@@ -36,7 +36,7 @@ public class ChunkProviderClient
         {
             chunk.onChunkUnload();
         }
-        if(worldObj.downloadThisWorld == true)
+        if(worldObj.downloadThisWorld == true && chunk.neverSave == false && chunk.isFilled == true )
         {
         	saveChunk(chunk);
 				try {
@@ -81,7 +81,7 @@ public class ChunkProviderClient
         for(Object ccip : chunkMapping.keySet())
         {
         	Chunk c = (Chunk)chunkMapping.get(ccip);
-            if(flag && !c.neverSave)
+            if( flag && !c.neverSave && c.isFilled )
             {
             	try {
 					worldObj.downloadChunkLoader.saveExtraChunkData(worldObj, c);
@@ -89,7 +89,8 @@ public class ChunkProviderClient
 					e.printStackTrace();
 				}
             }
-            saveChunk(c);
+            if( c.neverSave == false && c.isFilled )
+            	saveChunk(c);
         }
 
         if(flag)
