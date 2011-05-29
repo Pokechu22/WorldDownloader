@@ -31,10 +31,11 @@ public class GuiIngameMenu extends GuiScreen
         {
             ((GuiButton)controlList.get(0)).displayString = "Disconnect";
             ((GuiButton)controlList.get(0)).yPosition = height / 4 + 144 + byte0;
-            if( mc.theWorld.downloadThisWorld == false )
+            if( ((WorldClient)mc.theWorld).downloadThisWorld == false )
             	controlList.add(new GuiButton(7, width / 2 - 100, height / 4 + 120 + byte0, "Download this world"));
             else
             	controlList.add(new GuiButton(7, width / 2 - 100, height / 4 + 120 + byte0, "Stop downloading this world"));
+
         }
         controlList.add(new GuiButton(4, width / 2 - 100, height / 4 + 24 + byte0, "Back to game"));
         controlList.add(new GuiButton(0, width / 2 - 100, height / 4 + 96 + byte0, "Options..."));
@@ -50,10 +51,10 @@ public class GuiIngameMenu extends GuiScreen
         }
         if(guibutton.id == 1)
         {
-            mc.field_25001_G.func_25100_a(StatList.leaveGameStat, 1);
+            mc.statFileWriter.func_25100_a(StatList.leaveGameStat, 1);
             if(mc.isMultiplayerWorld())
             {
-    			if( mc.theWorld.downloadThisWorld == true )
+    			if( ((WorldClient)mc.theWorld).downloadThisWorld == true )
     				stopDownload();
                 mc.theWorld.sendQuittingDisconnectingPacket();
             }
@@ -67,33 +68,39 @@ public class GuiIngameMenu extends GuiScreen
         }
         if(guibutton.id == 5)
         {
-            mc.displayGuiScreen(new GuiAchievements(mc.field_25001_G));
+            mc.displayGuiScreen(new GuiAchievements(mc.statFileWriter));
         }
         if(guibutton.id == 6)
         {
-            mc.displayGuiScreen(new GuiStats(this, mc.field_25001_G));
+            mc.displayGuiScreen(new GuiStats(this, mc.statFileWriter));
         }
         if(guibutton.id == 7)
         {
-			if( mc.theWorld.downloadThisWorld == true )
+			if( ((WorldClient)mc.theWorld).downloadThisWorld == true )
 				stopDownload();
 			else
 				startDownload();
             mc.displayGuiScreen(null);
             mc.setIngameFocus();
         }
+
     }
-    
+
     private void startDownload()
     {
     	String worldName = mc.gameSettings.lastServer;
     	if( worldName.isEmpty() ) worldName = "Downloaded World";
     	
-    	mc.theWorld.worldInfo.setWorldName(worldName);
-		mc.theWorld.downloadSaveHandler = (SaveHandler) mc.getSaveLoader().getSaveLoader(worldName, true); // true = generate Players dir
-		mc.theWorld.downloadChunkLoader = mc.theWorld.downloadSaveHandler.getChunkLoader(null); // null = normal world
-		
-		mc.theWorld.downloadThisWorld = true;
+    	WorldClient wc = (WorldClient)mc.theWorld;
+    	
+    	wc.worldInfo.setWorldName(worldName);
+		wc.downloadSaveHandler = (SaveHandler) mc.getSaveLoader().getSaveLoader(worldName, false); // false = don't generate "Players" dir
+		wc.downloadChunkLoader = wc.downloadSaveHandler.getChunkLoader(wc.worldProvider);
+		if( wc.downloadSaveHandler.loadWorldInfo() != null )
+			wc.worldInfo.setSizeOnDisk( wc.downloadSaveHandler.loadWorldInfo().getSizeOnDisk() );
+		Chunk.wc = wc;
+		((ChunkProviderClient) wc.chunkProvider).importOldTileEntities();
+		wc.downloadThisWorld = true;
 		
 		mc.ingameGUI.addChatMessage("§cEverything you see will be downloaded.");
 		mc.ingameGUI.addChatMessage("§cTravel around to cover more of this beautiful world!");
@@ -101,16 +108,18 @@ public class GuiIngameMenu extends GuiScreen
     
     private void stopDownload()
     {
-		mc.theWorld.saveWorld(true, null);
+    	WorldClient wc = (WorldClient)mc.theWorld;
+		wc.saveWorld(true, null);
 		
-		mc.theWorld.downloadThisWorld = false;
+		wc.downloadThisWorld = false;
 		
-		mc.theWorld.downloadChunkLoader = null;
-		mc.theWorld.downloadSaveHandler = null;
+		wc.downloadChunkLoader = null;
+		wc.downloadSaveHandler = null;
 		
 		mc.ingameGUI.addChatMessage("§cDownload stopped.");
     }
 
+    
     public void updateScreen()
     {
         super.updateScreen();

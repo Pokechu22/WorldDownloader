@@ -6,6 +6,8 @@ package net.minecraft.src;
 
 import java.util.Random;
 
+import javax.swing.text.html.HTMLDocument.BlockElement;
+
 // Referenced classes of package net.minecraft.src:
 //            BlockContainer, World, EntityPlayer, EntityItem, 
 //            ItemStack, TileEntityChest, Material, IInventory, 
@@ -234,23 +236,23 @@ label0:
     public boolean blockActivated(World world, int i, int j, int k, EntityPlayer entityplayer)
     {
         Object obj = (TileEntityChest)world.getBlockTileEntity(i, j, k);
-        if(world.isBlockOpaqueCube(i, j + 1, k))
+        if(world.func_28100_h(i, j + 1, k))
         {
             return true;
         }
-        if(world.getBlockId(i - 1, j, k) == blockID && world.isBlockOpaqueCube(i - 1, j + 1, k))
+        if(world.getBlockId(i - 1, j, k) == blockID && world.func_28100_h(i - 1, j + 1, k))
         {
             return true;
         }
-        if(world.getBlockId(i + 1, j, k) == blockID && world.isBlockOpaqueCube(i + 1, j + 1, k))
+        if(world.getBlockId(i + 1, j, k) == blockID && world.func_28100_h(i + 1, j + 1, k))
         {
             return true;
         }
-        if(world.getBlockId(i, j, k - 1) == blockID && world.isBlockOpaqueCube(i, j + 1, k - 1))
+        if(world.getBlockId(i, j, k - 1) == blockID && world.func_28100_h(i, j + 1, k - 1))
         {
             return true;
         }
-        if(world.getBlockId(i, j, k + 1) == blockID && world.isBlockOpaqueCube(i, j + 1, k + 1))
+        if(world.getBlockId(i, j, k + 1) == blockID && world.func_28100_h(i, j + 1, k + 1))
         {
             return true;
         }
@@ -280,6 +282,40 @@ label0:
         }
     }
 
+    public static IInventory buildEntity(World world, int i, int j, int k, int size)
+    {
+        TileEntity te = new TileEntityChest();
+        world.setBlockTileEntity(i, j, k, te);
+        
+        IInventory obj = (IInventory) te;
+        if(size <= 27)
+        	return obj;
+        
+        te = new TileEntityChest();
+        
+        if(world.getBlockId(i - 1, j, k) == 54)
+        {
+        	world.setBlockTileEntity(i - 1, j, k, te);
+            obj = new InventoryLargeChest("Large chest", (IInventory) te, obj);
+        }
+        if(world.getBlockId(i + 1, j, k) == 54)
+        {
+        	world.setBlockTileEntity(i + 1, j, k, te);
+            obj = new InventoryLargeChest("Large chest", obj, (IInventory) te);
+        }
+        if(world.getBlockId(i, j, k - 1) == 54)
+        {
+        	world.setBlockTileEntity(i, j, k - 1, te);
+            obj = new InventoryLargeChest("Large chest", (IInventory) te, obj);
+        }
+        if(world.getBlockId(i, j, k + 1) == 54)
+        {
+        	world.setBlockTileEntity(i, j, k + 1, te);
+            obj = new InventoryLargeChest("Large chest", obj, (IInventory) te);
+        }
+        return (IInventory) obj;
+    }
+    
     protected TileEntity getBlockEntity()
     {
         return new TileEntityChest();

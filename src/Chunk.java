@@ -4,8 +4,11 @@
 
 package net.minecraft.src;
 
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.*;
+
+import net.minecraft.client.Minecraft;
 
 // Referenced classes of package net.minecraft.src:
 //            EnumSkyBlock, AxisAlignedBB, World, MathHelper, 
@@ -31,6 +34,7 @@ public class Chunk
         {
             entities[k] = new ArrayList();
         }
+
     }
 
     public Chunk(World world, byte abyte0[], int i, int j)
@@ -639,8 +643,31 @@ public class Chunk
 
         }
         isFilled = true;
+		importOldChunkTileEntities();
         return k1;
     }
+
+	public void importOldChunkTileEntities()
+	{
+		if(wc != null && wc.downloadThisWorld == true)
+		{
+			try {
+				IChunkLoader cl = wc.downloadChunkLoader;
+				Chunk ch = cl.loadChunk(wc, xPosition, zPosition);
+				if(ch == null) return;
+				Map ctem = ch.chunkTileEntityMap;
+				for( Object obj : ctem.keySet() )
+				{
+					ChunkPosition cp = (ChunkPosition) obj;
+					if(cp != null)
+					{
+						setChunkBlockTileEntity(cp.x, cp.y, cp.z, (TileEntity)ctem.get(obj));
+					}
+				}
+			}
+			catch (IOException e) {}
+		}
+	}
 
     public Random func_997_a(long l)
     {
@@ -677,4 +704,5 @@ public class Chunk
     public long lastSaveTime;
     
     public boolean isFilled = false;
+    public static WorldClient wc = null;
 }

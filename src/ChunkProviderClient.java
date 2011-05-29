@@ -25,8 +25,14 @@ public class ChunkProviderClient
 
     public boolean chunkExists(int i, int j)
     {
-        ChunkCoordIntPair chunkcoordintpair = new ChunkCoordIntPair(i, j);
-        return chunkMapping.containsKey(chunkcoordintpair);
+        if(this != null)
+        {
+            return true;
+        } else
+        {
+            ChunkCoordIntPair chunkcoordintpair = new ChunkCoordIntPair(i, j);
+            return chunkMapping.containsKey(chunkcoordintpair);
+        }
     }
 
     public void func_539_c(int i, int j)
@@ -36,11 +42,11 @@ public class ChunkProviderClient
         {
             chunk.onChunkUnload();
         }
-        if(worldObj.downloadThisWorld == true && chunk.neverSave == false && chunk.isFilled == true )
+        if(((WorldClient)worldObj).downloadThisWorld == true && chunk.neverSave == false && chunk.isFilled == true )
         {
         	saveChunk(chunk);
 				try {
-					worldObj.downloadChunkLoader.saveExtraChunkData(worldObj, chunk);
+					((WorldClient)worldObj).downloadChunkLoader.saveExtraChunkData(worldObj, chunk);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -75,7 +81,7 @@ public class ChunkProviderClient
 
     public boolean saveChunks(boolean flag, IProgressUpdate iprogressupdate)
     {
-    	if(worldObj.downloadThisWorld == false)
+    	if(((WorldClient)worldObj).downloadThisWorld == false)
     		return true;
     	
         for(Object ccip : chunkMapping.keySet())
@@ -84,7 +90,7 @@ public class ChunkProviderClient
             if( flag && !c.neverSave && c.isFilled )
             {
             	try {
-					worldObj.downloadChunkLoader.saveExtraChunkData(worldObj, c);
+					((WorldClient)worldObj).downloadChunkLoader.saveExtraChunkData(worldObj, c);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -95,22 +101,42 @@ public class ChunkProviderClient
 
         if(flag)
         {
-            worldObj.downloadChunkLoader.saveExtraData();
+        	((WorldClient)worldObj).downloadChunkLoader.saveExtraData();
         }
+
         return true;
     }
     
     private void saveChunk(Chunk chunk)
     {
-        if(worldObj.downloadThisWorld == false)
+        if(((WorldClient)worldObj).downloadThisWorld == false)
         	return;
         chunk.lastSaveTime = worldObj.getWorldTime();
         chunk.isTerrainPopulated = true;
         try {
-			worldObj.downloadChunkLoader.saveChunk(worldObj, chunk);
+        	((WorldClient)worldObj).downloadChunkLoader.saveChunk(worldObj, chunk);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+    }
+    
+    public Chunk loadChunk(int i, int j)
+    {
+    	Chunk ret = null;
+    	try {
+			ret = ((WorldClient)worldObj).downloadChunkLoader.loadChunk(worldObj, i, j);
+		} catch (IOException e) {}
+		return ret;
+    }
+
+    public void importOldTileEntities()
+    {
+        for(Object ccip : chunkMapping.keySet())
+        {
+        	Chunk c = (Chunk)chunkMapping.get(ccip);
+            if( c.isFilled )
+            	c.importOldChunkTileEntities();
+        }
     }
 
     public boolean func_532_a()
