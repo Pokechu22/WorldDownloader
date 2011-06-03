@@ -25,17 +25,19 @@ public class Packet15Place extends Packet
         itemStack = itemstack;
         if( WorldClient.wc.downloadThisWorld == true )
         {
-	        if( isContainer() )
+	        if( isID(Block.chest.blockID) || isID(Block.stoneOvenIdle.blockID) || isID(Block.stoneOvenActive.blockID) || isID(Block.dispenser.blockID) )
 	        {
 	        	WorldClient.wc.openContainerPacket = this;
 	        }
+	        else
+	        	WorldClient.wc.openContainerPacket = null;
         }
     }
 
-    public boolean isContainer()
+    public boolean isID( int id )
     {
-        ID = WorldClient.wc.getBlockId(xPosition, yPosition, zPosition);
-        if(ID == 54 || ID == 61 || ID == 23 ) // chest, furnace, dispenser
+        int ID = WorldClient.wc.getBlockId(xPosition, yPosition, zPosition);
+        if( ID == id )
         	return true;
         else
         	return false;
@@ -91,5 +93,4 @@ public class Packet15Place extends Packet
     public int zPosition;
     public int direction;
     public ItemStack itemStack;
-    public int ID;
 }

@@ -4,6 +4,7 @@
 
 package net.minecraft.src;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.*;
@@ -21,6 +22,7 @@ public class Chunk
     public Chunk(World world, int i, int j)
     {
         chunkTileEntityMap = new HashMap();
+        newChunkTileEntityMap = new HashMap();
         entities = new List[8];
         isTerrainPopulated = false;
         isModified = false;
@@ -507,7 +509,6 @@ public class Chunk
         {
             worldObj.func_632_b(entities[i]);
         }
-
     }
 
     public void setChunkModified()
@@ -643,32 +644,50 @@ public class Chunk
 
         }
         isFilled = true;
-		importOldChunkTileEntities();
+
         return k1;
     }
 
 	public void importOldChunkTileEntities()
 	{
-		if(wc != null && wc.downloadThisWorld == true)
-		{
-			try {
-				IChunkLoader cl = wc.downloadChunkLoader;
-				Chunk ch = cl.loadChunk(wc, xPosition, zPosition);
-				if(ch == null) return;
-				Map ctem = ch.chunkTileEntityMap;
-				for( Object obj : ctem.keySet() )
-				{
-					ChunkPosition cp = (ChunkPosition) obj;
-					if(cp != null)
-					{
-						setChunkBlockTileEntity(cp.x, cp.y, cp.z, (TileEntity)ctem.get(obj));
-					}
-				}
+        File file = wc.downloadSaveHandler.getSaveDirectory();
+        if(wc.worldProvider instanceof WorldProviderHell)
+        {
+            file = new File(file, "DIM-1");
+            file.mkdirs();
+        }
+		
+        java.io.DataInputStream datainputstream = RegionFileCache.getChunkInputStream(file, xPosition, zPosition);
+        NBTTagCompound nbttagcompound;
+        if(datainputstream != null)
+        {
+            try {
+				nbttagcompound = CompressedStreamTools.func_1141_a(datainputstream);
+			} catch (IOException e) {
+				return;
 			}
-			catch (IOException e) {}
-		}
+        }
+        else return;
+        
+        if( !nbttagcompound.hasKey("Level") )
+        	return;
+		
+        NBTTagList nbttaglist1 = nbttagcompound.getCompoundTag("Level").getTagList("TileEntities");
+        if(nbttaglist1 != null)
+        {
+            for(int l = 0; l < nbttaglist1.tagCount(); l++)
+            {
+                NBTTagCompound nbttagcompound2 = (NBTTagCompound)nbttaglist1.tagAt(l);
+                TileEntity te = TileEntity.createAndLoadEntity(nbttagcompound2);
+                if(te != null )
+                {
+                	ChunkPosition cp = new ChunkPosition(te.xCoord & 0xf, te.yCoord, te.zCoord & 0xf);
+                    newChunkTileEntityMap.put(cp, te);
+                }
+            }
+        }
 	}
-
+	
     public Random func_997_a(long l)
     {
         return new Random(worldObj.getRandomSeed() + (long)(xPosition * xPosition * 0x4c1906) + (long)(xPosition * 0x5ac0db) + (long)(zPosition * zPosition) * 0x4307a7L + (long)(zPosition * 0x5f24f) ^ l);
@@ -682,6 +701,16 @@ public class Chunk
     public void func_25124_i()
     {
         ChunkBlockMap.func_26002_a(blocks);
+    }
+    
+    public void setNewChunkBlockTileEntity(int i, int j, int k, TileEntity tileentity)
+    {
+        ChunkPosition chunkposition = new ChunkPosition(i, j, k);
+        tileentity.worldObj = worldObj;
+        tileentity.xCoord = xPosition * 16 + i;
+        tileentity.yCoord = j;
+        tileentity.zCoord = zPosition * 16 + k;
+        newChunkTileEntityMap.put(chunkposition, tileentity);
     }
 
     public static boolean isLit;
@@ -705,4 +734,5 @@ public class Chunk
     
     public boolean isFilled = false;
     public static WorldClient wc = null;
+    public Map newChunkTileEntityMap;
 }

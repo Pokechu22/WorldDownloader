@@ -612,33 +612,35 @@ public class NetClientHandler extends NetHandler
     	Packet15Place ocp = worldClient.openContainerPacket;
         if(packet100openwindow.inventoryType == 0)
         {
-        	if(worldClient.downloadThisWorld && ocp != null && ocp.isContainer() )
+        	IInventory inventory;
+        	if(worldClient.downloadThisWorld && ocp != null && ocp.isID(Block.chest.blockID) )
         	{
-        		currentInventory = BlockChest.buildEntity(worldClient, ocp.xPosition, ocp.yPosition, ocp.zPosition, packet100openwindow.slotsCount);
-        		mc.thePlayer.displayGUIChest(currentInventory);
+        		inventory = BlockChest.buildEntity(worldClient, ocp.xPosition, ocp.yPosition, ocp.zPosition, packet100openwindow.slotsCount);
         	}
         	else
         	{
-        		InventoryBasic inventorybasic = new InventoryBasic(packet100openwindow.windowTitle, packet100openwindow.slotsCount);
-        		mc.thePlayer.displayGUIChest(inventorybasic);
+        		inventory = new InventoryBasic(packet100openwindow.windowTitle, packet100openwindow.slotsCount);
         	}
+        	mc.thePlayer.displayGUIChest(inventory);
             mc.thePlayer.craftingInventory.windowId = packet100openwindow.windowId;
         } else
         if(packet100openwindow.inventoryType == 2)
         {
             TileEntityFurnace tileentityfurnace = new TileEntityFurnace();
-            if(worldClient.downloadThisWorld && ocp != null && ocp.isContainer() )
-            	worldClient.setBlockTileEntity(ocp.xPosition, ocp.yPosition, ocp.zPosition, tileentityfurnace);
-            currentInventory = tileentityfurnace;
+            if(worldClient.downloadThisWorld && ocp != null && (ocp.isID(Block.stoneOvenIdle.blockID) || ocp.isID(Block.stoneOvenActive.blockID)))
+            {
+            	worldClient.setNewBlockTileEntity(ocp.xPosition, ocp.yPosition, ocp.zPosition, tileentityfurnace);
+            }
             mc.thePlayer.displayGUIFurnace(tileentityfurnace);
             mc.thePlayer.craftingInventory.windowId = packet100openwindow.windowId;
         } else
         if(packet100openwindow.inventoryType == 3)
         {
             TileEntityDispenser tileentitydispenser = new TileEntityDispenser();
-            if(worldClient.downloadThisWorld && ocp != null && ocp.isContainer() )
-            	worldClient.setBlockTileEntity(ocp.xPosition, ocp.yPosition, ocp.zPosition, tileentitydispenser);
-            currentInventory = tileentitydispenser;
+            if(worldClient.downloadThisWorld && ocp != null && ocp.isID(Block.dispenser.blockID) )
+            {
+            	worldClient.setNewBlockTileEntity(ocp.xPosition, ocp.yPosition, ocp.zPosition, tileentitydispenser);
+            }
             mc.thePlayer.displayGUIDispenser(tileentitydispenser);
             mc.thePlayer.craftingInventory.windowId = packet100openwindow.windowId;
         } else
@@ -720,7 +722,6 @@ public class NetClientHandler extends NetHandler
                 {
                     tileentitysign.signText[i] = packet130updatesign.signLines[i];
                 }
-
                 tileentitysign.onInventoryChanged();
             }
         }
@@ -807,6 +808,4 @@ public class NetClientHandler extends NetHandler
     private boolean field_1210_g;
     public MapStorage field_28118_b;
     Random rand;
-    
-    public static IInventory currentInventory;
 }

@@ -307,8 +307,18 @@ public class WorldClient extends World
     		setBlockTileEntity(i, j, k, new TileEntityNote());
         tileentitynote.note = (byte)(i1 % 25);
         tileentitynote.onInventoryChanged();
+        setNewBlockTileEntity(i, j, k, tileentitynote);
     }
 
+    public void setNewBlockTileEntity(int i, int j, int k, TileEntity tileentity)
+    {
+        Chunk chunk = getChunkFromChunkCoords(i >> 4, k >> 4);
+        if(chunk != null)
+        {
+            chunk.setNewChunkBlockTileEntity(i & 0xf, j, k & 0xf, tileentity);
+        }
+    }
+    
     private LinkedList field_1057_z;
     private NetClientHandler sendQueue;
     private ChunkProviderClient field_20915_C;

@@ -63,6 +63,10 @@ public class ChunkProviderClient
         Arrays.fill(chunk.skylightMap.data, (byte)-1);
         chunkMapping.put(chunkcoordintpair, chunk);
         chunk.isChunkLoaded = true;
+        if(((WorldClient)worldObj).downloadThisWorld)
+        {
+        	chunk.importOldChunkTileEntities();
+        }
         return chunk;
     }
 
@@ -87,7 +91,7 @@ public class ChunkProviderClient
         for(Object ccip : chunkMapping.keySet())
         {
         	Chunk c = (Chunk)chunkMapping.get(ccip);
-            if( flag && !c.neverSave && c.isFilled )
+            if( flag && c != null && !c.neverSave && c.isFilled )
             {
             	try {
 					((WorldClient)worldObj).downloadChunkLoader.saveExtraChunkData(worldObj, c);
@@ -95,7 +99,7 @@ public class ChunkProviderClient
 					e.printStackTrace();
 				}
             }
-            if( c.neverSave == false && c.isFilled )
+            if( c != null && c.neverSave == false && c.isFilled )
             	saveChunk(c);
         }
 
@@ -114,6 +118,16 @@ public class ChunkProviderClient
         chunk.lastSaveTime = worldObj.getWorldTime();
         chunk.isTerrainPopulated = true;
         try {
+            for( Object ob : chunk.newChunkTileEntityMap.keySet() )
+            {
+            	TileEntity te = (TileEntity) chunk.newChunkTileEntityMap.get(ob);
+            	if(te != null)
+            	{
+            		Block block = Block.blocksList[worldObj.getBlockId(te.xCoord, te.yCoord, te.zCoord)];
+            		if( block instanceof BlockChest || block instanceof BlockDispenser || block instanceof BlockFurnace || block instanceof BlockNote )
+            			chunk.chunkTileEntityMap.put(ob, te);
+            	}
+            }
         	((WorldClient)worldObj).downloadChunkLoader.saveChunk(worldObj, chunk);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -134,8 +148,10 @@ public class ChunkProviderClient
         for(Object ccip : chunkMapping.keySet())
         {
         	Chunk c = (Chunk)chunkMapping.get(ccip);
-            if( c.isFilled )
+            if( c != null && c.isFilled )
+            {
             	c.importOldChunkTileEntities();
+            }
         }
     }
 

@@ -4,6 +4,7 @@
 
 package net.minecraft.src;
 
+import java.io.File;
 import java.util.List;
 import net.minecraft.client.Minecraft;
 
@@ -77,11 +78,16 @@ public class GuiIngameMenu extends GuiScreen
         if(guibutton.id == 7)
         {
 			if( ((WorldClient)mc.theWorld).downloadThisWorld == true )
-				stopDownload();
+			{
+				((GuiButton)controlList.get(1)).displayString = "Saving a shitload of data...";
+				stopDownloadIn = 2;
+			}
 			else
+			{
 				startDownload();
-            mc.displayGuiScreen(null);
-            mc.setIngameFocus();
+				mc.displayGuiScreen(null);
+				mc.setIngameFocus();
+			}
         }
 
     }
@@ -96,14 +102,13 @@ public class GuiIngameMenu extends GuiScreen
     	wc.worldInfo.setWorldName(worldName);
 		wc.downloadSaveHandler = (SaveHandler) mc.getSaveLoader().getSaveLoader(worldName, false); // false = don't generate "Players" dir
 		wc.downloadChunkLoader = wc.downloadSaveHandler.getChunkLoader(wc.worldProvider);
-		if( wc.downloadSaveHandler.loadWorldInfo() != null )
-			wc.worldInfo.setSizeOnDisk( wc.downloadSaveHandler.loadWorldInfo().getSizeOnDisk() );
+		wc.worldInfo.setSizeOnDisk( getFileSizeRecursive(wc.downloadSaveHandler.getSaveDirectory()) );
 		Chunk.wc = wc;
 		((ChunkProviderClient) wc.chunkProvider).importOldTileEntities();
 		wc.downloadThisWorld = true;
 		
-		mc.ingameGUI.addChatMessage("§cEverything you see will be downloaded.");
-		mc.ingameGUI.addChatMessage("§cTravel around to cover more of this beautiful world!");
+		mc.ingameGUI.addChatMessage("§c[WorldDL] §cDownloading everything you can see...");
+		mc.ingameGUI.addChatMessage("§c[WorldDL] §6You can increase that area by travelling around.");
     }
     
     private void stopDownload()
@@ -116,9 +121,22 @@ public class GuiIngameMenu extends GuiScreen
 		wc.downloadChunkLoader = null;
 		wc.downloadSaveHandler = null;
 		
-		mc.ingameGUI.addChatMessage("§cDownload stopped.");
+		mc.ingameGUI.addChatMessage("§c[WorldDL] §cDownload stopped.");
     }
 
+    private long getFileSizeRecursive(File f)
+    {
+    	long size = 0;
+    	File[] list = f.listFiles();
+    	for(File nf : list)
+    	{
+    		if( nf.isDirectory() )
+    			size += getFileSizeRecursive(nf);
+    		else if( nf.isFile() )
+    			size += nf.length();
+    	}
+    	return size;
+    }
     
     public void updateScreen()
     {
@@ -139,8 +157,17 @@ public class GuiIngameMenu extends GuiScreen
         }
         drawCenteredString(fontRenderer, "Game menu", width / 2, 40, 0xffffff);
         super.drawScreen(i, j, f);
+        if( stopDownloadIn == 0 )
+        {
+        	stopDownload();
+			mc.displayGuiScreen(null);
+			mc.setIngameFocus();
+        }
+        else if( stopDownloadIn > 0 )
+        	stopDownloadIn--;
     }
 
     private int updateCounter2;
     private int updateCounter;
+    private int stopDownloadIn = -1;
 }
