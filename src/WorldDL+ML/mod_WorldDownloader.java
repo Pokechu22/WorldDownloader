@@ -28,6 +28,9 @@ public class mod_WorldDownloader extends BaseMod
 		if( !mc.theWorld.multiplayerWorld )
 			return;
 		
+		if( !(mc.currentScreen instanceof GuiIngameMenu) && mc.currentScreen != null )
+			return;
+		
 		if(keyDownTimer <= 0)
 		{
 			wc = (WorldClient)mc.theWorld;
