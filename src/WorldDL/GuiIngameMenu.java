@@ -9,9 +9,9 @@ import java.util.List;
 import net.minecraft.client.Minecraft;
 
 // Referenced classes of package net.minecraft.src:
-//            GuiScreen, GuiOptions, StatCollector, GuiStats, 
-//            World, GuiMainMenu, MathHelper, StatList, 
-//            GuiButton, StatFileWriter, GuiAchievements
+//            GuiScreen, GuiButton, StatCollector, GuiOptions, 
+//            StatList, StatFileWriter, World, GuiMainMenu, 
+//            GuiAchievements, GuiStats, MathHelper
 
 public class GuiIngameMenu extends GuiScreen
 {
@@ -52,7 +52,7 @@ public class GuiIngameMenu extends GuiScreen
         }
         if(guibutton.id == 1)
         {
-            mc.statFileWriter.func_25100_a(StatList.leaveGameStat, 1);
+            mc.statFileWriter.readStat(StatList.leaveGameStat, 1);
             if(mc.isMultiplayerWorld())
             {
     			if( ((WorldClient)mc.theWorld).downloadThisWorld == true )
@@ -137,7 +137,7 @@ public class GuiIngameMenu extends GuiScreen
     	}
     	return size;
     }
-    
+
     public void updateScreen()
     {
         super.updateScreen();

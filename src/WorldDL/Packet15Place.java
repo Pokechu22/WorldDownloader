@@ -61,7 +61,8 @@ public class Packet15Place extends Packet
         }
     }
 
-    public void writePacketData(DataOutputStream dataoutputstream) throws IOException
+    public void writePacketData(DataOutputStream dataoutputstream)
+        throws IOException
     {
         dataoutputstream.writeInt(xPosition);
         dataoutputstream.write(yPosition);

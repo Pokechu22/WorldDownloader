@@ -7,9 +7,9 @@ package net.minecraft.src;
 import java.util.*;
 
 // Referenced classes of package net.minecraft.src:
-//            World, ChunkCoordinates, WorldInfo, MCHash, 
-//            NetClientHandler, IWorldAccess, Entity, WorldBlockPositionType, 
-//            ChunkProviderClient, SaveHandlerMP, WorldProvider, Packet255KickDisconnect, 
+//            World, SaveHandlerMP, WorldProvider, MCHash, 
+//            ChunkCoordinates, NetClientHandler, IWorldAccess, Entity, 
+//            WorldBlockPositionType, ChunkProviderClient, Packet255KickDisconnect, WorldInfo, 
 //            IChunkProvider
 
 public class WorldClient extends World
@@ -17,11 +17,11 @@ public class WorldClient extends World
 
     public WorldClient(NetClientHandler netclienthandler, long l, int i)
     {
-        super(new SaveHandlerMP(), "MpServer", WorldProvider.func_4101_a(i), l);
-        field_1057_z = new LinkedList();
-        field_1055_D = new MCHash();
-        field_20914_E = new HashSet();
-        field_1053_F = new HashSet();
+        super(new SaveHandlerMP(), "MpServer", WorldProvider.getProviderForDimension(i), l);
+        blocksToReceive = new LinkedList();
+        entityHashSet = new MCHash();
+        entityList = new HashSet();
+        entitySpawnQueue = new HashSet();
         sendQueue = netclienthandler;
         setSpawnPoint(new ChunkCoordinates(8, 64, 8));
         field_28108_z = netclienthandler.field_28118_b;
@@ -41,9 +41,9 @@ public class WorldClient extends World
             }
 
         }
-        for(int k = 0; k < 10 && !field_1053_F.isEmpty(); k++)
+        for(int k = 0; k < 10 && !entitySpawnQueue.isEmpty(); k++)
         {
-            Entity entity = (Entity)field_1053_F.iterator().next();
+            Entity entity = (Entity)entitySpawnQueue.iterator().next();
             if(!loadedEntityList.contains(entity))
             {
                 entityJoinedWorld(entity);
@@ -51,27 +51,27 @@ public class WorldClient extends World
         }
 
         sendQueue.processReadPackets();
-        for(int l = 0; l < field_1057_z.size(); l++)
+        for(int l = 0; l < blocksToReceive.size(); l++)
         {
-            WorldBlockPositionType worldblockpositiontype = (WorldBlockPositionType)field_1057_z.get(l);
-            if(--worldblockpositiontype.field_1206_d == 0)
+            WorldBlockPositionType worldblockpositiontype = (WorldBlockPositionType)blocksToReceive.get(l);
+            if(--worldblockpositiontype.acceptCountdown == 0)
             {
-                super.setBlockAndMetadata(worldblockpositiontype.field_1202_a, worldblockpositiontype.field_1201_b, worldblockpositiontype.field_1207_c, worldblockpositiontype.field_1205_e, worldblockpositiontype.field_1204_f);
-                super.markBlockNeedsUpdate(worldblockpositiontype.field_1202_a, worldblockpositiontype.field_1201_b, worldblockpositiontype.field_1207_c);
-                field_1057_z.remove(l--);
+                super.setBlockAndMetadata(worldblockpositiontype.posX, worldblockpositiontype.posY, worldblockpositiontype.posZ, worldblockpositiontype.blockID, worldblockpositiontype.metadata);
+                super.markBlockNeedsUpdate(worldblockpositiontype.posX, worldblockpositiontype.posY, worldblockpositiontype.posZ);
+                blocksToReceive.remove(l--);
             }
         }
 
     }
 
-    public void func_711_c(int i, int j, int k, int l, int i1, int j1)
+    public void invalidateBlockReceiveRegion(int i, int j, int k, int l, int i1, int j1)
     {
-        for(int k1 = 0; k1 < field_1057_z.size(); k1++)
+        for(int k1 = 0; k1 < blocksToReceive.size(); k1++)
         {
-            WorldBlockPositionType worldblockpositiontype = (WorldBlockPositionType)field_1057_z.get(k1);
-            if(worldblockpositiontype.field_1202_a >= i && worldblockpositiontype.field_1201_b >= j && worldblockpositiontype.field_1207_c >= k && worldblockpositiontype.field_1202_a <= l && worldblockpositiontype.field_1201_b <= i1 && worldblockpositiontype.field_1207_c <= j1)
+            WorldBlockPositionType worldblockpositiontype = (WorldBlockPositionType)blocksToReceive.get(k1);
+            if(worldblockpositiontype.posX >= i && worldblockpositiontype.posY >= j && worldblockpositiontype.posZ >= k && worldblockpositiontype.posX <= l && worldblockpositiontype.posY <= i1 && worldblockpositiontype.posZ <= j1)
             {
-                field_1057_z.remove(k1--);
+                blocksToReceive.remove(k1--);
             }
         }
 
@@ -85,7 +85,7 @@ public class WorldClient extends World
 
     public void setSpawnLocation()
     {
-        setSpawnPoint(new ChunkCoordinates(8, 64, 8));
+        //FLO//setSpawnPoint(new ChunkCoordinates(8, 64, 8));
     }
 
     protected void updateBlocksAndPlayCaveSounds()
@@ -105,7 +105,7 @@ public class WorldClient extends World
     {
         if(flag)
         {
-            field_20915_C.func_538_d(i, j);
+            field_20915_C.prepareChunk(i, j);
         } else
         {
             field_20915_C.func_539_c(i, j);
@@ -119,10 +119,10 @@ public class WorldClient extends World
     public boolean entityJoinedWorld(Entity entity)
     {
         boolean flag = super.entityJoinedWorld(entity);
-        field_20914_E.add(entity);
+        entityList.add(entity);
         if(!flag)
         {
-            field_1053_F.add(entity);
+            entitySpawnQueue.add(entity);
         }
         return flag;
     }
@@ -130,24 +130,24 @@ public class WorldClient extends World
     public void setEntityDead(Entity entity)
     {
         super.setEntityDead(entity);
-        field_20914_E.remove(entity);
+        entityList.remove(entity);
     }
 
     protected void obtainEntitySkin(Entity entity)
     {
         super.obtainEntitySkin(entity);
-        if(field_1053_F.contains(entity))
+        if(entitySpawnQueue.contains(entity))
         {
-            field_1053_F.remove(entity);
+            entitySpawnQueue.remove(entity);
         }
     }
 
     protected void releaseEntitySkin(Entity entity)
     {
         super.releaseEntitySkin(entity);
-        if(field_20914_E.contains(entity))
+        if(entityList.contains(entity))
         {
-            field_1053_F.add(entity);
+            entitySpawnQueue.add(entity);
         }
     }
 
@@ -158,26 +158,26 @@ public class WorldClient extends World
         {
             setEntityDead(entity1);
         }
-        field_20914_E.add(entity);
+        entityList.add(entity);
         entity.entityId = i;
         if(!entityJoinedWorld(entity))
         {
-            field_1053_F.add(entity);
+            entitySpawnQueue.add(entity);
         }
-        field_1055_D.addKey(i, entity);
+        entityHashSet.addKey(i, entity);
     }
 
     public Entity func_709_b(int i)
     {
-        return (Entity)field_1055_D.lookup(i);
+        return (Entity)entityHashSet.lookup(i);
     }
 
     public Entity removeEntityFromWorld(int i)
     {
-        Entity entity = (Entity)field_1055_D.removeObject(i);
+        Entity entity = (Entity)entityHashSet.removeObject(i);
         if(entity != null)
         {
-            field_20914_E.remove(entity);
+            entityList.remove(entity);
             setEntityDead(entity);
         }
         return entity;
@@ -189,7 +189,7 @@ public class WorldClient extends World
         int j1 = getBlockMetadata(i, j, k);
         if(super.setBlockMetadata(i, j, k, l))
         {
-            field_1057_z.add(new WorldBlockPositionType(this, i, j, k, i1, j1));
+            blocksToReceive.add(new WorldBlockPositionType(this, i, j, k, i1, j1));
             return true;
         } else
         {
@@ -203,7 +203,7 @@ public class WorldClient extends World
         int k1 = getBlockMetadata(i, j, k);
         if(super.setBlockAndMetadata(i, j, k, l, i1))
         {
-            field_1057_z.add(new WorldBlockPositionType(this, i, j, k, j1, k1));
+            blocksToReceive.add(new WorldBlockPositionType(this, i, j, k, j1, k1));
             return true;
         } else
         {
@@ -217,7 +217,7 @@ public class WorldClient extends World
         int j1 = getBlockMetadata(i, j, k);
         if(super.setBlock(i, j, k, l))
         {
-            field_1057_z.add(new WorldBlockPositionType(this, i, j, k, i1, j1));
+            blocksToReceive.add(new WorldBlockPositionType(this, i, j, k, i1, j1));
             return true;
         } else
         {
@@ -225,9 +225,9 @@ public class WorldClient extends World
         }
     }
 
-    public boolean func_714_c(int i, int j, int k, int l, int i1)
+    public boolean setBlockAndMetadataAndInvalidate(int i, int j, int k, int l, int i1)
     {
-        func_711_c(i, j, k, i, j, k);
+        invalidateBlockReceiveRegion(i, j, k, i, j, k);
         if(super.setBlockAndMetadata(i, j, k, l, i1))
         {
             notifyBlockChange(i, j, k, l);
@@ -245,7 +245,7 @@ public class WorldClient extends World
 
     protected void updateWeather()
     {
-        if(worldProvider.field_6478_e)
+        if(worldProvider.hasNoSky)
         {
             return;
         }
@@ -253,40 +253,40 @@ public class WorldClient extends World
         {
             field_27168_F--;
         }
-        field_26901_B = field_27171_C;
+        prevRainingStrength = rainingStrength;
         if(worldInfo.getRaining())
         {
-            field_27171_C += 0.01D;
+            rainingStrength += 0.01D;
         } else
         {
-            field_27171_C -= 0.01D;
+            rainingStrength -= 0.01D;
         }
-        if(field_27171_C < 0.0F)
+        if(rainingStrength < 0.0F)
         {
-            field_27171_C = 0.0F;
+            rainingStrength = 0.0F;
         }
-        if(field_27171_C > 1.0F)
+        if(rainingStrength > 1.0F)
         {
-            field_27171_C = 1.0F;
+            rainingStrength = 1.0F;
         }
-        field_27170_D = field_27169_E;
+        prevThunderingStrength = thunderingStrength;
         if(worldInfo.getThundering())
         {
-            field_27169_E += 0.01D;
+            thunderingStrength += 0.01D;
         } else
         {
-            field_27169_E -= 0.01D;
+            thunderingStrength -= 0.01D;
         }
-        if(field_27169_E < 0.0F)
+        if(thunderingStrength < 0.0F)
         {
-            field_27169_E = 0.0F;
+            thunderingStrength = 0.0F;
         }
-        if(field_27169_E > 1.0F)
+        if(thunderingStrength > 1.0F)
         {
-            field_27169_E = 1.0F;
+            thunderingStrength = 1.0F;
         }
     }
-    
+
     public void saveWorld(boolean flag, IProgressUpdate iprogressupdate) {
     	if(downloadThisWorld == true)
     	{
@@ -301,13 +301,15 @@ public class WorldClient extends World
     	super.playNoteAt(i, j, k, l, i1);
     	if(downloadThisWorld == false)
     		return;
-    	
-    	TileEntityNote tileentitynote = (TileEntityNote)getBlockTileEntity(i, j, k);
-    	if( tileentitynote == null)
-    		setBlockTileEntity(i, j, k, new TileEntityNote());
-        tileentitynote.note = (byte)(i1 % 25);
-        tileentitynote.onInventoryChanged();
-        setNewBlockTileEntity(i, j, k, tileentitynote);
+    	if( getBlockId(i, j, k) == Block.musicBlock.blockID)
+    	{
+	    	TileEntityNote tileentitynote = (TileEntityNote)getBlockTileEntity(i, j, k);
+	    	if( tileentitynote == null)
+	    		setBlockTileEntity(i, j, k, new TileEntityNote());
+	        tileentitynote.note = (byte)(i1 % 25);
+	        tileentitynote.onInventoryChanged();
+	        setNewBlockTileEntity(i, j, k, tileentitynote);
+    	}
     }
 
     public void setNewBlockTileEntity(int i, int j, int k, TileEntity tileentity)
@@ -319,14 +321,14 @@ public class WorldClient extends World
         }
     }
     
-    private LinkedList field_1057_z;
+	private LinkedList blocksToReceive;
     private NetClientHandler sendQueue;
     private ChunkProviderClient field_20915_C;
-    private MCHash field_1055_D;
-    private Set field_20914_E;
-    private Set field_1053_F;
-    
-    public boolean downloadThisWorld = false;
+    private MCHash entityHashSet;
+    private Set entityList;
+    private Set entitySpawnQueue;
+	
+	public boolean downloadThisWorld = false;
     public IChunkLoader downloadChunkLoader;
     public SaveHandler downloadSaveHandler;
     public Packet15Place openContainerPacket;

@@ -7,9 +7,9 @@ package net.minecraft.src;
 import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
-//            BlockContainer, World, EntityPlayer, EntityItem, 
-//            ItemStack, TileEntityChest, Material, IInventory, 
-//            InventoryLargeChest, Block, IBlockAccess, TileEntity
+//            BlockContainer, Material, IBlockAccess, Block, 
+//            World, TileEntityChest, IInventory, ItemStack, 
+//            EntityItem, InventoryLargeChest, EntityPlayer, TileEntity
 
 public class BlockChest extends BlockContainer
 {
@@ -234,23 +234,23 @@ label0:
     public boolean blockActivated(World world, int i, int j, int k, EntityPlayer entityplayer)
     {
         Object obj = (TileEntityChest)world.getBlockTileEntity(i, j, k);
-        if(world.func_28100_h(i, j + 1, k))
+        if(world.isBlockNormalCube(i, j + 1, k))
         {
             return true;
         }
-        if(world.getBlockId(i - 1, j, k) == blockID && world.func_28100_h(i - 1, j + 1, k))
+        if(world.getBlockId(i - 1, j, k) == blockID && world.isBlockNormalCube(i - 1, j + 1, k))
         {
             return true;
         }
-        if(world.getBlockId(i + 1, j, k) == blockID && world.func_28100_h(i + 1, j + 1, k))
+        if(world.getBlockId(i + 1, j, k) == blockID && world.isBlockNormalCube(i + 1, j + 1, k))
         {
             return true;
         }
-        if(world.getBlockId(i, j, k - 1) == blockID && world.func_28100_h(i, j + 1, k - 1))
+        if(world.getBlockId(i, j, k - 1) == blockID && world.isBlockNormalCube(i, j + 1, k - 1))
         {
             return true;
         }
-        if(world.getBlockId(i, j, k + 1) == blockID && world.func_28100_h(i, j + 1, k + 1))
+        if(world.getBlockId(i, j, k + 1) == blockID && world.isBlockNormalCube(i, j + 1, k + 1))
         {
             return true;
         }

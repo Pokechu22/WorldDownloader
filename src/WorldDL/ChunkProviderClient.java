@@ -8,8 +8,8 @@ import java.io.IOException;
 import java.util.*;
 
 // Referenced classes of package net.minecraft.src:
-//            IChunkProvider, EmptyChunk, Chunk, NibbleArray, 
-//            ChunkCoordIntPair, World, IProgressUpdate
+//            IChunkProvider, EmptyChunk, ChunkCoordIntPair, Chunk, 
+//            NibbleArray, World, IProgressUpdate
 
 public class ChunkProviderClient
     implements IChunkProvider
@@ -55,7 +55,7 @@ public class ChunkProviderClient
         field_889_c.remove(chunk);
     }
 
-    public Chunk func_538_d(int i, int j)
+    public Chunk prepareChunk(int i, int j)
     {
         ChunkCoordIntPair chunkcoordintpair = new ChunkCoordIntPair(i, j);
         byte abyte0[] = new byte[32768];
@@ -110,7 +110,7 @@ public class ChunkProviderClient
 
         return true;
     }
-    
+
     private void saveChunk(Chunk chunk)
     {
         if(((WorldClient)worldObj).downloadThisWorld == false)
@@ -155,12 +155,12 @@ public class ChunkProviderClient
         }
     }
 
-    public boolean func_532_a()
+    public boolean unload100OldestChunks()
     {
         return false;
     }
 
-    public boolean func_536_b()
+    public boolean canSave()
     {
         return false;
     }
