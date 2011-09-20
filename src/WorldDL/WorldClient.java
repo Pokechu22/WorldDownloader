@@ -8,40 +8,30 @@ import java.util.*;
 
 // Referenced classes of package net.minecraft.src:
 //            World, SaveHandlerMP, WorldProvider, MCHash, 
-//            ChunkCoordinates, NetClientHandler, IWorldAccess, Entity, 
-//            WorldBlockPositionType, ChunkProviderClient, Packet255KickDisconnect, WorldInfo, 
+//            ChunkCoordinates, NetClientHandler, Entity, WorldBlockPositionType, 
+//            ChunkProviderClient, Packet255KickDisconnect, WorldInfo, WorldSettings, 
 //            IChunkProvider
 
 public class WorldClient extends World
 {
 
-    public WorldClient(NetClientHandler netclienthandler, long l, int i)
+    public WorldClient(NetClientHandler netclienthandler, WorldSettings worldsettings, int i, int j)
     {
-        super(new SaveHandlerMP(), "MpServer", WorldProvider.getProviderForDimension(i), l);
+        super(new SaveHandlerMP(), "MpServer", WorldProvider.getProviderForDimension(i), worldsettings);
         blocksToReceive = new LinkedList();
         entityHashSet = new MCHash();
         entityList = new HashSet();
         entitySpawnQueue = new HashSet();
         sendQueue = netclienthandler;
+        difficultySetting = j;
         setSpawnPoint(new ChunkCoordinates(8, 64, 8));
-        field_28108_z = netclienthandler.field_28118_b;
-        wc = this;
+        mapStorage = netclienthandler.mapStorage;
     }
 
     public void tick()
     {
         setWorldTime(getWorldTime() + 1L);
-        int i = calculateSkylightSubtracted(1.0F);
-        if(i != skylightSubtracted)
-        {
-            skylightSubtracted = i;
-            for(int j = 0; j < worldAccesses.size(); j++)
-            {
-                ((IWorldAccess)worldAccesses.get(j)).updateAllRenderers();
-            }
-
-        }
-        for(int k = 0; k < 10 && !entitySpawnQueue.isEmpty(); k++)
+        for(int i = 0; i < 10 && !entitySpawnQueue.isEmpty(); i++)
         {
             Entity entity = (Entity)entitySpawnQueue.iterator().next();
             if(!loadedEntityList.contains(entity))
@@ -51,14 +41,14 @@ public class WorldClient extends World
         }
 
         sendQueue.processReadPackets();
-        for(int l = 0; l < blocksToReceive.size(); l++)
+        for(int j = 0; j < blocksToReceive.size(); j++)
         {
-            WorldBlockPositionType worldblockpositiontype = (WorldBlockPositionType)blocksToReceive.get(l);
+            WorldBlockPositionType worldblockpositiontype = (WorldBlockPositionType)blocksToReceive.get(j);
             if(--worldblockpositiontype.acceptCountdown == 0)
             {
                 super.setBlockAndMetadata(worldblockpositiontype.posX, worldblockpositiontype.posY, worldblockpositiontype.posZ, worldblockpositiontype.blockID, worldblockpositiontype.metadata);
                 super.markBlockNeedsUpdate(worldblockpositiontype.posX, worldblockpositiontype.posY, worldblockpositiontype.posZ);
-                blocksToReceive.remove(l--);
+                blocksToReceive.remove(j--);
             }
         }
 
@@ -85,7 +75,9 @@ public class WorldClient extends World
 
     public void setSpawnLocation()
     {
-        //FLO//setSpawnPoint(new ChunkCoordinates(8, 64, 8));
+    	/* WORLD DOWNLOADER ---> */
+        //setSpawnPoint(new ChunkCoordinates(8, 64, 8));
+    	/* <--- WORLD DOWNLOADER */
     }
 
     protected void updateBlocksAndPlayCaveSounds()
@@ -96,7 +88,7 @@ public class WorldClient extends World
     {
     }
 
-    public boolean TickUpdates(boolean flag)
+    public boolean tickUpdates(boolean flag)
     {
         return false;
     }
@@ -105,7 +97,7 @@ public class WorldClient extends World
     {
         if(flag)
         {
-            field_20915_C.prepareChunk(i, j);
+            field_20915_C.loadChunk(i, j);
         } else
         {
             field_20915_C.func_539_c(i, j);
@@ -249,12 +241,12 @@ public class WorldClient extends World
         {
             return;
         }
-        if(field_27168_F > 0)
+        if(lastLightningBolt > 0)
         {
-            field_27168_F--;
+            lastLightningBolt--;
         }
         prevRainingStrength = rainingStrength;
-        if(worldInfo.getRaining())
+        if(worldInfo.getIsRaining())
         {
             rainingStrength += 0.01D;
         } else
@@ -270,7 +262,7 @@ public class WorldClient extends World
             rainingStrength = 1.0F;
         }
         prevThunderingStrength = thunderingStrength;
-        if(worldInfo.getThundering())
+        if(worldInfo.getIsThundering())
         {
             thunderingStrength += 0.01D;
         } else
@@ -287,11 +279,13 @@ public class WorldClient extends World
         }
     }
 
+    /* WORLD DOWNLOADER ---> */
     public void saveWorld(boolean flag, IProgressUpdate iprogressupdate) {
-    	if(downloadThisWorld == true)
+    	if(WorldDL.downloading == true)
     	{
-    		downloadSaveHandler.saveWorldInfoAndPlayer(worldInfo, playerEntities);
     		chunkProvider.saveChunks(flag, iprogressupdate);
+    		worldInfo.setSizeOnDisk( WorldDL.getFileSizeRecursive(WorldDL.mySaveHandler.getSaveDirectory()) );
+    		WorldDL.mySaveHandler.saveWorldInfoAndPlayer(worldInfo, playerEntities);
     	}
     	super.saveWorld(flag, iprogressupdate);
     }
@@ -299,38 +293,33 @@ public class WorldClient extends World
     public void playNoteAt(int i, int j, int k, int l, int i1)
     {
     	super.playNoteAt(i, j, k, l, i1);
-    	if(downloadThisWorld == false)
+    	if(WorldDL.downloading == false)
     		return;
-    	if( getBlockId(i, j, k) == Block.musicBlock.blockID)
+    	if( getBlockId(i, j, k) == Block.music.blockID)
     	{
 	    	TileEntityNote tileentitynote = (TileEntityNote)getBlockTileEntity(i, j, k);
 	    	if( tileentitynote == null)
 	    		setBlockTileEntity(i, j, k, new TileEntityNote());
 	        tileentitynote.note = (byte)(i1 % 25);
 	        tileentitynote.onInventoryChanged();
-	        setNewBlockTileEntity(i, j, k, tileentitynote);
+	        setMyBlockTileEntity(i, j, k, tileentitynote);
     	}
     }
 
-    public void setNewBlockTileEntity(int i, int j, int k, TileEntity tileentity)
+    public void setMyBlockTileEntity(int i, int j, int k, TileEntity tileentity)
     {
         Chunk chunk = getChunkFromChunkCoords(i >> 4, k >> 4);
         if(chunk != null)
         {
-            chunk.setNewChunkBlockTileEntity(i & 0xf, j, k & 0xf, tileentity);
+            chunk.setMyChunkBlockTileEntity(i & 0xf, j, k & 0xf, tileentity);
         }
     }
+    /* <--- WORLD DOWNLOADER */
     
-	private LinkedList blocksToReceive;
+    private LinkedList blocksToReceive;
     private NetClientHandler sendQueue;
     private ChunkProviderClient field_20915_C;
     private MCHash entityHashSet;
     private Set entityList;
     private Set entitySpawnQueue;
-	
-	public boolean downloadThisWorld = false;
-    public IChunkLoader downloadChunkLoader;
-    public SaveHandler downloadSaveHandler;
-    public Packet15Place openContainerPacket;
-    public static WorldClient wc;
 }

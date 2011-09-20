@@ -12,52 +12,53 @@ public class mod_WorldDownloader extends BaseMod
 	//@MLProp(name="Key", info="Keycode that starts and stops the download. http://goo.gl/S9Q2W")
 	public static int key = 38; //Key_L // http://www.lwjgl.org/javadoc/constant-values.html#org.lwjgl.input.Keyboard.CHAR_NONE
 	
-	Minecraft mc;
-	WorldClient wc;
-	int keyDownTimer = 0;
-	KeyBinding kb;
+
+	
+    
+	int keyDownTimer = 0; // Counts down every tick from 10 after L was pressed. Stops rapid button activation.
+	KeyBinding kb = new KeyBinding("key.downloadWorld", key);
 	boolean stopDownloadNextFrame = false;
 	
 	public mod_WorldDownloader() {
-		mc = ModLoader.getMinecraftInstance();
+		WorldDL.mc = ModLoader.getMinecraftInstance();
 	}
 	
 	public void ModsLoaded() {
-		kb = new KeyBinding("key.downloadWorld", key);
-		ModLoader.RegisterKey(this, kb, true);
-		ModLoader.SetInGUIHook(this, true, false);
+		ModLoader.RegisterKey(this, kb, true); // Keys in options.txt overwrite the L key!
+		ModLoader.SetInGUIHook(this, true, false); // To draw the text in the lower right corner
 	}
 	
 	public void KeyboardEvent(KeyBinding kb) {
-		if( !mc.theWorld.multiplayerWorld )
+		if( !WorldDL.mc.theWorld.multiplayerWorld )
 			return;
 		
-		if( !(mc.currentScreen instanceof GuiIngameMenu) && mc.currentScreen != null )
-			return;
+		if( !(WorldDL.mc.currentScreen instanceof GuiIngameMenu) && WorldDL.mc.currentScreen != null )
+			return; // Only start or stop if in game menu or in game.
 		
-		if(keyDownTimer <= 0)
+		if(keyDownTimer <= 0) // prevent rapid starts/stops
 		{
-			wc = (WorldClient)mc.theWorld;
+			WorldDL.wc = (WorldClient)WorldDL.mc.theWorld;
 			keyDownTimer = 10;
 			ModLoader.SetInGameHook(this, true, true);
-			if(wc.downloadThisWorld)
+			if(WorldDL.downloading) // if downloading...
 			{
-				stopDownloadNextFrame = true;
-				if( mc.currentScreen instanceof GuiIngameMenu )
+				stopDownloadNextFrame = true; // First draw the stop text, then stop in the next frame
+				
+				if( WorldDL.mc.currentScreen instanceof GuiIngameMenu ) // Draw it on screen
 				{
-					GuiIngameMenu igm = (GuiIngameMenu)mc.currentScreen;
+					GuiIngameMenu igm = (GuiIngameMenu)WorldDL.mc.currentScreen;
 					String saving = "Saving a shitload of data...";
 					igm.drawString(igm.fontRenderer, saving, igm.width-igm.fontRenderer.getStringWidth(saving)-5, igm.height-25, 0xCCCC00);
 				}
-				else
+				else // or add it to the chat
 				{
-			    	mc.ingameGUI.addChatMessage("§c[WorldDL] §6Saving a shitload of data...");
+			    	WorldDL.mc.ingameGUI.addChatMessage("§c[WorldDL] §6Saving a shitload of data...");
 					ModLoader.SetInGameHook(this, true, true);
 				}
 			}
-			else
+			else // if not downloading...
 			{
-				startDownload();
+				WorldDL.startDownload();
 			}
 		}
 	}
@@ -66,85 +67,43 @@ public class mod_WorldDownloader extends BaseMod
 	{
 		if(stopDownloadNextFrame)
 		{
-			stopDownload();
+			WorldDL.stopDownload();
 			stopDownloadNextFrame = false;
 			return true;
 		}
+		
 		if(keyDownTimer <= 0)
 			ModLoader.SetInGameHook(this, false, true);
 		keyDownTimer--;
 		return true;
 	}
 	
-	public boolean OnTickInGUI(Minecraft minecraft, GuiScreen gs)
+	public boolean OnTickInGUI(Minecraft minecraft, GuiScreen gs) // Draws the text in the lower right corner
 	{
-		if( gs instanceof GuiIngameMenu && mc.theWorld.multiplayerWorld )
+		if( gs instanceof GuiIngameMenu && WorldDL.mc.theWorld.multiplayerWorld ) // only in the game menu in SMP
 		{
 			GuiIngameMenu igm = (GuiIngameMenu) gs;
 			String info;
-			if( ((WorldClient)mc.theWorld).downloadThisWorld )
+			
+			if( WorldDL.downloading )
 				info = "Downloading -- To stop press " + Keyboard.getKeyName(key);
 			else
 				info = "To download the world press " + Keyboard.getKeyName(key);
 			igm.drawString(igm.fontRenderer, info, igm.width-igm.fontRenderer.getStringWidth(info)-5, igm.height-15, 0xCC0000);
+			
 			if(stopDownloadNextFrame)
 			{
-				stopDownload();
+				WorldDL.stopDownload();
 				stopDownloadNextFrame = false;
 			}
 		}
 		return true;
 	}
 	
+	/* DON'T FORGET TO UPDATE THE VERSION !!! */
 	public String Version()
 	{
-		return "1.7.3";
+		return "1.8.1";
 	}
-
-    private void startDownload()
-    {
-    	String worldName = mc.gameSettings.lastServer;
-    	if( worldName.isEmpty() ) worldName = "Downloaded world";
-    	
-    	wc = (WorldClient)mc.theWorld;
-    	
-    	wc.worldInfo.setWorldName(worldName);
-		wc.downloadSaveHandler = (SaveHandler) mc.getSaveLoader().getSaveLoader(worldName, false); // false = don't generate "Players" dir
-		wc.downloadChunkLoader = wc.downloadSaveHandler.getChunkLoader(wc.worldProvider);
-		wc.worldInfo.setSizeOnDisk( getFileSizeRecursive(wc.downloadSaveHandler.getSaveDirectory()) );
-		Chunk.wc = wc;
-		((ChunkProviderClient) wc.chunkProvider).importOldTileEntities();
-		wc.downloadThisWorld = true;
-		
-		mc.ingameGUI.addChatMessage("§c[WorldDL] §cDownloading everything you can see...");
-		mc.ingameGUI.addChatMessage("§c[WorldDL] §6You can increase that area by travelling around.");
-    }
-    
-    private void stopDownload()
-    {
-    	WorldClient wc = (WorldClient)mc.theWorld;
-		wc.saveWorld(true, null);
-		
-		wc.downloadThisWorld = false;
-		
-		wc.downloadChunkLoader = null;
-		wc.downloadSaveHandler = null;
-		
-		mc.ingameGUI.addChatMessage("§c[WorldDL] §cDownload stopped.");
-    }
-
-    private long getFileSizeRecursive(File f)
-    {
-    	long size = 0;
-    	File[] list = f.listFiles();
-    	for(File nf : list)
-    	{
-    		if( nf.isDirectory() )
-    			size += getFileSizeRecursive(nf);
-    		else if( nf.isFile() )
-    			size += nf.length();
-    	}
-    	return size;
-    }
 
 }

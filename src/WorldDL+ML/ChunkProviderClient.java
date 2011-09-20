@@ -4,12 +4,14 @@
 
 package net.minecraft.src;
 
+/* WORLD DOWNLOADER ---> */
 import java.io.IOException;
+/* <--- WORLD DOWNLOADER */
 import java.util.*;
 
 // Referenced classes of package net.minecraft.src:
-//            IChunkProvider, EmptyChunk, ChunkCoordIntPair, Chunk, 
-//            NibbleArray, World, IProgressUpdate
+//            IChunkProvider, PlayerList, EmptyChunk, ChunkCoordIntPair, 
+//            Chunk, NibbleArray, World, IProgressUpdate
 
 public class ChunkProviderClient
     implements IChunkProvider
@@ -17,9 +19,11 @@ public class ChunkProviderClient
 
     public ChunkProviderClient(World world)
     {
-        chunkMapping = new HashMap();
+        //chunkMapping = new PlayerList(); // MCP Decompile Error?
+    	chunkMapping = new HashMap();
         field_889_c = new ArrayList();
-        blankChunk = new EmptyChunk(world, new byte[32768], 0, 0);
+        world.getClass();
+        blankChunk = new EmptyChunk(world, new byte[256 * 128], 0, 0);
         worldObj = world;
     }
 
@@ -30,8 +34,7 @@ public class ChunkProviderClient
             return true;
         } else
         {
-            ChunkCoordIntPair chunkcoordintpair = new ChunkCoordIntPair(i, j);
-            return chunkMapping.containsKey(chunkcoordintpair);
+            return chunkMapping.containsKey(ChunkCoordIntPair.chunkXZ2Int(i, j));
         }
     }
 
@@ -42,38 +45,41 @@ public class ChunkProviderClient
         {
             chunk.onChunkUnload();
         }
-        if(((WorldClient)worldObj).downloadThisWorld == true && chunk.neverSave == false && chunk.isFilled == true )
+        /* WORLD DOWNLOADER ---> */
+        if(WorldDL.downloading == true && chunk.neverSave == false && chunk.isFilled == true )
         {
         	saveChunk(chunk);
 				try {
-					((WorldClient)worldObj).downloadChunkLoader.saveExtraChunkData(worldObj, chunk);
+					WorldDL.myChunkLoader.saveExtraChunkData(worldObj, chunk);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
         }
-        chunkMapping.remove(new ChunkCoordIntPair(i, j));
+        /* <--- WORLD DOWNLOADER */
+        chunkMapping.remove(ChunkCoordIntPair.chunkXZ2Int(i, j));
         field_889_c.remove(chunk);
     }
 
-    public Chunk prepareChunk(int i, int j)
+    public Chunk loadChunk(int i, int j)
     {
-        ChunkCoordIntPair chunkcoordintpair = new ChunkCoordIntPair(i, j);
-        byte abyte0[] = new byte[32768];
+        worldObj.getClass();
+        byte abyte0[] = new byte[256 * 128];
         Chunk chunk = new Chunk(worldObj, abyte0, i, j);
         Arrays.fill(chunk.skylightMap.data, (byte)-1);
-        chunkMapping.put(chunkcoordintpair, chunk);
+        chunkMapping.put(ChunkCoordIntPair.chunkXZ2Int(i, j), chunk);
         chunk.isChunkLoaded = true;
-        if(((WorldClient)worldObj).downloadThisWorld)
+        /* WORLD DOWNLOADER ---> */
+        if(WorldDL.downloading)
         {
         	chunk.importOldChunkTileEntities();
         }
+        /* <--- WORLD DOWNLOADER */
         return chunk;
     }
 
     public Chunk provideChunk(int i, int j)
     {
-        ChunkCoordIntPair chunkcoordintpair = new ChunkCoordIntPair(i, j);
-        Chunk chunk = (Chunk)chunkMapping.get(chunkcoordintpair);
+        Chunk chunk = (Chunk)chunkMapping.get(ChunkCoordIntPair.chunkXZ2Int(i, j));
         if(chunk == null)
         {
             return blankChunk;
@@ -85,7 +91,8 @@ public class ChunkProviderClient
 
     public boolean saveChunks(boolean flag, IProgressUpdate iprogressupdate)
     {
-    	if(((WorldClient)worldObj).downloadThisWorld == false)
+    	/* WORLD DOWNLOADER ---> */
+    	if(WorldDL.downloading == false)
     		return true;
     	
         for(Object ccip : chunkMapping.keySet())
@@ -94,7 +101,7 @@ public class ChunkProviderClient
             if( flag && c != null && !c.neverSave && c.isFilled )
             {
             	try {
-					((WorldClient)worldObj).downloadChunkLoader.saveExtraChunkData(worldObj, c);
+            		WorldDL.myChunkLoader.saveExtraChunkData(worldObj, c);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -105,22 +112,24 @@ public class ChunkProviderClient
 
         if(flag)
         {
-        	((WorldClient)worldObj).downloadChunkLoader.saveExtraData();
+        	WorldDL.myChunkLoader.saveExtraData();
         }
+        /* <--- WORLD DOWNLOADER */
 
         return true;
     }
 
+    /* WORLD DOWNLOADER ---> */
     private void saveChunk(Chunk chunk)
     {
-        if(((WorldClient)worldObj).downloadThisWorld == false)
+        if(WorldDL.downloading == false)
         	return;
         chunk.lastSaveTime = worldObj.getWorldTime();
         chunk.isTerrainPopulated = true;
         try {
-            for( Object ob : chunk.newChunkTileEntityMap.keySet() )
+            for( Object ob : chunk.myChunkTileEntityMap.keySet() )
             {
-            	TileEntity te = (TileEntity) chunk.newChunkTileEntityMap.get(ob);
+            	TileEntity te = (TileEntity) chunk.myChunkTileEntityMap.get(ob);
             	if(te != null)
             	{
             		Block block = Block.blocksList[worldObj.getBlockId(te.xCoord, te.yCoord, te.zCoord)];
@@ -128,20 +137,20 @@ public class ChunkProviderClient
             			chunk.chunkTileEntityMap.put(ob, te);
             	}
             }
-        	((WorldClient)worldObj).downloadChunkLoader.saveChunk(worldObj, chunk);
+            WorldDL.myChunkLoader.saveChunk(worldObj, chunk);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
     }
     
-    public Chunk loadChunk(int i, int j)
-    {
-    	Chunk ret = null;
-    	try {
-			ret = ((WorldClient)worldObj).downloadChunkLoader.loadChunk(worldObj, i, j);
-		} catch (IOException e) {}
-		return ret;
-    }
+//    public Chunk loadChunk(int i, int j)
+//    {
+//    	Chunk ret = null;
+//    	try {
+//			ret = WorldDL.myChunkLoader.loadChunk(worldObj, i, j);
+//		} catch (IOException e) {}
+//		return ret;
+//    }
 
     public void importOldTileEntities()
     {
@@ -154,6 +163,7 @@ public class ChunkProviderClient
             }
         }
     }
+    /* <--- WORLD DOWNLOADER */
 
     public boolean unload100OldestChunks()
     {
@@ -175,7 +185,8 @@ public class ChunkProviderClient
     }
 
     private Chunk blankChunk;
-    private Map chunkMapping;
+    //private PlayerList chunkMapping; // MCP Decompile Error?
+    private HashMap chunkMapping;
     private List field_889_c;
     private World worldObj;
 }

@@ -4,7 +4,6 @@
 
 package net.minecraft.src;
 
-import java.io.File;
 import java.util.List;
 import net.minecraft.client.Minecraft;
 
@@ -31,12 +30,13 @@ public class GuiIngameMenu extends GuiScreen
         if(mc.isMultiplayerWorld())
         {
             ((GuiButton)controlList.get(0)).displayString = "Disconnect";
+            /* WORLD DOWNLOADER ---> */
             ((GuiButton)controlList.get(0)).yPosition = height / 4 + 144 + byte0;
-            if( ((WorldClient)mc.theWorld).downloadThisWorld == false )
+            if( WorldDL.downloading == false )
             	controlList.add(new GuiButton(7, width / 2 - 100, height / 4 + 120 + byte0, "Download this world"));
             else
             	controlList.add(new GuiButton(7, width / 2 - 100, height / 4 + 120 + byte0, "Stop downloading this world"));
-
+            /* <--- WORLD DOWNLOADER */
         }
         controlList.add(new GuiButton(4, width / 2 - 100, height / 4 + 24 + byte0, "Back to game"));
         controlList.add(new GuiButton(0, width / 2 - 100, height / 4 + 96 + byte0, "Options..."));
@@ -55,8 +55,10 @@ public class GuiIngameMenu extends GuiScreen
             mc.statFileWriter.readStat(StatList.leaveGameStat, 1);
             if(mc.isMultiplayerWorld())
             {
-    			if( ((WorldClient)mc.theWorld).downloadThisWorld == true )
-    				stopDownload();
+            	/* WORLD DOWNLOADER ---> */
+    			if( WorldDL.downloading == true )
+    				WorldDL.stopDownload();
+    			/* <--- WORLD DOWNLOADER */
                 mc.theWorld.sendQuittingDisconnectingPacket();
             }
             mc.changeWorld1(null);
@@ -75,67 +77,25 @@ public class GuiIngameMenu extends GuiScreen
         {
             mc.displayGuiScreen(new GuiStats(this, mc.statFileWriter));
         }
+        /* WORLD DOWNLOADER ---> */
         if(guibutton.id == 7)
         {
-			if( ((WorldClient)mc.theWorld).downloadThisWorld == true )
+        	WorldDL.mc = mc;
+        	WorldDL.wc = (WorldClient)mc.theWorld;
+			if( WorldDL.downloading == true )
 			{
 				((GuiButton)controlList.get(1)).displayString = "Saving a shitload of data...";
 				stopDownloadIn = 2;
 			}
 			else
 			{
-				startDownload();
+				WorldDL.startDownload();
 				mc.displayGuiScreen(null);
 				mc.setIngameFocus();
 			}
         }
+        /* <--- WORLD DOWNLOADER */
 
-    }
-
-    private void startDownload()
-    {
-    	String worldName = mc.gameSettings.lastServer;
-    	if( worldName.isEmpty() ) worldName = "Downloaded World";
-    	
-    	WorldClient wc = (WorldClient)mc.theWorld;
-    	
-    	wc.worldInfo.setWorldName(worldName);
-		wc.downloadSaveHandler = (SaveHandler) mc.getSaveLoader().getSaveLoader(worldName, false); // false = don't generate "Players" dir
-		wc.downloadChunkLoader = wc.downloadSaveHandler.getChunkLoader(wc.worldProvider);
-		wc.worldInfo.setSizeOnDisk( getFileSizeRecursive(wc.downloadSaveHandler.getSaveDirectory()) );
-		Chunk.wc = wc;
-		((ChunkProviderClient) wc.chunkProvider).importOldTileEntities();
-		wc.downloadThisWorld = true;
-		
-		mc.ingameGUI.addChatMessage("§c[WorldDL] §cDownloading everything you can see...");
-		mc.ingameGUI.addChatMessage("§c[WorldDL] §6You can increase that area by travelling around.");
-    }
-    
-    private void stopDownload()
-    {
-    	WorldClient wc = (WorldClient)mc.theWorld;
-		wc.saveWorld(true, null);
-		
-		wc.downloadThisWorld = false;
-		
-		wc.downloadChunkLoader = null;
-		wc.downloadSaveHandler = null;
-		
-		mc.ingameGUI.addChatMessage("§c[WorldDL] §cDownload stopped.");
-    }
-
-    private long getFileSizeRecursive(File f)
-    {
-    	long size = 0;
-    	File[] list = f.listFiles();
-    	for(File nf : list)
-    	{
-    		if( nf.isDirectory() )
-    			size += getFileSizeRecursive(nf);
-    		else if( nf.isFile() )
-    			size += nf.length();
-    	}
-    	return size;
     }
 
     public void updateScreen()
@@ -157,17 +117,21 @@ public class GuiIngameMenu extends GuiScreen
         }
         drawCenteredString(fontRenderer, "Game menu", width / 2, 40, 0xffffff);
         super.drawScreen(i, j, f);
+        /* WORLD DOWNLOADER ---> */
         if( stopDownloadIn == 0 )
         {
-        	stopDownload();
+        	WorldDL.stopDownload();
 			mc.displayGuiScreen(null);
 			mc.setIngameFocus();
         }
         else if( stopDownloadIn > 0 )
         	stopDownloadIn--;
+        /* <--- WORLD DOWNLOADER */
     }
 
     private int updateCounter2;
     private int updateCounter;
+    /* WORLD DOWNLOADER ---> */
     private int stopDownloadIn = -1;
+    /* <--- WORLD DOWNLOADER */
 }

@@ -23,27 +23,18 @@ public class Packet15Place extends Packet
         zPosition = k;
         direction = l;
         itemStack = itemstack;
-        if( WorldClient.wc.downloadThisWorld == true )
+        /* WORLD DOWNLOADER ---> */
+        if( WorldDL.downloading == true )
         {
-	        if( isID(Block.chest.blockID) || isID(Block.stoneOvenIdle.blockID) || isID(Block.stoneOvenActive.blockID) || isID(Block.dispenser.blockID) )
-	        {
-	        	WorldClient.wc.openContainerPacket = this;
-	        }
-	        else
-	        	WorldClient.wc.openContainerPacket = null;
+        	WorldDL.lastClickedX = xPosition;
+        	WorldDL.lastClickedY = yPosition;
+        	WorldDL.lastClickedZ = zPosition;
         }
+        /* <--- WORLD DOWNLOADER */
     }
 
-    public boolean isID( int id )
-    {
-        int ID = WorldClient.wc.getBlockId(xPosition, yPosition, zPosition);
-        if( ID == id )
-        	return true;
-        else
-        	return false;
-    }
-    
-    public void readPacketData(DataInputStream datainputstream) throws IOException
+    public void readPacketData(DataInputStream datainputstream)
+        throws IOException
     {
         xPosition = datainputstream.readInt();
         yPosition = datainputstream.read();
