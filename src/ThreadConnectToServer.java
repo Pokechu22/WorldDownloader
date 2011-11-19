@@ -22,6 +22,7 @@ class ThreadConnectToServer extends Thread
         hostName = s;
         port = i;
         /* WORLD DOWNLOADER ---> */
+		WorldDL.lastServerHostname = WorldDL.serverHostname;
         WorldDL.serverHostname = s;
         /* <--- WORLD DOWNLOADER */
     }

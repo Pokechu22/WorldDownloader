@@ -50,7 +50,7 @@ public class ChunkProviderClient
         {
         	saveChunk(chunk);
 				try {
-					WorldDL.myChunkLoader.saveExtraChunkData(worldObj, chunk);
+					((WorldClient)worldObj).myChunkLoader.saveExtraChunkData(worldObj, chunk);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -101,7 +101,7 @@ public class ChunkProviderClient
             if( flag && c != null && !c.neverSave && c.isFilled )
             {
             	try {
-            		WorldDL.myChunkLoader.saveExtraChunkData(worldObj, c);
+            		((WorldClient)worldObj).myChunkLoader.saveExtraChunkData(worldObj, c);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -112,7 +112,7 @@ public class ChunkProviderClient
 
         if(flag)
         {
-        	WorldDL.myChunkLoader.saveExtraData();
+        	((WorldClient)worldObj).myChunkLoader.saveExtraData();
         }
         /* <--- WORLD DOWNLOADER */
 
@@ -137,7 +137,7 @@ public class ChunkProviderClient
             			chunk.chunkTileEntityMap.put(ob, te);
             	}
             }
-            WorldDL.myChunkLoader.saveChunk(worldObj, chunk);
+            ((WorldClient)worldObj).myChunkLoader.saveChunk(worldObj, chunk);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

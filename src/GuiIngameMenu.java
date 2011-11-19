@@ -35,7 +35,7 @@ public class GuiIngameMenu extends GuiScreen
             if( WorldDL.downloading == false )
             	controlList.add(new GuiButton(7, width / 2 - 100, height / 4 + 120 + byte0, "Download this world"));
             else
-            	controlList.add(new GuiButton(7, width / 2 - 100, height / 4 + 120 + byte0, "Stop downloading this world"));
+            	controlList.add(new GuiButton(7, width / 2 - 100, height / 4 + 120 + byte0, "Stop download"));
             /* <--- WORLD DOWNLOADER */
         }
         controlList.add(new GuiButton(4, width / 2 - 100, height / 4 + 24 + byte0, "Back to game"));

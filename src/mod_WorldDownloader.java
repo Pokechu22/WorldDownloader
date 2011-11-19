@@ -11,12 +11,8 @@ public class mod_WorldDownloader extends BaseMod
 {
 	//@MLProp(name="Key", info="Keycode that starts and stops the download. http://goo.gl/S9Q2W")
 	public static int key = 38; //Key_L // http://www.lwjgl.org/javadoc/constant-values.html#org.lwjgl.input.Keyboard.CHAR_NONE
-	
-
-	
     
-	int keyDownTimer = 0; // Counts down every tick from 10 after L was pressed. Stops rapid button activation.
-	KeyBinding kb = new KeyBinding("key.downloadWorld", key);
+	KeyBinding kb = new KeyBinding("Download world", key);
 	boolean stopDownloadNextFrame = false;
 	
 	public mod_WorldDownloader() {
@@ -24,7 +20,7 @@ public class mod_WorldDownloader extends BaseMod
 	}
 	
 	public void ModsLoaded() {
-		ModLoader.RegisterKey(this, kb, true); // Keys in options.txt overwrite the L key!
+		ModLoader.RegisterKey(this, kb, false); // Keys in options.txt overwrite the L key!
 		ModLoader.SetInGUIHook(this, true, false); // To draw the text in the lower right corner
 	}
 	
@@ -35,47 +31,32 @@ public class mod_WorldDownloader extends BaseMod
 		if( !(WorldDL.mc.currentScreen instanceof GuiIngameMenu) && WorldDL.mc.currentScreen != null )
 			return; // Only start or stop if in game menu or in game.
 		
-		if(keyDownTimer <= 0) // prevent rapid starts/stops
+		WorldDL.wc = (WorldClient)WorldDL.mc.theWorld;
+		if(WorldDL.downloading) // if downloading...
 		{
-			WorldDL.wc = (WorldClient)WorldDL.mc.theWorld;
-			keyDownTimer = 10;
-			ModLoader.SetInGameHook(this, true, true);
-			if(WorldDL.downloading) // if downloading...
+			if( WorldDL.mc.currentScreen instanceof GuiIngameMenu ) // Draw it on screen
 			{
+				GuiIngameMenu igm = (GuiIngameMenu)WorldDL.mc.currentScreen;
+				String saving = "Saving a shitload of data...";
+				igm.drawString(igm.fontRenderer, saving, igm.width-igm.fontRenderer.getStringWidth(saving)-5, igm.height-25, 0xCCCC00);
 				stopDownloadNextFrame = true; // First draw the stop text, then stop in the next frame
-				
-				if( WorldDL.mc.currentScreen instanceof GuiIngameMenu ) // Draw it on screen
-				{
-					GuiIngameMenu igm = (GuiIngameMenu)WorldDL.mc.currentScreen;
-					String saving = "Saving a shitload of data...";
-					igm.drawString(igm.fontRenderer, saving, igm.width-igm.fontRenderer.getStringWidth(saving)-5, igm.height-25, 0xCCCC00);
-				}
-				else // or add it to the chat
-				{
-			    	WorldDL.mc.ingameGUI.addChatMessage("§c[WorldDL] §6Saving a shitload of data...");
-					ModLoader.SetInGameHook(this, true, true);
-				}
 			}
-			else // if not downloading...
+			else // or add it to the chat
 			{
-				WorldDL.startDownload();
+		    	WorldDL.mc.ingameGUI.addChatMessage("§c[WorldDL] §6Saving a shitload of data...");
+				ModLoader.SetInGameHook(this, true, true);
 			}
+		}
+		else // if not downloading...
+		{
+			WorldDL.startDownload();
 		}
 	}
 	
 	public boolean OnTickInGame(Minecraft minecraft)
 	{
-		if(stopDownloadNextFrame)
-		{
-			WorldDL.stopDownload();
-			stopDownloadNextFrame = false;
-			return true;
-		}
-		
-		if(keyDownTimer <= 0)
-			ModLoader.SetInGameHook(this, false, true);
-		keyDownTimer--;
-		return true;
+		WorldDL.stopDownload();
+		return false;
 	}
 	
 	public boolean OnTickInGUI(Minecraft minecraft, GuiScreen gs) // Draws the text in the lower right corner
@@ -94,7 +75,6 @@ public class mod_WorldDownloader extends BaseMod
 			if(stopDownloadNextFrame)
 			{
 				WorldDL.stopDownload();
-				stopDownloadNextFrame = false;
 			}
 		}
 		return true;
@@ -103,7 +83,7 @@ public class mod_WorldDownloader extends BaseMod
 	/* DON'T FORGET TO UPDATE THE VERSION !!! */
 	public String Version()
 	{
-		return "1.8.1";
+		return "1.8.1b";
 	}
 
 }

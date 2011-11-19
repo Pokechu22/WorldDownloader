@@ -26,6 +26,12 @@ public class WorldClient extends World
         difficultySetting = j;
         setSpawnPoint(new ChunkCoordinates(8, 64, 8));
         mapStorage = netclienthandler.mapStorage;
+        /* WORLD DOWNLOADER ---> */
+        WorldDL.continueDownload( this ); // Will only continue if it was running before
+        WorldDL.lastSeed = worldInfo.getRandomSeed();
+        WorldDL.lastDimension = i;
+        WorldDL.lastServerHostname = WorldDL.serverHostname;
+        /* <--- WORLD DOWNLOADER */
     }
 
     public void tick()
@@ -285,6 +291,7 @@ public class WorldClient extends World
     	{
     		chunkProvider.saveChunks(flag, iprogressupdate);
     		worldInfo.setSizeOnDisk( WorldDL.getFileSizeRecursive(WorldDL.mySaveHandler.getSaveDirectory()) );
+    		worldInfo = new WorldDL.WorldInfoProxy(worldInfo);
     		WorldDL.mySaveHandler.saveWorldInfoAndPlayer(worldInfo, playerEntities);
     	}
     	super.saveWorld(flag, iprogressupdate);
@@ -322,4 +329,7 @@ public class WorldClient extends World
     private MCHash entityHashSet;
     private Set entityList;
     private Set entitySpawnQueue;
+    /* WORLD DOWNLOADER ---> */
+    public IChunkLoader myChunkLoader; // Despite it's name this is used to SAVE the chunks
+    /* <--- WORLD DOWNLOADER */
 }

@@ -1,11 +1,12 @@
-> Outputted net/minecraft/src/ChunkProviderClient   to reobf/minecraft as ls.class
-> Outputted mod_WorldDownloader                     to reobf/minecraft as mod_WorldDownloader.class
-> Outputted net/minecraft/src/Packet15Place         to reobf/minecraft as dv.class
-> Outputted net/minecraft/src/GuiDispenser          to reobf/minecraft as dr.class
-> Outputted net/minecraft/src/WorldClient           to reobf/minecraft as gx.class
-> Outputted net/minecraft/src/ThreadConnectToServer to reobf/minecraft as acy.class
-> Outputted net/minecraft/src/GuiChest              to reobf/minecraft as tn.class
-> Outputted WorldDL                                 to reobf/minecraft as WorldDL.class
-> Outputted net/minecraft/src/GuiFurnace            to reobf/minecraft as ii.class
-> Outputted net/minecraft/src/GuiIngameMenu         to reobf/minecraft as in.class
-> Outputted net/minecraft/src/Chunk                 to reobf/minecraft as vy.class
+ChunkProviderClient     ls.class
+mod_WorldDownloader     mod_WorldDownloader.class
+Packet15Place           dv.class
+GuiDispenser            dr.class
+WorldClient             gx.class
+ThreadConnectToServer   acy.class
+GuiChest                tn.class
+WorldDL                 WorldDL.class
+GuiFurnace              ii.class
+GuiIngameMenu           in.class
+WorldDL$WorldInfoProxy  WorldDL$WorldInfoProxy.class
+Chunk                   vy.class
