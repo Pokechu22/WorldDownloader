@@ -19,10 +19,14 @@ public class mod_WorldDownloader extends BaseMod
 		WorldDL.mc = ModLoader.getMinecraftInstance();
 	}
 	
-	public void ModsLoaded() {
+	@Override
+	public void ModsLoaded()
+	{
 		ModLoader.RegisterKey(this, kb, false); // Keys in options.txt overwrite the L key!
 		ModLoader.SetInGUIHook(this, true, false); // To draw the text in the lower right corner
 	}
+	
+	public void load() { }
 	
 	public void KeyboardEvent(KeyBinding kb) {
 		if( !WorldDL.mc.theWorld.multiplayerWorld )
@@ -53,13 +57,13 @@ public class mod_WorldDownloader extends BaseMod
 		}
 	}
 	
-	public boolean OnTickInGame(Minecraft minecraft)
+	public boolean OnTickInGame(float f, Minecraft minecraft)
 	{
 		WorldDL.stopDownload();
 		return false;
 	}
 	
-	public boolean OnTickInGUI(Minecraft minecraft, GuiScreen gs) // Draws the text in the lower right corner
+	public boolean OnTickInGUI(float f, Minecraft minecraft, GuiScreen gs) // Draws the text in the lower right corner
 	{
 		if( gs instanceof GuiIngameMenu && WorldDL.mc.theWorld.multiplayerWorld ) // only in the game menu in SMP
 		{
@@ -75,15 +79,15 @@ public class mod_WorldDownloader extends BaseMod
 			if(stopDownloadNextFrame)
 			{
 				WorldDL.stopDownload();
+				stopDownloadNextFrame = false;
 			}
 		}
 		return true;
 	}
 	
 	/* DON'T FORGET TO UPDATE THE VERSION !!! */
-	public String Version()
-	{
-		return "1.8.1b";
+	public String getVersion() {
+		return "1.0.0";
 	}
 
 }

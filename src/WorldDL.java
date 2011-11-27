@@ -152,7 +152,8 @@ public class WorldDL {
     public static class WorldInfoProxy extends WorldInfo
     {
 
-		public WorldInfoProxy(WorldInfo worldinfo) {
+		public WorldInfoProxy(WorldInfo worldinfo)
+		{
 			super(worldinfo);
 		}
 		
@@ -161,7 +162,7 @@ public class WorldDL {
 	    	ArrayList activePlayerList = new ArrayList(1);
 	    	activePlayerList.add(mc.thePlayer);
 	        NBTTagCompound temp = super.getNBTTagCompoundWithPlayer(activePlayerList);
-	        if( mc.thePlayer.field_35212_aW.field_35758_c && mc.thePlayer.field_35212_aW.field_35756_d && mc.thePlayer.field_35212_aW.field_35759_a )
+	        if( mc.thePlayer.capabilities.allowFlying && mc.thePlayer.capabilities.depleteBuckets && mc.thePlayer.capabilities.disableDamage )
 	        	temp.setInteger("GameType", 1); // Creative
 	        else
 	        	temp.setInteger("GameType", 0); // Survival

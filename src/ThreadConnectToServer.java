@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -10,10 +10,15 @@ import net.minecraft.client.Minecraft;
 
 // Referenced classes of package net.minecraft.src:
 //            NetClientHandler, GuiConnecting, Packet2Handshake, Session, 
-//            GuiConnectFailed
+//            GuiDisconnected
 
 class ThreadConnectToServer extends Thread
 {
+
+    final Minecraft mc; /* synthetic field */
+    final String hostName; /* synthetic field */
+    final int port; /* synthetic field */
+    final GuiConnecting connectingGui; /* synthetic field */
 
     ThreadConnectToServer(GuiConnecting guiconnecting, Minecraft minecraft, String s, int i)
     {
@@ -44,7 +49,7 @@ class ThreadConnectToServer extends Thread
             {
                 return;
             }
-            mc.displayGuiScreen(new GuiConnectFailed("connect.failed", "disconnect.genericReason", new Object[] {
+            mc.displayGuiScreen(new GuiDisconnected("connect.failed", "disconnect.genericReason", new Object[] {
                 (new StringBuilder()).append("Unknown host '").append(hostName).append("'").toString()
             }));
         }
@@ -54,7 +59,7 @@ class ThreadConnectToServer extends Thread
             {
                 return;
             }
-            mc.displayGuiScreen(new GuiConnectFailed("connect.failed", "disconnect.genericReason", new Object[] {
+            mc.displayGuiScreen(new GuiDisconnected("connect.failed", "disconnect.genericReason", new Object[] {
                 connectexception.getMessage()
             }));
         }
@@ -65,14 +70,9 @@ class ThreadConnectToServer extends Thread
                 return;
             }
             exception.printStackTrace();
-            mc.displayGuiScreen(new GuiConnectFailed("connect.failed", "disconnect.genericReason", new Object[] {
+            mc.displayGuiScreen(new GuiDisconnected("connect.failed", "disconnect.genericReason", new Object[] {
                 exception.toString()
             }));
         }
     }
-
-    final Minecraft mc; /* synthetic field */
-    final String hostName; /* synthetic field */
-    final int port; /* synthetic field */
-    final GuiConnecting connectingGui; /* synthetic field */
 }

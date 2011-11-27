@@ -1,13 +1,13 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
 import java.util.*;
 
 // Referenced classes of package net.minecraft.src:
-//            World, SaveHandlerMP, WorldProvider, MCHash, 
+//            World, SaveHandlerMP, WorldProvider, IntHashMap, 
 //            ChunkCoordinates, NetClientHandler, Entity, WorldBlockPositionType, 
 //            ChunkProviderClient, Packet255KickDisconnect, WorldInfo, WorldSettings, 
 //            IChunkProvider
@@ -15,11 +15,23 @@ import java.util.*;
 public class WorldClient extends World
 {
 
+    private LinkedList blocksToReceive;
+    private NetClientHandler sendQueue;
+    private ChunkProviderClient field_20915_C;
+    private IntHashMap entityHashSet;
+    private Set entityList;
+    private Set entitySpawnQueue;
+    
+    /* WORLD DOWNLOADER ---> */
+    public IChunkLoader myChunkLoader; // Despite it's name this is used to SAVE the chunks
+    /* <--- WORLD DOWNLOADER */
+
+
     public WorldClient(NetClientHandler netclienthandler, WorldSettings worldsettings, int i, int j)
     {
         super(new SaveHandlerMP(), "MpServer", WorldProvider.getProviderForDimension(i), worldsettings);
         blocksToReceive = new LinkedList();
-        entityHashSet = new MCHash();
+        entityHashSet = new IntHashMap();
         entityList = new HashSet();
         entitySpawnQueue = new HashSet();
         sendQueue = netclienthandler;
@@ -110,7 +122,7 @@ public class WorldClient extends World
         }
         if(!flag)
         {
-            markBlocksDirty(i * 16, 0, j * 16, i * 16 + 15, 128, j * 16 + 15);
+            markBlocksDirty(i * 16, 0, j * 16, i * 16 + 15, field_35472_c, j * 16 + 15);
         }
     }
 
@@ -322,14 +334,5 @@ public class WorldClient extends World
         }
     }
     /* <--- WORLD DOWNLOADER */
-    
-    private LinkedList blocksToReceive;
-    private NetClientHandler sendQueue;
-    private ChunkProviderClient field_20915_C;
-    private MCHash entityHashSet;
-    private Set entityList;
-    private Set entitySpawnQueue;
-    /* WORLD DOWNLOADER ---> */
-    public IChunkLoader myChunkLoader; // Despite it's name this is used to SAVE the chunks
-    /* <--- WORLD DOWNLOADER */
+
 }

@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -10,20 +10,24 @@ import java.io.IOException;
 import java.util.*;
 
 // Referenced classes of package net.minecraft.src:
-//            IChunkProvider, PlayerList, EmptyChunk, ChunkCoordIntPair, 
-//            Chunk, NibbleArray, World, IProgressUpdate
+//            IChunkProvider, LongHashMap, EmptyChunk, World, 
+//            ChunkCoordIntPair, Chunk, NibbleArray, IProgressUpdate, 
+//            EnumCreatureType, ChunkPosition
 
 public class ChunkProviderClient
     implements IChunkProvider
 {
 
+    private Chunk blankChunk;
+    private LongHashMap chunkMapping;
+    private List field_889_c;
+    private World worldObj;
+
     public ChunkProviderClient(World world)
     {
-        //chunkMapping = new PlayerList(); // MCP Decompile Error?
-    	chunkMapping = new HashMap();
+        chunkMapping = new LongHashMap();
         field_889_c = new ArrayList();
-        world.getClass();
-        blankChunk = new EmptyChunk(world, new byte[256 * 128], 0, 0);
+        blankChunk = new EmptyChunk(world, new byte[256 * world.field_35472_c], 0, 0);
         worldObj = world;
     }
 
@@ -34,14 +38,14 @@ public class ChunkProviderClient
             return true;
         } else
         {
-            return chunkMapping.containsKey(ChunkCoordIntPair.chunkXZ2Int(i, j));
+            return chunkMapping.func_35575_b(ChunkCoordIntPair.chunkXZ2Int(i, j));
         }
     }
 
     public void func_539_c(int i, int j)
     {
         Chunk chunk = provideChunk(i, j);
-        if(!chunk.func_21167_h())
+        if(!chunk.getFalse())
         {
             chunk.onChunkUnload();
         }
@@ -62,11 +66,10 @@ public class ChunkProviderClient
 
     public Chunk loadChunk(int i, int j)
     {
-        worldObj.getClass();
-        byte abyte0[] = new byte[256 * 128];
+        byte abyte0[] = new byte[256 * worldObj.field_35472_c];
         Chunk chunk = new Chunk(worldObj, abyte0, i, j);
         Arrays.fill(chunk.skylightMap.data, (byte)-1);
-        chunkMapping.put(ChunkCoordIntPair.chunkXZ2Int(i, j), chunk);
+        chunkMapping.add(ChunkCoordIntPair.chunkXZ2Int(i, j), chunk);
         chunk.isChunkLoaded = true;
         /* WORLD DOWNLOADER ---> */
         if(WorldDL.downloading)
@@ -79,7 +82,7 @@ public class ChunkProviderClient
 
     public Chunk provideChunk(int i, int j)
     {
-        Chunk chunk = (Chunk)chunkMapping.get(ChunkCoordIntPair.chunkXZ2Int(i, j));
+        Chunk chunk = (Chunk)chunkMapping.getValueByKey(ChunkCoordIntPair.chunkXZ2Int(i, j));
         if(chunk == null)
         {
             return blankChunk;
@@ -95,20 +98,29 @@ public class ChunkProviderClient
     	if(WorldDL.downloading == false)
     		return true;
     	
-        for(Object ccip : chunkMapping.keySet())
-        {
-        	Chunk c = (Chunk)chunkMapping.get(ccip);
-            if( flag && c != null && !c.neverSave && c.isFilled )
-            {
-            	try {
-            		((WorldClient)worldObj).myChunkLoader.saveExtraChunkData(worldObj, c);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-            }
-            if( c != null && c.neverSave == false && c.isFilled )
-            	saveChunk(c);
-        }
+    	for(LongHashMapEntry lhme : chunkMapping.getEntries())
+    	{
+    		while( lhme != null )
+    		{
+    			Chunk c = (Chunk)lhme.field_35832_b;
+    			
+                if( flag && c != null && !c.neverSave && c.isFilled )
+                {
+                	try
+                	{
+						((WorldClient)worldObj).myChunkLoader.saveExtraChunkData(worldObj, c);
+					}
+                	catch (IOException e)
+                	{
+						e.printStackTrace();
+					}
+                }
+                if( c != null && c.neverSave == false && c.isFilled )
+                	saveChunk(c);
+                
+    			lhme = lhme.field_35833_c; // Get next Entry in this linked list 
+    		}
+    	}
 
         if(flag)
         {
@@ -133,7 +145,7 @@ public class ChunkProviderClient
             	if(te != null)
             	{
             		Block block = Block.blocksList[worldObj.getBlockId(te.xCoord, te.yCoord, te.zCoord)];
-            		if( block instanceof BlockChest || block instanceof BlockDispenser || block instanceof BlockFurnace || block instanceof BlockNote )
+            		if( block instanceof BlockChest || block instanceof BlockDispenser || block instanceof BlockFurnace || block instanceof BlockNote || block instanceof BlockBrewingStand )
             			chunk.chunkTileEntityMap.put(ob, te);
             	}
             }
@@ -154,14 +166,20 @@ public class ChunkProviderClient
 
     public void importOldTileEntities()
     {
-        for(Object ccip : chunkMapping.keySet())
-        {
-        	Chunk c = (Chunk)chunkMapping.get(ccip);
-            if( c != null && c.isFilled )
-            {
-            	c.importOldChunkTileEntities();
-            }
-        }
+    	for(LongHashMapEntry lhme : chunkMapping.getEntries())
+    	{
+    		while( lhme != null )
+    		{
+    			Chunk c = (Chunk)lhme.field_35832_b;
+                
+                if( c != null && c.isFilled )
+                {
+                	c.importOldChunkTileEntities();
+                }
+    			
+    			lhme = lhme.field_35833_c; // Get next Entry in this linked list 
+    		}
+    	}
     }
     /* <--- WORLD DOWNLOADER */
 
@@ -181,12 +199,16 @@ public class ChunkProviderClient
 
     public String makeString()
     {
-        return (new StringBuilder()).append("MultiplayerChunkCache: ").append(chunkMapping.size()).toString();
+        return (new StringBuilder()).append("MultiplayerChunkCache: ").append(chunkMapping.getNumHashElements()).toString();
     }
 
-    private Chunk blankChunk;
-    //private PlayerList chunkMapping; // MCP Decompile Error?
-    private HashMap chunkMapping;
-    private List field_889_c;
-    private World worldObj;
+    public List func_40377_a(EnumCreatureType enumcreaturetype, int i, int j, int k)
+    {
+        return null;
+    }
+
+    public ChunkPosition func_40376_a(World world, String s, int i, int j, int k)
+    {
+        return null;
+    }
 }

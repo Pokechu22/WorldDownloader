@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -13,7 +13,10 @@ import org.lwjgl.opengl.GL11;
 
 public class GuiDispenser extends GuiContainer
 {
-
+	/* World Downloader >>> */
+    private TileEntityDispenser ted;
+    /* <<< World Downloader */
+    
     public GuiDispenser(InventoryPlayer inventoryplayer, TileEntityDispenser tileentitydispenser)
     {
         super(new ContainerDispenser(inventoryplayer, tileentitydispenser));
@@ -28,14 +31,14 @@ public class GuiDispenser extends GuiContainer
         fontRenderer.drawString("Inventory", 8, (ySize - 96) + 2, 0x404040);
     }
 
-    protected void drawGuiContainerBackgroundLayer(float f)
+    protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
     {
-        int i = mc.renderEngine.getTexture("/gui/trap.png");
+        int k = mc.renderEngine.getTexture("/gui/trap.png");
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        mc.renderEngine.bindTexture(i);
-        int j = (width - xSize) / 2;
-        int k = (height - ySize) / 2;
-        drawTexturedModalRect(j, k, 0, 0, xSize, ySize);
+        mc.renderEngine.bindTexture(k);
+        int l = (width - xSize) / 2;
+        int i1 = (height - ySize) / 2;
+        drawTexturedModalRect(l, i1, 0, 0, xSize, ySize);
     }
     
     /* WORLD DOWNLOADER ---> */
@@ -47,7 +50,6 @@ public class GuiDispenser extends GuiContainer
     	}
     	super.onGuiClosed();
     }
-    
-    private TileEntityDispenser ted;
     /* <--- WORLD DOWNLOADER */
+
 }
