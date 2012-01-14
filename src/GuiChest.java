@@ -1,19 +1,10 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import net.minecraft.client.Minecraft;
 import org.lwjgl.opengl.GL11;
 
-// Referenced classes of package net.minecraft.src:
-//            GuiContainer, ContainerChest, IInventory, FontRenderer, 
-//            RenderEngine
-
 public class GuiChest extends GuiContainer
 {
-
     private IInventory upperChestInventory;
     private IInventory lowerChestInventory;
     private int inventoryRows;

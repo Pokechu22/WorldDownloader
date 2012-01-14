@@ -1,26 +1,17 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
-
-
-// Referenced classes of package net.minecraft.src:
-//            LongHashMapEntry
 
 public class LongHashMap
 {
-
-    private transient LongHashMapEntry playerListEntries[];
+    private transient LongHashMapEntry hashArray[];
     private transient int numHashElements;
     private int capacity;
     private final float percent = 0.75F;
-    private volatile transient int field_35581_e;
+    private volatile transient int modCount;
 
     public LongHashMap()
     {
         capacity = 12;
-        playerListEntries = new LongHashMapEntry[16];
+        hashArray = new LongHashMapEntry[16];
     }
 
     private static int getHashedKey(long l)
@@ -47,28 +38,28 @@ public class LongHashMap
     public Object getValueByKey(long l)
     {
         int i = getHashedKey(l);
-        for(LongHashMapEntry longhashmapentry = playerListEntries[getHashIndex(i, playerListEntries.length)]; longhashmapentry != null; longhashmapentry = longhashmapentry.field_35833_c)
+        for (LongHashMapEntry longhashmapentry = hashArray[getHashIndex(i, hashArray.length)]; longhashmapentry != null; longhashmapentry = longhashmapentry.nextEntry)
         {
-            if(longhashmapentry.field_35834_a == l)
+            if (longhashmapentry.key == l)
             {
-                return longhashmapentry.field_35832_b;
+                return longhashmapentry.value;
             }
         }
 
         return null;
     }
 
-    public boolean func_35575_b(long l)
+    public boolean containsKey(long l)
     {
-        return func_35569_c(l) != null;
+        return getEntry(l) != null;
     }
 
-    final LongHashMapEntry func_35569_c(long l)
+    final LongHashMapEntry getEntry(long l)
     {
         int i = getHashedKey(l);
-        for(LongHashMapEntry longhashmapentry = playerListEntries[getHashIndex(i, playerListEntries.length)]; longhashmapentry != null; longhashmapentry = longhashmapentry.field_35833_c)
+        for (LongHashMapEntry longhashmapentry = hashArray[getHashIndex(i, hashArray.length)]; longhashmapentry != null; longhashmapentry = longhashmapentry.nextEntry)
         {
-            if(longhashmapentry.field_35834_a == l)
+            if (longhashmapentry.key == l)
             {
                 return longhashmapentry;
             }
@@ -80,32 +71,33 @@ public class LongHashMap
     public void add(long l, Object obj)
     {
         int i = getHashedKey(l);
-        int j = getHashIndex(i, playerListEntries.length);
-        for(LongHashMapEntry longhashmapentry = playerListEntries[j]; longhashmapentry != null; longhashmapentry = longhashmapentry.field_35833_c)
+        int j = getHashIndex(i, hashArray.length);
+        for (LongHashMapEntry longhashmapentry = hashArray[j]; longhashmapentry != null; longhashmapentry = longhashmapentry.nextEntry)
         {
-            if(longhashmapentry.field_35834_a == l)
+            if (longhashmapentry.key == l)
             {
-                longhashmapentry.field_35832_b = obj;
+                longhashmapentry.value = obj;
             }
         }
 
-        field_35581_e++;
+        modCount++;
         createKey(i, l, obj, j);
     }
 
     private void resizeTable(int i)
     {
-        LongHashMapEntry alonghashmapentry[] = playerListEntries;
+        LongHashMapEntry alonghashmapentry[] = hashArray;
         int j = alonghashmapentry.length;
-        if(j == 0x40000000)
+        if (j == 0x40000000)
         {
             capacity = 0x7fffffff;
             return;
-        } else
+        }
+        else
         {
             LongHashMapEntry alonghashmapentry1[] = new LongHashMapEntry[i];
             copyHashTableTo(alonghashmapentry1);
-            playerListEntries = alonghashmapentry1;
+            hashArray = alonghashmapentry1;
             capacity = (int)((float)i * percent);
             return;
         }
@@ -113,54 +105,55 @@ public class LongHashMap
 
     private void copyHashTableTo(LongHashMapEntry alonghashmapentry[])
     {
-        LongHashMapEntry alonghashmapentry1[] = playerListEntries;
+        LongHashMapEntry alonghashmapentry1[] = hashArray;
         int i = alonghashmapentry.length;
-        for(int j = 0; j < alonghashmapentry1.length; j++)
+        for (int j = 0; j < alonghashmapentry1.length; j++)
         {
             LongHashMapEntry longhashmapentry = alonghashmapentry1[j];
-            if(longhashmapentry == null)
+            if (longhashmapentry == null)
             {
                 continue;
             }
             alonghashmapentry1[j] = null;
             do
             {
-                LongHashMapEntry longhashmapentry1 = longhashmapentry.field_35833_c;
+                LongHashMapEntry longhashmapentry1 = longhashmapentry.nextEntry;
                 int k = getHashIndex(longhashmapentry.field_35831_d, i);
-                longhashmapentry.field_35833_c = alonghashmapentry[k];
+                longhashmapentry.nextEntry = alonghashmapentry[k];
                 alonghashmapentry[k] = longhashmapentry;
                 longhashmapentry = longhashmapentry1;
-            } while(longhashmapentry != null);
+            }
+            while (longhashmapentry != null);
         }
-
     }
 
     public Object remove(long l)
     {
         LongHashMapEntry longhashmapentry = removeKey(l);
-        return longhashmapentry != null ? longhashmapentry.field_35832_b : null;
+        return longhashmapentry != null ? longhashmapentry.value : null;
     }
 
     final LongHashMapEntry removeKey(long l)
     {
         int i = getHashedKey(l);
-        int j = getHashIndex(i, playerListEntries.length);
-        LongHashMapEntry longhashmapentry = playerListEntries[j];
+        int j = getHashIndex(i, hashArray.length);
+        LongHashMapEntry longhashmapentry = hashArray[j];
         LongHashMapEntry longhashmapentry1;
         LongHashMapEntry longhashmapentry2;
-        for(longhashmapentry1 = longhashmapentry; longhashmapentry1 != null; longhashmapentry1 = longhashmapentry2)
+        for (longhashmapentry1 = longhashmapentry; longhashmapentry1 != null; longhashmapentry1 = longhashmapentry2)
         {
-            longhashmapentry2 = longhashmapentry1.field_35833_c;
-            if(longhashmapentry1.field_35834_a == l)
+            longhashmapentry2 = longhashmapentry1.nextEntry;
+            if (longhashmapentry1.key == l)
             {
-                field_35581_e++;
+                modCount++;
                 numHashElements--;
-                if(longhashmapentry == longhashmapentry1)
+                if (longhashmapentry == longhashmapentry1)
                 {
-                    playerListEntries[j] = longhashmapentry2;
-                } else
+                    hashArray[j] = longhashmapentry2;
+                }
+                else
                 {
-                    longhashmapentry.field_35833_c = longhashmapentry2;
+                    longhashmapentry.nextEntry = longhashmapentry2;
                 }
                 return longhashmapentry1;
             }
@@ -172,11 +165,11 @@ public class LongHashMap
 
     private void createKey(int i, long l, Object obj, int j)
     {
-        LongHashMapEntry longhashmapentry = playerListEntries[j];
-        playerListEntries[j] = new LongHashMapEntry(i, l, obj, longhashmapentry);
-        if(numHashElements++ >= capacity)
+        LongHashMapEntry longhashmapentry = hashArray[j];
+        hashArray[j] = new LongHashMapEntry(i, l, obj, longhashmapentry);
+        if (numHashElements++ >= capacity)
         {
-            resizeTable(2 * playerListEntries.length);
+            resizeTable(2 * hashArray.length);
         }
     }
 
@@ -188,7 +181,7 @@ public class LongHashMap
     /* World Downloader >>> */
     public LongHashMapEntry[] getEntries()
     {
-    	return playerListEntries;
+    	return hashArray;
     }
     /* <<< World Downloader */
 }

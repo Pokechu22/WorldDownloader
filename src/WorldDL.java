@@ -67,7 +67,7 @@ public class WorldDL {
     	
     	newWc.myChunkLoader = mySaveHandler.getChunkLoader( newWc.worldProvider );
     	
-    	/*DEBUG*/mc.ingameGUI.addChatMessage("§c[WorldDL] §6Continuing download.");
+    	mc.ingameGUI.addChatMessage("§c[WorldDL] §6Continuing download.");
     	
     	wc = newWc;
     }

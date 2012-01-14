@@ -1,27 +1,16 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.*;
 
-// Referenced classes of package net.minecraft.src:
-//            World, SaveHandlerMP, WorldProvider, IntHashMap, 
-//            ChunkCoordinates, NetClientHandler, Entity, WorldBlockPositionType, 
-//            ChunkProviderClient, Packet255KickDisconnect, WorldInfo, WorldSettings, 
-//            IChunkProvider
-
 public class WorldClient extends World
 {
-
     private LinkedList blocksToReceive;
     private NetClientHandler sendQueue;
     private ChunkProviderClient field_20915_C;
     private IntHashMap entityHashSet;
     private Set entityList;
     private Set entitySpawnQueue;
-    
+
     /* WORLD DOWNLOADER ---> */
     public IChunkLoader myChunkLoader; // Despite it's name this is used to SAVE the chunks
     /* <--- WORLD DOWNLOADER */
@@ -49,40 +38,39 @@ public class WorldClient extends World
     public void tick()
     {
         setWorldTime(getWorldTime() + 1L);
-        for(int i = 0; i < 10 && !entitySpawnQueue.isEmpty(); i++)
+        for (int i = 0; i < 10 && !entitySpawnQueue.isEmpty(); i++)
         {
             Entity entity = (Entity)entitySpawnQueue.iterator().next();
-            if(!loadedEntityList.contains(entity))
+            entitySpawnQueue.remove(entity);
+            if (!loadedEntityList.contains(entity))
             {
-                entityJoinedWorld(entity);
+                spawnEntityInWorld(entity);
             }
         }
 
         sendQueue.processReadPackets();
-        for(int j = 0; j < blocksToReceive.size(); j++)
+        for (int j = 0; j < blocksToReceive.size(); j++)
         {
             WorldBlockPositionType worldblockpositiontype = (WorldBlockPositionType)blocksToReceive.get(j);
-            if(--worldblockpositiontype.acceptCountdown == 0)
+            if (--worldblockpositiontype.acceptCountdown == 0)
             {
                 super.setBlockAndMetadata(worldblockpositiontype.posX, worldblockpositiontype.posY, worldblockpositiontype.posZ, worldblockpositiontype.blockID, worldblockpositiontype.metadata);
                 super.markBlockNeedsUpdate(worldblockpositiontype.posX, worldblockpositiontype.posY, worldblockpositiontype.posZ);
                 blocksToReceive.remove(j--);
             }
         }
-
     }
 
     public void invalidateBlockReceiveRegion(int i, int j, int k, int l, int i1, int j1)
     {
-        for(int k1 = 0; k1 < blocksToReceive.size(); k1++)
+        for (int k1 = 0; k1 < blocksToReceive.size(); k1++)
         {
             WorldBlockPositionType worldblockpositiontype = (WorldBlockPositionType)blocksToReceive.get(k1);
-            if(worldblockpositiontype.posX >= i && worldblockpositiontype.posY >= j && worldblockpositiontype.posZ >= k && worldblockpositiontype.posX <= l && worldblockpositiontype.posY <= i1 && worldblockpositiontype.posZ <= j1)
+            if (worldblockpositiontype.posX >= i && worldblockpositiontype.posY >= j && worldblockpositiontype.posZ >= k && worldblockpositiontype.posX <= l && worldblockpositiontype.posY <= i1 && worldblockpositiontype.posZ <= j1)
             {
                 blocksToReceive.remove(k1--);
             }
         }
-
     }
 
     protected IChunkProvider getChunkProvider()
@@ -113,24 +101,25 @@ public class WorldClient extends World
 
     public void doPreChunk(int i, int j, boolean flag)
     {
-        if(flag)
+        if (flag)
         {
             field_20915_C.loadChunk(i, j);
-        } else
+        }
+        else
         {
             field_20915_C.func_539_c(i, j);
         }
-        if(!flag)
+        if (!flag)
         {
-            markBlocksDirty(i * 16, 0, j * 16, i * 16 + 15, field_35472_c, j * 16 + 15);
+            markBlocksDirty(i * 16, 0, j * 16, i * 16 + 15, worldHeight, j * 16 + 15);
         }
     }
 
-    public boolean entityJoinedWorld(Entity entity)
+    public boolean spawnEntityInWorld(Entity entity)
     {
-        boolean flag = super.entityJoinedWorld(entity);
+        boolean flag = super.spawnEntityInWorld(entity);
         entityList.add(entity);
-        if(!flag)
+        if (!flag)
         {
             entitySpawnQueue.add(entity);
         }
@@ -146,7 +135,7 @@ public class WorldClient extends World
     protected void obtainEntitySkin(Entity entity)
     {
         super.obtainEntitySkin(entity);
-        if(entitySpawnQueue.contains(entity))
+        if (entitySpawnQueue.contains(entity))
         {
             entitySpawnQueue.remove(entity);
         }
@@ -155,29 +144,29 @@ public class WorldClient extends World
     protected void releaseEntitySkin(Entity entity)
     {
         super.releaseEntitySkin(entity);
-        if(entityList.contains(entity))
+        if (entityList.contains(entity))
         {
             entitySpawnQueue.add(entity);
         }
     }
 
-    public void func_712_a(int i, Entity entity)
+    public void addEntityToWorld(int i, Entity entity)
     {
-        Entity entity1 = func_709_b(i);
-        if(entity1 != null)
+        Entity entity1 = getEntityByID(i);
+        if (entity1 != null)
         {
             setEntityDead(entity1);
         }
         entityList.add(entity);
         entity.entityId = i;
-        if(!entityJoinedWorld(entity))
+        if (!spawnEntityInWorld(entity))
         {
             entitySpawnQueue.add(entity);
         }
         entityHashSet.addKey(i, entity);
     }
 
-    public Entity func_709_b(int i)
+    public Entity getEntityByID(int i)
     {
         return (Entity)entityHashSet.lookup(i);
     }
@@ -185,7 +174,7 @@ public class WorldClient extends World
     public Entity removeEntityFromWorld(int i)
     {
         Entity entity = (Entity)entityHashSet.removeObject(i);
-        if(entity != null)
+        if (entity != null)
         {
             entityList.remove(entity);
             setEntityDead(entity);
@@ -197,11 +186,12 @@ public class WorldClient extends World
     {
         int i1 = getBlockId(i, j, k);
         int j1 = getBlockMetadata(i, j, k);
-        if(super.setBlockMetadata(i, j, k, l))
+        if (super.setBlockMetadata(i, j, k, l))
         {
             blocksToReceive.add(new WorldBlockPositionType(this, i, j, k, i1, j1));
             return true;
-        } else
+        }
+        else
         {
             return false;
         }
@@ -211,11 +201,12 @@ public class WorldClient extends World
     {
         int j1 = getBlockId(i, j, k);
         int k1 = getBlockMetadata(i, j, k);
-        if(super.setBlockAndMetadata(i, j, k, l, i1))
+        if (super.setBlockAndMetadata(i, j, k, l, i1))
         {
             blocksToReceive.add(new WorldBlockPositionType(this, i, j, k, j1, k1));
             return true;
-        } else
+        }
+        else
         {
             return false;
         }
@@ -225,11 +216,12 @@ public class WorldClient extends World
     {
         int i1 = getBlockId(i, j, k);
         int j1 = getBlockMetadata(i, j, k);
-        if(super.setBlock(i, j, k, l))
+        if (super.setBlock(i, j, k, l))
         {
             blocksToReceive.add(new WorldBlockPositionType(this, i, j, k, i1, j1));
             return true;
-        } else
+        }
+        else
         {
             return false;
         }
@@ -238,11 +230,12 @@ public class WorldClient extends World
     public boolean setBlockAndMetadataAndInvalidate(int i, int j, int k, int l, int i1)
     {
         invalidateBlockReceiveRegion(i, j, k, i, j, k);
-        if(super.setBlockAndMetadata(i, j, k, l, i1))
+        if (super.setBlockAndMetadata(i, j, k, l, i1))
         {
             notifyBlockChange(i, j, k, l);
             return true;
-        } else
+        }
+        else
         {
             return false;
         }
@@ -255,43 +248,45 @@ public class WorldClient extends World
 
     protected void updateWeather()
     {
-        if(worldProvider.hasNoSky)
+        if (worldProvider.hasNoSky)
         {
             return;
         }
-        if(lastLightningBolt > 0)
+        if (lastLightningBolt > 0)
         {
             lastLightningBolt--;
         }
         prevRainingStrength = rainingStrength;
-        if(worldInfo.getIsRaining())
+        if (worldInfo.getIsRaining())
         {
             rainingStrength += 0.01D;
-        } else
+        }
+        else
         {
             rainingStrength -= 0.01D;
         }
-        if(rainingStrength < 0.0F)
+        if (rainingStrength < 0.0F)
         {
             rainingStrength = 0.0F;
         }
-        if(rainingStrength > 1.0F)
+        if (rainingStrength > 1.0F)
         {
             rainingStrength = 1.0F;
         }
         prevThunderingStrength = thunderingStrength;
-        if(worldInfo.getIsThundering())
+        if (worldInfo.getIsThundering())
         {
             thunderingStrength += 0.01D;
-        } else
+        }
+        else
         {
             thunderingStrength -= 0.01D;
         }
-        if(thunderingStrength < 0.0F)
+        if (thunderingStrength < 0.0F)
         {
             thunderingStrength = 0.0F;
         }
-        if(thunderingStrength > 1.0F)
+        if (thunderingStrength > 1.0F)
         {
             thunderingStrength = 1.0F;
         }
