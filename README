@@ -1,5 +1,5 @@
-WorldDownloader for Minecraft 1.0.0
+WorldDownloader for Minecraft 1.1.0
 
-I use MCP 5.0 http://mcp.ocean-labs.de/index.php/MCP_Releases  for decompiling,
+I use MCP 5.6 http://mcp.ocean-labs.de/index.php/MCP_Releases  for decompiling,
 deobfuscation, recompiling, and reobfuscation. Just install it, follow it's Readme file,
 put my files in the src/minecraft/net/minecraft/src folder and use the batch or sh scripts.
