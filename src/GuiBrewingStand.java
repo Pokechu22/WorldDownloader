@@ -7,68 +7,79 @@ public class GuiBrewingStand extends GuiContainer
 {
     private TileEntityBrewingStand field_40217_h;
 
-    public GuiBrewingStand(InventoryPlayer inventoryplayer, TileEntityBrewingStand tileentitybrewingstand)
+    public GuiBrewingStand(InventoryPlayer par1InventoryPlayer, TileEntityBrewingStand par2TileEntityBrewingStand)
     {
-        super(new ContainerBrewingStand(inventoryplayer, tileentitybrewingstand));
-        field_40217_h = tileentitybrewingstand;
+        super(new ContainerBrewingStand(par1InventoryPlayer, par2TileEntityBrewingStand));
+        field_40217_h = par2TileEntityBrewingStand;
     }
 
+    /**
+     * Draw the foreground layer for the GuiContainer (everythin in front of the items)
+     */
     protected void drawGuiContainerForegroundLayer()
     {
-        fontRenderer.drawString("Brewing Stand", 56, 6, 0x404040);
-        fontRenderer.drawString("Inventory", 8, (ySize - 96) + 2, 0x404040);
+        fontRenderer.drawString(StatCollector.translateToLocal("container.brewing"), 56, 6, 0x404040);
+        fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, (ySize - 96) + 2, 0x404040);
     }
 
-    protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
+    /**
+     * Draw the background layer for the GuiContainer (everything behind the items)
+     */
+    protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
     {
-        int k = mc.renderEngine.getTexture("/gui/alchemy.png");
+        int i = mc.renderEngine.getTexture("/gui/alchemy.png");
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        mc.renderEngine.bindTexture(k);
-        int l = (width - xSize) / 2;
-        int i1 = (height - ySize) / 2;
-        drawTexturedModalRect(l, i1, 0, 0, xSize, ySize);
-        int j1 = field_40217_h.getBrewTime();
-        if (j1 > 0)
+        mc.renderEngine.bindTexture(i);
+        int j = (width - xSize) / 2;
+        int k = (height - ySize) / 2;
+        drawTexturedModalRect(j, k, 0, 0, xSize, ySize);
+        int l = field_40217_h.getBrewTime();
+
+        if (l > 0)
         {
-            int k1 = (int)(28F * (1.0F - (float)j1 / 400F));
-            if (k1 > 0)
+            int i1 = (int)(28F * (1.0F - (float)l / 400F));
+
+            if (i1 > 0)
             {
-                drawTexturedModalRect(l + 97, i1 + 16, 176, 0, 9, k1);
+                drawTexturedModalRect(j + 97, k + 16, 176, 0, 9, i1);
             }
-            int l1 = (j1 / 2) % 7;
-            switch (l1)
+
+            int j1 = (l / 2) % 7;
+
+            switch (j1)
             {
                 case 6:
-                    k1 = 0;
+                    i1 = 0;
                     break;
 
                 case 5:
-                    k1 = 6;
+                    i1 = 6;
                     break;
 
                 case 4:
-                    k1 = 11;
+                    i1 = 11;
                     break;
 
                 case 3:
-                    k1 = 16;
+                    i1 = 16;
                     break;
 
                 case 2:
-                    k1 = 20;
+                    i1 = 20;
                     break;
 
                 case 1:
-                    k1 = 24;
+                    i1 = 24;
                     break;
 
                 case 0:
-                    k1 = 29;
+                    i1 = 29;
                     break;
             }
-            if (k1 > 0)
+
+            if (i1 > 0)
             {
-                drawTexturedModalRect(l + 65, (i1 + 14 + 29) - k1, 185, 29 - k1, 12, k1);
+                drawTexturedModalRect(j + 65, (k + 14 + 29) - i1, 185, 29 - i1, 12, i1);
             }
         }
     }

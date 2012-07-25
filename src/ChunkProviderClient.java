@@ -1,27 +1,42 @@
 package net.minecraft.src;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /* WORLD DOWNLOADER ---> */
 import java.io.IOException;
 /* <--- WORLD DOWNLOADER */
-import java.util.*;
 
-public class ChunkProviderClient
-    implements IChunkProvider
+
+public class ChunkProviderClient implements IChunkProvider
 {
+    /**
+     * The completely empty chunk used by ChunkProviderClient when chunkMapping doesn't contain the requested
+     * coordinates.
+     */
     private Chunk blankChunk;
+
+    /**
+     * The mapping between ChunkCoordinates and Chunks that ChunkProviderClient maintains.
+     */
     private LongHashMap chunkMapping;
     private List field_889_c;
+
+    /** Reference to the World object. */
     private World worldObj;
 
-    public ChunkProviderClient(World world)
+    public ChunkProviderClient(World par1World)
     {
         chunkMapping = new LongHashMap();
         field_889_c = new ArrayList();
-        blankChunk = new EmptyChunk(world, new byte[256 * world.worldHeight], 0, 0);
-        worldObj = world;
+        blankChunk = new EmptyChunk(par1World, 0, 0);
+        worldObj = par1World;
     }
 
-    public boolean chunkExists(int i, int j)
+    /**
+     * Checks to see if a chunk exists at x, y
+     */
+    public boolean chunkExists(int par1, int par2)
     {
         if (this != null)
         {
@@ -29,51 +44,58 @@ public class ChunkProviderClient
         }
         else
         {
-            return chunkMapping.containsKey(ChunkCoordIntPair.chunkXZ2Int(i, j));
+            return chunkMapping.containsItem(ChunkCoordIntPair.chunkXZ2Int(par1, par2));
         }
     }
 
-    public void func_539_c(int i, int j)
+    public void func_539_c(int par1, int par2)
     {
-        Chunk chunk = provideChunk(i, j);
+        Chunk chunk = provideChunk(par1, par2);
+
         if (!chunk.isEmpty())
         {
             chunk.onChunkUnload();
         }
+        
         /* WORLD DOWNLOADER ---> */
-        if(WorldDL.downloading == true && chunk.neverSave == false && chunk.isFilled == true )
-        {
+        if(WorldDL.downloading == true && chunk.isFilled == true )
         	saveChunk(chunk);
-				try {
-					((WorldClient)worldObj).myChunkLoader.saveExtraChunkData(worldObj, chunk);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-        }
         /* <--- WORLD DOWNLOADER */
-        chunkMapping.remove(ChunkCoordIntPair.chunkXZ2Int(i, j));
+        
+        chunkMapping.remove(ChunkCoordIntPair.chunkXZ2Int(par1, par2));
         field_889_c.remove(chunk);
     }
 
-    public Chunk loadChunk(int i, int j)
+    /**
+     * Creates an empty chunk ready to put data from the server in
+     */
+    public Chunk loadChunk(int par1, int par2)
     {
-        byte abyte0[] = new byte[256 * worldObj.worldHeight];
-        Chunk chunk = new Chunk(worldObj, abyte0, i, j);
-        Arrays.fill(chunk.skylightMap.data, (byte) - 1);
-        chunkMapping.add(ChunkCoordIntPair.chunkXZ2Int(i, j), chunk);
+        Chunk chunk = new Chunk(worldObj, par1, par2);
+        chunkMapping.add(ChunkCoordIntPair.chunkXZ2Int(par1, par2), chunk);
         chunk.isChunkLoaded = true;
+        
         /* WORLD DOWNLOADER ---> */
-        if(WorldDL.downloading)
-        {
-        	chunk.importOldChunkTileEntities();
-        }
+        
+    	if( WorldDL.wc != worldObj ) // Has the world object been replaced? (e.g. by a dimension change)
+    		WorldDL.worldChange( );
+    	
+        if( WorldDL.downloading )
+        	chunk.importOldChunkTileEntities( );
+        
         /* <--- WORLD DOWNLOADER */
+        
         return chunk;
     }
 
-    public Chunk provideChunk(int i, int j)
+    /**
+     * Will return back a chunk, if it doesn't exist and its not a MP client it will generates all the blocks for the
+     * specified chunk from the map seed and chunk seed
+     */
+    public Chunk provideChunk(int par1, int par2)
     {
-        Chunk chunk = (Chunk)chunkMapping.getValueByKey(ChunkCoordIntPair.chunkXZ2Int(i, j));
+        Chunk chunk = (Chunk)chunkMapping.getValueByKey(ChunkCoordIntPair.chunkXZ2Int(par1, par2));
+
         if (chunk == null)
         {
             return blankChunk;
@@ -84,7 +106,11 @@ public class ChunkProviderClient
         }
     }
 
-    public boolean saveChunks(boolean flag, IProgressUpdate iprogressupdate)
+    /**
+     * Two modes of operation: if passed true, save all Chunks in one go.  If passed false, save up to two chunks.
+     * Return true if all chunks have been saved.
+     */
+    public boolean saveChunks(boolean par1, IProgressUpdate par2IProgressUpdate)
     {
     	/* WORLD DOWNLOADER ---> */
     	if(WorldDL.downloading == false)
@@ -96,28 +122,12 @@ public class ChunkProviderClient
     		{
     			Chunk c = (Chunk)lhme.value;
     			
-                if( flag && c != null && !c.neverSave && c.isFilled )
-                {
-                	try
-                	{
-						((WorldClient)worldObj).myChunkLoader.saveExtraChunkData(worldObj, c);
-					}
-                	catch (IOException e)
-                	{
-						e.printStackTrace();
-					}
-                }
-                if( c != null && c.neverSave == false && c.isFilled )
+                if( c != null && c.isFilled )
                 	saveChunk(c);
                 
     			lhme = lhme.nextEntry; // Get next Entry in this linked list 
     		}
     	}
-
-        if(flag)
-        {
-        	((WorldClient)worldObj).myChunkLoader.saveExtraData();
-        }
         /* <--- WORLD DOWNLOADER */
 
         return true;
@@ -137,7 +147,8 @@ public class ChunkProviderClient
             	if(te != null)
             	{
             		Block block = Block.blocksList[worldObj.getBlockId(te.xCoord, te.yCoord, te.zCoord)];
-            		if( block instanceof BlockChest || block instanceof BlockDispenser || block instanceof BlockFurnace || block instanceof BlockNote || block instanceof BlockBrewingStand )
+            		
+            		if( isBlockAndTileEntitySavable(block, te) )
             			chunk.chunkTileEntityMap.put(ob, te);
             	}
             }
@@ -147,14 +158,21 @@ public class ChunkProviderClient
 		}
     }
     
-//    public Chunk loadChunk(int i, int j)
-//    {
-//    	Chunk ret = null;
-//    	try {
-//			ret = WorldDL.myChunkLoader.loadChunk(worldObj, i, j);
-//		} catch (IOException e) {}
-//		return ret;
-//    }
+    private boolean isBlockAndTileEntitySavable( Block block, TileEntity te )
+    {
+    	if( block instanceof BlockChest && te instanceof TileEntityChest )
+    		return true;
+    	if( block instanceof BlockDispenser && te instanceof TileEntityDispenser )
+    		return true;
+    	if( block instanceof BlockFurnace && te instanceof TileEntityFurnace )
+    		return true;
+    	if( block instanceof BlockNote && te instanceof TileEntityNote )
+    		return true;
+    	if( block instanceof BlockBrewingStand && te instanceof TileEntityBrewingStand )
+    		return true;
+    	// else:
+    	return false;
+    }
 
     public void importOldTileEntities()
     {
@@ -175,31 +193,50 @@ public class ChunkProviderClient
     }
     /* <--- WORLD DOWNLOADER */
 
+    /**
+     * Unloads the 100 oldest chunks from memory, due to a bug with chunkSet.add() never being called it thinks the list
+     * is always empty and will not remove any chunks.
+     */
     public boolean unload100OldestChunks()
     {
         return false;
     }
 
+    /**
+     * Returns if the IChunkProvider supports saving.
+     */
     public boolean canSave()
     {
         return false;
     }
 
+    /**
+     * Populates chunk with ores etc etc
+     */
     public void populate(IChunkProvider ichunkprovider, int i, int j)
     {
     }
 
+    /**
+     * Converts the instance data to a readable string.
+     */
     public String makeString()
     {
         return (new StringBuilder()).append("MultiplayerChunkCache: ").append(chunkMapping.getNumHashElements()).toString();
     }
 
-    public List func_40377_a(EnumCreatureType enumcreaturetype, int i, int j, int k)
+    /**
+     * Returns a list of creatures of the specified type that can spawn at the given location.
+     */
+    public List getPossibleCreatures(EnumCreatureType par1EnumCreatureType, int par2, int par3, int i)
     {
         return null;
     }
 
-    public ChunkPosition func_40376_a(World world, String s, int i, int j, int k)
+    /**
+     * Returns the location of the closest structure of the specified type. If not found returns null.
+     */
+    public ChunkPosition findClosestStructure(World par1World, String par2Str, int par3, int i, int j)
     {
         return null;
     }

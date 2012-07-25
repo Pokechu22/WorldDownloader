@@ -7,6 +7,8 @@ public class Packet15Place extends Packet
     public int xPosition;
     public int yPosition;
     public int zPosition;
+
+    /** The offset to use for block/item placement. */
     public int direction;
     public ItemStack itemStack;
 
@@ -14,13 +16,14 @@ public class Packet15Place extends Packet
     {
     }
 
-    public Packet15Place(int i, int j, int k, int l, ItemStack itemstack)
+    public Packet15Place(int par1, int par2, int par3, int par4, ItemStack par5ItemStack)
     {
-        xPosition = i;
-        yPosition = j;
-        zPosition = k;
-        direction = l;
-        itemStack = itemstack;
+        xPosition = par1;
+        yPosition = par2;
+        zPosition = par3;
+        direction = par4;
+        itemStack = par5ItemStack;
+        
         /* WORLD DOWNLOADER ---> */
         if( WorldDL.downloading == true )
         {
@@ -29,33 +32,44 @@ public class Packet15Place extends Packet
         	WorldDL.lastClickedZ = zPosition;
         }
         /* <--- WORLD DOWNLOADER */
+
     }
 
-    public void readPacketData(DataInputStream datainputstream)
-    throws IOException
+    /**
+     * Abstract. Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(DataInputStream par1DataInputStream) throws IOException
     {
-        xPosition = datainputstream.readInt();
-        yPosition = datainputstream.read();
-        zPosition = datainputstream.readInt();
-        direction = datainputstream.read();
-        itemStack = func_40187_b(datainputstream);
+        xPosition = par1DataInputStream.readInt();
+        yPosition = par1DataInputStream.read();
+        zPosition = par1DataInputStream.readInt();
+        direction = par1DataInputStream.read();
+        itemStack = readItemStack(par1DataInputStream);
     }
 
-    public void writePacketData(DataOutputStream dataoutputstream)
-    throws IOException
+    /**
+     * Abstract. Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(DataOutputStream par1DataOutputStream) throws IOException
     {
-        dataoutputstream.writeInt(xPosition);
-        dataoutputstream.write(yPosition);
-        dataoutputstream.writeInt(zPosition);
-        dataoutputstream.write(direction);
-        writeItemStack(itemStack, dataoutputstream);
+        par1DataOutputStream.writeInt(xPosition);
+        par1DataOutputStream.write(yPosition);
+        par1DataOutputStream.writeInt(zPosition);
+        par1DataOutputStream.write(direction);
+        writeItemStack(itemStack, par1DataOutputStream);
     }
 
-    public void processPacket(NetHandler nethandler)
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(NetHandler par1NetHandler)
     {
-        nethandler.handlePlace(this);
+        par1NetHandler.handlePlace(this);
     }
 
+    /**
+     * Abstract. Return the size of the packet (not counting the header).
+     */
     public int getPacketSize()
     {
         return 15;
