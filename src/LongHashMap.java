@@ -2,186 +2,238 @@ package net.minecraft.src;
 
 public class LongHashMap
 {
-    private transient LongHashMapEntry hashArray[];
+    /** the array of all elements in the hash */
+    private transient LongHashMapEntry[] hashArray = new LongHashMapEntry[16];
+
+    /** the number of elements in the hash array */
     private transient int numHashElements;
-    private int capacity;
-    private final float percent = 0.75F;
-    private volatile transient int modCount;
 
-    public LongHashMap()
+    /**
+     * the maximum amount of elements in the hash (probably 3/4 the size due to meh hashing function)
+     */
+    private int capacity = 12;
+
+    /**
+     * percent of the hasharray that can be used without hash colliding probably
+     */
+    private final float percentUseable = 0.75F;
+
+    /** count of times elements have been added/removed */
+    private transient volatile int modCount;
+
+    /**
+     * returns the hashed key given the original key
+     */
+    private static int getHashedKey(long par0)
     {
-        capacity = 12;
-        hashArray = new LongHashMapEntry[16];
+        return hash((int)(par0 ^ par0 >>> 32));
     }
 
-    private static int getHashedKey(long l)
+    /**
+     * the hash function
+     */
+    private static int hash(int par0)
     {
-        return hash((int)(l ^ l >>> 32));
+        par0 ^= par0 >>> 20 ^ par0 >>> 12;
+        return par0 ^ par0 >>> 7 ^ par0 >>> 4;
     }
 
-    private static int hash(int i)
+    /**
+     * gets the index in the hash given the array length and the hashed key
+     */
+    private static int getHashIndex(int par0, int par1)
     {
-        i ^= i >>> 20 ^ i >>> 12;
-        return i ^ i >>> 7 ^ i >>> 4;
-    }
-
-    private static int getHashIndex(int i, int j)
-    {
-        return i & j - 1;
+        return par0 & par1 - 1;
     }
 
     public int getNumHashElements()
     {
-        return numHashElements;
+        return this.numHashElements;
     }
 
-    public Object getValueByKey(long l)
+    /**
+     * get the value from the map given the key
+     */
+    public Object getValueByKey(long par1)
     {
-        int i = getHashedKey(l);
-        for (LongHashMapEntry longhashmapentry = hashArray[getHashIndex(i, hashArray.length)]; longhashmapentry != null; longhashmapentry = longhashmapentry.nextEntry)
+        int var3 = getHashedKey(par1);
+
+        for (LongHashMapEntry var4 = this.hashArray[getHashIndex(var3, this.hashArray.length)]; var4 != null; var4 = var4.nextEntry)
         {
-            if (longhashmapentry.key == l)
+            if (var4.key == par1)
             {
-                return longhashmapentry.value;
+                return var4.value;
             }
         }
 
         return null;
     }
 
-    public boolean containsKey(long l)
+    public boolean containsItem(long par1)
     {
-        return getEntry(l) != null;
+        return this.getEntry(par1) != null;
     }
 
-    final LongHashMapEntry getEntry(long l)
+    final LongHashMapEntry getEntry(long par1)
     {
-        int i = getHashedKey(l);
-        for (LongHashMapEntry longhashmapentry = hashArray[getHashIndex(i, hashArray.length)]; longhashmapentry != null; longhashmapentry = longhashmapentry.nextEntry)
+        int var3 = getHashedKey(par1);
+
+        for (LongHashMapEntry var4 = this.hashArray[getHashIndex(var3, this.hashArray.length)]; var4 != null; var4 = var4.nextEntry)
         {
-            if (longhashmapentry.key == l)
+            if (var4.key == par1)
             {
-                return longhashmapentry;
+                return var4;
             }
         }
 
         return null;
     }
 
-    public void add(long l, Object obj)
+    /**
+     * Add a key-value pair.
+     */
+    public void add(long par1, Object par3Obj)
     {
-        int i = getHashedKey(l);
-        int j = getHashIndex(i, hashArray.length);
-        for (LongHashMapEntry longhashmapentry = hashArray[j]; longhashmapentry != null; longhashmapentry = longhashmapentry.nextEntry)
+        int var4 = getHashedKey(par1);
+        int var5 = getHashIndex(var4, this.hashArray.length);
+
+        for (LongHashMapEntry var6 = this.hashArray[var5]; var6 != null; var6 = var6.nextEntry)
         {
-            if (longhashmapentry.key == l)
+            if (var6.key == par1)
             {
-                longhashmapentry.value = obj;
+                var6.value = par3Obj;
+                return;
             }
         }
 
-        modCount++;
-        createKey(i, l, obj, j);
+        ++this.modCount;
+        this.createKey(var4, par1, par3Obj, var5);
     }
 
-    private void resizeTable(int i)
+    /**
+     * resizes the table
+     */
+    private void resizeTable(int par1)
     {
-        LongHashMapEntry alonghashmapentry[] = hashArray;
-        int j = alonghashmapentry.length;
-        if (j == 0x40000000)
+        LongHashMapEntry[] var2 = this.hashArray;
+        int var3 = var2.length;
+
+        if (var3 == 1073741824)
         {
-            capacity = 0x7fffffff;
-            return;
+            this.capacity = Integer.MAX_VALUE;
         }
         else
         {
-            LongHashMapEntry alonghashmapentry1[] = new LongHashMapEntry[i];
-            copyHashTableTo(alonghashmapentry1);
-            hashArray = alonghashmapentry1;
-            capacity = (int)((float)i * percent);
-            return;
+            LongHashMapEntry[] var4 = new LongHashMapEntry[par1];
+            this.copyHashTableTo(var4);
+            this.hashArray = var4;
+            this.capacity = (int)((float)par1 * this.percentUseable);
         }
     }
 
-    private void copyHashTableTo(LongHashMapEntry alonghashmapentry[])
+    /**
+     * copies the hash table to the specified array
+     */
+    private void copyHashTableTo(LongHashMapEntry[] par1ArrayOfLongHashMapEntry)
     {
-        LongHashMapEntry alonghashmapentry1[] = hashArray;
-        int i = alonghashmapentry.length;
-        for (int j = 0; j < alonghashmapentry1.length; j++)
-        {
-            LongHashMapEntry longhashmapentry = alonghashmapentry1[j];
-            if (longhashmapentry == null)
-            {
-                continue;
-            }
-            alonghashmapentry1[j] = null;
-            do
-            {
-                LongHashMapEntry longhashmapentry1 = longhashmapentry.nextEntry;
-                int k = getHashIndex(longhashmapentry.field_35831_d, i);
-                longhashmapentry.nextEntry = alonghashmapentry[k];
-                alonghashmapentry[k] = longhashmapentry;
-                longhashmapentry = longhashmapentry1;
-            }
-            while (longhashmapentry != null);
-        }
-    }
+        LongHashMapEntry[] var2 = this.hashArray;
+        int var3 = par1ArrayOfLongHashMapEntry.length;
 
-    public Object remove(long l)
-    {
-        LongHashMapEntry longhashmapentry = removeKey(l);
-        return longhashmapentry != null ? longhashmapentry.value : null;
-    }
-
-    final LongHashMapEntry removeKey(long l)
-    {
-        int i = getHashedKey(l);
-        int j = getHashIndex(i, hashArray.length);
-        LongHashMapEntry longhashmapentry = hashArray[j];
-        LongHashMapEntry longhashmapentry1;
-        LongHashMapEntry longhashmapentry2;
-        for (longhashmapentry1 = longhashmapentry; longhashmapentry1 != null; longhashmapentry1 = longhashmapentry2)
+        for (int var4 = 0; var4 < var2.length; ++var4)
         {
-            longhashmapentry2 = longhashmapentry1.nextEntry;
-            if (longhashmapentry1.key == l)
+            LongHashMapEntry var5 = var2[var4];
+
+            if (var5 != null)
             {
-                modCount++;
-                numHashElements--;
-                if (longhashmapentry == longhashmapentry1)
+                var2[var4] = null;
+                LongHashMapEntry var6;
+
+                do
                 {
-                    hashArray[j] = longhashmapentry2;
+                    var6 = var5.nextEntry;
+                    int var7 = getHashIndex(var5.hash, var3);
+                    var5.nextEntry = par1ArrayOfLongHashMapEntry[var7];
+                    par1ArrayOfLongHashMapEntry[var7] = var5;
+                    var5 = var6;
+                }
+                while (var6 != null);
+            }
+        }
+    }
+
+    /**
+     * calls the removeKey method and returns removed object
+     */
+    public Object remove(long par1)
+    {
+        LongHashMapEntry var3 = this.removeKey(par1);
+        return var3 == null ? null : var3.value;
+    }
+
+    /**
+     * removes the key from the hash linked list
+     */
+    final LongHashMapEntry removeKey(long par1)
+    {
+        int var3 = getHashedKey(par1);
+        int var4 = getHashIndex(var3, this.hashArray.length);
+        LongHashMapEntry var5 = this.hashArray[var4];
+        LongHashMapEntry var6;
+        LongHashMapEntry var7;
+
+        for (var6 = var5; var6 != null; var6 = var7)
+        {
+            var7 = var6.nextEntry;
+
+            if (var6.key == par1)
+            {
+                ++this.modCount;
+                --this.numHashElements;
+
+                if (var5 == var6)
+                {
+                    this.hashArray[var4] = var7;
                 }
                 else
                 {
-                    longhashmapentry.nextEntry = longhashmapentry2;
+                    var5.nextEntry = var7;
                 }
-                return longhashmapentry1;
+
+                return var6;
             }
-            longhashmapentry = longhashmapentry1;
+
+            var5 = var6;
         }
 
-        return longhashmapentry1;
+        return var6;
     }
 
-    private void createKey(int i, long l, Object obj, int j)
+    /**
+     * creates the key in the hash table
+     */
+    private void createKey(int par1, long par2, Object par4Obj, int par5)
     {
-        LongHashMapEntry longhashmapentry = hashArray[j];
-        hashArray[j] = new LongHashMapEntry(i, l, obj, longhashmapentry);
-        if (numHashElements++ >= capacity)
+        LongHashMapEntry var6 = this.hashArray[par5];
+        this.hashArray[par5] = new LongHashMapEntry(par1, par2, par4Obj, var6);
+
+        if (this.numHashElements++ >= this.capacity)
         {
-            resizeTable(2 * hashArray.length);
+            this.resizeTable(2 * this.hashArray.length);
         }
     }
 
-    static int getHashCode(long l)
+    /**
+     * public method to get the hashed key(hashCode)
+     */
+    static int getHashCode(long par0)
     {
-        return getHashedKey(l);
+        return getHashedKey(par0);
     }
     
-    /* World Downloader >>> */
+    /* WORLD DOWNLOADER >>> */
     public LongHashMapEntry[] getEntries()
     {
     	return hashArray;
     }
-    /* <<< World Downloader */
+    /* <<< WORLD DOWNLOADER */
 }

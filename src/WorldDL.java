@@ -10,7 +10,7 @@ public class WorldDL {
 
 	public static Minecraft mc;
 	public static WorldClient wc;
-	
+
 	public static boolean downloading = false; // Indicator if it's running
     public static SaveHandler mySaveHandler; // Used to load/save world metadata and player data
     
@@ -24,8 +24,6 @@ public class WorldDL {
     
     public static String serverHostname = "";
     
-    public static int gameTypeOverride = -1;
-    
     public static void startDownload( )
     {
     	if( serverHostname.isEmpty() )
@@ -34,18 +32,15 @@ public class WorldDL {
     	}
     	
     	wc = (WorldClient)mc.theWorld;
-    	
-    	gameTypeOverride = -1;
-    	
     	wc.worldInfo.setWorldName(serverHostname);
 		mySaveHandler = (SaveHandler) mc.getSaveLoader().getSaveLoader(serverHostname, false); // false = don't generate "Players" dir
-		wc.myChunkLoader = mySaveHandler.getChunkLoader( wc.worldProvider );
-		
+		wc.myChunkLoader = mySaveHandler.getChunkLoader( wc.provider );
+
 		((ChunkProviderClient) wc.chunkProvider).importOldTileEntities(); // Get all old TileEntities (for Chests etc.)
-		
+
 		downloading = true; // Everything set up.
-		
-		mc.ingameGUI.addChatMessage("§c[WorldDL] §6Download started.");
+
+		mc.thePlayer.addChatMessage("§c[WorldDL] §6Download started.");
     }
     
     public static void continueDownload( WorldClient newWc )
@@ -55,8 +50,8 @@ public class WorldDL {
     	
     	WorldInfo wi = newWc.worldInfo;
     	if(    !serverHostname.equals( lastServerHostname )
-    		|| wi.getRandomSeed() != lastSeed
-    		|| newWc.worldProvider.worldType == lastDimension )
+    		|| wi.getSeed() != lastSeed
+    		|| newWc.provider.worldType != lastDimension )
     	{
     		downloading = false; // Don't save anything from the new world
     		stopDownload(); // and stop because we are on a different server or have reconnected after an error or kick.
@@ -65,27 +60,26 @@ public class WorldDL {
     	
     	newWc.worldInfo.setWorldName(serverHostname);
     	
-    	newWc.myChunkLoader = mySaveHandler.getChunkLoader( newWc.worldProvider );
+    	newWc.myChunkLoader = mySaveHandler.getChunkLoader( newWc.provider );
     	
-    	mc.ingameGUI.addChatMessage("§c[WorldDL] §6Continuing download.");
+    	mc.thePlayer.addChatMessage("§c[WorldDL] §6Continuing download.");
     	
     	wc = newWc;
     }
     
     public static void stopDownload()
     {
-    	WorldClient wc = (WorldClient)mc.theWorld;
-    	
     	if( wc != null)
     	{
     		wc.saveWorld(true, null); // true has no effect afaik. I use it like I found it. null means no progress bar.
     		wc.myChunkLoader = null;
     	}
 		mySaveHandler = null;
-		
+
 		downloading = false; // We're done here.
-		
-		mc.ingameGUI.addChatMessage("§c[WorldDL] §6Download stopped.");
+
+		mc.thePlayer.addChatMessage("§c[WorldDL] §6Download stopped......");
+		mc.thePlayer.addChatMessage("§c[WorldDL] §6Saved as single player world \"" + wc.worldInfo.getWorldName() + "\"");
     }
 
     // Helper method to get the world folder's size in bytes
@@ -103,12 +97,30 @@ public class WorldDL {
     	return size;
     }
 
+    public static void setPlayerEnderChestInventory( IInventory inv )
+    {
+    	InventoryEnderChest iec = mc.thePlayer.getInventoryEnderChest();
+    	
+    	for( int i = 0; i < 27; i++)
+    	{
+    		iec.setInventorySlotContents(i, inv.getStackInSlot(i));
+    	}
+    }
+    
     // Normal chests consist of one TileEntityChest, large chests consist of two.
     // This method determines where the second chest block is (if any) and stores both halfs of the received items in TileEntities.
     // First half goes in the block with lower x- or z-coordinate.
     // This is a modified version of the Minecraft method BlockChest.blockActivated(World, int, int, int, EntityPlayer)
     public static void setChestTileEntitiy( IInventory inv )
     {
+    	if(wc.getBlockId(lastClickedX, lastClickedY, lastClickedZ) == Block.enderChest.blockID)
+    	{
+    		InventoryEnderChest iec = WorldDL.mc.thePlayer.getInventoryEnderChest();
+    		for( int i = 0; i < inv.getSizeInventory(); i++ )
+    			iec.setInventorySlotContents(i, inv.getStackInSlot(i));
+    		return;
+    	}
+    	
     	TileEntityChest tec1 = new TileEntityChest();
     	for( int i = 0; i < 27; i++)
     	{
@@ -147,28 +159,5 @@ public class WorldDL {
         	wc.setMyBlockTileEntity(lastClickedX, lastClickedY, lastClickedZ, tec1);
         	wc.setMyBlockTileEntity(lastClickedX, lastClickedY, lastClickedZ + 1, tec2);
         }
-    }
-    
-    public static class WorldInfoProxy extends WorldInfo
-    {
-
-		public WorldInfoProxy(WorldInfo worldinfo)
-		{
-			super(worldinfo);
-		}
-		
-	    public NBTTagCompound getNBTTagCompoundWithPlayer(List list)
-	    {
-	    	ArrayList activePlayerList = new ArrayList(1);
-	    	activePlayerList.add(mc.thePlayer);
-	        NBTTagCompound temp = super.getNBTTagCompoundWithPlayer(activePlayerList);
-	        if( mc.thePlayer.capabilities.allowFlying && mc.thePlayer.capabilities.depleteBuckets && mc.thePlayer.capabilities.disableDamage )
-	        	temp.setInteger("GameType", 1); // Creative
-	        else
-	        	temp.setInteger("GameType", 0); // Survival
-	        if( gameTypeOverride != -1 )
-	        	temp.setInteger("GameType", gameTypeOverride );
-	        return temp;
-	    }
     }
 }

@@ -1,38 +1,42 @@
 package net.minecraft.src;
 
-import net.minecraft.client.Minecraft;
 import org.lwjgl.opengl.GL11;
 
 public class GuiDispenser extends GuiContainer
 {
-    /* World Downloader >>> */
+    /* WORLD DOWNLOADER >>> */
     private TileEntityDispenser ted;
-    /* <<< World Downloader */
-    
-    public GuiDispenser(InventoryPlayer inventoryplayer, TileEntityDispenser tileentitydispenser)
+    /* <<< WORLD DOWNLOADER */
+
+    public GuiDispenser(InventoryPlayer par1InventoryPlayer, TileEntityDispenser par2TileEntityDispenser)
     {
-        super(new ContainerDispenser(inventoryplayer, tileentitydispenser));
+        super(new ContainerDispenser(par1InventoryPlayer, par2TileEntityDispenser));
         /* WORLD DOWNLOADER ---> */
-        ted = tileentitydispenser;
+        ted = par2TileEntityDispenser;
         /* <--- WORLD DOWNLOADER */
     }
 
+    /**
+     * Draw the foreground layer for the GuiContainer (everything in front of the items)
+     */
     protected void drawGuiContainerForegroundLayer()
     {
-        fontRenderer.drawString("Dispenser", 60, 6, 0x404040);
-        fontRenderer.drawString("Inventory", 8, (ySize - 96) + 2, 0x404040);
+        this.fontRenderer.drawString(StatCollector.translateToLocal("container.dispenser"), 60, 6, 4210752);
+        this.fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
     }
 
-    protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
+    /**
+     * Draw the background layer for the GuiContainer (everything behind the items)
+     */
+    protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
     {
-        int k = mc.renderEngine.getTexture("/gui/trap.png");
+        int var4 = this.mc.renderEngine.getTexture("/gui/trap.png");
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        mc.renderEngine.bindTexture(k);
-        int l = (width - xSize) / 2;
-        int i1 = (height - ySize) / 2;
-        drawTexturedModalRect(l, i1, 0, 0, xSize, ySize);
+        this.mc.renderEngine.bindTexture(var4);
+        int var5 = (this.width - this.xSize) / 2;
+        int var6 = (this.height - this.ySize) / 2;
+        this.drawTexturedModalRect(var5, var6, 0, 0, this.xSize, this.ySize);
     }
-    
     /* WORLD DOWNLOADER ---> */
     public void onGuiClosed() {
     	if( WorldDL.downloading )
@@ -43,5 +47,4 @@ public class GuiDispenser extends GuiContainer
     	super.onGuiClosed();
     }
     /* <--- WORLD DOWNLOADER */
-
 }

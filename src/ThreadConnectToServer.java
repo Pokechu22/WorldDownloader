@@ -2,24 +2,26 @@ package net.minecraft.src;
 
 import java.net.ConnectException;
 import java.net.UnknownHostException;
-import net.minecraft.client.Minecraft;
 
 class ThreadConnectToServer extends Thread
 {
-    final Minecraft mc;
-    final String hostName;
+    /** The IP address or domain used to connect. */
+    final String ip;
+
+    /** The port used to connect. */
     final int port;
+
+    /** A reference to the GuiConnecting object. */
     final GuiConnecting connectingGui;
 
-    ThreadConnectToServer(GuiConnecting guiconnecting, Minecraft minecraft, String s, int i)
+    ThreadConnectToServer(GuiConnecting par1GuiConnecting, String par2Str, int par3)
     {
-        connectingGui = guiconnecting;
-        mc = minecraft;
-        hostName = s;
-        port = i;
+        this.connectingGui = par1GuiConnecting;
+        this.ip = par2Str;
+        this.port = par3;
         /* WORLD DOWNLOADER ---> */
-	WorldDL.lastServerHostname = WorldDL.serverHostname;
-        WorldDL.serverHostname = s;
+        WorldDL.lastServerHostname = WorldDL.serverHostname;
+        WorldDL.serverHostname = par2Str;
         /* <--- WORLD DOWNLOADER */
     }
 
@@ -27,46 +29,42 @@ class ThreadConnectToServer extends Thread
     {
         try
         {
-            GuiConnecting.setNetClientHandler(connectingGui, new NetClientHandler(mc, hostName, port));
-            if (GuiConnecting.isCancelled(connectingGui))
+            GuiConnecting.setNetClientHandler(this.connectingGui, new NetClientHandler(GuiConnecting.func_74256_a(this.connectingGui), this.ip, this.port));
+
+            if (GuiConnecting.isCancelled(this.connectingGui))
             {
                 return;
             }
-            GuiConnecting.getNetClientHandler(connectingGui).addToSendQueue(new Packet2Handshake(mc.session.username));
+
+            GuiConnecting.getNetClientHandler(this.connectingGui).addToSendQueue(new Packet2ClientProtocol(39, GuiConnecting.func_74254_c(this.connectingGui).session.username, this.ip, this.port));
         }
-        catch (UnknownHostException unknownhostexception)
+        catch (UnknownHostException var2)
         {
-            if (GuiConnecting.isCancelled(connectingGui))
+            if (GuiConnecting.isCancelled(this.connectingGui))
             {
                 return;
             }
-            mc.displayGuiScreen(new GuiDisconnected("connect.failed", "disconnect.genericReason", new Object[]
-                    {
-                        (new StringBuilder()).append("Unknown host '").append(hostName).append("'").toString()
-                    }));
+
+            GuiConnecting.func_74249_e(this.connectingGui).displayGuiScreen(new GuiDisconnected("connect.failed", "disconnect.genericReason", new Object[] {"Unknown host \'" + this.ip + "\'"}));
         }
-        catch (ConnectException connectexception)
+        catch (ConnectException var3)
         {
-            if (GuiConnecting.isCancelled(connectingGui))
+            if (GuiConnecting.isCancelled(this.connectingGui))
             {
                 return;
             }
-            mc.displayGuiScreen(new GuiDisconnected("connect.failed", "disconnect.genericReason", new Object[]
-                    {
-                        connectexception.getMessage()
-                    }));
+
+            GuiConnecting.func_74250_f(this.connectingGui).displayGuiScreen(new GuiDisconnected("connect.failed", "disconnect.genericReason", new Object[] {var3.getMessage()}));
         }
-        catch (Exception exception)
+        catch (Exception var4)
         {
-            if (GuiConnecting.isCancelled(connectingGui))
+            if (GuiConnecting.isCancelled(this.connectingGui))
             {
                 return;
             }
-            exception.printStackTrace();
-            mc.displayGuiScreen(new GuiDisconnected("connect.failed", "disconnect.genericReason", new Object[]
-                    {
-                        exception.toString()
-                    }));
+
+            var4.printStackTrace();
+            GuiConnecting.func_74251_g(this.connectingGui).displayGuiScreen(new GuiDisconnected("connect.failed", "disconnect.genericReason", new Object[] {var4.toString()}));
         }
     }
 }
