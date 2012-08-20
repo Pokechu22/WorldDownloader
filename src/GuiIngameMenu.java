@@ -29,9 +29,10 @@ public class GuiIngameMenu extends GuiScreen
         int row3 = row2 + 24;
         int row4 = row3 + 24;
         int row5 = row4 + 24;
+        int row6 = row5 + 24;
         
         
-        this.controlList.add(new GuiButton(1, leftcolumn, row4, StatCollector.translateToLocal("menu.returnToMenu")));
+        this.controlList.add(new GuiButton(1, leftcolumn, row5, StatCollector.translateToLocal("menu.returnToMenu")));
         
         if (!this.mc.isIntegratedServerRunning())
         {
@@ -39,18 +40,18 @@ public class GuiIngameMenu extends GuiScreen
             
             /* WORLD DOWNLOADER ---> */
             if( WorldDL.downloading == false )
-                controlList.add(new GuiButton(8, leftcolumn, row5, "Download this world"));
+                controlList.add(new GuiButton(8, leftcolumn, row6, "Download this world"));
             else
-                controlList.add(new GuiButton(8, leftcolumn, row5, "Stop download"));
+                controlList.add(new GuiButton(8, leftcolumn, row6, "Stop download"));
             /* <--- WORLD DOWNLOADER */
         }
 
         this.controlList.add(new GuiButton(4, leftcolumn, row1, StatCollector.translateToLocal("menu.returnToGame")));
         
         // ROW 
-        this.controlList.add(new GuiButton(0, leftcolumn, row3, 98, 20, StatCollector.translateToLocal("menu.options")));
+        this.controlList.add(new GuiButton(0, leftcolumn, row4, 98, 20, StatCollector.translateToLocal("menu.options")));
         GuiButton var3;
-        this.controlList.add(var3 = new GuiButton(7, rightcolumn, row3, 98, 20, StatCollector.translateToLocal("menu.shareToLan")));
+        this.controlList.add(var3 = new GuiButton(7, rightcolumn, row4, 98, 20, StatCollector.translateToLocal("menu.shareToLan")));
         
         this.controlList.add(new GuiButton(5, leftcolumn, row2, 98, 20, StatCollector.translateToLocal("gui.achievements")));
         this.controlList.add(new GuiButton(6, rightcolumn, row2, 98, 20, StatCollector.translateToLocal("gui.stats")));
