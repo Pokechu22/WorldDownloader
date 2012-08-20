@@ -656,6 +656,8 @@ public class NetClientHandler extends NetHandler
 
     public void handleChat(Packet3Chat par1Packet3Chat)
     {
+    	String msg = par1Packet3Chat.message;
+    	WorldDL.handleServerSeedMessage(msg);
         this.mc.ingameGUI.getChatGUI().printChatMessage(par1Packet3Chat.message);
     }
 

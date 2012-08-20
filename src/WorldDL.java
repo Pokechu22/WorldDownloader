@@ -160,4 +160,22 @@ public class WorldDL {
         	wc.setMyBlockTileEntity(lastClickedX, lastClickedY, lastClickedZ + 1, tec2);
         }
     }
+    
+    public static void handleServerSeedMessage(String msg)
+    {
+    	if(downloading && msg.startsWith("Seed: "))
+    	{
+    		String seed = msg.substring(6);
+    		try
+    		{
+    			long seedval = Long.parseLong(seed);
+    			wc.worldInfo.setSeed(seedval);
+    			mc.thePlayer.addChatMessage("§c[WorldDL] §6Set single-player world seed to " + seedval);
+    		}
+    		catch(NumberFormatException e)
+    		{
+    			mc.thePlayer.addChatMessage("§c[WorldDL] §6Could not parse server seed");
+    		}
+    	}
+    }
 }
