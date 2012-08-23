@@ -1,0 +1,14 @@
+TODO
+----
+
+* TileTicks must be generated for repeaters, ...
+* Chests closing animation is not played
+* Stopping download and quickly opening the cloned world => not all chunks are saved (threaded IO problem?)
+* "Get Seed from Server" button
+* EnderChests: Conversion from received Container to local EnderChest storage format
+* Offers from villagers should be saved
+* Record Players don't do anything. => Create empty TileEntityRecordPlayer ???
+* Save bed position when sleeping (see bookmarks)
+* Remove the superfluous calls to chatMsg(String). They were meant for debugging.
+* The backup functionality???
+* 

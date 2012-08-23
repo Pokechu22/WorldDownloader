@@ -3,7 +3,7 @@ package net.minecraft.src;
 import java.util.List;
 import net.minecraft.client.Minecraft;
 
-public class GuiWorldDLPlayer extends GuiScreen
+public class GuiWDLPlayer extends GuiScreen
 {
 	private String title = "";
 	
@@ -18,7 +18,7 @@ public class GuiWorldDLPlayer extends GuiScreen
 	private GuiTextField posX, posY, posZ;
 	private int posTextY;
 
-	public GuiWorldDLPlayer( GuiScreen parent )
+	public GuiWDLPlayer( GuiScreen parent )
     {
 		this.parent = parent;
     }
@@ -27,7 +27,7 @@ public class GuiWorldDLPlayer extends GuiScreen
     {
         controlList.clear();
         
-        title = "Player Options for " + WorldDL.folderName.replace('@', ':');
+        title = "Player Options for " + WDL.baseFolderName.replace('@', ':');
         
         int w = width / 2;
         int h = height / 4;
@@ -49,9 +49,9 @@ public class GuiWorldDLPlayer extends GuiScreen
         
         hi += 22;
         posTextY = hi + 4;
-        posX = new GuiTextField( this, fontRenderer, w-87, hi, 50, 16, "");
-        posY = new GuiTextField( this, fontRenderer, w-19, hi, 50, 16, "");
-        posZ = new GuiTextField( this, fontRenderer, w+48, hi, 50, 16, "");
+        posX = new GuiTextField( fontRenderer, w-87, hi, 50, 16 );
+        posY = new GuiTextField( fontRenderer, w-19, hi, 50, 16 );
+        posZ = new GuiTextField( fontRenderer, w+48, hi, 50, 16 );
         posX.setMaxStringLength(7);
         posY.setMaxStringLength(7);
         posZ.setMaxStringLength(7);
@@ -92,7 +92,7 @@ public class GuiWorldDLPlayer extends GuiScreen
     		if( showPosFields )
     			updatePosXYZ(true);
     		
-    		WorldDL.saveProps();
+    		WDL.saveProps();
     		mc.displayGuiScreen( parent );
     	}
     }
@@ -111,12 +111,9 @@ public class GuiWorldDLPlayer extends GuiScreen
     protected void keyTyped(char c, int i) {
     	super.keyTyped(c, i);
     	
-    	if( posX.isFocused )
-    		posX.textboxKeyTyped(c, i);
-    	else if( posY.isFocused )
-    		posY.textboxKeyTyped(c, i);
-    	else if( posZ.isFocused )
-    		posZ.textboxKeyTyped(c, i);
+    	posX.textboxKeyTyped(c, i);
+    	posY.textboxKeyTyped(c, i);
+    	posZ.textboxKeyTyped(c, i);
     }
     
     public void updateScreen()
@@ -147,13 +144,13 @@ public class GuiWorldDLPlayer extends GuiScreen
     
     private void updateHealth( boolean btnClicked )
     {
-    	String playerHealth = WorldDL.baseProps.getProperty("PlayerHealth");
+    	String playerHealth = WDL.baseProps.getProperty("PlayerHealth");
     	
     	if( playerHealth.equals("keep") )
     	{
     		if( btnClicked )
     		{
-    			WorldDL.baseProps.setProperty("PlayerHealth", "20");
+    			WDL.baseProps.setProperty("PlayerHealth", "20");
     			updateHealth(false);
     		}
     		else
@@ -163,7 +160,7 @@ public class GuiWorldDLPlayer extends GuiScreen
     	{
     		if( btnClicked )
     		{
-    			WorldDL.baseProps.setProperty("PlayerHealth", "keep");
+    			WDL.baseProps.setProperty("PlayerHealth", "keep");
     			updateHealth(false);
     		}
     		else
@@ -173,13 +170,13 @@ public class GuiWorldDLPlayer extends GuiScreen
     
     private void updateHunger( boolean btnClicked )
     {
-    	String playerFood = WorldDL.baseProps.getProperty("PlayerFood");
+    	String playerFood = WDL.baseProps.getProperty("PlayerFood");
     	
     	if( playerFood.equals("keep") )
     	{
     		if( btnClicked )
     		{
-    			WorldDL.baseProps.setProperty("PlayerFood", "20");
+    			WDL.baseProps.setProperty("PlayerFood", "20");
     			updateHunger(false);
     		}
     		else
@@ -189,7 +186,7 @@ public class GuiWorldDLPlayer extends GuiScreen
     	{
     		if( btnClicked )
     		{
-    			WorldDL.baseProps.setProperty("PlayerFood", "keep");
+    			WDL.baseProps.setProperty("PlayerFood", "keep");
     			updateHunger(false);
     		}
     		else
@@ -199,7 +196,7 @@ public class GuiWorldDLPlayer extends GuiScreen
     
     private void updatePlayerPos( boolean btnClicked )
     {
-    	String playerPos = WorldDL.worldProps.getProperty("PlayerPos");
+    	String playerPos = WDL.worldProps.getProperty("PlayerPos");
     	showPosFields = false;
     	pickPosBtn.drawButton = false;
     	
@@ -207,7 +204,7 @@ public class GuiWorldDLPlayer extends GuiScreen
     	{
     		if( btnClicked )
     		{
-    			WorldDL.worldProps.setProperty("PlayerPos", "xyz");
+    			WDL.worldProps.setProperty("PlayerPos", "xyz");
     			updatePlayerPos(false);
     		}
     		else
@@ -217,7 +214,7 @@ public class GuiWorldDLPlayer extends GuiScreen
     	{
     		if( btnClicked )
     		{
-    			WorldDL.worldProps.setProperty("PlayerPos", "keep");
+    			WDL.worldProps.setProperty("PlayerPos", "keep");
     			updatePlayerPos(false);
     		}
     		else
@@ -237,9 +234,9 @@ public class GuiWorldDLPlayer extends GuiScreen
 	    		int x = Integer.parseInt( posX.getText() );
 	    		int y = Integer.parseInt( posY.getText() );
 	    		int z = Integer.parseInt( posZ.getText() );
-	    		WorldDL.worldProps.setProperty("PlayerX", String.valueOf(x));
-	    		WorldDL.worldProps.setProperty("PlayerY", String.valueOf(y));
-	    		WorldDL.worldProps.setProperty("PlayerZ", String.valueOf(z));
+	    		WDL.worldProps.setProperty("PlayerX", String.valueOf(x));
+	    		WDL.worldProps.setProperty("PlayerY", String.valueOf(y));
+	    		WDL.worldProps.setProperty("PlayerZ", String.valueOf(z));
     		}
     		catch( NumberFormatException e )
     		{
@@ -248,9 +245,9 @@ public class GuiWorldDLPlayer extends GuiScreen
     	}
     	else
     	{
-    		posX.setText( WorldDL.worldProps.getProperty("PlayerX") );
-    		posY.setText( WorldDL.worldProps.getProperty("PlayerY") );
-    		posZ.setText( WorldDL.worldProps.getProperty("PlayerZ") );
+    		posX.setText( WDL.worldProps.getProperty("PlayerX") );
+    		posY.setText( WDL.worldProps.getProperty("PlayerY") );
+    		posZ.setText( WDL.worldProps.getProperty("PlayerZ") );
     	}
     }
     

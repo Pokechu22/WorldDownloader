@@ -3,7 +3,7 @@ package net.minecraft.src;
 import java.util.List;
 import net.minecraft.client.Minecraft;
 
-public class GuiWorldDL extends GuiScreen
+public class GuiWDL extends GuiScreen
 {
 	private String title = "";
 	
@@ -17,39 +17,39 @@ public class GuiWorldDL extends GuiScreen
 	private GuiButton generatorOverrides;
 	private GuiButton playerOverrides;
 
-	public GuiWorldDL( GuiScreen parent )
+	public GuiWDL( GuiScreen parent )
     {
 		this.parent = parent;
     }
 
     public void initGui()
     {
-		if( WorldDL.isMultiworld && WorldDL.currentMultiworld.isEmpty() )
+		if( WDL.isMultiworld && WDL.worldName.isEmpty() )
 		{
-			mc.displayGuiScreen( new GuiWorldDLMultiworldSelect( parent ) );
+			mc.displayGuiScreen( new GuiWDLMultiworldSelect( parent ) );
 		}
 		
-    	if( WorldDL.isNewWorld )
+    	if( WDL.propsFound == false )
     	{
-    		mc.displayGuiScreen( new GuiWorldDLMultiworld( parent ) );
+    		mc.displayGuiScreen( new GuiWDLMultiworld( parent ) );
     		return;
     	}
 		
         controlList.clear();
         
-        title = "Options for " + WorldDL.folderName.replace('@', ':');
+        title = "Options for " + WDL.baseFolderName.replace('@', ':');
         
         int w = width / 2;
         int h = height / 4;
         
         int hi = h-15;
         
-		if( WorldDL.baseProps.getProperty("ServerName").isEmpty() )
+		if( WDL.baseProps.getProperty("ServerName").isEmpty() )
 		{
-			WorldDL.baseProps.setProperty( "ServerName", WorldDL.findServerName() );
+			WDL.baseProps.setProperty( "ServerName", WDL.getServerName() );
 		}
         
-        worldName = new GuiTextField( this, fontRenderer, width / 2 - 70, hi, 168, 18, "" );
+        worldName = new GuiTextField( fontRenderer, width / 2 - 70, hi, 168, 18 );
         updateServerName(false);
         
         hi += 22;
@@ -79,8 +79,6 @@ public class GuiWorldDL extends GuiScreen
         
         hi += 28;
         controlList.add( new GuiButton( 100, w-100, h+150, "Done" ) );
-        
-        WorldDL.initBaseClassRefs();
     }
 
     protected void actionPerformed(GuiButton guibutton)
@@ -93,18 +91,18 @@ public class GuiWorldDL extends GuiScreen
     	if( guibutton.id == 1 ) //Auto start
     		updateAutoStart( true );
     	else if( guibutton.id == 2 ) //Backup
-    		mc.displayGuiScreen( new GuiWorldDLBackup(this) );
+    		mc.displayGuiScreen( new GuiWDLBackup(this) );
 //    	else if( guibutton.id == 3 ) //Multiworld
-//    		mc.displayGuiScreen( new GuiWorldDLMultiworld(this) );
+//    		mc.displayGuiScreen( new GuiWDLMultiworld(this) );
     	else if( guibutton.id == 4 ) //World Overrides
-    		mc.displayGuiScreen( new GuiWorldDLWorld(this) );
+    		mc.displayGuiScreen( new GuiWDLWorld(this) );
     	else if( guibutton.id == 5 ) //Generator Overrides
-    		mc.displayGuiScreen( new GuiWorldDLGenerator(this) );
+    		mc.displayGuiScreen( new GuiWDLGenerator(this) );
     	else if( guibutton.id == 6 ) //Player Overrides
-    		mc.displayGuiScreen( new GuiWorldDLPlayer(this) );
+    		mc.displayGuiScreen( new GuiWDLPlayer(this) );
     	else if( guibutton.id == 100 ) //Done
     	{
-    		WorldDL.saveProps();
+    		WDL.saveProps();
     		mc.displayGuiScreen( parent );
     	}
     }
@@ -116,8 +114,7 @@ public class GuiWorldDL extends GuiScreen
     
     protected void keyTyped(char c, int i) {
     	super.keyTyped(c, i);
-    	if( worldName.isFocused )
-    		worldName.textboxKeyTyped(c, i);
+    	worldName.textboxKeyTyped(c, i);
     }
     
     public void updateScreen()
@@ -138,12 +135,12 @@ public class GuiWorldDL extends GuiScreen
     
     public void updateAutoStart( boolean btnClicked )
     {
-		String autoStart = WorldDL.baseProps.getProperty("AutoStart");
+		String autoStart = WDL.baseProps.getProperty("AutoStart");
 		if( autoStart.equals("true") )
 		{
 			if( btnClicked )
 			{
-				WorldDL.baseProps.setProperty("AutoStart", "false");
+				WDL.baseProps.setProperty("AutoStart", "false");
 				updateAutoStart(false);
 			}
 			else
@@ -153,7 +150,7 @@ public class GuiWorldDL extends GuiScreen
 		{
 			if( btnClicked )
 			{
-				WorldDL.baseProps.setProperty("AutoStart", "true");
+				WDL.baseProps.setProperty("AutoStart", "true");
 				updateAutoStart(false);
 			}
 			else
@@ -166,9 +163,9 @@ public class GuiWorldDL extends GuiScreen
     {
     	if( write )
     	{
-    		WorldDL.baseProps.setProperty("ServerName", worldName.getText() );
+    		WDL.baseProps.setProperty("ServerName", worldName.getText() );
     	}
     	else
-    		worldName.setText( WorldDL.baseProps.getProperty("ServerName") );
+    		worldName.setText( WDL.baseProps.getProperty("ServerName") );
     }
 }

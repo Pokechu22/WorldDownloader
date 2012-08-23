@@ -10,7 +10,7 @@ import java.util.Properties;
 
 import net.minecraft.client.Minecraft;
 
-public class GuiWorldDLMultiworldSelect extends GuiScreen
+public class GuiWDLMultiworldSelect extends GuiScreen
 {
 
 	private GuiButton cancelBtn;
@@ -25,16 +25,16 @@ public class GuiWorldDLMultiworldSelect extends GuiScreen
 	
 	EntityPlayerSP cam;
 	
-	public GuiWorldDLMultiworldSelect( GuiScreen parent )
+	public GuiWDLMultiworldSelect( GuiScreen parent )
     {
 		this.parent = parent;
-		EntityPlayerSP player = WorldDL.mc.thePlayer;
-        cam = new EntityPlayerSP(WorldDL.mc, WorldDL.wc, new Session("Camera", ""), player.dimension);
+		EntityClientPlayerMP player = WDL.mc.thePlayer;
+        cam = new EntityPlayerSP(WDL.mc, WDL.wc, new Session("Camera", ""), player.dimension);
         cam.setLocationAndAngles(player.posX, player.posY - player.yOffset, player.posZ, player.rotationYaw, 0.0f );
         yaw = player.rotationYaw;
-        thirdPersonViewSave = WorldDL.mc.gameSettings.thirdPersonView;
-        WorldDL.mc.gameSettings.thirdPersonView = 0;
-        WorldDL.mc.renderViewEntity = cam;
+        thirdPersonViewSave = WDL.mc.gameSettings.thirdPersonView;
+        WDL.mc.gameSettings.thirdPersonView = 0;
+        WDL.mc.renderViewEntity = cam;
     }
 
     public void initGui()
@@ -52,7 +52,7 @@ public class GuiWorldDLMultiworldSelect extends GuiScreen
         cancelBtn = new GuiButton( 100, w-100, height-30, "Cancel" );
         controlList.add( cancelBtn );
         
-        String linkedWorlds = WorldDL.baseProps.getProperty("LinkedWorlds");
+        String linkedWorlds = WDL.baseProps.getProperty("LinkedWorlds");
         String[] tempWorlds = linkedWorlds.split("[|]");
         String[] tempNames = new String[tempWorlds.length];
         
@@ -64,7 +64,7 @@ public class GuiWorldDLMultiworldSelect extends GuiScreen
         		tempWorlds[i] = null;
         		continue;
         	}
-        	Properties worldProps = WorldDL.loadWorldProps(tempWorlds[i]);
+        	Properties worldProps = WDL.loadWorldProps(tempWorlds[i]);
         	if( worldProps == null )
         	{
         		tempWorlds[i] = null;
@@ -104,7 +104,7 @@ public class GuiWorldDLMultiworldSelect extends GuiScreen
         	controlList.add(buttons[newWorldPos]);
         }
 
-        newNameField = new GuiTextField( this, fontRenderer, (newWorldPos%columns)*buttonWidth + spaceLeft, height - 60 - (newWorldPos/columns)*21 + 1, buttonWidth, 18, "" );
+        newNameField = new GuiTextField( fontRenderer, (newWorldPos%columns)*buttonWidth + spaceLeft, height - 60 - (newWorldPos/columns)*21 + 1, buttonWidth, 18 );
     }
 
     protected void actionPerformed(GuiButton guibutton)
@@ -138,7 +138,7 @@ public class GuiWorldDLMultiworldSelect extends GuiScreen
     protected void keyTyped(char par1, int par2)
     {
     	super.keyTyped(par1, par2);
-    	if( newNameField.isFocused )
+    	if( newNameField.isFocused() )
     	{
     		newNameField.textboxKeyTyped(par1, par2);
     		if( par2 == 28 )// Return key
@@ -170,6 +170,7 @@ public class GuiWorldDLMultiworldSelect extends GuiScreen
         cam.prevRotationYaw = cam.rotationYaw = yaw;
         
         float radius = 0.475f; //Min: 0.475f
+        // field_71439_g == thePlayer
         cam.lastTickPosY = cam.prevPosY = cam.posY = mc.thePlayer.posY;
         cam.lastTickPosX = cam.prevPosX = cam.posX = mc.thePlayer.posX - radius * Math.sin(yaw/180.0*Math.PI);
         cam.lastTickPosZ = cam.prevPosZ = cam.posZ = mc.thePlayer.posZ + radius * Math.cos(yaw/180.0*Math.PI);
@@ -185,38 +186,38 @@ public class GuiWorldDLMultiworldSelect extends GuiScreen
     
     public void onGuiClosed() {
     	super.onGuiClosed();
-    	WorldDL.mc.gameSettings.thirdPersonView = thirdPersonViewSave;
-    	mc.renderViewEntity = mc.thePlayer;
+    	WDL.mc.gameSettings.thirdPersonView = thirdPersonViewSave;
+    	mc.renderViewEntity = mc.thePlayer; // == thePlayer
     }
     
     private void worldSelected( String w )
     {
-    	WorldDL.currentMultiworld = w;
-    	WorldDL.isMultiworld = true;
-    	WorldDL.isNewWorld = false;
+    	WDL.worldName = w;
+    	WDL.isMultiworld = true;
+    	WDL.propsFound = true;
     	if( parent == null )
     	{
-    		WorldDL.startDownload();
+    		WDL.start();
     		mc.displayGuiScreen(null);
     		mc.setIngameFocus();
     	}
     	else
     	{
-    		WorldDL.worldProps = WorldDL.loadWorldProps( w );
-    		mc.displayGuiScreen( new GuiWorldDL(parent) );
+    		WDL.worldProps = WDL.loadWorldProps( w );
+    		mc.displayGuiScreen( new GuiWDL(parent) );
     	}
     }
     
     private String addMultiworld( String name )
     {
     	String world = name;
-		for( char c : ChatAllowedCharacters.allowedCharactersArray )
+		for( char c : ChatAllowedCharacters.invalidFilenameCharacters )
 		{
 			world = world.replace(c, '_');
 		}
-    	new File( mc.mcDataDir, "saves/" + WorldDL.folderName + " - " + world ).mkdirs();
+    	new File( mc.mcDataDir, "saves/" + WDL.baseFolderName + " - " + world ).mkdirs();
     	
-    	Properties newProps = new Properties( WorldDL.baseProps );
+    	Properties newProps = new Properties( WDL.baseProps );
     	newProps.setProperty("WorldName", name);
     	
     	String[] newWorlds = new String[ worlds.length+1 ];
@@ -228,8 +229,8 @@ public class GuiWorldDLMultiworldSelect extends GuiScreen
     	for( String s : newWorlds )
     		newLinkedWorlds += s + "|";
     	
-    	WorldDL.baseProps.setProperty("LinkedWorlds", newLinkedWorlds);
-    	WorldDL.saveProps(world, newProps);
+    	WDL.baseProps.setProperty("LinkedWorlds", newLinkedWorlds);
+    	WDL.saveProps(world, newProps);
     	
     	return world;
     }

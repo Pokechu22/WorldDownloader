@@ -3,7 +3,7 @@ package net.minecraft.src;
 import java.util.List;
 import net.minecraft.client.Minecraft;
 
-public class GuiWorldDLWorld extends GuiScreen
+public class GuiWDLWorld extends GuiScreen
 {
 	private String title = "";
 	
@@ -19,7 +19,7 @@ public class GuiWorldDLWorld extends GuiScreen
 	private GuiTextField spawnX, spawnY, spawnZ;
 	private int spawnTextY;
 
-	public GuiWorldDLWorld( GuiScreen parent )
+	public GuiWDLWorld( GuiScreen parent )
     {
 		this.parent = parent;
     }
@@ -28,7 +28,7 @@ public class GuiWorldDLWorld extends GuiScreen
     {
         controlList.clear();
         
-        title = "World Options for " + WorldDL.folderName.replace('@', ':');
+        title = "World Options for " + WDL.baseFolderName.replace('@', ':');
         
         int w = width / 2;
         int h = height / 4;
@@ -55,9 +55,9 @@ public class GuiWorldDLWorld extends GuiScreen
         
         hi += 22;
         spawnTextY = hi + 4;
-        spawnX = new GuiTextField( this, fontRenderer, w-87, hi, 50, 16, "");
-        spawnY = new GuiTextField( this, fontRenderer, w-19, hi, 50, 16, "");
-        spawnZ = new GuiTextField( this, fontRenderer, w+48, hi, 50, 16, "");
+        spawnX = new GuiTextField( fontRenderer, w-87, hi, 50, 16 );
+        spawnY = new GuiTextField( fontRenderer, w-19, hi, 50, 16 );
+        spawnZ = new GuiTextField( fontRenderer, w+48, hi, 50, 16 );
         spawnX.setMaxStringLength(7);
         spawnY.setMaxStringLength(7);
         spawnZ.setMaxStringLength(7);
@@ -102,7 +102,7 @@ public class GuiWorldDLWorld extends GuiScreen
     		if( showSpawnFields )
     			updateSpawnXYZ(true);
     		
-    		WorldDL.saveProps();
+    		WDL.saveProps();
     		mc.displayGuiScreen( parent );
     	}
     }
@@ -121,12 +121,9 @@ public class GuiWorldDLWorld extends GuiScreen
     protected void keyTyped(char c, int i) {
     	super.keyTyped(c, i);
     	
-    	if( spawnX.isFocused )
-    		spawnX.textboxKeyTyped(c, i);
-    	else if( spawnY.isFocused )
-    		spawnY.textboxKeyTyped(c, i);
-    	else if( spawnZ.isFocused )
-    		spawnZ.textboxKeyTyped(c, i);
+    	spawnX.textboxKeyTyped(c, i);
+    	spawnY.textboxKeyTyped(c, i);
+    	spawnZ.textboxKeyTyped(c, i);
     }
     
     public void updateScreen()
@@ -157,13 +154,13 @@ public class GuiWorldDLWorld extends GuiScreen
     
     private void updateGameMode( boolean btnClicked )
     {
-    	String gameType = WorldDL.baseProps.getProperty("GameType");
+    	String gameType = WDL.baseProps.getProperty("GameType");
     	
     	if( gameType.equals("keep") )
     	{
     		if( btnClicked )
     		{
-    			WorldDL.baseProps.setProperty("GameType", "creative");
+    			WDL.baseProps.setProperty("GameType", "creative");
     			updateGameMode(false);
     		}
     		else
@@ -173,7 +170,7 @@ public class GuiWorldDLWorld extends GuiScreen
     	{
     		if( btnClicked )
     		{
-    			WorldDL.baseProps.setProperty("GameType", "survival");
+    			WDL.baseProps.setProperty("GameType", "survival");
     			updateGameMode(false);
     		}
     		else
@@ -183,7 +180,7 @@ public class GuiWorldDLWorld extends GuiScreen
     	{
     		if( btnClicked )
     		{
-    			WorldDL.baseProps.setProperty("GameType", "hardcore");
+    			WDL.baseProps.setProperty("GameType", "hardcore");
     			updateGameMode(false);
     		}
     		else
@@ -193,7 +190,7 @@ public class GuiWorldDLWorld extends GuiScreen
     	{
     		if( btnClicked )
     		{
-    			WorldDL.baseProps.setProperty("GameType", "keep");
+    			WDL.baseProps.setProperty("GameType", "keep");
     			updateGameMode(false);
     		}
     		else
@@ -203,13 +200,13 @@ public class GuiWorldDLWorld extends GuiScreen
     
     private void updateTime( boolean btnClicked )
     {
-    	String time = WorldDL.baseProps.getProperty("Time");
+    	String time = WDL.baseProps.getProperty("Time");
     	
     	if( time.equals("keep") )
     	{
     		if( btnClicked )
     		{
-    			WorldDL.baseProps.setProperty("Time", "23000");
+    			WDL.baseProps.setProperty("Time", "23000");
     			updateTime(false);
     		}
     		else
@@ -219,7 +216,7 @@ public class GuiWorldDLWorld extends GuiScreen
     	{
     		if( btnClicked )
     		{
-    			WorldDL.baseProps.setProperty("Time", "0");
+    			WDL.baseProps.setProperty("Time", "0");
     			updateTime(false);
     		}
     		else
@@ -229,7 +226,7 @@ public class GuiWorldDLWorld extends GuiScreen
     	{
     		if( btnClicked )
     		{
-    			WorldDL.baseProps.setProperty("Time", "6000");
+    			WDL.baseProps.setProperty("Time", "6000");
     			updateTime(false);
     		}
     		else
@@ -239,7 +236,7 @@ public class GuiWorldDLWorld extends GuiScreen
     	{
     		if( btnClicked )
     		{
-    			WorldDL.baseProps.setProperty("Time", "11500");
+    			WDL.baseProps.setProperty("Time", "11500");
     			updateTime(false);
     		}
     		else
@@ -249,7 +246,7 @@ public class GuiWorldDLWorld extends GuiScreen
     	{
     		if( btnClicked )
     		{
-    			WorldDL.baseProps.setProperty("Time", "12500");
+    			WDL.baseProps.setProperty("Time", "12500");
     			updateTime(false);
     		}
     		else
@@ -259,7 +256,7 @@ public class GuiWorldDLWorld extends GuiScreen
     	{
     		if( btnClicked )
     		{
-    			WorldDL.baseProps.setProperty("Time", "18000");
+    			WDL.baseProps.setProperty("Time", "18000");
     			updateTime(false);
     		}
     		else
@@ -269,7 +266,7 @@ public class GuiWorldDLWorld extends GuiScreen
     	{
     		if( btnClicked )
     		{
-    			WorldDL.baseProps.setProperty("Time", "keep");
+    			WDL.baseProps.setProperty("Time", "keep");
     			updateTime(false);
     		}
     		else
@@ -278,13 +275,13 @@ public class GuiWorldDLWorld extends GuiScreen
     }
     private void updateWeather( boolean btnClicked )
     {
-    	String weather = WorldDL.baseProps.getProperty("Weather");
+    	String weather = WDL.baseProps.getProperty("Weather");
     	
     	if( weather.equals("keep") )
     	{
     		if( btnClicked )
     		{
-    			WorldDL.baseProps.setProperty("Weather", "sunny");
+    			WDL.baseProps.setProperty("Weather", "sunny");
     			updateWeather(false);
     		}
     		else
@@ -294,7 +291,7 @@ public class GuiWorldDLWorld extends GuiScreen
     	{
     		if( btnClicked )
     		{
-    			WorldDL.baseProps.setProperty("Weather", "rain");
+    			WDL.baseProps.setProperty("Weather", "rain");
     			updateWeather(false);
     		}
     		else
@@ -304,7 +301,7 @@ public class GuiWorldDLWorld extends GuiScreen
     	{
     		if( btnClicked )
     		{
-    			WorldDL.baseProps.setProperty("Weather", "thunderstorm");
+    			WDL.baseProps.setProperty("Weather", "thunderstorm");
     			updateWeather(false);
     		}
     		else
@@ -314,7 +311,7 @@ public class GuiWorldDLWorld extends GuiScreen
     	{
     		if( btnClicked )
     		{
-    			WorldDL.baseProps.setProperty("Weather", "keep");
+    			WDL.baseProps.setProperty("Weather", "keep");
     			updateWeather(false);
     		}
     		else
@@ -324,7 +321,7 @@ public class GuiWorldDLWorld extends GuiScreen
     
     private void updateSpawn( boolean btnClicked )
     {
-    	String spawn = WorldDL.worldProps.getProperty("Spawn");
+    	String spawn = WDL.worldProps.getProperty("Spawn");
     	showSpawnFields = false;
     	pickSpawnBtn.drawButton = false;
     	
@@ -332,7 +329,7 @@ public class GuiWorldDLWorld extends GuiScreen
     	{
     		if( btnClicked )
     		{
-    			WorldDL.worldProps.setProperty("Spawn", "player");
+    			WDL.worldProps.setProperty("Spawn", "player");
     			updateSpawn(false);
     		}
     		else
@@ -342,7 +339,7 @@ public class GuiWorldDLWorld extends GuiScreen
     	{
     		if( btnClicked )
     		{
-    			WorldDL.worldProps.setProperty("Spawn", "xyz");
+    			WDL.worldProps.setProperty("Spawn", "xyz");
     			updateSpawn(false);
     		}
     		else
@@ -352,7 +349,7 @@ public class GuiWorldDLWorld extends GuiScreen
     	{
     		if( btnClicked )
     		{
-    			WorldDL.worldProps.setProperty("Spawn", "auto");
+    			WDL.worldProps.setProperty("Spawn", "auto");
     			updateSpawn(false);
     		}
     		else
@@ -372,9 +369,9 @@ public class GuiWorldDLWorld extends GuiScreen
 	    		int x = Integer.parseInt( spawnX.getText() );
 	    		int y = Integer.parseInt( spawnY.getText() );
 	    		int z = Integer.parseInt( spawnZ.getText() );
-	    		WorldDL.worldProps.setProperty("SpawnX", String.valueOf(x));
-	    		WorldDL.worldProps.setProperty("SpawnY", String.valueOf(y));
-	    		WorldDL.worldProps.setProperty("SpawnZ", String.valueOf(z));
+	    		WDL.worldProps.setProperty("SpawnX", String.valueOf(x));
+	    		WDL.worldProps.setProperty("SpawnY", String.valueOf(y));
+	    		WDL.worldProps.setProperty("SpawnZ", String.valueOf(z));
     		}
     		catch( NumberFormatException e )
     		{
@@ -383,9 +380,9 @@ public class GuiWorldDLWorld extends GuiScreen
     	}
     	else
     	{
-    		spawnX.setText( WorldDL.worldProps.getProperty("SpawnX") );
-    		spawnY.setText( WorldDL.worldProps.getProperty("SpawnY") );
-    		spawnZ.setText( WorldDL.worldProps.getProperty("SpawnZ") );
+    		spawnX.setText( WDL.worldProps.getProperty("SpawnX") );
+    		spawnY.setText( WDL.worldProps.getProperty("SpawnY") );
+    		spawnZ.setText( WDL.worldProps.getProperty("SpawnZ") );
     	}
     }
     

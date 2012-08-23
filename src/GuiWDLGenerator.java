@@ -3,7 +3,7 @@ package net.minecraft.src;
 import java.util.List;
 import net.minecraft.client.Minecraft;
 
-public class GuiWorldDLGenerator extends GuiScreen
+public class GuiWDLGenerator extends GuiScreen
 {
 	private String title = "";
 	
@@ -13,7 +13,7 @@ public class GuiWorldDLGenerator extends GuiScreen
 	private GuiButton generatorBtn;
 	private GuiButton generateStructuresBtn;
 
-	public GuiWorldDLGenerator( GuiScreen parent )
+	public GuiWDLGenerator( GuiScreen parent )
     {
 		this.parent = parent;
     }
@@ -22,14 +22,15 @@ public class GuiWorldDLGenerator extends GuiScreen
     {
         controlList.clear();
         
-        title = "World Generator Options for " + WorldDL.folderName.replace('@', ':');
+        title = "World Generator Options for " + WDL.baseFolderName.replace('@', ':');
         
         int w = width / 2;
         int h = height / 4;
         
         int hi = h-15;
         
-        seedField = new GuiTextField( this, fontRenderer, width / 2 - 70, hi, 168, 18, "ERROR" );
+        seedField = new GuiTextField( fontRenderer, width / 2 - 70, hi, 168, 18);
+        seedField.setText("ERROR");
         updateSeed( false );
         
         hi += 22;
@@ -57,7 +58,7 @@ public class GuiWorldDLGenerator extends GuiScreen
     	else if( guibutton.id == 100 ) //Done
     	{
     		updateSeed( true );
-    		WorldDL.saveProps();
+    		WDL.saveProps();
     		mc.displayGuiScreen( parent );
     	}
     }
@@ -69,8 +70,7 @@ public class GuiWorldDLGenerator extends GuiScreen
     
     protected void keyTyped(char c, int i) {
     	super.keyTyped(c, i);
-    	if( seedField.isFocused )
-    		seedField.textboxKeyTyped(c, i);
+    	seedField.textboxKeyTyped(c, i);
     }
     
     public void updateScreen()
@@ -91,13 +91,13 @@ public class GuiWorldDLGenerator extends GuiScreen
     
     private void updateGenerator( boolean btnClicked )
     {
-		String generatorName = WorldDL.worldProps.getProperty("GeneratorName");
+		String generatorName = WDL.worldProps.getProperty("GeneratorName");
 		if( generatorName.equals("default") )
 		{
 			if( btnClicked )
 			{
-				WorldDL.worldProps.setProperty("GeneratorName", "flat");
-				WorldDL.worldProps.setProperty("GeneratorVersion", "0");
+				WDL.worldProps.setProperty("GeneratorName", "flat");
+				WDL.worldProps.setProperty("GeneratorVersion", "0");
 				updateGenerator(false);
 			}
 			else
@@ -107,8 +107,8 @@ public class GuiWorldDLGenerator extends GuiScreen
 		{
 			if( btnClicked )
 			{
-				WorldDL.worldProps.setProperty("GeneratorName", "default");
-				WorldDL.worldProps.setProperty("GeneratorVersion", "1");
+				WDL.worldProps.setProperty("GeneratorName", "default");
+				WDL.worldProps.setProperty("GeneratorVersion", "1");
 				updateGenerator(false);
 			}
 			else
@@ -118,12 +118,12 @@ public class GuiWorldDLGenerator extends GuiScreen
     
     private void updateGenerateStructures( boolean btnClicked )
     {
-		String generateStructures = WorldDL.worldProps.getProperty("MapFeatures");
+		String generateStructures = WDL.worldProps.getProperty("MapFeatures");
 		if( generateStructures.equals("true") )
 		{
 			if( btnClicked )
 			{
-				WorldDL.worldProps.setProperty("MapFeatures", "false");
+				WDL.worldProps.setProperty("MapFeatures", "false");
 				updateGenerateStructures(false);
 			}
 			else
@@ -133,7 +133,7 @@ public class GuiWorldDLGenerator extends GuiScreen
 		{
 			if( btnClicked )
 			{
-				WorldDL.worldProps.setProperty("MapFeatures", "true");
+				WDL.worldProps.setProperty("MapFeatures", "true");
 				updateGenerateStructures(false);
 			}
 			else
@@ -145,9 +145,9 @@ public class GuiWorldDLGenerator extends GuiScreen
     {
     	if( write )
     	{
-    		WorldDL.worldProps.setProperty("RandomSeed", seedField.getText() );
+    		WDL.worldProps.setProperty("RandomSeed", seedField.getText() );
     	}
     	else
-    		seedField.setText( WorldDL.worldProps.getProperty("RandomSeed") );
+    		seedField.setText( WDL.worldProps.getProperty("RandomSeed") );
     }
 }
