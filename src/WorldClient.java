@@ -30,11 +30,6 @@ public class WorldClient extends World
     private final Minecraft mc = Minecraft.getMinecraft();
     private final Set previousActiveChunkSet = new HashSet();
 
-    /* WORLD DOWNLOADER ---> */
-    public IChunkLoader myChunkLoader; // Despite it's name this is used to SAVE the chunks
-    /* <--- WORLD DOWNLOADER */
-
-
     public WorldClient(NetClientHandler par1NetClientHandler, WorldSettings par2WorldSettings, int par3, int par4, Profiler par5Profiler)
     {
         super(new SaveHandlerMP(), "MpServer", WorldProvider.getProviderForDimension(par3), par2WorldSettings, par5Profiler);
@@ -42,13 +37,6 @@ public class WorldClient extends World
         this.difficultySetting = par4;
         this.setSpawnLocation(8, 64, 8);
         this.mapStorage = par1NetClientHandler.mapStorage;
-        /* WORLD DOWNLOADER ---> */
-        WorldDL.downloading = false;
-        //WorldDL.continueDownload( this ); // Will only continue if it was running before
-        //WorldDL.lastSeed = worldInfo.getSeed();
-        //WorldDL.lastDimension = par3;
-        //WorldDL.lastServerHostname = WorldDL.serverHostname;
-        /* <--- WORLD DOWNLOADER */
     }
 
     /**
@@ -78,6 +66,24 @@ public class WorldClient extends World
         this.theProfiler.endStartSection("tiles");
         this.tickBlocksAndAmbiance();
         this.theProfiler.endSection();
+        /*WDL>>>*/
+        if( WDL.guiToShowAsync != null )
+        {
+            WDL.mc.displayGuiScreen( WDL.guiToShowAsync );
+            WDL.guiToShowAsync = null;
+        }
+        if( WDL.downloading )
+        {
+            if( WDL.mc.thePlayer.craftingInventory != WDL.windowContainer )
+            {
+                if( WDL.mc.thePlayer.craftingInventory == WDL.mc.thePlayer.inventorySlots )
+                    WDL.onItemGuiClosed();
+                else
+                    WDL.onItemGuiOpened();
+                WDL.windowContainer = WDL.mc.thePlayer.craftingInventory;
+            }
+        }
+        /*<<<WDL*/
     }
 
     /**
@@ -139,11 +145,19 @@ public class WorldClient extends World
     {
         if (par3)
         {
+            /*WDL>>>*/
+            if( this != WDL.wc )
+                WDL.onWorldLoad();
             this.clientChunkProvider.loadChunk(par1, par2);
+            /*<<<WDL*/
         }
         else
         {
+            /*WDL>>>*/
+            if( WDL.downloading )
+                WDL.onChunkNoLongerNeeded( chunkProvider.provideChunk(par1, par2) );
             this.clientChunkProvider.unloadChunk(par1, par2);
+            /*<<<WDL*/
         }
 
         if (!par3)
@@ -421,7 +435,7 @@ public class WorldClient extends World
     }
 
     /**
-     * par8 is loudness, all pars passed to mc.sndManager.playSound
+     * par8 is loudness, all pars passed to minecraftInstance.sndManager.playSound
      */
     public void playSound(double par1, double par3, double par5, String par7Str, float par8, float par9)
     {
@@ -447,56 +461,26 @@ public class WorldClient extends World
     {
         return par0WorldClient.entitySpawnQueue;
     }
-
-    /* WORLD DOWNLOADER ---> */
-    public void saveWorld(boolean flag, IProgressUpdate iprogressupdate) 
-    {
-    	if(WorldDL.downloading == true)
-    	{
-    		chunkProvider.saveChunks(flag, iprogressupdate);
-    		worldInfo.setSizeOnDisk( WorldDL.getFileSizeRecursive(WorldDL.mySaveHandler.getSaveDirectory()) );
-    		
-	        NBTTagCompound nbttagcompound = new NBTTagCompound();
-            this.mc.thePlayer.writeToNBT(nbttagcompound);
-            NBTTagCompound nbttagcompound1 = worldInfo.cloneNBTCompound(nbttagcompound);
-            if( this.mc.thePlayer.capabilities.allowFlying && this.mc.thePlayer.capabilities.disableDamage )
-	        	nbttagcompound1.setInteger("GameType", 1); // Creative
-	        else
-	        	nbttagcompound1.setInteger("GameType", 0); // Survival
-	        
-    		WorldDL.mySaveHandler.saveWorldInfoWithPlayer(worldInfo, nbttagcompound);
-    	}
-
-        //mapStorage.saveAllData();
-        //chunkProvider.saveChunks(flag, iprogressupdate);
-    }
-
-
-    /*
-    public void playNoteAt(int i, int j, int k, int l, int i1)
-    {
-    	super.playNoteAt(i, j, k, l, i1);
-    	if(WorldDL.downloading == false)
-    		return;
-    	if( getBlockId(i, j, k) == Block.music.blockID)
-    	{
-	    	TileEntityNote tileentitynote = (TileEntityNote)getBlockTileEntity(i, j, k);
-	    	if( tileentitynote == null)
-	    		setBlockTileEntity(i, j, k, new TileEntityNote());
-	        tileentitynote.note = (byte)(i1 % 25);
-	        tileentitynote.onInventoryChanged();
-	        setMyBlockTileEntity(i, j, k, tileentitynote);
-    	}
-    }
-	*/
     
-    public void setMyBlockTileEntity(int i, int j, int k, TileEntity tileentity)
+    /*WDL>>>*/
+    @Override
+    public void removeWorldAccess(IWorldAccess par1iWorldAccess)
     {
-        Chunk chunk = getChunkFromChunkCoords(i >> 4, k >> 4);
-        if(chunk != null)
-        {
-            chunk.setMyChunkBlockTileEntity(i & 0xf, j, k & 0xf, tileentity);
-        }
+        super.removeWorldAccess(par1iWorldAccess);
+        // the old world: this (!= null)
+        // the new world: mc.theWorld (!= null)
+        if( WDL.downloading )
+            WDL.onWorldUnload();
     }
-    /* <--- WORLD DOWNLOADER */
+    /*<<<WDL*/
+    
+    /*WDL>>>*/
+    @Override
+    public void addBlockEvent(int par1, int par2, int par3, int par4, int par5, int par6)
+    {
+        super.addBlockEvent(par1, par2, par3, par4, par5, par6);
+        if( WDL.downloading )
+            WDL.onBlockEvent( par1, par2, par3, par4, par5, par6 );
+    }
+    /*<<<WDL*/
 }
