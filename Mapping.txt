@@ -1,5 +1,7 @@
-AnvilSaveConverter     => adx.class
-GuiIngameMenu          => apj.class
+Mappings using MCP 7.2 obfuscator
+
+AnvilSaveConverter     => ady.class
+GuiIngameMenu          => apk.class
 GuiWDL                 => GuiWDL.class
 GuiWDLBackup           => GuiWDLBackup.class
 GuiWDLGenerator        => GuiWDLGenerator.class
@@ -8,4 +10,4 @@ GuiWDLMultiworldSelect => GuiWDLMultiworldSelect.class
 GuiWDLPlayer           => GuiWDLPlayer.class
 GuiWDLWorld            => GuiWDLWorld.class
 WDL                    => WDL.class
-WorldClient            => atc.class
+WorldClient            => atd.class
