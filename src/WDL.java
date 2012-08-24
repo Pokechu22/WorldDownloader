@@ -772,7 +772,7 @@ public class WDL
     public static void chatMsg( String msg )
     {
         System.out.println( "WorldDownloader: " + msg ); // Just for debugging!
-        mc.ingameGUI.func_73827_b().func_73765_a("\u00A7c[WorldDL]\u00A76 " + msg );
+        mc.ingameGUI.getChatGUI().printChatMessage("\u00A7c[WorldDL]\u00A76 " + msg );
     }
     
     /**
