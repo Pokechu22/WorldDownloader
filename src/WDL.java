@@ -11,6 +11,7 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 
 import net.minecraft.client.Minecraft;
@@ -206,14 +207,16 @@ public class WDL
         lastX = mc.objectMouseOver.blockX;
         lastY = mc.objectMouseOver.blockY;
         lastZ = mc.objectMouseOver.blockZ;
-        //chatMsg( "onItemGuiOpened: " + lastX + " " + lastY + " " + lastZ );
+        int block = wc.getBlockId( lastX, lastY, lastZ );
+        chatMsg( "onItemGuiOpened: " + lastX + " " + lastY + " " + lastZ + " " + Block.blocksList[block].getBlockName() );
     }
     
     /** Must be called when a GUI that triggered an onItemGuiOpened is no longer shown */
     public static void onItemGuiClosed( )
     {
-        //chatMsg("onItemGuiClosed" );
         int block = wc.getBlockId( lastX, lastY, lastZ );
+        chatMsg("onItemGuiClosed: " + Block.blocksList[block].getBlockName() );
+        
         if( windowContainer instanceof ContainerChest && windowContainer.inventorySlots.size() > 63 )
         {
             if( block != Block.chest.blockID )
@@ -254,6 +257,16 @@ public class WDL
                 newTileEntities.add( new ChunkPosition( lastX  , lastY, lastZ ) );
             }
             chatMsg("onItemGuiClosed: set new TE: " + invTop + " at " + lastX + " " + lastY + " " + lastZ );
+        }
+        else if( windowContainer instanceof ContainerChest && block == Block.enderChest.blockID)
+        {
+        	InventoryEnderChest inventoryEnderChest = mc.thePlayer.getInventoryEnderChest();
+        	int inventorySize = inventoryEnderChest.getSizeInventory();
+        	int containerSize = windowContainer.inventorySlots.size();
+        	for(int i = 0; i < containerSize && i < inventorySize; i++)
+        	{
+        		inventoryEnderChest.setInventorySlotContents(i, windowContainer.getSlot(i).getStack());
+        	}
         }
         else
         {
