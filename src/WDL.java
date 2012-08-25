@@ -28,6 +28,7 @@ public class WDL
     
     public static Container windowContainer; // Reference to the place where all the item stacks end up after receiving them.
     public static int lastX = 0, lastY = 0, lastZ = 0; // Last right clicked block. Needed for TileEntity creation!
+    public static Entity lastEntity; // Last entity clicked (used for non-block tiles like minecarts with chests)
     
     public static SaveHandler  saveHandler; // For player files and the level.dat file
     public static IChunkLoader chunkLoader; // For the chunks (despite it's name it does also SAVE them)
@@ -204,89 +205,130 @@ public class WDL
     {
         if( mc.objectMouseOver == null )
             return;
-        lastX = mc.objectMouseOver.blockX;
-        lastY = mc.objectMouseOver.blockY;
-        lastZ = mc.objectMouseOver.blockZ;
-        int block = wc.getBlockId( lastX, lastY, lastZ );
-        chatMsg( "onItemGuiOpened: " + lastX + " " + lastY + " " + lastZ + " " + Block.blocksList[block].getBlockName() );
+        
+        if( mc.objectMouseOver.typeOfHit == EnumMovingObjectType.ENTITY)
+        {
+        	lastEntity = mc.objectMouseOver.entityHit;
+        }
+        else
+        {
+        	lastEntity = null;
+	        lastX = mc.objectMouseOver.blockX;
+	        lastY = mc.objectMouseOver.blockY;
+	        lastZ = mc.objectMouseOver.blockZ;
+        }
     }
     
     /** Must be called when a GUI that triggered an onItemGuiOpened is no longer shown */
     public static void onItemGuiClosed( )
     {
-        int block = wc.getBlockId( lastX, lastY, lastZ );
-        chatMsg("onItemGuiClosed: " + Block.blocksList[block].getBlockName() );
-        
-        if( windowContainer instanceof ContainerChest && windowContainer.inventorySlots.size() > 63 )
+    	if(lastEntity != null)
+    	{
+    		if(lastEntity instanceof EntityMinecart)
+    		{
+    			EntityMinecart emc = (EntityMinecart)lastEntity;
+    			WDL.chatMsg("onItemGuiClosed: EntityMinecart");
+    			if(emc.minecartType == 1)
+    			{
+    				for(int i = 0; i < emc.getSizeInventory(); i++)
+    				{
+    					emc.setInventorySlotContents(i, windowContainer.getSlot(i).getStack());
+    				}
+    			}
+    		}
+    		else
+    		{
+    			WDL.chatMsg(lastEntity.getEntityString());
+    		}
+    		return;
+    	}
+    	// Get the tile entity which we are going to update the inventory for 
+        TileEntity te = wc.getBlockTileEntity(lastX, lastY, lastZ);
+        if(te == null)
         {
-            if( block != Block.chest.blockID )
-                return;
-            
-            TileEntityChest invTop    = new TileEntityChest();
-            TileEntityChest invBottom = new TileEntityChest();
-            copyItemStacks( windowContainer, invTop   , 0 );
-            copyItemStacks( windowContainer, invBottom, 27);
-            
-            // Double chests consist of two TileEntities. They need to be correctly placed:
-            if (wc.getBlockId(lastX, lastY, lastZ+1) == Block.chest.blockID)
-            {
-                wc.setBlockTileEntity( lastX, lastY, lastZ  , invTop    );
-                newTileEntities.add( new ChunkPosition( lastX, lastY, lastZ   ) );
-                wc.setBlockTileEntity( lastX, lastY, lastZ+1, invBottom );
-                newTileEntities.add( new ChunkPosition( lastX, lastY, lastZ+1 ) );
-            }
-            else if (wc.getBlockId(lastX, lastY, lastZ-1) == Block.chest.blockID)
-            {
-                wc.setBlockTileEntity( lastX, lastY, lastZ-1, invTop    );
-                newTileEntities.add( new ChunkPosition( lastX, lastY, lastZ-1 ) );
-                wc.setBlockTileEntity( lastX, lastY, lastZ  , invBottom );
-                newTileEntities.add( new ChunkPosition( lastX, lastY, lastZ   ) );
-            }
-            else if (wc.getBlockId(lastX + 1, lastY, lastZ) == Block.chest.blockID)
-            {
-                wc.setBlockTileEntity( lastX  , lastY, lastZ, invTop    );
-                newTileEntities.add( new ChunkPosition( lastX  , lastY, lastZ ) );
-                wc.setBlockTileEntity( lastX+1, lastY, lastZ, invBottom );
-                newTileEntities.add( new ChunkPosition( lastX+1, lastY, lastZ ) );
-            }
-            else if( wc.getBlockId(lastX - 1, lastY, lastZ) == Block.chest.blockID )
-            {
-                wc.setBlockTileEntity( lastX-1, lastY, lastZ, invTop    );
-                newTileEntities.add( new ChunkPosition( lastX-1, lastY, lastZ ) );
-                wc.setBlockTileEntity( lastX  , lastY, lastZ, invBottom );
-                newTileEntities.add( new ChunkPosition( lastX  , lastY, lastZ ) );
-            }
-            chatMsg("onItemGuiClosed: set new TE: " + invTop + " at " + lastX + " " + lastY + " " + lastZ );
+        	WDL.chatMsg("onItemGuiClosed could not get TE at " + lastX + " " + lastY + " " + lastZ);
+        	return;
         }
-        else if( windowContainer instanceof ContainerChest && block == Block.enderChest.blockID)
+        
+        if( windowContainer instanceof ContainerChest && te instanceof TileEntityChest)
         {
-        	InventoryEnderChest inventoryEnderChest = mc.thePlayer.getInventoryEnderChest();
+        	if(windowContainer.inventorySlots.size() > 63 )
+        	{   
+	            TileEntity te2 = null;
+            	te2 = wc.getBlockTileEntity(lastX, lastY, lastZ+1);
+            	if(te2 != null && te2 instanceof TileEntityChest)
+            	{
+            		copyItemStacks( windowContainer, (TileEntityChest)te, 0 );
+                    copyItemStacks( windowContainer, (TileEntityChest)te2, 27);
+                    newTileEntities.add(new ChunkPosition(lastX, lastY, lastZ));
+                    newTileEntities.add(new ChunkPosition(lastX, lastY, lastZ+1));
+                    return;
+            	}
+            	te2 = wc.getBlockTileEntity(lastX, lastY, lastZ-1);
+            	if(te2 != null && te2 instanceof TileEntityChest)
+            	{
+            		copyItemStacks( windowContainer, (TileEntityChest)te2, 0 );
+                    copyItemStacks( windowContainer, (TileEntityChest)te, 27);
+                    newTileEntities.add(new ChunkPosition(lastX, lastY, lastZ));
+                    newTileEntities.add(new ChunkPosition(lastX, lastY, lastZ-1));
+                    return;
+            	}
+            	te2 = wc.getBlockTileEntity(lastX+1, lastY, lastZ);
+            	if(te2 != null && te2 instanceof TileEntityChest)
+            	{
+            		copyItemStacks( windowContainer, (TileEntityChest)te, 0 );
+                    copyItemStacks( windowContainer, (TileEntityChest)te2, 27);
+                    newTileEntities.add(new ChunkPosition(lastX, lastY, lastZ));
+                    newTileEntities.add(new ChunkPosition(lastX+1, lastY, lastZ));
+                    return;
+            	}
+            	te2 = wc.getBlockTileEntity(lastX-1, lastY, lastZ);
+            	if(te2 != null && te2 instanceof TileEntityChest)
+            	{
+            		copyItemStacks( windowContainer, (TileEntityChest)te2, 0 );
+                    copyItemStacks( windowContainer, (TileEntityChest)te, 27);
+                    newTileEntities.add(new ChunkPosition(lastX, lastY, lastZ));
+                    newTileEntities.add(new ChunkPosition(lastX-1, lastY, lastZ));
+                    return;
+            	}
+        	}
+        	// basic chest
+        	else
+        	{
+    			copyItemStacks(windowContainer, (TileEntityChest)te, 0);
+    			newTileEntities.add(new ChunkPosition(lastX, lastY, lastZ));
+    			return;
+        	}
+        }
+        else if( windowContainer instanceof ContainerChest && te instanceof TileEntityEnderChest)
+		{
+			InventoryEnderChest inventoryEnderChest = mc.thePlayer.getInventoryEnderChest();
         	int inventorySize = inventoryEnderChest.getSizeInventory();
         	int containerSize = windowContainer.inventorySlots.size();
         	for(int i = 0; i < containerSize && i < inventorySize; i++)
         	{
         		inventoryEnderChest.setInventorySlotContents(i, windowContainer.getSlot(i).getStack());
         	}
+        	return;
         }
-        else
+        else if( windowContainer instanceof ContainerBrewingStand )
         {
-            TileEntity newTE;
-            if( windowContainer instanceof ContainerChest && block == Block.chest.blockID )
-                newTE = new TileEntityChest();
-            else if( windowContainer instanceof ContainerBrewingStand )
-                newTE = new TileEntityBrewingStand();
-            else if( windowContainer instanceof ContainerDispenser )
-                newTE = new TileEntityDispenser();
-            else if( windowContainer instanceof ContainerFurnace )
-                newTE = new TileEntityFurnace();
-            else
-                return;
-            
-            copyItemStacks(windowContainer, (IInventory) newTE, 0);
-            wc.setBlockTileEntity( lastX, lastY, lastZ, newTE );
-            newTileEntities.add( new ChunkPosition( lastX, lastY, lastZ ) );
-            chatMsg("onItemGuiClosed: set new TE: " + newTE + " at " + lastX + " " + lastY + " " + lastZ );
+            copyItemStacks( windowContainer, (TileEntityBrewingStand)te, 0);
+            newTileEntities.add(new ChunkPosition(lastX, lastY, lastZ));
         }
+        else if( windowContainer instanceof ContainerDispenser )
+        {
+        	copyItemStacks( windowContainer, (TileEntityDispenser)te, 0);
+        	newTileEntities.add(new ChunkPosition(lastX, lastY, lastZ));
+        }
+        else if( windowContainer instanceof ContainerFurnace )
+        {
+        	copyItemStacks( windowContainer, (TileEntityFurnace)te, 0);
+        	newTileEntities.add(new ChunkPosition(lastX, lastY, lastZ));
+        }
+
+        WDL.chatMsg("onItemGuiClosed unhandled TE: " + te);
+        return;
     }
     
      /**
@@ -324,36 +366,44 @@ public class WDL
             {
                 NBTTagCompound tileEntityNBT = (NBTTagCompound) tileEntitiesNBT.tagAt( i );
                 TileEntity te = TileEntity.createAndLoadEntity( tileEntityNBT );
-                if( isImportableTileEntity( te ) )
+                String entityType = null;
+                if(( entityType = isImportableTileEntity( te ) ) != null)
+                {
                     if( ! newTileEntities.contains( new ChunkPosition( te.xCoord, te.yCoord, te.zCoord ) ) )
                     {
                         chunk.addTileEntity( te );
-                        chatMsg("Loaded TE: " + te + " at " + te.xCoord + " " + te.yCoord + " " + te.zCoord );
+                        chatMsg("Loaded TE: " + entityType + " at " + te.xCoord + " " + te.yCoord + " " + te.zCoord );
                     }
-                    else chatMsg( "Dropping old TE: " + te + " at " + te.xCoord + " " + te.yCoord + " " + te.zCoord );
-                else chatMsg( "Old TE is not importable: " + te + " at " + te.xCoord + " " + te.yCoord + " " + te.zCoord );
-                
+                    else
+                	{
+                    	chatMsg( "Dropping old TE: " + entityType + " at " + te.xCoord + " " + te.yCoord + " " + te.zCoord );
+                	}
+                }
+                else 
+                {
+                	chatMsg( "Old TE is not importable: " + entityType + " at " + te.xCoord + " " + te.yCoord + " " + te.zCoord );
+                }
             }
         }
         catch ( Exception e ) { } // Couldn't load the old chunk. Nothing unusual. Happens with every not downloaded chunk.
     }
     
     /** Checks if the TileEntity should be imported. Only "problematic" TEs will be imported. */
-    public static boolean isImportableTileEntity( TileEntity te )
+    public static String isImportableTileEntity( TileEntity te )
     {
         Block block = Block.blocksList[ wc.getBlockId( te.xCoord, te.yCoord, te.zCoord ) ];
         if( block instanceof BlockChest && te instanceof TileEntityChest )
-            return true;
+            return "TileEntityChest";
         else if( block instanceof BlockDispenser && te instanceof TileEntityDispenser )
-            return true;
+            return "TileEntityDispenser";
         else if( block instanceof BlockFurnace && te instanceof TileEntityFurnace )
-            return true;
+            return "TileEntityFurnace";
         else if( block instanceof BlockNote && te instanceof TileEntityNote )
-            return true;
+            return "TileEntityNote";
         else if( block instanceof BlockBrewingStand && te instanceof TileEntityBrewingStand )
-            return true;
+            return "TileEntityBrewingStand";
         else
-            return false;
+            return null;
     }
     
     /** Saves all remaining chunks, world info and player info. Usually called when stopping. */
