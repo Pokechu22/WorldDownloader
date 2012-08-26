@@ -21,6 +21,7 @@ import net.minecraft.client.Minecraft;
  */
 public class WDL
 {
+	public static boolean DEBUG = true; // Setting to false will supress debug output in chat console
     // References:
     public static Minecraft   mc; // Reference to the Minecraft object
     public static WorldClient wc; // Reference to the World object that WDL uses
@@ -222,82 +223,97 @@ public class WDL
     /** Must be called when a GUI that triggered an onItemGuiOpened is no longer shown */
     public static void onItemGuiClosed( )
     {
+    	String saveName = "";
+    	
+    	// If the last thing clicked was an ENTITY
     	if(lastEntity != null)
     	{
-    		if(lastEntity instanceof EntityMinecart)
+    		
+    		if(lastEntity instanceof EntityMinecart && windowContainer instanceof ContainerChest)
     		{
     			EntityMinecart emc = (EntityMinecart)lastEntity;
-    			WDL.chatMsg("onItemGuiClosed: EntityMinecart");
     			if(emc.minecartType == 1)
     			{
     				for(int i = 0; i < emc.getSizeInventory(); i++)
     				{
     					emc.setInventorySlotContents(i, windowContainer.getSlot(i).getStack());
+    					saveName = "Storage Minecart contents";
     				}
     			}
     		}
+    		else if(lastEntity instanceof EntityVillager && windowContainer instanceof ContainerMerchant)
+    		{
+    			EntityVillager ev = (EntityVillager)lastEntity;
+    			WDL.chatMsg("Saving villager offers is not yet supported.");
+    			saveName = "Villager offers";
+    			return;
+    		}
     		else
     		{
-    			WDL.chatMsg(lastEntity.getEntityString());
+    			WDL.chatMsg("Unsupported entity cannot be saved:" + lastEntity.getEntityString());
     		}
+    		WDL.chatMsg("Saved " + saveName + ".");
     		return;
     	}
+    	
+    	// Else, the last thing clicked was a TILE ENTITY
     	// Get the tile entity which we are going to update the inventory for 
         TileEntity te = wc.getBlockTileEntity(lastX, lastY, lastZ);
         if(te == null)
         {
-        	WDL.chatMsg("onItemGuiClosed could not get TE at " + lastX + " " + lastY + " " + lastZ);
+        	WDL.chatDebug("onItemGuiClosed could not get TE at " + lastX + " " + lastY + " " + lastZ);
         	return;
         }
         
         if( windowContainer instanceof ContainerChest && te instanceof TileEntityChest)
         {
         	if(windowContainer.inventorySlots.size() > 63 )
-        	{   
-	            TileEntity te2 = null;
-            	te2 = wc.getBlockTileEntity(lastX, lastY, lastZ+1);
-            	if(te2 != null && te2 instanceof TileEntityChest)
+        	{
+        		TileEntity te2;
+        		ChunkPosition cp1 = new ChunkPosition(lastX, lastY, lastZ);
+        		ChunkPosition cp2;
+        		TileEntityChest tec1, tec2;
+        		if((te2 = wc.getBlockTileEntity(lastX, lastY, lastZ+1)) instanceof TileEntityChest)
             	{
-            		copyItemStacks( windowContainer, (TileEntityChest)te, 0 );
-                    copyItemStacks( windowContainer, (TileEntityChest)te2, 27);
-                    newTileEntities.add(new ChunkPosition(lastX, lastY, lastZ));
-                    newTileEntities.add(new ChunkPosition(lastX, lastY, lastZ+1));
-                    return;
+        			tec1 = (TileEntityChest)te;
+        			tec2 = (TileEntityChest)te2;
+        			cp2 = new ChunkPosition(lastX, lastY, lastZ+1);
             	}
-            	te2 = wc.getBlockTileEntity(lastX, lastY, lastZ-1);
-            	if(te2 != null && te2 instanceof TileEntityChest)
+        		else if((te2 = wc.getBlockTileEntity(lastX, lastY, lastZ-1)) instanceof TileEntityChest)
             	{
-            		copyItemStacks( windowContainer, (TileEntityChest)te2, 0 );
-                    copyItemStacks( windowContainer, (TileEntityChest)te, 27);
-                    newTileEntities.add(new ChunkPosition(lastX, lastY, lastZ));
-                    newTileEntities.add(new ChunkPosition(lastX, lastY, lastZ-1));
-                    return;
+            		tec1 = (TileEntityChest)te2;
+        			tec2 = (TileEntityChest)te;
+        			cp2 = new ChunkPosition(lastX, lastY, lastZ-1);
             	}
-            	te2 = wc.getBlockTileEntity(lastX+1, lastY, lastZ);
-            	if(te2 != null && te2 instanceof TileEntityChest)
+        		else if((te2 = wc.getBlockTileEntity(lastX+1, lastY, lastZ)) instanceof TileEntityChest)
             	{
-            		copyItemStacks( windowContainer, (TileEntityChest)te, 0 );
-                    copyItemStacks( windowContainer, (TileEntityChest)te2, 27);
-                    newTileEntities.add(new ChunkPosition(lastX, lastY, lastZ));
-                    newTileEntities.add(new ChunkPosition(lastX+1, lastY, lastZ));
-                    return;
+        			tec1 = (TileEntityChest)te;
+        			tec2 = (TileEntityChest)te2;
+        			cp2 = new ChunkPosition(lastX+1, lastY, lastZ);
             	}
-            	te2 = wc.getBlockTileEntity(lastX-1, lastY, lastZ);
-            	if(te2 != null && te2 instanceof TileEntityChest)
+        		else if((te2 = wc.getBlockTileEntity(lastX-1, lastY, lastZ)) instanceof TileEntityChest)
             	{
-            		copyItemStacks( windowContainer, (TileEntityChest)te2, 0 );
-                    copyItemStacks( windowContainer, (TileEntityChest)te, 27);
-                    newTileEntities.add(new ChunkPosition(lastX, lastY, lastZ));
-                    newTileEntities.add(new ChunkPosition(lastX-1, lastY, lastZ));
-                    return;
+        			tec1 = (TileEntityChest)te2;
+        			tec2 = (TileEntityChest)te;
+        			cp2 = new ChunkPosition(lastX-1, lastY, lastZ);
             	}
+        		else
+        		{
+        			WDL.chatMsg("Could not save this chest!");
+        			return;
+        		}
+        		copyItemStacks( windowContainer, (TileEntityChest)tec1, 0 );
+                copyItemStacks( windowContainer, (TileEntityChest)tec2, 27);
+                newTileEntities.add(cp1);
+                newTileEntities.add(cp2);
+                saveName = "Double Chest contents";
         	}
         	// basic chest
         	else
         	{
     			copyItemStacks(windowContainer, (TileEntityChest)te, 0);
     			newTileEntities.add(new ChunkPosition(lastX, lastY, lastZ));
-    			return;
+    			saveName = "Chest contents";
         	}
         }
         else if( windowContainer instanceof ContainerChest && te instanceof TileEntityEnderChest)
@@ -309,25 +325,33 @@ public class WDL
         	{
         		inventoryEnderChest.setInventorySlotContents(i, windowContainer.getSlot(i).getStack());
         	}
-        	return;
+        	saveName = "Ender Chest contents";
         }
         else if( windowContainer instanceof ContainerBrewingStand )
         {
             copyItemStacks( windowContainer, (TileEntityBrewingStand)te, 0);
             newTileEntities.add(new ChunkPosition(lastX, lastY, lastZ));
+            saveName = "Brewing Stand contents";
         }
         else if( windowContainer instanceof ContainerDispenser )
         {
         	copyItemStacks( windowContainer, (TileEntityDispenser)te, 0);
         	newTileEntities.add(new ChunkPosition(lastX, lastY, lastZ));
+        	saveName = "Dispenser contents";
         }
         else if( windowContainer instanceof ContainerFurnace )
         {
         	copyItemStacks( windowContainer, (TileEntityFurnace)te, 0);
         	newTileEntities.add(new ChunkPosition(lastX, lastY, lastZ));
+        	saveName = "Furnace contents";
+        }
+        else
+        {
+        	WDL.chatDebug("onItemGuiClosed unhandled TE: " + te);
+        	return;
         }
 
-        WDL.chatMsg("onItemGuiClosed unhandled TE: " + te);
+        WDL.chatMsg("Saved " + saveName + ".");
         return;
     }
     
@@ -343,7 +367,7 @@ public class WDL
             newTE.note = (byte)( param % 25 );
             wc.setBlockTileEntity( x, y, z, newTE );
             newTileEntities.add( new ChunkPosition( x, y, z ) );
-            chatMsg( "onBlockEvent: Note Block: " + x + " " + y + " " + z + " pitch: " + param + " - " + newTE );
+            chatDebug( "onBlockEvent: Note Block: " + x + " " + y + " " + z + " pitch: " + param + " - " + newTE );
         }
         // Pistons, Chests (open, close), EnderChests, ... (see references to WorldServer.addBlockEvent)
     }
@@ -372,16 +396,16 @@ public class WDL
                     if( ! newTileEntities.contains( new ChunkPosition( te.xCoord, te.yCoord, te.zCoord ) ) )
                     {
                         chunk.addTileEntity( te );
-                        chatMsg("Loaded TE: " + entityType + " at " + te.xCoord + " " + te.yCoord + " " + te.zCoord );
+                        chatDebug("Loaded TE: " + entityType + " at " + te.xCoord + " " + te.yCoord + " " + te.zCoord );
                     }
                     else
                 	{
-                    	chatMsg( "Dropping old TE: " + entityType + " at " + te.xCoord + " " + te.yCoord + " " + te.zCoord );
+                    	chatDebug( "Dropping old TE: " + entityType + " at " + te.xCoord + " " + te.yCoord + " " + te.zCoord );
                 	}
                 }
                 else 
                 {
-                	chatMsg( "Old TE is not importable: " + entityType + " at " + te.xCoord + " " + te.yCoord + " " + te.zCoord );
+                	chatDebug( "Old TE is not importable: " + entityType + " at " + te.xCoord + " " + te.yCoord + " " + te.zCoord );
                 }
             }
         }
@@ -834,8 +858,17 @@ public class WDL
     /** Adds a chat message with a World Downloader prefix */
     public static void chatMsg( String msg )
     {
-        System.out.println( "WorldDownloader: " + msg ); // Just for debugging!
+        //System.out.println( "WorldDownloader: " + msg ); // Just for debugging!
         mc.ingameGUI.getChatGUI().printChatMessage("\u00A7c[WorldDL]\u00A76 " + msg );
+    }
+    
+    /** Adds a chat message with a World Downloader prefix */
+    public static void chatDebug( String msg )
+    {
+    	if(!WDL.DEBUG)
+    		return;
+        //System.out.println( "WorldDownloader: " + msg ); // Just for debugging!
+        mc.ingameGUI.getChatGUI().printChatMessage("\u00A72[WorldDL]\u00A76 " + msg );
     }
     
     /**
