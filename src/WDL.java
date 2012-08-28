@@ -448,7 +448,7 @@ public class WDL
         mc.thePlayer.writeToNBT( playerNBT );
         applyOverridesToPlayer( playerNBT );
         
-        wc.worldInfo.setSaveVersion( 19133 ); //TODO: Update this value each time it changes in the original code!
+        wc.worldInfo.setSaveVersion( ((AnvilSaveConverter)mc.getSaveLoader()).getSaveVersion() );
         NBTTagCompound worldInfoNBT = wc.worldInfo.cloneNBTCompound( playerNBT );
         applyOverridesToWorldInfo( worldInfoNBT );
         
