@@ -34,12 +34,13 @@ public class GuiIngameMenu extends GuiScreen
         // This code adds the start, stop and options buttons to the menu:
         if( !mc.isIntegratedServerRunning() ) // (If connected to real server)
         {
-            if( WDL.downloading == false )
-                controlList.add(new GuiButton(50, width / 2 - 100, height / 4 + 72 + var1, 170, 20, "Download this world"));
-            else
-                controlList.add(new GuiButton(50, width / 2 - 100, height / 4 + 72 + var1, 170, 20, "Stop download"));
-            
-            controlList.add(new GuiButton(51, width / 2 + 71, height / 4 + 72 + var1, 28, 20, "..."));
+            GuiButton wdlDownload = new GuiButton(50, width / 2 - 100, height / 4 + 72 + var1, 170, 20, "WDL bug!");
+            wdlDownload.displayString = (WDL.downloading ? (WDL.isSavingChunks ? "Still saving..." : "Stop download") : "Download this world");
+            controlList.add(wdlDownload);
+            wdlDownload.enabled = (!WDL.downloading || (WDL.downloading && !WDL.isSavingChunks));
+            GuiButton wdlOptions = new GuiButton(51, width / 2 + 71, height / 4 + 72 + var1, 28, 20, "...");
+            controlList.add(wdlOptions);
+            wdlOptions.enabled = (!WDL.downloading || (WDL.downloading && !WDL.isSavingChunks));
             ((GuiButton)controlList.get(0)).yPosition = height / 4 + 144 + var1;
             ((GuiButton)controlList.get(2)).yPosition = height / 4 + 120 + var1;
             ((GuiButton)controlList.get(3)).yPosition = height / 4 + 120 + var1;

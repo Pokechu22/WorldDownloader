@@ -14,6 +14,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.Minecraft;
 
 /**
@@ -21,7 +23,7 @@ import net.minecraft.client.Minecraft;
  */
 public class WDL
 {
-	public static boolean DEBUG = true; // Setting to false will supress debug output in chat console
+	public static boolean DEBUG = false; // Setting to false will supress debug output in chat console
     // References:
     public static Minecraft   mc; // Reference to the Minecraft object
     public static WorldClient wc; // Reference to the World object that WDL uses
@@ -44,6 +46,8 @@ public class WDL
     public static boolean isMultiworld  = false; // Is this a multiworld server?
     public static boolean propsFound    = false; // Are there saved properties available?
     public static boolean startOnChange = false; // Automatically restart after world changes?
+    
+    public static boolean isSavingChunks = false;
     
     // Names:
     public static String worldName      = "WorldDownloaderERROR"; // safe default
@@ -131,12 +135,12 @@ public class WDL
     /** Stops the download */
     public static void stop( )
     {
-        saveEverything();
-        startOnChange = false;
-        downloading = false;
-        chatMsg( "Download stopped" );
-        mc.getSaveLoader().flushCache();
-        saveHandler.flush();
+    	if(downloading)
+    	{
+	    	WDLSaveAsync saver = new WDLSaveAsync();
+	    	Thread thread = new Thread(saver, "WDL Save Thread");
+	    	thread.start();
+    	}
     }
     
     //// Callback methods for important events. Call them from suitable locations in the base classes. \\\\
@@ -160,7 +164,7 @@ public class WDL
         if( nm != newNM )
         {
             // Different server, different world!
-            chatMsg( "onWorldLoad: different server!" );
+            chatDebug( "onWorldLoad: different server!" );
             nm = newNM;
             loadBaseProps();
             if( baseProps.getProperty( "AutoStart" ).equals( "true" ) )
@@ -171,7 +175,7 @@ public class WDL
         else
         {
             // Same server, different world!
-            chatMsg( "onWorldLoad: same server!" );
+            chatDebug( "onWorldLoad: same server!" );
             if( startOnChange )
                 start();
         }
@@ -180,14 +184,17 @@ public class WDL
     /** Must be called when the world is no longer used */
     public static void onWorldUnload( )
     {
+    	/*
         if( downloading )
         {
             chatMsg( "onWorldUnload" );
-            downloading = false;
             saveEverything();
+            downloading = false;
             mc.getSaveLoader().flushCache();
             saveHandler.flush();
         }
+        */
+    	stop();
         wc = null;
     }
     
@@ -197,7 +204,7 @@ public class WDL
         if( unneededChunk == null || unneededChunk.isModified == false )
             return;
         
-        //chatMsg( "onChunkNoLongerNeeded: " + unneededChunk.xPosition + ", " + unneededChunk.zPosition );
+        chatDebug( "onChunkNoLongerNeeded: " + unneededChunk.xPosition + ", " + unneededChunk.zPosition );
         saveChunk( unneededChunk );
     }
     
@@ -460,7 +467,7 @@ public class WDL
     /** Save the player (position, health, inventory, ...) into its own file in the players directory */
     public static void savePlayer( NBTTagCompound playerNBT )
     {
-        chatMsg( "savePlayer");
+        chatMsg( "Saving player data...");
         try
         {
             File playersDirectory = new File( saveHandler.getSaveDirectory(), "players" );
@@ -475,14 +482,15 @@ public class WDL
         }
         catch (Exception e)
         {
-            throw new RuntimeException( "WorldDownloader: Couldn't save the player" );
+            throw new RuntimeException( "Couldn't save the player!" );
         }
+        chatMsg( "Player data saved.");
     }
     
     /** Save the world metadata (time, gamemode, seed, ...) into the level.dat file */
     public static void saveWorldInfo( NBTTagCompound worldInfoNBT )
     {
-        chatMsg( "saveWorldInfo");
+        chatMsg( "Saving world metadata...");
         File saveDirectory = saveHandler.getSaveDirectory();
         NBTTagCompound dataNBT = new NBTTagCompound();
         dataNBT.setTag( "Data", worldInfoNBT );
@@ -507,19 +515,23 @@ public class WDL
         }
         catch (Exception e)
         {
-            throw new RuntimeException( "WorldDownloader: Couldn't save the world metadata!" );
+            throw new RuntimeException( "Couldn't save the world metadata!" );
         }
+        chatMsg( "World data saved.");
     }
     
     /** Calls saveChunk for all currently loaded chunks */
     public static void saveChunks( )
     {
-        chatMsg( "saveChunks");
+        chatMsg( "Saving chunks...");
         LongHashMap chunkMapping = (LongHashMap) stealAndGetField( wc.chunkProvider, LongHashMap.class );
         LongHashMapEntry[] hashArray = (LongHashMapEntry[]) stealAndGetField( chunkMapping , LongHashMapEntry[].class );
         
+        isSavingChunks = true;
+        WDLSaveProgressReporter progressReporter = new WDLSaveProgressReporter();
+        progressReporter.start();
+        
         // Now that we have the HashMap, lets start iterating over it:
-        int i = 0;
         for( LongHashMapEntry lhme : hashArray )
         {
             while( lhme != null )
@@ -528,7 +540,15 @@ public class WDL
                 if( c != null && c.isModified ) // only save filled chunks
                 {
                     saveChunk( c );
-                    i++;
+                    
+                    try
+                    {
+                    	ThreadedFileIOBase.threadedIOInstance.waitForFinish();
+                    }
+                    catch(Exception e)
+                    {
+                    	chatMsg( "Threw exception waiting for asynchronous IO to finish. Hmmm.");
+                    }
                 }
                 else
                     chatMsg( "Didn't save chunk " + c.xPosition + " " + c.zPosition + " because isModified is false!" );
@@ -536,8 +556,34 @@ public class WDL
                 lhme = lhme.nextEntry; // Get next Entry in this linked list
             }
         }
-        chatMsg( "saveChunks: saved " + i + " chunks" );
+        isSavingChunks = false;
+        chatMsg( "Chunk saving complete. Your single player file should be ready to play!");
     }
+    
+    /**
+     * Renders World Downloader save progress bar
+     */
+    /*
+    public static void renderSaveProgress()
+    {
+    	if (saveProgress == 0)
+    		return;
+        FontRenderer fontRenderer = mc.fontRenderer;
+        ScaledResolution scaledResolution = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
+        int scaledWidth = scaledResolution.getScaledWidth();
+        short width = 182;
+        int xPos = scaledWidth / 2 - width / 2;
+        byte yPos = 12;
+        mc.ingameGUI.drawTexturedModalRect(xPos, yPos, 0, 74, width, 5);
+        mc.ingameGUI.drawTexturedModalRect(xPos, yPos, 0, 74, width, 5);
+    	mc.ingameGUI.drawTexturedModalRect(xPos, yPos, 0, 79, saveProgress * width, 5);
+
+        String var9 = "Save Progress";
+        fontRenderer.drawStringWithShadow(var9, scaledWidth / 2 - fontRenderer.getStringWidth(var9) / 2, yPos - 10, 16711935);
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, mc.renderEngine.getTexture("/gui/icons.png"));
+    }
+    */
     
     /** Import all not overwritten TileEntities, then save the chunk */
     public static void saveChunk( Chunk c )
