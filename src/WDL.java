@@ -115,6 +115,7 @@ public class WDL
         {
             // Never seen this world before. Ask user about multiworlds:
             guiToShowAsync = new GuiWDLMultiworld( null );
+            return;
         }
         
         worldProps = loadWorldProps( worldName );
