@@ -28,6 +28,7 @@ public class WDL
     public static Minecraft   mc; // Reference to the Minecraft object
     public static WorldClient wc; // Reference to the World object that WDL uses
     public static NetworkManager nm = null; // Reference to a connection specific object. Used to detect a new connection.
+    public static EntityClientPlayerMP tp;
     
     public static Container windowContainer; // Reference to the place where all the item stacks end up after receiving them.
     public static int lastX = 0, lastY = 0, lastZ = 0; // Last right clicked block. Needed for TileEntity creation!
@@ -157,7 +158,8 @@ public class WDL
         
         worldName = ""; // The new (multi-)world name is unknown at the moment
         wc = mc.theWorld;
-        WDL.windowContainer = WDL.mc.thePlayer.craftingInventory;
+        tp = mc.thePlayer;
+        windowContainer = tp.craftingInventory;
         
         // Is this a different server?
         NetworkManager newNM = mc.getSendQueue().getNetManager();
@@ -196,7 +198,6 @@ public class WDL
         }
         */
     	stop();
-        wc = null;
     }
     
     /** Must be called when a chunk is no longer needed and should be removed */
@@ -326,7 +327,7 @@ public class WDL
         }
         else if( windowContainer instanceof ContainerChest && te instanceof TileEntityEnderChest)
 		{
-			InventoryEnderChest inventoryEnderChest = mc.thePlayer.getInventoryEnderChest();
+			InventoryEnderChest inventoryEnderChest = tp.getInventoryEnderChest();
         	int inventorySize = inventoryEnderChest.getSizeInventory();
         	int containerSize = windowContainer.inventorySlots.size();
         	for(int i = 0; i < containerSize && i < inventorySize; i++)
@@ -453,7 +454,7 @@ public class WDL
         }
         
         NBTTagCompound playerNBT = new NBTTagCompound();
-        mc.thePlayer.writeToNBT( playerNBT );
+        tp.writeToNBT( playerNBT );
         applyOverridesToPlayer( playerNBT );
         
         wc.worldInfo.setSaveVersion( ((AnvilSaveConverter)mc.getSaveLoader()).getSaveVersion() );
@@ -472,8 +473,8 @@ public class WDL
         try
         {
             File playersDirectory = new File( saveHandler.getSaveDirectory(), "players" );
-            File playerFile = new File( playersDirectory, mc.thePlayer.username + ".dat.tmp" );
-            File playerFileOld = new File( playersDirectory, mc.thePlayer.username + ".dat" );
+            File playerFile = new File( playersDirectory, tp.username + ".dat.tmp" );
+            File playerFileOld = new File( playersDirectory, tp.username + ".dat" );
             
             CompressedStreamTools.writeCompressed( playerNBT, new FileOutputStream( playerFile ) );
 
@@ -746,7 +747,7 @@ public class WDL
         String gametypeOption = worldProps.getProperty("GameType");
         if( gametypeOption.equals("keep") )
         {
-            if( mc.thePlayer.capabilities.isCreativeMode )
+            if( tp.capabilities.isCreativeMode )
                 worldInfoNBT.setInteger("GameType", 1); // Creative
             else
                 worldInfoNBT.setInteger("GameType", 0); // Survival
@@ -825,9 +826,9 @@ public class WDL
         String spawn = worldProps.getProperty("Spawn");
         if( spawn.equals("player") )
         {
-            int x = (int)Math.floor(mc.thePlayer.posX);
-            int y = (int)Math.floor(mc.thePlayer.posY);
-            int z = (int)Math.floor(mc.thePlayer.posZ);
+            int x = (int)Math.floor(tp.posX);
+            int y = (int)Math.floor(tp.posY);
+            int z = (int)Math.floor(tp.posZ);
             worldInfoNBT.setInteger("SpawnX", x);
             worldInfoNBT.setInteger("SpawnY", y);
             worldInfoNBT.setInteger("SpawnZ", z);

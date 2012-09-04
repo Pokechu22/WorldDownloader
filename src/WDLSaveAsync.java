@@ -10,5 +10,6 @@ public class WDLSaveAsync implements Runnable
         WDL.startOnChange = false;
         WDL.mc.getSaveLoader().flushCache();
         WDL.saveHandler.flush();
+        WDL.wc = null;
     }
 }
