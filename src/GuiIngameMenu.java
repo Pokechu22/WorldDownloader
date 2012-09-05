@@ -86,6 +86,7 @@ public class GuiIngameMenu extends GuiScreen
 
             case 7:
                 this.mc.displayGuiScreen(new GuiShareToLan(this));
+                break;
             /*WDL>>>*/
             case 50:
                 if( WDL.downloading == true )
