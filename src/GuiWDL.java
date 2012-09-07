@@ -59,6 +59,7 @@ public class GuiWDL extends GuiScreen
         
         hi += 22;
         backupBtn = new GuiButton( 2, w-100, hi, "Backup Options..." );
+        backupBtn.enabled = false;
         controlList.add( backupBtn );
         
 //        hi += 22;

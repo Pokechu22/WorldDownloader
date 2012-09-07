@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 
 public class GuiWDLBackup extends GuiScreen
 {
+	private String title = "";
 	
 	private GuiScreen parent;
 	
@@ -21,6 +22,8 @@ public class GuiWDLBackup extends GuiScreen
     public void initGui()
     {
         controlList.clear();
+        
+        title = "Backup Options for " + WDL.baseFolderName.replace('@', ':');
         
         int w = width / 2;
         int h = height / 4;
@@ -69,7 +72,7 @@ public class GuiWDLBackup extends GuiScreen
     public void drawScreen(int i, int j, float f)
     {
         drawDefaultBackground();
-        drawCenteredString(fontRenderer, "Options for [HostString][:Port]", width / 2, height / 4 - 40, 0xffffff);
+        drawCenteredString(fontRenderer, title, width / 2, height / 4 - 40, 0xffffff);
         
         drawString(fontRenderer, "Name:", width / 2 - 99, 50, 0xffffff);
         if( cmdBox == true )
