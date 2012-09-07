@@ -388,9 +388,9 @@ public class GuiWDLWorld extends GuiScreen
     
     private void pickSpawn()
     {
-    	int x = (int)Math.floor(mc.thePlayer.posX);
-    	int y = (int)Math.floor(mc.thePlayer.posY);
-    	int z = (int)Math.floor(mc.thePlayer.posZ);
+    	int x = (int)Math.floor(WDL.tp.posX);
+    	int y = (int)Math.floor(WDL.tp.posY);
+    	int z = (int)Math.floor(WDL.tp.posZ);
     	spawnX.setText(String.valueOf(x));
     	spawnY.setText(String.valueOf(y));
     	spawnZ.setText(String.valueOf(z));

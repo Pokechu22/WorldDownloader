@@ -74,13 +74,13 @@ public class WorldClient extends World
         }
         if( WDL.downloading )
         {
-            if( WDL.mc.thePlayer.craftingInventory != WDL.windowContainer )
+            if( WDL.tp.craftingInventory != WDL.windowContainer )
             {
-                if( WDL.mc.thePlayer.craftingInventory == WDL.mc.thePlayer.inventorySlots )
+                if( WDL.tp.craftingInventory == WDL.tp.inventorySlots )
                     WDL.onItemGuiClosed();
                 else
                     WDL.onItemGuiOpened();
-                WDL.windowContainer = WDL.mc.thePlayer.craftingInventory;
+                WDL.windowContainer = WDL.tp.craftingInventory;
             }
         }
         /*<<<WDL*/

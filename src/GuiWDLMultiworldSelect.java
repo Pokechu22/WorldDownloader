@@ -28,7 +28,7 @@ public class GuiWDLMultiworldSelect extends GuiScreen
 	public GuiWDLMultiworldSelect( GuiScreen parent )
     {
 		this.parent = parent;
-		EntityClientPlayerMP player = WDL.mc.thePlayer;
+		EntityClientPlayerMP player = WDL.tp;
         cam = new EntityPlayerSP(WDL.mc, WDL.wc, new Session("Camera", ""), player.dimension);
         cam.setLocationAndAngles(player.posX, player.posY - player.yOffset, player.posZ, player.rotationYaw, 0.0f );
         yaw = player.rotationYaw;
@@ -171,9 +171,9 @@ public class GuiWDLMultiworldSelect extends GuiScreen
         
         float radius = 0.475f; //Min: 0.475f
         // field_71439_g == thePlayer
-        cam.lastTickPosY = cam.prevPosY = cam.posY = mc.thePlayer.posY;
-        cam.lastTickPosX = cam.prevPosX = cam.posX = mc.thePlayer.posX - radius * Math.sin(yaw/180.0*Math.PI);
-        cam.lastTickPosZ = cam.prevPosZ = cam.posZ = mc.thePlayer.posZ + radius * Math.cos(yaw/180.0*Math.PI);
+        cam.lastTickPosY = cam.prevPosY = cam.posY = WDL.tp.posY;
+        cam.lastTickPosX = cam.prevPosX = cam.posX = WDL.tp.posX - radius * Math.sin(yaw/180.0*Math.PI);
+        cam.lastTickPosZ = cam.prevPosZ = cam.posZ = WDL.tp.posZ + radius * Math.cos(yaw/180.0*Math.PI);
         
         float baseSpeed = 1.0f;
         yaw += baseSpeed *( 1.0f + 0.7f * Math.cos((yaw+45.0f)/45.0*Math.PI) );
@@ -187,7 +187,7 @@ public class GuiWDLMultiworldSelect extends GuiScreen
     public void onGuiClosed() {
     	super.onGuiClosed();
     	WDL.mc.gameSettings.thirdPersonView = thirdPersonViewSave;
-    	mc.renderViewEntity = mc.thePlayer; // == thePlayer
+    	mc.renderViewEntity = WDL.tp;
     }
     
     private void worldSelected( String w )
