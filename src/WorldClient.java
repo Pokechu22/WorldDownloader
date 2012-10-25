@@ -45,6 +45,7 @@ public class WorldClient extends World
     public void tick()
     {
         super.tick();
+        this.func_82738_a(this.func_82737_E() + 1L);
         this.setWorldTime(this.getWorldTime() + 1L);
         this.theProfiler.startSection("reEntryProcessing");
 
@@ -143,22 +144,22 @@ public class WorldClient extends World
 
     public void doPreChunk(int par1, int par2, boolean par3)
     {
-        if (par3)
-        {
-            /*WDL>>>*/
-            if( this != WDL.wc )
-                WDL.onWorldLoad();
-            this.clientChunkProvider.loadChunk(par1, par2);
-            /*<<<WDL*/
-        }
-        else
-        {
-            /*WDL>>>*/
-            if( WDL.downloading )
-                WDL.onChunkNoLongerNeeded( chunkProvider.provideChunk(par1, par2) );
-            this.clientChunkProvider.unloadChunk(par1, par2);
-            /*<<<WDL*/
-        }
+    	if (par3)
+    	{
+    	    /*WDL>>>*/
+    	    if( this != WDL.wc )
+    	        WDL.onWorldLoad();
+    	    this.clientChunkProvider.loadChunk(par1, par2);
+    	    /*<<<WDL*/
+    	}
+    	else
+    	{
+    	    /*WDL>>>*/
+    	    if( WDL.downloading )
+    	        WDL.onChunkNoLongerNeeded( chunkProvider.provideChunk(par1, par2) );
+    	    this.clientChunkProvider.unloadChunk(par1, par2);
+    	    /*<<<WDL*/
+    	}
 
         if (!par3)
         {
@@ -249,11 +250,11 @@ public class WorldClient extends World
     }
 
     /**
-     * Lookup and return an Entity based on its ID
+     * Returns the Entity with the given ID, or null if it doesn't exist in this World.
      */
     public Entity getEntityByID(int par1)
     {
-        return (Entity)this.entityHashSet.lookup(par1);
+        return (Entity)(par1 == this.mc.thePlayer.entityId ? this.mc.thePlayer : (Entity)this.entityHashSet.lookup(par1));
     }
 
     public Entity removeEntityFromWorld(int par1)
@@ -281,6 +282,11 @@ public class WorldClient extends World
     public void sendQuittingDisconnectingPacket()
     {
         this.sendQueue.quitWithPacket(new Packet255KickDisconnect("Quitting"));
+    }
+
+    public IUpdatePlayerListBox func_82735_a(EntityMinecart par1EntityMinecart)
+    {
+        return new SoundUpdaterMinecart(this.mc.sndManager, par1EntityMinecart, this.mc.thePlayer);
     }
 
     /**
@@ -472,9 +478,7 @@ public class WorldClient extends World
         if( WDL.downloading )
             WDL.onWorldUnload();
     }
-    /*<<<WDL*/
-    
-    /*WDL>>>*/
+
     @Override
     public void addBlockEvent(int par1, int par2, int par3, int par4, int par5, int par6)
     {

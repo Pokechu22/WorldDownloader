@@ -211,10 +211,12 @@ public class GuiWDLMultiworldSelect extends GuiScreen
     private String addMultiworld( String name )
     {
     	String world = name;
-		for( char c : ChatAllowedCharacters.invalidFilenameCharacters )
+    	String invalidChars = "\\/:*?\"<>|";
+		for( char c : invalidChars.toCharArray())
 		{
 			world = world.replace(c, '_');
 		}
+
     	new File( mc.mcDataDir, "saves/" + WDL.baseFolderName + " - " + world ).mkdirs();
     	
     	Properties newProps = new Properties( WDL.baseProps );

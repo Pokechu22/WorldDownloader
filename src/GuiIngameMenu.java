@@ -29,23 +29,23 @@ public class GuiIngameMenu extends GuiScreen
         this.controlList.add(var3 = new GuiButton(7, this.width / 2 + 2, this.height / 4 + 96 + var1, 98, 20, StatCollector.translateToLocal("menu.shareToLan")));
         this.controlList.add(new GuiButton(5, this.width / 2 - 100, this.height / 4 + 48 + var1, 98, 20, StatCollector.translateToLocal("gui.achievements")));
         this.controlList.add(new GuiButton(6, this.width / 2 + 2, this.height / 4 + 48 + var1, 98, 20, StatCollector.translateToLocal("gui.stats")));
-        var3.enabled = this.mc.isSingleplayer() && !this.mc.getIntegratedServer().func_71344_c();
+        var3.enabled = this.mc.isSingleplayer() && !this.mc.getIntegratedServer().getPublic();
         /*WDL>>>*/
-        // This code adds the start, stop and options buttons to the menu:
-        if( !mc.isIntegratedServerRunning() ) // (If connected to real server)
-        {
-            GuiButton wdlDownload = new GuiButton(50, width / 2 - 100, height / 4 + 72 + var1, 170, 20, "WDL bug!");
-            wdlDownload.displayString = (WDL.downloading ? (WDL.isSavingChunks ? "Still saving..." : "Stop download") : "Download this world");
-            controlList.add(wdlDownload);
-            wdlDownload.enabled = (!WDL.downloading || (WDL.downloading && !WDL.isSavingChunks));
-            GuiButton wdlOptions = new GuiButton(51, width / 2 + 71, height / 4 + 72 + var1, 28, 20, "...");
-            controlList.add(wdlOptions);
-            wdlOptions.enabled = (!WDL.downloading || (WDL.downloading && !WDL.isSavingChunks));
-            ((GuiButton)controlList.get(0)).yPosition = height / 4 + 144 + var1;
-            ((GuiButton)controlList.get(2)).yPosition = height / 4 + 120 + var1;
-            ((GuiButton)controlList.get(3)).yPosition = height / 4 + 120 + var1;
-        }
-        /*<<<WDL*/
+	    // This code adds the start, stop and options buttons to the menu:
+	    if( !mc.isIntegratedServerRunning() ) // (If connected to real server)
+	    {
+	        GuiButton wdlDownload = new GuiButton(50, width / 2 - 100, height / 4 + 72 + var1, 170, 20, "WDL bug!");
+	        wdlDownload.displayString = (WDL.downloading ? (WDL.isSavingChunks ? "Still saving..." : "Stop download") : "Download this world");
+	        controlList.add(wdlDownload);
+	        wdlDownload.enabled = (!WDL.downloading || (WDL.downloading && !WDL.isSavingChunks));
+	        GuiButton wdlOptions = new GuiButton(51, width / 2 + 71, height / 4 + 72 + var1, 28, 20, "...");
+	        controlList.add(wdlOptions);
+	        wdlOptions.enabled = (!WDL.downloading || (WDL.downloading && !WDL.isSavingChunks));
+	        ((GuiButton)controlList.get(0)).yPosition = height / 4 + 144 + var1;
+	        ((GuiButton)controlList.get(2)).yPosition = height / 4 + 120 + var1;
+	        ((GuiButton)controlList.get(3)).yPosition = height / 4 + 120 + var1;
+	    }
+	    /*<<<WDL*/
     }
 
     /**
@@ -74,6 +74,7 @@ public class GuiIngameMenu extends GuiScreen
             case 4:
                 this.mc.displayGuiScreen((GuiScreen)null);
                 this.mc.setIngameFocus();
+                this.mc.sndManager.func_82461_f();
                 break;
 
             case 5:
@@ -93,11 +94,11 @@ public class GuiIngameMenu extends GuiScreen
                     WDL.stop();
                 else
                     WDL.start();
-                
+
                 mc.displayGuiScreen(null);
                 mc.setIngameFocus();
                 break;
-            
+
             case 51:
                  mc.displayGuiScreen( new GuiWDL( this ) );
                  break;

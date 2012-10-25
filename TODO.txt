@@ -1,14 +1,16 @@
-TODO
-----
+BUG TRACKER CAN BE FOUND HERE:
+https://github.com/cubic72/WorldDownloader/issues?state=open
 
-* TileTicks must be generated for repeaters, ...
-* DONE 2012-08-25: Chests closing animation is not played
-* Stopping download and quickly opening the cloned world => not all chunks are saved (threaded IO problem?)
-* "Get Seed from Server" button
-* DONE 2012-08-24: EnderChests: Conversion from received Container to local EnderChest storage format
-* Offers from villagers should be saved
+TODO:
+* TileTicks for repeaters
+* Offers from villagers
 * Record Players don't do anything. => Create empty TileEntityRecordPlayer ???
-* Save bed position when sleeping (see bookmarks)
-* Remove the superfluous calls to chatMsg(String). They were meant for debugging.
-* The backup functionality???
-* DONE 2012-08-25: Minecarts with chests need to be saved
+* Save new position when sleeping
+
+OTHER KNOWN BUGS:
+* Stopping download and quickly opening the cloned world => not all chunks are saved (threaded IO problem?)
+
+
+FUTURE ENHANCEMENTS    
+* "Get Seed from Server" button (will require op privilege on server)
+* Backup world functionality when overwriting a save

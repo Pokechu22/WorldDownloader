@@ -27,7 +27,7 @@ public class WDL
     // References:
     public static Minecraft   mc; // Reference to the Minecraft object
     public static WorldClient wc; // Reference to the World object that WDL uses
-    public static NetworkManager nm = null; // Reference to a connection specific object. Used to detect a new connection.
+    public static INetworkManager nm = null; // Reference to a connection specific object. Used to detect a new connection.
     public static EntityClientPlayerMP tp;
     
     public static Container windowContainer; // Reference to the place where all the item stacks end up after receiving them.
@@ -162,7 +162,7 @@ public class WDL
         windowContainer = tp.craftingInventory;
         
         // Is this a different server?
-        NetworkManager newNM = mc.getSendQueue().getNetManager();
+        INetworkManager newNM = mc.getSendQueue().getNetManager();
         
         if( nm != newNM )
         {
