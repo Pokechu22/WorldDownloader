@@ -1,5 +1,5 @@
 BUG TRACKER CAN BE FOUND HERE:
-https://github.com/cubic72/WorldDownloader/issues?state=open
+https://github.com/dslake/WorldDownloader/issues?state=open
 
 TODO:
 * TileTicks for repeaters
