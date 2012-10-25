@@ -27,7 +27,7 @@ public class GuiChest extends GuiContainer
     /**
      * Draw the foreground layer for the GuiContainer (everything in front of the items)
      */
-    protected void drawGuiContainerForegroundLayer()
+    protected void drawGuiContainerForegroundLayer(int par1, int par2)
     {
         this.fontRenderer.drawString(StatCollector.translateToLocal(this.lowerChestInventory.getInvName()), 8, 6, 4210752);
         this.fontRenderer.drawString(StatCollector.translateToLocal(this.upperChestInventory.getInvName()), 8, this.ySize - 96 + 2, 4210752);
@@ -46,24 +46,23 @@ public class GuiChest extends GuiContainer
         this.drawTexturedModalRect(var5, var6, 0, 0, this.xSize, this.inventoryRows * 18 + 17);
         this.drawTexturedModalRect(var5, var6 + this.inventoryRows * 18 + 17, 0, 126, this.xSize, 96);
     }
-    
     /* WORLD DOWNLOADER ---> */
     public void onGuiClosed()
     {
         /*
-    	for(int i = 0; i < lowerChestInventory.getSizeInventory(); ++i)
-    	{
-    		if(lowerChestInventory.getStackInSlot(i) != null)
-    			mc.thePlayer.addChatMessage("onGuiClosed: " + lowerChestInventory.getStackInSlot(i).getItem().getItemName());
-    	}
+        for(int i = 0; i < lowerChestInventory.getSizeInventory(); ++i)
+        {
+                if(lowerChestInventory.getStackInSlot(i) != null)
+                        mc.thePlayer.addChatMessage("onGuiClosed: " + lowerChestInventory.getStackInSlot(i).getItem().getItemName());
+        }
         */
-    	if( WorldDL.downloading )
-    	{
-    		// This creates new TileEntityChest(s) for the received chest content
-    		//  and adds them to the myChunkTileEntityMap in the appropriate chunk.
-    		WorldDL.setChestTileEntitiy( lowerChestInventory );
-    	}
-    	super.onGuiClosed();
+        if( WorldDL.downloading )
+        {
+                // This creates new TileEntityChest(s) for the received chest content
+                //  and adds them to the myChunkTileEntityMap in the appropriate chunk.
+                WorldDL.setChestTileEntitiy( lowerChestInventory );
+        }
+        super.onGuiClosed();
     }
     /* <--- WORLD DOWNLOADER */
 }

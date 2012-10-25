@@ -43,6 +43,7 @@ public class WorldDL {
 		mc.thePlayer.addChatMessage("§c[WorldDL] §6Download started.");
     }
     
+    /*
     public static void continueDownload( WorldClient newWc )
     {
     	if( !downloading )
@@ -66,6 +67,7 @@ public class WorldDL {
     	
     	wc = newWc;
     }
+    */
     
     public static void stopDownload()
     {

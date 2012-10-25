@@ -15,7 +15,7 @@ public class GuiBrewingStand extends GuiContainer
     /**
      * Draw the foreground layer for the GuiContainer (everything in front of the items)
      */
-    protected void drawGuiContainerForegroundLayer()
+    protected void drawGuiContainerForegroundLayer(int par1, int par2)
     {
         this.fontRenderer.drawString(StatCollector.translateToLocal("container.brewing"), 56, 6, 4210752);
         this.fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
@@ -82,14 +82,14 @@ public class GuiBrewingStand extends GuiContainer
         }
     }
     /* WORLD DOWNLOADER ---> */
-    public void onGuiClosed() 
+    public void onGuiClosed()
     {
-    	if( WorldDL.downloading )
-    	{
-    		// This adds the TileEntityDispenser to the myChunkTileEntityMap in the appropriate chunk.
-    		WorldDL.wc.setMyBlockTileEntity(WorldDL.lastClickedX, WorldDL.lastClickedY, WorldDL.lastClickedZ, field_74217_o);
-    	}
-    	super.onGuiClosed();
+        if( WorldDL.downloading )
+        {
+                // This adds the TileEntityDispenser to the myChunkTileEntityMap in the appropriate chunk.
+                WorldDL.wc.setMyBlockTileEntity(WorldDL.lastClickedX, WorldDL.lastClickedY, WorldDL.lastClickedZ, field_74217_o);
+        }
+        super.onGuiClosed();
     }
     /* <--- WORLD DOWNLOADER */
 }

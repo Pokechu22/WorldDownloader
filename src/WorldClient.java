@@ -33,8 +33,7 @@ public class WorldClient extends World
     /* WORLD DOWNLOADER ---> */
     public IChunkLoader myChunkLoader; // Despite it's name this is used to SAVE the chunks
     /* <--- WORLD DOWNLOADER */
-
-
+    
     public WorldClient(NetClientHandler par1NetClientHandler, WorldSettings par2WorldSettings, int par3, int par4, Profiler par5Profiler)
     {
         super(new SaveHandlerMP(), "MpServer", WorldProvider.getProviderForDimension(par3), par2WorldSettings, par5Profiler);
@@ -42,6 +41,7 @@ public class WorldClient extends World
         this.difficultySetting = par4;
         this.setSpawnLocation(8, 64, 8);
         this.mapStorage = par1NetClientHandler.mapStorage;
+        
         /* WORLD DOWNLOADER ---> */
         WorldDL.downloading = false;
         //WorldDL.continueDownload( this ); // Will only continue if it was running before
@@ -57,6 +57,7 @@ public class WorldClient extends World
     public void tick()
     {
         super.tick();
+        this.func_82738_a(this.func_82737_E() + 1L);
         this.setWorldTime(this.getWorldTime() + 1L);
         this.theProfiler.startSection("reEntryProcessing");
 
@@ -235,11 +236,11 @@ public class WorldClient extends World
     }
 
     /**
-     * Lookup and return an Entity based on its ID
+     * Returns the Entity with the given ID, or null if it doesn't exist in this World.
      */
     public Entity getEntityByID(int par1)
     {
-        return (Entity)this.entityHashSet.lookup(par1);
+        return (Entity)(par1 == this.mc.thePlayer.entityId ? this.mc.thePlayer : (Entity)this.entityHashSet.lookup(par1));
     }
 
     public Entity removeEntityFromWorld(int par1)
@@ -267,6 +268,11 @@ public class WorldClient extends World
     public void sendQuittingDisconnectingPacket()
     {
         this.sendQueue.quitWithPacket(new Packet255KickDisconnect("Quitting"));
+    }
+
+    public IUpdatePlayerListBox func_82735_a(EntityMinecart par1EntityMinecart)
+    {
+        return new SoundUpdaterMinecart(this.mc.sndManager, par1EntityMinecart, this.mc.thePlayer);
     }
 
     /**
@@ -421,7 +427,7 @@ public class WorldClient extends World
     }
 
     /**
-     * par8 is loudness, all pars passed to mc.sndManager.playSound
+     * par8 is loudness, all pars passed to minecraftInstance.sndManager.playSound
      */
     public void playSound(double par1, double par3, double par5, String par7Str, float par8, float par9)
     {
@@ -447,49 +453,29 @@ public class WorldClient extends World
     {
         return par0WorldClient.entitySpawnQueue;
     }
-
+    
     /* WORLD DOWNLOADER ---> */
-    public void saveWorld(boolean flag, IProgressUpdate iprogressupdate) 
+    public void saveWorld(boolean flag, IProgressUpdate iprogressupdate)
     {
-    	if(WorldDL.downloading == true)
-    	{
-    		chunkProvider.saveChunks(flag, iprogressupdate);
-    		worldInfo.setSizeOnDisk( WorldDL.getFileSizeRecursive(WorldDL.mySaveHandler.getSaveDirectory()) );
-    		
-	        NBTTagCompound nbttagcompound = new NBTTagCompound();
+        if(WorldDL.downloading == true)
+        {
+            chunkProvider.saveChunks(flag, iprogressupdate);
+            worldInfo.setSizeOnDisk( WorldDL.getFileSizeRecursive(WorldDL.mySaveHandler.getSaveDirectory()) );
+
+            NBTTagCompound nbttagcompound = new NBTTagCompound();
             this.mc.thePlayer.writeToNBT(nbttagcompound);
             NBTTagCompound nbttagcompound1 = worldInfo.cloneNBTCompound(nbttagcompound);
             if( this.mc.thePlayer.capabilities.allowFlying && this.mc.thePlayer.capabilities.disableDamage )
-	        	nbttagcompound1.setInteger("GameType", 1); // Creative
-	        else
-	        	nbttagcompound1.setInteger("GameType", 0); // Survival
-	        
-    		WorldDL.mySaveHandler.saveWorldInfoWithPlayer(worldInfo, nbttagcompound);
-    	}
+                nbttagcompound1.setInteger("GameType", 1); // Creative
+            else
+                nbttagcompound1.setInteger("GameType", 0); // Survival
+            WorldDL.mySaveHandler.saveWorldInfoWithPlayer(worldInfo, nbttagcompound);
+        }
 
         //mapStorage.saveAllData();
         //chunkProvider.saveChunks(flag, iprogressupdate);
     }
 
-
-    /*
-    public void playNoteAt(int i, int j, int k, int l, int i1)
-    {
-    	super.playNoteAt(i, j, k, l, i1);
-    	if(WorldDL.downloading == false)
-    		return;
-    	if( getBlockId(i, j, k) == Block.music.blockID)
-    	{
-	    	TileEntityNote tileentitynote = (TileEntityNote)getBlockTileEntity(i, j, k);
-	    	if( tileentitynote == null)
-	    		setBlockTileEntity(i, j, k, new TileEntityNote());
-	        tileentitynote.note = (byte)(i1 % 25);
-	        tileentitynote.onInventoryChanged();
-	        setMyBlockTileEntity(i, j, k, tileentitynote);
-    	}
-    }
-	*/
-    
     public void setMyBlockTileEntity(int i, int j, int k, TileEntity tileentity)
     {
         Chunk chunk = getChunkFromChunkCoords(i >> 4, k >> 4);

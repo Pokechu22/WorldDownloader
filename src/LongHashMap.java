@@ -233,7 +233,7 @@ public class LongHashMap
     /* WORLD DOWNLOADER >>> */
     public LongHashMapEntry[] getEntries()
     {
-    	return hashArray;
+        return hashArray;
     }
     /* <<< WORLD DOWNLOADER */
 }

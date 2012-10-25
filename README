@@ -1,5 +1,13 @@
-WorldDownloader for Minecraft 1.3.2
+WorldDownloader for Minecraft 1.4.2
 
-I used MCP 7.2 http://mcp.ocean-labs.de/index.php/MCP_Releases#MCP_7.x
-for deobfuscation, recompiling, and reobfuscation. Just install it, follow it's Readme file,
-put my files in the src/minecraft/net/minecraft/src folder and use the batch or sh scripts.
+SOURCE:
+https://github.com/dslake/WorldDownloader
+
+PLEASE READ THE MINECRAFT FORUMS THREAD AND FAQ BEFORE REPORTING A PROBLEM:
+http://www.minecraftforum.net/topic/1444862-132-world-downloader-mod/
+
+I used MCP 7.19 for Minecraft 1.4.2 for deobfuscation, recompiling, and reobfuscation. 
+Just download MCP, install it and follow the instructions here:
+http://mcp.ocean-labs.de/index.php/MCP_Releases#MCP_7.x
+
+Copy src files into src/minecraft/net/minecraft/src folder and use the batch or sh scripts.

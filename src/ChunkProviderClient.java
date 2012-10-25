@@ -59,11 +59,11 @@ public class ChunkProviderClient implements IChunkProvider
         /* WORLD DOWNLOADER ---> */
         if(WorldDL.downloading == true && var3.isFilled == true )
         {
-        	saveChunk(var3);
-			((WorldClient)worldObj).myChunkLoader.saveExtraChunkData(worldObj, var3);
+            saveChunk(var3);
+            ((WorldClient)worldObj).myChunkLoader.saveExtraChunkData(worldObj, var3);
         }
         /* <--- WORLD DOWNLOADER */
-
+        
         this.chunkMapping.remove(ChunkCoordIntPair.chunkXZ2Int(par1, par2));
         this.chunkListing.remove(var3);
     }
@@ -79,10 +79,9 @@ public class ChunkProviderClient implements IChunkProvider
         /* WORLD DOWNLOADER ---> */
         if(WorldDL.downloading)
         {
-        	var3.importOldChunkTileEntities();
+                var3.importOldChunkTileEntities();
         }
         /* <--- WORLD DOWNLOADER */
-
         return var3;
     }
 
@@ -102,85 +101,84 @@ public class ChunkProviderClient implements IChunkProvider
      */
     public boolean saveChunks(boolean par1, IProgressUpdate par2IProgressUpdate)
     {
-        /* WORLD DOWNLOADER ---> */
+    	/* WORLD DOWNLOADER ---> */
     	if(WorldDL.downloading == false)
-    		return true;
+    	        return true;
     	for(LongHashMapEntry lhme : chunkMapping.getEntries())
     	{
-    		while( lhme != null )
-    		{
-    			Chunk chunk = (Chunk)lhme.value;
-    			
-    			if(chunk != null && chunk.isFilled)
-    			{
-    				if(par1)
-						((WorldClient)worldObj).myChunkLoader.saveExtraChunkData(worldObj, chunk);
-					saveChunk(chunk);
-    			}
-    			lhme = lhme.nextEntry; // Get next Entry in this linked list 
-    		}
+    	        while( lhme != null )
+    	        {
+    	                Chunk chunk = (Chunk)lhme.value;
+
+    	                if(chunk != null && chunk.isFilled)
+    	                {
+    	                        if(par1)
+    	                                        ((WorldClient)worldObj).myChunkLoader.saveExtraChunkData(worldObj, chunk);
+    	                                saveChunk(chunk);
+    	                }
+    	                lhme = lhme.nextEntry; // Get next Entry in this linked list
+    	        }
     	}
 
-        if(par1)
-        {
-        	((WorldClient)worldObj).myChunkLoader.saveExtraData();
-        }
-        /* <--- WORLD DOWNLOADER */
-
+    	if(par1)
+    	{
+    	        ((WorldClient)worldObj).myChunkLoader.saveExtraData();
+    	}
+    	/* <--- WORLD DOWNLOADER */
         return true;
     }
     /* WORLD DOWNLOADER ---> */
     private void saveChunk(Chunk chunk)
     {
         if(WorldDL.downloading == false)
-        	return;
+                return;
         chunk.lastSaveTime = worldObj.getWorldTime();
         chunk.isTerrainPopulated = true;
         try {
             for( Object ob : chunk.myChunkTileEntityMap.keySet() )
             {
-            	TileEntity te = (TileEntity) chunk.myChunkTileEntityMap.get(ob);
-            	if(te != null)
-            	{
-            		Block block = Block.blocksList[worldObj.getBlockId(te.xCoord, te.yCoord, te.zCoord)];
-            		if( block instanceof BlockChest || block instanceof BlockDispenser || block instanceof BlockFurnace || block instanceof BlockNote || block instanceof BlockBrewingStand )
-            			chunk.chunkTileEntityMap.put(ob, te);
-            	}
+                TileEntity te = (TileEntity) chunk.myChunkTileEntityMap.get(ob);
+                if(te != null)
+                {
+                        Block block = Block.blocksList[worldObj.getBlockId(te.xCoord, te.yCoord, te.zCoord)];
+                        if( block instanceof BlockChest || block instanceof BlockDispenser || block instanceof BlockFurnace || block instanceof BlockNote || block instanceof BlockBrewingStand )
+                                chunk.chunkTileEntityMap.put(ob, te);
+                }
             }
             ((WorldClient)worldObj).myChunkLoader.saveChunk(worldObj, chunk);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+                } catch (Exception e) {
+                        e.printStackTrace();
+                }
     }
-    
+
 //    public Chunk loadChunk(int i, int j)
 //    {
-//    	Chunk ret = null;
-//    	try {
-//			ret = WorldDL.myChunkLoader.loadChunk(worldObj, i, j);
-//		} catch (IOException e) {}
-//		return ret;
+//      Chunk ret = null;
+//      try {
+//                      ret = WorldDL.myChunkLoader.loadChunk(worldObj, i, j);
+//              } catch (IOException e) {}
+//              return ret;
 //    }
 
     public void importOldTileEntities()
     {
-    	for(LongHashMapEntry lhme : chunkMapping.getEntries())
-    	{
-    		while( lhme != null )
-    		{
-    			Chunk c = (Chunk)lhme.value;
-                
+        for(LongHashMapEntry lhme : chunkMapping.getEntries())
+        {
+                while( lhme != null )
+                {
+                        Chunk c = (Chunk)lhme.value;
+
                 if( c != null && c.isFilled )
                 {
-                	c.importOldChunkTileEntities();
+                        c.importOldChunkTileEntities();
                 }
-    			
-    			lhme = lhme.nextEntry; // Get next Entry in this linked list 
-    		}
-    	}
+
+                        lhme = lhme.nextEntry; // Get next Entry in this linked list
+                }
+        }
     }
     /* <--- WORLD DOWNLOADER */
-
+    
     /**
      * Unloads the 100 oldest chunks from memory, due to a bug with chunkSet.add() never being called it thinks the list
      * is always empty and will not remove any chunks.
@@ -231,4 +229,6 @@ public class ChunkProviderClient implements IChunkProvider
     {
         return this.chunkListing.size();
     }
+
+    public void func_82695_e(int par1, int par2) {}
 }

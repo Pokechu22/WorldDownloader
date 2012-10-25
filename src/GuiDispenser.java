@@ -4,10 +4,10 @@ import org.lwjgl.opengl.GL11;
 
 public class GuiDispenser extends GuiContainer
 {
-    /* WORLD DOWNLOADER >>> */
-    private TileEntityDispenser ted;
-    /* <<< WORLD DOWNLOADER */
-
+	/* WORLD DOWNLOADER >>> */
+	private TileEntityDispenser ted;
+	/* <<< WORLD DOWNLOADER */
+	
     public GuiDispenser(InventoryPlayer par1InventoryPlayer, TileEntityDispenser par2TileEntityDispenser)
     {
         super(new ContainerDispenser(par1InventoryPlayer, par2TileEntityDispenser));
@@ -19,7 +19,7 @@ public class GuiDispenser extends GuiContainer
     /**
      * Draw the foreground layer for the GuiContainer (everything in front of the items)
      */
-    protected void drawGuiContainerForegroundLayer()
+    protected void drawGuiContainerForegroundLayer(int par1, int par2)
     {
         this.fontRenderer.drawString(StatCollector.translateToLocal("container.dispenser"), 60, 6, 4210752);
         this.fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
@@ -37,14 +37,16 @@ public class GuiDispenser extends GuiContainer
         int var6 = (this.height - this.ySize) / 2;
         this.drawTexturedModalRect(var5, var6, 0, 0, this.xSize, this.ySize);
     }
+    
     /* WORLD DOWNLOADER ---> */
-    public void onGuiClosed() {
-    	if( WorldDL.downloading )
-    	{
-    		// This adds the TileEntityDispenser to the myChunkTileEntityMap in the appropriate chunk.
-    		WorldDL.wc.setMyBlockTileEntity(WorldDL.lastClickedX, WorldDL.lastClickedY, WorldDL.lastClickedZ, ted);
-    	}
-    	super.onGuiClosed();
+    public void onGuiClosed() 
+    {
+	    if( WorldDL.downloading )
+	    {
+	            // This adds the TileEntityDispenser to the myChunkTileEntityMap in the appropriate chunk.
+	            WorldDL.wc.setMyBlockTileEntity(WorldDL.lastClickedX, WorldDL.lastClickedY, WorldDL.lastClickedZ, ted);
+	    }
+	    super.onGuiClosed();
     }
     /* <--- WORLD DOWNLOADER */
 }

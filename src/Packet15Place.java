@@ -35,13 +35,13 @@ public class Packet15Place extends Packet
         this.xOffset = par6;
         this.yOffset = par7;
         this.zOffset = par8;
-
+        
         /* WORLD DOWNLOADER ---> */
         if( WorldDL.downloading == true )
         {
-        	WorldDL.lastClickedX = xPosition;
-        	WorldDL.lastClickedY = yPosition;
-        	WorldDL.lastClickedZ = zPosition;
+                WorldDL.lastClickedX = xPosition;
+                WorldDL.lastClickedY = yPosition;
+                WorldDL.lastClickedZ = zPosition;
         }
         /* <--- WORLD DOWNLOADER */
     }

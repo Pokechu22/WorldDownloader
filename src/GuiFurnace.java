@@ -15,7 +15,7 @@ public class GuiFurnace extends GuiContainer
     /**
      * Draw the foreground layer for the GuiContainer (everything in front of the items)
      */
-    protected void drawGuiContainerForegroundLayer()
+    protected void drawGuiContainerForegroundLayer(int par1, int par2)
     {
         this.fontRenderer.drawString(StatCollector.translateToLocal("container.furnace"), 60, 6, 4210752);
         this.fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
@@ -44,13 +44,14 @@ public class GuiFurnace extends GuiContainer
         this.drawTexturedModalRect(var5 + 79, var6 + 34, 176, 14, var7 + 1, 16);
     }
     /* WORLD DOWNLOADER ---> */
-    public void onGuiClosed() {
-    	if( WorldDL.downloading )
-    	{
-    		// This adds the TileEntityFurnace to the myChunkTileEntityMap in the appropriate chunk.
-    		WorldDL.wc.setMyBlockTileEntity(WorldDL.lastClickedX, WorldDL.lastClickedY, WorldDL.lastClickedZ, furnaceInventory);
-    	}
-    	super.onGuiClosed();
+    public void onGuiClosed() 
+    {
+        if( WorldDL.downloading )
+        {
+                // This adds the TileEntityFurnace to the myChunkTileEntityMap in the appropriate chunk.
+                WorldDL.wc.setMyBlockTileEntity(WorldDL.lastClickedX, WorldDL.lastClickedY, WorldDL.lastClickedZ, furnaceInventory);
+        }
+        super.onGuiClosed();
     }
-    /* <--- WORLD DOWNLOADER */  
+    /* <--- WORLD DOWNLOADER */
 }
