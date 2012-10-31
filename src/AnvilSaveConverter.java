@@ -61,8 +61,8 @@ public class AnvilSaveConverter extends SaveFormatOld
     {
         /*WDL>>>*/
         // mc.thePlayer is still valid. That's good!
-        if( WDL.mc.theWorld == null )
-            WDL.onWorldUnload();
+        //if( WDL.mc.theWorld == null )
+        //    WDL.onWorldUnload();
         /*<<<WDL*/
         RegionFileCache.clearRegionFileReferences();
     }

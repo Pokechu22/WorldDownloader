@@ -4,7 +4,7 @@ public class WDLSaveProgressReporter implements Runnable
 {
     public void run()
     {
-        while (WDL.isSavingChunks)
+        while (WDL.saving)
         {
             WDL.chatMsg("Saving...");
 

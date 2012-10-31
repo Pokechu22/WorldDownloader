@@ -4,12 +4,9 @@ public class WDLSaveAsync implements Runnable
 {
     public void run()
     {
-        WDL.chatMsg( "Download stopped" );
+    	// Save everything
         WDL.saveEverything();
-        WDL.downloading = false;
-        WDL.startOnChange = false;
-        WDL.mc.getSaveLoader().flushCache();
-        WDL.saveHandler.flush();
-        WDL.wc = null;
+        WDL.saving = false;
+        WDL.onSaveComplete();
     }
 }

@@ -475,8 +475,8 @@ public class WorldClient extends World
         super.removeWorldAccess(par1iWorldAccess);
         // the old world: this (!= null)
         // the new world: mc.theWorld (!= null)
-        if( WDL.downloading )
-            WDL.onWorldUnload();
+        //if( WDL.downloading )
+        //    WDL.onWorldUnload();
     }
 
     @Override

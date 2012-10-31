@@ -1,5 +1,6 @@
 package net.minecraft.src;
 
+import java.io.Console;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -48,7 +49,8 @@ public class WDL
     public static boolean propsFound    = false; // Are there saved properties available?
     public static boolean startOnChange = false; // Automatically restart after world changes?
     
-    public static boolean isSavingChunks = false;
+    public static boolean saving = false;
+    public static boolean worldLoadingDeferred = false;
     
     // Names:
     public static String worldName      = "WorldDownloaderERROR"; // safe default
@@ -104,7 +106,6 @@ public class WDL
     public static void start( )
     {
         wc = mc.theWorld;
-        
         if( isMultiworld && worldName.isEmpty() )
         {
             // Ask the user which world is loaded
@@ -139,10 +140,23 @@ public class WDL
     {
     	if(downloading)
     	{
-	    	WDLSaveAsync saver = new WDLSaveAsync();
-	    	Thread thread = new Thread(saver, "WDL Save Thread");
-	    	thread.start();
+    		// Indicate that downloading has stopped
+    		downloading = false;
+    		startOnChange = false;
+	    	chatMsg( "Download stopped" );
+	    	
+	    	startSaveThread();
     	}
+    }
+    
+    private static void startSaveThread()
+    {
+    	// Indicate that we are saving
+    	WDL.chatMsg( "Save started." );
+    	WDL.saving = true;
+    	WDLSaveAsync saver = new WDLSaveAsync();
+    	Thread thread = new Thread(saver, "WDL Save Thread");
+    	thread.start();    	
     }
     
     //// Callback methods for important events. Call them from suitable locations in the base classes. \\\\
@@ -153,9 +167,23 @@ public class WDL
         if( mc.isIntegratedServerRunning() )
             return;
         
-        if( downloading ) // This should NEVER happen! (famous last words, lol)
-            throw new RuntimeException( "World Downloader: Couldn't stop download! Check your worlds!" );
-        
+        // If already downloading
+        if( downloading )
+        {
+        	// If not currently saving, stop the current download and start saving now
+        	if(!saving)
+        	{
+        		WDL.chatMsg("World change detected. Download will start once current save completes.");
+        		//worldLoadingDeferred = true;
+        		startSaveThread();
+        	}
+        	return;
+        }
+        loadWorld();
+    }
+    
+    public static void loadWorld()
+    {   
         worldName = ""; // The new (multi-)world name is unknown at the moment
         wc = mc.theWorld;
         tp = mc.thePlayer;
@@ -187,18 +215,25 @@ public class WDL
     /** Must be called when the world is no longer used */
     public static void onWorldUnload( )
     {
-    	/*
-        if( downloading )
-        {
-            chatMsg( "onWorldUnload" );
-            saveEverything();
-            downloading = false;
-            mc.getSaveLoader().flushCache();
-            saveHandler.flush();
-        }
-        */
-    	stop();
     }
+    
+    public static void onSaveComplete()
+    {
+    	WDL.mc.getSaveLoader().flushCache();
+	    WDL.saveHandler.flush();
+	    WDL.wc = null;
+	    
+	    // If still downloading, load the current world and keep on downloading 
+	    if(downloading)
+	    {
+	    	WDL.chatMsg( "Save complete. Starting download again." );
+	    	WDL.loadWorld();
+	    	return;
+	    }
+	    
+	    WDL.chatMsg( "Save complete. Your single player file is ready to play!" );
+    }
+    
     
     /** Must be called when a chunk is no longer needed and should be removed */
     public static void onChunkNoLongerNeeded( Chunk unneededChunk )
@@ -529,7 +564,6 @@ public class WDL
         LongHashMap chunkMapping = (LongHashMap) stealAndGetField( wc.chunkProvider, LongHashMap.class );
         LongHashMapEntry[] hashArray = (LongHashMapEntry[]) stealAndGetField( chunkMapping , LongHashMapEntry[].class );
         
-        isSavingChunks = true;
         WDLSaveProgressReporter progressReporter = new WDLSaveProgressReporter();
         progressReporter.start();
         
@@ -558,8 +592,7 @@ public class WDL
                 lhme = lhme.nextEntry; // Get next Entry in this linked list
             }
         }
-        isSavingChunks = false;
-        chatMsg( "Chunk saving complete. Your single player file should be ready to play!");
+        chatMsg( "Chunk data saved.");
     }
     
     /**

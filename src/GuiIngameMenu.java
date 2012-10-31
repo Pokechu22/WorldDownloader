@@ -35,12 +35,12 @@ public class GuiIngameMenu extends GuiScreen
 	    if( !mc.isIntegratedServerRunning() ) // (If connected to real server)
 	    {
 	        GuiButton wdlDownload = new GuiButton(50, width / 2 - 100, height / 4 + 72 + var1, 170, 20, "WDL bug!");
-	        wdlDownload.displayString = (WDL.downloading ? (WDL.isSavingChunks ? "Still saving..." : "Stop download") : "Download this world");
+	        wdlDownload.displayString = (WDL.downloading ? (WDL.saving ? "Still saving..." : "Stop download") : "Download this world");
 	        controlList.add(wdlDownload);
-	        wdlDownload.enabled = (!WDL.downloading || (WDL.downloading && !WDL.isSavingChunks));
+	        wdlDownload.enabled = (!WDL.downloading || (WDL.downloading && !WDL.saving));
 	        GuiButton wdlOptions = new GuiButton(51, width / 2 + 71, height / 4 + 72 + var1, 28, 20, "...");
 	        controlList.add(wdlOptions);
-	        wdlOptions.enabled = (!WDL.downloading || (WDL.downloading && !WDL.isSavingChunks));
+	        wdlOptions.enabled = (!WDL.downloading || (WDL.downloading && !WDL.saving));
 	        ((GuiButton)controlList.get(0)).yPosition = height / 4 + 144 + var1;
 	        ((GuiButton)controlList.get(2)).yPosition = height / 4 + 120 + var1;
 	        ((GuiButton)controlList.get(3)).yPosition = height / 4 + 120 + var1;
