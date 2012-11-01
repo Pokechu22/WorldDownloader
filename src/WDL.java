@@ -439,7 +439,7 @@ public class WDL
                 {
                     if( ! newTileEntities.contains( new ChunkPosition( te.xCoord, te.yCoord, te.zCoord ) ) )
                     {
-                        chunk.addTileEntity( te );
+                    	wc.setBlockTileEntity( te.xCoord, te.yCoord, te.zCoord, te );
                         chatDebug("Loaded TE: " + entityType + " at " + te.xCoord + " " + te.yCoord + " " + te.zCoord );
                     }
                     else
