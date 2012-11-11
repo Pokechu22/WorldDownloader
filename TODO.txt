@@ -6,11 +6,5 @@ TODO:
 * Offers from villagers
 * Record Players don't do anything. => Create empty TileEntityRecordPlayer ???
 * Save new position when sleeping
-
-OTHER KNOWN BUGS:
-* Stopping download and quickly opening the cloned world => not all chunks are saved (threaded IO problem?)
-
-
-FUTURE ENHANCEMENTS    
 * "Get Seed from Server" button (will require op privilege on server)
 * Backup world functionality when overwriting a save

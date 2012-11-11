@@ -45,7 +45,7 @@ public class WorldClient extends World
     public void tick()
     {
         super.tick();
-        this.func_82738_a(this.func_82737_E() + 1L);
+        this.func_82738_a(this.getTotalWorldTime() + 1L);
         this.setWorldTime(this.getWorldTime() + 1L);
         this.theProfiler.startSection("reEntryProcessing");
 
@@ -67,24 +67,6 @@ public class WorldClient extends World
         this.theProfiler.endStartSection("tiles");
         this.tickBlocksAndAmbiance();
         this.theProfiler.endSection();
-        /*WDL>>>*/
-        if( WDL.guiToShowAsync != null )
-        {
-            WDL.mc.displayGuiScreen( WDL.guiToShowAsync );
-            WDL.guiToShowAsync = null;
-        }
-        if( WDL.downloading )
-        {
-            if( WDL.tp.craftingInventory != WDL.windowContainer )
-            {
-                if( WDL.tp.craftingInventory == WDL.tp.inventorySlots )
-                    WDL.onItemGuiClosed();
-                else
-                    WDL.onItemGuiOpened();
-                WDL.windowContainer = WDL.tp.craftingInventory;
-            }
-        }
-        /*<<<WDL*/
     }
 
     /**
@@ -144,22 +126,22 @@ public class WorldClient extends World
 
     public void doPreChunk(int par1, int par2, boolean par3)
     {
-    	if (par3)
-    	{
-    	    /*WDL>>>*/
-    	    if( this != WDL.wc )
-    	        WDL.onWorldLoad();
-    	    this.clientChunkProvider.loadChunk(par1, par2);
-    	    /*<<<WDL*/
-    	}
-    	else
-    	{
-    	    /*WDL>>>*/
-    	    if( WDL.downloading )
-    	        WDL.onChunkNoLongerNeeded( chunkProvider.provideChunk(par1, par2) );
-    	    this.clientChunkProvider.unloadChunk(par1, par2);
-    	    /*<<<WDL*/
-    	}
+        if (par3)
+        {
+            /*WDL>>>*/
+            if( this != WDL.wc )
+                WDL.onWorldLoad();
+            this.clientChunkProvider.loadChunk(par1, par2);
+            /*<<<WDL*/
+        }
+        else
+        {
+            /*WDL>>>*/
+            if( WDL.downloading )
+                WDL.onChunkNoLongerNeeded( chunkProvider.provideChunk(par1, par2) );
+            this.clientChunkProvider.unloadChunk(par1, par2);
+            /*<<<WDL*/
+        }
 
         if (!par3)
         {
@@ -432,12 +414,12 @@ public class WorldClient extends World
     /**
      * Adds some basic stats of the world to the given crash report.
      */
-    public CrashReport addWorldInfoToCrashReport(CrashReport par1CrashReport)
+    public CrashReportCategory addWorldInfoToCrashReport(CrashReport par1CrashReport)
     {
-        par1CrashReport = super.addWorldInfoToCrashReport(par1CrashReport);
-        par1CrashReport.addCrashSectionCallable("Forced Entities", new CallableMPL1(this));
-        par1CrashReport.addCrashSectionCallable("Retry Entities", new CallableMPL2(this));
-        return par1CrashReport;
+        CrashReportCategory var2 = super.addWorldInfoToCrashReport(par1CrashReport);
+        var2.addCrashSectionCallable("Forced entities", new CallableMPL1(this));
+        var2.addCrashSectionCallable("Retry entities", new CallableMPL2(this));
+        return var2;
     }
 
     /**
@@ -467,24 +449,4 @@ public class WorldClient extends World
     {
         return par0WorldClient.entitySpawnQueue;
     }
-    
-    /*WDL>>>*/
-    @Override
-    public void removeWorldAccess(IWorldAccess par1iWorldAccess)
-    {
-        super.removeWorldAccess(par1iWorldAccess);
-        // the old world: this (!= null)
-        // the new world: mc.theWorld (!= null)
-        //if( WDL.downloading )
-        //    WDL.onWorldUnload();
-    }
-
-    @Override
-    public void addBlockEvent(int par1, int par2, int par3, int par4, int par5, int par6)
-    {
-        super.addBlockEvent(par1, par2, par3, par4, par5, par6);
-        if( WDL.downloading )
-            WDL.onBlockEvent( par1, par2, par3, par4, par5, par6 );
-    }
-    /*<<<WDL*/
 }

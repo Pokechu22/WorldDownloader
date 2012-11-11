@@ -1,15 +1,14 @@
-Mappings using MCP 7.19
+Mappings using MCP 7.21pre2
 
-AnvilSaveConverter          => agq.class
-GuiIngameMenu               => asq.class
-GuiWDL                      => GuiWDL.class
-GuiWDLBackup                => GuiWDLBackup.class
-GuiWDLGenerator             => GuiWDLGenerator.class
-GuiWDLMultiworld            => GuiWDLMultiworld.class
-GuiWDLMultiworldSelect      => GuiWDLMultiworldSelect.class
-GuiWDLPlayer                => GuiWDLPlayer.class
-GuiWDLWorld                 => GuiWDLWorld.class
-WDLSaveAsync                => WDLSaveAsync.class
-WDLSaveProgressReporter     => WDLSaveProgressReporter.class
-WDL                         => WDL.class
-WorldClient                 => awz.class
+GuiIngameMenu           => aty.class
+GuiWDLBackup            => GuiWDLBackup.class
+GuiWDLGenerator         => GuiWDLGenerator.class
+GuiWDLMultiworld        => GuiWDLMultiworld.class
+GuiWDLMultiworldSelect  => GuiWDLMultiworldSelect.class
+GuiWDLPlayer            => GuiWDLPlayer.class
+GuiWDLWorld             => GuiWDLWorld.class
+WDL                     => WDL.class
+WDLSaveAsync            => WDLSaveAsync.class
+WDLSaveProgressReporter => WDLSaveProgressReporter.class
+GuiWDL                  => GuiWDL.class
+WorldClient             => ayh.class
