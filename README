@@ -1,14 +1,2 @@
-WorldDownloader v2 for Minecraft 1.4.4
-
-SOURCE:
-https://github.com/dslake/WorldDownloader
-
-PLEASE READ THE MINECRAFT FORUMS THREAD AND FAQ BEFORE REPORTING A PROBLEM:
-http://www.minecraftforum.net/topic/1444862-
-
-I used MCP 7.21pre2 for Minecraft 1.4.4 for deobfuscation, recompiling, and reobfuscation. 
-Just download MCP, install it and follow the instructions here:
-http://mcp.ocean-labs.de/index.php/MCP_Releases#MCP_7.x
-
-Copy src files into src/minecraft/net/minecraft/src folder and use the batch or sh scripts.
-
+This was a development branch for World Downloader v2. 
+It was merged to master on 2012-11-11 and will not be updated.
