@@ -8,57 +8,45 @@ public class GuiIngameMenu extends GuiScreen
     /** Counts the number of screen updates. */
     private int updateCounter = 0;
 
-    /* WORLD DOWNLOADER ---> */
-    private int stopDownloadIn = -1;
-    private int disconnectIn = -1;
-    /* <--- WORLD DOWNLOADER */
-    
     /**
      * Adds the buttons (and other controls) to the screen in question.
      */
-    /* WORLD DOWNLOADER ---> */
     public void initGui()
     {
         this.updateCounter2 = 0;
         this.controlList.clear();
-        byte byte0 = -16;
-
-        int leftcolumn = this.width / 2 - 100;
-        int rightcolumn = this.width / 2 + 2;
-        int row1 = this.height / 4 + 24 + byte0;
-        int row2 = row1 + 24;
-        int row3 = row2 + 24;
-        int row4 = row3 + 24;
-        int row5 = row4 + 24;
-        int row6 = row5 + 24;
-
-
-        this.controlList.add(new GuiButton(1, leftcolumn, row5, StatCollector.translateToLocal("menu.returnToMenu")));
+        byte var1 = -16;
+        this.controlList.add(new GuiButton(1, this.width / 2 - 100, this.height / 4 + 120 + var1, StatCollector.translateToLocal("menu.returnToMenu")));
 
         if (!this.mc.isIntegratedServerRunning())
         {
             ((GuiButton)this.controlList.get(0)).displayString = StatCollector.translateToLocal("menu.disconnect");
-
-            /* WORLD DOWNLOADER ---> */
-            if( WorldDL.downloading == false )
-                controlList.add(new GuiButton(8, leftcolumn, row6, "Download this world"));
-            else
-                controlList.add(new GuiButton(8, leftcolumn, row6, "Stop download"));
-            /* <--- WORLD DOWNLOADER */
         }
 
-        this.controlList.add(new GuiButton(4, leftcolumn, row1, StatCollector.translateToLocal("menu.returnToGame")));
-
-        // ROW
-        this.controlList.add(new GuiButton(0, leftcolumn, row4, 98, 20, StatCollector.translateToLocal("menu.options")));
+        this.controlList.add(new GuiButton(4, this.width / 2 - 100, this.height / 4 + 24 + var1, StatCollector.translateToLocal("menu.returnToGame")));
+        this.controlList.add(new GuiButton(0, this.width / 2 - 100, this.height / 4 + 96 + var1, 98, 20, StatCollector.translateToLocal("menu.options")));
         GuiButton var3;
-        this.controlList.add(var3 = new GuiButton(7, rightcolumn, row4, 98, 20, StatCollector.translateToLocal("menu.shareToLan")));
-
-        this.controlList.add(new GuiButton(5, leftcolumn, row2, 98, 20, StatCollector.translateToLocal("gui.achievements")));
-        this.controlList.add(new GuiButton(6, rightcolumn, row2, 98, 20, StatCollector.translateToLocal("gui.stats")));
+        this.controlList.add(var3 = new GuiButton(7, this.width / 2 + 2, this.height / 4 + 96 + var1, 98, 20, StatCollector.translateToLocal("menu.shareToLan")));
+        this.controlList.add(new GuiButton(5, this.width / 2 - 100, this.height / 4 + 48 + var1, 98, 20, StatCollector.translateToLocal("gui.achievements")));
+        this.controlList.add(new GuiButton(6, this.width / 2 + 2, this.height / 4 + 48 + var1, 98, 20, StatCollector.translateToLocal("gui.stats")));
         var3.enabled = this.mc.isSingleplayer() && !this.mc.getIntegratedServer().getPublic();
+        /*WDL>>>*/
+        // This code adds the start, stop and options buttons to the menu:
+        if( !mc.isIntegratedServerRunning() ) // (If connected to real server)
+        {
+            GuiButton wdlDownload = new GuiButton(50, width / 2 - 100, height / 4 + 72 + var1, 170, 20, "WDL bug!");
+                wdlDownload.displayString = (WDL.downloading ? (WDL.saving ? "Still saving..." : "Stop download") : "Download this world");
+                controlList.add(wdlDownload);
+                wdlDownload.enabled = (!WDL.downloading || (WDL.downloading && !WDL.saving));
+                GuiButton wdlOptions = new GuiButton(51, width / 2 + 71, height / 4 + 72 + var1, 28, 20, "...");
+                controlList.add(wdlOptions);
+                wdlOptions.enabled = (!WDL.downloading || (WDL.downloading && !WDL.saving));
+                ((GuiButton)controlList.get(0)).yPosition = height / 4 + 144 + var1;
+                ((GuiButton)controlList.get(2)).yPosition = height / 4 + 120 + var1;
+                ((GuiButton)controlList.get(3)).yPosition = height / 4 + 120 + var1;
+        }
+        /*<<<WDL*/
     }
-    /* <--- WORLD DOWNLOADER */
 
     /**
      * Fired when a control is clicked. This is the equivalent of ActionListener.actionPerformed(ActionEvent e).
@@ -74,22 +62,10 @@ public class GuiIngameMenu extends GuiScreen
             case 1:
                 par1GuiButton.enabled = false;
                 this.mc.statFileWriter.readStat(StatList.leaveGameStat, 1);
+                this.mc.theWorld.sendQuittingDisconnectingPacket();
+                this.mc.loadWorld((WorldClient)null);
+                this.mc.displayGuiScreen(new GuiMainMenu());
 
-                /* WORLD DOWNLOADER ---> */
-                if( WorldDL.downloading == true )
-                {
-                        ((GuiButton)this.controlList.get(1)).displayString = "Saving world data...";
-                    WorldDL.stopDownload();
-                    disconnectIn = 100;
-                }
-                else
-                {
-                        this.mc.theWorld.sendQuittingDisconnectingPacket();
-                        this.mc.loadWorld((WorldClient)null);
-                        this.mc.displayGuiScreen(new GuiMainMenu());
-                }
-                break;
-                /* <--- WORLD DOWNLOADER */
             case 2:
             case 3:
             default:
@@ -98,7 +74,7 @@ public class GuiIngameMenu extends GuiScreen
             case 4:
                 this.mc.displayGuiScreen((GuiScreen)null);
                 this.mc.setIngameFocus();
-                this.mc.sndManager.func_82461_f();
+                this.mc.sndManager.resumeAllSounds();
                 break;
 
             case 5:
@@ -111,24 +87,22 @@ public class GuiIngameMenu extends GuiScreen
 
             case 7:
                 this.mc.displayGuiScreen(new GuiShareToLan(this));
-                /* WORLD DOWNLOADER ---> */
+            /*WDL>>>*/
                 break;
-            case 8:
-                WorldDL.mc = this.mc;
-                WorldDL.wc = (WorldClient)this.mc.theWorld;
-                if( WorldDL.downloading == true )
-                {
-                        ((GuiButton)this.controlList.get(1)).displayString = "Saving world data...";
-                    stopDownloadIn = 100;
-                }
+            case 50:
+                if( WDL.downloading == true )
+                    WDL.stop();
                 else
-                {
-                    WorldDL.startDownload();
-                    this.mc.displayGuiScreen(null);
-                    this.mc.setIngameFocus();
-                }
+                    WDL.start();
+
+                mc.displayGuiScreen(null);
+                mc.setIngameFocus();
                 break;
-            /* <--- WORLD DOWNLOADER */
+
+            case 51:
+                 mc.displayGuiScreen( new GuiWDL( this ) );
+                 break;
+            /*<<<WDL*/
         }
     }
 
@@ -149,24 +123,5 @@ public class GuiIngameMenu extends GuiScreen
         this.drawDefaultBackground();
         this.drawCenteredString(this.fontRenderer, "Game menu", this.width / 2, 40, 16777215);
         super.drawScreen(par1, par2, par3);
-        /* WORLD DOWNLOADER ---> */
-        if( stopDownloadIn == 0 )
-        {
-            WorldDL.stopDownload();
-            this.mc.displayGuiScreen(null);
-            this.mc.setIngameFocus();
-        }
-        else if( stopDownloadIn > 0 )
-            stopDownloadIn--;
-
-        if( disconnectIn == 0)
-        {
-                this.mc.theWorld.sendQuittingDisconnectingPacket();
-            this.mc.loadWorld((WorldClient)null);
-            this.mc.displayGuiScreen(new GuiMainMenu());
-        }
-        else if(disconnectIn > 0)
-                disconnectIn--;
-        /* <--- WORLD DOWNLOADER */
     }
 }

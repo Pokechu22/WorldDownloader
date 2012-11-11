@@ -30,10 +30,6 @@ public class WorldClient extends World
     private final Minecraft mc = Minecraft.getMinecraft();
     private final Set previousActiveChunkSet = new HashSet();
 
-    /* WORLD DOWNLOADER ---> */
-    public IChunkLoader myChunkLoader; // Despite it's name this is used to SAVE the chunks
-    /* <--- WORLD DOWNLOADER */
-    
     public WorldClient(NetClientHandler par1NetClientHandler, WorldSettings par2WorldSettings, int par3, int par4, Profiler par5Profiler)
     {
         super(new SaveHandlerMP(), "MpServer", WorldProvider.getProviderForDimension(par3), par2WorldSettings, par5Profiler);
@@ -41,14 +37,6 @@ public class WorldClient extends World
         this.difficultySetting = par4;
         this.setSpawnLocation(8, 64, 8);
         this.mapStorage = par1NetClientHandler.mapStorage;
-        
-        /* WORLD DOWNLOADER ---> */
-        WorldDL.downloading = false;
-        //WorldDL.continueDownload( this ); // Will only continue if it was running before
-        //WorldDL.lastSeed = worldInfo.getSeed();
-        //WorldDL.lastDimension = par3;
-        //WorldDL.lastServerHostname = WorldDL.serverHostname;
-        /* <--- WORLD DOWNLOADER */
     }
 
     /**
@@ -57,7 +45,7 @@ public class WorldClient extends World
     public void tick()
     {
         super.tick();
-        this.func_82738_a(this.func_82737_E() + 1L);
+        this.func_82738_a(this.getTotalWorldTime() + 1L);
         this.setWorldTime(this.getWorldTime() + 1L);
         this.theProfiler.startSection("reEntryProcessing");
 
@@ -140,11 +128,19 @@ public class WorldClient extends World
     {
         if (par3)
         {
+            /*WDL>>>*/
+            if( this != WDL.wc )
+                WDL.onWorldLoad();
             this.clientChunkProvider.loadChunk(par1, par2);
+            /*<<<WDL*/
         }
         else
         {
+            /*WDL>>>*/
+            if( WDL.downloading )
+                WDL.onChunkNoLongerNeeded( chunkProvider.provideChunk(par1, par2) );
             this.clientChunkProvider.unloadChunk(par1, par2);
+            /*<<<WDL*/
         }
 
         if (!par3)
@@ -418,12 +414,12 @@ public class WorldClient extends World
     /**
      * Adds some basic stats of the world to the given crash report.
      */
-    public CrashReport addWorldInfoToCrashReport(CrashReport par1CrashReport)
+    public CrashReportCategory addWorldInfoToCrashReport(CrashReport par1CrashReport)
     {
-        par1CrashReport = super.addWorldInfoToCrashReport(par1CrashReport);
-        par1CrashReport.addCrashSectionCallable("Forced Entities", new CallableMPL1(this));
-        par1CrashReport.addCrashSectionCallable("Retry Entities", new CallableMPL2(this));
-        return par1CrashReport;
+        CrashReportCategory var2 = super.addWorldInfoToCrashReport(par1CrashReport);
+        var2.addCrashSectionCallable("Forced entities", new CallableMPL1(this));
+        var2.addCrashSectionCallable("Retry entities", new CallableMPL2(this));
+        return var2;
     }
 
     /**
@@ -453,36 +449,4 @@ public class WorldClient extends World
     {
         return par0WorldClient.entitySpawnQueue;
     }
-    
-    /* WORLD DOWNLOADER ---> */
-    public void saveWorld(boolean flag, IProgressUpdate iprogressupdate)
-    {
-        if(WorldDL.downloading == true)
-        {
-            chunkProvider.saveChunks(flag, iprogressupdate);
-            worldInfo.setSizeOnDisk( WorldDL.getFileSizeRecursive(WorldDL.mySaveHandler.getSaveDirectory()) );
-
-            NBTTagCompound nbttagcompound = new NBTTagCompound();
-            this.mc.thePlayer.writeToNBT(nbttagcompound);
-            NBTTagCompound nbttagcompound1 = worldInfo.cloneNBTCompound(nbttagcompound);
-            if( this.mc.thePlayer.capabilities.allowFlying && this.mc.thePlayer.capabilities.disableDamage )
-                nbttagcompound1.setInteger("GameType", 1); // Creative
-            else
-                nbttagcompound1.setInteger("GameType", 0); // Survival
-            WorldDL.mySaveHandler.saveWorldInfoWithPlayer(worldInfo, nbttagcompound);
-        }
-
-        //mapStorage.saveAllData();
-        //chunkProvider.saveChunks(flag, iprogressupdate);
-    }
-
-    public void setMyBlockTileEntity(int i, int j, int k, TileEntity tileentity)
-    {
-        Chunk chunk = getChunkFromChunkCoords(i >> 4, k >> 4);
-        if(chunk != null)
-        {
-            chunk.setMyChunkBlockTileEntity(i & 0xf, j, k & 0xf, tileentity);
-        }
-    }
-    /* <--- WORLD DOWNLOADER */
 }

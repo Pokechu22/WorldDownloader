@@ -1,14 +1,14 @@
-Outputted net/minecraft/src/Chunk             to reobf\minecraft as za.class
-Outputted net/minecraft/src/WorldInfo         to reobf\minecraft as agv.class
-Outputted net/minecraft/src/WorldDL           to reobf\minecraft as WorldDL.class
-Outputted net/minecraft/src/GuiFurnace        to reobf\minecraft as auj.class
-Outputted net/minecraft/src/Packet15Place     to reobf\minecraft as fc.class
-Outputted net/minecraft/src/GuiIngameMenu     to reobf\minecraft as asq.class
-Outputted net/minecraft/src/ChunkProviderClient to reobf\minecraft as awx.class
-Outputted net/minecraft/src/GuiBrewingStand   to reobf\minecraft as aty.class
-Outputted net/minecraft/src/NetClientHandler  to reobf\minecraft as awr.class
-Outputted net/minecraft/src/ThreadConnectToServer to reobf\minecraft as awv.class
-Outputted net/minecraft/src/LongHashMap       to reobf\minecraft as jt.class
-Outputted net/minecraft/src/GuiDispenser      to reobf\minecraft as aup.class
-Outputted net/minecraft/src/WorldClient       to reobf\minecraft as awz.class
-Outputted net/minecraft/src/GuiChest          to reobf\minecraft as aua.class
+Mappings using MCP 7.21pre2
+
+GuiIngameMenu           => aty.class
+GuiWDLBackup            => GuiWDLBackup.class
+GuiWDLGenerator         => GuiWDLGenerator.class
+GuiWDLMultiworld        => GuiWDLMultiworld.class
+GuiWDLMultiworldSelect  => GuiWDLMultiworldSelect.class
+GuiWDLPlayer            => GuiWDLPlayer.class
+GuiWDLWorld             => GuiWDLWorld.class
+WDL                     => WDL.class
+WDLSaveAsync            => WDLSaveAsync.class
+WDLSaveProgressReporter => WDLSaveProgressReporter.class
+GuiWDL                  => GuiWDL.class
+WorldClient             => ayh.class
