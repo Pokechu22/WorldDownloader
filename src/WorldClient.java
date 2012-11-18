@@ -67,6 +67,25 @@ public class WorldClient extends World
         this.theProfiler.endStartSection("tiles");
         this.tickBlocksAndAmbiance();
         this.theProfiler.endSection();
+
+        /*WDL>>>*/
+        if( WDL.guiToShowAsync != null )
+        {
+            WDL.mc.displayGuiScreen( WDL.guiToShowAsync );
+            WDL.guiToShowAsync = null;
+        }
+        if( WDL.downloading )
+        {
+            if( WDL.tp.craftingInventory != WDL.windowContainer )
+            {
+                if( WDL.tp.craftingInventory == WDL.tp.inventorySlots )
+                    WDL.onItemGuiClosed();
+                else
+                    WDL.onItemGuiOpened();
+                WDL.windowContainer = WDL.tp.craftingInventory;
+            }
+        }
+        /*<<<WDL*/
     }
 
     /**
@@ -449,4 +468,24 @@ public class WorldClient extends World
     {
         return par0WorldClient.entitySpawnQueue;
     }
+
+    /*WDL>>>*/
+    @Override
+    public void removeWorldAccess(IWorldAccess par1iWorldAccess)
+    {
+        super.removeWorldAccess(par1iWorldAccess);
+        // the old world: this (!= null)
+        // the new world: mc.theWorld (!= null)
+        //if( WDL.downloading )
+        //    WDL.onWorldUnload();
+    }
+
+    @Override
+    public void addBlockEvent(int par1, int par2, int par3, int par4, int par5, int par6)
+    {
+        super.addBlockEvent(par1, par2, par3, par4, par5, par6);
+        if( WDL.downloading )
+            WDL.onBlockEvent( par1, par2, par3, par4, par5, par6 );
+    }
+    /*<<<WDL*/
 }
