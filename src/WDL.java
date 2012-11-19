@@ -1016,9 +1016,11 @@ public class WDL
             worldProps.setProperty("RandomSeed", seed);
             WDL.chatMsg("Setting single-player world seed to " + seed);
         }
+        /*
         else
         {
         	WDL.chatMsg("Could not retrieve server seed");
         }
+        */
     }
 }
