@@ -61,6 +61,9 @@ public class GuiIngameMenu extends GuiScreen
 
             case 1:
                 par1GuiButton.enabled = false;
+                /* WDL >>> */
+                WDL.stop();
+                /* <<< WDL */
                 this.mc.statFileWriter.readStat(StatList.leaveGameStat, 1);
                 this.mc.theWorld.sendQuittingDisconnectingPacket();
                 this.mc.loadWorld((WorldClient)null);

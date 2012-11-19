@@ -76,13 +76,13 @@ public class WorldClient extends World
         }
         if( WDL.downloading )
         {
-            if( WDL.tp.craftingInventory != WDL.windowContainer )
+            if( WDL.tp.openContainer != WDL.windowContainer )
             {
-                if( WDL.tp.craftingInventory == WDL.tp.inventorySlots )
+                if( WDL.tp.openContainer == WDL.tp.inventoryContainer )
                     WDL.onItemGuiClosed();
                 else
                     WDL.onItemGuiOpened();
-                WDL.windowContainer = WDL.tp.craftingInventory;
+                WDL.windowContainer = WDL.tp.openContainer;
             }
         }
         /*<<<WDL*/
@@ -164,7 +164,7 @@ public class WorldClient extends World
 
         if (!par3)
         {
-            this.markBlocksDirty(par1 * 16, 0, par2 * 16, par1 * 16 + 15, 256, par2 * 16 + 15);
+            this.markBlockRangeForRenderUpdate(par1 * 16, 0, par2 * 16, par1 * 16 + 15, 256, par2 * 16 + 15);
         }
     }
 

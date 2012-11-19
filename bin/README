@@ -1,0 +1,22 @@
+WORLD DOWNLOADER v2
+------------------------------
+Official forum thread and downloads are here:
+
+http://www.minecraftforum.net/topic/1444862-
+
+
+INSTALLATION
+------------------------------
+1. Open your minecraft.jar* with an archive tool like 7zip or WinRAR.
+2. Put the class files you just downloaded in there. Overwrite if necessary.
+3. Delete the META-INF folder if it exists in the jar file.
+4. Close the archive and save if asked. Done!
+
+
+How to find minecraft.jar:
+
+* Windows by entering %APPDATA%\.minecraft\bin in an Explorer window or in the start->run dialog.
+
+* Linux by opening ~/.minecraft/bin/ in a file manager of your choice.
+
+* Mac OS X by opening Library/Application Support/minecraft/bin in Finder.

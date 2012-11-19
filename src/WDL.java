@@ -187,7 +187,7 @@ public class WDL
         worldName = ""; // The new (multi-)world name is unknown at the moment
         wc = mc.theWorld;
         tp = mc.thePlayer;
-        windowContainer = tp.craftingInventory;
+        windowContainer = tp.openContainer;
         
         // Is this a different server?
         INetworkManager newNM = mc.getSendQueue().getNetManager();
@@ -1007,5 +1007,18 @@ public class WDL
             throw new RuntimeException("WorldDownloader: Couldn't get Field of type \"" + typeOfField + "\" from object \"" + object + "\" !" );
         }
     }
-    
+
+    public static void handleServerSeedMessage(String msg)
+    {
+        if(downloading && msg.startsWith("Seed: "))
+        {
+            String seed = msg.substring(6);
+            worldProps.setProperty("RandomSeed", seed);
+            WDL.chatMsg("Setting single-player world seed to " + seed);
+        }
+        else
+        {
+        	WDL.chatMsg("Could not retrieve server seed");
+        }
+    }
 }
