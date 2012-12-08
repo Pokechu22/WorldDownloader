@@ -3,7 +3,7 @@ Mappings using MCP 7.22
 GuiIngameMenu           => aty.class
 GuiWDL                  => GuiWDL.class
 GuiWDLBackup            => GuiWDLBackup.class
-GuiWDLGenera=>r         => GuiWDLGenera=>r.class
+GuiWDLGenerator         => GuiWDLGenerator.class
 GuiWDLMultiworld        => GuiWDLMultiworld.class
 GuiWDLMultiworldSelect  => GuiWDLMultiworldSelect.class
 GuiWDLPlayer            => GuiWDLPlayer.class
