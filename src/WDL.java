@@ -288,7 +288,7 @@ public class WDL
     		else if(lastEntity instanceof EntityVillager && windowContainer instanceof ContainerMerchant)
     		{
     			EntityVillager ev = (EntityVillager)lastEntity;
-    			WDL.chatMsg("Saving villager offers is not yet supported.");
+    			WDL.chatDebug("Saving villager offers is not yet supported.");
     			saveName = "Villager offers";
     			return;
     		}
@@ -296,7 +296,7 @@ public class WDL
     		{
     			WDL.chatMsg("Unsupported entity cannot be saved:" + lastEntity.getEntityString());
     		}
-    		WDL.chatMsg("Saved " + saveName + ".");
+    		WDL.chatDebug("Saved " + saveName + ".");
     		return;
     	}
     	
@@ -395,7 +395,7 @@ public class WDL
         	return;
         }
 
-        WDL.chatMsg("Saved " + saveName + ".");
+        WDL.chatDebug("Saved " + saveName + ".");
         return;
     }
     
@@ -504,7 +504,7 @@ public class WDL
     /** Save the player (position, health, inventory, ...) into its own file in the players directory */
     public static void savePlayer( NBTTagCompound playerNBT )
     {
-        chatMsg( "Saving player data...");
+        chatDebug( "Saving player data...");
         try
         {
             File playersDirectory = new File( saveHandler.getSaveDirectory(), "players" );
@@ -521,13 +521,13 @@ public class WDL
         {
             throw new RuntimeException( "Couldn't save the player!" );
         }
-        chatMsg( "Player data saved.");
+        chatDebug( "Player data saved.");
     }
     
     /** Save the world metadata (time, gamemode, seed, ...) into the level.dat file */
     public static void saveWorldInfo( NBTTagCompound worldInfoNBT )
     {
-        chatMsg( "Saving world metadata...");
+    	chatDebug( "Saving world metadata...");
         File saveDirectory = saveHandler.getSaveDirectory();
         NBTTagCompound dataNBT = new NBTTagCompound();
         dataNBT.setTag( "Data", worldInfoNBT );
@@ -554,13 +554,13 @@ public class WDL
         {
             throw new RuntimeException( "Couldn't save the world metadata!" );
         }
-        chatMsg( "World data saved.");
+        chatDebug( "World data saved.");
     }
     
     /** Calls saveChunk for all currently loaded chunks */
     public static void saveChunks( )
     {
-        chatMsg( "Saving chunks...");
+    	chatDebug( "Saving chunks...");
         LongHashMap chunkMapping = (LongHashMap) stealAndGetField( wc.chunkProvider, LongHashMap.class );
         LongHashMapEntry[] hashArray = (LongHashMapEntry[]) stealAndGetField( chunkMapping , LongHashMapEntry[].class );
         
@@ -592,7 +592,7 @@ public class WDL
                 lhme = lhme.nextEntry; // Get next Entry in this linked list
             }
         }
-        chatMsg( "Chunk data saved.");
+        chatDebug( "Chunk data saved.");
     }
     
     /**

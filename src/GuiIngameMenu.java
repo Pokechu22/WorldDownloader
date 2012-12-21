@@ -30,6 +30,7 @@ public class GuiIngameMenu extends GuiScreen
         this.controlList.add(new GuiButton(5, this.width / 2 - 100, this.height / 4 + 48 + var1, 98, 20, StatCollector.translateToLocal("gui.achievements")));
         this.controlList.add(new GuiButton(6, this.width / 2 + 2, this.height / 4 + 48 + var1, 98, 20, StatCollector.translateToLocal("gui.stats")));
         var3.enabled = this.mc.isSingleplayer() && !this.mc.getIntegratedServer().getPublic();
+        
         /*WDL>>>*/
         // This code adds the start, stop and options buttons to the menu:
         if( !mc.isIntegratedServerRunning() ) // (If connected to real server)

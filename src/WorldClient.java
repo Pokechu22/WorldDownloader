@@ -67,7 +67,7 @@ public class WorldClient extends World
         this.theProfiler.endStartSection("tiles");
         this.tickBlocksAndAmbiance();
         this.theProfiler.endSection();
-
+        
         /*WDL>>>*/
         if( WDL.guiToShowAsync != null )
         {
@@ -147,19 +147,20 @@ public class WorldClient extends World
     {
         if (par3)
         {
-            /*WDL>>>*/
+        	/*WDL>>>*/
             if( this != WDL.wc )
                 WDL.onWorldLoad();
-            this.clientChunkProvider.loadChunk(par1, par2);
             /*<<<WDL*/
+            
+            this.clientChunkProvider.loadChunk(par1, par2);
         }
         else
         {
-            /*WDL>>>*/
+        	/*WDL>>>*/
             if( WDL.downloading )
                 WDL.onChunkNoLongerNeeded( chunkProvider.provideChunk(par1, par2) );
-            this.clientChunkProvider.unloadChunk(par1, par2);
             /*<<<WDL*/
+            this.clientChunkProvider.unloadChunk(par1, par2);
         }
 
         if (!par3)
@@ -260,6 +261,50 @@ public class WorldClient extends World
 
     public Entity removeEntityFromWorld(int par1)
     {
+    	/*WDL>>>*/
+    	// If the entity is being removed and it's outside the default tracking range,
+    	// go ahead and remember it until the chunk is saved.
+    	Entity entity = (Entity)this.getEntityByID(par1);
+    	if(entity != null)
+    	{
+    		int threshold = 0;
+            if ((entity instanceof EntityFishHook) ||
+           		(entity instanceof EntityArrow) ||
+           		(entity instanceof EntitySmallFireball) ||
+           		(entity instanceof EntitySnowball) ||
+           		(entity instanceof EntityEnderPearl) ||
+           		(entity instanceof EntityEnderEye) ||
+           		(entity instanceof EntityEgg) ||
+           		(entity instanceof EntityPotion) ||
+           		(entity instanceof EntityExpBottle) ||
+           		(entity instanceof EntityItem) ||
+           		(entity instanceof EntitySquid))
+            {
+            	threshold = 64;
+            }
+            else if ((entity instanceof EntityMinecart) ||
+            		 (entity instanceof EntityBoat) ||
+            		 (entity instanceof IAnimals))
+            {
+                threshold = 80;
+            }
+            else if ((entity instanceof EntityDragon) ||
+           		 	 (entity instanceof EntityTNTPrimed) ||
+           		 	 (entity instanceof EntityFallingSand) ||
+           		 	 (entity instanceof EntityPainting) ||
+           		 	 (entity instanceof EntityXPOrb))
+            {
+                threshold = 160;
+            }	
+            double distance = entity.getDistance(WDL.tp.posX, entity.posY, WDL.tp.posZ);
+            if( distance > (double)threshold)
+            {
+            	//WDL.chatMsg("removeEntityFromWorld: Refusing to remove " + entity.getEntityString() + " at distance " + distance);
+            	return null;
+            }
+    	}
+    	/*<<<WDL*/
+
         Entity var2 = (Entity)this.entityHashSet.removeObject(par1);
 
         if (var2 != null)
@@ -297,11 +342,6 @@ public class WorldClient extends World
     {
         if (!this.provider.hasNoSky)
         {
-            if (this.lastLightningBolt > 0)
-            {
-                --this.lastLightningBolt;
-            }
-
             this.prevRainingStrength = this.rainingStrength;
 
             if (this.worldInfo.isRaining())
@@ -444,19 +484,34 @@ public class WorldClient extends World
     /**
      * par8 is loudness, all pars passed to minecraftInstance.sndManager.playSound
      */
-    public void playSound(double par1, double par3, double par5, String par7Str, float par8, float par9)
+    public void playSound(double par1, double par3, double par5, String par7Str, float par8, float par9, boolean par10)
     {
-        float var10 = 16.0F;
+        float var11 = 16.0F;
 
         if (par8 > 1.0F)
         {
-            var10 *= par8;
+            var11 *= par8;
         }
 
-        if (this.mc.renderViewEntity.getDistanceSq(par1, par3, par5) < (double)(var10 * var10))
+        double var12 = this.mc.renderViewEntity.getDistanceSq(par1, par3, par5);
+
+        if (var12 < (double)(var11 * var11))
         {
-            this.mc.sndManager.playSound(par7Str, (float)par1, (float)par3, (float)par5, par8, par9);
+            if (par10 && var12 > 100.0D)
+            {
+                double var14 = Math.sqrt(var12) / 40.0D;
+                this.mc.sndManager.func_92070_a(par7Str, (float)par1, (float)par3, (float)par5, par8, par9, (int)Math.round(var14 * 20.0D));
+            }
+            else
+            {
+                this.mc.sndManager.playSound(par7Str, (float)par1, (float)par3, (float)par5, par8, par9);
+            }
         }
+    }
+
+    public void func_92088_a(double par1, double par3, double par5, double par7, double par9, double par11, NBTTagCompound par13NBTTagCompound)
+    {
+        this.mc.effectRenderer.addEffect(new EntityFireworkStarterFX(this, par1, par3, par5, par7, par9, par11, this.mc.effectRenderer, par13NBTTagCompound));
     }
 
     static Set getEntityList(WorldClient par0WorldClient)
@@ -468,7 +523,7 @@ public class WorldClient extends World
     {
         return par0WorldClient.entitySpawnQueue;
     }
-
+    
     /*WDL>>>*/
     @Override
     public void removeWorldAccess(IWorldAccess par1iWorldAccess)

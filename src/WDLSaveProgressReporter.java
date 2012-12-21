@@ -10,7 +10,7 @@ public class WDLSaveProgressReporter implements Runnable
 
             try 
             {
-                Thread.sleep(5000L);
+                Thread.sleep(10000L);
             } 
             catch (InterruptedException e) 
             {
