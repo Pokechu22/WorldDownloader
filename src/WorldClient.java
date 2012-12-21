@@ -264,44 +264,47 @@ public class WorldClient extends World
     	/*WDL>>>*/
     	// If the entity is being removed and it's outside the default tracking range,
     	// go ahead and remember it until the chunk is saved.
-    	Entity entity = (Entity)this.getEntityByID(par1);
-    	if(entity != null)
+    	if(WDL.downloading)
     	{
-    		int threshold = 0;
-            if ((entity instanceof EntityFishHook) ||
-           		(entity instanceof EntityArrow) ||
-           		(entity instanceof EntitySmallFireball) ||
-           		(entity instanceof EntitySnowball) ||
-           		(entity instanceof EntityEnderPearl) ||
-           		(entity instanceof EntityEnderEye) ||
-           		(entity instanceof EntityEgg) ||
-           		(entity instanceof EntityPotion) ||
-           		(entity instanceof EntityExpBottle) ||
-           		(entity instanceof EntityItem) ||
-           		(entity instanceof EntitySquid))
-            {
-            	threshold = 64;
-            }
-            else if ((entity instanceof EntityMinecart) ||
-            		 (entity instanceof EntityBoat) ||
-            		 (entity instanceof IAnimals))
-            {
-                threshold = 80;
-            }
-            else if ((entity instanceof EntityDragon) ||
-           		 	 (entity instanceof EntityTNTPrimed) ||
-           		 	 (entity instanceof EntityFallingSand) ||
-           		 	 (entity instanceof EntityPainting) ||
-           		 	 (entity instanceof EntityXPOrb))
-            {
-                threshold = 160;
-            }	
-            double distance = entity.getDistance(WDL.tp.posX, entity.posY, WDL.tp.posZ);
-            if( distance > (double)threshold)
-            {
-            	//WDL.chatMsg("removeEntityFromWorld: Refusing to remove " + entity.getEntityString() + " at distance " + distance);
-            	return null;
-            }
+	    	Entity entity = (Entity)this.getEntityByID(par1);
+	    	if(entity != null)
+	    	{
+	    		int threshold = 0;
+	            if ((entity instanceof EntityFishHook) ||
+	           		(entity instanceof EntityArrow) ||
+	           		(entity instanceof EntitySmallFireball) ||
+	           		(entity instanceof EntitySnowball) ||
+	           		(entity instanceof EntityEnderPearl) ||
+	           		(entity instanceof EntityEnderEye) ||
+	           		(entity instanceof EntityEgg) ||
+	           		(entity instanceof EntityPotion) ||
+	           		(entity instanceof EntityExpBottle) ||
+	           		(entity instanceof EntityItem) ||
+	           		(entity instanceof EntitySquid))
+	            {
+	            	threshold = 64;
+	            }
+	            else if ((entity instanceof EntityMinecart) ||
+	            		 (entity instanceof EntityBoat) ||
+	            		 (entity instanceof IAnimals))
+	            {
+	                threshold = 80;
+	            }
+	            else if ((entity instanceof EntityDragon) ||
+	           		 	 (entity instanceof EntityTNTPrimed) ||
+	           		 	 (entity instanceof EntityFallingSand) ||
+	           		 	 (entity instanceof EntityPainting) ||
+	           		 	 (entity instanceof EntityXPOrb))
+	            {
+	                threshold = 160;
+	            }	
+	            double distance = entity.getDistance(WDL.tp.posX, entity.posY, WDL.tp.posZ);
+	            if( distance > (double)threshold)
+	            {
+	            	//WDL.chatMsg("removeEntityFromWorld: Refusing to remove " + entity.getEntityString() + " at distance " + distance);
+	            	return null;
+	            }
+	    	}
     	}
     	/*<<<WDL*/
 
