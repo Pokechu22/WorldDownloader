@@ -269,11 +269,11 @@ public class WorldClient extends World
 	    	Entity entity = (Entity)this.getEntityByID(par1);
 	    	if(entity != null)
 	    	{
-	    		int threshold = 0;
+	    		int threshold = 255;
 	            if ((entity instanceof EntityFishHook) ||
-	           		(entity instanceof EntityArrow) ||
-	           		(entity instanceof EntitySmallFireball) ||
-	           		(entity instanceof EntitySnowball) ||
+	           		//(entity instanceof EntityArrow) ||
+	           		//(entity instanceof EntitySmallFireball) ||
+	           		//(entity instanceof EntitySnowball) ||
 	           		(entity instanceof EntityEnderPearl) ||
 	           		(entity instanceof EntityEnderEye) ||
 	           		(entity instanceof EntityEgg) ||
