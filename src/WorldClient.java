@@ -30,9 +30,9 @@ public class WorldClient extends World
     private final Minecraft mc = Minecraft.getMinecraft();
     private final Set previousActiveChunkSet = new HashSet();
 
-    public WorldClient(NetClientHandler par1NetClientHandler, WorldSettings par2WorldSettings, int par3, int par4, Profiler par5Profiler)
+    public WorldClient(NetClientHandler par1NetClientHandler, WorldSettings par2WorldSettings, int par3, int par4, Profiler par5Profiler, ILogAgent par6ILogAgent)
     {
-        super(new SaveHandlerMP(), "MpServer", WorldProvider.getProviderForDimension(par3), par2WorldSettings, par5Profiler);
+        super(new SaveHandlerMP(), "MpServer", WorldProvider.getProviderForDimension(par3), par2WorldSettings, par5Profiler, par6ILogAgent);
         this.sendQueue = par1NetClientHandler;
         this.difficultySetting = par4;
         this.setSpawnLocation(8, 64, 8);
@@ -63,11 +63,11 @@ public class WorldClient extends World
         this.theProfiler.endStartSection("connection");
         this.sendQueue.processReadPackets();
         this.theProfiler.endStartSection("chunkCache");
-        this.clientChunkProvider.unload100OldestChunks();
+        this.clientChunkProvider.unloadQueuedChunks();
         this.theProfiler.endStartSection("tiles");
         this.tickBlocksAndAmbiance();
         this.theProfiler.endSection();
-        
+
         /*WDL>>>*/
         if( WDL.guiToShowAsync != null )
         {
@@ -147,19 +147,20 @@ public class WorldClient extends World
     {
         if (par3)
         {
-        	/*WDL>>>*/
+            /*WDL>>>*/
             if( this != WDL.wc )
                 WDL.onWorldLoad();
             /*<<<WDL*/
-            
+
             this.clientChunkProvider.loadChunk(par1, par2);
         }
         else
         {
-        	/*WDL>>>*/
+            /*WDL>>>*/
             if( WDL.downloading )
                 WDL.onChunkNoLongerNeeded( chunkProvider.provideChunk(par1, par2) );
             /*<<<WDL*/
+
             this.clientChunkProvider.unloadChunk(par1, par2);
         }
 
@@ -186,12 +187,11 @@ public class WorldClient extends World
     }
 
     /**
-     * Dismounts the entity (and anything riding the entity), sets the dead flag, and removes the player entity from the
-     * player entity list. Called by the playerLoggedOut function.
+     * Schedule the entity for removal during the next tick. Marks the entity dead in anticipation.
      */
-    public void setEntityDead(Entity par1Entity)
+    public void removeEntity(Entity par1Entity)
     {
-        super.setEntityDead(par1Entity);
+        super.removeEntity(par1Entity);
         this.entityList.remove(par1Entity);
     }
 
@@ -237,7 +237,7 @@ public class WorldClient extends World
 
         if (var3 != null)
         {
-            this.setEntityDead(var3);
+            this.removeEntity(var3);
         }
 
         this.entityList.add(par2Entity);
@@ -261,59 +261,60 @@ public class WorldClient extends World
 
     public Entity removeEntityFromWorld(int par1)
     {
-    	/*WDL>>>*/
-    	// If the entity is being removed and it's outside the default tracking range,
-    	// go ahead and remember it until the chunk is saved.
-    	if(WDL.downloading)
-    	{
-	    	Entity entity = (Entity)this.getEntityByID(par1);
-	    	if(entity != null)
-	    	{
-	    		int threshold = 255;
-	            if ((entity instanceof EntityFishHook) ||
-	           		//(entity instanceof EntityArrow) ||
-	           		//(entity instanceof EntitySmallFireball) ||
-	           		//(entity instanceof EntitySnowball) ||
-	           		(entity instanceof EntityEnderPearl) ||
-	           		(entity instanceof EntityEnderEye) ||
-	           		(entity instanceof EntityEgg) ||
-	           		(entity instanceof EntityPotion) ||
-	           		(entity instanceof EntityExpBottle) ||
-	           		(entity instanceof EntityItem) ||
-	           		(entity instanceof EntitySquid))
-	            {
-	            	threshold = 64;
-	            }
-	            else if ((entity instanceof EntityMinecart) ||
-	            		 (entity instanceof EntityBoat) ||
-	            		 (entity instanceof IAnimals))
-	            {
-	                threshold = 80;
-	            }
-	            else if ((entity instanceof EntityDragon) ||
-	           		 	 (entity instanceof EntityTNTPrimed) ||
-	           		 	 (entity instanceof EntityFallingSand) ||
-	           		 	 (entity instanceof EntityPainting) ||
-	           		 	 (entity instanceof EntityXPOrb))
-	            {
-	                threshold = 160;
-	            }	
-	            double distance = entity.getDistance(WDL.tp.posX, entity.posY, WDL.tp.posZ);
-	            if( distance > (double)threshold)
-	            {
-	            	//WDL.chatMsg("removeEntityFromWorld: Refusing to remove " + entity.getEntityString() + " at distance " + distance);
-	            	return null;
-	            }
-	    	}
-    	}
-    	/*<<<WDL*/
+        /*WDL>>>*/
+        // If the entity is being removed and it's outside the default tracking range,
+        // go ahead and remember it until the chunk is saved.
+        if(WDL.downloading)
+        {
+            Entity entity = (Entity)this.getEntityByID(par1);
+            if(entity != null)
+            {
+                int threshold = 255;
+                if ((entity instanceof EntityFishHook) ||
+                    //(entity instanceof EntityArrow) ||
+                    //(entity instanceof EntitySmallFireball) ||
+                    //(entity instanceof EntitySnowball) ||
+                    (entity instanceof EntityEnderPearl) ||
+                    (entity instanceof EntityEnderEye) ||
+                    (entity instanceof EntityEgg) ||
+                    (entity instanceof EntityPotion) ||
+                    (entity instanceof EntityExpBottle) ||
+                    (entity instanceof EntityItem) ||
+                    (entity instanceof EntitySquid))
+                {
+                    threshold = 64;
+                }
+                else if ((entity instanceof EntityMinecart) ||
+                         (entity instanceof EntityBoat) ||
+                         (entity instanceof IAnimals))
+                {
+                    threshold = 80;
+                }
+                else if ((entity instanceof EntityDragon) ||
+                         (entity instanceof EntityTNTPrimed) ||
+                         (entity instanceof EntityFallingSand) ||
+                         (entity instanceof EntityPainting) ||
+                         (entity instanceof EntityXPOrb))
+                {
+                    threshold = 160;
+                }
+                double distance = entity.getDistance(WDL.tp.posX, entity.posY, WDL.tp.posZ);
+                if( distance > (double)threshold)
+                {
+                    WDL.chatDebug("removeEntityFromWorld: Refusing to remove " + entity.getEntityString() + " at distance " + distance);
+                    return null;
+                }
+                WDL.chatDebug("removeEntityFromWorld: Removing " + entity.getEntityString() + " at distance " + distance);
+            }
+        }
+        /*<<<WDL*/
 
         Entity var2 = (Entity)this.entityHashSet.removeObject(par1);
 
         if (var2 != null)
         {
             this.entityList.remove(var2);
-            this.setEntityDead(var2);
+            this.removeEntity(var2);
         }
 
         return var2;
@@ -322,7 +323,7 @@ public class WorldClient extends World
     public boolean setBlockAndMetadataAndInvalidate(int par1, int par2, int par3, int par4, int par5)
     {
         this.invalidateBlockReceiveRegion(par1, par2, par3, par1, par2, par3);
-        return super.setBlockAndMetadataWithNotify(par1, par2, par3, par4, par5);
+        return super.setBlockAndMetadataWithNotify(par1, par2, par3, par4, par5, 3);
     }
 
     /**
@@ -517,6 +518,11 @@ public class WorldClient extends World
         this.mc.effectRenderer.addEffect(new EntityFireworkStarterFX(this, par1, par3, par5, par7, par9, par11, this.mc.effectRenderer, par13NBTTagCompound));
     }
 
+    public void func_96443_a(Scoreboard par1Scoreboard)
+    {
+        this.field_96442_D = par1Scoreboard;
+    }
+
     static Set getEntityList(WorldClient par0WorldClient)
     {
         return par0WorldClient.entityList;
@@ -526,7 +532,7 @@ public class WorldClient extends World
     {
         return par0WorldClient.entitySpawnQueue;
     }
-    
+
     /*WDL>>>*/
     @Override
     public void removeWorldAccess(IWorldAccess par1iWorldAccess)

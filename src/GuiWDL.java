@@ -35,7 +35,7 @@ public class GuiWDL extends GuiScreen
     		return;
     	}
 		
-        controlList.clear();
+    	this.buttonList.clear();
         
         title = "Options for " + WDL.baseFolderName.replace('@', ':');
         
@@ -54,13 +54,13 @@ public class GuiWDL extends GuiScreen
         
         hi += 22;
         autoStartBtn = new GuiButton( 1, w-100, hi, "Start Download: ERROR" );
-        controlList.add( autoStartBtn );
+        this.buttonList.add( autoStartBtn );
         updateAutoStart(false);
         
         hi += 22;
         backupBtn = new GuiButton( 2, w-100, hi, "Backup Options..." );
         backupBtn.enabled = false;
-        controlList.add( backupBtn );
+        this.buttonList.add( backupBtn );
         
 //        hi += 22;
 //        multiWorldBtn = new GuiButton(3, w-100, hi, "Multiworld (DELETE THIS)");
@@ -68,18 +68,18 @@ public class GuiWDL extends GuiScreen
         
         hi += 28;
         worldOverrides = new GuiButton(4, w-100, hi, "World Overrides...");
-        controlList.add( worldOverrides );
+        this.buttonList.add( worldOverrides );
         
         hi += 22;
         generatorOverrides = new GuiButton(5, w-100, hi, "World Generator Overrides...");
-        controlList.add( generatorOverrides );
+        this.buttonList.add( generatorOverrides );
         
         hi += 22;
         playerOverrides = new GuiButton(6, w-100, hi, "Player Overrides...");
-        controlList.add( playerOverrides );
+        this.buttonList.add( playerOverrides );
         
         hi += 28;
-        controlList.add( new GuiButton( 100, w-100, h+150, "Done" ) );
+        this.buttonList.add( new GuiButton( 100, w-100, h+150, "Done" ) );
     }
 
     protected void actionPerformed(GuiButton guibutton)

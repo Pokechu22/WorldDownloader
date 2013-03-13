@@ -25,7 +25,7 @@ public class GuiWDLPlayer extends GuiScreen
 
     public void initGui()
     {
-        controlList.clear();
+    	this.buttonList.clear();
         
         title = "Player Options for " + WDL.baseFolderName.replace('@', ':');
         
@@ -35,17 +35,17 @@ public class GuiWDLPlayer extends GuiScreen
         int hi = h-15;
         
         healthBtn = new GuiButton( 1, w-100, hi, "Health: ERROR" );
-        controlList.add( healthBtn );
+        this.buttonList.add( healthBtn );
         updateHealth(false);
         
         hi += 22;
         hungerBtn = new GuiButton( 2, w-100, hi, "Hunger: ERROR" );
-        controlList.add( hungerBtn );
+        this.buttonList.add( hungerBtn );
         updateHunger(false);
         
         hi += 22;
         playerPosBtn = new GuiButton( 3, w-100, hi, "Player Position: ERROR" );
-        controlList.add( playerPosBtn );
+        this.buttonList.add( playerPosBtn );
         
         hi += 22;
         posTextY = hi + 4;
@@ -58,12 +58,12 @@ public class GuiWDLPlayer extends GuiScreen
         
         hi += 18;
         pickPosBtn = new GuiButton(4, w-0, hi, 100, 20, "Current position");
-        controlList.add(pickPosBtn);
+        this.buttonList.add(pickPosBtn);
         
         updatePlayerPos(false);
         updatePosXYZ(false);
         
-        controlList.add( new GuiButton( 100, w-100, h+150, "Done" ) );
+        this.buttonList.add( new GuiButton( 100, w-100, h+150, "Done" ) );
     }
 
     protected void actionPerformed(GuiButton guibutton)

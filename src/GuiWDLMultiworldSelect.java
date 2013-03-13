@@ -39,7 +39,7 @@ public class GuiWDLMultiworldSelect extends GuiScreen
 
     public void initGui()
     {
-        controlList.clear();
+    	this.buttonList.clear();
         
         int w = width / 2;
         int h = height / 4;
@@ -50,7 +50,7 @@ public class GuiWDLMultiworldSelect extends GuiScreen
         int buttonWidth = width / columns - 5;
         
         cancelBtn = new GuiButton( 100, w-100, height-30, "Cancel" );
-        controlList.add( cancelBtn );
+        this.buttonList.add( cancelBtn );
         
         String linkedWorlds = WDL.baseProps.getProperty("LinkedWorlds");
         String[] tempWorlds = linkedWorlds.split("[|]");
@@ -92,7 +92,7 @@ public class GuiWDLMultiworldSelect extends GuiScreen
         	{
         		worlds[wi] = tempWorlds[i];
         		buttons[wi] = new GuiButton(wi, (wi%columns)*buttonWidth + spaceLeft, height - 60 - (wi/columns)*21 , buttonWidth, 20, tempNames[i]);
-        		controlList.add(buttons[wi]);
+        		this.buttonList.add(buttons[wi]);
         		wi++;
         	}
         }
@@ -101,7 +101,7 @@ public class GuiWDLMultiworldSelect extends GuiScreen
         if( !newWorld ) // Needed to make resizing the window work when the TextBox is visible
         {
         	buttons[newWorldPos] = new GuiButton(newWorldPos, (newWorldPos%columns)*buttonWidth + spaceLeft, height - 60 - (newWorldPos/columns)*21 , buttonWidth, 20, "< New Name >");
-        	controlList.add(buttons[newWorldPos]);
+        	this.buttonList.add(buttons[newWorldPos]);
         }
 
         newNameField = new GuiTextField( fontRenderer, (newWorldPos%columns)*buttonWidth + spaceLeft, height - 60 - (newWorldPos/columns)*21 + 1, buttonWidth, 18 );
@@ -115,7 +115,7 @@ public class GuiWDLMultiworldSelect extends GuiScreen
     	if( guibutton.id == worlds.length ) //New world
     	{
     		newWorld = true;
-    		controlList.remove(buttons[worlds.length]);
+    		this.buttonList.remove(buttons[worlds.length]);
     	}
     	else if( guibutton.id == 100 ) //Cancel
     	{

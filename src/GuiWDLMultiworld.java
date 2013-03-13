@@ -19,7 +19,7 @@ public class GuiWDLMultiworld extends GuiScreen
 	
     public void initGui()
     {
-        controlList.clear();
+    	this.buttonList.clear();
         
         int w = width / 2;
         int h = height / 4;
@@ -27,10 +27,10 @@ public class GuiWDLMultiworld extends GuiScreen
         int hi = h+115;
         
         multiworldEnabledBtn = new GuiButton( 1, w-100, hi, "Multiworld support: ERROR" );
-        controlList.add( multiworldEnabledBtn );
+        this.buttonList.add( multiworldEnabledBtn );
         updateMultiworldEnabled(false);
         
-        controlList.add( new GuiButton( 100, w-100, h+150, "OK" ) );
+        this.buttonList.add( new GuiButton( 100, w-100, h+150, "OK" ) );
     }
 
     protected void actionPerformed(GuiButton guibutton)

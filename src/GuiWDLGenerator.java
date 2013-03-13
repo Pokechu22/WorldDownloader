@@ -20,7 +20,7 @@ public class GuiWDLGenerator extends GuiScreen
 
     public void initGui()
     {
-        controlList.clear();
+    	this.buttonList.clear();
         
         title = "World Generator Options for " + WDL.baseFolderName.replace('@', ':');
         
@@ -35,15 +35,15 @@ public class GuiWDLGenerator extends GuiScreen
         
         hi += 22;
         generatorBtn = new GuiButton(1, w-100, hi, "World Generator: ERROR");
-        controlList.add(generatorBtn);
+        this.buttonList.add(generatorBtn);
         updateGenerator( false );
         
         hi += 22;
         generateStructuresBtn = new GuiButton( 2, w-100, hi, "Generate Structures: ERROR" );
-        controlList.add(generateStructuresBtn);
+        this.buttonList.add(generateStructuresBtn);
         updateGenerateStructures( false );
         
-        controlList.add( new GuiButton( 100, w-100, h+150, "Done" ) );
+        this.buttonList.add( new GuiButton( 100, w-100, h+150, "Done" ) );
     }
 
     protected void actionPerformed(GuiButton guibutton)

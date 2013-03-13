@@ -190,7 +190,7 @@ public class WDL
         windowContainer = tp.openContainer;
         
         // Is this a different server?
-        INetworkManager newNM = mc.getSendQueue().getNetManager();
+        INetworkManager newNM = tp.sendQueue.getNetManager();
         
         if( nm != newNM )
         {
@@ -276,11 +276,12 @@ public class WDL
     		if(lastEntity instanceof EntityMinecart && windowContainer instanceof ContainerChest)
     		{
     			EntityMinecart emc = (EntityMinecart)lastEntity;
-    			if(emc.minecartType == 1)
+    			if(emc instanceof EntityMinecartChest)
     			{
-    				for(int i = 0; i < emc.getSizeInventory(); i++)
+    				EntityMinecartChest emcc = (EntityMinecartChest)emc;
+    				for(int i = 0; i < emcc.getSizeInventory(); i++)
     				{
-    					emc.setInventorySlotContents(i, windowContainer.getSlot(i).getStack());
+    					emcc.setInventorySlotContents(i, windowContainer.getSlot(i).getStack());
     					saveName = "Storage Minecart contents";
     				}
     			}

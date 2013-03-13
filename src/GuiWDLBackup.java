@@ -21,7 +21,7 @@ public class GuiWDLBackup extends GuiScreen
 
     public void initGui()
     {
-        controlList.clear();
+    	this.buttonList.clear();
         
         title = "Backup Options for " + WDL.baseFolderName.replace('@', ':');
         
@@ -29,12 +29,12 @@ public class GuiWDLBackup extends GuiScreen
         int h = height / 4;
         
         backupBtn = new GuiButton( 10, w-100, h+105, "Backup: ERROR" );
-        controlList.add( backupBtn );
+        this.buttonList.add( backupBtn );
         updateBackup(false);
         
         commandField = new GuiTextField( fontRenderer, w-98, h+126, 196, 17);
         
-        controlList.add( new GuiButton( 100, w-100, h+150, "Done" ) );
+        this.buttonList.add( new GuiButton( 100, w-100, h+150, "Done" ) );
     }
 
     protected void actionPerformed(GuiButton guibutton)

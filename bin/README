@@ -7,7 +7,7 @@ http://www.minecraftforum.net/topic/1444862-
 
 INSTALLATION
 ------------------------------
-1. Open your minecraft.jar* with an archive tool like 7zip or WinRAR.
+1. Open your minecraft.jar* with an archive tool like 7zip or WinRAR. *** DO NOT EXTRACT THE FILES ***
 2. Put the class files you just downloaded in there. Overwrite if necessary.
 3. Delete the META-INF folder if it exists in the jar file.
 4. Close the archive and save if asked. Done!

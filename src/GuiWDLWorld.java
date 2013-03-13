@@ -26,7 +26,7 @@ public class GuiWDLWorld extends GuiScreen
 
     public void initGui()
     {
-        controlList.clear();
+    	this.buttonList.clear();
         
         title = "World Options for " + WDL.baseFolderName.replace('@', ':');
         
@@ -36,22 +36,22 @@ public class GuiWDLWorld extends GuiScreen
         int hi = h-15;
         
         gameModeBtn = new GuiButton( 1, w-100, hi, "Game Mode: ERROR" );
-        controlList.add( gameModeBtn );
+        this.buttonList.add( gameModeBtn );
         updateGameMode(false);
         
         hi += 22;
         timeBtn = new GuiButton( 2, w-100, hi, "Time: ERROR" );
-        controlList.add( timeBtn );
+        this.buttonList.add( timeBtn );
         updateTime(false);
         
         hi += 22;
         weatherBtn = new GuiButton( 3, w-100, hi, "Weather: ERROR" );
-        controlList.add( weatherBtn );
+        this.buttonList.add( weatherBtn );
         updateWeather(false);
         
         hi += 22;
         spawnBtn = new GuiButton( 4, w-100, hi, "Spawn Position: ERROR" );
-        controlList.add( spawnBtn );
+        this.buttonList.add( spawnBtn );
         
         hi += 22;
         spawnTextY = hi + 4;
@@ -64,12 +64,12 @@ public class GuiWDLWorld extends GuiScreen
         
         hi += 18;
         pickSpawnBtn = new GuiButton(5, w-0, hi, 100, 20, "Current position");
-        controlList.add(pickSpawnBtn);
+        this.buttonList.add(pickSpawnBtn);
         
         updateSpawn(false);
         updateSpawnXYZ(false);
         
-        controlList.add( new GuiButton( 100, w-100, h+150, "Done" ) );
+        this.buttonList.add( new GuiButton( 100, w-100, h+150, "Done" ) );
     }
 
     protected void actionPerformed(GuiButton guibutton)
