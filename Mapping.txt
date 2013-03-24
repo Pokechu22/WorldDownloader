@@ -1,15 +1,15 @@
-Mappings using MCP 7.42pre2
+Mappings using MCP 7.44
 
-GuiIngameMenu           => axf.class
-GuiWDL                  => GuiWDL.class
-GuiWDLBackup            => GuiWDLBackup.class
-GuiWDLGenerator         => GuiWDLGenerator.class
-GuiWDLMultiworld        => GuiWDLMultiworld.class
+GuiWDLWorld        => GuiWDLWorld.class
+GuiWDLGenerator    => GuiWDLGenerator.class
+GuiIngameMenu      => axl.class
 GuiWDLMultiworldSelect  => GuiWDLMultiworldSelect.class
-GuiWDLPlayer            => GuiWDLPlayer.class
-GuiWDLWorld             => GuiWDLWorld.class
-NetClientHandler        => bde.class
-WDL                     => WDL.class
-WDLSaveAsync            => WDLSaveAsync.class
-WDLSaveProgressReporter => WDLSaveProgressReporter.class
-WorldClient             => bdm.class
+WDL                => WDL.class
+GuiWDLPlayer       => GuiWDLPlayer.class
+WDLSaveAsync       => WDLSaveAsync.class
+NetClientHandler   => bdl.class
+GuiWDLMultiworld   => GuiWDLMultiworld.class
+WDLSaveProgressReporter  => WDLSaveProgressReporter.class
+GuiWDLBackup       => GuiWDLBackup.class
+GuiWDL             => GuiWDL.class
+WorldClient        => bdt.class
