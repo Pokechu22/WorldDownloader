@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.net.URLDecoder;
 
 import org.lwjgl.opengl.GL11;
 
@@ -30,6 +31,7 @@ public class WDL
     public static WorldClient wc; // Reference to the World object that WDL uses
     public static INetworkManager nm = null; // Reference to a connection specific object. Used to detect a new connection.
     public static EntityClientPlayerMP tp;
+    public static McoServer mcos;
     
     public static Container windowContainer; // Reference to the place where all the item stacks end up after receiving them.
     public static int lastX = 0, lastY = 0, lastZ = 0; // Last right clicked block. Needed for TileEntity creation!
@@ -508,7 +510,7 @@ public class WDL
         chatDebug( "Saving player data...");
         try
         {
-            File playersDirectory = new File( saveHandler.getSaveDirectory(), "players" );
+            File playersDirectory = new File( saveHandler.getWorldDirectory(), "players" );
             File playerFile = new File( playersDirectory, tp.username + ".dat.tmp" );
             File playerFileOld = new File( playersDirectory, tp.username + ".dat" );
             
@@ -529,7 +531,7 @@ public class WDL
     public static void saveWorldInfo( NBTTagCompound worldInfoNBT )
     {
     	chatDebug( "Saving world metadata...");
-        File saveDirectory = saveHandler.getSaveDirectory();
+        File saveDirectory = saveHandler.getWorldDirectory();
         NBTTagCompound dataNBT = new NBTTagCompound();
         dataNBT.setTag( "Data", worldInfoNBT );
         
@@ -886,30 +888,22 @@ public class WDL
     /** Get the name of the server the user specified it in the server list */
     public static String getServerName( )
     {
-        return mc.getServerData().serverName;
+    	try
+    	{
+	    	if(mc.getServerData() != null)
+	    		return mc.getServerData().serverName;
+	    	else if(mcos != null)
+	    		return "MCRealm: " + URLDecoder.decode(mcos.field_96406_b, "UTF-8");
+    	}
+    	catch(Exception e)
+    	{}
+    	return "Unidentified Server";
     }
     
     /** Get the base folder name for the server we are connected to */
     public static String getBaseFolderName( )
     {
-        String hostAndPort = mc.getServerData().serverIP;
-        int lastColon = hostAndPort.lastIndexOf( ":" );
-        if( lastColon == -1 ) // domain name or IPv4
-            return hostAndPort;
-        
-        if( lastColon == hostAndPort.indexOf( ":" ) ) // domain name or IPv4 address with port
-            return hostAndPort.replace( ':', '@' );
-        
-        int lastSqBracket = hostAndPort.lastIndexOf( "]" );
-        if( lastSqBracket == -1 ) //IPv6 address without port
-            return hostAndPort.replace( ':', '_' );
-        
-        if( lastSqBracket+1 == lastColon ) //IPv6 address with port
-            return hostAndPort.substring( 1, lastSqBracket ).replace(':', '_')
-                   + hostAndPort.substring(lastColon).replace(':', '@');
-        
-        // IPv6 address in brackets without port
-        return hostAndPort.substring( 1, lastSqBracket ).replace(':', '_');
+    	return getServerName().replaceAll("\\W+", "_");
     }
     
     /** Get the folder name for the specified world */

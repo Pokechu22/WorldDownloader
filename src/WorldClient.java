@@ -269,7 +269,7 @@ public class WorldClient extends World
             Entity entity = (Entity)this.getEntityByID(par1);
             if(entity != null)
             {
-                int threshold = 255;
+                int threshold = 0;
                 if ((entity instanceof EntityFishHook) ||
                     //(entity instanceof EntityArrow) ||
                     //(entity instanceof EntitySmallFireball) ||
