@@ -18,8 +18,6 @@ import java.net.URLDecoder;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraft.client.Minecraft;
-
 /**
  * This is the main class that does most of the work.
  */

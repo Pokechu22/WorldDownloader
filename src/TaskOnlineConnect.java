@@ -16,37 +16,39 @@ public class TaskOnlineConnect extends TaskLongRunning
 
     public void run()
     {
-        this.func_96576_b(StringTranslate.getInstance().translateKey("mco.connect.connecting"));
-        McoClient var1 = new McoClient(this.func_96578_b().session);
+        this.func_96576_b(I18n.func_135053_a("mco.connect.connecting"));
+        McoClient var1 = new McoClient(this.func_96578_b().func_110432_I());
         boolean var2 = false;
         boolean var3 = false;
-        McoServerAddress var4 = null;
+        int var4 = 5;
+        McoServerAddress var5 = null;
 
-        for (int var5 = 0; var5 < 10 && !this.func_96577_c(); ++var5)
+        for (int var6 = 0; var6 < 10 && !this.func_96577_c(); ++var6)
         {
             try
             {
-                var4 = var1.func_96374_a(this.field_96585_c.field_96408_a);
+                var5 = var1.func_96374_a(this.field_96585_c.field_96408_a);
                 var2 = true;
             }
-            catch (ExceptionRetryCall var7)
+            catch (ExceptionRetryCall var8)
             {
-                ;
+                var4 = var8.field_96393_c;
             }
-            catch (ExceptionMcoService var8)
+            catch (ExceptionMcoService var9)
             {
                 var3 = true;
-                this.func_96575_a(var8.getLocalizedMessage());
+                this.func_96575_a(var9.toString());
+                Minecraft.getMinecraft().getLogAgent().logSevere(var9.toString());
                 break;
             }
-            catch (IOException var9)
+            catch (IOException var10)
             {
-                ;
+                Minecraft.getMinecraft().getLogAgent().logWarning("Realms: could not parse response");
             }
-            catch (Exception var10)
+            catch (Exception var11)
             {
                 var3 = true;
-                this.func_96575_a(var10.getLocalizedMessage());
+                this.func_96575_a(var11.getLocalizedMessage());
             }
 
             if (var2)
@@ -54,15 +56,15 @@ public class TaskOnlineConnect extends TaskLongRunning
                 break;
             }
 
-            this.func_96581_e();
+            this.func_111251_a(var4);
         }
 
         if (!this.func_96577_c() && !var3)
         {
             if (var2)
             {
-                ServerAddress var11 = ServerAddress.func_78860_a(var4.field_96417_a);
-                this.func_96582_a(var11.getIP(), var11.getPort());
+                ServerAddress var12 = ServerAddress.func_78860_a(var5.field_96417_a);
+                this.func_96582_a(var12.getIP(), var12.getPort());
             }
             else
             {
@@ -71,24 +73,24 @@ public class TaskOnlineConnect extends TaskLongRunning
         }
     }
 
-    private void func_96581_e()
+    private void func_111251_a(int par1)
     {
         try
         {
-            Thread.sleep(5000L);
+            Thread.sleep((long)(par1 * 1000));
         }
-        catch (InterruptedException var2)
+        catch (InterruptedException var3)
         {
-            System.err.println(var2);
+            Minecraft.getMinecraft().getLogAgent().logWarning(var3.getLocalizedMessage());
         }
     }
 
     private void func_96582_a(String par1Str, int par2)
     {
-    	/* WDL >>> */
-    	WDL.mcos = field_96585_c;
-    	/* <<< WDL */
-    	
+        /* WDL >>> */
+        WDL.mcos = field_96585_c;
+        /* <<< WDL */
+
         (new ThreadOnlineConnect(this, par1Str, par2)).start();
     }
 

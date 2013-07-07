@@ -1,17 +1,17 @@
-Mappings using MCP 7.51
+Mappings using MCP 8.03
 
 GuiWDLWorld       => GuiWDLWorld.class
+Minecraft         => atn.class
 GuiWDLGenerator   => GuiWDLGenerator.class
-GuiIngameMenu     => axl.class
+GuiIngameMenu     => avp.class
 GuiWDLMultiworldSelect => GuiWDLMultiworldSelect.class
-WDL               => WDL.class
-TaskOnlineConnect => bae.class
+TaskOnlineConnect => ayo.class
 GuiWDLPlayer      => GuiWDLPlayer.class
 WDLSaveAsync      => WDLSaveAsync.class
-NetClientHandler  => bdk.class
+NetClientHandler  => bcn.class
 GuiWDLMultiworld  => GuiWDLMultiworld.class
 WDLSaveProgressReporter => WDLSaveProgressReporter.class
 GuiWDLBackup      => GuiWDLBackup.class
 GuiWDL            => GuiWDL.class
-WorldClient       => bds.class
-
+WorldClient       => bcu.class
+WDL               => WDL.class

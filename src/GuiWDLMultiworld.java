@@ -3,8 +3,6 @@ package net.minecraft.src;
 import java.util.List;
 import java.util.Properties;
 
-import net.minecraft.client.Minecraft;
-
 public class GuiWDLMultiworld extends GuiScreen
 {
 	private GuiScreen parent;

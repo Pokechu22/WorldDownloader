@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.Set;
-import net.minecraft.client.Minecraft;
 
 public class WorldClient extends World
 {
@@ -46,7 +45,12 @@ public class WorldClient extends World
     {
         super.tick();
         this.func_82738_a(this.getTotalWorldTime() + 1L);
-        this.setWorldTime(this.getWorldTime() + 1L);
+
+        if (this.getGameRules().getGameRuleBooleanValue("doDaylightCycle"))
+        {
+            this.setWorldTime(this.getWorldTime() + 1L);
+        }
+
         this.theProfiler.startSection("reEntryProcessing");
 
         for (int var1 = 0; var1 < 10 && !this.entitySpawnQueue.isEmpty(); ++var1)
@@ -521,6 +525,24 @@ public class WorldClient extends World
     public void func_96443_a(Scoreboard par1Scoreboard)
     {
         this.worldScoreboard = par1Scoreboard;
+    }
+
+    /**
+     * Sets the world time.
+     */
+    public void setWorldTime(long par1)
+    {
+        if (par1 < 0L)
+        {
+            par1 = -par1;
+            this.getGameRules().setOrCreateGameRule("doDaylightCycle", "false");
+        }
+        else
+        {
+            this.getGameRules().setOrCreateGameRule("doDaylightCycle", "true");
+        }
+
+        super.setWorldTime(par1);
     }
 
     static Set getEntityList(WorldClient par0WorldClient)

@@ -3,10 +3,10 @@ package net.minecraft.src;
 public class GuiIngameMenu extends GuiScreen
 {
     /** Also counts the number of updates, not certain as to why yet. */
-    private int updateCounter2 = 0;
+    private int updateCounter2;
 
     /** Counts the number of screen updates. */
-    private int updateCounter = 0;
+    private int updateCounter;
 
     /**
      * Adds the buttons (and other controls) to the screen in question.
@@ -16,19 +16,20 @@ public class GuiIngameMenu extends GuiScreen
         this.updateCounter2 = 0;
         this.buttonList.clear();
         byte var1 = -16;
-        this.buttonList.add(new GuiButton(1, this.width / 2 - 100, this.height / 4 + 120 + var1, StatCollector.translateToLocal("menu.returnToMenu")));
+        boolean var2 = true;
+        this.buttonList.add(new GuiButton(1, this.width / 2 - 100, this.height / 4 + 120 + var1, I18n.func_135053_a("menu.returnToMenu")));
 
         if (!this.mc.isIntegratedServerRunning())
         {
-            ((GuiButton)this.buttonList.get(0)).displayString = StatCollector.translateToLocal("menu.disconnect");
+            ((GuiButton)this.buttonList.get(0)).displayString = I18n.func_135053_a("menu.disconnect");
         }
 
-        this.buttonList.add(new GuiButton(4, this.width / 2 - 100, this.height / 4 + 24 + var1, StatCollector.translateToLocal("menu.returnToGame")));
-        this.buttonList.add(new GuiButton(0, this.width / 2 - 100, this.height / 4 + 96 + var1, 98, 20, StatCollector.translateToLocal("menu.options")));
+        this.buttonList.add(new GuiButton(4, this.width / 2 - 100, this.height / 4 + 24 + var1, I18n.func_135053_a("menu.returnToGame")));
+        this.buttonList.add(new GuiButton(0, this.width / 2 - 100, this.height / 4 + 96 + var1, 98, 20, I18n.func_135053_a("menu.options")));
         GuiButton var3;
-        this.buttonList.add(var3 = new GuiButton(7, this.width / 2 + 2, this.height / 4 + 96 + var1, 98, 20, StatCollector.translateToLocal("menu.shareToLan")));
-        this.buttonList.add(new GuiButton(5, this.width / 2 - 100, this.height / 4 + 48 + var1, 98, 20, StatCollector.translateToLocal("gui.achievements")));
-        this.buttonList.add(new GuiButton(6, this.width / 2 + 2, this.height / 4 + 48 + var1, 98, 20, StatCollector.translateToLocal("gui.stats")));
+        this.buttonList.add(var3 = new GuiButton(7, this.width / 2 + 2, this.height / 4 + 96 + var1, 98, 20, I18n.func_135053_a("menu.shareToLan")));
+        this.buttonList.add(new GuiButton(5, this.width / 2 - 100, this.height / 4 + 48 + var1, 98, 20, I18n.func_135053_a("gui.achievements")));
+        this.buttonList.add(new GuiButton(6, this.width / 2 + 2, this.height / 4 + 48 + var1, 98, 20, I18n.func_135053_a("gui.stats")));
         var3.enabled = this.mc.isSingleplayer() && !this.mc.getIntegratedServer().getPublic();
 
         /*WDL>>>*/
