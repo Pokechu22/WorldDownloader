@@ -199,12 +199,9 @@ public class WorldClient extends World
         this.entityList.remove(par1Entity);
     }
 
-    /**
-     * Start the skin for this entity downloading, if necessary, and increment its reference counter
-     */
-    protected void obtainEntitySkin(Entity par1Entity)
+    protected void onEntityAdded(Entity par1Entity)
     {
-        super.obtainEntitySkin(par1Entity);
+        super.onEntityAdded(par1Entity);
 
         if (this.entitySpawnQueue.contains(par1Entity))
         {
@@ -212,12 +209,9 @@ public class WorldClient extends World
         }
     }
 
-    /**
-     * Decrement the reference counter for this entity's skin image data
-     */
-    protected void releaseEntitySkin(Entity par1Entity)
+    protected void onEntityRemoved(Entity par1Entity)
     {
-        super.releaseEntitySkin(par1Entity);
+        super.onEntityRemoved(par1Entity);
 
         if (this.entityList.contains(par1Entity))
         {
@@ -442,7 +436,7 @@ public class WorldClient extends World
 
         for (var1 = 0; var1 < this.unloadedEntityList.size(); ++var1)
         {
-            this.releaseEntitySkin((Entity)this.unloadedEntityList.get(var1));
+            this.onEntityRemoved((Entity)this.unloadedEntityList.get(var1));
         }
 
         this.unloadedEntityList.clear();
@@ -473,7 +467,7 @@ public class WorldClient extends World
                 }
 
                 this.loadedEntityList.remove(var1--);
-                this.releaseEntitySkin(var2);
+                this.onEntityRemoved(var2);
             }
         }
     }
@@ -486,6 +480,8 @@ public class WorldClient extends World
         CrashReportCategory var2 = super.addWorldInfoToCrashReport(par1CrashReport);
         var2.addCrashSectionCallable("Forced entities", new CallableMPL1(this));
         var2.addCrashSectionCallable("Retry entities", new CallableMPL2(this));
+        var2.addCrashSectionCallable("Server brand", new WorldClientINNER3(this));
+        var2.addCrashSectionCallable("Server type", new WorldClientINNER4(this));
         return var2;
     }
 
@@ -553,6 +549,11 @@ public class WorldClient extends World
     static Set getEntitySpawnQueue(WorldClient par0WorldClient)
     {
         return par0WorldClient.entitySpawnQueue;
+    }
+
+    static Minecraft func_142030_c(WorldClient par0WorldClient)
+    {
+        return par0WorldClient.mc;
     }
 
     /*WDL>>>*/

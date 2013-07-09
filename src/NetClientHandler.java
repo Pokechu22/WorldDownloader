@@ -1,5 +1,6 @@
 package net.minecraft.src;
 
+import com.google.common.base.Charsets;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
@@ -18,8 +19,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.Map.Entry;
 import javax.crypto.SecretKey;
+import net.minecraft.client.ClientBrandRetriever;
 import org.lwjgl.input.Keyboard;
 
 public class NetClientHandler extends NetHandler
@@ -174,6 +175,7 @@ public class NetClientHandler extends NetHandler
         this.currentServerMaxPlayers = par1Packet1Login.maxPlayers;
         this.mc.playerController.setGameType(par1Packet1Login.gameType);
         this.mc.gameSettings.sendSettingsToServer();
+        this.netManager.addToSendQueue(new Packet250CustomPayload("MC|Brand", ClientBrandRetriever.getClientModName().getBytes(Charsets.UTF_8)));
     }
 
     public void handleVehicleSpawn(Packet23VehicleSpawn par1Packet23VehicleSpawn)
@@ -872,7 +874,7 @@ public class NetClientHandler extends NetHandler
             }
             else
             {
-                ((EntityLiving)var2).func_110160_i(false);
+                ((EntityLiving)var2).func_110160_i(false, false);
             }
         }
     }
@@ -965,7 +967,7 @@ public class NetClientHandler extends NetHandler
 
                 if (par1Packet100OpenWindow.useProvidedWindowTitle)
                 {
-                    var4.func_94129_a(par1Packet100OpenWindow.windowTitle);
+                    var4.setGuiDisplayName(par1Packet100OpenWindow.windowTitle);
                 }
 
                 var2.displayGUIFurnace(var4);
@@ -1073,7 +1075,7 @@ public class NetClientHandler extends NetHandler
             if (this.mc.currentScreen instanceof GuiContainerCreative)
             {
                 GuiContainerCreative var4 = (GuiContainerCreative)this.mc.currentScreen;
-                var3 = var4.func_74230_h() != CreativeTabs.tabInventory.getTabIndex();
+                var3 = var4.getCurrentTabIndex() != CreativeTabs.tabInventory.getTabIndex();
             }
 
             if (par1Packet103SetSlot.windowId == 0 && par1Packet103SetSlot.itemSlot >= 36 && par1Packet103SetSlot.itemSlot < 45)
@@ -1125,6 +1127,25 @@ public class NetClientHandler extends NetHandler
         else if (par1Packet104WindowItems.windowId == var2.openContainer.windowId)
         {
             var2.openContainer.putStacksInSlots(par1Packet104WindowItems.itemStack);
+        }
+    }
+
+    public void func_142031_a(Packet133TileEditorOpen par1Packet133TileEditorOpen)
+    {
+        TileEntity var2 = this.worldClient.getBlockTileEntity(par1Packet133TileEditorOpen.field_142035_b, par1Packet133TileEditorOpen.field_142036_c, par1Packet133TileEditorOpen.field_142034_d);
+
+        if (var2 != null)
+        {
+            this.mc.thePlayer.displayGUIEditSign(var2);
+        }
+        else if (par1Packet133TileEditorOpen.field_142037_a == 0)
+        {
+            TileEntitySign var3 = new TileEntitySign();
+            var3.setWorldObj(this.worldClient);
+            var3.xCoord = par1Packet133TileEditorOpen.field_142035_b;
+            var3.yCoord = par1Packet133TileEditorOpen.field_142036_c;
+            var3.zCoord = par1Packet133TileEditorOpen.field_142034_d;
+            this.mc.thePlayer.displayGUIEditSign(var3);
         }
     }
 
@@ -1480,6 +1501,10 @@ public class NetClientHandler extends NetHandler
                 var7.printStackTrace();
             }
         }
+        else if ("MC|Brand".equals(par1Packet250CustomPayload.channel))
+        {
+            this.mc.thePlayer.func_142020_c(new String(par1Packet250CustomPayload.data, Charsets.UTF_8));
+        }
     }
 
     /**
@@ -1632,18 +1657,27 @@ public class NetClientHandler extends NetHandler
             }
             else
             {
-                ClientsideAttributeMap var3 = (ClientsideAttributeMap)((EntityLivingBase)var2).func_110140_aT();
-                Entry var5;
-                ReadonlyAttributeInstance var6;
+                BaseAttributeMap var3 = ((EntityLivingBase)var2).func_110140_aT();
+                Iterator var4 = par1Packet44UpdateAttributes.func_111003_f().iterator();
 
-                for (Iterator var4 = par1Packet44UpdateAttributes.func_111003_f().entrySet().iterator(); var4.hasNext(); var6.func_111140_b(((Double)var5.getValue()).doubleValue()))
+                while (var4.hasNext())
                 {
-                    var5 = (Entry)var4.next();
-                    var6 = var3.func_111155_b((String)var5.getKey());
+                    Packet44UpdateAttributesSnapshot var5 = (Packet44UpdateAttributesSnapshot)var4.next();
+                    AttributeInstance var6 = var3.func_111152_a(var5.func_142040_a());
 
                     if (var6 == null)
                     {
-                        var6 = var3.func_111156_d(new RangedAttribute((String)var5.getKey(), 0.0D, 2.2250738585072014E-308D, Double.MAX_VALUE));
+                        var6 = var3.func_111150_b(new RangedAttribute(var5.func_142040_a(), 0.0D, 2.2250738585072014E-308D, Double.MAX_VALUE));
+                    }
+
+                    var6.func_111128_a(var5.func_142041_b());
+                    var6.func_142049_d();
+                    Iterator var7 = var5.func_142039_c().iterator();
+
+                    while (var7.hasNext())
+                    {
+                        AttributeModifier var8 = (AttributeModifier)var7.next();
+                        var6.func_111121_a(var8);
                     }
                 }
             }
