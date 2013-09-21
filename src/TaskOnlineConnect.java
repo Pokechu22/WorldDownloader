@@ -16,14 +16,14 @@ public class TaskOnlineConnect extends TaskLongRunning
 
     public void run()
     {
-        this.func_96576_b(I18n.func_135053_a("mco.connect.connecting"));
-        McoClient var1 = new McoClient(this.func_96578_b().func_110432_I());
+        this.setMessage(I18n.getString("mco.connect.connecting"));
+        McoClient var1 = new McoClient(this.getMinecraft().getSession());
         boolean var2 = false;
         boolean var3 = false;
         int var4 = 5;
         McoServerAddress var5 = null;
 
-        for (int var6 = 0; var6 < 10 && !this.func_96577_c(); ++var6)
+        for (int var6 = 0; var6 < 10 && !this.wasScreenClosed(); ++var6)
         {
             try
             {
@@ -37,7 +37,7 @@ public class TaskOnlineConnect extends TaskLongRunning
             catch (ExceptionMcoService var9)
             {
                 var3 = true;
-                this.func_96575_a(var9.toString());
+                this.setFailedMessage(var9.toString());
                 Minecraft.getMinecraft().getLogAgent().logSevere(var9.toString());
                 break;
             }
@@ -48,7 +48,7 @@ public class TaskOnlineConnect extends TaskLongRunning
             catch (Exception var11)
             {
                 var3 = true;
-                this.func_96575_a(var11.getLocalizedMessage());
+                this.setFailedMessage(var11.getLocalizedMessage());
             }
 
             if (var2)
@@ -59,7 +59,7 @@ public class TaskOnlineConnect extends TaskLongRunning
             this.func_111251_a(var4);
         }
 
-        if (!this.func_96577_c() && !var3)
+        if (!this.wasScreenClosed() && !var3)
         {
             if (var2)
             {
@@ -68,7 +68,7 @@ public class TaskOnlineConnect extends TaskLongRunning
             }
             else
             {
-                this.func_96578_b().displayGuiScreen(this.field_96584_d);
+                this.getMinecraft().displayGuiScreen(this.field_96584_d);
             }
         }
     }
@@ -94,7 +94,7 @@ public class TaskOnlineConnect extends TaskLongRunning
         (new ThreadOnlineConnect(this, par1Str, par2)).start();
     }
 
-    public void func_96573_a()
+    public void updateScreen()
     {
         if (this.field_96586_a != null)
         {

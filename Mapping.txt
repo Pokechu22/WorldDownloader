@@ -1,17 +1,17 @@
-Mappings using MCP 8.04
+Mappings using MCP 8.11
 
-22:33:17 - > Outputted net/minecraft/src/GuiWDLWorld       to reobf\minecraft as GuiWDLWorld.class
-22:33:17 - > Outputted net/minecraft/src/Minecraft         to reobf\minecraft as ats.class
-22:33:17 - > Outputted net/minecraft/src/GuiWDLGenerator   to reobf\minecraft as GuiWDLGenerator.class
-22:33:17 - > Outputted net/minecraft/src/GuiIngameMenu     to reobf\minecraft as avv.class
-22:33:17 - > Outputted net/minecraft/src/GuiWDLMultiworldSelect to reobf\minecraft as GuiWDLMultiworldSelect.class
-22:33:17 - > Outputted net/minecraft/src/TaskOnlineConnect to reobf\minecraft as ayu.class
-22:33:17 - > Outputted net/minecraft/src/GuiWDLPlayer      to reobf\minecraft as GuiWDLPlayer.class
-22:33:17 - > Outputted net/minecraft/src/WDLSaveAsync      to reobf\minecraft as WDLSaveAsync.class
-22:33:17 - > Outputted net/minecraft/src/NetClientHandler  to reobf\minecraft as bct.class
-22:33:17 - > Outputted net/minecraft/src/GuiWDLMultiworld  to reobf\minecraft as GuiWDLMultiworld.class
-22:33:17 - > Outputted net/minecraft/src/WDLSaveProgressReporter to reobf\minecraft as WDLSaveProgressReporter.class
-22:33:17 - > Outputted net/minecraft/src/GuiWDLBackup      to reobf\minecraft as GuiWDLBackup.class
-22:33:17 - > Outputted net/minecraft/src/GuiWDL            to reobf\minecraft as GuiWDL.class
-22:33:17 - > Outputted net/minecraft/src/WorldClient       to reobf\minecraft as bda.class
-22:33:17 - > Outputted net/minecraft/src/WDL               to reobf\minecraft as WDL.class
+> Outputted net/minecraft/src/GuiWDLWorld       to reobf\minecraft as GuiWDLWorld.class
+> Outputted net/minecraft/src/Minecraft         to reobf\minecraft as atv.class
+> Outputted net/minecraft/src/GuiWDLGenerator   to reobf\minecraft as GuiWDLGenerator.class
+> Outputted net/minecraft/src/GuiIngameMenu     to reobf\minecraft as avy.class
+> Outputted net/minecraft/src/GuiWDLMultiworldSelect to reobf\minecraft as GuiWDLMultiworldSelect.class
+> Outputted net/minecraft/src/TaskOnlineConnect to reobf\minecraft as ayx.class
+> Outputted net/minecraft/src/GuiWDLPlayer      to reobf\minecraft as GuiWDLPlayer.class
+> Outputted net/minecraft/src/WDLSaveAsync      to reobf\minecraft as WDLSaveAsync.class
+> Outputted net/minecraft/src/NetClientHandler  to reobf\minecraft as bcw.class
+> Outputted net/minecraft/src/GuiWDLMultiworld  to reobf\minecraft as GuiWDLMultiworld.class
+> Outputted net/minecraft/src/WDLSaveProgressReporter to reobf\minecraft as WDLSaveProgressReporter.class
+> Outputted net/minecraft/src/GuiWDLBackup      to reobf\minecraft as GuiWDLBackup.class
+> Outputted net/minecraft/src/GuiWDL            to reobf\minecraft as GuiWDL.class
+> Outputted net/minecraft/src/WorldClient       to reobf\minecraft as bdd.class
+> Outputted net/minecraft/src/WDL               to reobf\minecraft as WDL.class

@@ -332,7 +332,7 @@ public class WorldClient extends World
         this.sendQueue.quitWithPacket(new Packet255KickDisconnect("Quitting"));
     }
 
-    public IUpdatePlayerListBox func_82735_a(EntityMinecart par1EntityMinecart)
+    public IUpdatePlayerListBox getMinecartSoundUpdater(EntityMinecart par1EntityMinecart)
     {
         return new SoundUpdaterMinecart(this.mc.sndManager, par1EntityMinecart, this.mc.thePlayer);
     }
