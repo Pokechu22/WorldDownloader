@@ -318,25 +318,29 @@ public class WDL
         		ChunkPosition cp1 = new ChunkPosition(lastX, lastY, lastZ);
         		ChunkPosition cp2;
         		TileEntityChest tec1, tec2;
-        		if((te2 = wc.getBlockTileEntity(lastX, lastY, lastZ+1)) instanceof TileEntityChest)
+        		if((te2 = wc.getBlockTileEntity(lastX, lastY, lastZ+1)) instanceof TileEntityChest &&
+        			((TileEntityChest)te2).getChestType() == ((TileEntityChest)te).getChestType())
             	{
         			tec1 = (TileEntityChest)te;
         			tec2 = (TileEntityChest)te2;
         			cp2 = new ChunkPosition(lastX, lastY, lastZ+1);
             	}
-        		else if((te2 = wc.getBlockTileEntity(lastX, lastY, lastZ-1)) instanceof TileEntityChest)
+        		else if((te2 = wc.getBlockTileEntity(lastX, lastY, lastZ-1)) instanceof TileEntityChest &&
+        				((TileEntityChest)te2).getChestType() == ((TileEntityChest)te).getChestType())
             	{
             		tec1 = (TileEntityChest)te2;
         			tec2 = (TileEntityChest)te;
         			cp2 = new ChunkPosition(lastX, lastY, lastZ-1);
             	}
-        		else if((te2 = wc.getBlockTileEntity(lastX+1, lastY, lastZ)) instanceof TileEntityChest)
+        		else if((te2 = wc.getBlockTileEntity(lastX+1, lastY, lastZ)) instanceof TileEntityChest &&
+            			((TileEntityChest)te2).getChestType() == ((TileEntityChest)te).getChestType())
             	{
         			tec1 = (TileEntityChest)te;
         			tec2 = (TileEntityChest)te2;
         			cp2 = new ChunkPosition(lastX+1, lastY, lastZ);
             	}
-        		else if((te2 = wc.getBlockTileEntity(lastX-1, lastY, lastZ)) instanceof TileEntityChest)
+        		else if((te2 = wc.getBlockTileEntity(lastX-1, lastY, lastZ)) instanceof TileEntityChest &&
+            			((TileEntityChest)te2).getChestType() == ((TileEntityChest)te).getChestType())
             	{
         			tec1 = (TileEntityChest)te2;
         			tec2 = (TileEntityChest)te;
