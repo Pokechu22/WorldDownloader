@@ -1,262 +1,285 @@
-package net.minecraft.src;
+package net.minecraft.wdl;
 
-import java.util.List;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiTextField;
 
 public class GuiWDLPlayer extends GuiScreen
 {
-	private String title = "";
-	
-	private GuiScreen parent;
-	
-	private GuiButton healthBtn;
-	private GuiButton hungerBtn;
-	private GuiButton playerPosBtn;
-	private GuiButton pickPosBtn;
-	
-	private boolean showPosFields = false;
-	private GuiTextField posX, posY, posZ;
-	private int posTextY;
+    private String title = "";
+    private GuiScreen parent;
+    private GuiButton healthBtn;
+    private GuiButton hungerBtn;
+    private GuiButton playerPosBtn;
+    private GuiButton pickPosBtn;
+    private boolean showPosFields = false;
+    private GuiTextField posX;
+    private GuiTextField posY;
+    private GuiTextField posZ;
+    private int posTextY;
 
-	public GuiWDLPlayer( GuiScreen parent )
+    public GuiWDLPlayer(GuiScreen var1)
     {
-		this.parent = parent;
+        this.parent = var1;
     }
 
+    /**
+     * Adds the buttons (and other controls) to the screen in question.
+     */
     public void initGui()
     {
-    	this.buttonList.clear();
-        
-        title = "Player Options for " + WDL.baseFolderName.replace('@', ':');
-        
-        int w = width / 2;
-        int h = height / 4;
-        
-        int hi = h-15;
-        
-        healthBtn = new GuiButton( 1, w-100, hi, "Health: ERROR" );
-        this.buttonList.add( healthBtn );
-        updateHealth(false);
-        
-        hi += 22;
-        hungerBtn = new GuiButton( 2, w-100, hi, "Hunger: ERROR" );
-        this.buttonList.add( hungerBtn );
-        updateHunger(false);
-        
-        hi += 22;
-        playerPosBtn = new GuiButton( 3, w-100, hi, "Player Position: ERROR" );
-        this.buttonList.add( playerPosBtn );
-        
-        hi += 22;
-        posTextY = hi + 4;
-        posX = new GuiTextField( fontRenderer, w-87, hi, 50, 16 );
-        posY = new GuiTextField( fontRenderer, w-19, hi, 50, 16 );
-        posZ = new GuiTextField( fontRenderer, w+48, hi, 50, 16 );
-        posX.setMaxStringLength(7);
-        posY.setMaxStringLength(7);
-        posZ.setMaxStringLength(7);
-        
-        hi += 18;
-        pickPosBtn = new GuiButton(4, w-0, hi, 100, 20, "Current position");
-        this.buttonList.add(pickPosBtn);
-        
-        updatePlayerPos(false);
-        updatePosXYZ(false);
-        
-        this.buttonList.add( new GuiButton( 100, w-100, h+150, "Done" ) );
+        this.buttonList.clear();
+        this.title = "Player Options for " + WDL.baseFolderName.replace('@', ':');
+        int var1 = this.width / 2;
+        int var2 = this.height / 4;
+        int var3 = var2 - 15;
+        this.healthBtn = new GuiButton(1, var1 - 100, var3, "Health: ERROR");
+        this.buttonList.add(this.healthBtn);
+        this.updateHealth(false);
+        var3 += 22;
+        this.hungerBtn = new GuiButton(2, var1 - 100, var3, "Hunger: ERROR");
+        this.buttonList.add(this.hungerBtn);
+        this.updateHunger(false);
+        var3 += 22;
+        this.playerPosBtn = new GuiButton(3, var1 - 100, var3, "Player Position: ERROR");
+        this.buttonList.add(this.playerPosBtn);
+        var3 += 22;
+        this.posTextY = var3 + 4;
+        this.posX = new GuiTextField(this.fontRenderer, var1 - 87, var3, 50, 16);
+        this.posY = new GuiTextField(this.fontRenderer, var1 - 19, var3, 50, 16);
+        this.posZ = new GuiTextField(this.fontRenderer, var1 + 48, var3, 50, 16);
+        this.posX.func_146203_f(7);
+        this.posY.func_146203_f(7);
+        this.posZ.func_146203_f(7);
+        var3 += 18;
+        this.pickPosBtn = new GuiButton(4, var1 - 0, var3, 100, 20, "Current position");
+        this.buttonList.add(this.pickPosBtn);
+        this.updatePlayerPos(false);
+        this.updatePosXYZ(false);
+        this.buttonList.add(new GuiButton(100, var1 - 100, var2 + 150, "Done"));
     }
 
-    protected void actionPerformed(GuiButton guibutton)
+    /**
+     * Fired when a control is clicked. This is the equivalent of ActionListener.actionPerformed(ActionEvent e).
+     */
+    protected void actionPerformed(GuiButton var1)
     {
-    	if( !guibutton.enabled )
-    		return;
-    	
-    	if( guibutton.id == 1 ) //Health
-    	{
-    		updateHealth(true);
-    	}
-    	else if( guibutton.id == 2 ) //Hunger
-    	{
-    		updateHunger(true);
-    	}
-    	else if( guibutton.id == 3 ) //Player Position
-    	{
-    		updatePlayerPos(true);
-    	}
-    	else if( guibutton.id == 4 ) //Pick XYZ
-    	{
-    		pickPlayerPos();
-    	}
-    	else if( guibutton.id == 100 ) //Done
-    	{
-    		if( showPosFields )
-    			updatePosXYZ(true);
-    		
-    		WDL.saveProps();
-    		mc.displayGuiScreen( parent );
-    	}
+        if (var1.enabled)
+        {
+            if (var1.id == 1)
+            {
+                this.updateHealth(true);
+            }
+            else if (var1.id == 2)
+            {
+                this.updateHunger(true);
+            }
+            else if (var1.id == 3)
+            {
+                this.updatePlayerPos(true);
+            }
+            else if (var1.id == 4)
+            {
+                this.pickPlayerPos();
+            }
+            else if (var1.id == 100)
+            {
+                if (this.showPosFields)
+                {
+                    this.updatePosXYZ(true);
+                }
+
+                WDL.saveProps();
+                this.mc.displayGuiScreen(this.parent);
+            }
+        }
     }
 
-    protected void mouseClicked(int i, int j, int k) {
-    	super.mouseClicked(i, j, k);
-    	
-    	if( showPosFields )
-    	{
-    		posX.mouseClicked(i, j, k);
-    		posY.mouseClicked(i, j, k);
-    		posZ.mouseClicked(i, j, k);
-    	}
+    /**
+     * Called when the mouse is clicked.
+     */
+    protected void mouseClicked(int var1, int var2, int var3)
+    {
+        super.mouseClicked(var1, var2, var3);
+
+        if (this.showPosFields)
+        {
+            this.posX.func_146192_a(var1, var2, var3);
+            this.posY.func_146192_a(var1, var2, var3);
+            this.posZ.func_146192_a(var1, var2, var3);
+        }
     }
-    
-    protected void keyTyped(char c, int i) {
-    	super.keyTyped(c, i);
-    	
-    	posX.textboxKeyTyped(c, i);
-    	posY.textboxKeyTyped(c, i);
-    	posZ.textboxKeyTyped(c, i);
+
+    /**
+     * Fired when a key is typed. This is the equivalent of KeyListener.keyTyped(KeyEvent e).
+     */
+    protected void keyTyped(char var1, int var2)
+    {
+        super.keyTyped(var1, var2);
+        this.posX.func_146201_a(var1, var2);
+        this.posY.func_146201_a(var1, var2);
+        this.posZ.func_146201_a(var1, var2);
     }
-    
+
+    /**
+     * Called from the main game loop to update the screen.
+     */
     public void updateScreen()
     {
-    	posX.updateCursorCounter();
-    	posY.updateCursorCounter();
-    	posZ.updateCursorCounter();
+        this.posX.func_146178_a();
+        this.posY.func_146178_a();
+        this.posZ.func_146178_a();
         super.updateScreen();
     }
 
-    public void drawScreen(int i, int j, float f)
+    /**
+     * Draws the screen and all the components in it.
+     */
+    public void drawScreen(int var1, int var2, float var3)
     {
-        drawDefaultBackground();
-        drawCenteredString(fontRenderer, title, width / 2, height / 4 - 40, 0xffffff);
+        this.func_146276_q_();
+        this.drawCenteredString(this.fontRenderer, this.title, this.width / 2, this.height / 4 - 40, 16777215);
 
-        if( showPosFields )
+        if (this.showPosFields)
         {
-            drawString(fontRenderer, "X:", width / 2 - 99, posTextY, 0xffffff);
-            drawString(fontRenderer, "Y:", width / 2 - 31, posTextY, 0xffffff);
-            drawString(fontRenderer, "Z:", width / 2 + 37, posTextY, 0xffffff);
-        	posX.drawTextBox();
-        	posY.drawTextBox();
-        	posZ.drawTextBox();
+            this.drawString(this.fontRenderer, "X:", this.width / 2 - 99, this.posTextY, 16777215);
+            this.drawString(this.fontRenderer, "Y:", this.width / 2 - 31, this.posTextY, 16777215);
+            this.drawString(this.fontRenderer, "Z:", this.width / 2 + 37, this.posTextY, 16777215);
+            this.posX.func_146194_f();
+            this.posY.func_146194_f();
+            this.posZ.func_146194_f();
         }
 
-        super.drawScreen(i, j, f);
+        super.drawScreen(var1, var2, var3);
     }
-    
-    private void updateHealth( boolean btnClicked )
+
+    private void updateHealth(boolean var1)
     {
-    	String playerHealth = WDL.baseProps.getProperty("PlayerHealth");
-    	
-    	if( playerHealth.equals("keep") )
-    	{
-    		if( btnClicked )
-    		{
-    			WDL.baseProps.setProperty("PlayerHealth", "20");
-    			updateHealth(false);
-    		}
-    		else
-    			healthBtn.displayString = "Health: Don't change";
-    	}
-    	else if( playerHealth.equals("20") )
-    	{
-    		if( btnClicked )
-    		{
-    			WDL.baseProps.setProperty("PlayerHealth", "keep");
-    			updateHealth(false);
-    		}
-    		else
-    			healthBtn.displayString = "Health: Full";
-    	}
+        String var2 = WDL.baseProps.getProperty("PlayerHealth");
+
+        if (var2.equals("keep"))
+        {
+            if (var1)
+            {
+                WDL.baseProps.setProperty("PlayerHealth", "20");
+                this.updateHealth(false);
+            }
+            else
+            {
+                this.healthBtn.displayString = "Health: Don\'t change";
+            }
+        }
+        else if (var2.equals("20"))
+        {
+            if (var1)
+            {
+                WDL.baseProps.setProperty("PlayerHealth", "keep");
+                this.updateHealth(false);
+            }
+            else
+            {
+                this.healthBtn.displayString = "Health: Full";
+            }
+        }
     }
-    
-    private void updateHunger( boolean btnClicked )
+
+    private void updateHunger(boolean var1)
     {
-    	String playerFood = WDL.baseProps.getProperty("PlayerFood");
-    	
-    	if( playerFood.equals("keep") )
-    	{
-    		if( btnClicked )
-    		{
-    			WDL.baseProps.setProperty("PlayerFood", "20");
-    			updateHunger(false);
-    		}
-    		else
-    			hungerBtn.displayString = "Hunger: Don't change";
-    	}
-    	else if( playerFood.equals("20") )
-    	{
-    		if( btnClicked )
-    		{
-    			WDL.baseProps.setProperty("PlayerFood", "keep");
-    			updateHunger(false);
-    		}
-    		else
-    			hungerBtn.displayString = "Hunger: Full";
-    	}
+        String var2 = WDL.baseProps.getProperty("PlayerFood");
+
+        if (var2.equals("keep"))
+        {
+            if (var1)
+            {
+                WDL.baseProps.setProperty("PlayerFood", "20");
+                this.updateHunger(false);
+            }
+            else
+            {
+                this.hungerBtn.displayString = "Hunger: Don\'t change";
+            }
+        }
+        else if (var2.equals("20"))
+        {
+            if (var1)
+            {
+                WDL.baseProps.setProperty("PlayerFood", "keep");
+                this.updateHunger(false);
+            }
+            else
+            {
+                this.hungerBtn.displayString = "Hunger: Full";
+            }
+        }
     }
-    
-    private void updatePlayerPos( boolean btnClicked )
+
+    private void updatePlayerPos(boolean var1)
     {
-    	String playerPos = WDL.worldProps.getProperty("PlayerPos");
-    	showPosFields = false;
-    	pickPosBtn.drawButton = false;
-    	
-    	if( playerPos.equals("keep") )
-    	{
-    		if( btnClicked )
-    		{
-    			WDL.worldProps.setProperty("PlayerPos", "xyz");
-    			updatePlayerPos(false);
-    		}
-    		else
-    			playerPosBtn.displayString = "Player Position: Don't change";
-    	}
-    	else if( playerPos.equals("xyz") )
-    	{
-    		if( btnClicked )
-    		{
-    			WDL.worldProps.setProperty("PlayerPos", "keep");
-    			updatePlayerPos(false);
-    		}
-    		else
-    		{
-    			playerPosBtn.displayString = "Player Position:";
-    			showPosFields = true;
-    			pickPosBtn.drawButton = true;
-    		}
-    	}
+        String var2 = WDL.worldProps.getProperty("PlayerPos");
+        this.showPosFields = false;
+        this.pickPosBtn.drawButton = false;
+
+        if (var2.equals("keep"))
+        {
+            if (var1)
+            {
+                WDL.worldProps.setProperty("PlayerPos", "xyz");
+                this.updatePlayerPos(false);
+            }
+            else
+            {
+                this.playerPosBtn.displayString = "Player Position: Don\'t change";
+            }
+        }
+        else if (var2.equals("xyz"))
+        {
+            if (var1)
+            {
+                WDL.worldProps.setProperty("PlayerPos", "keep");
+                this.updatePlayerPos(false);
+            }
+            else
+            {
+                this.playerPosBtn.displayString = "Player Position:";
+                this.showPosFields = true;
+                this.pickPosBtn.drawButton = true;
+            }
+        }
     }
-    
-    private void updatePosXYZ( boolean write )
+
+    private void updatePosXYZ(boolean var1)
     {
-    	if( write )
-    	{
-    		try {
-	    		int x = Integer.parseInt( posX.getText() );
-	    		int y = Integer.parseInt( posY.getText() );
-	    		int z = Integer.parseInt( posZ.getText() );
-	    		WDL.worldProps.setProperty("PlayerX", String.valueOf(x));
-	    		WDL.worldProps.setProperty("PlayerY", String.valueOf(y));
-	    		WDL.worldProps.setProperty("PlayerZ", String.valueOf(z));
-    		}
-    		catch( NumberFormatException e )
-    		{
-    			updatePlayerPos(true);
-    		}
-    	}
-    	else
-    	{
-    		posX.setText( WDL.worldProps.getProperty("PlayerX") );
-    		posY.setText( WDL.worldProps.getProperty("PlayerY") );
-    		posZ.setText( WDL.worldProps.getProperty("PlayerZ") );
-    	}
+        if (var1)
+        {
+            try
+            {
+                int var2 = Integer.parseInt(this.posX.func_146179_b());
+                int var3 = Integer.parseInt(this.posY.func_146179_b());
+                int var4 = Integer.parseInt(this.posZ.func_146179_b());
+                WDL.worldProps.setProperty("PlayerX", String.valueOf(var2));
+                WDL.worldProps.setProperty("PlayerY", String.valueOf(var3));
+                WDL.worldProps.setProperty("PlayerZ", String.valueOf(var4));
+            }
+            catch (NumberFormatException var5)
+            {
+                this.updatePlayerPos(true);
+            }
+        }
+        else
+        {
+            this.posX.func_146180_a(WDL.worldProps.getProperty("PlayerX"));
+            this.posY.func_146180_a(WDL.worldProps.getProperty("PlayerY"));
+            this.posZ.func_146180_a(WDL.worldProps.getProperty("PlayerZ"));
+        }
     }
-    
+
     private void pickPlayerPos()
     {
-    	int x = (int)Math.floor(WDL.tp.posX);
-    	int y = (int)Math.floor(WDL.tp.posY);
-    	int z = (int)Math.floor(WDL.tp.posZ);
-    	posX.setText(String.valueOf(x));
-    	posY.setText(String.valueOf(y));
-    	posZ.setText(String.valueOf(z));
+        int var1 = (int)Math.floor(WDL.tp.posX);
+        int var2 = (int)Math.floor(WDL.tp.posY);
+        int var3 = (int)Math.floor(WDL.tp.posZ);
+        this.posX.func_146180_a(String.valueOf(var1));
+        this.posY.func_146180_a(String.valueOf(var2));
+        this.posZ.func_146180_a(String.valueOf(var3));
     }
 }

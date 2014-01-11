@@ -1,10 +1,9 @@
-package net.minecraft.src;
+package net.minecraft.wdl;
 
 public class WDLSaveAsync implements Runnable
 {
     public void run()
     {
-    	// Save everything
         WDL.saveEverything();
         WDL.saving = false;
         WDL.onSaveComplete();

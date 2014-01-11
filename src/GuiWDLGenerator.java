@@ -1,152 +1,174 @@
-package net.minecraft.src;
+package net.minecraft.wdl;
 
-import java.util.List;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiTextField;
 
 public class GuiWDLGenerator extends GuiScreen
 {
-	private String title = "";
-	
-	private GuiScreen parent;
-	
+    private String title = "";
+    private GuiScreen parent;
     private GuiTextField seedField;
-	private GuiButton generatorBtn;
-	private GuiButton generateStructuresBtn;
+    private GuiButton generatorBtn;
+    private GuiButton generateStructuresBtn;
 
-	public GuiWDLGenerator( GuiScreen parent )
+    public GuiWDLGenerator(GuiScreen var1)
     {
-		this.parent = parent;
+        this.parent = var1;
     }
 
+    /**
+     * Adds the buttons (and other controls) to the screen in question.
+     */
     public void initGui()
     {
-    	this.buttonList.clear();
-        
-        title = "World Generator Options for " + WDL.baseFolderName.replace('@', ':');
-        
-        int w = width / 2;
-        int h = height / 4;
-        
-        int hi = h-15;
-        
-        seedField = new GuiTextField( fontRenderer, width / 2 - 70, hi, 168, 18);
-        seedField.setText("ERROR");
-        updateSeed( false );
-        
-        hi += 22;
-        generatorBtn = new GuiButton(1, w-100, hi, "World Generator: ERROR");
-        this.buttonList.add(generatorBtn);
-        updateGenerator( false );
-        
-        hi += 22;
-        generateStructuresBtn = new GuiButton( 2, w-100, hi, "Generate Structures: ERROR" );
-        this.buttonList.add(generateStructuresBtn);
-        updateGenerateStructures( false );
-        
-        this.buttonList.add( new GuiButton( 100, w-100, h+150, "Done" ) );
+        this.buttonList.clear();
+        this.title = "World Generator Options for " + WDL.baseFolderName.replace('@', ':');
+        int var1 = this.width / 2;
+        int var2 = this.height / 4;
+        int var3 = var2 - 15;
+        this.seedField = new GuiTextField(this.fontRenderer, this.width / 2 - 70, var3, 168, 18);
+        this.seedField.func_146180_a("ERROR");
+        this.updateSeed(false);
+        var3 += 22;
+        this.generatorBtn = new GuiButton(1, var1 - 100, var3, "World Generator: ERROR");
+        this.buttonList.add(this.generatorBtn);
+        this.updateGenerator(false);
+        var3 += 22;
+        this.generateStructuresBtn = new GuiButton(2, var1 - 100, var3, "Generate Structures: ERROR");
+        this.buttonList.add(this.generateStructuresBtn);
+        this.updateGenerateStructures(false);
+        this.buttonList.add(new GuiButton(100, var1 - 100, var2 + 150, "Done"));
     }
 
-    protected void actionPerformed(GuiButton guibutton)
+    /**
+     * Fired when a control is clicked. This is the equivalent of ActionListener.actionPerformed(ActionEvent e).
+     */
+    protected void actionPerformed(GuiButton var1)
     {
-    	if( !guibutton.enabled )
-    		return;
-    	
-    	if( guibutton.id == 1 ) //Generator
-    		updateGenerator( true );
-    	else if( guibutton.id == 2 ) //Generate structures
-    		updateGenerateStructures( true );
-    	else if( guibutton.id == 100 ) //Done
-    	{
-    		updateSeed( true );
-    		WDL.saveProps();
-    		mc.displayGuiScreen( parent );
-    	}
+        if (var1.enabled)
+        {
+            if (var1.id == 1)
+            {
+                this.updateGenerator(true);
+            }
+            else if (var1.id == 2)
+            {
+                this.updateGenerateStructures(true);
+            }
+            else if (var1.id == 100)
+            {
+                this.updateSeed(true);
+                WDL.saveProps();
+                this.mc.displayGuiScreen(this.parent);
+            }
+        }
     }
 
-    protected void mouseClicked(int i, int j, int k) {
-    	super.mouseClicked(i, j, k);
-    	seedField.mouseClicked(i, j, k);
+    /**
+     * Called when the mouse is clicked.
+     */
+    protected void mouseClicked(int var1, int var2, int var3)
+    {
+        super.mouseClicked(var1, var2, var3);
+        this.seedField.func_146192_a(var1, var2, var3);
     }
-    
-    protected void keyTyped(char c, int i) {
-    	super.keyTyped(c, i);
-    	seedField.textboxKeyTyped(c, i);
+
+    /**
+     * Fired when a key is typed. This is the equivalent of KeyListener.keyTyped(KeyEvent e).
+     */
+    protected void keyTyped(char var1, int var2)
+    {
+        super.keyTyped(var1, var2);
+        this.seedField.func_146201_a(var1, var2);
     }
-    
+
+    /**
+     * Called from the main game loop to update the screen.
+     */
     public void updateScreen()
     {
-    	seedField.updateCursorCounter();
+        this.seedField.func_146178_a();
         super.updateScreen();
     }
 
-    public void drawScreen(int i, int j, float f)
+    /**
+     * Draws the screen and all the components in it.
+     */
+    public void drawScreen(int var1, int var2, float var3)
     {
-        drawDefaultBackground();
-        drawCenteredString(fontRenderer, title, width / 2, height / 4 - 40, 0xffffff);
-        
-        drawString(fontRenderer, "Seed:", width / 2 - 99, height / 4 - 10, 0xffffff);
-        seedField.drawTextBox();
-        super.drawScreen(i, j, f);
+        this.func_146276_q_();
+        this.drawCenteredString(this.fontRenderer, this.title, this.width / 2, this.height / 4 - 40, 16777215);
+        this.drawString(this.fontRenderer, "Seed:", this.width / 2 - 99, this.height / 4 - 10, 16777215);
+        this.seedField.func_146194_f();
+        super.drawScreen(var1, var2, var3);
     }
-    
-    private void updateGenerator( boolean btnClicked )
+
+    private void updateGenerator(boolean var1)
     {
-		String generatorName = WDL.worldProps.getProperty("GeneratorName");
-		if( generatorName.equals("default") )
-		{
-			if( btnClicked )
-			{
-				WDL.worldProps.setProperty("GeneratorName", "flat");
-				WDL.worldProps.setProperty("GeneratorVersion", "0");
-				updateGenerator(false);
-			}
-			else
-				generatorBtn.displayString = "World Generator: Default";
-		}
-		else
-		{
-			if( btnClicked )
-			{
-				WDL.worldProps.setProperty("GeneratorName", "default");
-				WDL.worldProps.setProperty("GeneratorVersion", "1");
-				updateGenerator(false);
-			}
-			else
-				generatorBtn.displayString = "World Generator: Flat";
-		}
+        String var2 = WDL.worldProps.getProperty("GeneratorName");
+
+        if (var2.equals("default"))
+        {
+            if (var1)
+            {
+                WDL.worldProps.setProperty("GeneratorName", "flat");
+                WDL.worldProps.setProperty("GeneratorVersion", "0");
+                this.updateGenerator(false);
+            }
+            else
+            {
+                this.generatorBtn.displayString = "World Generator: Default";
+            }
+        }
+        else if (var1)
+        {
+            WDL.worldProps.setProperty("GeneratorName", "default");
+            WDL.worldProps.setProperty("GeneratorVersion", "1");
+            this.updateGenerator(false);
+        }
+        else
+        {
+            this.generatorBtn.displayString = "World Generator: Flat";
+        }
     }
-    
-    private void updateGenerateStructures( boolean btnClicked )
+
+    private void updateGenerateStructures(boolean var1)
     {
-		String generateStructures = WDL.worldProps.getProperty("MapFeatures");
-		if( generateStructures.equals("true") )
-		{
-			if( btnClicked )
-			{
-				WDL.worldProps.setProperty("MapFeatures", "false");
-				updateGenerateStructures(false);
-			}
-			else
-				generateStructuresBtn.displayString = "Generate Structures: ON";
-		}
-		else
-		{
-			if( btnClicked )
-			{
-				WDL.worldProps.setProperty("MapFeatures", "true");
-				updateGenerateStructures(false);
-			}
-			else
-				generateStructuresBtn.displayString = "Generate Structures: OFF";
-		}
+        String var2 = WDL.worldProps.getProperty("MapFeatures");
+
+        if (var2.equals("true"))
+        {
+            if (var1)
+            {
+                WDL.worldProps.setProperty("MapFeatures", "false");
+                this.updateGenerateStructures(false);
+            }
+            else
+            {
+                this.generateStructuresBtn.displayString = "Generate Structures: ON";
+            }
+        }
+        else if (var1)
+        {
+            WDL.worldProps.setProperty("MapFeatures", "true");
+            this.updateGenerateStructures(false);
+        }
+        else
+        {
+            this.generateStructuresBtn.displayString = "Generate Structures: OFF";
+        }
     }
-    
-    private void updateSeed( boolean write )
+
+    private void updateSeed(boolean var1)
     {
-    	if( write )
-    	{
-    		WDL.worldProps.setProperty("RandomSeed", seedField.getText() );
-    	}
-    	else
-    		seedField.setText( WDL.worldProps.getProperty("RandomSeed") );
+        if (var1)
+        {
+            WDL.worldProps.setProperty("RandomSeed", this.seedField.func_146179_b());
+        }
+        else
+        {
+            this.seedField.func_146180_a(WDL.worldProps.getProperty("RandomSeed"));
+        }
     }
 }

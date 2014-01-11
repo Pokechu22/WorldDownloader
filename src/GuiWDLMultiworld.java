@@ -1,122 +1,136 @@
-package net.minecraft.src;
+package net.minecraft.wdl;
 
-import java.util.List;
-import java.util.Properties;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
 
 public class GuiWDLMultiworld extends GuiScreen
 {
-	private GuiScreen parent;
-	
-	private GuiButton multiworldEnabledBtn;
-	boolean newMultiworldState = false;
-	
-	public GuiWDLMultiworld( GuiScreen parent )
+    private GuiScreen parent;
+    private GuiButton multiworldEnabledBtn;
+    boolean newMultiworldState = false;
+
+    public GuiWDLMultiworld(GuiScreen var1)
     {
-		this.parent = parent;
+        this.parent = var1;
     }
-	
+
+    /**
+     * Adds the buttons (and other controls) to the screen in question.
+     */
     public void initGui()
     {
-    	this.buttonList.clear();
-        
-        int w = width / 2;
-        int h = height / 4;
-        
-        int hi = h+115;
-        
-        multiworldEnabledBtn = new GuiButton( 1, w-100, hi, "Multiworld support: ERROR" );
-        this.buttonList.add( multiworldEnabledBtn );
-        updateMultiworldEnabled(false);
-        
-        this.buttonList.add( new GuiButton( 100, w-100, h+150, "OK" ) );
+        this.buttonList.clear();
+        int var1 = this.width / 2;
+        int var2 = this.height / 4;
+        int var3 = var2 + 115;
+        this.multiworldEnabledBtn = new GuiButton(1, var1 - 100, var3, "Multiworld support: ERROR");
+        this.buttonList.add(this.multiworldEnabledBtn);
+        this.updateMultiworldEnabled(false);
+        this.buttonList.add(new GuiButton(100, var1 - 100, var2 + 150, "OK"));
     }
 
-    protected void actionPerformed(GuiButton guibutton)
+    /**
+     * Fired when a control is clicked. This is the equivalent of ActionListener.actionPerformed(ActionEvent e).
+     */
+    protected void actionPerformed(GuiButton var1)
     {
-    	if( !guibutton.enabled )
-    		return;
-    	if( guibutton.id == 1 )
-    	{
-    		updateMultiworldEnabled( true );
-    	}
-    	else if( guibutton.id == 100 ) //Done
-    	{
-    		if( newMultiworldState == true )
-    			mc.displayGuiScreen( new GuiWDLMultiworldSelect( parent ) );
-    		else
-    		{
-    			WDL.baseProps.setProperty("LinkedWorlds", "");
-    			WDL.saveProps();
-    			WDL.propsFound = true;
-    			
-        		if( parent != null )
-    				mc.displayGuiScreen( new GuiWDL( parent ) );
-        	    else
-        	    {
-        	    	WDL.start();
-        	    	mc.displayGuiScreen(null);
-        	    	mc.setIngameFocus();
-        	    }
-    		}
-    	}
+        if (var1.enabled)
+        {
+            if (var1.id == 1)
+            {
+                this.updateMultiworldEnabled(true);
+            }
+            else if (var1.id == 100)
+            {
+                if (this.newMultiworldState)
+                {
+                    this.mc.displayGuiScreen(new GuiWDLMultiworldSelect(this.parent));
+                }
+                else
+                {
+                    WDL.baseProps.setProperty("LinkedWorlds", "");
+                    WDL.saveProps();
+                    WDL.propsFound = true;
+
+                    if (this.parent != null)
+                    {
+                        this.mc.displayGuiScreen(new GuiWDL(this.parent));
+                    }
+                    else
+                    {
+                        WDL.start();
+                        this.mc.displayGuiScreen((GuiScreen)null);
+                        this.mc.setIngameFocus();
+                    }
+                }
+            }
+        }
     }
 
-    protected void mouseClicked(int i, int j, int k) {
-    	super.mouseClicked(i, j, k);
+    /**
+     * Called when the mouse is clicked.
+     */
+    protected void mouseClicked(int var1, int var2, int var3)
+    {
+        super.mouseClicked(var1, var2, var3);
     }
-    
-    protected void keyTyped(char c, int i) {
-    	super.keyTyped(c, i);
+
+    /**
+     * Fired when a key is typed. This is the equivalent of KeyListener.keyTyped(KeyEvent e).
+     */
+    protected void keyTyped(char var1, int var2)
+    {
+        super.keyTyped(var1, var2);
     }
-    
+
+    /**
+     * Called from the main game loop to update the screen.
+     */
     public void updateScreen()
     {
         super.updateScreen();
     }
 
-    public void drawScreen(int i, int j, float f)
+    /**
+     * Draws the screen and all the components in it.
+     */
+    public void drawScreen(int var1, int var2, float var3)
     {
-        drawDefaultBackground();
-        drawRect(width/2-160, height/4-60, width/2+160, height/4+180, 0xb0000000);
-        drawCenteredString( fontRenderer, "Multiworld Support", width / 2, height / 4 - 40, 0xff0000 );
-        
-        drawString( fontRenderer, "Multiworld support is required if at least one of the", width / 2 - 150, height / 4 - 15, 0xffffff );
-        drawString( fontRenderer, " following conditions is met:", width / 2 - 150, height / 4 - 5, 0xffffff );
-        
-        drawString( fontRenderer, "- \"Multiworld\" is mentioned on the server's website", width / 2 - 150, height / 4 + 15, 0xffffff );
-        
-        drawString( fontRenderer, "- The server has more than 3 dimensions (or worlds)", width / 2 - 150, height / 4 + 35, 0xffffff );
-        
-        drawString( fontRenderer, "- The server has other dimensions than the official ones", width / 2 - 150, height / 4 + 55, 0xffffff );
-        drawString( fontRenderer, "   (Earth, Nether, The End)", width / 2 - 150, height / 4 + 65, 0xffffff );
-        
-        //drawString( fontRenderer, "- The seeds of the 3 standard dimensions are differing", width / 2 - 150, height / 4 + 85, 0xffffff );
-        
-        drawRect(width/2-102, height/4+113, width/2+102, height/4+137, 0xffff0000);
-        super.drawScreen(i, j, f);
+        this.func_146276_q_();
+        drawRect(this.width / 2 - 160, this.height / 4 - 60, this.width / 2 + 160, this.height / 4 + 180, -1342177280);
+        this.drawCenteredString(this.fontRenderer, "Multiworld Support", this.width / 2, this.height / 4 - 40, 16711680);
+        this.drawString(this.fontRenderer, "Multiworld support is required if at least one of the", this.width / 2 - 150, this.height / 4 - 15, 16777215);
+        this.drawString(this.fontRenderer, " following conditions is met:", this.width / 2 - 150, this.height / 4 - 5, 16777215);
+        this.drawString(this.fontRenderer, "- \"Multiworld\" is mentioned on the server\'s website", this.width / 2 - 150, this.height / 4 + 15, 16777215);
+        this.drawString(this.fontRenderer, "- The server has more than 3 dimensions (or worlds)", this.width / 2 - 150, this.height / 4 + 35, 16777215);
+        this.drawString(this.fontRenderer, "- The server has other dimensions than the official ones", this.width / 2 - 150, this.height / 4 + 55, 16777215);
+        this.drawString(this.fontRenderer, "   (Earth, Nether, The End)", this.width / 2 - 150, this.height / 4 + 65, 16777215);
+        drawRect(this.width / 2 - 102, this.height / 4 + 113, this.width / 2 + 102, this.height / 4 + 137, -65536);
+        super.drawScreen(var1, var2, var3);
     }
-    
-    private void updateMultiworldEnabled( boolean btnClicked )
+
+    private void updateMultiworldEnabled(boolean var1)
     {
-		if( newMultiworldState == false )
-		{
-			if( btnClicked )
-			{
-				newMultiworldState = true;
-				updateMultiworldEnabled( false );
-			}
-			else
-				multiworldEnabledBtn.displayString = "Multiworld support: Disabled";
-		}
-		else
-		{
-			if( btnClicked )
-			{
-				newMultiworldState = false;
-				updateMultiworldEnabled( false );
-			}
-			else
-				multiworldEnabledBtn.displayString = "Multiworld support: Enabled";
-		}
+        if (!this.newMultiworldState)
+        {
+            if (var1)
+            {
+                this.newMultiworldState = true;
+                this.updateMultiworldEnabled(false);
+            }
+            else
+            {
+                this.multiworldEnabledBtn.displayString = "Multiworld support: Disabled";
+            }
+        }
+        else if (var1)
+        {
+            this.newMultiworldState = false;
+            this.updateMultiworldEnabled(false);
+        }
+        else
+        {
+            this.multiworldEnabledBtn.displayString = "Multiworld support: Enabled";
+        }
     }
 }

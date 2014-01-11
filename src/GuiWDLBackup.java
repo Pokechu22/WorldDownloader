@@ -1,136 +1,170 @@
-package net.minecraft.src;
+package net.minecraft.wdl;
 
-import java.util.List;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiTextField;
 
 public class GuiWDLBackup extends GuiScreen
 {
-	private String title = "";
-	
-	private GuiScreen parent;
-	
-	private GuiTextField commandField;
-	private GuiButton backupBtn;
-	
-	boolean cmdBox = false;
+    private String title = "";
 
-	public GuiWDLBackup( GuiScreen parent )
+    private GuiScreen parent;
+
+    private GuiTextField commandField;
+    private GuiButton backupBtn;
+
+    boolean cmdBox = false;
+
+    public GuiWDLBackup(GuiScreen parent)
     {
-		this.parent = parent;
+        this.parent = parent;
     }
 
+    /**
+     * Adds the buttons (and other controls) to the screen in question.
+     */
     public void initGui()
     {
-    	this.buttonList.clear();
-        
-        title = "Backup Options for " + WDL.baseFolderName.replace('@', ':');
-        
-        int w = width / 2;
-        int h = height / 4;
-        
-        backupBtn = new GuiButton( 10, w-100, h+105, "Backup: ERROR" );
-        this.buttonList.add( backupBtn );
-        updateBackup(false);
-        
-        commandField = new GuiTextField( fontRenderer, w-98, h+126, 196, 17);
-        
-        this.buttonList.add( new GuiButton( 100, w-100, h+150, "Done" ) );
+        this.buttonList.clear();
+
+        this.title = "Backup Options for " + WDL.baseFolderName.replace('@', ':');
+
+        int w = this.width / 2;
+        int h = this.height / 4;
+
+        this.backupBtn = new GuiButton(10, w - 100, h + 105, "Backup: ERROR");
+        this.buttonList.add(this.backupBtn);
+        this.updateBackup(false);
+
+        this.commandField = new GuiTextField(this.fontRenderer, w - 98, h + 126, 196, 17);
+
+        this.buttonList.add(new GuiButton(100, w - 100, h + 150, "Done"));
     }
 
-    protected void actionPerformed(GuiButton guibutton)
+    /**
+     * Fired when a control is clicked. This is the equivalent of ActionListener.actionPerformed(ActionEvent e).
+     */
+    protected void actionPerformed(GuiButton var1)
     {
-    	if( !guibutton.enabled )
-    		return;
-    	
-    	if( guibutton.id == 10 ) //Backup
-    	{
-    		updateBackup( true );
-    	}
-    	else if( guibutton.id == 100 ) //Done
-    	{
-    		mc.displayGuiScreen( parent );
-    	}
+        if (var1.enabled)
+        {
+            if (var1.id == 10)
+            {
+                this.updateBackup(true);
+            }
+            else if (var1.id == 100)
+            {
+                this.mc.displayGuiScreen(this.parent);
+            }
+        }
     }
 
-    protected void mouseClicked(int i, int j, int k) {
-    	super.mouseClicked(i, j, k);
-    	if( cmdBox == true )
-    		commandField.mouseClicked(i, j, k);
+    /**
+     * Called when the mouse is clicked.
+     */
+    protected void mouseClicked(int var1, int var2, int var3)
+    {
+        super.mouseClicked(var1, var2, var3);
+
+        if (this.cmdBox)
+        {
+            this.commandField.func_146192_a(var1, var2, var3);
+        }
     }
-    
-    protected void keyTyped(char c, int i) {
-    	super.keyTyped(c, i);
-    	commandField.textboxKeyTyped(c, i);
+
+    /**
+     * Fired when a key is typed. This is the equivalent of KeyListener.keyTyped(KeyEvent e).
+     */
+    protected void keyTyped(char var1, int var2)
+    {
+        super.keyTyped(var1, var2);
+        this.commandField.func_146201_a(var1, var2);
     }
-    
+
+    /**
+     * Called from the main game loop to update the screen.
+     */
     public void updateScreen()
     {
-    	commandField.updateCursorCounter();
+        this.commandField.func_146178_a();
         super.updateScreen();
     }
 
-    public void drawScreen(int i, int j, float f)
+    /**
+     * Draws the screen and all the components in it.
+     */
+    public void drawScreen(int var1, int var2, float var3)
     {
-        drawDefaultBackground();
-        drawCenteredString(fontRenderer, title, width / 2, height / 4 - 40, 0xffffff);
-        
-        drawString(fontRenderer, "Name:", width / 2 - 99, 50, 0xffffff);
-        if( cmdBox == true )
-        	commandField.drawTextBox();
-        super.drawScreen(i, j, f);
+        this.func_146276_q_();
+        this.drawCenteredString(this.fontRenderer, this.title, this.width / 2, this.height / 4 - 40, 16777215);
+        this.drawString(this.fontRenderer, "Name:", this.width / 2 - 99, 50, 16777215);
+
+        if (this.cmdBox)
+        {
+            this.commandField.func_146194_f();
+        }
+
+        super.drawScreen(var1, var2, var3);
     }
-    
-	public void updateBackup( boolean btnClicked )
-	{
-		cmdBox = false;
-		
-		String backup = WDL.baseProps.getProperty("Backup");
-		if( backup == "off" )
-		{
-			if( btnClicked )
-			{
-				WDL.baseProps.setProperty("Backup", "folder");
-				updateBackup(false);
-			}
-			else
-				backupBtn.displayString = "Backup: Disabled";
-		}
-		else if( backup == "folder" )
-		{
-			if( btnClicked )
-			{
-				WDL.baseProps.setProperty("Backup", "zip");
-				updateBackup(false);
-			}
-			else
-				backupBtn.displayString = "Backup: Copy World Folder";
-		}
-		else if( backup == "zip")
-		{
-			if( btnClicked )
-			{
-				WDL.baseProps.setProperty("Backup", "command");
-				updateBackup(false);
-			}
-			else
-	    		backupBtn.displayString = "Backup: Zip World Folder";
-		}
-		else if( backup == "command")
-		{
-			if( btnClicked )
-			{
-				WDL.baseProps.setProperty("Backup", "off");
-				updateBackup(false);
-			}
-			else
-			{
-	    		backupBtn.displayString = "Backup: Run the following command";
-	    		cmdBox = true;
-			}
-		}
-		else
-		{
-			WDL.baseProps.setProperty("Backup", "off");
-			updateBackup(false);
-		}
-	}
+
+    public void updateBackup(boolean var1)
+    {
+        this.cmdBox = false;
+        String var2 = WDL.baseProps.getProperty("Backup");
+
+        if (var2 == "off")
+        {
+            if (var1)
+            {
+                WDL.baseProps.setProperty("Backup", "folder");
+                this.updateBackup(false);
+            }
+            else
+            {
+                this.backupBtn.displayString = "Backup: Disabled";
+            }
+        }
+        else if (var2 == "folder")
+        {
+            if (var1)
+            {
+                WDL.baseProps.setProperty("Backup", "zip");
+                this.updateBackup(false);
+            }
+            else
+            {
+                this.backupBtn.displayString = "Backup: Copy World Folder";
+            }
+        }
+        else if (var2 == "zip")
+        {
+            if (var1)
+            {
+                WDL.baseProps.setProperty("Backup", "command");
+                this.updateBackup(false);
+            }
+            else
+            {
+                this.backupBtn.displayString = "Backup: Zip World Folder";
+            }
+        }
+        else if (var2 == "command")
+        {
+            if (var1)
+            {
+                WDL.baseProps.setProperty("Backup", "off");
+                this.updateBackup(false);
+            }
+            else
+            {
+                this.backupBtn.displayString = "Backup: Run the following command";
+                this.cmdBox = true;
+            }
+        }
+        else
+        {
+            WDL.baseProps.setProperty("Backup", "off");
+            this.updateBackup(false);
+        }
+    }
 }

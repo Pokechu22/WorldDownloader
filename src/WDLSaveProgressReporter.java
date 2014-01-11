@@ -1,4 +1,4 @@
-package net.minecraft.src;
+package net.minecraft.wdl;
 
 public class WDLSaveProgressReporter implements Runnable
 {
@@ -8,21 +8,20 @@ public class WDLSaveProgressReporter implements Runnable
         {
             WDL.chatMsg("Saving...");
 
-            try 
+            try
             {
                 Thread.sleep(10000L);
-            } 
-            catch (InterruptedException e) 
+            }
+            catch (InterruptedException var2)
             {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                var2.printStackTrace();
             }
         }
     }
 
     public void start()
     {
-        Thread t = new Thread(this);
-        t.start();
+        Thread var1 = new Thread(this);
+        var1.start();
     }
 }
