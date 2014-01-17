@@ -45,9 +45,9 @@ public class GuiWDLPlayer extends GuiScreen
         this.buttonList.add(this.playerPosBtn);
         var3 += 22;
         this.posTextY = var3 + 4;
-        this.posX = new GuiTextField(this.fontRenderer, var1 - 87, var3, 50, 16);
-        this.posY = new GuiTextField(this.fontRenderer, var1 - 19, var3, 50, 16);
-        this.posZ = new GuiTextField(this.fontRenderer, var1 + 48, var3, 50, 16);
+        this.posX = new GuiTextField(this.fontRendererObj, var1 - 87, var3, 50, 16);
+        this.posY = new GuiTextField(this.fontRendererObj, var1 - 19, var3, 50, 16);
+        this.posZ = new GuiTextField(this.fontRendererObj, var1 + 48, var3, 50, 16);
         this.posX.func_146203_f(7);
         this.posY.func_146203_f(7);
         this.posZ.func_146203_f(7);
@@ -104,9 +104,9 @@ public class GuiWDLPlayer extends GuiScreen
 
         if (this.showPosFields)
         {
-            this.posX.func_146192_a(var1, var2, var3);
-            this.posY.func_146192_a(var1, var2, var3);
-            this.posZ.func_146192_a(var1, var2, var3);
+            this.posX.mouseClicked(var1, var2, var3);
+            this.posY.mouseClicked(var1, var2, var3);
+            this.posZ.mouseClicked(var1, var2, var3);
         }
     }
 
@@ -116,9 +116,9 @@ public class GuiWDLPlayer extends GuiScreen
     protected void keyTyped(char var1, int var2)
     {
         super.keyTyped(var1, var2);
-        this.posX.func_146201_a(var1, var2);
-        this.posY.func_146201_a(var1, var2);
-        this.posZ.func_146201_a(var1, var2);
+        this.posX.textboxKeyTyped(var1, var2);
+        this.posY.textboxKeyTyped(var1, var2);
+        this.posZ.textboxKeyTyped(var1, var2);
     }
 
     /**
@@ -126,9 +126,9 @@ public class GuiWDLPlayer extends GuiScreen
      */
     public void updateScreen()
     {
-        this.posX.func_146178_a();
-        this.posY.func_146178_a();
-        this.posZ.func_146178_a();
+        this.posX.updateCursorCounter();
+        this.posY.updateCursorCounter();
+        this.posZ.updateCursorCounter();
         super.updateScreen();
     }
 
@@ -137,17 +137,17 @@ public class GuiWDLPlayer extends GuiScreen
      */
     public void drawScreen(int var1, int var2, float var3)
     {
-        this.func_146276_q_();
-        this.drawCenteredString(this.fontRenderer, this.title, this.width / 2, this.height / 4 - 40, 16777215);
+        this.drawDefaultBackground();
+        this.drawCenteredString(this.fontRendererObj, this.title, this.width / 2, this.height / 4 - 40, 16777215);
 
         if (this.showPosFields)
         {
-            this.drawString(this.fontRenderer, "X:", this.width / 2 - 99, this.posTextY, 16777215);
-            this.drawString(this.fontRenderer, "Y:", this.width / 2 - 31, this.posTextY, 16777215);
-            this.drawString(this.fontRenderer, "Z:", this.width / 2 + 37, this.posTextY, 16777215);
-            this.posX.func_146194_f();
-            this.posY.func_146194_f();
-            this.posZ.func_146194_f();
+            this.drawString(this.fontRendererObj, "X:", this.width / 2 - 99, this.posTextY, 16777215);
+            this.drawString(this.fontRendererObj, "Y:", this.width / 2 - 31, this.posTextY, 16777215);
+            this.drawString(this.fontRendererObj, "Z:", this.width / 2 + 37, this.posTextY, 16777215);
+            this.posX.drawTextBox();
+            this.posY.drawTextBox();
+            this.posZ.drawTextBox();
         }
 
         super.drawScreen(var1, var2, var3);
@@ -217,7 +217,7 @@ public class GuiWDLPlayer extends GuiScreen
     {
         String var2 = WDL.worldProps.getProperty("PlayerPos");
         this.showPosFields = false;
-        this.pickPosBtn.drawButton = false;
+        this.pickPosBtn.field_146125_m = false;
 
         if (var2.equals("keep"))
         {
@@ -242,7 +242,7 @@ public class GuiWDLPlayer extends GuiScreen
             {
                 this.playerPosBtn.displayString = "Player Position:";
                 this.showPosFields = true;
-                this.pickPosBtn.drawButton = true;
+                this.pickPosBtn.field_146125_m = true;
             }
         }
     }
@@ -253,9 +253,9 @@ public class GuiWDLPlayer extends GuiScreen
         {
             try
             {
-                int var2 = Integer.parseInt(this.posX.func_146179_b());
-                int var3 = Integer.parseInt(this.posY.func_146179_b());
-                int var4 = Integer.parseInt(this.posZ.func_146179_b());
+                int var2 = Integer.parseInt(this.posX.getText());
+                int var3 = Integer.parseInt(this.posY.getText());
+                int var4 = Integer.parseInt(this.posZ.getText());
                 WDL.worldProps.setProperty("PlayerX", String.valueOf(var2));
                 WDL.worldProps.setProperty("PlayerY", String.valueOf(var3));
                 WDL.worldProps.setProperty("PlayerZ", String.valueOf(var4));
@@ -267,9 +267,9 @@ public class GuiWDLPlayer extends GuiScreen
         }
         else
         {
-            this.posX.func_146180_a(WDL.worldProps.getProperty("PlayerX"));
-            this.posY.func_146180_a(WDL.worldProps.getProperty("PlayerY"));
-            this.posZ.func_146180_a(WDL.worldProps.getProperty("PlayerZ"));
+            this.posX.setText(WDL.worldProps.getProperty("PlayerX"));
+            this.posY.setText(WDL.worldProps.getProperty("PlayerY"));
+            this.posZ.setText(WDL.worldProps.getProperty("PlayerZ"));
         }
     }
 
@@ -278,8 +278,8 @@ public class GuiWDLPlayer extends GuiScreen
         int var1 = (int)Math.floor(WDL.tp.posX);
         int var2 = (int)Math.floor(WDL.tp.posY);
         int var3 = (int)Math.floor(WDL.tp.posZ);
-        this.posX.func_146180_a(String.valueOf(var1));
-        this.posY.func_146180_a(String.valueOf(var2));
-        this.posZ.func_146180_a(String.valueOf(var3));
+        this.posX.setText(String.valueOf(var1));
+        this.posY.setText(String.valueOf(var2));
+        this.posZ.setText(String.valueOf(var3));
     }
 }

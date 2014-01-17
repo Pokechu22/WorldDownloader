@@ -96,15 +96,15 @@ public class GuiWDLMultiworld extends GuiScreen
      */
     public void drawScreen(int var1, int var2, float var3)
     {
-        this.func_146276_q_();
+        this.drawDefaultBackground();
         drawRect(this.width / 2 - 160, this.height / 4 - 60, this.width / 2 + 160, this.height / 4 + 180, -1342177280);
-        this.drawCenteredString(this.fontRenderer, "Multiworld Support", this.width / 2, this.height / 4 - 40, 16711680);
-        this.drawString(this.fontRenderer, "Multiworld support is required if at least one of the", this.width / 2 - 150, this.height / 4 - 15, 16777215);
-        this.drawString(this.fontRenderer, " following conditions is met:", this.width / 2 - 150, this.height / 4 - 5, 16777215);
-        this.drawString(this.fontRenderer, "- \"Multiworld\" is mentioned on the server\'s website", this.width / 2 - 150, this.height / 4 + 15, 16777215);
-        this.drawString(this.fontRenderer, "- The server has more than 3 dimensions (or worlds)", this.width / 2 - 150, this.height / 4 + 35, 16777215);
-        this.drawString(this.fontRenderer, "- The server has other dimensions than the official ones", this.width / 2 - 150, this.height / 4 + 55, 16777215);
-        this.drawString(this.fontRenderer, "   (Earth, Nether, The End)", this.width / 2 - 150, this.height / 4 + 65, 16777215);
+        this.drawCenteredString(this.fontRendererObj, "Multiworld Support", this.width / 2, this.height / 4 - 40, 16711680);
+        this.drawString(this.fontRendererObj, "Multiworld support is required if at least one of the", this.width / 2 - 150, this.height / 4 - 15, 16777215);
+        this.drawString(this.fontRendererObj, " following conditions is met:", this.width / 2 - 150, this.height / 4 - 5, 16777215);
+        this.drawString(this.fontRendererObj, "- \"Multiworld\" is mentioned on the server\'s website", this.width / 2 - 150, this.height / 4 + 15, 16777215);
+        this.drawString(this.fontRendererObj, "- The server has more than 3 dimensions (or worlds)", this.width / 2 - 150, this.height / 4 + 35, 16777215);
+        this.drawString(this.fontRendererObj, "- The server has other dimensions than the official ones", this.width / 2 - 150, this.height / 4 + 55, 16777215);
+        this.drawString(this.fontRendererObj, "   (Earth, Nether, The End)", this.width / 2 - 150, this.height / 4 + 65, 16777215);
         drawRect(this.width / 2 - 102, this.height / 4 + 113, this.width / 2 + 102, this.height / 4 + 137, -65536);
         super.drawScreen(var1, var2, var3);
     }

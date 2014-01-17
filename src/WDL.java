@@ -8,7 +8,10 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -26,6 +29,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.mco.McoServer;
+import net.minecraft.client.multiplayer.ChunkProviderClient;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -236,10 +240,10 @@ public class WDL
         worldName = ""; // The new (multi-)world name is unknown at the moment
         wc = mc.theWorld;
         tp = mc.thePlayer;
-        windowContainer = tp.field_71070_bA;
+        windowContainer = tp.openContainer;
 
         // Is this a different server?
-        NetworkManager newNM = tp.field_71174_a.func_147298_b(); // tp.sendQueue.getNetManager()
+        NetworkManager newNM = tp.sendQueue.getNetworkManager(); // tp.sendQueue.getNetManager()
 
         if (nm != newNM)
         {
@@ -367,28 +371,28 @@ public class WDL
                 ChunkPosition cp2;
                 TileEntityChest tec1, tec2;
                 if ((te2 = wc.getTileEntity(lastX, lastY, lastZ + 1)) instanceof TileEntityChest &&
-                        ((TileEntityChest)te2).getChestType() == ((TileEntityChest)te).getChestType())
+                        ((TileEntityChest)te2).func_145980_j() == ((TileEntityChest)te).func_145980_j())
                 {
                     tec1 = (TileEntityChest)te;
                     tec2 = (TileEntityChest)te2;
                     cp2 = new ChunkPosition(lastX, lastY, lastZ + 1);
                 }
                 else if ((te2 = wc.getTileEntity(lastX, lastY, lastZ - 1)) instanceof TileEntityChest &&
-                        ((TileEntityChest)te2).getChestType() == ((TileEntityChest)te).getChestType())
+                        ((TileEntityChest)te2).func_145980_j() == ((TileEntityChest)te).func_145980_j())
                 {
                     tec1 = (TileEntityChest)te2;
                     tec2 = (TileEntityChest)te;
                     cp2 = new ChunkPosition(lastX, lastY, lastZ - 1);
                 }
                 else if ((te2 = wc.getTileEntity(lastX + 1, lastY, lastZ)) instanceof TileEntityChest &&
-                        ((TileEntityChest)te2).getChestType() == ((TileEntityChest)te).getChestType())
+                        ((TileEntityChest)te2).func_145980_j() == ((TileEntityChest)te).func_145980_j())
                 {
                     tec1 = (TileEntityChest)te;
                     tec2 = (TileEntityChest)te2;
                     cp2 = new ChunkPosition(lastX + 1, lastY, lastZ);
                 }
                 else if ((te2 = wc.getTileEntity(lastX - 1, lastY, lastZ)) instanceof TileEntityChest &&
-                        ((TileEntityChest)te2).getChestType() == ((TileEntityChest)te).getChestType())
+                        ((TileEntityChest)te2).func_145980_j() == ((TileEntityChest)te).func_145980_j())
                 {
                     tec1 = (TileEntityChest)te2;
                     tec2 = (TileEntityChest)te;
@@ -487,7 +491,7 @@ public class WDL
             {
                 for (int i = 0; i < tileEntitiesNBT.tagCount(); i++)
                 {
-                    NBTTagCompound tileEntityNBT = (NBTTagCompound)tileEntitiesNBT.func_150305_b(i);
+                    NBTTagCompound tileEntityNBT = (NBTTagCompound)tileEntitiesNBT.getCompoundTagAt(i);
                     TileEntity te = TileEntity.createAndLoadEntity(tileEntityNBT);
                     String entityType = null;
                     if ((entityType = isImportableTileEntity(te)) != null)
@@ -564,15 +568,28 @@ public class WDL
 
         ISaveHandler saveHAndler = wc.getSaveHandler();
         AnvilSaveConverter saveConverter = (AnvilSaveConverter)mc.getSaveLoader();
-        int saveVersion = saveConverter.getAnvilSaveVersion();
-        wc.getWorldInfo().setSaveVersion(saveVersion);
+
+        wc.getWorldInfo().setSaveVersion(getSaveVersion(saveConverter));
 
         NBTTagCompound worldInfoNBT = wc.getWorldInfo().cloneNBTCompound(playerNBT);
         applyOverridesToWorldInfo(worldInfoNBT);
 
         savePlayer(playerNBT);
         saveWorldInfo(worldInfoNBT);
-        saveChunks();
+        try
+        {
+            saveChunks();
+        }
+        catch (IllegalArgumentException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch (IllegalAccessException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     /** Save the player (position, health, inventory, ...) into its own file in the players directory */
@@ -639,23 +656,48 @@ public class WDL
         chatDebug("World data saved.");
     }
 
-    /** Calls saveChunk for all currently loaded chunks */
-    public static void saveChunks()
+    /**
+     * Calls saveChunk for all currently loaded chunks
+     * 
+     * @throws IllegalAccessException
+     * @throws IllegalArgumentException
+     */
+    public static void saveChunks() throws IllegalArgumentException, IllegalAccessException
     {
         chatDebug("Saving chunks...");
-        LongHashMap longHM = (LongHashMap)stealAndGetField(wc.getChunkProvider(), LongHashMap.class);
-        LongHashMap.Entry[] hashArray = (LongHashMap.Entry[])((LongHashMap.Entry[])stealAndGetField(longHM, LongHashMap.Entry[].class));
+        // Get the ChunkProviderClient from WorldClient
+        ChunkProviderClient chunkProvider = (ChunkProviderClient)wc.getChunkProvider();
+
+        // First, steal LongHashMap from chunk provider
+        Class<LongHashMap> lhmClass = LongHashMap.class;
+        LongHashMap lhm = (LongHashMap)stealAndGetField(chunkProvider, lhmClass);
+
+        // Get the hashArray field and set it accessible
+        Field hashArrayField = lhmClass.getDeclaredFields()[0]; // hashArray
+        hashArrayField.setAccessible(true);
+
+        // Get the LongHashMap.Entry[] through the now accessible field
+        Object[] hashArray = (Object[])hashArrayField.get(lhm);
+
+        // Get the actual class for LongHashMap.Entry
+        Class<?> Entry = hashArray[0].getClass();
+
+        // Find the private fields for 'value' and 'nextEntry' in LongHashMap.Entry and make them accessible
+        Field valueField = Entry.getDeclaredFields()[1]; // value
+        valueField.setAccessible(true);
+        Field nextEntryField = Entry.getDeclaredFields()[2]; // nextEntry
+        nextEntryField.setAccessible(true);
 
         WDLSaveProgressReporter progressReporter = new WDLSaveProgressReporter();
         progressReporter.start();
 
-        int length = hashArray.length;
-
-        for (int i = 0; i < length; ++i)
+        for (int i = 0; i < hashArray.length; ++i)
         {
-            for (LongHashMap.Entry entry = hashArray[i]; entry != null; entry = entry.nextEntry)
+            // for (LongHashMap.Entry entry = hashArray[i]; entry != null; entry = entry.nextEntry)
+            for (Object lhme = hashArray[i]; lhme != null; lhme = nextEntryField.get(lhme))
             {
-                Chunk c = (Chunk)entry.getValue();
+                // Chunk c = (Chunk)lhme.getValue();
+                Chunk c = (Chunk)valueField.get(lhme);
                 if (c != null && c.isModified)
                 {
                     saveChunk(c);
@@ -682,12 +724,12 @@ public class WDL
      * Renders World Downloader save progress bar
      */
     /*
-     * public static void renderSaveProgress() { if (saveProgress == 0) return; FontRenderer fontRenderer = mc.fontRenderer; ScaledResolution scaledResolution = new ScaledResolution(mc.gameSettings,
+     * public static void renderSaveProgress() { if (saveProgress == 0) return; FontRenderer fontRendererObj = mc.fontRendererObj; ScaledResolution scaledResolution = new ScaledResolution(mc.gameSettings,
      * mc.displayWidth, mc.displayHeight); int scaledWidth = scaledResolution.getScaledWidth(); short width = 182; int xPos = scaledWidth / 2 - width / 2; byte yPos = 12;
      * mc.ingameGUI.drawTexturedModalRect(xPos, yPos, 0, 74, width, 5); mc.ingameGUI.drawTexturedModalRect(xPos, yPos, 0, 74, width, 5); mc.ingameGUI.drawTexturedModalRect(xPos, yPos, 0, 79,
      * saveProgress * width, 5);
      * 
-     * String var9 = "Save Progress"; fontRenderer.drawStringWithShadow(var9, scaledWidth / 2 - fontRenderer.getStringWidth(var9) / 2, yPos - 10, 16711935); GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+     * String var9 = "Save Progress"; fontRendererObj.drawStringWithShadow(var9, scaledWidth / 2 - fontRendererObj.getStringWidth(var9) / 2, yPos - 10, 16711935); GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
      * GL11.glBindTexture(GL11.GL_TEXTURE_2D, mc.renderEngine.getTexture("/gui/icons.png")); }
      */
 
@@ -874,7 +916,7 @@ public class WDL
         String gametypeOption = worldProps.getProperty("GameType");
         if (gametypeOption.equals("keep"))
         {
-            if (tp.field_71075_bZ.isCreativeMode) // capabilities
+            if (tp.capabilities.isCreativeMode) // capabilities
             {
                 worldInfoNBT.setInteger("GameType", 1); // Creative
             }
@@ -1040,7 +1082,7 @@ public class WDL
     public static void chatMsg(String msg)
     {
         // System.out.println( "WorldDownloader: " + msg ); // Just for debugging!
-        mc.ingameGUI.func_146158_b().func_146227_a(new ChatComponentText("\u00A7c[WorldDL]\u00A76 " + msg));
+        mc.ingameGUI.getChatGUI().func_146227_a(new ChatComponentText("\u00A7c[WorldDL]\u00A76 " + msg));
     }
 
     /** Adds a chat message with a World Downloader prefix */
@@ -1049,9 +1091,39 @@ public class WDL
         if (!WDL.DEBUG)
             return;
         // System.out.println( "WorldDownloader: " + msg ); // Just for debugging!
-        mc.ingameGUI.func_146158_b().func_146227_a(new ChatComponentText("\u00A72[WorldDL]\u00A76 " + msg));
+        mc.ingameGUI.getChatGUI().func_146227_a(new ChatComponentText("\u00A72[WorldDL]\u00A76 " + msg));
     }
 
+    
+    private static int getSaveVersion(AnvilSaveConverter asc)
+    {
+        int saveVersion = 0;
+        try
+        {
+            Method[] anvilMethods = AnvilSaveConverter.class.getDeclaredMethods();
+            for (Method m : anvilMethods)
+            {
+                if (m.getParameterTypes().length == 0 && m.getReturnType().equals(int.class))
+                {
+                    m.setAccessible(true);
+                    saveVersion = (Integer)m.invoke(asc);
+                    break;
+                }
+            }
+        } catch (Throwable t)
+        {
+            // TODO Auto-generated catch block
+            t.printStackTrace();
+        }
+        if (saveVersion == 0)
+        {
+            saveVersion = 19133; // Version for 1.7.2 just in case we can't get
+                                 // it
+        }
+        return saveVersion;
+    }
+    
+    
     /**
      * Uses Java's reflection API to get access to an unaccessible field
      * 
@@ -1066,7 +1138,7 @@ public class WDL
         Field[] fields = typeOfClass.getDeclaredFields();
         for (Field f : fields)
         {
-            if (f.getType() == typeOfField)
+            if (f.getType().equals(typeOfField))
             {
                 try
                 {
@@ -1101,7 +1173,9 @@ public class WDL
             object = null;
         }
         else
+        {
             typeOfObject = object.getClass();
+        }
 
         try
         {

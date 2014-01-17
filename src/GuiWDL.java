@@ -52,7 +52,7 @@ public class GuiWDL extends GuiScreen
             WDL.baseProps.setProperty("ServerName", WDL.getServerName());
         }
 
-        this.worldName = new GuiTextField(this.fontRenderer, this.width / 2 - 70, hi, 168, 18);
+        this.worldName = new GuiTextField(this.fontRendererObj, this.width / 2 - 70, hi, 168, 18);
         this.updateServerName(false);
 
         hi += 22;
@@ -120,7 +120,7 @@ public class GuiWDL extends GuiScreen
     protected void mouseClicked(int var1, int var2, int var3)
     {
         super.mouseClicked(var1, var2, var3);
-        this.worldName.func_146192_a(var1, var2, var3);
+        this.worldName.mouseClicked(var1, var2, var3);
     }
 
     /**
@@ -129,7 +129,7 @@ public class GuiWDL extends GuiScreen
     protected void keyTyped(char c, int i)
     {
         super.keyTyped(c, i);
-        this.worldName.func_146201_a(c, i);
+        this.worldName.textboxKeyTyped(c, i);
     }
 
     /**
@@ -137,7 +137,7 @@ public class GuiWDL extends GuiScreen
      */
     public void updateScreen()
     {
-        this.worldName.func_146178_a(); // updateCursorCounter
+        this.worldName.updateCursorCounter(); // updateCursorCounter
         super.updateScreen();
     }
 
@@ -146,10 +146,10 @@ public class GuiWDL extends GuiScreen
      */
     public void drawScreen(int var1, int var2, float var3)
     {
-        this.func_146276_q_(); // drawDefaultBackground
-        this.drawCenteredString(this.fontRenderer, this.title, this.width / 2, this.height / 4 - 40, 16777215);
-        this.drawString(this.fontRenderer, "Name:", this.width / 2 - 99, this.height / 4 - 10, 16777215);
-        this.worldName.func_146194_f(); // drawTextBox
+        this.drawDefaultBackground(); // drawDefaultBackground
+        this.drawCenteredString(this.fontRendererObj, this.title, this.width / 2, this.height / 4 - 40, 16777215);
+        this.drawString(this.fontRendererObj, "Name:", this.width / 2 - 99, this.height / 4 - 10, 16777215);
+        this.worldName.drawTextBox(); // drawTextBox
         super.drawScreen(var1, var2, var3);
     }
 
@@ -183,11 +183,11 @@ public class GuiWDL extends GuiScreen
     {
         if (var1)
         {
-            WDL.baseProps.setProperty("ServerName", this.worldName.func_146179_b());
+            WDL.baseProps.setProperty("ServerName", this.worldName.getText());
         }
         else
         {
-            this.worldName.func_146180_a(WDL.baseProps.getProperty("ServerName"));
+            this.worldName.setText(WDL.baseProps.getProperty("ServerName"));
         }
     }
 }

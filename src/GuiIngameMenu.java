@@ -38,7 +38,7 @@ public class GuiIngameMenu extends GuiScreen
         this.buttonList.add(var3 = new GuiButton(7, this.width / 2 + 2, this.height / 4 + 96 + var1, 98, 20, I18n.format("menu.shareToLan", new Object[0])));
         this.buttonList.add(new GuiButton(5, this.width / 2 - 100, this.height / 4 + 48 + var1, 98, 20, I18n.format("gui.achievements", new Object[0])));
         this.buttonList.add(new GuiButton(6, this.width / 2 + 2, this.height / 4 + 48 + var1, 98, 20, I18n.format("gui.stats", new Object[0])));
-        var3.enabled = this.mc.isSingleplayer() && !this.mc.getIntegratedServer().func_71344_c();
+        var3.enabled = this.mc.isSingleplayer() && !this.mc.getIntegratedServer().getPublic();
 
         /* WDL >>> */
         // This code adds the start, stop and options buttons to the menu:
@@ -51,9 +51,9 @@ public class GuiIngameMenu extends GuiScreen
             GuiButton wdlOptions = new GuiButton(51, this.width / 2 + 71, this.height / 4 + 72 + var1, 28, 20, "...");
             this.buttonList.add(wdlOptions);
             wdlOptions.enabled = (!WDL.downloading || (WDL.downloading && !WDL.saving));
-            ((GuiButton)this.buttonList.get(0)).yPosition = this.height / 4 + 144 + var1;
-            ((GuiButton)this.buttonList.get(2)).yPosition = this.height / 4 + 120 + var1;
-            ((GuiButton)this.buttonList.get(3)).yPosition = this.height / 4 + 120 + var1;
+            ((GuiButton)this.buttonList.get(0)).field_146129_i = this.height / 4 + 144 + var1;
+            ((GuiButton)this.buttonList.get(2)).field_146129_i = this.height / 4 + 120 + var1;
+            ((GuiButton)this.buttonList.get(3)).field_146129_i = this.height / 4 + 120 + var1;
         }
         /* <<< WDL */
 
@@ -61,9 +61,6 @@ public class GuiIngameMenu extends GuiScreen
 
     }
 
-    /**
-     * Fired when a control is clicked. This is the equivalent of ActionListener.actionPerformed(ActionEvent e).
-     */
     protected void actionPerformed(GuiButton p_146284_1_)
     {
         switch (p_146284_1_.id)
@@ -144,8 +141,8 @@ public class GuiIngameMenu extends GuiScreen
      */
     public void drawScreen(int par1, int par2, float par3)
     {
-        this.func_146276_q_();
-        this.drawCenteredString(this.fontRenderer, "Game menu", this.width / 2, 40, 16777215);
+        this.drawDefaultBackground();
+        this.drawCenteredString(this.fontRendererObj, "Game menu", this.width / 2, 40, 16777215);
         super.drawScreen(par1, par2, par3);
     }
 }

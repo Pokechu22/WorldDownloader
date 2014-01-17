@@ -7,6 +7,8 @@ http://www.minecraftforum.net/topic/1444862-
 
 INSTALLATION (manual way)
 ------------------------------
+MagicLauncher is highly recommended. Otherwise, the following steps will get you there too.
+
 1. Make a new Minecraft version by copying an existing folder from 'versions' folder and renaming
    (e.g. Copy 1.6.4 to 1.6.4.wdl) SEE BELOW, How to find your Minecraft versions folder
 2. In the new folder, rename the .jar and .json files with the same name as the folder (add .wdl)

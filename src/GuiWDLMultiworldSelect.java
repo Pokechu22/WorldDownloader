@@ -111,7 +111,7 @@ public class GuiWDLMultiworldSelect extends GuiScreen
             this.buttonList.add(this.buttons[var11]);
         }
 
-        this.newNameField = new GuiTextField(this.fontRenderer, var11 % var3 * var4 + var9, this.height - 60 - var11 / var3 * 21 + 1, var4, 18);
+        this.newNameField = new GuiTextField(this.fontRendererObj, var11 % var3 * var4 + var9, this.height - 60 - var11 / var3 * 21 + 1, var4, 18);
     }
 
     /**
@@ -149,7 +149,7 @@ public class GuiWDLMultiworldSelect extends GuiScreen
 
         if (this.newWorld)
         {
-            this.newNameField.func_146192_a(var1, var2, var3);
+            this.newNameField.mouseClicked(var1, var2, var3);
         }
     }
 
@@ -160,13 +160,13 @@ public class GuiWDLMultiworldSelect extends GuiScreen
     {
         super.keyTyped(var1, var2);
 
-        if (this.newNameField.func_146206_l())
+        if (this.newNameField.isFocused())
         {
-            this.newNameField.func_146201_a(var1, var2);
+            this.newNameField.textboxKeyTyped(var1, var2);
 
             if (var2 == 28)
             {
-                String var3 = this.newNameField.func_146179_b();
+                String var3 = this.newNameField.getText();
 
                 if (var3 != null && !var3.isEmpty())
                 {
@@ -181,7 +181,7 @@ public class GuiWDLMultiworldSelect extends GuiScreen
      */
     public void updateScreen()
     {
-        this.newNameField.func_146178_a();
+        this.newNameField.updateCursorCounter();
         super.updateScreen();
     }
 
@@ -194,14 +194,14 @@ public class GuiWDLMultiworldSelect extends GuiScreen
 
         if (this.parent == null)
         {
-            this.drawCenteredString(this.fontRenderer, "World Downloader - Trying To Start Download", this.width / 2, this.height / 16, 16777215);
+            this.drawCenteredString(this.fontRendererObj, "World Downloader - Trying To Start Download", this.width / 2, this.height / 16, 16777215);
         }
         else
         {
-            this.drawCenteredString(this.fontRenderer, "World Downloader - Trying To Change Options", this.width / 2, this.height / 16, 16777215);
+            this.drawCenteredString(this.fontRendererObj, "World Downloader - Trying To Change Options", this.width / 2, this.height / 16, 16777215);
         }
 
-        this.drawCenteredString(this.fontRenderer, "Where are you?", this.width / 2, this.height / 16 + 10, 16711680);
+        this.drawCenteredString(this.fontRendererObj, "Where are you?", this.width / 2, this.height / 16 + 10, 16711680);
         this.cam.prevRotationPitch = this.cam.rotationPitch = 0.0F;
         this.cam.prevRotationYaw = this.cam.rotationYaw = this.yaw;
         float var4 = 0.475F;
@@ -213,7 +213,7 @@ public class GuiWDLMultiworldSelect extends GuiScreen
 
         if (this.newWorld)
         {
-            this.newNameField.func_146194_f();
+            this.newNameField.drawTextBox();
         }
 
         super.drawScreen(var1, var2, var3);

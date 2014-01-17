@@ -30,7 +30,7 @@ import net.minecraft.wdl.WDL;
 public class TaskOnlineConnect extends TaskLongRunning
 {
     private static final AtomicInteger field_148439_a = new AtomicInteger(0);
-    private static final Logger field_148438_c = LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger();
     private NetworkManager field_148436_d;
     private final McoServer field_148437_e;
     private final GuiScreen field_148435_f;
@@ -74,19 +74,19 @@ public class TaskOnlineConnect extends TaskLongRunning
                 {
                     var4 = true;
                     this.func_148416_a(var11.toString());
-                    field_148438_c.error("Couldn\'t connect to world", var11);
+                    logger.error("Couldn\'t connect to world", var11);
                 }
 
                 break;
             }
             catch (IOException var12)
             {
-                field_148438_c.error("Couldn\'t parse response connecting to world", var12);
+                logger.error("Couldn\'t parse response connecting to world", var12);
             }
             catch (Exception var13)
             {
                 var4 = true;
-                field_148438_c.error("Couldn\'t connect to world", var13);
+                logger.error("Couldn\'t connect to world", var13);
                 this.func_148416_a(var13.getLocalizedMessage());
             }
 
@@ -124,7 +124,7 @@ public class TaskOnlineConnect extends TaskLongRunning
         }
         catch (InterruptedException var3)
         {
-            field_148438_c.warn(var3.getLocalizedMessage());
+            logger.warn(var3.getLocalizedMessage());
         }
     }
 
@@ -177,7 +177,7 @@ public class TaskOnlineConnect extends TaskLongRunning
                         return;
                     }
 
-                    TaskOnlineConnect.field_148438_c.error("Couldn\'t connect to world", var2);
+                    TaskOnlineConnect.logger.error("Couldn\'t connect to world", var2);
                     TaskOnlineConnect.this.func_148413_b().displayGuiScreen(new GuiScreenDisconnectedOnline(TaskOnlineConnect.this.field_148435_f, "connect.failed", new ChatComponentTranslation("disconnect.genericReason", new Object[] {"Unknown host \'" + p_148432_1_ + "\'"})));
                 }
                 catch (Exception var3)
@@ -187,7 +187,7 @@ public class TaskOnlineConnect extends TaskLongRunning
                         return;
                     }
 
-                    TaskOnlineConnect.field_148438_c.error("Couldn\'t connect to world", var3);
+                    TaskOnlineConnect.logger.error("Couldn\'t connect to world", var3);
                     TaskOnlineConnect.this.func_148413_b().displayGuiScreen(new GuiScreenDisconnectedOnline(TaskOnlineConnect.this.field_148435_f, "connect.failed", new ChatComponentTranslation("disconnect.genericReason", new Object[] {var3.toString()})));
                 }
             }

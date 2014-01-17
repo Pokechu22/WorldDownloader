@@ -36,7 +36,7 @@ public class GuiWDLBackup extends GuiScreen
         this.buttonList.add(this.backupBtn);
         this.updateBackup(false);
 
-        this.commandField = new GuiTextField(this.fontRenderer, w - 98, h + 126, 196, 17);
+        this.commandField = new GuiTextField(this.fontRendererObj, w - 98, h + 126, 196, 17);
 
         this.buttonList.add(new GuiButton(100, w - 100, h + 150, "Done"));
     }
@@ -68,7 +68,7 @@ public class GuiWDLBackup extends GuiScreen
 
         if (this.cmdBox)
         {
-            this.commandField.func_146192_a(var1, var2, var3);
+            this.commandField.mouseClicked(var1, var2, var3);
         }
     }
 
@@ -78,7 +78,7 @@ public class GuiWDLBackup extends GuiScreen
     protected void keyTyped(char var1, int var2)
     {
         super.keyTyped(var1, var2);
-        this.commandField.func_146201_a(var1, var2);
+        this.commandField.textboxKeyTyped(var1, var2);
     }
 
     /**
@@ -86,7 +86,7 @@ public class GuiWDLBackup extends GuiScreen
      */
     public void updateScreen()
     {
-        this.commandField.func_146178_a();
+        this.commandField.updateCursorCounter();
         super.updateScreen();
     }
 
@@ -95,13 +95,13 @@ public class GuiWDLBackup extends GuiScreen
      */
     public void drawScreen(int var1, int var2, float var3)
     {
-        this.func_146276_q_();
-        this.drawCenteredString(this.fontRenderer, this.title, this.width / 2, this.height / 4 - 40, 16777215);
-        this.drawString(this.fontRenderer, "Name:", this.width / 2 - 99, 50, 16777215);
+        this.drawDefaultBackground();
+        this.drawCenteredString(this.fontRendererObj, this.title, this.width / 2, this.height / 4 - 40, 16777215);
+        this.drawString(this.fontRendererObj, "Name:", this.width / 2 - 99, 50, 16777215);
 
         if (this.cmdBox)
         {
-            this.commandField.func_146194_f();
+            this.commandField.drawTextBox();
         }
 
         super.drawScreen(var1, var2, var3);

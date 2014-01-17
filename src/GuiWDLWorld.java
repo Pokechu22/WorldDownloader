@@ -50,9 +50,9 @@ public class GuiWDLWorld extends GuiScreen
         this.buttonList.add(this.spawnBtn);
         var3 += 22;
         this.spawnTextY = var3 + 4;
-        this.spawnX = new GuiTextField(this.fontRenderer, var1 - 87, var3, 50, 16);
-        this.spawnY = new GuiTextField(this.fontRenderer, var1 - 19, var3, 50, 16);
-        this.spawnZ = new GuiTextField(this.fontRenderer, var1 + 48, var3, 50, 16);
+        this.spawnX = new GuiTextField(this.fontRendererObj, var1 - 87, var3, 50, 16);
+        this.spawnY = new GuiTextField(this.fontRendererObj, var1 - 19, var3, 50, 16);
+        this.spawnZ = new GuiTextField(this.fontRendererObj, var1 + 48, var3, 50, 16);
         this.spawnX.func_146203_f(7);
         this.spawnY.func_146203_f(7);
         this.spawnZ.func_146203_f(7);
@@ -113,9 +113,9 @@ public class GuiWDLWorld extends GuiScreen
 
         if (this.showSpawnFields)
         {
-            this.spawnX.func_146192_a(var1, var2, var3);
-            this.spawnY.func_146192_a(var1, var2, var3);
-            this.spawnZ.func_146192_a(var1, var2, var3);
+            this.spawnX.mouseClicked(var1, var2, var3);
+            this.spawnY.mouseClicked(var1, var2, var3);
+            this.spawnZ.mouseClicked(var1, var2, var3);
         }
     }
 
@@ -125,9 +125,9 @@ public class GuiWDLWorld extends GuiScreen
     protected void keyTyped(char var1, int var2)
     {
         super.keyTyped(var1, var2);
-        this.spawnX.func_146201_a(var1, var2);
-        this.spawnY.func_146201_a(var1, var2);
-        this.spawnZ.func_146201_a(var1, var2);
+        this.spawnX.textboxKeyTyped(var1, var2);
+        this.spawnY.textboxKeyTyped(var1, var2);
+        this.spawnZ.textboxKeyTyped(var1, var2);
     }
 
     /**
@@ -135,9 +135,9 @@ public class GuiWDLWorld extends GuiScreen
      */
     public void updateScreen()
     {
-        this.spawnX.func_146178_a();
-        this.spawnY.func_146178_a();
-        this.spawnZ.func_146178_a();
+        this.spawnX.updateCursorCounter();
+        this.spawnY.updateCursorCounter();
+        this.spawnZ.updateCursorCounter();
         super.updateScreen();
     }
 
@@ -146,17 +146,17 @@ public class GuiWDLWorld extends GuiScreen
      */
     public void drawScreen(int var1, int var2, float var3)
     {
-        this.func_146276_q_();
-        this.drawCenteredString(this.fontRenderer, this.title, this.width / 2, this.height / 4 - 40, 16777215);
+        this.drawDefaultBackground();
+        this.drawCenteredString(this.fontRendererObj, this.title, this.width / 2, this.height / 4 - 40, 16777215);
 
         if (this.showSpawnFields)
         {
-            this.drawString(this.fontRenderer, "X:", this.width / 2 - 99, this.spawnTextY, 16777215);
-            this.drawString(this.fontRenderer, "Y:", this.width / 2 - 31, this.spawnTextY, 16777215);
-            this.drawString(this.fontRenderer, "Z:", this.width / 2 + 37, this.spawnTextY, 16777215);
-            this.spawnX.func_146194_f();
-            this.spawnY.func_146194_f();
-            this.spawnZ.func_146194_f();
+            this.drawString(this.fontRendererObj, "X:", this.width / 2 - 99, this.spawnTextY, 16777215);
+            this.drawString(this.fontRendererObj, "Y:", this.width / 2 - 31, this.spawnTextY, 16777215);
+            this.drawString(this.fontRendererObj, "Z:", this.width / 2 + 37, this.spawnTextY, 16777215);
+            this.spawnX.drawTextBox();
+            this.spawnY.drawTextBox();
+            this.spawnZ.drawTextBox();
         }
 
         super.drawScreen(var1, var2, var3);
@@ -364,7 +364,7 @@ public class GuiWDLWorld extends GuiScreen
     {
         String var2 = WDL.worldProps.getProperty("Spawn");
         this.showSpawnFields = false;
-        this.pickSpawnBtn.drawButton = false;
+        this.pickSpawnBtn.field_146125_m = false;
 
         if (var2.equals("auto"))
         {
@@ -401,7 +401,7 @@ public class GuiWDLWorld extends GuiScreen
             {
                 this.spawnBtn.displayString = "Spawn Position:";
                 this.showSpawnFields = true;
-                this.pickSpawnBtn.drawButton = true;
+                this.pickSpawnBtn.field_146125_m = true;
             }
         }
     }
@@ -412,9 +412,9 @@ public class GuiWDLWorld extends GuiScreen
         {
             try
             {
-                int var2 = Integer.parseInt(this.spawnX.func_146179_b());
-                int var3 = Integer.parseInt(this.spawnY.func_146179_b());
-                int var4 = Integer.parseInt(this.spawnZ.func_146179_b());
+                int var2 = Integer.parseInt(this.spawnX.getText());
+                int var3 = Integer.parseInt(this.spawnY.getText());
+                int var4 = Integer.parseInt(this.spawnZ.getText());
                 WDL.worldProps.setProperty("SpawnX", String.valueOf(var2));
                 WDL.worldProps.setProperty("SpawnY", String.valueOf(var3));
                 WDL.worldProps.setProperty("SpawnZ", String.valueOf(var4));
@@ -426,9 +426,9 @@ public class GuiWDLWorld extends GuiScreen
         }
         else
         {
-            this.spawnX.func_146180_a(WDL.worldProps.getProperty("SpawnX"));
-            this.spawnY.func_146180_a(WDL.worldProps.getProperty("SpawnY"));
-            this.spawnZ.func_146180_a(WDL.worldProps.getProperty("SpawnZ"));
+            this.spawnX.setText(WDL.worldProps.getProperty("SpawnX"));
+            this.spawnY.setText(WDL.worldProps.getProperty("SpawnY"));
+            this.spawnZ.setText(WDL.worldProps.getProperty("SpawnZ"));
         }
     }
 
@@ -437,8 +437,8 @@ public class GuiWDLWorld extends GuiScreen
         int var1 = (int)Math.floor(WDL.tp.posX);
         int var2 = (int)Math.floor(WDL.tp.posY);
         int var3 = (int)Math.floor(WDL.tp.posZ);
-        this.spawnX.func_146180_a(String.valueOf(var1));
-        this.spawnY.func_146180_a(String.valueOf(var2));
-        this.spawnZ.func_146180_a(String.valueOf(var3));
+        this.spawnX.setText(String.valueOf(var1));
+        this.spawnY.setText(String.valueOf(var2));
+        this.spawnZ.setText(String.valueOf(var3));
     }
 }

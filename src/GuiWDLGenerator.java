@@ -27,8 +27,8 @@ public class GuiWDLGenerator extends GuiScreen
         int var1 = this.width / 2;
         int var2 = this.height / 4;
         int var3 = var2 - 15;
-        this.seedField = new GuiTextField(this.fontRenderer, this.width / 2 - 70, var3, 168, 18);
-        this.seedField.func_146180_a("ERROR");
+        this.seedField = new GuiTextField(this.fontRendererObj, this.width / 2 - 70, var3, 168, 18);
+        this.seedField.setText("ERROR");
         this.updateSeed(false);
         var3 += 22;
         this.generatorBtn = new GuiButton(1, var1 - 100, var3, "World Generator: ERROR");
@@ -71,7 +71,7 @@ public class GuiWDLGenerator extends GuiScreen
     protected void mouseClicked(int var1, int var2, int var3)
     {
         super.mouseClicked(var1, var2, var3);
-        this.seedField.func_146192_a(var1, var2, var3);
+        this.seedField.mouseClicked(var1, var2, var3);
     }
 
     /**
@@ -80,7 +80,7 @@ public class GuiWDLGenerator extends GuiScreen
     protected void keyTyped(char var1, int var2)
     {
         super.keyTyped(var1, var2);
-        this.seedField.func_146201_a(var1, var2);
+        this.seedField.textboxKeyTyped(var1, var2);
     }
 
     /**
@@ -88,7 +88,7 @@ public class GuiWDLGenerator extends GuiScreen
      */
     public void updateScreen()
     {
-        this.seedField.func_146178_a();
+        this.seedField.updateCursorCounter();
         super.updateScreen();
     }
 
@@ -97,10 +97,10 @@ public class GuiWDLGenerator extends GuiScreen
      */
     public void drawScreen(int var1, int var2, float var3)
     {
-        this.func_146276_q_();
-        this.drawCenteredString(this.fontRenderer, this.title, this.width / 2, this.height / 4 - 40, 16777215);
-        this.drawString(this.fontRenderer, "Seed:", this.width / 2 - 99, this.height / 4 - 10, 16777215);
-        this.seedField.func_146194_f();
+        this.drawDefaultBackground();
+        this.drawCenteredString(this.fontRendererObj, this.title, this.width / 2, this.height / 4 - 40, 16777215);
+        this.drawString(this.fontRendererObj, "Seed:", this.width / 2 - 99, this.height / 4 - 10, 16777215);
+        this.seedField.drawTextBox();
         super.drawScreen(var1, var2, var3);
     }
 
@@ -164,11 +164,11 @@ public class GuiWDLGenerator extends GuiScreen
     {
         if (var1)
         {
-            WDL.worldProps.setProperty("RandomSeed", this.seedField.func_146179_b());
+            WDL.worldProps.setProperty("RandomSeed", this.seedField.getText());
         }
         else
         {
-            this.seedField.func_146180_a(WDL.worldProps.getProperty("RandomSeed"));
+            this.seedField.setText(WDL.worldProps.getProperty("RandomSeed"));
         }
     }
 }
