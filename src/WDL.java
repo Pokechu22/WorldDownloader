@@ -668,56 +668,102 @@ public class WDL
         // Get the ChunkProviderClient from WorldClient
         ChunkProviderClient chunkProvider = (ChunkProviderClient)wc.getChunkProvider();
 
-        // First, steal LongHashMap from chunk provider
-        Class<LongHashMap> lhmClass = LongHashMap.class;
-        LongHashMap lhm = (LongHashMap)stealAndGetField(chunkProvider, lhmClass);
-
         // Get the hashArray field and set it accessible
-        Field hashArrayField = lhmClass.getDeclaredFields()[0]; // hashArray
-        hashArrayField.setAccessible(true);
-
-        // Get the LongHashMap.Entry[] through the now accessible field
-        Object[] hashArray = (Object[])hashArrayField.get(lhm);
-
-        // Get the actual class for LongHashMap.Entry
-        Class<?> Entry = hashArray[0].getClass();
-
-        // Find the private fields for 'value' and 'nextEntry' in LongHashMap.Entry and make them accessible
-        Field valueField = Entry.getDeclaredFields()[1]; // value
-        valueField.setAccessible(true);
-        Field nextEntryField = Entry.getDeclaredFields()[2]; // nextEntry
-        nextEntryField.setAccessible(true);
-
-        WDLSaveProgressReporter progressReporter = new WDLSaveProgressReporter();
-        progressReporter.start();
-
-        for (int i = 0; i < hashArray.length; ++i)
+        Field hashArrayField = null;
+        Field[] lhmFields = LongHashMap.class.getDeclaredFields();
+        //System.out.println("Looking for hashArray field...");
+        for (Field f : lhmFields)
         {
-            // for (LongHashMap.Entry entry = hashArray[i]; entry != null; entry = entry.nextEntry)
-            for (Object lhme = hashArray[i]; lhme != null; lhme = nextEntryField.get(lhme))
+            //System.out.println("Found field " + f.getName() + " of type " + f.getType().getName());
+            if (f.getType().isArray())
             {
-                // Chunk c = (Chunk)lhme.getValue();
-                Chunk c = (Chunk)valueField.get(lhme);
-                if (c != null && c.isModified)
-                {
-                    saveChunk(c);
-
-                    try
-                    {
-                        ThreadedFileIOBase.threadedIOInstance.waitForFinish();
-                    }
-                    catch (Exception e)
-                    {
-                        chatMsg("Threw exception waiting for asynchronous IO to finish. Hmmm.");
-                    }
-                }
-                else
-                {
-                    chatMsg("Didn\'t save chunk " + c.xPosition + " " + c.zPosition + " because isModified is false!");
-                }
+                hashArrayField = f;
+                break;
             }
         }
-        chatDebug("Chunk data saved.");
+        if (hashArrayField == null)
+        {
+            chatMsg("Could not save chunks. Reflection error.");
+            return;
+        }
+        //System.out.println("Setting hashArrayField of type " + hashArrayField.getType().getName() + " accessible.");
+        hashArrayField.setAccessible(true);
+
+        // Steal the instance of LongHashMap from our chunk provider
+        //System.out.println("Stealing field from chunkProvider (type=" + chunkProvider.getClass().getName() + ") of type " + LongHashMap.class.getName());
+        LongHashMap lhm = (LongHashMap)stealAndGetField(chunkProvider, LongHashMap.class);
+/*      
+        if (lhm != null)
+        {
+            System.out.println("Successfully got lhm of type" + lhm.getClass().getName());
+        }
+*/
+        // Get the LongHashMap.Entry[] through the now accessible field using a
+        // LongHashMap we steal from our chunkProvider.
+        Object[] hashArray = (Object[])hashArrayField.get(lhm);
+        //System.out.println("hashArray is of type " + hashArray.getClass().getName());
+
+        //System.out.println("hashArray.length = " + hashArray.length);
+        if (hashArray.length == 0)
+        {
+            chatError("ChunkProviderClient has no chunk data!");
+            return;
+        }
+        else
+        {
+            // Get the actual class for LongHashMap.Entry
+            Class<?> Entry = null;
+            for (Object o : hashArray)
+            {
+                if(o != null)
+                {
+                    Entry = o.getClass();
+                    break;
+                }
+            }
+            if(Entry == null)
+            {
+                chatError("Could not get class for LongHashMap.Entry.");
+                return;
+            }
+
+            // Find the private fields for 'value' and 'nextEntry' in
+            // LongHashMap.Entry and make them accessible
+            Field valueField = Entry.getDeclaredFields()[1]; // value
+            valueField.setAccessible(true);
+            Field nextEntryField = Entry.getDeclaredFields()[2]; // nextEntry
+            nextEntryField.setAccessible(true);
+
+            WDLSaveProgressReporter progressReporter = new WDLSaveProgressReporter();
+            progressReporter.start();
+
+            for (int i = 0; i < hashArray.length; ++i)
+            {
+                // for (LongHashMap.Entry entry = hashArray[i]; entry != null;
+                // entry = entry.nextEntry)
+                for (Object lhme = hashArray[i]; lhme != null; lhme = nextEntryField.get(lhme))
+                {
+                    // Chunk c = (Chunk)lhme.getValue();
+                    Chunk c = (Chunk)valueField.get(lhme);
+                    if (c != null && c.isModified)
+                    {
+                        saveChunk(c);
+
+                        try
+                        {
+                            ThreadedFileIOBase.threadedIOInstance.waitForFinish();
+                        } catch (Exception e)
+                        {
+                            chatMsg("Threw exception waiting for asynchronous IO to finish. Hmmm.");
+                        }
+                    } else
+                    {
+                        chatMsg("Didn\'t save chunk " + c.xPosition + " " + c.zPosition + " because isModified is false!");
+                    }
+                }
+            }
+            chatDebug("Chunk data saved.");
+        }
     }
 
     /**
@@ -1093,6 +1139,13 @@ public class WDL
         // System.out.println( "WorldDownloader: " + msg ); // Just for debugging!
         mc.ingameGUI.getChatGUI().func_146227_a(new ChatComponentText("\u00A72[WorldDL]\u00A76 " + msg));
     }
+    
+    /** Adds a chat message with a World Downloader prefix */
+    public static void chatError(String msg)
+    {
+        // System.out.println( "WorldDownloader: " + msg ); // Just for debugging!
+        mc.ingameGUI.getChatGUI().func_146227_a(new ChatComponentText("\u00A72[WorldDL]\u00A74 " + msg));
+    }
 
     
     private static int getSaveVersion(AnvilSaveConverter asc)
@@ -1135,9 +1188,14 @@ public class WDL
      */
     public static Field stealField(Class typeOfClass, Class typeOfField)
     {
+        //System.out.println("stealField: typeOfClass = " + typeOfClass.getName());
+        //System.out.println("stealField: typeOfField = " + typeOfField.getName());
         Field[] fields = typeOfClass.getDeclaredFields();
         for (Field f : fields)
         {
+            //System.out.println("stealField: Found field " + f.getName() + 
+            //        " of type " + f.getType());
+            
             if (f.getType().equals(typeOfField))
             {
                 try
