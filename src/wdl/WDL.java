@@ -28,7 +28,6 @@ import net.minecraft.block.BlockNote;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.mco.McoServer;
 import net.minecraft.client.multiplayer.ChunkProviderClient;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.Entity;
@@ -87,7 +86,9 @@ public class WDL
     public static WorldClient wc; // Reference to the World object that WDL uses
     public static NetworkManager nm = null; // Reference to a connection specific object. Used to detect a new connection.
     public static EntityClientPlayerMP tp;
+    /* TODO: Realms support disabled until someone gets it working
     public static McoServer mcos;
+    */
 
     public static Container windowContainer; // Reference to the place where all the item stacks end up after receiving them.
     public static int lastX = 0, lastY = 0, lastZ = 0; // Last right clicked block. Needed for TileEntity creation!
@@ -1078,10 +1079,12 @@ public class WDL
             {
                 return mc.func_147104_D().serverName;
             }
+            /* TODO: Realms support disabled until someone gets it working
             else if (mcos != null)
             {
                 return "MCRealm: " + URLDecoder.decode(mcos.field_148810_b, "UTF-8");
             }
+            */
         }
         catch (Exception e)
         {
