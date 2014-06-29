@@ -1,0 +1,16 @@
+[
+{
+  "modid": "WorldDownloader",
+  "name": "World Downloader",
+  "description": "Backup your creations from multiplayer servers",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "http://www.minecraftforum.net/topic/1444862-",
+  "updateUrl": "",
+  "authorList": ["nairol"],["cubic72"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
