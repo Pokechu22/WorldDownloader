@@ -599,9 +599,9 @@ public class WDL
         chatDebug("Saving player data...");
         try
         {
-            File playersDirectory = new File(saveHandler.getWorldDirectory(), "players");
-            File playerFile = new File(playersDirectory, tp.func_142021_k() + ".dat.tmp");
-            File playerFileOld = new File(playersDirectory, tp.func_142021_k() + ".dat");
+            File playersDirectory = new File(saveHandler.getWorldDirectory(), "playerdata");
+            File playerFile = new File(playersDirectory, tp.getUniqueID().toString() + ".dat.tmp");
+            File playerFileOld = new File(playersDirectory, tp.getUniqueID().toString() + ".dat");
 
             CompressedStreamTools.writeCompressed(playerNBT, new FileOutputStream(playerFile));
 
