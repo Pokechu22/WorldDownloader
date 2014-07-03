@@ -1,6 +1,7 @@
 package net.minecraft.client.network;
 
 import com.google.common.base.Charsets;
+import com.mojang.authlib.GameProfile;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.util.concurrent.GenericFutureListener;
@@ -28,18 +29,21 @@ import net.minecraft.client.gui.GuiMultiplayer;
 import net.minecraft.client.gui.GuiPlayerInfo;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiScreenDemo;
-import net.minecraft.client.gui.GuiScreenDisconnectedOnline;
+import net.minecraft.client.gui.GuiScreenRealmsProxy;
 import net.minecraft.client.gui.GuiWinGame;
 import net.minecraft.client.gui.GuiYesNo;
+import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraft.client.gui.IProgressMeter;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
+import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.ServerList;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.particle.EntityCrit2FX;
 import net.minecraft.client.particle.EntityPickupFX;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.GameSettings;
+import net.minecraft.client.stream.MetadataAchievement;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLeashKnot;
@@ -155,6 +159,7 @@ import net.minecraft.network.play.server.S3EPacketTeams;
 import net.minecraft.network.play.server.S3FPacketCustomPayload;
 import net.minecraft.network.play.server.S40PacketDisconnect;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.realms.DisconnectedOnlineScreen;
 import net.minecraft.scoreboard.IScoreObjectiveCriteria;
 import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
@@ -525,28 +530,29 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
         double var6 = (double)p_147237_1_.func_148946_h() / 32.0D;
         float var8 = (float)(p_147237_1_.func_148941_i() * 360) / 256.0F;
         float var9 = (float)(p_147237_1_.func_148945_j() * 360) / 256.0F;
-        EntityOtherPlayerMP var10 = new EntityOtherPlayerMP(this.gameController.theWorld, p_147237_1_.func_148948_e());
-        var10.prevPosX = var10.lastTickPosX = (double)(var10.serverPosX = p_147237_1_.func_148942_f());
-        var10.prevPosY = var10.lastTickPosY = (double)(var10.serverPosY = p_147237_1_.func_148949_g());
-        var10.prevPosZ = var10.lastTickPosZ = (double)(var10.serverPosZ = p_147237_1_.func_148946_h());
-        int var11 = p_147237_1_.func_148947_k();
+        GameProfile var10 = p_147237_1_.func_148948_e();
+        EntityOtherPlayerMP var11 = new EntityOtherPlayerMP(this.gameController.theWorld, p_147237_1_.func_148948_e());
+        var11.prevPosX = var11.lastTickPosX = (double)(var11.serverPosX = p_147237_1_.func_148942_f());
+        var11.prevPosY = var11.lastTickPosY = (double)(var11.serverPosY = p_147237_1_.func_148949_g());
+        var11.prevPosZ = var11.lastTickPosZ = (double)(var11.serverPosZ = p_147237_1_.func_148946_h());
+        int var12 = p_147237_1_.func_148947_k();
 
-        if (var11 == 0)
+        if (var12 == 0)
         {
-            var10.inventory.mainInventory[var10.inventory.currentItem] = null;
+            var11.inventory.mainInventory[var11.inventory.currentItem] = null;
         }
         else
         {
-            var10.inventory.mainInventory[var10.inventory.currentItem] = new ItemStack(Item.getItemById(var11), 1, 0);
+            var11.inventory.mainInventory[var11.inventory.currentItem] = new ItemStack(Item.getItemById(var12), 1, 0);
         }
 
-        var10.setPositionAndRotation(var2, var4, var6, var8, var9);
-        this.clientWorldController.addEntityToWorld(p_147237_1_.func_148943_d(), var10);
-        List var12 = p_147237_1_.func_148944_c();
+        var11.setPositionAndRotation(var2, var4, var6, var8, var9);
+        this.clientWorldController.addEntityToWorld(p_147237_1_.func_148943_d(), var11);
+        List var13 = p_147237_1_.func_148944_c();
 
-        if (var12 != null)
+        if (var13 != null)
         {
-            var10.getDataWatcher().updateWatchedObjectsFromList(var12);
+            var11.getDataWatcher().updateWatchedObjectsFromList(var13);
         }
     }
 
@@ -779,7 +785,14 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
 
         if (this.guiScreenServer != null)
         {
-            this.gameController.displayGuiScreen(new GuiScreenDisconnectedOnline(this.guiScreenServer, "disconnect.lost", p_147231_1_));
+            if (this.guiScreenServer instanceof GuiScreenRealmsProxy)
+            {
+                this.gameController.displayGuiScreen((new DisconnectedOnlineScreen(((GuiScreenRealmsProxy)this.guiScreenServer).func_154321_a(), "disconnect.lost", p_147231_1_)).getProxy());
+            }
+            else
+            {
+                this.gameController.displayGuiScreen(new GuiDisconnected(this.guiScreenServer, "disconnect.lost", p_147231_1_));
+            }
         }
         else
         {
@@ -1503,7 +1516,9 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
             {
                 if (this.field_147308_k && this.gameController.thePlayer.func_146107_m().writeStat(var5) == 0)
                 {
-                    this.gameController.guiAchievement.func_146256_a((Achievement)var5);
+                    Achievement var7 = (Achievement)var5;
+                    this.gameController.guiAchievement.func_146256_a(var7);
+                    this.gameController.func_152346_Z().func_152911_a(new MetadataAchievement(var7), 0L);
 
                     if (var5 == AchievementList.openInventory)
                     {
@@ -1642,9 +1657,13 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
                     var5.setRecipes(var6);
                 }
             }
-            catch (IOException var7)
+            catch (IOException var10)
             {
-                logger.error("Couldn\'t load trade info", var7);
+                logger.error("Couldn\'t load trade info", var10);
+            }
+            finally
+            {
+                var2.release();
             }
         }
         else if ("MC|Brand".equals(p_147240_1_.func_149169_c()))
@@ -1653,38 +1672,35 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
         }
         else if ("MC|RPack".equals(p_147240_1_.func_149169_c()))
         {
-            final String var8 = new String(p_147240_1_.func_149168_d(), Charsets.UTF_8);
+            final String var12 = new String(p_147240_1_.func_149168_d(), Charsets.UTF_8);
 
-            if (this.gameController.gameSettings.serverTextures)
+            if (this.gameController.func_147104_D() != null && this.gameController.func_147104_D().func_152586_b() == ServerData.ServerResourceMode.ENABLED)
             {
-                if (this.gameController.func_147104_D() != null && this.gameController.func_147104_D().func_147408_b())
+                this.gameController.getResourcePackRepository().func_148526_a(var12);
+            }
+            else if (this.gameController.func_147104_D() == null || this.gameController.func_147104_D().func_152586_b() == ServerData.ServerResourceMode.PROMPT)
+            {
+                this.gameController.displayGuiScreen(new GuiYesNo(new GuiYesNoCallback()
                 {
-                    this.gameController.getResourcePackRepository().func_148526_a(var8);
-                }
-                else if (this.gameController.func_147104_D() == null || this.gameController.func_147104_D().func_147410_c())
-                {
-                    this.gameController.displayGuiScreen(new GuiYesNo(new GuiScreen()
+                    private static final String __OBFID = "CL_00000879";
+                    public void confirmClicked(boolean p_73878_1_, int p_73878_2_)
                     {
-                        private static final String __OBFID = "CL_00000879";
-                        public void confirmClicked(boolean par1, int par2)
+                        NetHandlerPlayClient.this.gameController = Minecraft.getMinecraft();
+
+                        if (NetHandlerPlayClient.this.gameController.func_147104_D() != null)
                         {
-                            this.mc = Minecraft.getMinecraft();
-
-                            if (this.mc.func_147104_D() != null)
-                            {
-                                this.mc.func_147104_D().setAcceptsTextures(par1);
-                                ServerList.func_147414_b(this.mc.func_147104_D());
-                            }
-
-                            if (par1)
-                            {
-                                this.mc.getResourcePackRepository().func_148526_a(var8);
-                            }
-
-                            this.mc.displayGuiScreen((GuiScreen)null);
+                            NetHandlerPlayClient.this.gameController.func_147104_D().func_152584_a(ServerData.ServerResourceMode.ENABLED);
+                            ServerList.func_147414_b(NetHandlerPlayClient.this.gameController.func_147104_D());
                         }
-                    }, I18n.format("multiplayer.texturePrompt.line1", new Object[0]), I18n.format("multiplayer.texturePrompt.line2", new Object[0]), 0));
-                }
+
+                        if (p_73878_1_)
+                        {
+                            NetHandlerPlayClient.this.gameController.getResourcePackRepository().func_148526_a(var12);
+                        }
+
+                        NetHandlerPlayClient.this.gameController.displayGuiScreen((GuiScreen)null);
+                    }
+                }, I18n.format("multiplayer.texturePrompt.line1", new Object[0]), I18n.format("multiplayer.texturePrompt.line2", new Object[0]), 0));
             }
         }
     }

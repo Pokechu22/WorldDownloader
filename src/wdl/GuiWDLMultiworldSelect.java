@@ -27,7 +27,7 @@ public class GuiWDLMultiworldSelect extends GuiScreen
     {
         this.parent = var1;
         EntityClientPlayerMP var2 = WDL.tp;
-        this.cam = new EntityPlayerSP(WDL.mc, WDL.wc, new Session("Camera", "", ""), var2.dimension);
+        this.cam = new EntityPlayerSP(WDL.mc, WDL.wc, new Session("Camera", "", "", "legacy"), var2.dimension);
         this.cam.setLocationAndAngles(var2.posX, var2.posY - (double)var2.yOffset, var2.posZ, var2.rotationYaw, 0.0F);
         this.yaw = var2.rotationYaw;
         this.thirdPersonViewSave = WDL.mc.gameSettings.thirdPersonView;
