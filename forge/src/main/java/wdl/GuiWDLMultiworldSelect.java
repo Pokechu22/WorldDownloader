@@ -1,4 +1,4 @@
-package net.minecraft.wdl;
+package wdl;
 
 import java.io.File;
 import java.util.Properties;

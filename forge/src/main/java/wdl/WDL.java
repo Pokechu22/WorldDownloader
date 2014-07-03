@@ -1,23 +1,15 @@
-package net.minecraft.wdl;
+package wdl;
 
-import java.io.Console;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
-import java.lang.reflect.Array;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Properties;
-import java.net.URLDecoder;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBrewingStand;
@@ -60,7 +52,6 @@ import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.tileentity.TileEntityNote;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.LongHashMap;
-import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.MinecraftException;
@@ -71,9 +62,6 @@ import net.minecraft.world.chunk.storage.RegionFileCache;
 import net.minecraft.world.storage.ISaveHandler;
 import net.minecraft.world.storage.SaveHandler;
 import net.minecraft.world.storage.ThreadedFileIOBase;
-import net.minecraft.world.storage.WorldInfo;
-
-import org.lwjgl.opengl.GL11;
 
 /**
  * This is the main class that does most of the work.

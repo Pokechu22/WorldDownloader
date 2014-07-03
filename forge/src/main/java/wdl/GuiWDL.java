@@ -1,4 +1,4 @@
-package net.minecraft.wdl;
+package wdl;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -59,11 +59,6 @@ public class GuiWDL extends GuiScreen
         this.autoStartBtn = new GuiButton(1, w - 100, hi, "Start Download: ERROR");
         this.buttonList.add(this.autoStartBtn);
         this.updateAutoStart(false);
-
-        hi += 22;
-        this.backupBtn = new GuiButton(2, w - 100, hi, "Backup Options...");
-        this.backupBtn.enabled = false;
-        this.buttonList.add(this.backupBtn);
         hi += 28;
         this.worldOverrides = new GuiButton(4, w - 100, hi, "World Overrides...");
         this.buttonList.add(this.worldOverrides);
@@ -90,10 +85,6 @@ public class GuiWDL extends GuiScreen
         if (guibutton.id == 1) // Auto start
         {
             this.updateAutoStart(true);
-        }
-        else if (guibutton.id == 2) // Backup
-        {
-            this.mc.displayGuiScreen(new GuiWDLBackup(this));
         }
         else if (guibutton.id == 4) // World Overrides
         {
