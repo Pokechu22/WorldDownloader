@@ -1,6 +1,6 @@
 [
 {
-  "modid": "WorldDownloader",
+  "modid": "WDL",
   "name": "World Downloader",
   "description": "Backup your creations from multiplayer servers",
   "version": "${version}",
