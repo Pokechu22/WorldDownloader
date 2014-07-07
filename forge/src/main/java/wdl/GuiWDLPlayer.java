@@ -48,9 +48,9 @@ public class GuiWDLPlayer extends GuiScreen
         this.posX = new GuiTextField(this.fontRendererObj, var1 - 87, var3, 50, 16);
         this.posY = new GuiTextField(this.fontRendererObj, var1 - 19, var3, 50, 16);
         this.posZ = new GuiTextField(this.fontRendererObj, var1 + 48, var3, 50, 16);
-        this.posX.func_146203_f(7);
-        this.posY.func_146203_f(7);
-        this.posZ.func_146203_f(7);
+        this.posX.setMaxStringLength(7);
+        this.posY.setMaxStringLength(7);
+        this.posZ.setMaxStringLength(7);
         var3 += 18;
         this.pickPosBtn = new GuiButton(4, var1 - 0, var3, 100, 20, "Current position");
         this.buttonList.add(this.pickPosBtn);
@@ -217,7 +217,7 @@ public class GuiWDLPlayer extends GuiScreen
     {
         String var2 = WDL.worldProps.getProperty("PlayerPos");
         this.showPosFields = false;
-        this.pickPosBtn.field_146125_m = false;
+        this.pickPosBtn.visible = false;
 
         if (var2.equals("keep"))
         {
@@ -242,7 +242,7 @@ public class GuiWDLPlayer extends GuiScreen
             {
                 this.playerPosBtn.displayString = "Player Position:";
                 this.showPosFields = true;
-                this.pickPosBtn.field_146125_m = true;
+                this.pickPosBtn.visible = true;
             }
         }
     }

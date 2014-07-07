@@ -53,9 +53,9 @@ public class GuiWDLWorld extends GuiScreen
         this.spawnX = new GuiTextField(this.fontRendererObj, var1 - 87, var3, 50, 16);
         this.spawnY = new GuiTextField(this.fontRendererObj, var1 - 19, var3, 50, 16);
         this.spawnZ = new GuiTextField(this.fontRendererObj, var1 + 48, var3, 50, 16);
-        this.spawnX.func_146203_f(7);
-        this.spawnY.func_146203_f(7);
-        this.spawnZ.func_146203_f(7);
+        this.spawnX.setMaxStringLength(7);
+        this.spawnY.setMaxStringLength(7);
+        this.spawnZ.setMaxStringLength(7);
         var3 += 18;
         this.pickSpawnBtn = new GuiButton(5, var1 - 0, var3, 100, 20, "Current position");
         this.buttonList.add(this.pickSpawnBtn);
@@ -364,7 +364,7 @@ public class GuiWDLWorld extends GuiScreen
     {
         String var2 = WDL.worldProps.getProperty("Spawn");
         this.showSpawnFields = false;
-        this.pickSpawnBtn.field_146125_m = false;
+        this.pickSpawnBtn.visible = false;
 
         if (var2.equals("auto"))
         {
@@ -401,7 +401,7 @@ public class GuiWDLWorld extends GuiScreen
             {
                 this.spawnBtn.displayString = "Spawn Position:";
                 this.showSpawnFields = true;
-                this.pickSpawnBtn.field_146125_m = true;
+                this.pickSpawnBtn.visible = true;
             }
         }
     }

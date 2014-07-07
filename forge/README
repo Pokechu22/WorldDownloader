@@ -16,4 +16,12 @@ There is no need to download the latest version! The commands in the next sectio
 * Run command: `gradlew setupDecompWorkspace`
 * Run command: `gradlew eclipse`
 
+## Building the mod
+* Open a command window in this folder (Windows: Shift+Click -> "Open command window here")
+* Run command: `gradlew build`
+* The jar file containing the mod can be found in the subfolder **build/libs**
+
+## Other gradle "tasks"
+`gradlew tasks`
+
 [More information about Forge](http://www.minecraftforge.net/forum/index.php/topic,14048.0.html)
