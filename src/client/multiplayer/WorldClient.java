@@ -123,11 +123,6 @@ public class WorldClient extends World
         this.theProfiler.endSection();
         
         /* WDL >>> */
-        if( WDL.guiToShowAsync != null )
-        {
-            WDL.mc.displayGuiScreen( WDL.guiToShowAsync );
-            WDL.guiToShowAsync = null;
-        }
         if( WDL.downloading )
         {
             if( WDL.tp.openContainer != WDL.windowContainer )
