@@ -100,8 +100,6 @@ public class WDL
     // Positions of newly created TileEntities that will overwrite the imported ones when saving:
     public static HashSet<ChunkPosition> newTileEntities = new HashSet<ChunkPosition>();
 
-    public static GuiScreen guiToShowAsync = null; // A Gui to show in the next world tick. Needed so that the mouse works.
-
     // State variables:
     public static boolean downloading = false; // Read-only outside of this class!
     public static boolean isMultiworld = false; // Is this a multiworld server?
@@ -165,16 +163,19 @@ public class WDL
         if (isMultiworld && worldName.isEmpty())
         {
             // Ask the user which world is loaded
-            guiToShowAsync = new GuiWDLMultiworldSelect(null);
+        	mc.displayGuiScreen(new GuiWDLMultiworldSelect(null));
             return;
         }
 
         if (!propsFound)
         {
             // Never seen this world before. Ask user about multiworlds:
-            guiToShowAsync = new GuiWDLMultiworld(null);
+        	mc.displayGuiScreen(new GuiWDLMultiworld(null));
             return;
         }
+        
+        WDL.mc.displayGuiScreen((GuiScreen)null);
+        WDL.mc.setIngameFocus();
 
         worldProps = loadWorldProps(worldName);
 

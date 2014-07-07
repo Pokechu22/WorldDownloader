@@ -109,14 +109,14 @@ public class GuiIngameMenu extends GuiScreen
                 if (WDL.downloading)
                 {
                     WDL.stop();
+                    WDL.mc.displayGuiScreen((GuiScreen)null);
+                    WDL.mc.setIngameFocus();
                 }
                 else
                 {
                     WDL.start();
                 }
-
-                this.mc.displayGuiScreen((GuiScreen)null);
-                this.mc.setIngameFocus();
+                
                 break;
 
             case 51:
