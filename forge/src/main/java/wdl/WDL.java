@@ -9,6 +9,7 @@ import java.io.FileWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Properties;
 
 import net.minecraft.block.Block;
@@ -19,6 +20,8 @@ import net.minecraft.block.BlockFurnace;
 import net.minecraft.block.BlockNote;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiIngameMenu;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.ChunkProviderClient;
 import net.minecraft.client.multiplayer.WorldClient;
@@ -164,7 +167,6 @@ public class WDL
         if (isMultiworld && worldName.isEmpty())
         {
             // Ask the user which world is loaded
-            //guiToShowAsync = new GuiWDLMultiworldSelect(null);
         	mc.displayGuiScreen(new GuiWDLMultiworldSelect(null));
             return;
         }
@@ -172,7 +174,6 @@ public class WDL
         if (!propsFound)
         {
             // Never seen this world before. Ask user about multiworlds:
-            //guiToShowAsync = new GuiWDLMultiworld(null);
         	mc.displayGuiScreen(new GuiWDLMultiworld(null));
             return;
         }
@@ -1316,5 +1317,77 @@ public class WDL
         /*
          * else { WDL.chatMsg("Could not retrieve server seed"); }
          */
+    }
+    
+    // Add World Downloader buttons to GuiIngameMenu
+    public static void injectWDLButtons(GuiIngameMenu gui, List buttonList)
+    {
+    	if (mc.isIntegratedServerRunning())
+    	{
+    		return; // WDL not available if in singleplayer or LAN server mode
+    	}
+    	
+    	int insertAtYPos = 0;
+    	for( Object obj : buttonList)
+    	{
+    		GuiButton btn = (GuiButton)obj;
+    		if(btn.id == 5) // Button "Achievements"
+    		{
+    			insertAtYPos = btn.yPosition + btn.height + 4;
+    			break;
+    		}
+    	}
+    	
+    	// Move other buttons down one slot (= 24 height units)
+    	for( Object obj : buttonList)
+    	{
+    		GuiButton btn = (GuiButton)obj;
+    		if(btn.yPosition >= insertAtYPos)
+    		{
+    			btn.yPosition += 24;
+    		}
+    	}
+    	
+    	// Insert buttons... The IDs are chosen to be unique (hopefully). They are ASCII encoded strings: "WDLs" and "WDLo"
+    	GuiButton wdlDownload = new GuiButton(0x57444C73, gui.width / 2 - 100, insertAtYPos, 170, 20, "WDL bug!");
+        GuiButton wdlOptions = new GuiButton(0x57444C6F, gui.width / 2 + 71, insertAtYPos, 28, 20, "...");
+    	
+        wdlDownload.displayString = (WDL.downloading ? (WDL.saving ? "Still saving..." : "Stop download") : "Download this world");
+        wdlDownload.enabled = (!WDL.downloading || (WDL.downloading && !WDL.saving));
+
+        wdlOptions.enabled = (!WDL.downloading || (WDL.downloading && !WDL.saving));
+        
+        buttonList.add(wdlDownload);
+        buttonList.add(wdlOptions);
+    }
+    
+    public static void handleWDLButtonClick(GuiIngameMenu gui, GuiButton button)
+    {
+    	if (mc.isIntegratedServerRunning())
+    	{
+    		return; // WDL not available if in singleplayer or LAN server mode
+    	}
+    		
+    	if(button.id == 0x57444C73) // "Start/Stop Download"
+    	{
+            if (WDL.downloading)
+            {
+                WDL.stop();
+                WDL.mc.displayGuiScreen((GuiScreen)null);
+                WDL.mc.setIngameFocus();
+            }
+            else
+            {
+                WDL.start();
+            }
+    	}
+    	else if( button.id == 0x57444C6F) // "..." (options)
+    	{
+    		WDL.mc.displayGuiScreen(new GuiWDL(gui));
+    	}
+    	else if( button.id == 1) // "Disconnect"
+    	{
+    		WDL.stop();
+    	}
     }
 }

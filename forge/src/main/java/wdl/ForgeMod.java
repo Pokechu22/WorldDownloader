@@ -1,10 +1,6 @@
 package wdl;
 
-import java.util.List;
-
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiIngameMenu;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
@@ -119,9 +115,9 @@ public class ForgeMod
     @SubscribeEvent
     public void onGuiDrawn(InitGuiEvent.Post event)
     {
-    	if(!WDL.mc.isIntegratedServerRunning() && event.gui instanceof GuiIngameMenu)
+    	if(event.gui instanceof GuiIngameMenu)
     	{
-    		injectWDLButtons((GuiIngameMenu)event.gui, event.buttonList);
+    		WDL.injectWDLButtons((GuiIngameMenu)event.gui, event.buttonList);
     	}
     	
     	if(WDL.downloading)
@@ -140,9 +136,9 @@ public class ForgeMod
     @SubscribeEvent
     public void onGuiButtonClicked(ActionPerformedEvent.Pre event)
     {
-    	if(!WDL.mc.isIntegratedServerRunning() && event.gui instanceof GuiIngameMenu)
+    	if(event.gui instanceof GuiIngameMenu)
     	{
-    		handleWDLButtonClick((GuiIngameMenu)event.gui, event.button);
+    		WDL.handleWDLButtonClick((GuiIngameMenu)event.gui, event.button);
     	}
     }
     
@@ -151,67 +147,5 @@ public class ForgeMod
     {
     	WDL.handleServerSeedMessage(event.message.getFormattedText());
     }
-    
-    
-    // Add World Downloader buttons to GuiIngameMenu
-    private void injectWDLButtons(GuiIngameMenu gui, List buttonList)
-    {
-    	int insertAtYPos = 0;
-    	for( Object obj : buttonList)
-    	{
-    		GuiButton btn = (GuiButton)obj;
-    		if(btn.id == 5) // Button "Achievements"
-    		{
-    			insertAtYPos = btn.yPosition + btn.height + 4;
-    			break;
-    		}
-    	}
-    	
-    	// Move other buttons down one slot (= 24 height units)
-    	for( Object obj : buttonList)
-    	{
-    		GuiButton btn = (GuiButton)obj;
-    		if(btn.yPosition >= insertAtYPos)
-    		{
-    			btn.yPosition += 24;
-    		}
-    	}
-    	
-    	// Insert buttons... The IDs are chosen to be unique (hopefully). They are ASCII encoded strings: "WDLs" and "WDLo"
-    	GuiButton wdlDownload = new GuiButton(0x57444C73, gui.width / 2 - 100, insertAtYPos, 170, 20, "WDL bug!");
-        GuiButton wdlOptions = new GuiButton(0x57444C6F, gui.width / 2 + 71, insertAtYPos, 28, 20, "...");
-    	
-        wdlDownload.displayString = (WDL.downloading ? (WDL.saving ? "Still saving..." : "Stop download") : "Download this world");
-        wdlDownload.enabled = (!WDL.downloading || (WDL.downloading && !WDL.saving));
 
-        wdlOptions.enabled = (!WDL.downloading || (WDL.downloading && !WDL.saving));
-        
-        buttonList.add(wdlDownload);
-        buttonList.add(wdlOptions);
-    }
-    
-    private void handleWDLButtonClick(GuiIngameMenu gui, GuiButton button)
-    {
-    	if(button.id == 0x57444C73) // "Start/Stop Download"
-    	{
-            if (WDL.downloading)
-            {
-                WDL.stop();
-                WDL.mc.displayGuiScreen((GuiScreen)null);
-                WDL.mc.setIngameFocus();
-            }
-            else
-            {
-                WDL.start();
-            }
-    	}
-    	else if( button.id == 0x57444C6F) // "..." (options)
-    	{
-    		WDL.mc.displayGuiScreen(new GuiWDL(gui));
-    	}
-    	else if( button.id == 1) // "Disconnect"
-    	{
-    		WDL.stop();
-    	}
-    }
 }
