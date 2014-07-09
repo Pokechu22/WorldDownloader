@@ -1,23 +1,16 @@
-package net.minecraft.wdl;
+package wdl;
 
-import java.io.Console;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
-import java.lang.reflect.Array;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
-import java.net.URLDecoder;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBrewingStand;
@@ -27,14 +20,31 @@ import net.minecraft.block.BlockFurnace;
 import net.minecraft.block.BlockNote;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiIngameMenu;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.ChunkProviderClient;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.boss.EntityDragon;
+import net.minecraft.entity.item.EntityBoat;
+import net.minecraft.entity.item.EntityEnderEye;
+import net.minecraft.entity.item.EntityEnderPearl;
+import net.minecraft.entity.item.EntityExpBottle;
+import net.minecraft.entity.item.EntityFallingBlock;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.item.EntityMinecartChest;
+import net.minecraft.entity.item.EntityPainting;
+import net.minecraft.entity.item.EntityTNTPrimed;
+import net.minecraft.entity.item.EntityXPOrb;
+import net.minecraft.entity.passive.EntitySquid;
 import net.minecraft.entity.passive.EntityVillager;
+import net.minecraft.entity.passive.IAnimals;
+import net.minecraft.entity.projectile.EntityEgg;
+import net.minecraft.entity.projectile.EntityFishHook;
+import net.minecraft.entity.projectile.EntityPotion;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ContainerBrewingStand;
@@ -60,7 +70,6 @@ import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.tileentity.TileEntityNote;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.LongHashMap;
-import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.MinecraftException;
@@ -71,9 +80,6 @@ import net.minecraft.world.chunk.storage.RegionFileCache;
 import net.minecraft.world.storage.ISaveHandler;
 import net.minecraft.world.storage.SaveHandler;
 import net.minecraft.world.storage.ThreadedFileIOBase;
-import net.minecraft.world.storage.WorldInfo;
-
-import org.lwjgl.opengl.GL11;
 
 /**
  * This is the main class that does most of the work.
@@ -81,6 +87,7 @@ import org.lwjgl.opengl.GL11;
 public class WDL
 {
     public static boolean DEBUG = false; // Setting to false will supress debug output in chat console
+    
     // References:
     public static Minecraft mc; // Reference to the Minecraft object
     public static WorldClient wc; // Reference to the World object that WDL uses
@@ -99,7 +106,7 @@ public class WDL
 
     // Positions of newly created TileEntities that will overwrite the imported ones when saving:
     public static HashSet<ChunkPosition> newTileEntities = new HashSet<ChunkPosition>();
-
+    
     // State variables:
     public static boolean downloading = false; // Read-only outside of this class!
     public static boolean isMultiworld = false; // Is this a multiworld server?
@@ -121,19 +128,14 @@ public class WDL
     // Initialization:
     static
     {
-        // Get the static Minecraft reference:
-        mc = (Minecraft)stealAndGetField(Minecraft.class, Minecraft.class);
-
+        mc = Minecraft.getMinecraft();
+        
         // Initialize the Properties template:
         defaultProps = new Properties();
         defaultProps.setProperty("ServerName", "");
         defaultProps.setProperty("WorldName", "");
         defaultProps.setProperty("LinkedWorlds", "");
         defaultProps.setProperty("AutoStart", "false");
-        defaultProps.setProperty("Backup", "off");
-        defaultProps.setProperty("BackupPath", ""); // Represents folder or zip-file name
-        defaultProps.setProperty("BackupsToKeep", "1");
-        defaultProps.setProperty("BackupCommand", "");
         defaultProps.setProperty("GameType", "keep");
         defaultProps.setProperty("Time", "keep");
         defaultProps.setProperty("Weather", "keep");
@@ -163,14 +165,14 @@ public class WDL
         if (isMultiworld && worldName.isEmpty())
         {
             // Ask the user which world is loaded
-        	mc.displayGuiScreen(new GuiWDLMultiworldSelect(null));
+            mc.displayGuiScreen(new GuiWDLMultiworldSelect(null));
             return;
         }
 
         if (!propsFound)
         {
             // Never seen this world before. Ask user about multiworlds:
-        	mc.displayGuiScreen(new GuiWDLMultiworld(null));
+            mc.displayGuiScreen(new GuiWDLMultiworld(null));
             return;
         }
         
@@ -467,14 +469,68 @@ public class WDL
         if (block == Blocks.noteblock)
         {
             TileEntityNote newTE = new TileEntityNote();
-            newTE.field_145879_a = (byte)(param % 25);
+            newTE.note = (byte)(param % 25);
             wc.setTileEntity(x, y, z, newTE);
             newTileEntities.add(new ChunkPosition(x, y, z));
             chatDebug("onBlockEvent: Note Block: " + x + " " + y + " " + z + " pitch: " + param + " - " + newTE);
         }
         // Pistons, Chests (open, close), EnderChests, ... (see references to WorldServer.addBlockEvent)
     }
-
+    
+    
+    /**
+     * Must be called when an entity is about to be removed from the world.
+     * @return true if the entity should not be removed, false if it can be
+     */
+    public static boolean shouldKeepEntity(Entity entity)
+    {
+        // If the entity is being removed and it's outside the default tracking range,
+        // go ahead and remember it until the chunk is saved.
+        if(WDL.downloading)
+        {
+            if(entity != null)
+            {
+                int threshold = 0;
+                if ((entity instanceof EntityFishHook) ||
+                    //(entity instanceof EntityArrow) ||
+                    //(entity instanceof EntitySmallFireball) ||
+                    //(entity instanceof EntitySnowball) ||
+                    (entity instanceof EntityEnderPearl) ||
+                    (entity instanceof EntityEnderEye) ||
+                    (entity instanceof EntityEgg) ||
+                    (entity instanceof EntityPotion) ||
+                    (entity instanceof EntityExpBottle) ||
+                    (entity instanceof EntityItem) ||
+                    (entity instanceof EntitySquid))
+                {
+                    threshold = 64;
+                }
+                else if ((entity instanceof EntityMinecart) ||
+                         (entity instanceof EntityBoat) ||
+                         (entity instanceof IAnimals))
+                {
+                    threshold = 80;
+                }
+                else if ((entity instanceof EntityDragon) ||
+                         (entity instanceof EntityTNTPrimed) ||
+                         (entity instanceof EntityFallingBlock) ||
+                         (entity instanceof EntityPainting) ||
+                         (entity instanceof EntityXPOrb))
+                {
+                    threshold = 160;
+                }
+                double distance = entity.getDistance(WDL.tp.posX, entity.posY, WDL.tp.posZ);
+                if( distance > (double)threshold)
+                {
+                    WDL.chatDebug("removeEntityFromWorld: Refusing to remove " + EntityList.getEntityString(entity) + " at distance " + distance);
+                    return true;
+                }
+                WDL.chatDebug("removeEntityFromWorld: Removing " + EntityList.getEntityString(entity) + " at distance " + distance);
+            }
+        }
+        return false;
+    }
+    
     /** Load the previously saved TileEntities and add them to the Chunk **/
     public static void importTileEntities(Chunk chunk)
     {
@@ -498,19 +554,19 @@ public class WDL
                     String entityType = null;
                     if ((entityType = isImportableTileEntity(te)) != null)
                     {
-                        if (!newTileEntities.contains(new ChunkPosition(te.field_145851_c, te.field_145848_d, te.field_145849_e)))
+                        if (!newTileEntities.contains(new ChunkPosition(te.xCoord, te.yCoord, te.zCoord)))
                         {
-                            wc.setTileEntity(te.field_145851_c, te.field_145848_d, te.field_145849_e, te);
-                            chatDebug("Loaded TE: " + entityType + " at " + te.field_145851_c + " " + te.field_145848_d + " " + te.field_145849_e);
+                            wc.setTileEntity(te.xCoord, te.yCoord, te.zCoord, te);
+                            chatDebug("Loaded TE: " + entityType + " at " + te.xCoord + " " + te.yCoord + " " + te.zCoord);
                         }
                         else
                         {
-                            chatDebug("Dropping old TE: " + entityType + " at " + te.field_145851_c + " " + te.field_145848_d + " " + te.field_145849_e);
+                            chatDebug("Dropping old TE: " + entityType + " at " + te.xCoord + " " + te.yCoord + " " + te.zCoord);
                         }
                     }
                     else
                     {
-                        chatDebug("Old TE is not importable: " + entityType + " at " + te.field_145851_c + " " + te.field_145848_d + " " + te.field_145849_e);
+                        chatDebug("Old TE is not importable: " + entityType + " at " + te.xCoord + " " + te.yCoord + " " + te.zCoord);
                     }
                 }
             }
@@ -523,7 +579,7 @@ public class WDL
     /** Checks if the TileEntity should be imported. Only "problematic" TEs will be imported. */
     public static String isImportableTileEntity(TileEntity te)
     {
-        Block block = wc.getBlock(te.field_145851_c, te.field_145848_d, te.field_145849_e);
+        Block block = wc.getBlock(te.xCoord, te.yCoord, te.zCoord);
         if (block instanceof BlockChest && te instanceof TileEntityChest)
         {
             return "TileEntityChest";
@@ -584,12 +640,10 @@ public class WDL
         }
         catch (IllegalArgumentException e)
         {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         catch (IllegalAccessException e)
         {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -1132,7 +1186,7 @@ public class WDL
     public static void chatMsg(String msg)
     {
         // System.out.println( "WorldDownloader: " + msg ); // Just for debugging!
-        mc.ingameGUI.getChatGUI().func_146227_a(new ChatComponentText("\u00A7c[WorldDL]\u00A76 " + msg));
+        mc.ingameGUI.getChatGUI().printChatMessage(new ChatComponentText("\u00A7c[WorldDL]\u00A76 " + msg));
     }
 
     /** Adds a chat message with a World Downloader prefix */
@@ -1141,14 +1195,14 @@ public class WDL
         if (!WDL.DEBUG)
             return;
         // System.out.println( "WorldDownloader: " + msg ); // Just for debugging!
-        mc.ingameGUI.getChatGUI().func_146227_a(new ChatComponentText("\u00A72[WorldDL]\u00A76 " + msg));
+        mc.ingameGUI.getChatGUI().printChatMessage(new ChatComponentText("\u00A72[WorldDL]\u00A76 " + msg));
     }
     
     /** Adds a chat message with a World Downloader prefix */
     public static void chatError(String msg)
     {
         // System.out.println( "WorldDownloader: " + msg ); // Just for debugging!
-        mc.ingameGUI.getChatGUI().func_146227_a(new ChatComponentText("\u00A72[WorldDL]\u00A74 " + msg));
+        mc.ingameGUI.getChatGUI().printChatMessage(new ChatComponentText("\u00A72[WorldDL]\u00A74 " + msg));
     }
 
     
@@ -1169,7 +1223,6 @@ public class WDL
             }
         } catch (Throwable t)
         {
-            // TODO Auto-generated catch block
             t.printStackTrace();
         }
         if (saveVersion == 0)
@@ -1261,5 +1314,77 @@ public class WDL
         /*
          * else { WDL.chatMsg("Could not retrieve server seed"); }
          */
+    }
+    
+    // Add World Downloader buttons to GuiIngameMenu
+    public static void injectWDLButtons(GuiIngameMenu gui, List buttonList)
+    {
+        if (mc.isIntegratedServerRunning())
+        {
+            return; // WDL not available if in singleplayer or LAN server mode
+        }
+        
+        int insertAtYPos = 0;
+        for( Object obj : buttonList)
+        {
+            GuiButton btn = (GuiButton)obj;
+            if(btn.id == 5) // Button "Achievements"
+            {
+                insertAtYPos = btn.yPosition + 24;
+                break;
+            }
+        }
+        
+        // Move other buttons down one slot (= 24 height units)
+        for( Object obj : buttonList)
+        {
+            GuiButton btn = (GuiButton)obj;
+            if(btn.yPosition >= insertAtYPos)
+            {
+                btn.yPosition += 24;
+            }
+        }
+        
+        // Insert buttons... The IDs are chosen to be unique (hopefully). They are ASCII encoded strings: "WDLs" and "WDLo"
+        GuiButton wdlDownload = new GuiButton(0x57444C73, gui.width / 2 - 100, insertAtYPos, 170, 20, "WDL bug!");
+        GuiButton wdlOptions = new GuiButton(0x57444C6F, gui.width / 2 + 71, insertAtYPos, 28, 20, "...");
+        
+        wdlDownload.displayString = (WDL.downloading ? (WDL.saving ? "Still saving..." : "Stop download") : "Download this world");
+        wdlDownload.enabled = (!WDL.downloading || (WDL.downloading && !WDL.saving));
+
+        wdlOptions.enabled = (!WDL.downloading || (WDL.downloading && !WDL.saving));
+        
+        buttonList.add(wdlDownload);
+        buttonList.add(wdlOptions);
+    }
+    
+    public static void handleWDLButtonClick(GuiIngameMenu gui, GuiButton button)
+    {
+        if (mc.isIntegratedServerRunning())
+        {
+            return; // WDL not available if in singleplayer or LAN server mode
+        }
+            
+        if(button.id == 0x57444C73) // "Start/Stop Download"
+        {
+            if (WDL.downloading)
+            {
+                WDL.stop();
+                WDL.mc.displayGuiScreen((GuiScreen)null);
+                WDL.mc.setIngameFocus();
+            }
+            else
+            {
+                WDL.start();
+            }
+        }
+        else if( button.id == 0x57444C6F) // "..." (options)
+        {
+            WDL.mc.displayGuiScreen(new GuiWDL(gui));
+        }
+        else if( button.id == 1) // "Disconnect"
+        {
+            WDL.stop();
+        }
     }
 }

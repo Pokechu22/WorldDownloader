@@ -32,28 +32,6 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.storage.SaveHandlerMP;
 
-/* WDL >>> */
-import net.minecraft.entity.EntityList;
-import net.minecraft.entity.boss.EntityDragon;
-import net.minecraft.entity.item.EntityBoat;
-import net.minecraft.entity.item.EntityEnderEye;
-import net.minecraft.entity.item.EntityEnderPearl;
-import net.minecraft.entity.item.EntityExpBottle;
-import net.minecraft.entity.item.EntityFallingBlock;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.item.EntityPainting;
-import net.minecraft.entity.item.EntityTNTPrimed;
-import net.minecraft.entity.item.EntityXPOrb;
-import net.minecraft.entity.passive.EntitySquid;
-import net.minecraft.entity.passive.IAnimals;
-import net.minecraft.entity.projectile.EntityEgg;
-import net.minecraft.entity.projectile.EntityFishHook;
-import net.minecraft.entity.projectile.EntityPotion;
-import net.minecraft.wdl.WDL;
-import net.minecraft.world.IWorldAccess;
-/* <<< WDL */
-
-
 public class WorldClient extends World
 {
     /** The packets that need to be sent to the server. */
@@ -123,15 +101,15 @@ public class WorldClient extends World
         this.theProfiler.endSection();
         
         /* WDL >>> */
-        if( WDL.downloading )
+        if( wdl.WDL.downloading )
         {
-            if( WDL.tp.openContainer != WDL.windowContainer )
+            if( wdl.WDL.tp.openContainer != wdl.WDL.windowContainer )
             {
-                if( WDL.tp.openContainer == WDL.tp.inventoryContainer )
-                    WDL.onItemGuiClosed();
+                if( wdl.WDL.tp.openContainer == wdl.WDL.tp.inventoryContainer )
+                    wdl.WDL.onItemGuiClosed();
                 else
-                    WDL.onItemGuiOpened();
-                WDL.windowContainer = WDL.tp.openContainer;
+                    wdl.WDL.onItemGuiOpened();
+                wdl.WDL.windowContainer = wdl.WDL.tp.openContainer;
             }
         }
         /* <<< WDL */
@@ -193,8 +171,7 @@ public class WorldClient extends World
         if (p_73025_3_)
         {
             /* WDL >>> */
-            if( this != WDL.wc )
-                WDL.onWorldLoad();
+            if( this != wdl.WDL.wc ) wdl.WDL.onWorldLoad();
             /* <<< WDL */
             
             this.clientChunkProvider.loadChunk(p_73025_1_, p_73025_2_);
@@ -202,8 +179,7 @@ public class WorldClient extends World
         else
         {
             /* WDL >>> */
-            if( WDL.downloading )
-                WDL.onChunkNoLongerNeeded( chunkProvider.provideChunk(p_73025_1_, p_73025_2_) );
+            if( wdl.WDL.downloading ) wdl.WDL.onChunkNoLongerNeeded( chunkProvider.provideChunk(p_73025_1_, p_73025_2_) );
             /* <<< WDL */
             
             this.clientChunkProvider.unloadChunk(p_73025_1_, p_73025_2_);
@@ -316,55 +292,11 @@ public class WorldClient extends World
 
     public Entity removeEntityFromWorld(int p_73028_1_)
     {
-        /* WDL >>> */
-        // If the entity is being removed and it's outside the default tracking range,
-        // go ahead and remember it until the chunk is saved.
-        if(WDL.downloading)
-        {
-            Entity entity = (Entity)this.getEntityByID(p_73028_1_);
-            if(entity != null)
-            {
-                int threshold = 0;
-                if ((entity instanceof EntityFishHook) ||
-                    //(entity instanceof EntityArrow) ||
-                    //(entity instanceof EntitySmallFireball) ||
-                    //(entity instanceof EntitySnowball) ||
-                    (entity instanceof EntityEnderPearl) ||
-                    (entity instanceof EntityEnderEye) ||
-                    (entity instanceof EntityEgg) ||
-                    (entity instanceof EntityPotion) ||
-                    (entity instanceof EntityExpBottle) ||
-                    (entity instanceof EntityItem) ||
-                    (entity instanceof EntitySquid))
-                {
-                    threshold = 64;
-                }
-                else if ((entity instanceof EntityMinecart) ||
-                         (entity instanceof EntityBoat) ||
-                         (entity instanceof IAnimals))
-                {
-                    threshold = 80;
-                }
-                else if ((entity instanceof EntityDragon) ||
-                         (entity instanceof EntityTNTPrimed) ||
-                         (entity instanceof EntityFallingBlock) ||
-                         (entity instanceof EntityPainting) ||
-                         (entity instanceof EntityXPOrb))
-                {
-                    threshold = 160;
-                }
-                double distance = entity.getDistance(WDL.tp.posX, entity.posY, WDL.tp.posZ);
-                if( distance > (double)threshold)
-                {
-                    WDL.chatDebug("removeEntityFromWorld: Refusing to remove " + EntityList.getEntityString(entity) + " at distance " + distance);
-                    return null;
-                }
-                WDL.chatDebug("removeEntityFromWorld: Removing " + EntityList.getEntityString(entity) + " at distance " + distance);
-            }
-        }
-        /* <<< WDL */
-        
         Entity var2 = (Entity)this.entityHashSet.removeObject(p_73028_1_);
+        
+        /* WDL >>> */
+        if(wdl.WDL.shouldKeepEntity(var2)) return null;
+        /* <<< WDL */
 
         if (var2 != null)
         {
@@ -582,21 +514,11 @@ public class WorldClient extends World
     
     /* WDL >>> */
     @Override
-    public void removeWorldAccess(IWorldAccess par1iWorldAccess)
-    {
-        super.removeWorldAccess(par1iWorldAccess);
-        // the old world: this (!= null)
-        // the new world: mc.theWorld (!= null)
-        //if( WDL.downloading )
-        // WDL.onWorldUnload();
-    }
-
-    @Override
     public void func_147452_c(int par1, int par2, int par3, Block par4, int par5, int par6)
     {
         super.func_147452_c(par1, par2, par3, par4, par5, par6);
-        if( WDL.downloading )
-            WDL.onBlockEvent( par1, par2, par3, par4, par5, par6 );
+        if( wdl.WDL.downloading )
+            wdl.WDL.onBlockEvent( par1, par2, par3, par4, par5, par6 );
     }
     /* <<< WDL */
 }
