@@ -196,10 +196,6 @@ import net.minecraft.world.storage.MapStorage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-/* WDL >>> */
-import net.minecraft.wdl.WDL;
-/* <<< WDL */
-
 public class NetHandlerPlayClient implements INetHandlerPlayClient
 {
     private static final Logger logger = LogManager.getLogger();
@@ -743,9 +739,9 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
     public void handleDisconnect(S40PacketDisconnect p_147253_1_)
     {
         /* WDL >>> */
-        if (WDL.downloading)
+        if (wdl.WDL.downloading)
         {
-            WDL.stop();
+            wdl.WDL.stop();
 
             try
             {
@@ -767,9 +763,9 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
     public void onDisconnect(IChatComponent p_147231_1_)
     {
         /* WDL >>> */
-        if (WDL.downloading)
+        if (wdl.WDL.downloading)
         {
-            WDL.stop();
+            wdl.WDL.stop();
 
             try
             {
@@ -838,10 +834,10 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
     {
         /* WDL >>> */
         String var2 = p_147251_1_.func_148915_c().getFormattedText();
-        WDL.handleServerSeedMessage(var2);
+        wdl.WDL.handleServerSeedMessage(var2);
         /* <<< WDL */
 
-        this.gameController.ingameGUI.getChatGUI().func_146227_a(p_147251_1_.func_148915_c());
+        this.gameController.ingameGUI.getChatGUI().printChatMessage(p_147251_1_.func_148915_c());
     }
 
     /**
@@ -1262,9 +1258,9 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
         {
             var2 = new TileEntitySign();
             ((TileEntity)var2).setWorldObj(this.clientWorldController);
-            ((TileEntity)var2).field_145851_c = p_147268_1_.func_149129_c();
-            ((TileEntity)var2).field_145848_d = p_147268_1_.func_149128_d();
-            ((TileEntity)var2).field_145849_e = p_147268_1_.func_149127_e();
+            ((TileEntity)var2).xCoord = p_147268_1_.func_149129_c();
+            ((TileEntity)var2).yCoord = p_147268_1_.func_149128_d();
+            ((TileEntity)var2).zCoord = p_147268_1_.func_149127_e();
         }
 
         this.gameController.thePlayer.func_146100_a((TileEntity)var2);
@@ -1449,15 +1445,15 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
             }
             else if (var4 == 101.0F)
             {
-                this.gameController.ingameGUI.getChatGUI().func_146227_a(new ChatComponentTranslation("demo.help.movement", new Object[] {GameSettings.getKeyDisplayString(var6.keyBindForward.getKeyCode()), GameSettings.getKeyDisplayString(var6.keyBindLeft.getKeyCode()), GameSettings.getKeyDisplayString(var6.keyBindBack.getKeyCode()), GameSettings.getKeyDisplayString(var6.keyBindRight.getKeyCode())}));
+                this.gameController.ingameGUI.getChatGUI().printChatMessage(new ChatComponentTranslation("demo.help.movement", new Object[] {GameSettings.getKeyDisplayString(var6.keyBindForward.getKeyCode()), GameSettings.getKeyDisplayString(var6.keyBindLeft.getKeyCode()), GameSettings.getKeyDisplayString(var6.keyBindBack.getKeyCode()), GameSettings.getKeyDisplayString(var6.keyBindRight.getKeyCode())}));
             }
             else if (var4 == 102.0F)
             {
-                this.gameController.ingameGUI.getChatGUI().func_146227_a(new ChatComponentTranslation("demo.help.jump", new Object[] {GameSettings.getKeyDisplayString(var6.keyBindJump.getKeyCode())}));
+                this.gameController.ingameGUI.getChatGUI().printChatMessage(new ChatComponentTranslation("demo.help.jump", new Object[] {GameSettings.getKeyDisplayString(var6.keyBindJump.getKeyCode())}));
             }
             else if (var4 == 103.0F)
             {
-                this.gameController.ingameGUI.getChatGUI().func_146227_a(new ChatComponentTranslation("demo.help.inventory", new Object[] {GameSettings.getKeyDisplayString(var6.keyBindInventory.getKeyCode())}));
+                this.gameController.ingameGUI.getChatGUI().printChatMessage(new ChatComponentTranslation("demo.help.inventory", new Object[] {GameSettings.getKeyDisplayString(var6.keyBindInventory.getKeyCode())}));
             }
         }
         else if (var3 == 6)

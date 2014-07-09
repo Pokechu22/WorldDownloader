@@ -1,4 +1,4 @@
-package net.minecraft.wdl;
+package wdl;
 
 public class WDLSaveProgressReporter implements Runnable
 {
