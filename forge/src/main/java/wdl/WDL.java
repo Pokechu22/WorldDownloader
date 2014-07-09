@@ -106,9 +106,7 @@ public class WDL
 
     // Positions of newly created TileEntities that will overwrite the imported ones when saving:
     public static HashSet<ChunkPosition> newTileEntities = new HashSet<ChunkPosition>();
-
-    public static GuiScreen guiToShowAsync = null; // A Gui to show in the next world tick. Needed so that the mouse works.
-
+    
     // State variables:
     public static boolean downloading = false; // Read-only outside of this class!
     public static boolean isMultiworld = false; // Is this a multiworld server?
@@ -130,8 +128,8 @@ public class WDL
     // Initialization:
     static
     {
-    	mc = Minecraft.getMinecraft();
-    	
+        mc = Minecraft.getMinecraft();
+        
         // Initialize the Properties template:
         defaultProps = new Properties();
         defaultProps.setProperty("ServerName", "");
@@ -167,14 +165,14 @@ public class WDL
         if (isMultiworld && worldName.isEmpty())
         {
             // Ask the user which world is loaded
-        	mc.displayGuiScreen(new GuiWDLMultiworldSelect(null));
+            mc.displayGuiScreen(new GuiWDLMultiworldSelect(null));
             return;
         }
 
         if (!propsFound)
         {
             // Never seen this world before. Ask user about multiworlds:
-        	mc.displayGuiScreen(new GuiWDLMultiworld(null));
+            mc.displayGuiScreen(new GuiWDLMultiworld(null));
             return;
         }
         
@@ -480,7 +478,6 @@ public class WDL
     }
     
     
-    // TODO: Change this in WorldClient.java line 324
     /**
      * Must be called when an entity is about to be removed from the world.
      * @return true if the entity should not be removed, false if it can be
@@ -1322,36 +1319,36 @@ public class WDL
     // Add World Downloader buttons to GuiIngameMenu
     public static void injectWDLButtons(GuiIngameMenu gui, List buttonList)
     {
-    	if (mc.isIntegratedServerRunning())
-    	{
-    		return; // WDL not available if in singleplayer or LAN server mode
-    	}
-    	
-    	int insertAtYPos = 0;
-    	for( Object obj : buttonList)
-    	{
-    		GuiButton btn = (GuiButton)obj;
-    		if(btn.id == 5) // Button "Achievements"
-    		{
-    			insertAtYPos = btn.yPosition + btn.height + 4;
-    			break;
-    		}
-    	}
-    	
-    	// Move other buttons down one slot (= 24 height units)
-    	for( Object obj : buttonList)
-    	{
-    		GuiButton btn = (GuiButton)obj;
-    		if(btn.yPosition >= insertAtYPos)
-    		{
-    			btn.yPosition += 24;
-    		}
-    	}
-    	
-    	// Insert buttons... The IDs are chosen to be unique (hopefully). They are ASCII encoded strings: "WDLs" and "WDLo"
-    	GuiButton wdlDownload = new GuiButton(0x57444C73, gui.width / 2 - 100, insertAtYPos, 170, 20, "WDL bug!");
+        if (mc.isIntegratedServerRunning())
+        {
+            return; // WDL not available if in singleplayer or LAN server mode
+        }
+        
+        int insertAtYPos = 0;
+        for( Object obj : buttonList)
+        {
+            GuiButton btn = (GuiButton)obj;
+            if(btn.id == 5) // Button "Achievements"
+            {
+                insertAtYPos = btn.yPosition + 24;
+                break;
+            }
+        }
+        
+        // Move other buttons down one slot (= 24 height units)
+        for( Object obj : buttonList)
+        {
+            GuiButton btn = (GuiButton)obj;
+            if(btn.yPosition >= insertAtYPos)
+            {
+                btn.yPosition += 24;
+            }
+        }
+        
+        // Insert buttons... The IDs are chosen to be unique (hopefully). They are ASCII encoded strings: "WDLs" and "WDLo"
+        GuiButton wdlDownload = new GuiButton(0x57444C73, gui.width / 2 - 100, insertAtYPos, 170, 20, "WDL bug!");
         GuiButton wdlOptions = new GuiButton(0x57444C6F, gui.width / 2 + 71, insertAtYPos, 28, 20, "...");
-    	
+        
         wdlDownload.displayString = (WDL.downloading ? (WDL.saving ? "Still saving..." : "Stop download") : "Download this world");
         wdlDownload.enabled = (!WDL.downloading || (WDL.downloading && !WDL.saving));
 
@@ -1363,13 +1360,13 @@ public class WDL
     
     public static void handleWDLButtonClick(GuiIngameMenu gui, GuiButton button)
     {
-    	if (mc.isIntegratedServerRunning())
-    	{
-    		return; // WDL not available if in singleplayer or LAN server mode
-    	}
-    		
-    	if(button.id == 0x57444C73) // "Start/Stop Download"
-    	{
+        if (mc.isIntegratedServerRunning())
+        {
+            return; // WDL not available if in singleplayer or LAN server mode
+        }
+            
+        if(button.id == 0x57444C73) // "Start/Stop Download"
+        {
             if (WDL.downloading)
             {
                 WDL.stop();
@@ -1380,14 +1377,14 @@ public class WDL
             {
                 WDL.start();
             }
-    	}
-    	else if( button.id == 0x57444C6F) // "..." (options)
-    	{
-    		WDL.mc.displayGuiScreen(new GuiWDL(gui));
-    	}
-    	else if( button.id == 1) // "Disconnect"
-    	{
-    		WDL.stop();
-    	}
+        }
+        else if( button.id == 0x57444C6F) // "..." (options)
+        {
+            WDL.mc.displayGuiScreen(new GuiWDL(gui));
+        }
+        else if( button.id == 1) // "Disconnect"
+        {
+            WDL.stop();
+        }
     }
 }
