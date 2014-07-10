@@ -29,6 +29,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiScreenRealmsProxy;
 import net.minecraft.client.multiplayer.ChunkProviderClient;
 import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.boss.EntityDragon;
@@ -1136,7 +1137,14 @@ public class WDL
         {
             if (mc.func_147104_D() != null) // getServerData
             {
-                return mc.func_147104_D().serverName;
+                String name = mc.func_147104_D().serverName;
+                
+                if(name.equals(I18n.format("selectServer.defaultName")))
+                {
+                	// Direct connection using domain name or IP (and port)
+                	name =  mc.func_147104_D().serverIP;
+                }
+                return name;
             }
             else
             {
@@ -1144,10 +1152,6 @@ public class WDL
                 if(realmName != null)
                 {
                     return realmName;
-                }
-                else // Direct connection using domain name or IP (and port)
-                {
-                    mc.getNetHandler().getNetworkManager().getSocketAddress().toString();
                 }
             }
         }
