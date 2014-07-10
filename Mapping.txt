@@ -1,24 +1,17 @@
-14:24:08 - > Outputted net/minecraft/client/gui/TaskOnlineConnect$1 to reobf\minecraft as bff.class
-14:24:08 - > Outputted net/minecraft/client/gui/TaskOnlineConnect to reobf\minecraft as bfe.class
-14:24:08 - > Outputted net/minecraft/wdl/GuiWDLGenerator   to reobf\minecraft as net/minecraft/wdl/GuiWDLGenerator.class
-14:24:08 - > Outputted net/minecraft/wdl/GuiWDL            to reobf\minecraft as net/minecraft/wdl/GuiWDL.class
-14:24:08 - > Outputted net/minecraft/client/gui/GuiIngameMenu to reobf\minecraft as bbw.class
-14:24:08 - > Outputted net/minecraft/wdl/WDLSaveProgressReporter to reobf\minecraft as net/minecraft/wdl/WDLSaveProgressReporter.class
-14:24:08 - > Outputted net/minecraft/wdl/WDLSaveAsync      to reobf\minecraft as net/minecraft/wdl/WDLSaveAsync.class
-14:24:08 - > Outputted net/minecraft/client/network/NetHandlerPlayClient$1 to reobf\minecraft as biw.class
-14:24:08 - > Outputted net/minecraft/client/network/NetHandlerPlayClient to reobf\minecraft as biv.class
-14:24:08 - > Outputted net/minecraft/client/multiplayer/WorldClient$4 to reobf\minecraft as bjd.class
-14:24:08 - > Outputted net/minecraft/client/multiplayer/WorldClient$2 to reobf\minecraft as bjb.class
-14:24:08 - > Outputted net/minecraft/client/multiplayer/WorldClient$3 to reobf\minecraft as bjc.class
-14:24:08 - > Outputted net/minecraft/client/multiplayer/WorldClient$1 to reobf\minecraft as bja.class
-14:24:08 - > Outputted net/minecraft/client/multiplayer/WorldClient to reobf\minecraft as biz.class
-14:24:08 - > Outputted net/minecraft/world/chunk/storage/AnvilSaveConverter to reobf\minecraft as awz.class
-14:24:08 - > Outputted net/minecraft/world/chunk/storage/AnvilSaveConverter$1 to reobf\minecraft as axa.class
-14:24:08 - > Outputted net/minecraft/wdl/GuiWDLBackup      to reobf\minecraft as net/minecraft/wdl/GuiWDLBackup.class
-14:24:08 - > Outputted net/minecraft/wdl/GuiWDLMultiworld  to reobf\minecraft as net/minecraft/wdl/GuiWDLMultiworld.class
-14:24:08 - > Outputted net/minecraft/util/LongHashMap      to reobf\minecraft as oq.class
-14:24:08 - > Outputted net/minecraft/util/LongHashMap$Entry to reobf\minecraft as or.class
-14:24:08 - > Outputted net/minecraft/wdl/GuiWDLPlayer      to reobf\minecraft as net/minecraft/wdl/GuiWDLPlayer.class
-14:24:08 - > Outputted net/minecraft/wdl/GuiWDLWorld       to reobf\minecraft as net/minecraft/wdl/GuiWDLWorld.class
-14:24:08 - > Outputted net/minecraft/wdl/GuiWDLMultiworldSelect to reobf\minecraft as net/minecraft/wdl/GuiWDLMultiworldSelect.class
-14:24:08 - > Outputted net/minecraft/wdl/WDL               to reobf\minecraft as net/minecraft/wdl/WDL.class
+> Outputted net/minecraft/client/gui/GuiIngameMenu              to reobf\minecraft as bdp.class
+> Outputted wdl/GuiWDL                                          to reobf\minecraft as wdl/GuiWDL.class
+> Outputted wdl/GuiWDLGenerator                                 to reobf\minecraft as wdl/GuiWDLGenerator.class
+> Outputted wdl/GuiWDLMultiworldSelect                          to reobf\minecraft as wdl/GuiWDLMultiworldSelect.class
+> Outputted net/minecraft/client/network/NetHandlerPlayClient$1 to reobf\minecraft as bjc.class
+> Outputted net/minecraft/client/network/NetHandlerPlayClient   to reobf\minecraft as bjb.class
+> Outputted wdl/GuiWDLWorld                                     to reobf\minecraft as wdl/GuiWDLWorld.class
+> Outputted wdl/GuiWDLMultiworld                                to reobf\minecraft as wdl/GuiWDLMultiworld.class
+> Outputted net/minecraft/client/multiplayer/WorldClient$4      to reobf\minecraft as bjj.class
+> Outputted net/minecraft/client/multiplayer/WorldClient$2      to reobf\minecraft as bjh.class
+> Outputted net/minecraft/client/multiplayer/WorldClient$3      to reobf\minecraft as bji.class
+> Outputted net/minecraft/client/multiplayer/WorldClient$1      to reobf\minecraft as bjg.class
+> Outputted net/minecraft/client/multiplayer/WorldClient        to reobf\minecraft as bjf.class
+> Outputted wdl/WDLSaveAsync                                    to reobf\minecraft as wdl/WDLSaveAsync.class
+> Outputted wdl/WDLSaveProgressReporter                         to reobf\minecraft as wdl/WDLSaveProgressReporter.class
+> Outputted wdl/WDL                                             to reobf\minecraft as wdl/WDL.class
+> Outputted wdl/GuiWDLPlayer                                    to reobf\minecraft as wdl/GuiWDLPlayer.class
