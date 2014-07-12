@@ -12,6 +12,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
 
+import com.mojang.realmsclient.RealmsMainScreen;
+import com.mojang.realmsclient.dto.McoServer;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBrewingStand;
 import net.minecraft.block.BlockChest;
@@ -23,8 +26,10 @@ import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiIngameMenu;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiScreenRealmsProxy;
 import net.minecraft.client.multiplayer.ChunkProviderClient;
 import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.boss.EntityDragon;
@@ -61,6 +66,7 @@ import net.minecraft.nbt.NBTTagDouble;
 import net.minecraft.nbt.NBTTagFloat;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
+import net.minecraft.realms.RealmsScreen;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityBrewingStand;
 import net.minecraft.tileentity.TileEntityChest;
@@ -86,16 +92,15 @@ import net.minecraft.world.storage.ThreadedFileIOBase;
  */
 public class WDL
 {
-    public static boolean DEBUG = false; // Setting to false will supress debug output in chat console
-    
+    //TODO: This class needs to be split into smaller classes. There is way too much different stuff in here.
+
+    public static boolean DEBUG = false; // Setting to false will suppress debug output in chat console
+
     // References:
     public static Minecraft mc; // Reference to the Minecraft object
     public static WorldClient wc; // Reference to the World object that WDL uses
     public static NetworkManager nm = null; // Reference to a connection specific object. Used to detect a new connection.
     public static EntityClientPlayerMP tp;
-    /* TODO: Realms support disabled until someone gets it working
-    public static McoServer mcos;
-    */
 
     public static Container windowContainer; // Reference to the place where all the item stacks end up after receiving them.
     public static int lastX = 0, lastY = 0, lastZ = 0; // Last right clicked block. Needed for TileEntity creation!
@@ -106,7 +111,7 @@ public class WDL
 
     // Positions of newly created TileEntities that will overwrite the imported ones when saving:
     public static HashSet<ChunkPosition> newTileEntities = new HashSet<ChunkPosition>();
-    
+
     // State variables:
     public static boolean downloading = false; // Read-only outside of this class!
     public static boolean isMultiworld = false; // Is this a multiworld server?
@@ -129,7 +134,7 @@ public class WDL
     static
     {
         mc = Minecraft.getMinecraft();
-        
+
         // Initialize the Properties template:
         defaultProps = new Properties();
         defaultProps.setProperty("ServerName", "");
@@ -175,7 +180,7 @@ public class WDL
             mc.displayGuiScreen(new GuiWDLMultiworld(null));
             return;
         }
-        
+
         WDL.mc.displayGuiScreen((GuiScreen)null);
         WDL.mc.setIngameFocus();
 
@@ -476,8 +481,8 @@ public class WDL
         }
         // Pistons, Chests (open, close), EnderChests, ... (see references to WorldServer.addBlockEvent)
     }
-    
-    
+
+
     /**
      * Must be called when an entity is about to be removed from the world.
      * @return true if the entity should not be removed, false if it can be
@@ -492,30 +497,30 @@ public class WDL
             {
                 int threshold = 0;
                 if ((entity instanceof EntityFishHook) ||
-                    //(entity instanceof EntityArrow) ||
-                    //(entity instanceof EntitySmallFireball) ||
-                    //(entity instanceof EntitySnowball) ||
-                    (entity instanceof EntityEnderPearl) ||
-                    (entity instanceof EntityEnderEye) ||
-                    (entity instanceof EntityEgg) ||
-                    (entity instanceof EntityPotion) ||
-                    (entity instanceof EntityExpBottle) ||
-                    (entity instanceof EntityItem) ||
-                    (entity instanceof EntitySquid))
+                        //(entity instanceof EntityArrow) ||
+                        //(entity instanceof EntitySmallFireball) ||
+                        //(entity instanceof EntitySnowball) ||
+                        (entity instanceof EntityEnderPearl) ||
+                        (entity instanceof EntityEnderEye) ||
+                        (entity instanceof EntityEgg) ||
+                        (entity instanceof EntityPotion) ||
+                        (entity instanceof EntityExpBottle) ||
+                        (entity instanceof EntityItem) ||
+                        (entity instanceof EntitySquid))
                 {
                     threshold = 64;
                 }
                 else if ((entity instanceof EntityMinecart) ||
-                         (entity instanceof EntityBoat) ||
-                         (entity instanceof IAnimals))
+                        (entity instanceof EntityBoat) ||
+                        (entity instanceof IAnimals))
                 {
                     threshold = 80;
                 }
                 else if ((entity instanceof EntityDragon) ||
-                         (entity instanceof EntityTNTPrimed) ||
-                         (entity instanceof EntityFallingBlock) ||
-                         (entity instanceof EntityPainting) ||
-                         (entity instanceof EntityXPOrb))
+                        (entity instanceof EntityTNTPrimed) ||
+                        (entity instanceof EntityFallingBlock) ||
+                        (entity instanceof EntityPainting) ||
+                        (entity instanceof EntityXPOrb))
                 {
                     threshold = 160;
                 }
@@ -530,7 +535,7 @@ public class WDL
         }
         return false;
     }
-    
+
     /** Load the previously saved TileEntities and add them to the Chunk **/
     public static void importTileEntities(Chunk chunk)
     {
@@ -748,12 +753,12 @@ public class WDL
         // Steal the instance of LongHashMap from our chunk provider
         //System.out.println("Stealing field from chunkProvider (type=" + chunkProvider.getClass().getName() + ") of type " + LongHashMap.class.getName());
         LongHashMap lhm = (LongHashMap)stealAndGetField(chunkProvider, LongHashMap.class);
-/*      
+        /*      
         if (lhm != null)
         {
             System.out.println("Successfully got lhm of type" + lhm.getClass().getName());
         }
-*/
+         */
         // Get the LongHashMap.Entry[] through the now accessible field using a
         // LongHashMap we steal from our chunkProvider.
         Object[] hashArray = (Object[])hashArrayField.get(lhm);
@@ -1132,19 +1137,74 @@ public class WDL
         {
             if (mc.func_147104_D() != null) // getServerData
             {
-                return mc.func_147104_D().serverName;
+                String name = mc.func_147104_D().serverName;
+                
+                if(name.equals(I18n.format("selectServer.defaultName")))
+                {
+                	// Direct connection using domain name or IP (and port)
+                	name =  mc.func_147104_D().serverIP;
+                }
+                return name;
             }
-            /* TODO: Realms support disabled until someone gets it working
-            else if (mcos != null)
+            else
             {
-                return "MCRealm: " + URLDecoder.decode(mcos.field_148810_b, "UTF-8");
+                String realmName = getRealmName();
+                if(realmName != null)
+                {
+                    return realmName;
+                }
             }
-            */
         }
         catch (Exception e)
         {
         }
         return "Unidentified Server";
+    }
+
+    public static String getRealmName()
+    {
+        // Is this the only way to get the name of the Realms server? Really Mojang?
+        // If this function turns out to be a pain to update, just remove Realms support completely.
+        // I doubt anyone will need this anyway since Realms support downloading the world out of the box.
+
+        // Try to get the value of mc.getNetHandler().guiScreenServer:
+        GuiScreen screen = (GuiScreen) stealAndGetField(mc.getNetHandler(), GuiScreen.class);
+
+        // If it is not a GuiScreenRealmsProxy we are not using a Realms server
+        if(!(screen instanceof GuiScreenRealmsProxy)) return null;
+
+        // Get the proxy's RealmsScreen object
+        GuiScreenRealmsProxy screenProxy = (GuiScreenRealmsProxy) screen;
+        RealmsScreen rs = screenProxy.func_154321_a();
+
+        // It needs to be of type RealmsMainScreen (this should always be the case)
+        if(!(rs instanceof RealmsMainScreen)) return null;
+
+        RealmsMainScreen rms = (RealmsMainScreen) rs;
+        McoServer mcos = null;
+        try
+        {
+            // Find the ID of the selected Realms server. Fortunately unobfuscated names!
+            Field selectedServerId = rms.getClass().getDeclaredField("selectedServerId");
+            selectedServerId.setAccessible(true);
+            Object obj = selectedServerId.get(rms);
+            if(!(obj instanceof Long)) return null;
+            long id = ((Long)obj).longValue();
+
+            // Get the McoServer instance that was selected
+            Method findServer = rms.getClass().getDeclaredMethod("findServer", long.class);
+            findServer.setAccessible(true);
+            obj = findServer.invoke(rms, id);
+            if(!(obj instanceof McoServer)) return null;
+            mcos = (McoServer)obj;
+        }
+        catch (Exception e)
+        {
+            return null;
+        }
+
+        // Return its name. Not sure if this is the best naming scheme...
+        return mcos.name;
     }
 
     /** Get the base folder name for the server we are connected to */
@@ -1197,7 +1257,7 @@ public class WDL
         // System.out.println( "WorldDownloader: " + msg ); // Just for debugging!
         mc.ingameGUI.getChatGUI().printChatMessage(new ChatComponentText("\u00A72[WorldDL]\u00A76 " + msg));
     }
-    
+
     /** Adds a chat message with a World Downloader prefix */
     public static void chatError(String msg)
     {
@@ -1205,7 +1265,7 @@ public class WDL
         mc.ingameGUI.getChatGUI().printChatMessage(new ChatComponentText("\u00A72[WorldDL]\u00A74 " + msg));
     }
 
-    
+
     private static int getSaveVersion(AnvilSaveConverter asc)
     {
         int saveVersion = 0;
@@ -1228,12 +1288,12 @@ public class WDL
         if (saveVersion == 0)
         {
             saveVersion = 19133; // Version for 1.7.2 just in case we can't get
-                                 // it
+            // it
         }
         return saveVersion;
     }
-    
-    
+
+
     /**
      * Uses Java's reflection API to get access to an unaccessible field
      * 
@@ -1252,7 +1312,7 @@ public class WDL
         {
             //System.out.println("stealField: Found field " + f.getName() + 
             //        " of type " + f.getType());
-            
+
             if (f.getType().equals(typeOfField))
             {
                 try
@@ -1315,7 +1375,7 @@ public class WDL
          * else { WDL.chatMsg("Could not retrieve server seed"); }
          */
     }
-    
+
     // Add World Downloader buttons to GuiIngameMenu
     public static void injectWDLButtons(GuiIngameMenu gui, List buttonList)
     {
@@ -1323,7 +1383,7 @@ public class WDL
         {
             return; // WDL not available if in singleplayer or LAN server mode
         }
-        
+
         int insertAtYPos = 0;
         for( Object obj : buttonList)
         {
@@ -1334,7 +1394,7 @@ public class WDL
                 break;
             }
         }
-        
+
         // Move other buttons down one slot (= 24 height units)
         for( Object obj : buttonList)
         {
@@ -1344,27 +1404,27 @@ public class WDL
                 btn.yPosition += 24;
             }
         }
-        
+
         // Insert buttons... The IDs are chosen to be unique (hopefully). They are ASCII encoded strings: "WDLs" and "WDLo"
         GuiButton wdlDownload = new GuiButton(0x57444C73, gui.width / 2 - 100, insertAtYPos, 170, 20, "WDL bug!");
         GuiButton wdlOptions = new GuiButton(0x57444C6F, gui.width / 2 + 71, insertAtYPos, 28, 20, "...");
-        
+
         wdlDownload.displayString = (WDL.downloading ? (WDL.saving ? "Still saving..." : "Stop download") : "Download this world");
         wdlDownload.enabled = (!WDL.downloading || (WDL.downloading && !WDL.saving));
 
         wdlOptions.enabled = (!WDL.downloading || (WDL.downloading && !WDL.saving));
-        
+
         buttonList.add(wdlDownload);
         buttonList.add(wdlOptions);
     }
-    
+
     public static void handleWDLButtonClick(GuiIngameMenu gui, GuiButton button)
     {
         if (mc.isIntegratedServerRunning())
         {
             return; // WDL not available if in singleplayer or LAN server mode
         }
-            
+
         if(button.id == 0x57444C73) // "Start/Stop Download"
         {
             if (WDL.downloading)

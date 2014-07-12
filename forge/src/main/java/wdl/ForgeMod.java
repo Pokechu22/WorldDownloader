@@ -23,42 +23,42 @@ public class ForgeMod
 {
     public static final String MODID = "WDL";
     public static final String VERSION = "1.7.10";
-    
+
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
-    	FMLCommonHandler.instance().bus().register(this);
-    	MinecraftForge.EVENT_BUS.register(this);
+        FMLCommonHandler.instance().bus().register(this);
+        MinecraftForge.EVENT_BUS.register(this);
     }
-	
+
     @SubscribeEvent
     public void onChunkLoad(ChunkEvent.Load event)
     {
-    	if(event.world != WDL.wc)
-    	{
-    		WDL.onWorldLoad();
-    	}
+        if(event.world != WDL.wc)
+        {
+            WDL.onWorldLoad();
+        }
     }
-    
+
     @SubscribeEvent
     public void onChunkUnload(ChunkEvent.Unload event)
     {
-    	if(WDL.downloading && event.world.isRemote)
-    	{
-    		WDL.onChunkNoLongerNeeded(event.getChunk());
-    	}
+        if(WDL.downloading && event.world.isRemote)
+        {
+            WDL.onChunkNoLongerNeeded(event.getChunk());
+        }
     }
-    
+
     @SubscribeEvent
     public void onWorldLoad(WorldEvent.Load event)
     {
-    	if(event.world.isRemote)
-    	{
-    		//WDL.onWorldLoad(); //Does NOT work! The player is not yet initialized here.
-    		event.world.addWorldAccess(new WDLWorldAccess());
-    	}
+        if(event.world.isRemote)
+        {
+            //WDL.onWorldLoad(); //Does NOT work! The player is not yet initialized here.
+            event.world.addWorldAccess(new WDLWorldAccess());
+        }
     }
-    
+
     /*
     @SubscribeEvent
     public void onWorldUnload(WorldEvent.Unload event)
@@ -69,83 +69,83 @@ public class ForgeMod
     		//WDL.onWorldUnload();
     	}
     }
-    */
-    
+     */
+
     @SubscribeEvent
     public void onGuiSwitch(GuiOpenEvent event)
     {
-    	
-    	if(WDL.downloading)
-    	{
-    		if(WDL.tp.openContainer != WDL.windowContainer)
-    		{
-    			if(WDL.tp.openContainer == WDL.tp.inventoryContainer)
-    			{
-    				WDL.onItemGuiClosed();
-    			}
-    			WDL.windowContainer = WDL.tp.openContainer;
-    		}
-    	}
-    	
+
+        if(WDL.downloading)
+        {
+            if(WDL.tp.openContainer != WDL.windowContainer)
+            {
+                if(WDL.tp.openContainer == WDL.tp.inventoryContainer)
+                {
+                    WDL.onItemGuiClosed();
+                }
+                WDL.windowContainer = WDL.tp.openContainer;
+            }
+        }
+
     }
-    
+
     @SubscribeEvent
     public void onNoteBlock(NoteBlockEvent event)
     {
-    	if(WDL.downloading && event.world.isRemote)
-    	{
-    		WDL.onBlockEvent(event.x, event.y, event.z, event.block, 0, event.getVanillaNoteId());
-    	}
+        if(WDL.downloading && event.world.isRemote)
+        {
+            WDL.onBlockEvent(event.x, event.y, event.z, event.block, 0, event.getVanillaNoteId());
+        }
     }
-    
+
     @SubscribeEvent
     public void onDisconnect(ClientDisconnectionFromServerEvent event)
     {
-    	WDL.stop();
+        WDL.stop();
     }
-    
+
     /*
     @SubscribeEvent
     public void onConnect(ClientConnectedToServerEvent event)
     {
     	// mc.theWorld is still null!
     }
-    */
-    
+     */
+
     @SubscribeEvent
     public void onGuiDrawn(InitGuiEvent.Post event)
     {
-    	if(event.gui instanceof GuiIngameMenu)
-    	{
-    		WDL.injectWDLButtons((GuiIngameMenu)event.gui, event.buttonList);
-    	}
-    	
-    	if(WDL.downloading)
-    	{
-    		if(WDL.tp.openContainer != WDL.windowContainer)
-    		{
-    			if(WDL.tp.openContainer != WDL.tp.inventoryContainer)
-    			{
-    				WDL.onItemGuiOpened();
-    			}
-    			WDL.windowContainer = WDL.tp.openContainer;
-    		}
-    	}
+        if(event.gui instanceof GuiIngameMenu)
+        {
+            WDL.injectWDLButtons((GuiIngameMenu)event.gui, event.buttonList);
+        }
+
+        if(WDL.downloading)
+        {
+            if(WDL.tp.openContainer != WDL.windowContainer)
+            {
+                if(WDL.tp.openContainer != WDL.tp.inventoryContainer)
+                {
+                    WDL.onItemGuiOpened();
+                }
+                WDL.windowContainer = WDL.tp.openContainer;
+            }
+        }
     }
-    
+
     @SubscribeEvent
     public void onGuiButtonClicked(ActionPerformedEvent.Pre event)
     {
-    	if(event.gui instanceof GuiIngameMenu)
-    	{
-    		WDL.handleWDLButtonClick((GuiIngameMenu)event.gui, event.button);
-    	}
+        if(event.gui instanceof GuiIngameMenu)
+        {
+            WDL.handleWDLButtonClick((GuiIngameMenu)event.gui, event.button);
+        }
     }
-    
+
     @SubscribeEvent
     public void onChatMessage(ClientChatReceivedEvent event)
     {
-    	WDL.handleServerSeedMessage(event.message.getFormattedText());
+        WDL.handleServerSeedMessage(event.message.getFormattedText());
     }
 
 }
