@@ -1,0 +1,7 @@
+/*
+!.gitignore
+!/src/
+!/src/minecraft/
+/src/minecraft_server/
+!/conf/fields.csv
+!/conf/methods.csv
