@@ -1,5 +1,6 @@
-package wdl;
+package wdl_forge;
 
+import wdl.WDL;
 import net.minecraft.client.gui.GuiIngameMenu;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.GuiOpenEvent;

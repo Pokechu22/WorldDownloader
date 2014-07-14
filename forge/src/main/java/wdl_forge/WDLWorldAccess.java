@@ -1,4 +1,4 @@
-package wdl;
+package wdl_forge;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
