@@ -8,3 +8,4 @@ REM  with the exception that deleting a symlink does not delete the linked resou
 REM Run this script after you've cloned the repo and anytime this file was changed in a new commit.
 
 mklink /j "mcp\src\minecraft\wdl" "src\wdl"
+mklink /j "forge\src\main\java\wdl" "src\wdl"

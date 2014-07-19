@@ -10,3 +10,4 @@
 # Run this script after you've cloned the repo and anytime this file was changed in a new commit.
 
 ln -sr "src/wdl" "mcp/src/minecraft/wdl"
+ln -sr "src/wdl" "forge/src/main/java/wdl"
