@@ -2,6 +2,7 @@ package wdl;
 
 public class WDLSaveProgressReporter implements Runnable
 {
+    @Override
     public void run()
     {
         while (WDL.saving)

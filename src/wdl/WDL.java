@@ -380,28 +380,28 @@ public class WDL
                 ChunkPosition cp2;
                 TileEntityChest tec1, tec2;
                 if ((te2 = wc.getTileEntity(lastX, lastY, lastZ + 1)) instanceof TileEntityChest &&
-                        ((TileEntityChest)te2).func_145980_j() == ((TileEntityChest)te).func_145980_j())
+                        ((TileEntityChest)te2).getChestType() == ((TileEntityChest)te).getChestType())
                 {
                     tec1 = (TileEntityChest)te;
                     tec2 = (TileEntityChest)te2;
                     cp2 = new ChunkPosition(lastX, lastY, lastZ + 1);
                 }
                 else if ((te2 = wc.getTileEntity(lastX, lastY, lastZ - 1)) instanceof TileEntityChest &&
-                        ((TileEntityChest)te2).func_145980_j() == ((TileEntityChest)te).func_145980_j())
+                        ((TileEntityChest)te2).getChestType() == ((TileEntityChest)te).getChestType())
                 {
                     tec1 = (TileEntityChest)te2;
                     tec2 = (TileEntityChest)te;
                     cp2 = new ChunkPosition(lastX, lastY, lastZ - 1);
                 }
                 else if ((te2 = wc.getTileEntity(lastX + 1, lastY, lastZ)) instanceof TileEntityChest &&
-                        ((TileEntityChest)te2).func_145980_j() == ((TileEntityChest)te).func_145980_j())
+                        ((TileEntityChest)te2).getChestType() == ((TileEntityChest)te).getChestType())
                 {
                     tec1 = (TileEntityChest)te;
                     tec2 = (TileEntityChest)te2;
                     cp2 = new ChunkPosition(lastX + 1, lastY, lastZ);
                 }
                 else if ((te2 = wc.getTileEntity(lastX - 1, lastY, lastZ)) instanceof TileEntityChest &&
-                        ((TileEntityChest)te2).func_145980_j() == ((TileEntityChest)te).func_145980_j())
+                        ((TileEntityChest)te2).getChestType() == ((TileEntityChest)te).getChestType())
                 {
                     tec1 = (TileEntityChest)te2;
                     tec2 = (TileEntityChest)te;
@@ -412,8 +412,8 @@ public class WDL
                     WDL.chatMsg("Could not save this chest!");
                     return;
                 }
-                copyItemStacks(windowContainer, (TileEntityChest)tec1, 0);
-                copyItemStacks(windowContainer, (TileEntityChest)tec2, 27);
+                copyItemStacks(windowContainer, tec1, 0);
+                copyItemStacks(windowContainer, tec2, 27);
                 newTileEntities.add(cp1);
                 newTileEntities.add(cp2);
                 saveName = "Double Chest contents";
@@ -554,7 +554,7 @@ public class WDL
             {
                 for (int i = 0; i < tileEntitiesNBT.tagCount(); i++)
                 {
-                    NBTTagCompound tileEntityNBT = (NBTTagCompound)tileEntitiesNBT.getCompoundTagAt(i);
+                    NBTTagCompound tileEntityNBT = tileEntitiesNBT.getCompoundTagAt(i);
                     TileEntity te = TileEntity.createAndLoadEntity(tileEntityNBT);
                     String entityType = null;
                     if ((entityType = isImportableTileEntity(te)) != null)
@@ -980,7 +980,7 @@ public class WDL
             pos.removeTag(0);
             pos.removeTag(0);
             pos.appendTag(new NBTTagDouble(x + 0.5D)); // appendTag
-            pos.appendTag(new NBTTagDouble((double)y + 0.621D)); // Player height
+            pos.appendTag(new NBTTagDouble(y + 0.621D)); // Player height
             pos.appendTag(new NBTTagDouble(x + 0.5D));
 
             NBTTagList motion = playerNBT.getTagList("Motion", 6);
@@ -1285,7 +1285,7 @@ public class WDL
         if (saveVersion == 0)
         {
             saveVersion = 19133; // Version for 1.7.2 just in case we can't get
-            // it
+                                 // it
         }
         return saveVersion;
     }

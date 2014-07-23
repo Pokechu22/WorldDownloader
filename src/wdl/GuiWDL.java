@@ -25,6 +25,7 @@ public class GuiWDL extends GuiScreen
     /**
      * Adds the buttons (and other controls) to the screen in question.
      */
+    @Override
     public void initGui()
     {
         if (WDL.isMultiworld && WDL.worldName.isEmpty())
@@ -75,6 +76,7 @@ public class GuiWDL extends GuiScreen
     /**
      * Fired when a control is clicked. This is the equivalent of ActionListener.actionPerformed(ActionEvent e).
      */
+    @Override
     protected void actionPerformed(GuiButton guibutton)
     {
         if (!guibutton.enabled)
@@ -108,6 +110,7 @@ public class GuiWDL extends GuiScreen
     /**
      * Called when the mouse is clicked.
      */
+    @Override
     protected void mouseClicked(int var1, int var2, int var3)
     {
         super.mouseClicked(var1, var2, var3);
@@ -117,6 +120,7 @@ public class GuiWDL extends GuiScreen
     /**
      * Fired when a key is typed. This is the equivalent of KeyListener.keyTyped(KeyEvent e).
      */
+    @Override
     protected void keyTyped(char c, int i)
     {
         super.keyTyped(c, i);
@@ -126,6 +130,7 @@ public class GuiWDL extends GuiScreen
     /**
      * Called from the main game loop to update the screen.
      */
+    @Override
     public void updateScreen()
     {
         this.worldName.updateCursorCounter(); // updateCursorCounter
@@ -135,6 +140,7 @@ public class GuiWDL extends GuiScreen
     /**
      * Draws the screen and all the components in it.
      */
+    @Override
     public void drawScreen(int var1, int var2, float var3)
     {
         this.drawDefaultBackground(); // drawDefaultBackground

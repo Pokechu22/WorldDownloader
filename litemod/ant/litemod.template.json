@@ -1,0 +1,8 @@
+{
+    "name": "${ant.project.name}",
+    "mcversion": "${litemodversion}",
+    "revision": "${git.revision}",
+    "author": "${author}",
+    "description": "This mod lets you download worlds",
+    "classTransformerClasses": "wdl.litemod.EventTransformerWDL"
+}

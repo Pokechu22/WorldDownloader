@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!-- Build file based off Mumfrey's ExampleMod. Thanks Mumfrey! -->
+
+<project name="WorldDownloader" basedir="." default="main">
+	
+	<!-- Change this into the directory of the MCP folder. -->
+	<property name="mcp.dir"            location="../../../../Documents/MinecraftModding/mcp908" />
+	<!-- Path to the python executable -->
+	<property name="python"             location="/usr/bin/python" />
+
+    <property name="version"            value="0.1" />
+    <property name="mcversion"          value="1.7.10" />
+    <property name="litemodversion"     value="1.7.10" />
+    <property name="author"             value="uyjulian" />
+    <property name="project"            value="WorldDownloader" />
+    <property name="md5set"             value="liteloader" />
+	
+    <property name="eclipse.dir"        location="${mcp.dir}/eclipse" />
+    <property name="mc.src.dir"         location="${mcp.dir}/src/minecraft" />
+    <property name="temp.dir"           location="${mcp.dir}/temp" />
+    <property name="md5.dir"            location="${mcp.dir}/md5" />
+    <property name="build.dir"          location="${mcp.dir}/build" />
+	<property name="git.dir"            location="../" />
+    <property name="target.dir"         location="${build.dir}/src" />
+    <property name="dist.dir"           location="${build.dir}/dist" />
+    <property name="stage.dir"          location="${build.dir}/stage/${ant.project.name}/${version}" />
+    <property name="file.prefix"        value="mod" />
+    <property name="file.type"          value="litemod" />
+
+    <!-- Main target -->
+    <target name="main" description="Perform all tasks for a build">
+        <antcall target="init" />
+        <antcall target="recompile" />
+        <antcall target="reobfuscate" />
+        <antcall target="savemd5" />
+        <antcall target="stage" />
+        <antcall target="litemod" />
+    </target>
+
+    <!-- Clean the target and reobf dirs -->
+    <target name="clean">
+        <delete dir="${target.dir}" />
+        <delete dir="${mcp.dir}/reobf" />
+    </target>
+
+    <!-- Copies the upstream MD5's to the MCP directory -->
+    <target name="preparemd5" description="Copy patched MD5 to the temp directory" depends="clean">
+        <echo level="info" message="Prepare exclusion MD5s, using exclusion set &quot;${md5set}&quot;" />
+
+        <copy tofile="${temp.dir}/client.md5" file="${md5.dir}/client_${md5set}.md5" failonerror="true" verbose="true" overwrite="true" />
+    </target>
+
+    <!-- Contributes MCP and project sources to the target dir -->
+    <target name="prepare" description="Prepare source for MCP" depends="preparemd5">
+        <echo level="info" message="Prepare sources for compile" />
+
+        <!-- Contribute the MCP sources -->
+        <copy todir="${target.dir}" verbose="false" overwrite="true">
+            <fileset dir="${mc.src.dir}" />
+        </copy>
+
+        <!-- UPSTREAM PROJECTS                                                                   -->
+        <!-- This is where upstream projects are contributed to the target directory, each       -->
+        <!-- upstream project needs a line below, so if you have additional upstreams then       -->
+        <!-- simply duplicate the line below and change "LiteLoader" to the name of the eclipse  -->
+        <!-- project that you want to contribute sources from.                                   -->
+        <antcall target="contributesource"><param name="lib" value="LiteLoader" /></antcall>
+
+        <!-- Lastly we contribute sources from the project itself, you do not need to change this -->
+        <antcall target="contributesource"><param name="lib" value="${project}" /></antcall>
+    </target>
+
+    <!-- Stage class files and resources into the staging directory -->
+    <target name="stage" description="Stage resources into staging directory">
+        <echo level="info" message="Staging resources" />
+
+        <!-- Stages the freshly-obfuscated class files into the staging directory. -->
+        <copy todir="${stage.dir}" overwrite="true">
+            <fileset dir="${mcp.dir}/reobf/minecraft" excludes=".svn/**, *.txt" />
+        </copy>
+
+        <!-- UPSTREAM PROJECTS                                                                   -->
+        <!-- Like with the sources, this is where upstream project resources are contributed to  -->
+        <!-- the target directory, each upstream project needs a line below, so if you have      -->
+        <!-- additioanl upstreams then simply duplicate the line below and change "LiteLoader"   -->
+        <!-- to the name of the eclipse project that you want to contribute resources from.      -->
+        <antcall target="contributeresources"><param name="lib" value="LiteLoader" /></antcall>
+
+        <!-- Lastly we contribute resources from the project itself                              -->
+        <antcall target="contributeresources"><param name="lib" value="${project}" /></antcall>
+        <exec executable="git" outputproperty="git.revision">
+             <arg line="rev-parse HEAD"/>
+        </exec>
+        <!-- Uses the template file to build the litemod.json file and stages it to the staging  -->
+        <!-- directory.                                                                          -->
+        <concat destfile="${stage.dir}/litemod.json" append="false">
+            <fileset file="./litemod.template.json" />
+            <filterchain><expandproperties /></filterchain>
+        </concat>
+    </target>
+
+    <!-- Contributes java sources from a project, do not alter -->
+    <target name="contributesource" description="Contribute an upstream project source code to the source path">
+        <echo level="info" message="Contributing project ${lib}" />
+        <copy todir="${target.dir}" verbose="false" overwrite="true" failonerror="false">
+            <!-- Eclipse default -->
+            <fileset dir="${eclipse.dir}/${lib}/src" />
+            <!-- Legacy default -->
+            <fileset dir="${eclipse.dir}/${lib}/java" />
+            <!-- Maven default -->
+            <fileset dir="${eclipse.dir}/${lib}/src/main/java" />
+        	<!-- Not in ecipse default -->
+            <fileset dir="../../${lib}/src" />
+        </copy>
+    </target>
+
+    <!-- Contribute resources from a project, do not alter -->
+    <target name="contributeresources" description="Contribute resources to the staging path">
+        <echo level="info" message="Contributing project resources for ${lib}" />
+        <copy todir="${stage.dir}" verbose="false" failonerror="false">
+            <fileset dir="${eclipse.dir}/${lib}/res" excludes=".svn/**">
+                <exclude name="**/Thumbs.db" />
+                <exclude name="**/classes" />
+                <exclude name="liteloader.properties" />
+            </fileset>
+            <fileset dir="${eclipse.dir}/${lib}/src/main/resources" excludes=".svn/**">
+                <exclude name="**/Thumbs.db" />
+                <exclude name="**/classes" />
+                <exclude name="liteloader.properties" />
+            </fileset>
+            <fileset dir="../../${lib}/src/main/resources" excludes=".svn/**">
+                <exclude name="**/Thumbs.db" />
+                <exclude name="**/classes" />
+                <exclude name="liteloader.properties" />
+            </fileset>
+        </copy>
+    </target>
+
+    <!-- Init task -->
+    <target name="init" description="Initialize build environment" depends="prepare">
+        <echo level="info" message="Cleaning old stage and dist, MCP reobf directories" />
+
+        <delete dir="${stage.dir}" />
+
+        <echo level="info" message="Creating stage and dist dirs" />
+        <mkdir dir="${stage.dir}" />
+        <mkdir dir="${dist.dir}" />
+        <mkdir dir="${md5.dir}" />
+    </target>
+
+    <!-- MCP recompilation task -->
+    <target name="recompile" description="MCP recompile">
+        <echo level="info" message="Compiling projects" />
+    	<echo append="false" file="${temp.dir}/build.cfg" message="[OUTPUT]&#x0A;SrcClient  = build/src" />
+        <exec executable="${python}" dir="${mcp.dir}">
+            <arg value="runtime/recompile.py" />
+            <arg value="--client" />
+            <arg value="--config" />
+            <arg value="${temp.dir}/build.cfg" />
+            <arg value="%*" />
+        </exec>
+    </target>
+
+    <!-- MCP reobfuscation task -->
+    <target name="reobfuscate" description="MCP reobfuscate">
+        <echo level="info" message="Obfuscating classes" />
+
+        <exec executable="${python}" dir="${mcp.dir}">
+            <arg value="runtime/reobfuscate.py" />
+            <arg value="--client" />
+            <arg value="%*" />
+        </exec>
+    </target>
+
+    <!-- Stores generated output MD5's for downstream projects if specifed -->
+    <target name="savemd5" description="Put post-obfuscation MD5 to stored md5 set" if="outmd5set">
+        <echo level="info" message="Storing obfuscated MD5s" />
+
+        <copy file="${temp.dir}/client_reobf.md5" tofile="${md5.dir}/client_${outmd5set}.md5" overwrite="true" verbose="true" />
+    </target>
+
+    <!-- Builds the litemod jar file -->
+    <target name="litemod" description="Build the litemod file">
+        <echo level="info" message="Building final output" />
+        <exec executable="git" outputproperty="git.revision">
+             <arg line="rev-parse HEAD"/>
+        </exec>
+        <mkdir dir="${dist.dir}" />
+        <jar destfile="${dist.dir}/${file.prefix}_${ant.project.name}_${git.revision}_mc${mcversion}.${file.type}" duplicate="preserve" index="true" manifestencoding="UTF-8">
+            <manifest>
+                <attribute name="Built-By" value="uyjulian (uyjulian at gmail dot com)" />
+                <attribute name="Implementation-Vendor" value="${author}" />
+                <attribute name="Implementation-Title" value="${ant.project.name}" />
+                <attribute name="Implementation-Version" value="${version}" />
+            </manifest>
+            <fileset dir="${stage.dir}" />
+        </jar>
+    </target>
+</project>

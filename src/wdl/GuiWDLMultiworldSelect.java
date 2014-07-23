@@ -28,7 +28,7 @@ public class GuiWDLMultiworldSelect extends GuiScreen
         this.parent = var1;
         EntityClientPlayerMP var2 = WDL.tp;
         this.cam = new EntityPlayerSP(WDL.mc, WDL.wc, new Session("Camera", "", "", "legacy"), var2.dimension);
-        this.cam.setLocationAndAngles(var2.posX, var2.posY - (double)var2.yOffset, var2.posZ, var2.rotationYaw, 0.0F);
+        this.cam.setLocationAndAngles(var2.posX, var2.posY - var2.yOffset, var2.posZ, var2.rotationYaw, 0.0F);
         this.yaw = var2.rotationYaw;
         this.thirdPersonViewSave = WDL.mc.gameSettings.thirdPersonView;
         WDL.mc.gameSettings.thirdPersonView = 0;
@@ -38,6 +38,7 @@ public class GuiWDLMultiworldSelect extends GuiScreen
     /**
      * Adds the buttons (and other controls) to the screen in question.
      */
+    @Override
     public void initGui()
     {
         this.buttonList.clear();
@@ -117,6 +118,7 @@ public class GuiWDLMultiworldSelect extends GuiScreen
     /**
      * Fired when a control is clicked. This is the equivalent of ActionListener.actionPerformed(ActionEvent e).
      */
+    @Override
     protected void actionPerformed(GuiButton var1)
     {
         if (var1.enabled)
@@ -143,6 +145,7 @@ public class GuiWDLMultiworldSelect extends GuiScreen
     /**
      * Called when the mouse is clicked.
      */
+    @Override
     protected void mouseClicked(int var1, int var2, int var3)
     {
         super.mouseClicked(var1, var2, var3);
@@ -156,6 +159,7 @@ public class GuiWDLMultiworldSelect extends GuiScreen
     /**
      * Fired when a key is typed. This is the equivalent of KeyListener.keyTyped(KeyEvent e).
      */
+    @Override
     protected void keyTyped(char var1, int var2)
     {
         super.keyTyped(var1, var2);
@@ -179,6 +183,7 @@ public class GuiWDLMultiworldSelect extends GuiScreen
     /**
      * Called from the main game loop to update the screen.
      */
+    @Override
     public void updateScreen()
     {
         this.newNameField.updateCursorCounter();
@@ -188,6 +193,7 @@ public class GuiWDLMultiworldSelect extends GuiScreen
     /**
      * Draws the screen and all the components in it.
      */
+    @Override
     public void drawScreen(int var1, int var2, float var3)
     {
         drawRect(this.width / 2 - 120, 0, this.width / 2 + 120, this.height / 16 + 25, -1073741824);
@@ -206,10 +212,10 @@ public class GuiWDLMultiworldSelect extends GuiScreen
         this.cam.prevRotationYaw = this.cam.rotationYaw = this.yaw;
         float var4 = 0.475F;
         this.cam.lastTickPosY = this.cam.prevPosY = this.cam.posY = WDL.tp.posY;
-        this.cam.lastTickPosX = this.cam.prevPosX = this.cam.posX = WDL.tp.posX - (double)var4 * Math.sin((double)this.yaw / 180.0D * Math.PI);
-        this.cam.lastTickPosZ = this.cam.prevPosZ = this.cam.posZ = WDL.tp.posZ + (double)var4 * Math.cos((double)this.yaw / 180.0D * Math.PI);
+        this.cam.lastTickPosX = this.cam.prevPosX = this.cam.posX = WDL.tp.posX - var4 * Math.sin(this.yaw / 180.0D * Math.PI);
+        this.cam.lastTickPosZ = this.cam.prevPosZ = this.cam.posZ = WDL.tp.posZ + var4 * Math.cos(this.yaw / 180.0D * Math.PI);
         float var5 = 1.0F;
-        this.yaw = (float)((double)this.yaw + (double)var5 * (1.0D + 0.699999988079071D * Math.cos((double)(this.yaw + 45.0F) / 45.0D * Math.PI)));
+        this.yaw = (float)(this.yaw + var5 * (1.0D + 0.699999988079071D * Math.cos((this.yaw + 45.0F) / 45.0D * Math.PI)));
 
         if (this.newWorld)
         {
@@ -222,6 +228,7 @@ public class GuiWDLMultiworldSelect extends GuiScreen
     /**
      * Called when the screen is unloaded. Used to disable keyboard repeat events
      */
+    @Override
     public void onGuiClosed()
     {
         super.onGuiClosed();
