@@ -980,7 +980,7 @@ public class WDL
             pos.removeTag(0);
             pos.appendTag(new NBTTagDouble(x + 0.5D)); // appendTag
             pos.appendTag(new NBTTagDouble((double)y + 0.621D)); // Player height
-            pos.appendTag(new NBTTagDouble(x + 0.5D));
+            pos.appendTag(new NBTTagDouble(z + 0.5D));
 
             NBTTagList motion = playerNBT.getTagList("Motion", 6);
             // Out with the old, in with the new
