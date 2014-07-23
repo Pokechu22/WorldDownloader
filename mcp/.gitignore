@@ -1,5 +1,6 @@
 /*
 !.gitignore
+!README.md
 !/src/
 !/src/minecraft/
 /src/minecraft_server/
