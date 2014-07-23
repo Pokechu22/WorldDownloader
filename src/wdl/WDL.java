@@ -809,16 +809,15 @@ public class WDL
                     if (c != null)
                     {
                         saveChunk(c);
-
-                        try
-                        {
-                            ThreadedFileIOBase.threadedIOInstance.waitForFinish();
-                        } catch (Exception e)
-                        {
-                            chatMsg("Threw exception waiting for asynchronous IO to finish. Hmmm.");
-                        }
                     }
                 }
+            }
+            try
+            {
+                ThreadedFileIOBase.threadedIOInstance.waitForFinish();
+            } catch (Exception e)
+            {
+                chatMsg("Threw exception waiting for asynchronous IO to finish. Hmmm.");
             }
             chatDebug("Chunk data saved.");
         }
