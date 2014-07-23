@@ -380,28 +380,28 @@ public class WDL
                 ChunkPosition cp2;
                 TileEntityChest tec1, tec2;
                 if ((te2 = wc.getTileEntity(lastX, lastY, lastZ + 1)) instanceof TileEntityChest &&
-                        ((TileEntityChest)te2).func_145980_j() == ((TileEntityChest)te).func_145980_j())
+                        ((TileEntityChest)te2).getChestType() == ((TileEntityChest)te).getChestType())
                 {
                     tec1 = (TileEntityChest)te;
                     tec2 = (TileEntityChest)te2;
                     cp2 = new ChunkPosition(lastX, lastY, lastZ + 1);
                 }
                 else if ((te2 = wc.getTileEntity(lastX, lastY, lastZ - 1)) instanceof TileEntityChest &&
-                        ((TileEntityChest)te2).func_145980_j() == ((TileEntityChest)te).func_145980_j())
+                        ((TileEntityChest)te2).getChestType() == ((TileEntityChest)te).getChestType())
                 {
                     tec1 = (TileEntityChest)te2;
                     tec2 = (TileEntityChest)te;
                     cp2 = new ChunkPosition(lastX, lastY, lastZ - 1);
                 }
                 else if ((te2 = wc.getTileEntity(lastX + 1, lastY, lastZ)) instanceof TileEntityChest &&
-                        ((TileEntityChest)te2).func_145980_j() == ((TileEntityChest)te).func_145980_j())
+                        ((TileEntityChest)te2).getChestType() == ((TileEntityChest)te).getChestType())
                 {
                     tec1 = (TileEntityChest)te;
                     tec2 = (TileEntityChest)te2;
                     cp2 = new ChunkPosition(lastX + 1, lastY, lastZ);
                 }
                 else if ((te2 = wc.getTileEntity(lastX - 1, lastY, lastZ)) instanceof TileEntityChest &&
-                        ((TileEntityChest)te2).func_145980_j() == ((TileEntityChest)te).func_145980_j())
+                        ((TileEntityChest)te2).getChestType() == ((TileEntityChest)te).getChestType())
                 {
                     tec1 = (TileEntityChest)te2;
                     tec2 = (TileEntityChest)te;
@@ -1132,14 +1132,14 @@ public class WDL
     {
         try
         {
-            if (mc.func_147104_D() != null) // getServerData
+            if (mc.getCurrentServerData() != null)
             {
-                String name = mc.func_147104_D().serverName;
+                String name = mc.getCurrentServerData().serverName;
                 
                 if(name.equals(I18n.format("selectServer.defaultName")))
                 {
                 	// Direct connection using domain name or IP (and port)
-                	name =  mc.func_147104_D().serverIP;
+                	name =  mc.getCurrentServerData().serverIP;
                 }
                 return name;
             }

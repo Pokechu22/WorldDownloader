@@ -110,7 +110,7 @@ public class WorldClient extends World
                 else
                     wdl.WDL.onItemGuiOpened();
                 wdl.WDL.windowContainer = wdl.WDL.tp.openContainer;
-            }
+    }
         }
         /* <<< WDL */
     }
@@ -248,7 +248,7 @@ public class WorldClient extends World
             }
         }
 
-        if (RenderManager.instance.getEntityRenderObject(p_72847_1_).func_147905_a() && !var2)
+        if (RenderManager.instance.getEntityRenderObject(p_72847_1_).isStaticEntity() && !var2)
         {
             this.mc.renderGlobal.onStaticEntitiesChanged();
         }
@@ -276,7 +276,7 @@ public class WorldClient extends World
 
         this.entityHashSet.addKey(p_73027_1_, p_73027_2_);
 
-        if (RenderManager.instance.getEntityRenderObject(p_73027_2_).func_147905_a())
+        if (RenderManager.instance.getEntityRenderObject(p_73027_2_).isStaticEntity())
         {
             this.mc.renderGlobal.onStaticEntitiesChanged();
         }
@@ -514,9 +514,9 @@ public class WorldClient extends World
     
     /* WDL >>> */
     @Override
-    public void func_147452_c(int par1, int par2, int par3, Block par4, int par5, int par6)
+    public void addBlockEvent(int par1, int par2, int par3, Block par4, int par5, int par6)
     {
-        super.func_147452_c(par1, par2, par3, par4, par5, par6);
+        super.addBlockEvent(par1, par2, par3, par4, par5, par6);
         if( wdl.WDL.downloading )
             wdl.WDL.onBlockEvent( par1, par2, par3, par4, par5, par6 );
     }
