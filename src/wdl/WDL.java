@@ -809,16 +809,15 @@ public class WDL
                     if (c != null)
                     {
                         saveChunk(c);
-
-                        try
-                        {
-                            ThreadedFileIOBase.threadedIOInstance.waitForFinish();
-                        } catch (Exception e)
-                        {
-                            chatMsg("Threw exception waiting for asynchronous IO to finish. Hmmm.");
-                        }
                     }
                 }
+            }
+            try
+            {
+                ThreadedFileIOBase.threadedIOInstance.waitForFinish();
+            } catch (Exception e)
+            {
+                chatMsg("Threw exception waiting for asynchronous IO to finish. Hmmm.");
             }
             chatDebug("Chunk data saved.");
         }
@@ -981,7 +980,7 @@ public class WDL
             pos.removeTag(0);
             pos.appendTag(new NBTTagDouble(x + 0.5D)); // appendTag
             pos.appendTag(new NBTTagDouble(y + 0.621D)); // Player height
-            pos.appendTag(new NBTTagDouble(x + 0.5D));
+            pos.appendTag(new NBTTagDouble(z + 0.5D));
 
             NBTTagList motion = playerNBT.getTagList("Motion", 6);
             // Out with the old, in with the new
@@ -1132,14 +1131,14 @@ public class WDL
     {
         try
         {
-            if (mc.func_147104_D() != null) // getServerData
+            if (mc.getCurrentServerData() != null)
             {
-                String name = mc.func_147104_D().serverName;
+                String name = mc.getCurrentServerData().serverName;
                 
                 if(name.equals(I18n.format("selectServer.defaultName")))
                 {
                 	// Direct connection using domain name or IP (and port)
-                	name =  mc.func_147104_D().serverIP;
+                	name =  mc.getCurrentServerData().serverIP;
                 }
                 return name;
             }
