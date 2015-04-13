@@ -74,10 +74,10 @@ import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.tileentity.TileEntityEnderChest;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.tileentity.TileEntityNote;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.LongHashMap;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
-import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.MinecraftException;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.AnvilSaveConverter;
@@ -128,9 +128,11 @@ public class WDL
      */
     public static Container windowContainer;
     /**
-     * Last right clicked block. Needed for TileEntity creation!
+     * The block position clicked most recently.
+     * 
+     * Needed for TileEntity creation.
      */
-    public static int lastX = 0, lastY = 0, lastZ = 0;
+    public static BlockPos lastClickedBlock;
     /**
      * Last entity clicked (used for non-block tiles like minecarts with chests)
      */
@@ -149,7 +151,7 @@ public class WDL
      * Positions of newly created TileEntities that will overwrite the
      * imported ones when saving:
      */
-    public static HashSet<ChunkPosition> newTileEntities = new HashSet<ChunkPosition>();
+    public static HashSet<BlockPos> newTileEntities = new HashSet<BlockPos>();
 
     // State variables:
     /**
@@ -256,7 +258,7 @@ public class WDL
         saveHandler = (SaveHandler)mc.getSaveLoader().getSaveLoader(getWorldFolderName(worldName), true);
         chunkLoader = saveHandler.getChunkLoader(wc.provider);
 
-        newTileEntities = new HashSet<ChunkPosition>();
+        newTileEntities = new HashSet<BlockPos>();
 
         if (baseProps.getProperty("ServerName").isEmpty())
             baseProps.setProperty("ServerName", getServerName());
@@ -386,9 +388,9 @@ public class WDL
         else
         {
             lastEntity = null;
-            lastX = mc.objectMouseOver.blockX;
-            lastY = mc.objectMouseOver.blockY;
-            lastZ = mc.objectMouseOver.blockZ;
+            //func_178782_a returns a BlockPos; find another one
+            //if it is reobfuscated.
+            lastClickedBlock = mc.objectMouseOver.func_178782_a();
         }
     }
 
@@ -431,10 +433,10 @@ public class WDL
 
         // Else, the last thing clicked was a TILE ENTITY
         // Get the tile entity which we are going to update the inventory for
-        TileEntity te = wc.getTileEntity(lastX, lastY, lastZ);
+        TileEntity te = wc.getTileEntity(lastClickedBlock);
         if (te == null)
         {
-            WDL.chatDebug("onItemGuiClosed could not get TE at " + lastX + " " + lastY + " " + lastZ);
+            WDL.chatDebug("onItemGuiClosed could not get TE at " + lastClickedBlock);
             return;
         }
 
@@ -443,36 +445,37 @@ public class WDL
             if (windowContainer.inventorySlots.size() > 63)
             {
                 TileEntity te2;
-                ChunkPosition cp1 = new ChunkPosition(lastX, lastY, lastZ);
-                ChunkPosition cp2;
+                BlockPos chestPos1 = lastClickedBlock;
+                BlockPos chestPos2;
+                
                 TileEntityChest tec1, tec2;
-                if ((te2 = wc.getTileEntity(lastX, lastY, lastZ + 1)) instanceof TileEntityChest &&
+                if ((te2 = wc.getTileEntity(chestPos1.add(0, 0, 1))) instanceof TileEntityChest &&
                         ((TileEntityChest)te2).getChestType() == ((TileEntityChest)te).getChestType())
                 {
                     tec1 = (TileEntityChest)te;
                     tec2 = (TileEntityChest)te2;
-                    cp2 = new ChunkPosition(lastX, lastY, lastZ + 1);
+                    chestPos2 = chestPos1.add(0, 0, 1);
                 }
-                else if ((te2 = wc.getTileEntity(lastX, lastY, lastZ - 1)) instanceof TileEntityChest &&
+                else if ((te2 = wc.getTileEntity(chestPos1.add(0, 0, -1))) instanceof TileEntityChest &&
                         ((TileEntityChest)te2).getChestType() == ((TileEntityChest)te).getChestType())
                 {
                     tec1 = (TileEntityChest)te2;
                     tec2 = (TileEntityChest)te;
-                    cp2 = new ChunkPosition(lastX, lastY, lastZ - 1);
+                    chestPos2 = chestPos1.add(0, 0, -1); 
                 }
-                else if ((te2 = wc.getTileEntity(lastX + 1, lastY, lastZ)) instanceof TileEntityChest &&
+                else if ((te2 = wc.getTileEntity(chestPos1.add(1, 0, 0))) instanceof TileEntityChest &&
                         ((TileEntityChest)te2).getChestType() == ((TileEntityChest)te).getChestType())
                 {
                     tec1 = (TileEntityChest)te;
                     tec2 = (TileEntityChest)te2;
-                    cp2 = new ChunkPosition(lastX + 1, lastY, lastZ);
+                    chestPos2 = chestPos1.add(-1, 0, 0);
                 }
-                else if ((te2 = wc.getTileEntity(lastX - 1, lastY, lastZ)) instanceof TileEntityChest &&
+                else if ((te2 = wc.getTileEntity(chestPos1.add(-1, 0, 0))) instanceof TileEntityChest &&
                         ((TileEntityChest)te2).getChestType() == ((TileEntityChest)te).getChestType())
                 {
                     tec1 = (TileEntityChest)te2;
                     tec2 = (TileEntityChest)te;
-                    cp2 = new ChunkPosition(lastX - 1, lastY, lastZ);
+                    chestPos2 = chestPos1.add(-1, 0, 0);
                 }
                 else
                 {
@@ -481,15 +484,15 @@ public class WDL
                 }
                 copyItemStacks(windowContainer, (TileEntityChest)tec1, 0);
                 copyItemStacks(windowContainer, (TileEntityChest)tec2, 27);
-                newTileEntities.add(cp1);
-                newTileEntities.add(cp2);
+                newTileEntities.add(chestPos1);
+                newTileEntities.add(chestPos2);
                 saveName = "Double Chest contents";
             }
             // basic chest
             else
             {
                 copyItemStacks(windowContainer, (TileEntityChest)te, 0);
-                newTileEntities.add(new ChunkPosition(lastX, lastY, lastZ));
+                newTileEntities.add(lastClickedBlock);
                 saveName = "Chest contents";
             }
         }
@@ -507,19 +510,19 @@ public class WDL
         else if (windowContainer instanceof ContainerBrewingStand)
         {
             copyItemStacks(windowContainer, (TileEntityBrewingStand)te, 0);
-            newTileEntities.add(new ChunkPosition(lastX, lastY, lastZ));
+            newTileEntities.add(lastClickedBlock);
             saveName = "Brewing Stand contents";
         }
         else if (windowContainer instanceof ContainerDispenser)
         {
             copyItemStacks(windowContainer, (TileEntityDispenser)te, 0);
-            newTileEntities.add(new ChunkPosition(lastX, lastY, lastZ));
+            newTileEntities.add(lastClickedBlock);
             saveName = "Dispenser contents";
         }
         else if (windowContainer instanceof ContainerFurnace)
         {
             copyItemStacks(windowContainer, (TileEntityFurnace)te, 0);
-            newTileEntities.add(new ChunkPosition(lastX, lastY, lastZ));
+            newTileEntities.add(lastClickedBlock);
             saveName = "Furnace contents";
         }
         else
