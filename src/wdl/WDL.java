@@ -94,12 +94,26 @@ public class WDL
 {
     //TODO: This class needs to be split into smaller classes. There is way too much different stuff in here.
 
-    public static boolean DEBUG = false; // Setting to false will suppress debug output in chat console
+	/**
+	 * Whether or not debug is enabled.
+	 * Setting to false will suppress debug output in chat console.
+	 */
+    public static boolean DEBUG = false;
 
-    // References:
-    public static Minecraft mc; // Reference to the Minecraft object
-    public static WorldClient wc; // Reference to the World object that WDL uses
-    public static NetworkManager nm = null; // Reference to a connection specific object. Used to detect a new connection.
+    // References: TODO these are bad names (other than mc).
+    /**
+     * Reference to the Minecraft object.
+     */
+    public static Minecraft mc;
+    /**
+     * Reference to the World object that WDL uses.
+     */
+    public static WorldClient wc;
+    /**
+     * Reference to a connection specific object.
+     * Used to detect a new connection.
+     */
+    public static NetworkManager nm = null;
     /**
      * The current player.
      * <br/>
@@ -109,27 +123,73 @@ public class WDL
      */
     public static EntityPlayerSP tp;
 
-    public static Container windowContainer; // Reference to the place where all the item stacks end up after receiving them.
-    public static int lastX = 0, lastY = 0, lastZ = 0; // Last right clicked block. Needed for TileEntity creation!
-    public static Entity lastEntity; // Last entity clicked (used for non-block tiles like minecarts with chests)
+    /**
+     * Reference to the place where all the item stacks end up after receiving them.
+     */
+    public static Container windowContainer;
+    /**
+     * Last right clicked block. Needed for TileEntity creation!
+     */
+    public static int lastX = 0, lastY = 0, lastZ = 0;
+    /**
+     * Last entity clicked (used for non-block tiles like minecarts with chests)
+     */
+    public static Entity lastEntity;
 
-    public static SaveHandler saveHandler; // For player files and the level.dat file
-    public static IChunkLoader chunkLoader; // For the chunks (despite it's name it does also SAVE them)
+    /**
+     * For player files and the level.dat file.
+     */
+    public static SaveHandler saveHandler;
+    /**
+     * For the chunks (despite the name it does also SAVE chunks)
+     */
+    public static IChunkLoader chunkLoader;
 
-    // Positions of newly created TileEntities that will overwrite the imported ones when saving:
+    /**
+     * Positions of newly created TileEntities that will overwrite the
+     * imported ones when saving:
+     */
     public static HashSet<ChunkPosition> newTileEntities = new HashSet<ChunkPosition>();
 
     // State variables:
-    public static boolean downloading = false; // Read-only outside of this class!
-    public static boolean isMultiworld = false; // Is this a multiworld server?
-    public static boolean propsFound = false; // Are there saved properties available?
-    public static boolean startOnChange = false; // Automatically restart after world changes?
+    /**
+     * Whether the world is currently downloading.
+     * 
+     * Don't modify this outside of WDL.java.
+     * TODO See above -- getters?
+     */
+    public static boolean downloading = false;
+    /**
+     * Is this a multiworld server?
+     */
+    public static boolean isMultiworld = false;
+    /**
+     * Are there saved properties available?
+     */
+    public static boolean propsFound = false;
+    /**
+     * Automatically restart after world changes?
+     */
+    public static boolean startOnChange = false;
 
+    /**
+     * Is the world currently being saved?
+     */
     public static boolean saving = false;
+    /**
+     * (Unknown) Has loading the world been delayed?
+     * TODO Seems to be unused.
+     */
     public static boolean worldLoadingDeferred = false;
 
     // Names:
-    public static String worldName = "WorldDownloaderERROR"; // safe default
+    /**
+     * The current world name.
+     */
+    public static String worldName = "WorldDownloaderERROR";
+    /**
+     * The folder in which worlds are being saved.
+     */
     public static String baseFolderName = "WorldDownloaderERROR"; // safe default
 
     // Properties:
