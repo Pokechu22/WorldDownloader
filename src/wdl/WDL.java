@@ -22,7 +22,7 @@ import net.minecraft.block.BlockDispenser;
 import net.minecraft.block.BlockFurnace;
 import net.minecraft.block.BlockNote;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiIngameMenu;
 import net.minecraft.client.gui.GuiScreen;
@@ -100,7 +100,14 @@ public class WDL
     public static Minecraft mc; // Reference to the Minecraft object
     public static WorldClient wc; // Reference to the World object that WDL uses
     public static NetworkManager nm = null; // Reference to a connection specific object. Used to detect a new connection.
-    public static EntityClientPlayerMP tp;
+    /**
+     * The current player.
+     * <br/>
+     * In 1.7.10, a net.minecraft.client.entity.EntityClientPlayerMP was
+     * used here, but now that does not exist, and it appears that the 
+     * SinglePlayer type is what is supposed to be used instead. 
+     */
+    public static EntityPlayerSP tp;
 
     public static Container windowContainer; // Reference to the place where all the item stacks end up after receiving them.
     public static int lastX = 0, lastY = 0, lastZ = 0; // Last right clicked block. Needed for TileEntity creation!
