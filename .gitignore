@@ -1,7 +1,9 @@
-/wdl/
+/bin/
+/mcp/
 
-/Start.java
-/net/minecraft/
+!/mcp/conf/fields.csv
+!/mcp/conf/methods.csv
+
 !/net/minecraft/client/gui/GuiIngameMenu.java
 !/net/minecraft/client/multiplayer/WorldClient.java
 !/net/minecraft/client/network/NetHandlerPlayClient.java
