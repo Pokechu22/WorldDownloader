@@ -236,7 +236,8 @@ public class WDL
         if (isMultiworld && worldName.isEmpty())
         {
             // Ask the user which world is loaded
-            mc.displayGuiScreen(new GuiWDLMultiworldSelect(null));
+        	//TODO: Disabled for now.
+            //mc.displayGuiScreen(new GuiWDLMultiworldSelect(null));
             return;
         }
 
