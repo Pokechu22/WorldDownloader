@@ -12,9 +12,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
 
-import com.mojang.realmsclient.RealmsMainScreen;
-import com.mojang.realmsclient.dto.McoServer;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBrewingStand;
 import net.minecraft.block.BlockChest;
@@ -538,16 +535,16 @@ public class WDL
     /**
      * Must be called when a block event is scheduled for the next tick. The caller has to check if WDL.downloading is true!
      */
-    public static void onBlockEvent(int x, int y, int z, Block block, int event, int param)
+    public static void onBlockEvent(BlockPos pos, Block block, int event, int param)
     {
         // if( blockID == Block.music.blockID )
         if (block == Blocks.noteblock)
         {
             TileEntityNote newTE = new TileEntityNote();
             newTE.note = (byte)(param % 25);
-            wc.setTileEntity(x, y, z, newTE);
-            newTileEntities.add(new ChunkPosition(x, y, z));
-            chatDebug("onBlockEvent: Note Block: " + x + " " + y + " " + z + " pitch: " + param + " - " + newTE);
+            wc.setTileEntity(pos, newTE);
+            newTileEntities.add(pos);
+            chatDebug("onBlockEvent: Note Block: " + pos + " pitch: " + param + " - " + newTE);
         }
         // Pistons, Chests (open, close), EnderChests, ... (see references to WorldServer.addBlockEvent)
     }
@@ -629,19 +626,19 @@ public class WDL
                     String entityType = null;
                     if ((entityType = isImportableTileEntity(te)) != null)
                     {
-                        if (!newTileEntities.contains(new ChunkPosition(te.xCoord, te.yCoord, te.zCoord)))
+                        if (!newTileEntities.contains(te.getPos()))
                         {
-                            wc.setTileEntity(te.xCoord, te.yCoord, te.zCoord, te);
-                            chatDebug("Loaded TE: " + entityType + " at " + te.xCoord + " " + te.yCoord + " " + te.zCoord);
+                            wc.setTileEntity(te.getPos(), te);
+                            chatDebug("Loaded TE: " + entityType + " at " + te.getPos());
                         }
                         else
                         {
-                            chatDebug("Dropping old TE: " + entityType + " at " + te.xCoord + " " + te.yCoord + " " + te.zCoord);
+                            chatDebug("Dropping old TE: " + entityType + " at " + te.getPos());
                         }
                     }
                     else
                     {
-                        chatDebug("Old TE is not importable: " + entityType + " at " + te.xCoord + " " + te.yCoord + " " + te.zCoord);
+                        chatDebug("Old TE is not importable: " + entityType + " at " + te.getPos());
                     }
                 }
             }
@@ -654,7 +651,7 @@ public class WDL
     /** Checks if the TileEntity should be imported. Only "problematic" TEs will be imported. */
     public static String isImportableTileEntity(TileEntity te)
     {
-        Block block = wc.getBlock(te.xCoord, te.yCoord, te.zCoord);
+        Block block = te.getBlockType();
         if (block instanceof BlockChest && te instanceof TileEntityChest)
         {
             return "TileEntityChest";
@@ -884,7 +881,10 @@ public class WDL
             }
             try
             {
-                ThreadedFileIOBase.threadedIOInstance.waitForFinish();
+            	//func_178779_a is a getter for the intsance.
+            	//Look inside of ThreadedFileIOBase.java for
+            	//such a getter.
+                ThreadedFileIOBase.func_178779_a().waitForFinish();
             } catch (Exception e)
             {
                 chatMsg("Threw exception waiting for asynchronous IO to finish. Hmmm.");
@@ -911,7 +911,7 @@ public class WDL
     {
         // chatMsg( "saveChunk at " + c.xPosition + " " + c.zPosition);
         importTileEntities(c);
-        c.isTerrainPopulated = true;
+        c.setTerrainPopulated(true);
         try
         {
             chunkLoader.saveChunk(wc, c);
@@ -1227,8 +1227,15 @@ public class WDL
         return "Unidentified Server";
     }
 
+    /**
+     * Does not work right now.
+     * 
+     * @return
+     */
     public static String getRealmName()
     {
+    	return "RealmsIsNotSupportedYet";
+    	/*
         // Is this the only way to get the name of the Realms server? Really Mojang?
         // If this function turns out to be a pain to update, just remove Realms support completely.
         // I doubt anyone will need this anyway since Realms support downloading the world out of the box.
@@ -1270,7 +1277,7 @@ public class WDL
         }
 
         // Return its name. Not sure if this is the best naming scheme...
-        return mcos.name;
+        return mcos.name;*/
     }
 
     /** Get the base folder name for the server we are connected to */
