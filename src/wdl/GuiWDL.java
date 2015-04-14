@@ -27,9 +27,8 @@ public class GuiWDL extends GuiScreen {
 	 */
 	public void initGui() {
 		if (WDL.isMultiworld && WDL.worldName.isEmpty()) {
-			// TODO this is not yet set up.
-			// this.mc.displayGuiScreen(new
-			// GuiWDLMultiworldSelect(this.parent));
+			this.mc.displayGuiScreen(new 
+					GuiWDLMultiworldSelect(this.parent));
 			return;
 		}
 

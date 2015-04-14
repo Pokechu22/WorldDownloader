@@ -95,7 +95,7 @@ public class WDL
 	 * Whether or not debug is enabled.
 	 * Setting to false will suppress debug output in chat console.
 	 */
-    public static boolean DEBUG = false;
+    public static boolean DEBUG = true;
 
     // References: TODO these are bad names (other than mc).
     /**
@@ -236,8 +236,7 @@ public class WDL
         if (isMultiworld && worldName.isEmpty())
         {
             // Ask the user which world is loaded
-        	//TODO: Disabled for now.
-            //mc.displayGuiScreen(new GuiWDLMultiworldSelect(null));
+        	mc.displayGuiScreen(new GuiWDLMultiworldSelect(null));
             return;
         }
 

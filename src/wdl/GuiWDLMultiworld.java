@@ -39,10 +39,8 @@ public class GuiWDLMultiworld extends GuiScreen {
 				this.updateMultiworldEnabled(true);
 			} else if (var1.id == 100) {
 				if (this.newMultiworldState) {
-					// TODO this part's not done.
-					return;
-					// this.mc.displayGuiScreen(new
-					// GuiWDLMultiworldSelect(this.parent));
+					this.mc.displayGuiScreen(new 
+							GuiWDLMultiworldSelect(this.parent));
 				} else {
 					WDL.baseProps.setProperty("LinkedWorlds", "");
 					WDL.saveProps();
