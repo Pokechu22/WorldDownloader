@@ -102,12 +102,12 @@ public class WorldClient extends World {
 
 		/* WDL >>> */
 		if (wdl.WDL.downloading) {
-			if (wdl.WDL.tp.openContainer != wdl.WDL.windowContainer) {
-				if (wdl.WDL.tp.openContainer == wdl.WDL.tp.inventoryContainer)
+			if (wdl.WDL.thePlayer.openContainer != wdl.WDL.windowContainer) {
+				if (wdl.WDL.thePlayer.openContainer == wdl.WDL.thePlayer.inventoryContainer)
 					wdl.WDL.onItemGuiClosed();
 				else
 					wdl.WDL.onItemGuiOpened();
-				wdl.WDL.windowContainer = wdl.WDL.tp.openContainer;
+				wdl.WDL.windowContainer = wdl.WDL.thePlayer.openContainer;
 			}
 		}
 		/* <<< WDL */
@@ -166,7 +166,7 @@ public class WorldClient extends World {
 	public void doPreChunk(int p_73025_1_, int p_73025_2_, boolean p_73025_3_) {
 		if (p_73025_3_) {
 			/* WDL >>> */
-			if (this != wdl.WDL.wc)
+			if (this != wdl.WDL.worldClient)
 				wdl.WDL.onWorldLoad();
 			/* <<< WDL */
 

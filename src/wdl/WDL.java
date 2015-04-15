@@ -97,20 +97,19 @@ public class WDL
 	 */
     public static boolean DEBUG = true;
 
-    // References: TODO these are bad names (other than mc).
     /**
      * Reference to the Minecraft object.
      */
-    public static Minecraft mc;
+    public static Minecraft minecraft;
     /**
      * Reference to the World object that WDL uses.
      */
-    public static WorldClient wc;
+    public static WorldClient worldClient;
     /**
      * Reference to a connection specific object.
      * Used to detect a new connection.
      */
-    public static NetworkManager nm = null;
+    public static NetworkManager networkManager = null;
     /**
      * The current player.
      * <br/>
@@ -118,7 +117,7 @@ public class WDL
      * used here, but now that does not exist, and it appears that the 
      * SinglePlayer type is what is supposed to be used instead. 
      */
-    public static EntityPlayerSP tp;
+    public static EntityPlayerSP thePlayer;
 
     /**
      * Reference to the place where all the item stacks end up after receiving them.
@@ -199,7 +198,7 @@ public class WDL
     // Initialization:
     static
     {
-        mc = Minecraft.getMinecraft();
+        minecraft = Minecraft.getMinecraft();
 
         // Initialize the Properties template:
         defaultProps = new Properties();
@@ -232,28 +231,28 @@ public class WDL
     /** Starts the download */
     public static void start()
     {
-        wc = mc.theWorld;
+        worldClient = minecraft.theWorld;
         if (isMultiworld && worldName.isEmpty())
         {
             // Ask the user which world is loaded
-        	mc.displayGuiScreen(new GuiWDLMultiworldSelect(null));
+        	minecraft.displayGuiScreen(new GuiWDLMultiworldSelect(null));
             return;
         }
 
         if (!propsFound)
         {
             // Never seen this world before. Ask user about multiworlds:
-            mc.displayGuiScreen(new GuiWDLMultiworld(null));
+            minecraft.displayGuiScreen(new GuiWDLMultiworld(null));
             return;
         }
 
-        WDL.mc.displayGuiScreen((GuiScreen)null);
-        WDL.mc.setIngameFocus();
+        WDL.minecraft.displayGuiScreen((GuiScreen)null);
+        WDL.minecraft.setIngameFocus();
 
         worldProps = loadWorldProps(worldName);
 
-        saveHandler = (SaveHandler)mc.getSaveLoader().getSaveLoader(getWorldFolderName(worldName), true);
-        chunkLoader = saveHandler.getChunkLoader(wc.provider);
+        saveHandler = (SaveHandler)minecraft.getSaveLoader().getSaveLoader(getWorldFolderName(worldName), true);
+        chunkLoader = saveHandler.getChunkLoader(worldClient.provider);
 
         newTileEntities = new HashSet<BlockPos>();
 
@@ -292,7 +291,7 @@ public class WDL
     /** Must be called after the static World object in Minecraft has been replaced */
     public static void onWorldLoad()
     {
-        if (mc.isIntegratedServerRunning())
+        if (minecraft.isIntegratedServerRunning())
             return;
 
         // If already downloading
@@ -313,18 +312,18 @@ public class WDL
     public static void loadWorld()
     {
         worldName = ""; // The new (multi-)world name is unknown at the moment
-        wc = mc.theWorld;
-        tp = mc.thePlayer;
-        windowContainer = tp.openContainer;
+        worldClient = minecraft.theWorld;
+        thePlayer = minecraft.thePlayer;
+        windowContainer = thePlayer.openContainer;
 
         // Is this a different server?
-        NetworkManager newNM = tp.sendQueue.getNetworkManager(); // tp.sendQueue.getNetManager()
+        NetworkManager newNM = thePlayer.sendQueue.getNetworkManager(); // tp.sendQueue.getNetManager()
 
-        if (nm != newNM)
+        if (networkManager != newNM)
         {
             // Different server, different world!
             chatDebug("onWorldLoad: different server!");
-            nm = newNM;
+            networkManager = newNM;
             loadBaseProps();
             if (baseProps.getProperty("AutoStart").equals("true"))
                 start();
@@ -347,9 +346,9 @@ public class WDL
 
     public static void onSaveComplete()
     {
-        WDL.mc.getSaveLoader().flushCache();
+        WDL.minecraft.getSaveLoader().flushCache();
         WDL.saveHandler.flush();
-        WDL.wc = null;
+        WDL.worldClient = null;
 
         // If still downloading, load the current world and keep on downloading
         if (downloading)
@@ -375,19 +374,19 @@ public class WDL
     /** Must be called when a GUI that receives item stacks from the server is shown */
     public static void onItemGuiOpened()
     {
-        if (mc.objectMouseOver == null)
+        if (minecraft.objectMouseOver == null)
             return;
 
-        if (mc.objectMouseOver.typeOfHit == MovingObjectType.ENTITY)
+        if (minecraft.objectMouseOver.typeOfHit == MovingObjectType.ENTITY)
         {
-            lastEntity = mc.objectMouseOver.entityHit;
+            lastEntity = minecraft.objectMouseOver.entityHit;
         }
         else
         {
             lastEntity = null;
             //func_178782_a returns a BlockPos; find another one
             //if it is reobfuscated.
-            lastClickedBlock = mc.objectMouseOver.func_178782_a();
+            lastClickedBlock = minecraft.objectMouseOver.func_178782_a();
         }
     }
 
@@ -430,7 +429,7 @@ public class WDL
 
         // Else, the last thing clicked was a TILE ENTITY
         // Get the tile entity which we are going to update the inventory for
-        TileEntity te = wc.getTileEntity(lastClickedBlock);
+        TileEntity te = worldClient.getTileEntity(lastClickedBlock);
         if (te == null)
         {
             WDL.chatDebug("onItemGuiClosed could not get TE at " + lastClickedBlock);
@@ -446,28 +445,28 @@ public class WDL
                 BlockPos chestPos2;
                 
                 TileEntityChest tec1, tec2;
-                if ((te2 = wc.getTileEntity(chestPos1.add(0, 0, 1))) instanceof TileEntityChest &&
+                if ((te2 = worldClient.getTileEntity(chestPos1.add(0, 0, 1))) instanceof TileEntityChest &&
                         ((TileEntityChest)te2).getChestType() == ((TileEntityChest)te).getChestType())
                 {
                     tec1 = (TileEntityChest)te;
                     tec2 = (TileEntityChest)te2;
                     chestPos2 = chestPos1.add(0, 0, 1);
                 }
-                else if ((te2 = wc.getTileEntity(chestPos1.add(0, 0, -1))) instanceof TileEntityChest &&
+                else if ((te2 = worldClient.getTileEntity(chestPos1.add(0, 0, -1))) instanceof TileEntityChest &&
                         ((TileEntityChest)te2).getChestType() == ((TileEntityChest)te).getChestType())
                 {
                     tec1 = (TileEntityChest)te2;
                     tec2 = (TileEntityChest)te;
                     chestPos2 = chestPos1.add(0, 0, -1); 
                 }
-                else if ((te2 = wc.getTileEntity(chestPos1.add(1, 0, 0))) instanceof TileEntityChest &&
+                else if ((te2 = worldClient.getTileEntity(chestPos1.add(1, 0, 0))) instanceof TileEntityChest &&
                         ((TileEntityChest)te2).getChestType() == ((TileEntityChest)te).getChestType())
                 {
                     tec1 = (TileEntityChest)te;
                     tec2 = (TileEntityChest)te2;
                     chestPos2 = chestPos1.add(-1, 0, 0);
                 }
-                else if ((te2 = wc.getTileEntity(chestPos1.add(-1, 0, 0))) instanceof TileEntityChest &&
+                else if ((te2 = worldClient.getTileEntity(chestPos1.add(-1, 0, 0))) instanceof TileEntityChest &&
                         ((TileEntityChest)te2).getChestType() == ((TileEntityChest)te).getChestType())
                 {
                     tec1 = (TileEntityChest)te2;
@@ -495,7 +494,7 @@ public class WDL
         }
         else if (windowContainer instanceof ContainerChest && te instanceof TileEntityEnderChest)
         {
-            InventoryEnderChest inventoryEnderChest = tp.getInventoryEnderChest();
+            InventoryEnderChest inventoryEnderChest = thePlayer.getInventoryEnderChest();
             int inventorySize = inventoryEnderChest.getSizeInventory();
             int containerSize = windowContainer.inventorySlots.size();
             for (int i = 0; i < containerSize && i < inventorySize; i++)
@@ -542,7 +541,7 @@ public class WDL
         {
             TileEntityNote newTE = new TileEntityNote();
             newTE.note = (byte)(param % 25);
-            wc.setTileEntity(pos, newTE);
+            worldClient.setTileEntity(pos, newTE);
             newTileEntities.add(pos);
             chatDebug("onBlockEvent: Note Block: " + pos + " pitch: " + param + " - " + newTE);
         }
@@ -591,7 +590,7 @@ public class WDL
                 {
                     threshold = 160;
                 }
-                double distance = entity.getDistance(WDL.tp.posX, entity.posY, WDL.tp.posZ);
+                double distance = entity.getDistance(WDL.thePlayer.posX, entity.posY, WDL.thePlayer.posZ);
                 if( distance > (double)threshold)
                 {
                     WDL.chatDebug("removeEntityFromWorld: Refusing to remove " + EntityList.getEntityString(entity) + " at distance " + distance);
@@ -628,7 +627,7 @@ public class WDL
                     {
                         if (!newTileEntities.contains(te.getPos()))
                         {
-                            wc.setTileEntity(te.getPos(), te);
+                            worldClient.setTileEntity(te.getPos(), te);
                             chatDebug("Loaded TE: " + entityType + " at " + te.getPos());
                         }
                         else
@@ -693,15 +692,15 @@ public class WDL
         }
 
         NBTTagCompound playerNBT = new NBTTagCompound();
-        tp.writeToNBT(playerNBT);
+        thePlayer.writeToNBT(playerNBT);
         applyOverridesToPlayer(playerNBT);
 
-        ISaveHandler saveHAndler = wc.getSaveHandler();
-        AnvilSaveConverter saveConverter = (AnvilSaveConverter)mc.getSaveLoader();
+        ISaveHandler saveHAndler = worldClient.getSaveHandler();
+        AnvilSaveConverter saveConverter = (AnvilSaveConverter)minecraft.getSaveLoader();
 
-        wc.getWorldInfo().setSaveVersion(getSaveVersion(saveConverter));
+        worldClient.getWorldInfo().setSaveVersion(getSaveVersion(saveConverter));
 
-        NBTTagCompound worldInfoNBT = wc.getWorldInfo().cloneNBTCompound(playerNBT);
+        NBTTagCompound worldInfoNBT = worldClient.getWorldInfo().cloneNBTCompound(playerNBT);
         applyOverridesToWorldInfo(worldInfoNBT);
 
         savePlayer(playerNBT);
@@ -727,8 +726,8 @@ public class WDL
         try
         {
             File playersDirectory = new File(saveHandler.getWorldDirectory(), "playerdata");
-            File playerFile = new File(playersDirectory, tp.getUniqueID().toString() + ".dat.tmp");
-            File playerFileOld = new File(playersDirectory, tp.getUniqueID().toString() + ".dat");
+            File playerFile = new File(playersDirectory, thePlayer.getUniqueID().toString() + ".dat.tmp");
+            File playerFileOld = new File(playersDirectory, thePlayer.getUniqueID().toString() + ".dat");
 
             CompressedStreamTools.writeCompressed(playerNBT, new FileOutputStream(playerFile));
 
@@ -794,7 +793,7 @@ public class WDL
     {
         chatDebug("Saving chunks...");
         // Get the ChunkProviderClient from WorldClient
-        ChunkProviderClient chunkProvider = (ChunkProviderClient)wc.getChunkProvider();
+        ChunkProviderClient chunkProvider = (ChunkProviderClient)worldClient.getChunkProvider();
 
         // Get the hashArray field and set it accessible
         Field hashArrayField = null;
@@ -914,7 +913,7 @@ public class WDL
         c.setTerrainPopulated(true);
         try
         {
-            chunkLoader.saveChunk(wc, c);
+            chunkLoader.saveChunk(worldClient, c);
         }
         catch (Exception e)
         {
@@ -930,7 +929,7 @@ public class WDL
         baseProps = new Properties(defaultProps);
         try
         {
-            baseProps.load(new FileReader(new File(mc.mcDataDir, "saves/" + baseFolderName + "/WorldDownloader.txt")));
+            baseProps.load(new FileReader(new File(minecraft.mcDataDir, "saves/" + baseFolderName + "/WorldDownloader.txt")));
             propsFound = true;
         }
         catch (FileNotFoundException e)
@@ -960,7 +959,7 @@ public class WDL
 
             try
             {
-                ret.load(new FileReader(new File(mc.mcDataDir, "saves/" + folder + "/WorldDownloader.txt")));
+                ret.load(new FileReader(new File(minecraft.mcDataDir, "saves/" + folder + "/WorldDownloader.txt")));
             }
             catch (Exception e)
             {
@@ -984,7 +983,7 @@ public class WDL
             String folder = getWorldFolderName(theWorldName);
             try
             {
-                theWorldProps.store(new FileWriter(new File(mc.mcDataDir, "saves/" + folder + "/WorldDownloader.txt")), "");
+                theWorldProps.store(new FileWriter(new File(minecraft.mcDataDir, "saves/" + folder + "/WorldDownloader.txt")), "");
             }
             catch (Exception e)
             {
@@ -995,7 +994,7 @@ public class WDL
             baseProps.putAll(theWorldProps);
         }
 
-        File baseFolder = new File(mc.mcDataDir, "saves/" + baseFolderName);
+        File baseFolder = new File(minecraft.mcDataDir, "saves/" + baseFolderName);
         baseFolder.mkdirs();
         try
         {
@@ -1089,7 +1088,7 @@ public class WDL
         String gametypeOption = worldProps.getProperty("GameType");
         if (gametypeOption.equals("keep"))
         {
-            if (tp.capabilities.isCreativeMode) // capabilities
+            if (thePlayer.capabilities.isCreativeMode) // capabilities
             {
                 worldInfoNBT.setInteger("GameType", 1); // Creative
             }
@@ -1176,9 +1175,9 @@ public class WDL
         String spawn = worldProps.getProperty("Spawn");
         if (spawn.equals("player"))
         {
-            int x = (int)Math.floor(tp.posX);
-            int y = (int)Math.floor(tp.posY);
-            int z = (int)Math.floor(tp.posZ);
+            int x = (int)Math.floor(thePlayer.posX);
+            int y = (int)Math.floor(thePlayer.posY);
+            int z = (int)Math.floor(thePlayer.posZ);
             worldInfoNBT.setInteger("SpawnX", x);
             worldInfoNBT.setInteger("SpawnY", y);
             worldInfoNBT.setInteger("SpawnZ", z);
@@ -1201,14 +1200,14 @@ public class WDL
     {
         try
         {
-            if (mc.getCurrentServerData() != null)
+            if (minecraft.getCurrentServerData() != null)
             {
-                String name = mc.getCurrentServerData().serverName;
+                String name = minecraft.getCurrentServerData().serverName;
                 
                 if(name.equals(I18n.format("selectServer.defaultName")))
                 {
                 	// Direct connection using domain name or IP (and port)
-                	name =  mc.getCurrentServerData().serverIP;
+                	name =  minecraft.getCurrentServerData().serverIP;
                 }
                 return name;
             }
@@ -1319,7 +1318,7 @@ public class WDL
     public static void chatMsg(String msg)
     {
         // System.out.println( "WorldDownloader: " + msg ); // Just for debugging!
-        mc.ingameGUI.getChatGUI().printChatMessage(new ChatComponentText("\u00A7c[WorldDL]\u00A76 " + msg));
+        minecraft.ingameGUI.getChatGUI().printChatMessage(new ChatComponentText("\u00A7c[WorldDL]\u00A76 " + msg));
     }
 
     /** Adds a chat message with a World Downloader prefix */
@@ -1328,14 +1327,14 @@ public class WDL
         if (!WDL.DEBUG)
             return;
         // System.out.println( "WorldDownloader: " + msg ); // Just for debugging!
-        mc.ingameGUI.getChatGUI().printChatMessage(new ChatComponentText("\u00A72[WorldDL]\u00A76 " + msg));
+        minecraft.ingameGUI.getChatGUI().printChatMessage(new ChatComponentText("\u00A72[WorldDL]\u00A76 " + msg));
     }
 
     /** Adds a chat message with a World Downloader prefix */
     public static void chatError(String msg)
     {
         // System.out.println( "WorldDownloader: " + msg ); // Just for debugging!
-        mc.ingameGUI.getChatGUI().printChatMessage(new ChatComponentText("\u00A72[WorldDL]\u00A74 " + msg));
+        minecraft.ingameGUI.getChatGUI().printChatMessage(new ChatComponentText("\u00A72[WorldDL]\u00A74 " + msg));
     }
 
 
@@ -1452,7 +1451,7 @@ public class WDL
     // Add World Downloader buttons to GuiIngameMenu
     public static void injectWDLButtons(GuiIngameMenu gui, List buttonList)
     {
-        if (mc.isIntegratedServerRunning())
+        if (minecraft.isIntegratedServerRunning())
         {
             return; // WDL not available if in singleplayer or LAN server mode
         }
@@ -1493,7 +1492,7 @@ public class WDL
 
     public static void handleWDLButtonClick(GuiIngameMenu gui, GuiButton button)
     {
-        if (mc.isIntegratedServerRunning())
+        if (minecraft.isIntegratedServerRunning())
         {
             return; // WDL not available if in singleplayer or LAN server mode
         }
@@ -1503,8 +1502,8 @@ public class WDL
             if (WDL.downloading)
             {
                 WDL.stop();
-                WDL.mc.displayGuiScreen((GuiScreen)null);
-                WDL.mc.setIngameFocus();
+                WDL.minecraft.displayGuiScreen((GuiScreen)null);
+                WDL.minecraft.setIngameFocus();
             }
             else
             {
@@ -1513,7 +1512,7 @@ public class WDL
         }
         else if( button.id == 0x57444C6F) // "..." (options)
         {
-            WDL.mc.displayGuiScreen(new GuiWDL(gui));
+            WDL.minecraft.displayGuiScreen(new GuiWDL(gui));
         }
         else if( button.id == 1) // "Disconnect"
         {

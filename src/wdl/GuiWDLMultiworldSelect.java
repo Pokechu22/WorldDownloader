@@ -24,14 +24,14 @@ public class GuiWDLMultiworldSelect extends GuiScreen {
 
 	public GuiWDLMultiworldSelect(GuiScreen var1) {
 		this.parent = var1;
-		EntityPlayerSP tempPlayer = WDL.tp;
-		this.cam = new EntityPlayerSP(WDL.mc, WDL.wc, tempPlayer.sendQueue,
+		EntityPlayerSP tempPlayer = WDL.thePlayer;
+		this.cam = new EntityPlayerSP(WDL.minecraft, WDL.worldClient, tempPlayer.sendQueue,
 				tempPlayer.getStatFileWriter());
 		this.cam.setLocationAndAngles(tempPlayer.posX, tempPlayer.posY
 				- (double) tempPlayer.getYOffset(), tempPlayer.posZ, tempPlayer.rotationYaw, 0.0F);
 		this.yaw = tempPlayer.rotationYaw;
-		this.thirdPersonViewSave = WDL.mc.gameSettings.thirdPersonView;
-		WDL.mc.gameSettings.thirdPersonView = 0;
+		this.thirdPersonViewSave = WDL.minecraft.gameSettings.thirdPersonView;
+		WDL.minecraft.gameSettings.thirdPersonView = 0;
 		//TODO renderViewEntity doesn't exist...
 	}
 
@@ -189,11 +189,11 @@ public class GuiWDLMultiworldSelect extends GuiScreen {
 		this.cam.prevRotationPitch = this.cam.rotationPitch = 0.0F;
 		this.cam.prevRotationYaw = this.cam.rotationYaw = this.yaw;
 		float var4 = 0.475F;
-		this.cam.lastTickPosY = this.cam.prevPosY = this.cam.posY = WDL.tp.posY;
-		this.cam.lastTickPosX = this.cam.prevPosX = this.cam.posX = WDL.tp.posX
+		this.cam.lastTickPosY = this.cam.prevPosY = this.cam.posY = WDL.thePlayer.posY;
+		this.cam.lastTickPosX = this.cam.prevPosX = this.cam.posX = WDL.thePlayer.posX
 				- (double) var4
 				* Math.sin((double) this.yaw / 180.0D * Math.PI);
-		this.cam.lastTickPosZ = this.cam.prevPosZ = this.cam.posZ = WDL.tp.posZ
+		this.cam.lastTickPosZ = this.cam.prevPosZ = this.cam.posZ = WDL.thePlayer.posZ
 				+ (double) var4
 				* Math.cos((double) this.yaw / 180.0D * Math.PI);
 		float var5 = 1.0F;
@@ -214,7 +214,7 @@ public class GuiWDLMultiworldSelect extends GuiScreen {
 	 */
 	public void onGuiClosed() {
 		super.onGuiClosed();
-		WDL.mc.gameSettings.thirdPersonView = this.thirdPersonViewSave;
+		WDL.minecraft.gameSettings.thirdPersonView = this.thirdPersonViewSave;
 		//TODO renderViewEntity
 	}
 

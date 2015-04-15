@@ -231,9 +231,9 @@ public class GuiWDLPlayer extends GuiScreen {
 	}
 
 	private void pickPlayerPos() {
-		int var1 = (int) Math.floor(WDL.tp.posX);
-		int var2 = (int) Math.floor(WDL.tp.posY);
-		int var3 = (int) Math.floor(WDL.tp.posZ);
+		int var1 = (int) Math.floor(WDL.thePlayer.posX);
+		int var2 = (int) Math.floor(WDL.thePlayer.posY);
+		int var3 = (int) Math.floor(WDL.thePlayer.posZ);
 		this.posX.setText(String.valueOf(var1));
 		this.posY.setText(String.valueOf(var2));
 		this.posZ.setText(String.valueOf(var3));

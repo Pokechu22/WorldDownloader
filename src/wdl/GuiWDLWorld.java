@@ -329,9 +329,9 @@ public class GuiWDLWorld extends GuiScreen {
 	}
 
 	private void pickSpawn() {
-		int var1 = (int) Math.floor(WDL.tp.posX);
-		int var2 = (int) Math.floor(WDL.tp.posY);
-		int var3 = (int) Math.floor(WDL.tp.posZ);
+		int var1 = (int) Math.floor(WDL.thePlayer.posX);
+		int var2 = (int) Math.floor(WDL.thePlayer.posY);
+		int var3 = (int) Math.floor(WDL.thePlayer.posZ);
 		this.spawnX.setText(String.valueOf(var1));
 		this.spawnY.setText(String.valueOf(var2));
 		this.spawnZ.setText(String.valueOf(var3));
