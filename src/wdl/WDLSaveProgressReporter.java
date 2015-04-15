@@ -1,27 +1,21 @@
 package wdl;
 
-public class WDLSaveProgressReporter implements Runnable
-{
-    public void run()
-    {
-        while (WDL.saving)
-        {
-            WDL.chatMsg("Saving...");
+public class WDLSaveProgressReporter implements Runnable {
+	@Override
+	public void run() {
+		while (WDL.saving) {
+			WDL.chatMsg("Saving...");
 
-            try
-            {
-                Thread.sleep(10000L);
-            }
-            catch (InterruptedException var2)
-            {
-                var2.printStackTrace();
-            }
-        }
-    }
+			try {
+				Thread.sleep(10000L);
+			} catch (InterruptedException var2) {
+				var2.printStackTrace();
+			}
+		}
+	}
 
-    public void start()
-    {
-        Thread var1 = new Thread(this);
-        var1.start();
-    }
+	public void start() {
+		Thread var1 = new Thread(this);
+		var1.start();
+	}
 }

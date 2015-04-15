@@ -8,7 +8,6 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.util.Session;
 
 public class GuiWDLMultiworldSelect extends GuiScreen {
 	private GuiButton cancelBtn;
@@ -25,19 +24,21 @@ public class GuiWDLMultiworldSelect extends GuiScreen {
 	public GuiWDLMultiworldSelect(GuiScreen var1) {
 		this.parent = var1;
 		EntityPlayerSP tempPlayer = WDL.thePlayer;
-		this.cam = new EntityPlayerSP(WDL.minecraft, WDL.worldClient, tempPlayer.sendQueue,
-				tempPlayer.getStatFileWriter());
+		this.cam = new EntityPlayerSP(WDL.minecraft, WDL.worldClient,
+				tempPlayer.sendQueue, tempPlayer.getStatFileWriter());
 		this.cam.setLocationAndAngles(tempPlayer.posX, tempPlayer.posY
-				- (double) tempPlayer.getYOffset(), tempPlayer.posZ, tempPlayer.rotationYaw, 0.0F);
+				- tempPlayer.getYOffset(), tempPlayer.posZ,
+				tempPlayer.rotationYaw, 0.0F);
 		this.yaw = tempPlayer.rotationYaw;
 		this.thirdPersonViewSave = WDL.minecraft.gameSettings.thirdPersonView;
 		WDL.minecraft.gameSettings.thirdPersonView = 0;
-		//TODO renderViewEntity doesn't exist...
+		// TODO renderViewEntity doesn't exist...
 	}
 
 	/**
 	 * Adds the buttons (and other controls) to the screen in question.
 	 */
+	@Override
 	public void initGui() {
 		this.buttonList.clear();
 		int var1 = this.width / 2;
@@ -103,15 +104,16 @@ public class GuiWDLMultiworldSelect extends GuiScreen {
 			this.buttonList.add(this.buttons[var11]);
 		}
 
-		this.newNameField = new GuiTextField(40, this.fontRendererObj, var11 % var3
-				* var4 + var9, this.height - 60 - var11 / var3 * 21 + 1, var4,
-				18);
+		this.newNameField = new GuiTextField(40, this.fontRendererObj, var11
+				% var3 * var4 + var9, this.height - 60 - var11 / var3 * 21 + 1,
+				var4, 18);
 	}
 
 	/**
 	 * Fired when a control is clicked. This is the equivalent of
 	 * ActionListener.actionPerformed(ActionEvent e).
 	 */
+	@Override
 	protected void actionPerformed(GuiButton var1) {
 		if (var1.enabled) {
 			this.newWorld = false;
@@ -131,7 +133,9 @@ public class GuiWDLMultiworldSelect extends GuiScreen {
 	/**
 	 * Called when the mouse is clicked.
 	 */
-	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+	@Override
+	protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
+			throws IOException {
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 
 		if (this.newWorld) {
@@ -143,6 +147,7 @@ public class GuiWDLMultiworldSelect extends GuiScreen {
 	 * Fired when a key is typed. This is the equivalent of
 	 * KeyListener.keyTyped(KeyEvent e).
 	 */
+	@Override
 	protected void keyTyped(char typedChar, int keyCode) throws IOException {
 		super.keyTyped(typedChar, keyCode);
 
@@ -162,6 +167,7 @@ public class GuiWDLMultiworldSelect extends GuiScreen {
 	/**
 	 * Called from the main game loop to update the screen.
 	 */
+	@Override
 	public void updateScreen() {
 		this.newNameField.updateCursorCounter();
 		super.updateScreen();
@@ -170,6 +176,7 @@ public class GuiWDLMultiworldSelect extends GuiScreen {
 	/**
 	 * Draws the screen and all the components in it.
 	 */
+	@Override
 	public void drawScreen(int var1, int var2, float var3) {
 		drawRect(this.width / 2 - 120, 0, this.width / 2 + 120,
 				this.height / 16 + 25, -1073741824);
@@ -191,15 +198,13 @@ public class GuiWDLMultiworldSelect extends GuiScreen {
 		float var4 = 0.475F;
 		this.cam.lastTickPosY = this.cam.prevPosY = this.cam.posY = WDL.thePlayer.posY;
 		this.cam.lastTickPosX = this.cam.prevPosX = this.cam.posX = WDL.thePlayer.posX
-				- (double) var4
-				* Math.sin((double) this.yaw / 180.0D * Math.PI);
+				- var4 * Math.sin(this.yaw / 180.0D * Math.PI);
 		this.cam.lastTickPosZ = this.cam.prevPosZ = this.cam.posZ = WDL.thePlayer.posZ
-				+ (double) var4
-				* Math.cos((double) this.yaw / 180.0D * Math.PI);
+				+ var4 * Math.cos(this.yaw / 180.0D * Math.PI);
 		float var5 = 1.0F;
-		this.yaw = (float) ((double) this.yaw + (double) var5
-				* (1.0D + 0.699999988079071D * Math
-						.cos((double) (this.yaw + 45.0F) / 45.0D * Math.PI)));
+		this.yaw = (float) (this.yaw + var5
+				* (1.0D + 0.699999988079071D * Math.cos((this.yaw + 45.0F)
+						/ 45.0D * Math.PI)));
 
 		if (this.newWorld) {
 			this.newNameField.drawTextBox();
@@ -212,10 +217,11 @@ public class GuiWDLMultiworldSelect extends GuiScreen {
 	 * Called when the screen is unloaded. Used to disable keyboard repeat
 	 * events
 	 */
+	@Override
 	public void onGuiClosed() {
 		super.onGuiClosed();
 		WDL.minecraft.gameSettings.thirdPersonView = this.thirdPersonViewSave;
-		//TODO renderViewEntity
+		// TODO renderViewEntity
 	}
 
 	private void worldSelected(String var1) {

@@ -1,10 +1,10 @@
 package net.minecraft.client.multiplayer;
 
-import com.google.common.collect.Sets;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.Callable;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -35,6 +35,8 @@ import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.storage.SaveDataMemoryStorage;
 import net.minecraft.world.storage.SaveHandlerMP;
 import net.minecraft.world.storage.WorldInfo;
+
+import com.google.common.collect.Sets;
 
 public class WorldClient extends World {
 	/** The packets that need to be sent to the server. */
@@ -75,6 +77,7 @@ public class WorldClient extends World {
 	/**
 	 * Runs a single tick for the world
 	 */
+	@Override
 	public void tick() {
 		super.tick();
 		this.func_82738_a(this.getTotalWorldTime() + 1L);
@@ -103,10 +106,11 @@ public class WorldClient extends World {
 		/* WDL >>> */
 		if (wdl.WDL.downloading) {
 			if (wdl.WDL.thePlayer.openContainer != wdl.WDL.windowContainer) {
-				if (wdl.WDL.thePlayer.openContainer == wdl.WDL.thePlayer.inventoryContainer)
+				if (wdl.WDL.thePlayer.openContainer == wdl.WDL.thePlayer.inventoryContainer) {
 					wdl.WDL.onItemGuiClosed();
-				else
+				} else {
 					wdl.WDL.onItemGuiOpened();
+				}
 				wdl.WDL.windowContainer = wdl.WDL.thePlayer.openContainer;
 			}
 		}
@@ -126,11 +130,13 @@ public class WorldClient extends World {
 	 * Creates the chunk provider for this world. Called in the constructor.
 	 * Retrieves provider from worldProvider?
 	 */
+	@Override
 	protected IChunkProvider createChunkProvider() {
 		this.clientChunkProvider = new ChunkProviderClient(this);
 		return this.clientChunkProvider;
 	}
 
+	@Override
 	protected void func_147456_g() {
 		super.func_147456_g();
 		this.previousActiveChunkSet.retainAll(this.activeChunkSet);
@@ -166,17 +172,19 @@ public class WorldClient extends World {
 	public void doPreChunk(int p_73025_1_, int p_73025_2_, boolean p_73025_3_) {
 		if (p_73025_3_) {
 			/* WDL >>> */
-			if (this != wdl.WDL.worldClient)
+			if (this != wdl.WDL.worldClient) {
 				wdl.WDL.onWorldLoad();
-			/* <<< WDL */
+				/* <<< WDL */
+			}
 
 			this.clientChunkProvider.loadChunk(p_73025_1_, p_73025_2_);
 		} else {
 			/* WDL >>> */
-			if (wdl.WDL.downloading)
+			if (wdl.WDL.downloading) {
 				wdl.WDL.onChunkNoLongerNeeded(chunkProvider.provideChunk(
 						p_73025_1_, p_73025_2_));
-			/* <<< WDL */
+				/* <<< WDL */
+			}
 
 			this.clientChunkProvider.unloadChunk(p_73025_1_, p_73025_2_);
 		}
@@ -191,6 +199,7 @@ public class WorldClient extends World {
 	/**
 	 * Called when an entity is spawned in the world. This includes players.
 	 */
+	@Override
 	public boolean spawnEntityInWorld(Entity p_72838_1_) {
 		boolean var2 = super.spawnEntityInWorld(p_72838_1_);
 		this.entityList.add(p_72838_1_);
@@ -209,11 +218,13 @@ public class WorldClient extends World {
 	 * Schedule the entity for removal during the next tick. Marks the entity
 	 * dead in anticipation.
 	 */
+	@Override
 	public void removeEntity(Entity p_72900_1_) {
 		super.removeEntity(p_72900_1_);
 		this.entityList.remove(p_72900_1_);
 	}
 
+	@Override
 	protected void onEntityAdded(Entity p_72923_1_) {
 		super.onEntityAdded(p_72923_1_);
 
@@ -222,6 +233,7 @@ public class WorldClient extends World {
 		}
 	}
 
+	@Override
 	protected void onEntityRemoved(Entity p_72847_1_) {
 		super.onEntityRemoved(p_72847_1_);
 		boolean var2 = false;
@@ -260,18 +272,20 @@ public class WorldClient extends World {
 	 * Returns the Entity with the given ID, or null if it doesn't exist in this
 	 * World.
 	 */
+	@Override
 	public Entity getEntityByID(int p_73045_1_) {
-		return (Entity) (p_73045_1_ == this.mc.thePlayer.getEntityId() ? this.mc.thePlayer
-				: super.getEntityByID(p_73045_1_));
+		return p_73045_1_ == this.mc.thePlayer.getEntityId() ? this.mc.thePlayer
+				: super.getEntityByID(p_73045_1_);
 	}
 
 	public Entity removeEntityFromWorld(int p_73028_1_) {
 		Entity var2 = (Entity) this.entitiesById.removeObject(p_73028_1_);
 
 		/* WDL >>> */
-		if (wdl.WDL.shouldKeepEntity(var2))
+		if (wdl.WDL.shouldKeepEntity(var2)) {
 			return null;
-		/* <<< WDL */
+			/* <<< WDL */
+		}
 
 		if (var2 != null) {
 			this.entityList.remove(var2);
@@ -292,6 +306,7 @@ public class WorldClient extends World {
 	/**
 	 * If on MP, sends a quitting packet.
 	 */
+	@Override
 	public void sendQuittingDisconnectingPacket() {
 		this.sendQueue.getNetworkManager().closeChannel(
 				new ChatComponentText("Quitting"));
@@ -300,9 +315,11 @@ public class WorldClient extends World {
 	/**
 	 * Updates all weather states.
 	 */
+	@Override
 	protected void updateWeather() {
 	}
 
+	@Override
 	protected int getRenderDistanceChunks() {
 		return this.mc.gameSettings.renderDistanceChunks;
 	}
@@ -328,10 +345,8 @@ public class WorldClient extends World {
 			var13.getBlock().randomDisplayTick(this, var12, var13, var5);
 
 			if (var7 && var13.getBlock() == Blocks.barrier) {
-				this.spawnParticle(EnumParticleTypes.BARRIER,
-						(double) ((float) var9 + 0.5F),
-						(double) ((float) var10 + 0.5F),
-						(double) ((float) var11 + 0.5F), 0.0D, 0.0D, 0.0D,
+				this.spawnParticle(EnumParticleTypes.BARRIER, var9 + 0.5F,
+						var10 + 0.5F, var11 + 0.5F, 0.0D, 0.0D, 0.0D,
 						new int[0]);
 			}
 		}
@@ -393,11 +408,13 @@ public class WorldClient extends World {
 	/**
 	 * Adds some basic stats of the world to the given crash report.
 	 */
+	@Override
 	public CrashReportCategory addWorldInfoToCrashReport(CrashReport report) {
 		CrashReportCategory var2 = super.addWorldInfoToCrashReport(report);
 		var2.addCrashSectionCallable("Forced entities", new Callable() {
 			private static final String __OBFID = "CL_00000883";
 
+			@Override
 			public String call() {
 				return WorldClient.this.entityList.size() + " total; "
 						+ WorldClient.this.entityList.toString();
@@ -406,6 +423,7 @@ public class WorldClient extends World {
 		var2.addCrashSectionCallable("Retry entities", new Callable() {
 			private static final String __OBFID = "CL_00000884";
 
+			@Override
 			public String call() {
 				return WorldClient.this.entitySpawnQueue.size() + " total; "
 						+ WorldClient.this.entitySpawnQueue.toString();
@@ -414,6 +432,7 @@ public class WorldClient extends World {
 		var2.addCrashSectionCallable("Server brand", new Callable() {
 			private static final String __OBFID = "CL_00000885";
 
+			@Override
 			public String call() {
 				return WorldClient.this.mc.thePlayer.getClientBrand();
 			}
@@ -421,6 +440,7 @@ public class WorldClient extends World {
 		var2.addCrashSectionCallable("Server type", new Callable() {
 			private static final String __OBFID = "CL_00000886";
 
+			@Override
 			public String call() {
 				return WorldClient.this.mc.getIntegratedServer() == null ? "Non-integrated multiplayer server"
 						: "Integrated singleplayer server";
@@ -431,9 +451,8 @@ public class WorldClient extends World {
 
 	public void func_175731_a(BlockPos p_175731_1_, String p_175731_2_,
 			float p_175731_3_, float p_175731_4_, boolean p_175731_5_) {
-		this.playSound((double) p_175731_1_.getX() + 0.5D,
-				(double) p_175731_1_.getY() + 0.5D,
-				(double) p_175731_1_.getZ() + 0.5D, p_175731_2_, p_175731_3_,
+		this.playSound(p_175731_1_.getX() + 0.5D, p_175731_1_.getY() + 0.5D,
+				p_175731_1_.getZ() + 0.5D, p_175731_2_, p_175731_3_,
 				p_175731_4_, p_175731_5_);
 	}
 
@@ -441,6 +460,7 @@ public class WorldClient extends World {
 	 * par8 is loudness, all pars passed to
 	 * minecraftInstance.sndManager.playSound
 	 */
+	@Override
 	public void playSound(double x, double y, double z, String soundName,
 			float volume, float pitch, boolean distanceDelay) {
 		double var11 = this.mc.func_175606_aa().getDistanceSq(x, y, z);
@@ -457,6 +477,7 @@ public class WorldClient extends World {
 		}
 	}
 
+	@Override
 	public void makeFireworks(double x, double y, double z, double motionX,
 			double motionY, double motionZ, NBTTagCompound compund) {
 		this.mc.effectRenderer.addEffect(new EntityFireworkStarterFX(this, x,
@@ -471,6 +492,7 @@ public class WorldClient extends World {
 	/**
 	 * Sets the world time.
 	 */
+	@Override
 	public void setWorldTime(long time) {
 		if (time < 0L) {
 			time = -time;
