@@ -17,6 +17,7 @@ import net.minecraft.block.BlockBrewingStand;
 import net.minecraft.block.BlockChest;
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.block.BlockFurnace;
+import net.minecraft.block.BlockHopper;
 import net.minecraft.block.BlockNote;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -52,6 +53,7 @@ import net.minecraft.inventory.ContainerBrewingStand;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.ContainerDispenser;
 import net.minecraft.inventory.ContainerFurnace;
+import net.minecraft.inventory.ContainerHopper;
 import net.minecraft.inventory.ContainerMerchant;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryEnderChest;
@@ -68,6 +70,7 @@ import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.tileentity.TileEntityEnderChest;
 import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.tileentity.TileEntityNote;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
@@ -498,6 +501,10 @@ public class WDL {
 			copyItemStacks(windowContainer, (TileEntityFurnace) te, 0);
 			newTileEntities.add(lastClickedBlock);
 			saveName = "Furnace contents";
+		} else if (windowContainer instanceof ContainerHopper) {
+			copyItemStacks(windowContainer, (TileEntityHopper) te, 0);
+			newTileEntities.add(lastClickedBlock);
+			saveName = "Hopper contents";
 		} else {
 			WDL.chatDebug("onItemGuiClosed unhandled TE: " + te);
 			return;
@@ -622,8 +629,9 @@ public class WDL {
 	}
 
 	/**
-	 * Checks if the TileEntity should be imported. Only "problematic" TEs will
-	 * be imported.
+	 * Checks if the TileEntity should be imported. Only "problematic" (IE, 
+	 * those that require manual interaction such as chests) TileEntities 
+	 * will be imported.
 	 */
 	public static String isImportableTileEntity(TileEntity te) {
 		Block block = te.getBlockType();
@@ -640,6 +648,9 @@ public class WDL {
 		} else if (block instanceof BlockBrewingStand
 				&& te instanceof TileEntityBrewingStand) {
 			return "TileEntityBrewingStand";
+		} else if (block instanceof BlockHopper
+				&& te instanceof TileEntityHopper) {
+			return "TileEntityHopper";
 		} else {
 			return null;
 		}
@@ -1223,8 +1234,6 @@ public class WDL {
 
 	/** Adds a chat message with a World Downloader prefix */
 	public static void chatMsg(String msg) {
-		// System.out.println( "WorldDownloader: " + msg ); // Just for
-		// debugging!
 		minecraft.ingameGUI.getChatGUI().printChatMessage(
 				new ChatComponentText("\u00A7c[WorldDL]\u00A76 " + msg));
 	}
@@ -1234,16 +1243,12 @@ public class WDL {
 		if (!WDL.DEBUG) {
 			return;
 		}
-		// System.out.println( "WorldDownloader: " + msg ); // Just for
-		// debugging!
 		minecraft.ingameGUI.getChatGUI().printChatMessage(
 				new ChatComponentText("\u00A72[WorldDL]\u00A76 " + msg));
 	}
 
 	/** Adds a chat message with a World Downloader prefix */
 	public static void chatError(String msg) {
-		// System.out.println( "WorldDownloader: " + msg ); // Just for
-		// debugging!
 		minecraft.ingameGUI.getChatGUI().printChatMessage(
 				new ChatComponentText("\u00A72[WorldDL]\u00A74 " + msg));
 	}
