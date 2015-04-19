@@ -851,17 +851,6 @@ public class WDL {
 					Chunk c = (Chunk) valueField.get(lhme);
 					
 					if (c != null) {
-						for (Iterable<Entity> entityList : c.getEntityLists()) {
-							for (Entity e : entityList) {
-								//Force the entity into its serverside location.
-								//Needed for certain things that move clientside,
-								//such as my glitchboats (http://imgur.com/3QQchZL)
-								e.posX = convertServerPos(e.serverPosX);
-								e.posY = convertServerPos(e.serverPosY);
-								e.posZ = convertServerPos(e.serverPosZ);
-							}
-						}
-						
 						saveChunk(c);
 					}
 				}
@@ -901,6 +890,17 @@ public class WDL {
 
 	/** Import all not overwritten TileEntities, then save the chunk */
 	public static void saveChunk(Chunk c) {
+		//Force the entity into its serverside location.
+		//Needed for certain things that move clientside,
+		//such as my glitchboats (http://imgur.com/3QQchZL)
+		for (Iterable<Entity> entityList : c.getEntityLists()) {
+			for (Entity e : entityList) {
+				e.posX = convertServerPos(e.serverPosX);
+				e.posY = convertServerPos(e.serverPosY);
+				e.posZ = convertServerPos(e.serverPosZ);
+			}
+		}
+		
 		// chatMsg( "saveChunk at " + c.xPosition + " " + c.zPosition);
 		importTileEntities(c);
 		c.setTerrainPopulated(true);
