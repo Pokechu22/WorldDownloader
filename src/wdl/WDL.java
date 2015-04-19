@@ -843,7 +843,19 @@ public class WDL {
 						.get(lhme)) {
 					// Chunk c = (Chunk)lhme.getValue();
 					Chunk c = (Chunk) valueField.get(lhme);
+					
 					if (c != null) {
+						for (Iterable<Entity> entityList : c.getEntityLists()) {
+							for (Entity e : entityList) {
+								//Force the entity into its serverside location.
+								//Needed for certain things that move clientside,
+								//such as my glitchboats (http://imgur.com/3QQchZL)
+								e.posX = convertServerPos(e.serverPosX);
+								e.posY = convertServerPos(e.serverPosY);
+								e.posZ = convertServerPos(e.serverPosZ);
+							}
+						}
+						
 						saveChunk(c);
 					}
 				}
@@ -859,7 +871,7 @@ public class WDL {
 			chatDebug("Chunk data saved.");
 		}
 	}
-
+	
 	/**
 	 * Renders World Downloader save progress bar
 	 */
@@ -1416,5 +1428,20 @@ public class WDL {
 		{
 			WDL.stop();
 		}
+	}
+	
+	/**
+	 * Converts a position from the fixed-point version that a packet
+	 * (or {@link Entity#serverPosX} and the like use) into a double.
+	 * 
+	 * @see
+	 *      <a href="http://wiki.vg/Protocol#Fixed-point_numbers">
+	 *      wiki.vg on Fixed-point numbers</a>
+	 * 
+	 * @param serverPos
+	 * @return The double version of the position.
+	 */
+	public static double convertServerPos(int serverPos) {
+		return serverPos / 32.0;
 	}
 }
