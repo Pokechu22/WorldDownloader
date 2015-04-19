@@ -38,6 +38,7 @@ import net.minecraft.entity.item.EntityFallingBlock;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.item.EntityMinecartChest;
+import net.minecraft.entity.item.EntityMinecartHopper;
 import net.minecraft.entity.item.EntityPainting;
 import net.minecraft.entity.item.EntityTNTPrimed;
 import net.minecraft.entity.item.EntityXPOrb;
@@ -393,16 +394,21 @@ public class WDL {
 		// If the last thing clicked was an ENTITY
 		if (lastEntity != null) {
 
-			if (lastEntity instanceof EntityMinecart
+			if (lastEntity instanceof EntityMinecartChest
 					&& windowContainer instanceof ContainerChest) {
-				EntityMinecart emc = (EntityMinecart) lastEntity;
-				if (emc instanceof EntityMinecartChest) {
-					EntityMinecartChest emcc = (EntityMinecartChest) emc;
-					for (int i = 0; i < emcc.getSizeInventory(); i++) {
-						emcc.setInventorySlotContents(i, windowContainer
-								.getSlot(i).getStack());
-						saveName = "Storage Minecart contents";
-					}
+				EntityMinecartChest emcc = (EntityMinecartChest) lastEntity;
+				for (int i = 0; i < emcc.getSizeInventory(); i++) {
+					emcc.setInventorySlotContents(i, windowContainer
+							.getSlot(i).getStack());
+					saveName = "Storage Minecart contents";
+				}
+			} else if (lastEntity instanceof EntityMinecartHopper
+					&& windowContainer instanceof ContainerHopper) {
+				EntityMinecartHopper emch = (EntityMinecartHopper) lastEntity;
+				for (int i = 0; i < emch.getSizeInventory(); i++) {
+					emch.setInventorySlotContents(i, windowContainer
+							.getSlot(i).getStack());
+					saveName = "Hopper Minecart contents";
 				}
 			} else if (lastEntity instanceof EntityVillager
 					&& windowContainer instanceof ContainerMerchant) {
