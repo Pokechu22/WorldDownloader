@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Properties;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockBeacon;
 import net.minecraft.block.BlockBrewingStand;
 import net.minecraft.block.BlockChest;
 import net.minecraft.block.BlockDispenser;
@@ -50,6 +51,7 @@ import net.minecraft.entity.projectile.EntityFishHook;
 import net.minecraft.entity.projectile.EntityPotion;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.ContainerBeacon;
 import net.minecraft.inventory.ContainerBrewingStand;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.ContainerDispenser;
@@ -66,6 +68,7 @@ import net.minecraft.nbt.NBTTagFloat;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityBeacon;
 import net.minecraft.tileentity.TileEntityBrewingStand;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityDispenser;
@@ -511,6 +514,23 @@ public class WDL {
 			copyItemStacks(windowContainer, (TileEntityHopper) te, 0);
 			newTileEntities.add(lastClickedBlock);
 			saveName = "Hopper contents";
+		} else if (windowContainer instanceof ContainerBeacon) {
+			//func_180611_e returns the beacon's IInventory tileBeacon.
+			IInventory beaconInventory = 
+					((ContainerBeacon)windowContainer).func_180611_e();
+			
+			TileEntityBeacon savedBeacon = (TileEntityBeacon)te;
+			
+			copyItemStacks(windowContainer, savedBeacon, 0);
+			
+			//Copy the field data as well -- contains the effects.
+			//TODO Put this into copyItemStacks or some other method?
+			for (int i = 0; i < beaconInventory.getFieldCount(); i++) {
+				savedBeacon.setField(i, beaconInventory.getField(i));
+			}
+			
+			newTileEntities.add(lastClickedBlock);
+			saveName = "Beacon effects";
 		} else {
 			WDL.chatDebug("onItemGuiClosed unhandled TE: " + te);
 			return;
@@ -657,6 +677,9 @@ public class WDL {
 		} else if (block instanceof BlockHopper
 				&& te instanceof TileEntityHopper) {
 			return "TileEntityHopper";
+		} else if (block instanceof BlockBeacon
+				&& te instanceof TileEntityBeacon) {
+			return "TileEntityBeacon";
 		} else {
 			return null;
 		}
