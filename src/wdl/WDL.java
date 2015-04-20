@@ -863,6 +863,10 @@ public class WDL {
 			nextEntryField.setAccessible(true);
 
 			WDLSaveProgressReporter progressReporter = new WDLSaveProgressReporter();
+			progressReporter.currentChunk = 0;
+			//TODO hashArray.length probably isn't the right field.
+			progressReporter.totalChunks = hashArray.length;
+			
 			progressReporter.start();
 
 			for (int i = 0; i < hashArray.length; ++i) {
@@ -934,6 +938,8 @@ public class WDL {
 			chatMsg("Chunk at chunk position " + c.xPosition + ","
 					+ c.zPosition + " can't be saved!");
 		}
+		
+		WDLSaveProgressReporter.currentChunk++;
 	}
 
 	/** Loads the server specific set of properties */
