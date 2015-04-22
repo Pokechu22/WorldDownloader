@@ -1,14 +1,33 @@
 package wdl;
 
+import java.util.List;
+
+import net.minecraft.world.storage.ThreadedFileIOBase;
+
 public class WDLSaveProgressReporter implements Runnable {
 	public static volatile int totalChunks = 0;
 	public static volatile int currentChunk = 0;
 	
+	/**
+	 * All of the items that are queued in {@link ThreadedFileIOBase}.
+	 * 
+	 * This is a reference to {@link ThreadedFileIOBase#threadedIOQueue}.
+	 */
+	private List threadedFileIOBaseQueue;
+	
+	private int initialQueueSize;
+	
 	@Override
 	public void run() {
+		threadedFileIOBaseQueue = (List)WDL.stealAndGetField(
+				ThreadedFileIOBase.func_178779_a(), List.class);
+		
+		initialQueueSize = threadedFileIOBaseQueue.size();
+		
 		while (WDL.saving) {
-			WDL.chatMsg("Saving... " + makeProgressBar(currentChunk,
-					totalChunks));
+			WDL.chatMsg("Saving... " + makeProgressBar(currentChunk + 
+					threadedFileIOBaseQueue.size(),
+					totalChunks + initialQueueSize));
 
 			try {
 				Thread.sleep(100L);
