@@ -475,15 +475,15 @@ public class WDL {
 					WDL.chatMsg("Could not save this chest!");
 					return;
 				}
-				copyItemStacks(windowContainer, tec1, 0);
-				copyItemStacks(windowContainer, tec2, 27);
+				saveContainerItems(windowContainer, tec1, 0);
+				saveContainerItems(windowContainer, tec2, 27);
 				newTileEntities.add(chestPos1);
 				newTileEntities.add(chestPos2);
 				saveName = "Double Chest contents";
 			}
 			// basic chest
 			else {
-				copyItemStacks(windowContainer, (TileEntityChest) te, 0);
+				saveContainerItems(windowContainer, (TileEntityChest) te, 0);
 				newTileEntities.add(lastClickedBlock);
 				saveName = "Chest contents";
 			}
@@ -499,19 +499,19 @@ public class WDL {
 			}
 			saveName = "Ender Chest contents";
 		} else if (windowContainer instanceof ContainerBrewingStand) {
-			copyItemStacks(windowContainer, (TileEntityBrewingStand) te, 0);
+			saveContainerItems(windowContainer, (TileEntityBrewingStand) te, 0);
 			newTileEntities.add(lastClickedBlock);
 			saveName = "Brewing Stand contents";
 		} else if (windowContainer instanceof ContainerDispenser) {
-			copyItemStacks(windowContainer, (TileEntityDispenser) te, 0);
+			saveContainerItems(windowContainer, (TileEntityDispenser) te, 0);
 			newTileEntities.add(lastClickedBlock);
 			saveName = "Dispenser contents";
 		} else if (windowContainer instanceof ContainerFurnace) {
-			copyItemStacks(windowContainer, (TileEntityFurnace) te, 0);
+			saveContainerItems(windowContainer, (TileEntityFurnace) te, 0);
 			newTileEntities.add(lastClickedBlock);
 			saveName = "Furnace contents";
 		} else if (windowContainer instanceof ContainerHopper) {
-			copyItemStacks(windowContainer, (TileEntityHopper) te, 0);
+			saveContainerItems(windowContainer, (TileEntityHopper) te, 0);
 			newTileEntities.add(lastClickedBlock);
 			saveName = "Hopper contents";
 		} else if (windowContainer instanceof ContainerBeacon) {
@@ -521,13 +521,8 @@ public class WDL {
 			
 			TileEntityBeacon savedBeacon = (TileEntityBeacon)te;
 			
-			copyItemStacks(windowContainer, savedBeacon, 0);
-			
-			//Copy the field data as well -- contains the effects.
-			//TODO Put this into copyItemStacks or some other method?
-			for (int i = 0; i < beaconInventory.getFieldCount(); i++) {
-				savedBeacon.setField(i, beaconInventory.getField(i));
-			}
+			saveContainerItems(windowContainer, savedBeacon, 0);
+			saveInventoryFields(beaconInventory, savedBeacon);
 			
 			newTileEntities.add(lastClickedBlock);
 			saveName = "Beacon effects";
@@ -1264,18 +1259,42 @@ public class WDL {
 		}
 	}
 
-	public static void copyItemStacks(Container c, IInventory i,
-			int startInContainerAt) {
-		int containerSize = c.inventorySlots.size();
-		int inventorySize = i.getSizeInventory();
+	/**
+	 * Saves the items of a container to the given TileEntity.
+	 * 
+	 * @param contaioner The container to save from -- usually
+	 *                   {@link #windowContainer}.
+	 * @param tileEntity The TileEntity to save to.
+	 * @param startInContainerAt The position to start at in the
+	 *                           container, for saving.
+	 */
+	public static void saveContainerItems(Container contaioner,
+			IInventory tileEntity, int startInContainerAt) {
+		int containerSize = contaioner.inventorySlots.size();
+		int inventorySize = tileEntity.getSizeInventory();
 		int nc = startInContainerAt;
 		int ni = 0;
 
 		while ((nc < containerSize) && (ni < inventorySize)) {
-			ItemStack is = c.getSlot(nc).getStack();
-			i.setInventorySlotContents(ni, is);
+			ItemStack is = contaioner.getSlot(nc).getStack();
+			tileEntity.setInventorySlotContents(ni, is);
 			ni++;
 			nc++;
+		}
+	}
+	
+	/**
+	 * Saves the fields of an inventory.
+	 * Fields are pieces of data such as furnace smelt time and
+	 * beacon effects.
+	 * 
+	 * @param inventory The inventory to save from.
+	 * @param tileEntity The inventory to save to.
+	 */
+	public static void saveInventoryFields(IInventory inventory, 
+			IInventory tileEntity) {
+		for (int i = 0; i < inventory.getFieldCount(); i++) {
+			tileEntity.setField(i, inventory.getField(i));
 		}
 	}
 
