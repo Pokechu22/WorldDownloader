@@ -23,7 +23,7 @@ public class WDLSaveProgressReporter implements Runnable {
 		
 		//GTL: Greatest to least.
 		final String[] blocksGTL = new String[] {
-				"\u2588",
+				"", //Don't want a full block in that case.
 				"\u2589",
 				"\u258A",
 				"\u258B",
@@ -47,12 +47,13 @@ public class WDLSaveProgressReporter implements Runnable {
 		
 		StringBuilder builder = new StringBuilder();
 		
-		int percent = (current * 128) / max;
+		int percent = (current * 100) / max;
+		int progress = (current * 128) / max;
 		
 		builder.append(percent).append("% ");
 		
-		int full = percent / 8;
-		int partial = percent % 8;
+		int full = progress / 8;
+		int partial = progress % 8;
 		
 		for (int i = 0; i < full; i++) {
 			builder.append("\u2588"); //Full block

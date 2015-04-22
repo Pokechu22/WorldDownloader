@@ -870,7 +870,7 @@ public class WDL {
 			WDLSaveProgressReporter progressReporter = new WDLSaveProgressReporter();
 			progressReporter.currentChunk = 0;
 			//TODO hashArray.length probably isn't the right field.
-			progressReporter.totalChunks = hashArray.length;
+			progressReporter.totalChunks = lhm.getNumHashElements();
 			
 			progressReporter.start();
 
