@@ -499,7 +499,12 @@ public class WDL {
 			}
 			saveName = "Ender Chest contents";
 		} else if (windowContainer instanceof ContainerBrewingStand) {
+			IInventory brewingInventory = (IInventory) stealAndGetField(
+					windowContainer, IInventory.class);
+			
 			saveContainerItems(windowContainer, (TileEntityBrewingStand) te, 0);
+			saveInventoryFields(brewingInventory, (TileEntityBrewingStand) te);
+			
 			newTileEntities.add(lastClickedBlock);
 			saveName = "Brewing Stand contents";
 		} else if (windowContainer instanceof ContainerDispenser) {
@@ -507,7 +512,12 @@ public class WDL {
 			newTileEntities.add(lastClickedBlock);
 			saveName = "Dispenser contents";
 		} else if (windowContainer instanceof ContainerFurnace) {
+			IInventory furnaceInventory = (IInventory) stealAndGetField(
+					windowContainer, IInventory.class);
+			
 			saveContainerItems(windowContainer, (TileEntityFurnace) te, 0);
+			saveInventoryFields(furnaceInventory, (TileEntityFurnace) te);
+			
 			newTileEntities.add(lastClickedBlock);
 			saveName = "Furnace contents";
 		} else if (windowContainer instanceof ContainerHopper) {
