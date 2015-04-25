@@ -1311,7 +1311,7 @@ public class WDL {
 	/** Adds a chat message with a World Downloader prefix */
 	public static void chatMsg(String msg) {
 		minecraft.ingameGUI.getChatGUI().printChatMessage(
-				new ChatComponentText("\u00A7c[WorldDL]\u00A76 " + msg));
+				new ChatComponentText("§c[WorldDL]§6 " + msg));
 	}
 
 	/** Adds a chat message with a World Downloader prefix */
@@ -1320,13 +1320,13 @@ public class WDL {
 			return;
 		}
 		minecraft.ingameGUI.getChatGUI().printChatMessage(
-				new ChatComponentText("\u00A72[WorldDL]\u00A76 " + msg));
+				new ChatComponentText("§2[WorldDL]§6 " + msg));
 	}
 
 	/** Adds a chat message with a World Downloader prefix */
 	public static void chatError(String msg) {
 		minecraft.ingameGUI.getChatGUI().printChatMessage(
-				new ChatComponentText("\u00A72[WorldDL]\u00A74 " + msg));
+				new ChatComponentText("§2[WorldDL]§4 " + msg));
 	}
 
 	private static int getSaveVersion(AnvilSaveConverter asc) {
