@@ -694,14 +694,14 @@ public class WDL {
 	 * Saves all remaining chunks, world info and player info. Usually called
 	 * when stopping.
 	 */
-	public static void saveEverything() {
+	public static void saveEverything() throws Exception {
 		saveProps();
 
 		try {
 			saveHandler.checkSessionLock();
 		} catch (MinecraftException e) {
 			throw new RuntimeException(
-					"WorldDownloader: Couldn't get session lock for saving the world!");
+					"WorldDownloader: Couldn't get session lock for saving the world!", e);
 		}
 
 		NBTTagCompound playerNBT = new NBTTagCompound();
@@ -721,13 +721,8 @@ public class WDL {
 
 		savePlayer(playerNBT);
 		saveWorldInfo(worldInfoNBT);
-		try {
-			saveChunks();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		}
+		
+		saveChunks();
 	}
 
 	/**
@@ -752,7 +747,7 @@ public class WDL {
 			}
 			playerFile.renameTo(playerFileOld);
 		} catch (Exception e) {
-			throw new RuntimeException("Couldn't save the player!");
+			throw new RuntimeException("Couldn't save the player!", e);
 		}
 		chatDebug("Player data saved.");
 	}
@@ -788,7 +783,7 @@ public class WDL {
 				dataFile.delete();
 			}
 		} catch (Exception e) {
-			throw new RuntimeException("Couldn't save the world metadata!");
+			throw new RuntimeException("Couldn't save the world metadata!", e);
 		}
 		chatDebug("World data saved.");
 	}
@@ -893,7 +888,7 @@ public class WDL {
 				// such a getter.
 				ThreadedFileIOBase.func_178779_a().waitForFinish();
 			} catch (Exception e) {
-				chatMsg("Threw exception waiting for asynchronous IO to finish. Hmmm.");
+				throw new RuntimeException("Threw exception waiting for asynchronous IO to finish. Hmmm.", e);
 			}
 			chatDebug("Chunk data saved.");
 		}
@@ -1376,7 +1371,10 @@ public class WDL {
 					f.setAccessible(true);
 					return f;
 				} catch (Exception e) {
-					break; // Throw the Exception
+					throw new RuntimeException(
+							"WorldDownloader: Couldn't steal Field of type \""
+									+ typeOfField + "\" from class \"" + typeOfClass
+									+ "\" !", e);
 				}
 			}
 		}
@@ -1414,7 +1412,7 @@ public class WDL {
 			throw new RuntimeException(
 					"WorldDownloader: Couldn't get Field of type \""
 							+ typeOfField + "\" from object \"" + object
-							+ "\" !");
+							+ "\" !", e);
 		}
 	}
 
