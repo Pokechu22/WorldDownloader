@@ -895,27 +895,8 @@ public class WDL {
 	}
 	
 	/**
-	 * Renders World Downloader save progress bar
+	 * Import all non-overwritten TileEntities, then save the chunk
 	 */
-	/*
-	 * public static void renderSaveProgress() { if (saveProgress == 0) return;
-	 * FontRenderer fontRendererObj = mc.fontRendererObj; ScaledResolution
-	 * scaledResolution = new ScaledResolution(mc.gameSettings, mc.displayWidth,
-	 * mc.displayHeight); int scaledWidth = scaledResolution.getScaledWidth();
-	 * short width = 182; int xPos = scaledWidth / 2 - width / 2; byte yPos =
-	 * 12; mc.ingameGUI.drawTexturedModalRect(xPos, yPos, 0, 74, width, 5);
-	 * mc.ingameGUI.drawTexturedModalRect(xPos, yPos, 0, 74, width, 5);
-	 * mc.ingameGUI.drawTexturedModalRect(xPos, yPos, 0, 79, saveProgress *
-	 * width, 5);
-	 * 
-	 * String var9 = "Save Progress"; fontRendererObj.drawStringWithShadow(var9,
-	 * scaledWidth / 2 - fontRendererObj.getStringWidth(var9) / 2, yPos - 10,
-	 * 16711935); GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-	 * GL11.glBindTexture(GL11.GL_TEXTURE_2D,
-	 * mc.renderEngine.getTexture("/gui/icons.png")); }
-	 */
-
-	/** Import all not overwritten TileEntities, then save the chunk */
 	public static void saveChunk(Chunk c) {
 		//Force the entity into its serverside location.
 		//Needed for certain things that move clientside,
