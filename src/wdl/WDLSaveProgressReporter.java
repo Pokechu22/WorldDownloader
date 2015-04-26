@@ -2,6 +2,7 @@ package wdl;
 
 import java.util.List;
 
+import net.minecraft.crash.CrashReport;
 import net.minecraft.world.storage.ThreadedFileIOBase;
 
 public class WDLSaveProgressReporter implements Runnable {
@@ -19,21 +20,22 @@ public class WDLSaveProgressReporter implements Runnable {
 	
 	@Override
 	public void run() {
-		threadedFileIOBaseQueue = (List)WDL.stealAndGetField(
-				ThreadedFileIOBase.func_178779_a(), List.class);
-		
-		initialQueueSize = threadedFileIOBaseQueue.size();
-		
-		while (WDL.saving) {
-			WDL.chatMsg("Saving... " + makeProgressBar(currentChunk + 
-					threadedFileIOBaseQueue.size(),
-					totalChunks + initialQueueSize));
-
-			try {
-				Thread.sleep(100L);
-			} catch (InterruptedException var2) {
-				var2.printStackTrace();
+		try {
+			threadedFileIOBaseQueue = (List)WDL.stealAndGetField(
+					ThreadedFileIOBase.func_178779_a(), List.class);
+			
+			initialQueueSize = threadedFileIOBaseQueue.size();
+			
+			while (WDL.saving) {
+				WDL.chatMsg("Saving... " + makeProgressBar(currentChunk + 
+						threadedFileIOBaseQueue.size(),
+						totalChunks + initialQueueSize));
+	
+				Thread.sleep(1000L);
 			}
+		} catch (Throwable t) {
+			WDL.minecraft.crashed(CrashReport.makeCrashReport(t,
+					"Displaying save progress bar"));
 		}
 	}
 	
