@@ -30,6 +30,7 @@ import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.IMerchant;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.item.EntityBoat;
 import net.minecraft.entity.item.EntityEnderEye;
@@ -46,6 +47,7 @@ import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.passive.EntitySquid;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.passive.IAnimals;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityEgg;
 import net.minecraft.entity.projectile.EntityFishHook;
 import net.minecraft.entity.projectile.EntityPotion;
@@ -78,8 +80,11 @@ import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.tileentity.TileEntityNote;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.util.LongHashMap;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
+import net.minecraft.village.MerchantRecipe;
+import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.MinecraftException;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.AnvilSaveConverter;
@@ -416,9 +421,22 @@ public class WDL {
 			} else if (lastEntity instanceof EntityVillager
 					&& windowContainer instanceof ContainerMerchant) {
 				EntityVillager ev = (EntityVillager) lastEntity;
-				WDL.chatDebug("Saving villager offers is not yet supported.");
+				
+				Field recipesField = stealField(EntityVillager.class,
+						MerchantRecipeList.class);
+				
+				MerchantRecipeList list = ((IMerchant)stealAndGetField(
+						windowContainer, IMerchant.class)).getRecipes(
+								thePlayer);
+				
+				try {
+					recipesField.set(lastEntity, list);
+				} catch (Exception e) {
+					throw new RuntimeException(
+							"WorldDownloader: Couldn't set trades field!");
+				}
+				
 				saveName = "Villager offers";
-				return;
 			} else {
 				WDL.chatMsg("Unsupported entity cannot be saved:"
 						+ EntityList.getEntityString(lastEntity));
