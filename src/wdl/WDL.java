@@ -433,7 +433,7 @@ public class WDL {
 					recipesField.set(lastEntity, list);
 				} catch (Exception e) {
 					throw new RuntimeException(
-							"WorldDownloader: Couldn't set trades field!");
+							"WorldDownloader: Couldn't set trades field!", e);
 				}
 				
 				saveName = "Villager offers";
