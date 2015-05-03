@@ -199,8 +199,7 @@ public class WDL {
 	/**
 	 * The folder in which worlds are being saved.
 	 */
-	public static String baseFolderName = "WorldDownloaderERROR"; // safe
-																	// default
+	public static String baseFolderName = "WorldDownloaderERROR";
 
 	// Properties:
 	public static Properties baseProps;
@@ -1084,31 +1083,25 @@ public class WDL {
 			int y = Integer.parseInt(worldProps.getProperty("PlayerY"));
 			int z = Integer.parseInt(worldProps.getProperty("PlayerZ"));
 
-			NBTTagList pos = playerNBT.getTagList("Pos", 6);
-			// Out with the old, in with the new
-			pos.removeTag(0); // removeTag
-			pos.removeTag(0);
-			pos.removeTag(0);
-			pos.appendTag(new NBTTagDouble(x + 0.5D)); // appendTag
-			pos.appendTag(new NBTTagDouble(y + 0.621D)); // Player height
+			//Positions are offset to center of block,
+			//or player height.
+			NBTTagList pos = new NBTTagList();
+			pos.appendTag(new NBTTagDouble(x + 0.5D));
+			pos.appendTag(new NBTTagDouble(y + 0.621D));
 			pos.appendTag(new NBTTagDouble(z + 0.5D));
+			playerNBT.setTag("Pos", pos);
 
-			NBTTagList motion = playerNBT.getTagList("Motion", 6);
-			// Out with the old, in with the new
-			motion.removeTag(0);
-			motion.removeTag(0);
-			motion.removeTag(0);
+			NBTTagList motion = new NBTTagList();
 			motion.appendTag(new NBTTagDouble(0.0D));
-			motion.appendTag(new NBTTagDouble(-0.0001D)); // Needed to land on
-															// the ground
+			//Force them to land on the ground?
+			motion.appendTag(new NBTTagDouble(-0.0001D));
 			motion.appendTag(new NBTTagDouble(0.0D));
+			playerNBT.setTag("Motion", motion);
 
-			NBTTagList rotation = playerNBT.getTagList("Rotation", 5);
-			// Out with the old, in with the new
-			rotation.removeTag(0);
-			rotation.removeTag(0);
+			NBTTagList rotation = new NBTTagList();
 			rotation.appendTag(new NBTTagFloat(0.0f));
 			rotation.appendTag(new NBTTagFloat(0.0f));
+			playerNBT.setTag("Rotation", rotation);
 		}
 	}
 
