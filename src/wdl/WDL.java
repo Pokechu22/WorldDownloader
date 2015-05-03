@@ -44,6 +44,7 @@ import net.minecraft.entity.item.EntityMinecartHopper;
 import net.minecraft.entity.item.EntityPainting;
 import net.minecraft.entity.item.EntityTNTPrimed;
 import net.minecraft.entity.item.EntityXPOrb;
+import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.passive.EntitySquid;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.passive.IAnimals;
@@ -52,6 +53,7 @@ import net.minecraft.entity.projectile.EntityEgg;
 import net.minecraft.entity.projectile.EntityFishHook;
 import net.minecraft.entity.projectile.EntityPotion;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.AnimalChest;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ContainerBeacon;
 import net.minecraft.inventory.ContainerBrewingStand;
@@ -59,6 +61,7 @@ import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.ContainerDispenser;
 import net.minecraft.inventory.ContainerFurnace;
 import net.minecraft.inventory.ContainerHopper;
+import net.minecraft.inventory.ContainerHorseInventory;
 import net.minecraft.inventory.ContainerMerchant;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryEnderChest;
@@ -437,6 +440,18 @@ public class WDL {
 				}
 				
 				saveName = "Villager offers";
+			} else if (lastEntity instanceof EntityHorse
+					&& windowContainer instanceof ContainerHorseInventory) {
+				EntityHorse horse = (EntityHorse)lastEntity;
+				horse.func_110226_cD();
+				//TODO that function name is bad and also
+				//private; reimplement it.  (I made it public 
+				//the non-included file, but obviously, that's
+				//not a permenant solution.
+				
+				AnimalChest horseInventory = (AnimalChest)stealAndGetField(
+						horse, AnimalChest.class);
+				saveContainerItems(windowContainer, horseInventory, 0);
 			} else {
 				WDL.chatMsg("Unsupported entity cannot be saved:"
 						+ EntityList.getEntityString(lastEntity));
@@ -1227,9 +1242,12 @@ public class WDL {
 		int inventorySize = tileEntity.getSizeInventory();
 		int nc = startInContainerAt;
 		int ni = 0;
+		
+		chatDebug("containerSize " + containerSize + " inventorySize " + inventorySize);
 
 		while ((nc < containerSize) && (ni < inventorySize)) {
 			ItemStack is = contaioner.getSlot(nc).getStack();
+			chatDebug("nc " + nc + " ni " + ni + " is " + is);
 			tileEntity.setInventorySlotContents(ni, is);
 			ni++;
 			nc++;
