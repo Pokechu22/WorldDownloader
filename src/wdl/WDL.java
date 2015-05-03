@@ -442,16 +442,39 @@ public class WDL {
 				saveName = "Villager offers";
 			} else if (lastEntity instanceof EntityHorse
 					&& windowContainer instanceof ContainerHorseInventory) {
-				EntityHorse horse = (EntityHorse)lastEntity;
-				horse.func_110226_cD();
-				//TODO that function name is bad and also
-				//private; reimplement it.  (I made it public 
-				//the non-included file, but obviously, that's
-				//not a permenant solution.
+				EntityHorse entityHorse = (EntityHorse)lastEntity;
 				
-				AnimalChest horseInventory = (AnimalChest)stealAndGetField(
-						horse, AnimalChest.class);
-				saveContainerItems(windowContainer, horseInventory, 0);
+				//Resize the horse's chest.  Needed because... reasons.
+				//Apparently the saved horse has the wrong size by 
+				//default.
+				//Based off of EntityHorse.func_110226_cD (in 1.8).
+				
+				AnimalChest horseChest = new AnimalChest("HorseChest",
+						(entityHorse.isChested() && 
+						(entityHorse.getHorseType() == 1 ||
+						entityHorse.getHorseType() == 2)) ? 17 : 2);
+				//func_110133_a sets the custom name -- if changed look
+				//for one that sets hasCustomName to true and gives 
+				//inventoryTitle the value of the parameter.
+				horseChest.func_110133_a(entityHorse.getName());
+				
+				saveContainerItems(windowContainer, horseChest, 0);
+				
+				//I don't even know what this does, but it's part of the
+				//other method...
+				horseChest.func_110134_a(entityHorse);
+				
+				//Save the actual data value to the other horse.
+				Field horseChestField = stealField(EntityHorse.class,
+						AnimalChest.class);
+				try {
+					horseChestField.set(entityHorse, horseChest);
+				} catch (Exception e) {
+					throw new RuntimeException("WorldDownloader: " +
+							"Couldn't set horseChest field!", e);
+				}
+				
+				saveName = "Horse Chest";
 			} else {
 				WDL.chatMsg("Unsupported entity cannot be saved:"
 						+ EntityList.getEntityString(lastEntity));
@@ -1242,12 +1265,10 @@ public class WDL {
 		int inventorySize = tileEntity.getSizeInventory();
 		int nc = startInContainerAt;
 		int ni = 0;
-		
-		chatDebug("containerSize " + containerSize + " inventorySize " + inventorySize);
 
 		while ((nc < containerSize) && (ni < inventorySize)) {
 			ItemStack is = contaioner.getSlot(nc).getStack();
-			chatDebug("nc " + nc + " ni " + ni + " is " + is);
+
 			tileEntity.setInventorySlotContents(ni, is);
 			ni++;
 			nc++;
