@@ -400,6 +400,56 @@ public class WDL {
 	 */
 	public static void onItemGuiClosed() {
 		String saveName = "";
+		
+		if (thePlayer.ridingEntity != null &&
+				thePlayer.ridingEntity instanceof EntityHorse) {
+			//If the player is on a horse, check if they are opening the
+			//inventory of the horse they are on.  If so, use that, 
+			//rather than the entity being looked at.
+			
+			if (windowContainer instanceof ContainerHorseInventory) {
+				EntityHorse horseInContainer = (EntityHorse)
+						stealAndGetField(windowContainer, EntityHorse.class);
+				
+				//Intentional reference equals
+				if (horseInContainer == thePlayer.ridingEntity) {
+					EntityHorse entityHorse = (EntityHorse)
+							thePlayer.ridingEntity;
+					
+					//Resize the horse's chest.  Needed because... reasons.
+					//Apparently the saved horse has the wrong size by 
+					//default.
+					//Based off of EntityHorse.func_110226_cD (in 1.8).
+					
+					AnimalChest horseChest = new AnimalChest("HorseChest",
+							(entityHorse.isChested() && 
+							(entityHorse.getHorseType() == 1 ||
+							entityHorse.getHorseType() == 2)) ? 17 : 2);
+					//func_110133_a sets the custom name -- if changed look
+					//for one that sets hasCustomName to true and gives 
+					//inventoryTitle the value of the parameter.
+					horseChest.func_110133_a(entityHorse.getName());
+					
+					saveContainerItems(windowContainer, horseChest, 0);
+					
+					//I don't even know what this does, but it's part of the
+					//other method...
+					horseChest.func_110134_a(entityHorse);
+					
+					//Save the actual data value to the other horse.
+					Field horseChestField = stealField(EntityHorse.class,
+							AnimalChest.class);
+					try {
+						horseChestField.set(entityHorse, horseChest);
+					} catch (Exception e) {
+						throw new RuntimeException("WorldDownloader: " +
+								"Couldn't set horseChest field!", e);
+					}
+					WDL.chatDebug("Saved ridden horse inventory.");
+					return;
+				}
+			}
+		}
 
 		// If the last thing clicked was an ENTITY
 		if (lastEntity != null) {
