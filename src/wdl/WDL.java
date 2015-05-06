@@ -437,14 +437,8 @@ public class WDL {
 					horseChest.func_110134_a(entityHorse);
 					
 					//Save the actual data value to the other horse.
-					Field horseChestField = stealField(EntityHorse.class,
-							AnimalChest.class);
-					try {
-						horseChestField.set(entityHorse, horseChest);
-					} catch (Exception e) {
-						throw new RuntimeException("WorldDownloader: " +
-								"Couldn't set horseChest field!", e);
-					}
+					stealAndSetField(entityHorse, AnimalChest.class, horseChest);
+					
 					WDL.chatDebug("Saved ridden horse inventory.");
 					return;
 				}
@@ -474,19 +468,11 @@ public class WDL {
 					&& windowContainer instanceof ContainerMerchant) {
 				EntityVillager ev = (EntityVillager) lastEntity;
 				
-				Field recipesField = stealField(EntityVillager.class,
-						MerchantRecipeList.class);
-				
 				MerchantRecipeList list = ((IMerchant)stealAndGetField(
 						windowContainer, IMerchant.class)).getRecipes(
 								thePlayer);
 				
-				try {
-					recipesField.set(lastEntity, list);
-				} catch (Exception e) {
-					throw new RuntimeException(
-							"WorldDownloader: Couldn't set trades field!", e);
-				}
+				stealAndSetField(ev, MerchantRecipeList.class, list);
 				
 				saveName = "Villager offers";
 			} else if (lastEntity instanceof EntityHorse
@@ -514,14 +500,7 @@ public class WDL {
 				horseChest.func_110134_a(entityHorse);
 				
 				//Save the actual data value to the other horse.
-				Field horseChestField = stealField(EntityHorse.class,
-						AnimalChest.class);
-				try {
-					horseChestField.set(entityHorse, horseChest);
-				} catch (Exception e) {
-					throw new RuntimeException("WorldDownloader: " +
-							"Couldn't set horseChest field!", e);
-				}
+				stealAndSetField(entityHorse, AnimalChest.class, horseChest);
 				
 				saveName = "Horse Chest";
 			} else {
@@ -1443,6 +1422,40 @@ public class WDL {
 					"WorldDownloader: Couldn't get Field of type \""
 							+ typeOfField + "\" from object \"" + object
 							+ "\" !", e);
+		}
+	}
+	
+	/**
+	 * Uses Java's reflection API to set the value of an unaccessible field
+	 * 
+	 * @param object
+	 *            Object that the field should be read from or the type of the
+	 *            object if the field is static
+	 * @param typeOfField
+	 *            The type of the field
+	 * @param value
+	 *            The value to set the field to.
+	 */
+	public static void stealAndSetField(Object object, Class typeOfField, 
+			Object value) {
+		Class typeOfObject;
+
+		if (object instanceof Class) // User asked for static field:
+		{
+			typeOfObject = (Class) object;
+			object = null;
+		} else {
+			typeOfObject = object.getClass();
+		}
+
+		try {
+			Field f = stealField(typeOfObject, typeOfField);
+			f.set(object, value);
+		} catch (Exception e) {
+			throw new RuntimeException(
+					"WorldDownloader: Couldn't set Field of type \""
+							+ typeOfField + "\" from object \"" + object
+							+ "\" to " + value + "!", e);
 		}
 	}
 
