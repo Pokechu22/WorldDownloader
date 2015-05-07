@@ -135,7 +135,7 @@ public class GuiWDLMultiworldSelect extends GuiScreen {
 	 */
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
-			throws IOException {
+	throws IOException {
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 
 		if (this.newWorld) {
@@ -202,7 +202,7 @@ public class GuiWDLMultiworldSelect extends GuiScreen {
 		this.cam.lastTickPosZ = this.cam.prevPosZ = this.cam.posZ = WDL.thePlayer.posZ
 				+ var4 * Math.cos(this.yaw / 180.0D * Math.PI);
 		float var5 = 1.0F;
-		this.yaw = (float) (this.yaw + var5
+		this.yaw = (float)(this.yaw + var5
 				* (1.0D + 0.699999988079071D * Math.cos((this.yaw + 45.0F)
 						/ 45.0D * Math.PI)));
 

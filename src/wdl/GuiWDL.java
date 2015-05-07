@@ -38,12 +38,9 @@ public class GuiWDL extends GuiScreen {
 		}
 
 		this.buttonList.clear();
-
 		this.title = "Options for " + WDL.baseFolderName.replace('@', ':');
-
 		int w = this.width / 2;
 		int h = this.height / 4;
-
 		int hi = h - 15;
 
 		if (WDL.baseProps.getProperty("ServerName").isEmpty()) {
@@ -53,7 +50,6 @@ public class GuiWDL extends GuiScreen {
 		this.worldName = new GuiTextField(42, this.fontRendererObj,
 				this.width / 2 - 70, hi, 168, 18);
 		this.updateServerName(false);
-
 		hi += 22;
 		this.autoStartBtn = new GuiButton(1, w - 100, hi,
 				"Start Download: ERROR");
@@ -87,20 +83,15 @@ public class GuiWDL extends GuiScreen {
 
 		this.updateServerName(true);
 
-		if (guibutton.id == 1) // Auto start
-		{
+		if (guibutton.id == 1) { // Auto start
 			this.updateAutoStart(true);
-		} else if (guibutton.id == 4) // World Overrides
-		{
+		} else if (guibutton.id == 4) { // World Overrides
 			this.mc.displayGuiScreen(new GuiWDLWorld(this));
-		} else if (guibutton.id == 5) // Generator Overrides
-		{
+		} else if (guibutton.id == 5) { // Generator Overrides
 			this.mc.displayGuiScreen(new GuiWDLGenerator(this));
-		} else if (guibutton.id == 6) // Player Overrides
-		{
+		} else if (guibutton.id == 6) { // Player Overrides
 			this.mc.displayGuiScreen(new GuiWDLPlayer(this));
-		} else if (guibutton.id == 100) // Done
-		{
+		} else if (guibutton.id == 100) { // Done
 			WDL.saveProps();
 			this.mc.displayGuiScreen(this.parent);
 		}
@@ -111,7 +102,7 @@ public class GuiWDL extends GuiScreen {
 	 */
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
-			throws IOException {
+	throws IOException {
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 		this.worldName.mouseClicked(mouseX, mouseY, mouseButton);
 	}
@@ -151,6 +142,7 @@ public class GuiWDL extends GuiScreen {
 
 	public void updateAutoStart(boolean btnClicked) {
 		String autoStart = WDL.baseProps.getProperty("AutoStart");
+
 		if (autoStart.equals("true")) {
 			if (btnClicked) {
 				WDL.baseProps.setProperty("AutoStart", "false");

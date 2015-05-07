@@ -62,8 +62,8 @@ public class WorldClient extends World {
 			WorldSettings p_i45063_2_, int p_i45063_3_,
 			EnumDifficulty p_i45063_4_, Profiler p_i45063_5_) {
 		super(new SaveHandlerMP(), new WorldInfo(p_i45063_2_, "MpServer"),
-				WorldProvider.getProviderForDimension(p_i45063_3_),
-				p_i45063_5_, true);
+			  WorldProvider.getProviderForDimension(p_i45063_3_),
+			  p_i45063_5_, true);
 		this.sendQueue = p_i45063_1_;
 		this.getWorldInfo().setDifficulty(p_i45063_4_);
 		this.setSpawnLocation(new BlockPos(8, 64, 8));
@@ -111,9 +111,11 @@ public class WorldClient extends World {
 				} else {
 					wdl.WDL.onItemGuiOpened();
 				}
+
 				wdl.WDL.windowContainer = wdl.WDL.thePlayer.openContainer;
 			}
 		}
+
 		/* <<< WDL */
 	}
 
@@ -208,7 +210,7 @@ public class WorldClient extends World {
 			this.entitySpawnQueue.add(p_72838_1_);
 		} else if (p_72838_1_ instanceof EntityMinecart) {
 			this.mc.getSoundHandler().playSound(
-					new MovingSoundMinecart((EntityMinecart) p_72838_1_));
+				new MovingSoundMinecart((EntityMinecart) p_72838_1_));
 		}
 
 		return var2;
@@ -275,7 +277,7 @@ public class WorldClient extends World {
 	@Override
 	public Entity getEntityByID(int p_73045_1_) {
 		return p_73045_1_ == this.mc.thePlayer.getEntityId() ? this.mc.thePlayer
-				: super.getEntityByID(p_73045_1_);
+			   : super.getEntityByID(p_73045_1_);
 	}
 
 	public Entity removeEntityFromWorld(int p_73028_1_) {
@@ -309,7 +311,7 @@ public class WorldClient extends World {
 	@Override
 	public void sendQuittingDisconnectingPacket() {
 		this.sendQueue.getNetworkManager().closeChannel(
-				new ChatComponentText("Quitting"));
+			new ChatComponentText("Quitting"));
 	}
 
 	/**
@@ -413,25 +415,22 @@ public class WorldClient extends World {
 		CrashReportCategory var2 = super.addWorldInfoToCrashReport(report);
 		var2.addCrashSectionCallable("Forced entities", new Callable() {
 			private static final String __OBFID = "CL_00000883";
-
 			@Override
 			public String call() {
 				return WorldClient.this.entityList.size() + " total; "
-						+ WorldClient.this.entityList.toString();
+					   + WorldClient.this.entityList.toString();
 			}
 		});
 		var2.addCrashSectionCallable("Retry entities", new Callable() {
 			private static final String __OBFID = "CL_00000884";
-
 			@Override
 			public String call() {
 				return WorldClient.this.entitySpawnQueue.size() + " total; "
-						+ WorldClient.this.entitySpawnQueue.toString();
+					   + WorldClient.this.entitySpawnQueue.toString();
 			}
 		});
 		var2.addCrashSectionCallable("Server brand", new Callable() {
 			private static final String __OBFID = "CL_00000885";
-
 			@Override
 			public String call() {
 				return WorldClient.this.mc.thePlayer.getClientBrand();
@@ -439,11 +438,10 @@ public class WorldClient extends World {
 		});
 		var2.addCrashSectionCallable("Server type", new Callable() {
 			private static final String __OBFID = "CL_00000886";
-
 			@Override
 			public String call() {
 				return WorldClient.this.mc.getIntegratedServer() == null ? "Non-integrated multiplayer server"
-						: "Integrated singleplayer server";
+					   : "Integrated singleplayer server";
 			}
 		});
 		return var2;
@@ -465,13 +463,13 @@ public class WorldClient extends World {
 			float volume, float pitch, boolean distanceDelay) {
 		double var11 = this.mc.func_175606_aa().getDistanceSq(x, y, z);
 		PositionedSoundRecord var13 = new PositionedSoundRecord(
-				new ResourceLocation(soundName), volume, pitch, (float) x,
-				(float) y, (float) z);
+			new ResourceLocation(soundName), volume, pitch, (float) x,
+			(float) y, (float) z);
 
 		if (distanceDelay && var11 > 100.0D) {
 			double var14 = Math.sqrt(var11) / 40.0D;
 			this.mc.getSoundHandler().playDelayedSound(var13,
-					(int) (var14 * 20.0D));
+					(int)(var14 * 20.0D));
 		} else {
 			this.mc.getSoundHandler().playSound(var13);
 		}
@@ -509,6 +507,7 @@ public class WorldClient extends World {
 	public void addBlockEvent(BlockPos pos, Block block, int eventId,
 			int eventParam) {
 		super.addBlockEvent(pos, block, eventId, eventParam);
+
 		if (wdl.WDL.downloading) {
 			wdl.WDL.onBlockEvent(pos, block, eventId, eventParam);
 		}

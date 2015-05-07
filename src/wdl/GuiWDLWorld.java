@@ -104,7 +104,7 @@ public class GuiWDLWorld extends GuiScreen {
 	 */
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
-			throws IOException {
+	throws IOException {
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 
 		if (this.showSpawnFields) {

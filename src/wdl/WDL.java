@@ -138,7 +138,7 @@ public class WDL {
 	public static Container windowContainer;
 	/**
 	 * The block position clicked most recently.
-	 * 
+	 *
 	 * Needed for TileEntity creation.
 	 */
 	public static BlockPos lastClickedBlock;
@@ -165,7 +165,7 @@ public class WDL {
 	// State variables:
 	/**
 	 * Whether the world is currently downloading.
-	 * 
+	 *
 	 * Don't modify this outside of WDL.java. TODO See above -- getters?
 	 */
 	public static boolean downloading = false;
@@ -209,7 +209,6 @@ public class WDL {
 	// Initialization:
 	static {
 		minecraft = Minecraft.getMinecraft();
-
 		// Initialize the Properties template:
 		defaultProps = new Properties();
 		defaultProps.setProperty("ServerName", "");
@@ -233,7 +232,6 @@ public class WDL {
 		defaultProps.setProperty("PlayerZ", "8");
 		defaultProps.setProperty("PlayerHealth", "20");
 		defaultProps.setProperty("PlayerFood", "20");
-
 		baseProps = new Properties(defaultProps);
 		worldProps = new Properties(baseProps);
 	}
@@ -241,6 +239,7 @@ public class WDL {
 	/** Starts the download */
 	public static void start() {
 		worldClient = minecraft.theWorld;
+
 		if (isMultiworld && worldName.isEmpty()) {
 			// Ask the user which world is loaded
 			minecraft.displayGuiScreen(new GuiWDLMultiworldSelect(null));
@@ -255,13 +254,10 @@ public class WDL {
 
 		WDL.minecraft.displayGuiScreen((GuiScreen) null);
 		WDL.minecraft.setIngameFocus();
-
 		worldProps = loadWorldProps(worldName);
-
 		saveHandler = (SaveHandler) minecraft.getSaveLoader().getSaveLoader(
 				getWorldFolderName(worldName), true);
 		chunkLoader = saveHandler.getChunkLoader(worldClient.provider);
-
 		newTileEntities = new HashSet<BlockPos>();
 
 		if (baseProps.getProperty("ServerName").isEmpty()) {
@@ -280,7 +276,6 @@ public class WDL {
 			downloading = false;
 			startOnChange = false;
 			chatMsg("Download stopped");
-
 			startSaveThread();
 		}
 	}
@@ -312,8 +307,10 @@ public class WDL {
 				// worldLoadingDeferred = true;
 				startSaveThread();
 			}
+
 			return;
 		}
+
 		loadWorld();
 	}
 
@@ -322,7 +319,6 @@ public class WDL {
 		worldClient = minecraft.theWorld;
 		thePlayer = minecraft.thePlayer;
 		windowContainer = thePlayer.openContainer;
-
 		// Is this a different server?
 		NetworkManager newNM = thePlayer.sendQueue.getNetworkManager(); // tp.sendQueue.getNetManager()
 
@@ -331,6 +327,7 @@ public class WDL {
 			chatDebug("onWorldLoad: different server!");
 			networkManager = newNM;
 			loadBaseProps();
+
 			if (baseProps.getProperty("AutoStart").equals("true")) {
 				start();
 			} else {
@@ -339,6 +336,7 @@ public class WDL {
 		} else {
 			// Same server, different world!
 			chatDebug("onWorldLoad: same server!");
+
 			if (startOnChange) {
 				start();
 			}
@@ -400,45 +398,38 @@ public class WDL {
 	 */
 	public static void onItemGuiClosed() {
 		String saveName = "";
-		
+
 		if (thePlayer.ridingEntity != null &&
 				thePlayer.ridingEntity instanceof EntityHorse) {
 			//If the player is on a horse, check if they are opening the
-			//inventory of the horse they are on.  If so, use that, 
+			//inventory of the horse they are on.  If so, use that,
 			//rather than the entity being looked at.
-			
 			if (windowContainer instanceof ContainerHorseInventory) {
 				EntityHorse horseInContainer = (EntityHorse)
 						stealAndGetField(windowContainer, EntityHorse.class);
-				
+
 				//Intentional reference equals
 				if (horseInContainer == thePlayer.ridingEntity) {
 					EntityHorse entityHorse = (EntityHorse)
 							thePlayer.ridingEntity;
-					
 					//Resize the horse's chest.  Needed because... reasons.
-					//Apparently the saved horse has the wrong size by 
+					//Apparently the saved horse has the wrong size by
 					//default.
 					//Based off of EntityHorse.func_110226_cD (in 1.8).
-					
 					AnimalChest horseChest = new AnimalChest("HorseChest",
-							(entityHorse.isChested() && 
-							(entityHorse.getHorseType() == 1 ||
-							entityHorse.getHorseType() == 2)) ? 17 : 2);
+							(entityHorse.isChested() &&
+									(entityHorse.getHorseType() == 1 ||
+											entityHorse.getHorseType() == 2)) ? 17 : 2);
 					//func_110133_a sets the custom name -- if changed look
-					//for one that sets hasCustomName to true and gives 
+					//for one that sets hasCustomName to true and gives
 					//inventoryTitle the value of the parameter.
 					horseChest.func_110133_a(entityHorse.getName());
-					
 					saveContainerItems(windowContainer, horseChest, 0);
-					
 					//I don't even know what this does, but it's part of the
 					//other method...
 					horseChest.func_110134_a(entityHorse);
-					
 					//Save the actual data value to the other horse.
 					stealAndSetField(entityHorse, AnimalChest.class, horseChest);
-					
 					WDL.chatDebug("Saved ridden horse inventory.");
 					return;
 				}
@@ -447,10 +438,10 @@ public class WDL {
 
 		// If the last thing clicked was an ENTITY
 		if (lastEntity != null) {
-
 			if (lastEntity instanceof EntityMinecartChest
 					&& windowContainer instanceof ContainerChest) {
 				EntityMinecartChest emcc = (EntityMinecartChest) lastEntity;
+
 				for (int i = 0; i < emcc.getSizeInventory(); i++) {
 					emcc.setInventorySlotContents(i, windowContainer
 							.getSlot(i).getStack());
@@ -459,6 +450,7 @@ public class WDL {
 			} else if (lastEntity instanceof EntityMinecartHopper
 					&& windowContainer instanceof ContainerHopper) {
 				EntityMinecartHopper emch = (EntityMinecartHopper) lastEntity;
+
 				for (int i = 0; i < emch.getSizeInventory(); i++) {
 					emch.setInventorySlotContents(i, windowContainer
 							.getSlot(i).getStack());
@@ -467,46 +459,38 @@ public class WDL {
 			} else if (lastEntity instanceof EntityVillager
 					&& windowContainer instanceof ContainerMerchant) {
 				EntityVillager ev = (EntityVillager) lastEntity;
-				
 				MerchantRecipeList list = ((IMerchant)stealAndGetField(
 						windowContainer, IMerchant.class)).getRecipes(
 								thePlayer);
-				
 				stealAndSetField(ev, MerchantRecipeList.class, list);
-				
 				saveName = "Villager offers";
 			} else if (lastEntity instanceof EntityHorse
 					&& windowContainer instanceof ContainerHorseInventory) {
 				EntityHorse entityHorse = (EntityHorse)lastEntity;
-				
 				//Resize the horse's chest.  Needed because... reasons.
-				//Apparently the saved horse has the wrong size by 
+				//Apparently the saved horse has the wrong size by
 				//default.
 				//Based off of EntityHorse.func_110226_cD (in 1.8).
-				
 				AnimalChest horseChest = new AnimalChest("HorseChest",
-						(entityHorse.isChested() && 
-						(entityHorse.getHorseType() == 1 ||
-						entityHorse.getHorseType() == 2)) ? 17 : 2);
+						(entityHorse.isChested() &&
+								(entityHorse.getHorseType() == 1 ||
+										entityHorse.getHorseType() == 2)) ? 17 : 2);
 				//func_110133_a sets the custom name -- if changed look
-				//for one that sets hasCustomName to true and gives 
+				//for one that sets hasCustomName to true and gives
 				//inventoryTitle the value of the parameter.
 				horseChest.func_110133_a(entityHorse.getName());
-				
 				saveContainerItems(windowContainer, horseChest, 0);
-				
 				//I don't even know what this does, but it's part of the
 				//other method...
 				horseChest.func_110134_a(entityHorse);
-				
 				//Save the actual data value to the other horse.
 				stealAndSetField(entityHorse, AnimalChest.class, horseChest);
-				
 				saveName = "Horse Chest";
 			} else {
 				WDL.chatMsg("Unsupported entity cannot be saved:"
 						+ EntityList.getEntityString(lastEntity));
 			}
+
 			WDL.chatDebug("Saved " + saveName + ".");
 			return;
 		}
@@ -514,6 +498,7 @@ public class WDL {
 		// Else, the last thing clicked was a TILE ENTITY
 		// Get the tile entity which we are going to update the inventory for
 		TileEntity te = worldClient.getTileEntity(lastClickedBlock);
+
 		if (te == null) {
 			WDL.chatDebug("onItemGuiClosed could not get TE at "
 					+ lastClickedBlock);
@@ -526,32 +511,32 @@ public class WDL {
 				TileEntity te2;
 				BlockPos chestPos1 = lastClickedBlock;
 				BlockPos chestPos2;
-
 				TileEntityChest tec1, tec2;
+
 				if ((te2 = worldClient.getTileEntity(chestPos1.add(0, 0, 1))) instanceof TileEntityChest
 						&& ((TileEntityChest) te2).getChestType() == ((TileEntityChest) te)
-								.getChestType()) {
+						.getChestType()) {
 					tec1 = (TileEntityChest) te;
 					tec2 = (TileEntityChest) te2;
 					chestPos2 = chestPos1.add(0, 0, 1);
 				} else if ((te2 = worldClient.getTileEntity(chestPos1.add(0, 0,
 						-1))) instanceof TileEntityChest
 						&& ((TileEntityChest) te2).getChestType() == ((TileEntityChest) te)
-								.getChestType()) {
+						.getChestType()) {
 					tec1 = (TileEntityChest) te2;
 					tec2 = (TileEntityChest) te;
 					chestPos2 = chestPos1.add(0, 0, -1);
 				} else if ((te2 = worldClient.getTileEntity(chestPos1.add(1, 0,
 						0))) instanceof TileEntityChest
 						&& ((TileEntityChest) te2).getChestType() == ((TileEntityChest) te)
-								.getChestType()) {
+						.getChestType()) {
 					tec1 = (TileEntityChest) te;
 					tec2 = (TileEntityChest) te2;
 					chestPos2 = chestPos1.add(-1, 0, 0);
 				} else if ((te2 = worldClient.getTileEntity(chestPos1.add(-1,
 						0, 0))) instanceof TileEntityChest
 						&& ((TileEntityChest) te2).getChestType() == ((TileEntityChest) te)
-								.getChestType()) {
+						.getChestType()) {
 					tec1 = (TileEntityChest) te2;
 					tec2 = (TileEntityChest) te;
 					chestPos2 = chestPos1.add(-1, 0, 0);
@@ -559,6 +544,7 @@ public class WDL {
 					WDL.chatMsg("Could not save this chest!");
 					return;
 				}
+
 				saveContainerItems(windowContainer, tec1, 0);
 				saveContainerItems(windowContainer, tec2, 27);
 				newTileEntities.add(chestPos1);
@@ -577,18 +563,18 @@ public class WDL {
 					.getInventoryEnderChest();
 			int inventorySize = inventoryEnderChest.getSizeInventory();
 			int containerSize = windowContainer.inventorySlots.size();
+
 			for (int i = 0; i < containerSize && i < inventorySize; i++) {
 				inventoryEnderChest.setInventorySlotContents(i, windowContainer
 						.getSlot(i).getStack());
 			}
+
 			saveName = "Ender Chest contents";
 		} else if (windowContainer instanceof ContainerBrewingStand) {
 			IInventory brewingInventory = (IInventory) stealAndGetField(
 					windowContainer, IInventory.class);
-			
 			saveContainerItems(windowContainer, (TileEntityBrewingStand) te, 0);
 			saveInventoryFields(brewingInventory, (TileEntityBrewingStand) te);
-			
 			newTileEntities.add(lastClickedBlock);
 			saveName = "Brewing Stand contents";
 		} else if (windowContainer instanceof ContainerDispenser) {
@@ -598,10 +584,8 @@ public class WDL {
 		} else if (windowContainer instanceof ContainerFurnace) {
 			IInventory furnaceInventory = (IInventory) stealAndGetField(
 					windowContainer, IInventory.class);
-			
 			saveContainerItems(windowContainer, (TileEntityFurnace) te, 0);
 			saveInventoryFields(furnaceInventory, (TileEntityFurnace) te);
-			
 			newTileEntities.add(lastClickedBlock);
 			saveName = "Furnace contents";
 		} else if (windowContainer instanceof ContainerHopper) {
@@ -610,14 +594,11 @@ public class WDL {
 			saveName = "Hopper contents";
 		} else if (windowContainer instanceof ContainerBeacon) {
 			//func_180611_e returns the beacon's IInventory tileBeacon.
-			IInventory beaconInventory = 
-					((ContainerBeacon)windowContainer).func_180611_e();
-			
+			IInventory beaconInventory =
+				((ContainerBeacon)windowContainer).func_180611_e();
 			TileEntityBeacon savedBeacon = (TileEntityBeacon)te;
-			
 			saveContainerItems(windowContainer, savedBeacon, 0);
 			saveInventoryFields(beaconInventory, savedBeacon);
-			
 			newTileEntities.add(lastClickedBlock);
 			saveName = "Beacon effects";
 		} else {
@@ -638,19 +619,20 @@ public class WDL {
 		// if( blockID == Block.music.blockID )
 		if (block == Blocks.noteblock) {
 			TileEntityNote newTE = new TileEntityNote();
-			newTE.note = (byte) (param % 25);
+			newTE.note = (byte)(param % 25);
 			worldClient.setTileEntity(pos, newTE);
 			newTileEntities.add(pos);
 			chatDebug("onBlockEvent: Note Block: " + pos + " pitch: " + param
 					+ " - " + newTE);
 		}
+
 		// Pistons, Chests (open, close), EnderChests, ... (see references to
 		// WorldServer.addBlockEvent)
 	}
 
 	/**
 	 * Must be called when an entity is about to be removed from the world.
-	 * 
+	 *
 	 * @return true if the entity should not be removed, false if it can be
 	 */
 	public static boolean shouldKeepEntity(Entity entity) {
@@ -660,6 +642,7 @@ public class WDL {
 		if (WDL.downloading) {
 			if (entity != null) {
 				int threshold = 0;
+
 				if ((entity instanceof EntityFishHook)
 						||
 						// (entity instanceof EntityArrow) ||
@@ -684,19 +667,23 @@ public class WDL {
 						|| (entity instanceof EntityXPOrb)) {
 					threshold = 160;
 				}
+
 				double distance = entity.getDistance(WDL.thePlayer.posX,
 						entity.posY, WDL.thePlayer.posZ);
+
 				if (distance > threshold) {
 					WDL.chatDebug("removeEntityFromWorld: Refusing to remove "
 							+ EntityList.getEntityString(entity)
 							+ " at distance " + distance);
 					return true;
 				}
+
 				WDL.chatDebug("removeEntityFromWorld: Removing "
 						+ EntityList.getEntityString(entity) + " at distance "
 						+ distance);
 			}
 		}
+
 		return false;
 	}
 
@@ -706,16 +693,16 @@ public class WDL {
 				File.class);
 		DataInputStream dis = RegionFileCache.getChunkInputStream(
 				chunkSaveLocation, chunk.xPosition, chunk.zPosition);
+
 		try {
 			NBTTagCompound chunkNBT = CompressedStreamTools.read(dis);
-
 			// NBTTagCompound levelNBT = chunkNBT.getCompoundTag( "Level" );
 			NBTTagCompound levelNBT = chunkNBT.getCompoundTag("Level");
-
 			// The official code checks if the chunk is in the right location.
 			// Should I too?.
 			NBTTagList tileEntitiesNBT = levelNBT
 					.getTagList("TileEntities", 10);
+
 			if (tileEntitiesNBT != null) {
 				for (int i = 0; i < tileEntitiesNBT.tagCount(); i++) {
 					NBTTagCompound tileEntityNBT = tileEntitiesNBT
@@ -723,6 +710,7 @@ public class WDL {
 					TileEntity te = TileEntity
 							.createAndLoadEntity(tileEntityNBT);
 					String entityType = null;
+
 					if ((entityType = isImportableTileEntity(te)) != null) {
 						if (!newTileEntities.contains(te.getPos())) {
 							worldClient.setTileEntity(te.getPos(), te);
@@ -740,16 +728,18 @@ public class WDL {
 			}
 		} catch (Exception e) {
 		} // Couldn't load the old chunk. Nothing unusual. Happens with every
-			// not downloaded chunk.
+
+		// not downloaded chunk.
 	}
 
 	/**
-	 * Checks if the TileEntity should be imported. Only "problematic" (IE, 
-	 * those that require manual interaction such as chests) TileEntities 
+	 * Checks if the TileEntity should be imported. Only "problematic" (IE,
+	 * those that require manual interaction such as chests) TileEntities
 	 * will be imported.
 	 */
 	public static String isImportableTileEntity(TileEntity te) {
 		Block block = te.getBlockType();
+
 		if (block instanceof BlockChest && te instanceof TileEntityChest) {
 			return "TileEntityChest";
 		} else if (block instanceof BlockDispenser
@@ -785,27 +775,22 @@ public class WDL {
 			saveHandler.checkSessionLock();
 		} catch (MinecraftException e) {
 			throw new RuntimeException(
-					"WorldDownloader: Couldn't get session lock for saving the world!", e);
+				"WorldDownloader: Couldn't get session lock for saving the world!", e);
 		}
 
 		NBTTagCompound playerNBT = new NBTTagCompound();
 		thePlayer.writeToNBT(playerNBT);
 		applyOverridesToPlayer(playerNBT);
-
 		ISaveHandler saveHAndler = worldClient.getSaveHandler();
 		AnvilSaveConverter saveConverter = (AnvilSaveConverter) minecraft
 				.getSaveLoader();
-
 		worldClient.getWorldInfo()
-				.setSaveVersion(getSaveVersion(saveConverter));
-
+		.setSaveVersion(getSaveVersion(saveConverter));
 		NBTTagCompound worldInfoNBT = worldClient.getWorldInfo()
 				.cloneNBTCompound(playerNBT);
 		applyOverridesToWorldInfo(worldInfoNBT);
-
 		savePlayer(playerNBT);
 		saveWorldInfo(worldInfoNBT);
-		
 		saveChunks();
 	}
 
@@ -815,6 +800,7 @@ public class WDL {
 	 */
 	public static void savePlayer(NBTTagCompound playerNBT) {
 		chatDebug("Saving player data...");
+
 		try {
 			File playersDirectory = new File(saveHandler.getWorldDirectory(),
 					"playerdata");
@@ -822,17 +808,18 @@ public class WDL {
 					.getUniqueID().toString() + ".dat.tmp");
 			File playerFileOld = new File(playersDirectory, thePlayer
 					.getUniqueID().toString() + ".dat");
-
 			CompressedStreamTools.writeCompressed(playerNBT,
 					new FileOutputStream(playerFile));
 
 			if (playerFileOld.exists()) {
 				playerFileOld.delete();
 			}
+
 			playerFile.renameTo(playerFileOld);
 		} catch (Exception e) {
 			throw new RuntimeException("Couldn't save the player!", e);
 		}
+
 		chatDebug("Player data saved.");
 	}
 
@@ -858,36 +845,39 @@ public class WDL {
 			}
 
 			dataFileOld.renameTo(dataFileBackup);
+
 			if (dataFileOld.exists()) {
 				dataFileOld.delete();
 			}
 
 			dataFile.renameTo(dataFileOld);
+
 			if (dataFile.exists()) {
 				dataFile.delete();
 			}
 		} catch (Exception e) {
 			throw new RuntimeException("Couldn't save the world metadata!", e);
 		}
+
 		chatDebug("World data saved.");
 	}
 
 	/**
 	 * Calls saveChunk for all currently loaded chunks
-	 * 
+	 *
 	 * @throws IllegalAccessException
 	 * @throws IllegalArgumentException
 	 */
 	public static void saveChunks() throws IllegalArgumentException,
-			IllegalAccessException {
+		IllegalAccessException {
 		chatDebug("Saving chunks...");
 		// Get the ChunkProviderClient from WorldClient
 		ChunkProviderClient chunkProvider = (ChunkProviderClient) worldClient
 				.getChunkProvider();
-
 		// Get the hashArray field and set it accessible
 		Field hashArrayField = null;
 		Field[] lhmFields = LongHashMap.class.getDeclaredFields();
+
 		// System.out.println("Looking for hashArray field...");
 		for (Field f : lhmFields) {
 			// System.out.println("Found field " + f.getName() + " of type " +
@@ -897,14 +887,15 @@ public class WDL {
 				break;
 			}
 		}
+
 		if (hashArrayField == null) {
 			chatMsg("Could not save chunks. Reflection error.");
 			return;
 		}
+
 		// System.out.println("Setting hashArrayField of type " +
 		// hashArrayField.getType().getName() + " accessible.");
 		hashArrayField.setAccessible(true);
-
 		// Steal the instance of LongHashMap from our chunk provider
 		// System.out.println("Stealing field from chunkProvider (type=" +
 		// chunkProvider.getClass().getName() + ") of type " +
@@ -928,12 +919,14 @@ public class WDL {
 		} else {
 			// Get the actual class for LongHashMap.Entry
 			Class<?> Entry = null;
+
 			for (Object o : hashArray) {
 				if (o != null) {
 					Entry = o.getClass();
 					break;
 				}
 			}
+
 			if (Entry == null) {
 				chatError("Could not get class for LongHashMap.Entry.");
 				return;
@@ -945,12 +938,10 @@ public class WDL {
 			valueField.setAccessible(true);
 			Field nextEntryField = Entry.getDeclaredFields()[2]; // nextEntry
 			nextEntryField.setAccessible(true);
-
 			WDLSaveProgressReporter progressReporter = new WDLSaveProgressReporter();
 			progressReporter.currentChunk = 0;
 			//TODO hashArray.length probably isn't the right field.
 			progressReporter.totalChunks = lhm.getNumHashElements();
-			
 			progressReporter.start();
 
 			for (int i = 0; i < hashArray.length; ++i) {
@@ -960,12 +951,13 @@ public class WDL {
 						.get(lhme)) {
 					// Chunk c = (Chunk)lhme.getValue();
 					Chunk c = (Chunk) valueField.get(lhme);
-					
+
 					if (c != null) {
 						saveChunk(c);
 					}
 				}
 			}
+
 			try {
 				// func_178779_a is a getter for the intsance.
 				// Look inside of ThreadedFileIOBase.java for
@@ -974,10 +966,11 @@ public class WDL {
 			} catch (Exception e) {
 				throw new RuntimeException("Threw exception waiting for asynchronous IO to finish. Hmmm.", e);
 			}
+
 			chatDebug("Chunk data saved.");
 		}
 	}
-	
+
 	/**
 	 * Import all non-overwritten TileEntities, then save the chunk
 	 */
@@ -992,10 +985,11 @@ public class WDL {
 				e.posZ = convertServerPos(e.serverPosZ);
 			}
 		}
-		
+
 		// chatMsg( "saveChunk at " + c.xPosition + " " + c.zPosition);
 		importTileEntities(c);
 		c.setTerrainPopulated(true);
+
 		try {
 			chunkLoader.saveChunk(worldClient, c);
 		} catch (Exception e) {
@@ -1003,7 +997,7 @@ public class WDL {
 			chatMsg("Chunk at chunk position " + c.xPosition + ","
 					+ c.zPosition + " can't be saved!");
 		}
-		
+
 		WDLSaveProgressReporter.currentChunk++;
 	}
 
@@ -1011,6 +1005,7 @@ public class WDL {
 	public static void loadBaseProps() {
 		baseFolderName = getBaseFolderName();
 		baseProps = new Properties(defaultProps);
+
 		try {
 			baseProps.load(new FileReader(new File(minecraft.mcDataDir,
 					"saves/" + baseFolderName + "/WorldDownloader.txt")));
@@ -1031,6 +1026,7 @@ public class WDL {
 	/** Loads the world specific set of properties */
 	public static Properties loadWorldProps(String theWorldName) {
 		Properties ret = new Properties(baseProps);
+
 		if (!theWorldName.isEmpty()) {
 			String folder = getWorldFolderName(theWorldName);
 
@@ -1041,6 +1037,7 @@ public class WDL {
 				return null;
 			}
 		}
+
 		return ret;
 	}
 
@@ -1059,10 +1056,11 @@ public class WDL {
 	public static void saveProps(String theWorldName, Properties theWorldProps) {
 		if (theWorldName.length() > 0) {
 			String folder = getWorldFolderName(theWorldName);
+
 			try {
 				theWorldProps.store(new FileWriter(new File(
 						minecraft.mcDataDir, "saves/" + folder
-								+ "/WorldDownloader.txt")), "");
+						+ "/WorldDownloader.txt")), "");
 			} catch (Exception e) {
 			}
 		} else if (!isMultiworld) {
@@ -1072,6 +1070,7 @@ public class WDL {
 		File baseFolder = new File(minecraft.mcDataDir, "saves/"
 				+ baseFolderName);
 		baseFolder.mkdirs();
+
 		try {
 			baseProps.store(new FileWriter(new File(baseFolder,
 					"WorldDownloader.txt")), "");
@@ -1086,6 +1085,7 @@ public class WDL {
 	public static void applyOverridesToPlayer(NBTTagCompound playerNBT) {
 		// Health
 		String health = worldProps.getProperty("PlayerHealth");
+
 		if (!health.equals("keep")) {
 			short h = Short.parseShort(health);
 			playerNBT.setShort("Health", h);
@@ -1093,25 +1093,28 @@ public class WDL {
 
 		// foodLevel, foodTimer, foodSaturationLevel, foodExhaustionLevel
 		String food = worldProps.getProperty("PlayerFood");
+
 		if (!food.equals("keep")) {
 			int f = Integer.parseInt(food);
 			playerNBT.setInteger("foodLevel", f);
 			playerNBT.setInteger("foodTickTimer", 0);
+
 			if (f == 20) {
 				playerNBT.setFloat("foodSaturationLevel", 5.0f);
 			} else {
 				playerNBT.setFloat("foodSaturationLevel", 0.0f);
 			}
+
 			playerNBT.setFloat("foodExhaustionLevel", 0.0f);
 		}
 
 		// Player Position
 		String playerPos = worldProps.getProperty("PlayerPos");
+
 		if (playerPos.equals("xyz")) {
 			int x = Integer.parseInt(worldProps.getProperty("PlayerX"));
 			int y = Integer.parseInt(worldProps.getProperty("PlayerY"));
 			int z = Integer.parseInt(worldProps.getProperty("PlayerZ"));
-
 			//Positions are offset to center of block,
 			//or player height.
 			NBTTagList pos = new NBTTagList();
@@ -1119,14 +1122,12 @@ public class WDL {
 			pos.appendTag(new NBTTagDouble(y + 0.621D));
 			pos.appendTag(new NBTTagDouble(z + 0.5D));
 			playerNBT.setTag("Pos", pos);
-
 			NBTTagList motion = new NBTTagList();
 			motion.appendTag(new NBTTagDouble(0.0D));
 			//Force them to land on the ground?
 			motion.appendTag(new NBTTagDouble(-0.0001D));
 			motion.appendTag(new NBTTagDouble(0.0D));
 			playerNBT.setTag("Motion", motion);
-
 			NBTTagList rotation = new NBTTagList();
 			rotation.appendTag(new NBTTagFloat(0.0f));
 			rotation.appendTag(new NBTTagFloat(0.0f));
@@ -1142,6 +1143,7 @@ public class WDL {
 		// LevelName
 		String baseName = baseProps.getProperty("ServerName");
 		String worldName = worldProps.getProperty("WorldName");
+
 		if (worldName.isEmpty()) {
 			worldInfoNBT.setString("LevelName", baseName);
 		} else {
@@ -1150,9 +1152,9 @@ public class WDL {
 
 		// GameType
 		String gametypeOption = worldProps.getProperty("GameType");
+
 		if (gametypeOption.equals("keep")) {
-			if (thePlayer.capabilities.isCreativeMode) // capabilities
-			{
+			if (thePlayer.capabilities.isCreativeMode) { // capabilities
 				worldInfoNBT.setInteger("GameType", 1); // Creative
 			} else {
 				worldInfoNBT.setInteger("GameType", 0); // Survival
@@ -1168,6 +1170,7 @@ public class WDL {
 
 		// Time
 		String timeOption = worldProps.getProperty("Time");
+
 		if (!timeOption.equals("keep")) {
 			long t = Integer.parseInt(timeOption);
 			worldInfoNBT.setLong("Time", t);
@@ -1176,6 +1179,7 @@ public class WDL {
 		// RandomSeed
 		String randomSeed = worldProps.getProperty("RandomSeed");
 		long seed = 0;
+
 		if (!randomSeed.isEmpty()) {
 			try {
 				seed = Long.parseLong(randomSeed);
@@ -1183,36 +1187,36 @@ public class WDL {
 				seed = randomSeed.hashCode();
 			}
 		}
-		worldInfoNBT.setLong("RandomSeed", seed);
 
+		worldInfoNBT.setLong("RandomSeed", seed);
 		// MapFeatures
 		boolean mapFeatures = Boolean.parseBoolean(worldProps
 				.getProperty("MapFeatures"));
 		worldInfoNBT.setBoolean("MapFeatures", mapFeatures);
-
 		// generatorName
 		String generatorName = worldProps.getProperty("GeneratorName");
 		worldInfoNBT.setString("generatorName", generatorName);
-
 		// generatorVersion
 		int generatorVersion = Integer.parseInt(worldProps
 				.getProperty("GeneratorVersion"));
 		worldInfoNBT.setInteger("generatorVersion", generatorVersion);
-
 		// Weather
 		String weather = worldProps.getProperty("Weather");
+
 		if (weather.equals("sunny")) {
 			worldInfoNBT.setBoolean("raining", false);
 			worldInfoNBT.setInteger("rainTime", 0);
 			worldInfoNBT.setBoolean("thundering", false);
 			worldInfoNBT.setInteger("thunderTime", 0);
 		}
+
 		if (weather.equals("rain")) {
 			worldInfoNBT.setBoolean("raining", true);
 			worldInfoNBT.setInteger("rainTime", 24000);
 			worldInfoNBT.setBoolean("thundering", false);
 			worldInfoNBT.setInteger("thunderTime", 0);
 		}
+
 		if (weather.equals("thunderstorm")) {
 			worldInfoNBT.setBoolean("raining", true);
 			worldInfoNBT.setInteger("rainTime", 24000);
@@ -1222,6 +1226,7 @@ public class WDL {
 
 		// Spawn
 		String spawn = worldProps.getProperty("Spawn");
+
 		if (spawn.equals("player")) {
 			int x = (int) Math.floor(thePlayer.posX);
 			int y = (int) Math.floor(thePlayer.posY);
@@ -1251,10 +1256,12 @@ public class WDL {
 					// Direct connection using domain name or IP (and port)
 					name = minecraft.getCurrentServerData().serverIP;
 				}
+
 				return name;
 			}
 		} catch (Exception e) {
 		}
+
 		return "Unidentified Server";
 	}
 
@@ -1274,7 +1281,7 @@ public class WDL {
 
 	/**
 	 * Saves the items of a container to the given TileEntity.
-	 * 
+	 *
 	 * @param contaioner The container to save from -- usually
 	 *                   {@link #windowContainer}.
 	 * @param tileEntity The TileEntity to save to.
@@ -1290,22 +1297,21 @@ public class WDL {
 
 		while ((nc < containerSize) && (ni < inventorySize)) {
 			ItemStack is = contaioner.getSlot(nc).getStack();
-
 			tileEntity.setInventorySlotContents(ni, is);
 			ni++;
 			nc++;
 		}
 	}
-	
+
 	/**
 	 * Saves the fields of an inventory.
 	 * Fields are pieces of data such as furnace smelt time and
 	 * beacon effects.
-	 * 
+	 *
 	 * @param inventory The inventory to save from.
 	 * @param tileEntity The inventory to save to.
 	 */
-	public static void saveInventoryFields(IInventory inventory, 
+	public static void saveInventoryFields(IInventory inventory,
 			IInventory tileEntity) {
 		for (int i = 0; i < inventory.getFieldCount(); i++) {
 			tileEntity.setField(i, inventory.getField(i));
@@ -1315,7 +1321,7 @@ public class WDL {
 	/** Adds a chat message with a World Downloader prefix */
 	public static void chatMsg(String msg) {
 		minecraft.ingameGUI.getChatGUI().printChatMessage(
-				new ChatComponentText("§c[WorldDL]§6 " + msg));
+			new ChatComponentText("§c[WorldDL]§6 " + msg));
 	}
 
 	/** Adds a chat message with a World Downloader prefix */
@@ -1323,21 +1329,24 @@ public class WDL {
 		if (!WDL.DEBUG) {
 			return;
 		}
+
 		minecraft.ingameGUI.getChatGUI().printChatMessage(
-				new ChatComponentText("§2[WorldDL]§6 " + msg));
+			new ChatComponentText("§2[WorldDL]§6 " + msg));
 	}
 
 	/** Adds a chat message with a World Downloader prefix */
 	public static void chatError(String msg) {
 		minecraft.ingameGUI.getChatGUI().printChatMessage(
-				new ChatComponentText("§2[WorldDL]§4 " + msg));
+			new ChatComponentText("§2[WorldDL]§4 " + msg));
 	}
 
 	private static int getSaveVersion(AnvilSaveConverter asc) {
 		int saveVersion = 0;
+
 		try {
 			Method[] anvilMethods = AnvilSaveConverter.class
 					.getDeclaredMethods();
+
 			for (Method m : anvilMethods) {
 				if (m.getParameterTypes().length == 0
 						&& m.getReturnType().equals(int.class)) {
@@ -1349,16 +1358,18 @@ public class WDL {
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}
+
 		if (saveVersion == 0) {
 			saveVersion = 19133; // Version for 1.7.2 just in case we can't get
 			// it
 		}
+
 		return saveVersion;
 	}
 
 	/**
 	 * Uses Java's reflection API to get access to an unaccessible field
-	 * 
+	 *
 	 * @param typeOfClass
 	 *            Class that the field should be read from
 	 * @param typeOfField
@@ -1371,31 +1382,32 @@ public class WDL {
 		// System.out.println("stealField: typeOfField = " +
 		// typeOfField.getName());
 		Field[] fields = typeOfClass.getDeclaredFields();
+
 		for (Field f : fields) {
 			// System.out.println("stealField: Found field " + f.getName() +
 			// " of type " + f.getType());
-
 			if (f.getType().equals(typeOfField)) {
 				try {
 					f.setAccessible(true);
 					return f;
 				} catch (Exception e) {
 					throw new RuntimeException(
-							"WorldDownloader: Couldn't steal Field of type \""
-									+ typeOfField + "\" from class \"" + typeOfClass
-									+ "\" !", e);
+						"WorldDownloader: Couldn't steal Field of type \""
+						+ typeOfField + "\" from class \"" + typeOfClass
+						+ "\" !", e);
 				}
 			}
 		}
+
 		throw new RuntimeException(
-				"WorldDownloader: Couldn't steal Field of type \""
-						+ typeOfField + "\" from class \"" + typeOfClass
-						+ "\" !");
+			"WorldDownloader: Couldn't steal Field of type \""
+			+ typeOfField + "\" from class \"" + typeOfClass
+			+ "\" !");
 	}
 
 	/**
 	 * Uses Java's reflection API to get access to an unaccessible field
-	 * 
+	 *
 	 * @param object
 	 *            Object that the field should be read from or the type of the
 	 *            object if the field is static
@@ -1406,8 +1418,7 @@ public class WDL {
 	public static Object stealAndGetField(Object object, Class typeOfField) {
 		Class typeOfObject;
 
-		if (object instanceof Class) // User asked for static field:
-		{
+		if (object instanceof Class) { // User asked for static field:
 			typeOfObject = (Class) object;
 			object = null;
 		} else {
@@ -1419,15 +1430,15 @@ public class WDL {
 			return f.get(object);
 		} catch (Exception e) {
 			throw new RuntimeException(
-					"WorldDownloader: Couldn't get Field of type \""
-							+ typeOfField + "\" from object \"" + object
-							+ "\" !", e);
+				"WorldDownloader: Couldn't get Field of type \""
+				+ typeOfField + "\" from object \"" + object
+				+ "\" !", e);
 		}
 	}
-	
+
 	/**
 	 * Uses Java's reflection API to set the value of an unaccessible field
-	 * 
+	 *
 	 * @param object
 	 *            Object that the field should be read from or the type of the
 	 *            object if the field is static
@@ -1436,12 +1447,11 @@ public class WDL {
 	 * @param value
 	 *            The value to set the field to.
 	 */
-	public static void stealAndSetField(Object object, Class typeOfField, 
+	public static void stealAndSetField(Object object, Class typeOfField,
 			Object value) {
 		Class typeOfObject;
 
-		if (object instanceof Class) // User asked for static field:
-		{
+		if (object instanceof Class) { // User asked for static field:
 			typeOfObject = (Class) object;
 			object = null;
 		} else {
@@ -1453,9 +1463,9 @@ public class WDL {
 			f.set(object, value);
 		} catch (Exception e) {
 			throw new RuntimeException(
-					"WorldDownloader: Couldn't set Field of type \""
-							+ typeOfField + "\" from object \"" + object
-							+ "\" to " + value + "!", e);
+				"WorldDownloader: Couldn't set Field of type \""
+				+ typeOfField + "\" from object \"" + object
+				+ "\" to " + value + "!", e);
 		}
 	}
 
@@ -1465,6 +1475,7 @@ public class WDL {
 			worldProps.setProperty("RandomSeed", seed);
 			WDL.chatMsg("Setting single-player world seed to " + seed);
 		}
+
 		/*
 		 * else { WDL.chatMsg("Could not retrieve server seed"); }
 		 */
@@ -1477,10 +1488,11 @@ public class WDL {
 		}
 
 		int insertAtYPos = 0;
+
 		for (Object obj : buttonList) {
 			GuiButton btn = (GuiButton) obj;
-			if (btn.id == 5) // Button "Achievements"
-			{
+
+			if (btn.id == 5) { // Button "Achievements"
 				insertAtYPos = btn.yPosition + 24;
 				break;
 			}
@@ -1489,6 +1501,7 @@ public class WDL {
 		// Move other buttons down one slot (= 24 height units)
 		for (Object obj : buttonList) {
 			GuiButton btn = (GuiButton) obj;
+
 			if (btn.yPosition >= insertAtYPos) {
 				btn.yPosition += 24;
 			}
@@ -1500,14 +1513,11 @@ public class WDL {
 				insertAtYPos, 170, 20, "WDL bug!");
 		GuiButton wdlOptions = new GuiButton(0x57444C6F, gui.width / 2 + 71,
 				insertAtYPos, 28, 20, "...");
-
 		wdlDownload.displayString = (WDL.downloading ? (WDL.saving ? "Still saving..."
 				: "Stop download")
 				: "Download this world");
 		wdlDownload.enabled = (!WDL.downloading || (WDL.downloading && !WDL.saving));
-
 		wdlOptions.enabled = (!WDL.downloading || (WDL.downloading && !WDL.saving));
-
 		buttonList.add(wdlDownload);
 		buttonList.add(wdlOptions);
 	}
@@ -1517,8 +1527,7 @@ public class WDL {
 			return; // WDL not available if in singleplayer or LAN server mode
 		}
 
-		if (button.id == 0x57444C73) // "Start/Stop Download"
-		{
+		if (button.id == 0x57444C73) { // "Start/Stop Download"
 			if (WDL.downloading) {
 				WDL.stop();
 				WDL.minecraft.displayGuiScreen((GuiScreen) null);
@@ -1526,23 +1535,21 @@ public class WDL {
 			} else {
 				WDL.start();
 			}
-		} else if (button.id == 0x57444C6F) // "..." (options)
-		{
+		} else if (button.id == 0x57444C6F) { // "..." (options)
 			WDL.minecraft.displayGuiScreen(new GuiWDL(gui));
-		} else if (button.id == 1) // "Disconnect"
-		{
+		} else if (button.id == 1) { // "Disconnect"
 			WDL.stop();
 		}
 	}
-	
+
 	/**
 	 * Converts a position from the fixed-point version that a packet
 	 * (or {@link Entity#serverPosX} and the like use) into a double.
-	 * 
+	 *
 	 * @see
 	 *      <a href="http://wiki.vg/Protocol#Fixed-point_numbers">
 	 *      wiki.vg on Fixed-point numbers</a>
-	 * 
+	 *
 	 * @param serverPos
 	 * @return The double version of the position.
 	 */

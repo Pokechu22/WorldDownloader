@@ -96,7 +96,7 @@ public class GuiWDLPlayer extends GuiScreen {
 	 */
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
-			throws IOException {
+	throws IOException {
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 
 		if (this.showPosFields) {

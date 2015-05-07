@@ -21,7 +21,7 @@ public class GuiIngameMenu extends GuiScreen {
 		boolean var2 = true;
 		this.buttonList.add(new GuiButton(1, this.width / 2 - 100, this.height
 				/ 4 + 120 + var1, I18n.format("menu.returnToMenu",
-				new Object[0])));
+						new Object[0])));
 
 		if (!this.mc.isIntegratedServerRunning()) {
 			((GuiButton) this.buttonList.get(0)).displayString = I18n.format(
@@ -33,14 +33,14 @@ public class GuiIngameMenu extends GuiScreen {
 				.format("menu.returnToGame", new Object[0])));
 		this.buttonList.add(new GuiButton(0, this.width / 2 - 100, this.height
 				/ 4 + 96 + var1, 98, 20, I18n.format("menu.options",
-				new Object[0])));
+						new Object[0])));
 		GuiButton var3;
 		this.buttonList.add(var3 = new GuiButton(7, this.width / 2 + 2,
 				this.height / 4 + 96 + var1, 98, 20, I18n.format(
 						"menu.shareToLan", new Object[0])));
 		this.buttonList.add(new GuiButton(5, this.width / 2 - 100, this.height
 				/ 4 + 48 + var1, 98, 20, I18n.format("gui.achievements",
-				new Object[0])));
+						new Object[0])));
 		this.buttonList.add(new GuiButton(6, this.width / 2 + 2, this.height
 				/ 4 + 48 + var1, 98, 20, I18n
 				.format("gui.stats", new Object[0])));
@@ -55,6 +55,7 @@ public class GuiIngameMenu extends GuiScreen {
 	protected void actionPerformed(GuiButton p_146284_1_) {
 		/* WDL >>> */
 		wdl.WDL.handleWDLButtonClick(this, p_146284_1_);
+
 		/* <<< WDL */
 		switch (p_146284_1_.id) {
 		case 0:

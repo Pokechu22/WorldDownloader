@@ -1,6 +1,7 @@
 /bin/
 /mcp/
 
+!/mcp/conf/astyle.cfg
 !/mcp/conf/fields.csv
 !/mcp/conf/methods.csv
 
