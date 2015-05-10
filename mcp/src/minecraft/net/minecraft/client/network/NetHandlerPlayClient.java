@@ -1547,6 +1547,10 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 		packetIn.func_179734_a(var2);
 		this.gameController.entityRenderer.getMapItemRenderer().func_148246_a(
 			var2);
+		
+		/* WDL >>> */
+		wdl.WDL.onMapDataLoaded(packetIn.getMapId(), var2);
+		/* <<< WDL */
 	}
 
 	@Override

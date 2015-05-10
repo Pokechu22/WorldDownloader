@@ -6,8 +6,10 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
@@ -65,6 +67,7 @@ import net.minecraft.inventory.ContainerHorseInventory;
 import net.minecraft.inventory.ContainerMerchant;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryEnderChest;
+import net.minecraft.item.ItemMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
@@ -94,6 +97,7 @@ import net.minecraft.world.chunk.storage.AnvilSaveConverter;
 import net.minecraft.world.chunk.storage.IChunkLoader;
 import net.minecraft.world.chunk.storage.RegionFileCache;
 import net.minecraft.world.storage.ISaveHandler;
+import net.minecraft.world.storage.MapData;
 import net.minecraft.world.storage.SaveHandler;
 import net.minecraft.world.storage.ThreadedFileIOBase;
 
@@ -162,6 +166,12 @@ public class WDL {
 	 */
 	public static HashSet<BlockPos> newTileEntities = new HashSet<BlockPos>();
 
+	/**
+	 * All of the {@link MapData}s that were sent to the client in the current
+	 * world.
+	 */
+	public static HashMap<Integer, MapData> newMapDatas = new HashMap<Integer, MapData>();
+	
 	// State variables:
 	/**
 	 * Whether the world is currently downloading.
@@ -259,6 +269,7 @@ public class WDL {
 				getWorldFolderName(worldName), true);
 		chunkLoader = saveHandler.getChunkLoader(worldClient.provider);
 		newTileEntities = new HashSet<BlockPos>();
+		newMapDatas = new HashMap<Integer, MapData>();
 
 		if (baseProps.getProperty("ServerName").isEmpty()) {
 			baseProps.setProperty("ServerName", getServerName());
@@ -629,6 +640,18 @@ public class WDL {
 		// Pistons, Chests (open, close), EnderChests, ... (see references to
 		// WorldServer.addBlockEvent)
 	}
+	
+	/**
+	 * Must be called when Packet 0x34 (map data) is received, regardless
+	 * of whether a download is currently occuring.
+	 */
+	public static void onMapDataLoaded(int mapID, 
+			MapData mapData) {
+		newMapDatas.put(mapID, mapData);
+		
+		//chatDebug("onMapDataLoaded: Map " + mapID + " saved.");
+		//TODO: Less spammy version; this is called constantly.
+	}
 
 	/**
 	 * Must be called when an entity is about to be removed from the world.
@@ -791,6 +814,7 @@ public class WDL {
 		applyOverridesToWorldInfo(worldInfoNBT);
 		savePlayer(playerNBT);
 		saveWorldInfo(worldInfoNBT);
+		saveMapData();
 		saveChunks();
 	}
 
@@ -940,7 +964,7 @@ public class WDL {
 			nextEntryField.setAccessible(true);
 			WDLSaveProgressReporter progressReporter = new WDLSaveProgressReporter();
 			progressReporter.currentChunk = 0;
-			//TODO hashArray.length probably isn't the right field.
+
 			progressReporter.totalChunks = lhm.getNumHashElements();
 			progressReporter.start();
 
@@ -1244,6 +1268,37 @@ public class WDL {
 			worldInfoNBT.setInteger("SpawnZ", z);
 			worldInfoNBT.setBoolean("initialized", true);
 		}
+	}
+	
+	/**
+	 * Saves existing map data.
+	 * 
+	 * TODO: Overwrite / create IDCounts.dat.
+	 */
+	public static void saveMapData() {
+		File dataDirectory = new File(saveHandler.getWorldDirectory(),
+				"data");
+		
+		for (HashMap.Entry<Integer, MapData> e : newMapDatas.entrySet()) {
+			File mapFile = new File(dataDirectory, "map_" + e.getKey() + ".dat");
+			
+			NBTTagCompound mapNBT = new NBTTagCompound();
+			NBTTagCompound data = new NBTTagCompound();
+			
+			e.getValue().writeToNBT(data);
+			
+			mapNBT.setTag("data", data);
+			
+			try {
+				CompressedStreamTools.writeCompressed(mapNBT,
+						new FileOutputStream(mapFile));
+			} catch (IOException ex) {
+				throw new RuntimeException("WDL: Exception while writing " +
+						"map data for map " + e.getKey() + "!", ex);
+			}
+		}
+		
+		chatDebug("Map data saved.");
 	}
 
 	/** Get the name of the server the user specified it in the server list */
