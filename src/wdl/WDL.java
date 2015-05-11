@@ -335,7 +335,8 @@ public class WDL {
 
 		if (networkManager != newNM) {
 			// Different server, different world!
-			chatDebug("onWorldLoad: different server!");
+			chatDebug(WDLDebugMessageCause.ON_WORLD_LOAD,
+					"onWorldLoad: different server!");
 			networkManager = newNM;
 			loadBaseProps();
 
@@ -346,7 +347,8 @@ public class WDL {
 			}
 		} else {
 			// Same server, different world!
-			chatDebug("onWorldLoad: same server!");
+			chatDebug(WDLDebugMessageCause.ON_WORLD_LOAD,
+					"onWorldLoad: same server!");
 
 			if (startOnChange) {
 				start();
@@ -379,8 +381,9 @@ public class WDL {
 			return;
 		}
 
-		chatDebug("onChunkNoLongerNeeded: " + unneededChunk.xPosition + ", "
-				+ unneededChunk.zPosition);
+		chatDebug(WDLDebugMessageCause.ON_CHUNK_NO_LONGER_NEEDED,
+				"onChunkNoLongerNeeded: " + unneededChunk.xPosition + ", "
+						+ unneededChunk.zPosition);
 		saveChunk(unneededChunk);
 	}
 
@@ -441,7 +444,8 @@ public class WDL {
 					horseChest.func_110134_a(entityHorse);
 					//Save the actual data value to the other horse.
 					stealAndSetField(entityHorse, AnimalChest.class, horseChest);
-					WDL.chatDebug("Saved ridden horse inventory.");
+					WDL.chatDebug(WDLDebugMessageCause.ON_GUI_CLOSED_INFO,
+							"Saved ridden horse inventory.");
 					return;
 				}
 			}
@@ -502,7 +506,8 @@ public class WDL {
 						+ EntityList.getEntityString(lastEntity));
 			}
 
-			WDL.chatDebug("Saved " + saveName + ".");
+			WDL.chatDebug(WDLDebugMessageCause.ON_GUI_CLOSED_INFO, "Saved "
+					+ saveName + ".");
 			return;
 		}
 
@@ -511,8 +516,8 @@ public class WDL {
 		TileEntity te = worldClient.getTileEntity(lastClickedBlock);
 
 		if (te == null) {
-			WDL.chatDebug("onItemGuiClosed could not get TE at "
-					+ lastClickedBlock);
+			WDL.chatDebug(WDLDebugMessageCause.ON_GUI_CLOSED_WARNING,
+					"onItemGuiClosed could not get TE at " + lastClickedBlock);
 			return;
 		}
 
@@ -613,11 +618,13 @@ public class WDL {
 			newTileEntities.add(lastClickedBlock);
 			saveName = "Beacon effects";
 		} else {
-			WDL.chatDebug("onItemGuiClosed unhandled TE: " + te);
+			WDL.chatDebug(WDLDebugMessageCause.ON_GUI_CLOSED_WARNING,
+					"onItemGuiClosed unhandled TE: " + te);
 			return;
 		}
 
-		WDL.chatDebug("Saved " + saveName + ".");
+		WDL.chatDebug(WDLDebugMessageCause.ON_GUI_CLOSED_INFO, "Saved "
+				+ saveName + ".");
 		return;
 	}
 
@@ -633,8 +640,9 @@ public class WDL {
 			newTE.note = (byte)(param % 25);
 			worldClient.setTileEntity(pos, newTE);
 			newTileEntities.add(pos);
-			chatDebug("onBlockEvent: Note Block: " + pos + " pitch: " + param
-					+ " - " + newTE);
+			chatDebug(WDLDebugMessageCause.ON_BLOCK_EVENT,
+					"onBlockEvent: Note Block: " + pos + " pitch: " + param
+							+ " - " + newTE);
 		}
 
 		// Pistons, Chests (open, close), EnderChests, ... (see references to
@@ -695,15 +703,18 @@ public class WDL {
 						entity.posY, WDL.thePlayer.posZ);
 
 				if (distance > threshold) {
-					WDL.chatDebug("removeEntityFromWorld: Refusing to remove "
-							+ EntityList.getEntityString(entity)
-							+ " at distance " + distance);
+					WDL.chatDebug(WDLDebugMessageCause.REMOVE_ENTITY,
+							"removeEntityFromWorld: Refusing to remove "
+									+ EntityList.getEntityString(entity)
+									+ " at distance " + distance);
 					return true;
 				}
 
-				WDL.chatDebug("removeEntityFromWorld: Removing "
-						+ EntityList.getEntityString(entity) + " at distance "
-						+ distance);
+				WDL.chatDebug(
+						WDLDebugMessageCause.REMOVE_ENTITY,
+						"removeEntityFromWorld: Removing "
+								+ EntityList.getEntityString(entity)
+								+ " at distance " + distance);
 			}
 		}
 
@@ -737,15 +748,19 @@ public class WDL {
 					if ((entityType = isImportableTileEntity(te)) != null) {
 						if (!newTileEntities.contains(te.getPos())) {
 							worldClient.setTileEntity(te.getPos(), te);
-							chatDebug("Loaded TE: " + entityType + " at "
-									+ te.getPos());
+							chatDebug(
+									WDLDebugMessageCause.LOAD_TILE_ENTITY,
+									"Loaded TE: " + entityType + " at "
+											+ te.getPos());
 						} else {
-							chatDebug("Dropping old TE: " + entityType + " at "
-									+ te.getPos());
+							chatDebug(WDLDebugMessageCause.LOAD_TILE_ENTITY,
+									"Dropping old TE: " + entityType + " at "
+											+ te.getPos());
 						}
 					} else {
-						chatDebug("Old TE is not importable: " + entityType
-								+ " at " + te.getPos());
+						chatDebug(WDLDebugMessageCause.LOAD_TILE_ENTITY,
+								"Old TE is not importable: " + entityType
+										+ " at " + te.getPos());
 					}
 				}
 			}
@@ -823,7 +838,7 @@ public class WDL {
 	 * the players directory
 	 */
 	public static void savePlayer(NBTTagCompound playerNBT) {
-		chatDebug("Saving player data...");
+		chatDebug(WDLDebugMessageCause.SAVING, "Saving player data...");
 
 		try {
 			File playersDirectory = new File(saveHandler.getWorldDirectory(),
@@ -844,7 +859,7 @@ public class WDL {
 			throw new RuntimeException("Couldn't save the player!", e);
 		}
 
-		chatDebug("Player data saved.");
+		chatDebug(WDLDebugMessageCause.SAVING, "Player data saved.");
 	}
 
 	/**
@@ -852,7 +867,7 @@ public class WDL {
 	 * file
 	 */
 	public static void saveWorldInfo(NBTTagCompound worldInfoNBT) {
-		chatDebug("Saving world metadata...");
+		chatDebug(WDLDebugMessageCause.SAVING, "Saving world metadata...");
 		File saveDirectory = saveHandler.getWorldDirectory();
 		NBTTagCompound dataNBT = new NBTTagCompound();
 		dataNBT.setTag("Data", worldInfoNBT);
@@ -883,7 +898,7 @@ public class WDL {
 			throw new RuntimeException("Couldn't save the world metadata!", e);
 		}
 
-		chatDebug("World data saved.");
+		chatDebug(WDLDebugMessageCause.SAVING, "World data saved.");
 	}
 
 	/**
@@ -894,7 +909,7 @@ public class WDL {
 	 */
 	public static void saveChunks() throws IllegalArgumentException,
 		IllegalAccessException {
-		chatDebug("Saving chunks...");
+		chatDebug(WDLDebugMessageCause.SAVING, "Saving chunks...");
 		// Get the ChunkProviderClient from WorldClient
 		ChunkProviderClient chunkProvider = (ChunkProviderClient) worldClient
 				.getChunkProvider();
@@ -991,7 +1006,7 @@ public class WDL {
 				throw new RuntimeException("Threw exception waiting for asynchronous IO to finish. Hmmm.", e);
 			}
 
-			chatDebug("Chunk data saved.");
+			chatDebug(WDLDebugMessageCause.SAVING, "Chunk data saved.");
 		}
 	}
 
@@ -1279,6 +1294,8 @@ public class WDL {
 		File dataDirectory = new File(saveHandler.getWorldDirectory(),
 				"data");
 		
+		chatDebug(WDLDebugMessageCause.SAVING, "Saving map data...");
+		
 		for (HashMap.Entry<Integer, MapData> e : newMapDatas.entrySet()) {
 			File mapFile = new File(dataDirectory, "map_" + e.getKey() + ".dat");
 			
@@ -1298,7 +1315,7 @@ public class WDL {
 			}
 		}
 		
-		chatDebug("Map data saved.");
+		chatDebug(WDLDebugMessageCause.SAVING, "Map data saved.");
 	}
 
 	/** Get the name of the server the user specified it in the server list */
@@ -1379,8 +1396,9 @@ public class WDL {
 			new ChatComponentText("§c[WorldDL]§6 " + msg));
 	}
 
-	/** Adds a chat message with a World Downloader prefix */
-	public static void chatDebug(String msg) {
+	/** Adds a chat message with a World Downloader prefix 
+	 * @param type TODO*/
+	public static void chatDebug(WDLDebugMessageCause type, String msg) {
 		if (!WDL.DEBUG) {
 			return;
 		}
