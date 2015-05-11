@@ -30,10 +30,10 @@ public enum WDLDebugMessageCause {
 	/**
 	 * Whether or not the global debug logging is enabled.
 	 */
-	public static boolean GLOBAL_DEBUG_ENABLED;
+	public static boolean globalDebugEnabled = false;
 	
 	public boolean isEnabled() {
-		return GLOBAL_DEBUG_ENABLED && this.enabled;
+		return globalDebugEnabled && this.enabled;
 	}
 
 	public void setEnabled(boolean enabled) {

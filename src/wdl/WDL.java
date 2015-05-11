@@ -109,12 +109,6 @@ public class WDL {
 	// much different stuff in here.
 
 	/**
-	 * Whether or not debug is enabled. Setting to false will suppress debug
-	 * output in chat console.
-	 */
-	public static boolean DEBUG = true;
-
-	/**
 	 * Reference to the Minecraft object.
 	 */
 	public static Minecraft minecraft;
@@ -1396,15 +1390,12 @@ public class WDL {
 			new ChatComponentText("§c[WorldDL]§6 " + msg));
 	}
 
-	/** Adds a chat message with a World Downloader prefix 
-	 * @param type TODO*/
+	/** Adds a chat message with a World Downloader prefix */
 	public static void chatDebug(WDLDebugMessageCause type, String msg) {
-		if (!WDL.DEBUG) {
-			return;
+		if (type.isEnabled()) {
+			minecraft.ingameGUI.getChatGUI().printChatMessage(
+				new ChatComponentText("§2[WorldDL]§6 " + msg));
 		}
-
-		minecraft.ingameGUI.getChatGUI().printChatMessage(
-			new ChatComponentText("§2[WorldDL]§6 " + msg));
 	}
 
 	/** Adds a chat message with a World Downloader prefix */
