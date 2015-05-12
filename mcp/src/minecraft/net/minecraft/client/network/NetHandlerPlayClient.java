@@ -2037,6 +2037,10 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 						this.gameController.thePlayer, var12, false));
 			}
 		}
+		
+		/* WDL >>> */
+		wdl.WDL.onPluginChannelPacket(packetIn.getChannelName(), packetIn);
+		/* <<< WDL */
 	}
 
 	/**

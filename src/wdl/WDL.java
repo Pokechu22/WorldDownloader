@@ -1,5 +1,7 @@
 package wdl;
 
+import io.netty.buffer.Unpooled;
+
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,6 +15,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
+
+import com.google.common.io.ByteArrayDataInput;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBeacon;
@@ -75,6 +81,9 @@ import net.minecraft.nbt.NBTTagDouble;
 import net.minecraft.nbt.NBTTagFloat;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.play.client.C17PacketCustomPayload;
+import net.minecraft.network.play.server.S3FPacketCustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityBeacon;
 import net.minecraft.tileentity.TileEntityBrewingStand;
@@ -315,6 +324,20 @@ public class WDL {
 
 			return;
 		}
+		
+		//Register the WDL messages.
+		PacketBuffer buffer = new PacketBuffer(Unpooled.buffer());
+		buffer.writeBytes(new byte[] {
+				'W', 'D', 'L', '|', 'I', 'N', 'I', 'T', '\0',
+				'W', 'D', 'L', '|', 'C', 'O', 'N', 'T', 'R', 'O', 'L', '\0'});
+		C17PacketCustomPayload packet = new C17PacketCustomPayload("REGISTER",
+				buffer);
+		minecraft.getNetHandler().addToSendQueue(packet);
+		
+		//Send the init message.
+		C17PacketCustomPayload init = new C17PacketCustomPayload("WDL|INIT",
+				new PacketBuffer(Unpooled.EMPTY_BUFFER));
+		minecraft.getNetHandler().addToSendQueue(init);
 
 		loadWorld();
 	}
@@ -325,7 +348,7 @@ public class WDL {
 		thePlayer = minecraft.thePlayer;
 		windowContainer = thePlayer.openContainer;
 		// Is this a different server?
-		NetworkManager newNM = thePlayer.sendQueue.getNetworkManager(); // tp.sendQueue.getNetManager()
+		NetworkManager newNM = thePlayer.sendQueue.getNetworkManager();
 
 		if (networkManager != newNM) {
 			// Different server, different world!
@@ -653,6 +676,34 @@ public class WDL {
 		
 		//chatDebug("onMapDataLoaded: Map " + mapID + " saved.");
 		//TODO: Less spammy version; this is called constantly.
+	}
+
+	/**
+	 * Must be called whenever a {@link S3FPacketCustomPayload} is
+	 * received by the client.
+	 */
+	public static void onPluginChannelPacket(String channel,
+			S3FPacketCustomPayload packet) {
+		if ("WDL|CONTROL".equals(channel)) {
+			ByteArrayDataInput input = ByteStreams.newDataInput(packet
+					.getBufferData().array());
+
+			int version = input.readInt();
+
+			boolean globalIsEnabled = input.readBoolean();
+			int saveRadius = input.readInt();
+			boolean cacheChunks = input.readBoolean();
+			boolean saveEntities = input.readBoolean();
+			boolean saveTileEntities = input.readBoolean();
+			boolean saveContainers = input.readBoolean();
+
+			chatMsg("globalIsEnabled: " + globalIsEnabled);
+			chatMsg("saveRadius: " + saveRadius);
+			chatMsg("cacheChunks: " + cacheChunks);
+			chatMsg("saveEntities: " + saveEntities);
+			chatMsg("saveTileEntities: " + saveTileEntities);
+			chatMsg("saveContainers: " + saveContainers);
+		}
 	}
 
 	/**
