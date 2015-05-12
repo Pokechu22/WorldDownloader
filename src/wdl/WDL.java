@@ -11,9 +11,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -95,6 +99,7 @@ import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.tileentity.TileEntityNote;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ClassInheratanceMultiMap;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.LongHashMap;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
@@ -218,6 +223,42 @@ public class WDL {
 	public static Properties baseProps;
 	public static Properties worldProps;
 	public static Properties defaultProps;
+	
+	// Server-granted settings: 
+	/**
+	 * Whether all players are allowed to download the world in general.
+	 * If false, they aren't allowed, regardless of the other values below.
+	 */
+	public static boolean canDownloadInGeneral = true;
+	/**
+	 * The distance from a player that WDL can save chunks.
+	 * 
+	 * TODO: NYI.
+	 */
+	public static int saveRadius = 64;
+	/**
+	 * Whether a player can cache chunks as they move.  In essence, this means
+	 * that if the value is true, the player can download the entire map while
+	 * moving about, but if false, the player will only save the nearby chunks
+	 * when they stop download.
+	 */
+	public static boolean canCacheChunks = true;
+	/**
+	 * Whether or not a player can save entities in the map.
+	 */
+	public static boolean canSaveEntities = true;
+	/**
+	 * Whether or not a player can save TileEntities in general.
+	 * <br/>
+	 * Chests and other containers also require {@link #canSaveContainers}. 
+	 */
+	public static boolean canSaveTileEntities = true;
+	/**
+	 * Whether a player can save containers that require opening to save their
+	 * contents, such as chests.  For this value to have meaning, the value of
+	 * {@link #canSaveTileEntities} must also be true.  
+	 */
+	public static boolean canSaveContainers = true;
 
 	// Initialization:
 	static {
@@ -325,24 +366,86 @@ public class WDL {
 			return;
 		}
 		
-		//Register the WDL messages.
-		PacketBuffer buffer = new PacketBuffer(Unpooled.buffer());
-		buffer.writeBytes(new byte[] {
-				'W', 'D', 'L', '|', 'I', 'N', 'I', 'T', '\0',
-				'W', 'D', 'L', '|', 'C', 'O', 'N', 'T', 'R', 'O', 'L', '\0'});
-		C17PacketCustomPayload packet = new C17PacketCustomPayload("REGISTER",
-				buffer);
-		minecraft.getNetHandler().addToSendQueue(packet);
-		
-		//Send the init message.
-		C17PacketCustomPayload init = new C17PacketCustomPayload("WDL|INIT",
-				new PacketBuffer(Unpooled.EMPTY_BUFFER));
-		minecraft.getNetHandler().addToSendQueue(init);
-
 		loadWorld();
+	}
+	
+	/**
+	 * Sends the packets that enable all of WDL's plugin channel support. <br/>
+	 * Current packets:
+	 * <table>
+	 * <tr>
+	 * <th>Channel</th>
+	 * <th>Direction</th>
+	 * <th>Purpose</th>
+	 * <th>Contents</th>
+	 * </tr>
+	 * <tr>
+	 * <td><code>WDL|INIT</code></td>
+	 * <td>Client&nbsp;&#8594;&nbsp;Server</td>
+	 * <td>Tells the server that the client runs WDL and that it should send
+	 * WDL-specific settings. Server should respond with a
+	 * <code>WDL|CONTROL</code> packet. Until a response, assume the most
+	 * permissive options.</td>
+	 * <td>There is no payload -- should be 0 bytes.</td>
+	 * </tr>
+	 * <tr>
+	 * <td><code>WDL|CONTROL</code></td>
+	 * <td>Server&nbsp;&#8594;&nbsp;Client</td>
+	 * <td>Updates the client's settings.</td>
+	 * <td>
+	 * The following sequence (in {@link ByteArrayDataOutput} format):
+	 * <ol>
+	 * <li>an <code>int</code>: The version of the packet -- should be
+	 * <code>1</code> for now. If it's higher, tell the player to update and
+	 * disable all features.</li>
+	 * <li>a <code>boolean</code>: If false, all of WDL should be disabled.</li>
+	 * <li>an <code>int</code>: The "save distance".</li>
+	 * <li>a <code>boolean</code>: Whether or not the client can cache chunks as
+	 * they move. If false, only the nearby chunks can be saved when download
+	 * stops.</li>
+	 * <li>a <code>boolean</code>: Whether or not WDL can save entities.</li>
+	 * <li>a <code>boolean</code>: Whether or not WDL can save tile entities in
+	 * general -- both noncontainers such as signs and containers such as
+	 * chests.</li>
+	 * <li>a <code>boolean</code>: Whether or not WDL can save containers. The
+	 * previous value must be true as well.
+	 * </ol>
+	 * </td>
+	 * </tr>
+	 * </table>
+	 */
+	private static void initPluginChannels() {
+		// Set the default values, in case the server never responds.
+		canDownloadInGeneral = true;
+		saveRadius = 64;
+		canCacheChunks = true;
+		canSaveEntities = true;
+		canSaveTileEntities = true;
+		canSaveContainers = true;
+		
+		chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE,
+				"Sending plugin channels registration to the server.");
+		
+		// Register the WDL messages.
+		PacketBuffer registerPacketBuffer = new PacketBuffer(Unpooled.buffer());
+		// Done like this because "buffer.writeString" doesn't do the propper
+		// null-terminated strings.
+		registerPacketBuffer.writeBytes(new byte[] {
+				'W', 'D', 'L', '|', 'I', 'N', 'I', 'T', '\0',
+				'W', 'D', 'L', '|', 'C', 'O', 'N', 'T', 'R', 'O', 'L', '\0' });
+		C17PacketCustomPayload registerPacket = new C17PacketCustomPayload(
+				"REGISTER", registerPacketBuffer);
+		minecraft.getNetHandler().addToSendQueue(registerPacket);
+
+		// Send the init message.
+		C17PacketCustomPayload initPacket = new C17PacketCustomPayload(
+				"WDL|INIT", new PacketBuffer(Unpooled.EMPTY_BUFFER));
+		minecraft.getNetHandler().addToSendQueue(initPacket);
 	}
 
 	public static void loadWorld() {
+		initPluginChannels();
+		
 		worldName = ""; // The new (multi-)world name is unknown at the moment
 		worldClient = minecraft.theWorld;
 		thePlayer = minecraft.thePlayer;
@@ -398,10 +501,17 @@ public class WDL {
 			return;
 		}
 
-		chatDebug(WDLDebugMessageCause.ON_CHUNK_NO_LONGER_NEEDED,
-				"onChunkNoLongerNeeded: " + unneededChunk.xPosition + ", "
-						+ unneededChunk.zPosition);
-		saveChunk(unneededChunk);
+		if (canCacheChunks) {
+			chatDebug(WDLDebugMessageCause.ON_CHUNK_NO_LONGER_NEEDED,
+					"onChunkNoLongerNeeded: " + unneededChunk.xPosition + ", "
+							+ unneededChunk.zPosition);
+			saveChunk(unneededChunk);
+		} else {
+			chatDebug(WDLDebugMessageCause.ON_CHUNK_NO_LONGER_NEEDED,
+					"onChunkNoLongerNeeded cannot save chunk at " +
+					unneededChunk.xPosition + ", " + unneededChunk.zPosition
+					+ " due to server restrictions!");
+		}
 	}
 
 	/**
@@ -441,6 +551,12 @@ public class WDL {
 
 				//Intentional reference equals
 				if (horseInContainer == thePlayer.ridingEntity) {
+					if (!canSaveEntities) {
+						WDL.chatDebug(WDLDebugMessageCause.ON_GUI_CLOSED_INFO,
+								"Server configuration forbids saving of Entities!");
+						return;
+					}
+					
 					EntityHorse entityHorse = (EntityHorse)
 							thePlayer.ridingEntity;
 					//Resize the horse's chest.  Needed because... reasons.
@@ -470,6 +586,12 @@ public class WDL {
 
 		// If the last thing clicked was an ENTITY
 		if (lastEntity != null) {
+			if (!canSaveEntities) {
+				WDL.chatDebug(WDLDebugMessageCause.ON_GUI_CLOSED_INFO,
+						"Server configuration forbids saving of Entities!");
+				return;
+			}
+			
 			if (lastEntity instanceof EntityMinecartChest
 					&& windowContainer instanceof ContainerChest) {
 				EntityMinecartChest emcc = (EntityMinecartChest) lastEntity;
@@ -527,8 +649,14 @@ public class WDL {
 					+ saveName + ".");
 			return;
 		}
-
+		
 		// Else, the last thing clicked was a TILE ENTITY
+		if (!canSaveTileEntities || !canSaveContainers) {
+			WDL.chatDebug(WDLDebugMessageCause.ON_GUI_CLOSED_INFO,
+					"Server configuration forbids saving of TileEntities!");
+			return;
+		}
+		
 		// Get the tile entity which we are going to update the inventory for
 		TileEntity te = worldClient.getTileEntity(lastClickedBlock);
 
@@ -651,7 +779,9 @@ public class WDL {
 	 */
 	public static void onBlockEvent(BlockPos pos, Block block, int event,
 			int param) {
-		// if( blockID == Block.music.blockID )
+		if (!canSaveTileEntities) {
+			return;
+		}
 		if (block == Blocks.noteblock) {
 			TileEntityNote newTE = new TileEntityNote();
 			newTE.note = (byte)(param % 25);
@@ -661,9 +791,6 @@ public class WDL {
 					"onBlockEvent: Note Block: " + pos + " pitch: " + param
 							+ " - " + newTE);
 		}
-
-		// Pistons, Chests (open, close), EnderChests, ... (see references to
-		// WorldServer.addBlockEvent)
 	}
 	
 	/**
@@ -689,20 +816,44 @@ public class WDL {
 					.getBufferData().array());
 
 			int version = input.readInt();
+			
+			if (version != 1) {
+				chatError("Unrecognized serverside control packet version: "
+						+ version + ".");
+				chatError("Disabling WDL; your version is out of date!");
+				
+				canDownloadInGeneral = false;
+				saveRadius = 0;
+				canCacheChunks = false;
+				canSaveEntities = false;
+				canSaveTileEntities = false;
+				canSaveContainers = false;
+				
+				return;
+			}
 
-			boolean globalIsEnabled = input.readBoolean();
-			int saveRadius = input.readInt();
-			boolean cacheChunks = input.readBoolean();
-			boolean saveEntities = input.readBoolean();
-			boolean saveTileEntities = input.readBoolean();
-			boolean saveContainers = input.readBoolean();
-
-			chatMsg("globalIsEnabled: " + globalIsEnabled);
-			chatMsg("saveRadius: " + saveRadius);
-			chatMsg("cacheChunks: " + cacheChunks);
-			chatMsg("saveEntities: " + saveEntities);
-			chatMsg("saveTileEntities: " + saveTileEntities);
-			chatMsg("saveContainers: " + saveContainers);
+			canDownloadInGeneral = input.readBoolean();
+			saveRadius = input.readInt();
+			canCacheChunks = input.readBoolean();
+			canSaveEntities = input.readBoolean();
+			canSaveTileEntities = input.readBoolean();
+			canSaveContainers = input.readBoolean();
+			
+			chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
+					"Successfully loaded settings from the server!");
+			
+			chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
+					"canDownloadInGeneral: " + canDownloadInGeneral);
+			chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
+					"saveRadius: " + saveRadius);
+			chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
+					"canCacheChunks: " + canCacheChunks);
+			chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
+					"canSaveEntities: " + canSaveEntities);
+			chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
+					"canSaveTileEntities: " + canSaveTileEntities);
+			chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
+					"canSaveContainers: " + canSaveContainers);
 		}
 	}
 
@@ -715,7 +866,7 @@ public class WDL {
 		// If the entity is being removed and it's outside the default tracking
 		// range,
 		// go ahead and remember it until the chunk is saved.
-		if (WDL.downloading) {
+		if (WDL.downloading && WDL.canSaveEntities) {
 			if (entity != null) {
 				int threshold = 0;
 
@@ -1070,16 +1221,42 @@ public class WDL {
 			}
 		}
 
-		// chatMsg( "saveChunk at " + c.xPosition + " " + c.zPosition);
+		if (!WDL.canSaveTileEntities) {
+			c.getTileEntityMap().clear();
+		}
+		
 		importTileEntities(c);
 		c.setTerrainPopulated(true);
 
 		try {
+			List<Entity> allEntities = new ArrayList<Entity>();
+			
+			//TODO: This can delete the player, leading to rapdily flashing lights.
+			if (!WDL.canSaveEntities) {
+				for (Iterable<Entity> entityList : c.getEntityLists()) {
+					for (Entity e : entityList) {
+						allEntities.add(e);
+					}
+				}
+				
+				for (Entity e : allEntities) {
+					c.removeEntity(e);
+				}
+			}
+			
 			chunkLoader.saveChunk(worldClient, c);
+			
+			if (!WDL.canSaveEntities) {
+				for (Entity e : allEntities) {
+					c.addEntity(e);
+				}
+			}
 		} catch (Exception e) {
 			// Better tell the player that something didn't work:
-			chatMsg("Chunk at chunk position " + c.xPosition + ","
+			chatError("Chunk at chunk position " + c.xPosition + ","
 					+ c.zPosition + " can't be saved!");
+			
+			e.printStackTrace();
 		}
 
 		WDLSaveProgressReporter.currentChunk++;
@@ -1341,7 +1518,7 @@ public class WDL {
 		
 		chatDebug(WDLDebugMessageCause.SAVING, "Saving map data...");
 		
-		for (HashMap.Entry<Integer, MapData> e : newMapDatas.entrySet()) {
+		for (Map.Entry<Integer, MapData> e : newMapDatas.entrySet()) {
 			File mapFile = new File(dataDirectory, "map_" + e.getKey() + ".dat");
 			
 			NBTTagCompound mapNBT = new NBTTagCompound();
@@ -1628,11 +1805,14 @@ public class WDL {
 				insertAtYPos, 170, 20, "WDL bug!");
 		GuiButton wdlOptions = new GuiButton(0x57444C6F, gui.width / 2 + 71,
 				insertAtYPos, 28, 20, "...");
-		wdlDownload.displayString = (WDL.downloading ? (WDL.saving ? "Still saving..."
+		wdlDownload.displayString = (WDL.canDownloadInGeneral ? (WDL.downloading ? (WDL.saving ? "Still saving..."
 				: "Stop download")
-				: "Download this world");
-		wdlDownload.enabled = (!WDL.downloading || (WDL.downloading && !WDL.saving));
-		wdlOptions.enabled = (!WDL.downloading || (WDL.downloading && !WDL.saving));
+				: "Download this world")
+				: "§cDownload blocked by server");
+		wdlDownload.enabled = (WDL.canDownloadInGeneral
+				&& (!WDL.downloading || (WDL.downloading && !WDL.saving)));
+		wdlOptions.enabled = (WDL.canDownloadInGeneral
+				&& (!WDL.downloading || (WDL.downloading && !WDL.saving)));
 		buttonList.add(wdlDownload);
 		buttonList.add(wdlOptions);
 	}
@@ -1643,6 +1823,10 @@ public class WDL {
 		}
 
 		if (button.id == 0x57444C73) { // "Start/Stop Download"
+			if (!canDownloadInGeneral) {
+				button.enabled = false;
+				return;
+			}
 			if (WDL.downloading) {
 				WDL.stop();
 				WDL.minecraft.displayGuiScreen((GuiScreen) null);
@@ -1651,6 +1835,10 @@ public class WDL {
 				WDL.start();
 			}
 		} else if (button.id == 0x57444C6F) { // "..." (options)
+			if (!canDownloadInGeneral) {
+				button.enabled = false;
+				return;
+			}
 			WDL.minecraft.displayGuiScreen(new GuiWDL(gui));
 		} else if (button.id == 1) { // "Disconnect"
 			WDL.stop();
