@@ -1231,15 +1231,28 @@ public class WDL {
 		try {
 			List<Entity> allEntities = new ArrayList<Entity>();
 			
-			//TODO: This can delete the player, leading to rapdily flashing lights.
 			if (!WDL.canSaveEntities) {
 				for (Iterable<Entity> entityList : c.getEntityLists()) {
 					for (Entity e : entityList) {
+						if (e instanceof EntityPlayer) {
+							//Skip players, as otherwise bad things happen, 
+							//such as deleting the current player and causing
+							//the screen to flicker.
+							continue;
+						}
+						
 						allEntities.add(e);
 					}
 				}
 				
 				for (Entity e : allEntities) {
+					if (e instanceof EntityPlayer) {
+						//Skip players, as otherwise bad things happen, 
+						//such as deleting the current player and causing
+						//the screen to flicker.
+						continue;
+					}
+					
 					c.removeEntity(e);
 				}
 			}
