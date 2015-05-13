@@ -286,6 +286,12 @@ public class WDL {
 		defaultProps.setProperty("PlayerZ", "8");
 		defaultProps.setProperty("PlayerHealth", "20");
 		defaultProps.setProperty("PlayerFood", "20");
+		
+		defaultProps.setProperty("Debug.globalDebugEnabled", "true");
+		for (WDLDebugMessageCause cause : WDLDebugMessageCause.values()) {
+			defaultProps.setProperty("Debug." + cause.name(), "true");
+		}
+		
 		baseProps = new Properties(defaultProps);
 		worldProps = new Properties(baseProps);
 	}
@@ -459,7 +465,14 @@ public class WDL {
 					"onWorldLoad: different server!");
 			networkManager = newNM;
 			loadBaseProps();
-
+			
+			WDLDebugMessageCause.globalDebugEnabled = baseProps.getProperty(
+					"Debug.globalDebugEnabled", "true").equals("true");
+			for (WDLDebugMessageCause cause : WDLDebugMessageCause.values()) {
+				cause.setEnabled(baseProps.getProperty(
+						"Debug." + cause.name(), "true").equals("true"));
+			}
+			
 			if (baseProps.getProperty("AutoStart").equals("true")) {
 				start();
 			} else {

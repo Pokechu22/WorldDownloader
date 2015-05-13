@@ -61,7 +61,14 @@ public class GuiWDLDebug extends GuiScreen {
 				}
 			}
 		} else if (button.id == 101) {
-			//TODO: Save settings.  (If needed)
+			WDL.baseProps.setProperty("Debug.globalDebugEnabled", 
+					WDLDebugMessageCause.globalDebugEnabled ? "true" : "false");
+			for (WDLDebugMessageCause cause : WDLDebugMessageCause.values()) {
+				WDL.baseProps.setProperty("Debug." + cause.name(),
+						cause.isEnabled() ? "true" : "false");
+			}
+			WDL.saveProps();
+			
 			this.mc.displayGuiScreen(this.parent);
 		} else {
 			WDLDebugMessageCause cause = 
