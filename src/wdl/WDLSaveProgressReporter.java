@@ -2,6 +2,8 @@ package wdl;
 
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreenWorking;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.world.storage.ThreadedFileIOBase;
 
@@ -25,12 +27,24 @@ public class WDLSaveProgressReporter implements Runnable {
 					ThreadedFileIOBase.func_178779_a(), List.class);
 			initialQueueSize = threadedFileIOBaseQueue.size();
 
+			GuiScreenWorking working = new GuiScreenWorking();
+			Minecraft.getMinecraft().displayGuiScreen(working);
+			
+			working.displaySavingString("Saving downloaded world");
 			while (WDL.saving) {
-				WDL.chatMsg("Saving... " + makeProgressBar(currentChunk +
-						threadedFileIOBaseQueue.size(),
-						totalChunks + initialQueueSize));
-				Thread.sleep(1000L);
+				int current = currentChunk + threadedFileIOBaseQueue.size();
+				int max = totalChunks + initialQueueSize;
+				
+				int percent;
+				if (max == 0) {
+					percent = 0;
+				} else {
+					percent = (current * 100) / max;
+				}
+				
+				working.setLoadingProgress(percent);
 			}
+			working.setDoneWorking();
 		} catch (Throwable t) {
 			WDL.minecraft.crashed(CrashReport.makeCrashReport(t,
 					"Displaying save progress bar"));
