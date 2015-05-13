@@ -12,20 +12,26 @@ public class GuiWDLDebug extends GuiScreen {
 		this.parent = parent;
 	}
 	
+	private GuiButton masterDebugSwitch;
+	
 	@Override
 	public void initGui() {
 		int x = (this.width / 2) - 100;
 		int y = (this.height / 4) - 15;
 		
-		this.buttonList.add(new GuiButton(100, x, y, "Master debug switch: " + 
-				(WDLDebugMessageCause.globalDebugEnabled ? "On" : "Off")));
+		masterDebugSwitch = new GuiButton(100, x, y, "Master debug switch: " + 
+				(WDLDebugMessageCause.globalDebugEnabled ? "On" : "Off"));
+		this.buttonList.add(masterDebugSwitch);
 		
 		WDLDebugMessageCause[] causes = WDLDebugMessageCause.values();
 		
 		y += 28;
 		
 		for (int i = 0; i < causes.length; i++) {
-			this.buttonList.add(new GuiButton(i, x, y, causes[i].toString()));
+			GuiButton causeBtn = new GuiButton(i, x, y, causes[i].toString());
+			causeBtn.enabled = WDLDebugMessageCause.globalDebugEnabled;
+			
+			this.buttonList.add(causeBtn);
 			
 			y += 22;
 		}
@@ -44,6 +50,9 @@ public class GuiWDLDebug extends GuiScreen {
 		if (button.id == 100) {
 			//"Master switch"
 			WDLDebugMessageCause.globalDebugEnabled ^= true;
+			
+			button.displayString = "Master debug switch: " + 
+					(WDLDebugMessageCause.globalDebugEnabled ? "On" : "Off");
 			
 			for (Object obj : buttonList) {
 				GuiButton btn = (GuiButton)obj;
