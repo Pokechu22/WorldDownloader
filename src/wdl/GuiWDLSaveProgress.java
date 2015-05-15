@@ -85,16 +85,29 @@ public class GuiWDLSaveProgress extends GuiScreen {
 		} else {
 			//TODO: Dirt background, rather than transparent.
 			this.drawDefaultBackground();
+			
+			String majorProgressInfo = "";
+			if (majorTaskCount > 1) {
+				majorProgressInfo = " (" + majorTaskNumber + " of " + 
+						majorTaskCount + ")";
+			}
+			String minorProgressInfo = "";
+			if (minorTaskMaximum > 1) {
+				minorProgressInfo = " (" + minorTaskProgress + " of " + 
+						minorTaskMaximum + ")";
+			}
+			
 			this.drawCenteredString(this.fontRendererObj, this.title,
 					this.width / 2, 70, 0xFFFFFF);
 			
-			//TODO: Add percent text to these peices of text.
-			this.drawCenteredString(this.fontRendererObj, this.majorTaskMessage,
-					this.width / 2, 90, 0xFFFFFF);
-			this.drawProgressBar(100, 84, 89, majorTaskNumber, majorTaskCount);
+			this.drawCenteredString(this.fontRendererObj, this.majorTaskMessage
+					+ majorProgressInfo, this.width / 2, 100, 0xFFFFFF);
+			this.drawProgressBar(110, 84, 89, 
+					(majorTaskNumber * minorTaskMaximum) + minorTaskProgress, 
+					majorTaskCount * minorTaskMaximum);
 			
-			this.drawCenteredString(this.fontRendererObj, this.minorTaskMessage,
-					this.width / 2, 130, 0xFFFFFF);
+			this.drawCenteredString(this.fontRendererObj, this.minorTaskMessage
+					+ minorProgressInfo, this.width / 2, 130, 0xFFFFFF);
 			this.drawProgressBar(140, 64, 69, minorTaskProgress, minorTaskMaximum);
 			
 			super.drawScreen(mouseX, mouseY, partialTicks);
