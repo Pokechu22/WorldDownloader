@@ -12,55 +12,64 @@ import net.minecraft.util.IProgressUpdate;
  * Based off of vanilla minecraft's 
  * {@link net.minecraft.client.gui.GuiScreenWorking GuiScreenWorking}.
  */
-public class GuiWDLSaveProgress extends GuiScreen implements IProgressUpdate {
-	private String mainMessage = "";
-	private String subMessage = "";
-	private int progress;
-	private boolean doneWorking;
-
+public class GuiWDLSaveProgress extends GuiScreen {
+	private final String title;
+	private String majorTaskMessage = "";
+	private String minorTaskMessage = "";
+	private int majorTaskNumber;
+	private final int majorTaskCount;
+	private int minorTaskProgress;
+	private int minorTaskMaximum;
+	
+	private boolean doneWorking = false;
+	
 	/**
-	 * Sets the main message for display.
-	 * <br/>
-	 * Blame the horrible name on {@link IProgressUpdate}.
-	 */
-	@Override
-	public void displaySavingString(String message) {
-		this.resetProgressAndMessage(message);
-	}
-
-	/**
-	 * Sets the progress to 0, and changes the sub message.
-	 */
-	@Override
-	public void resetProgressAndMessage(String subMessage) {
-		this.subMessage = subMessage;
-		this.setLoadingProgress(0);
-	}
-
-	/**
-	 * Sets the sub message.
-	 * <br/>
-	 * Blame the horrible name on {@link IProgressUpdate}.
-	 */
-	@Override
-	public void displayLoadingString(String message) {
-		this.subMessage = message;
-	}
-
-	/**
-	 * Updates the progress bar on the loading screen to the specified amount.
+	 * Creates a new GuiWDLSaveProgress.
 	 * 
-	 * @param progress The loading progress, a percentage.
+	 * @param title The title.
+	 * @param taskCount The total number of major tasks that there will be.
 	 */
-	@Override
-	public void setLoadingProgress(int progress) {
-		this.progress = progress;
+	public GuiWDLSaveProgress(String title, int taskCount) {
+		this.title = title;
+		this.majorTaskCount = taskCount;
+		this.majorTaskNumber = 0;
+	}
+	
+	/**
+	 * Starts a new major task with the given message.
+	 */
+	public void startMajorTask(String message, int minorTaskMaximum) {
+		this.majorTaskMessage = message;
+		this.majorTaskNumber++;
+		
+		this.minorTaskMessage = "";
+		this.minorTaskProgress = 0;
+		this.minorTaskMaximum = minorTaskMaximum;
+	}
+
+	/**
+	 * Updates the progress on the current minor task.
+	 * 
+	 * @param message
+	 *            The message -- should be something like "saving chunk at x,z";
+	 *            the current position and maximum and the percent are
+	 *            automatically appended after it.
+	 */
+	public void setMinorTaskProgress(String message, int progress) {
+		this.minorTaskMessage = message;
+		this.minorTaskProgress = progress;
+	}
+	
+	/**
+	 * Updates the progress on the minor task.
+	 */
+	public void setMinorTaskProgress(int progress) {
+		this.minorTaskProgress = progress;
 	}
 
 	/**
 	 * Sets the GUI as done working, meaning it will be closed next tick.
 	 */
-	@Override
 	public void setDoneWorking() {
 		this.doneWorking = true;
 	}
@@ -71,33 +80,62 @@ public class GuiWDLSaveProgress extends GuiScreen implements IProgressUpdate {
 	 */
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		final int PROGRESS_BAR_WIDTH = 182;
-		final int PROGRESS_BAR_X = (this.width / 2) - (PROGRESS_BAR_WIDTH / 2);
-		final int PROGRESS_BAR_Y = (this.height / 2);
-		
 		if (this.doneWorking) {
 			this.mc.displayGuiScreen((GuiScreen) null);
 		} else {
+			//TODO: Dirt background, rather than transparent.
 			this.drawDefaultBackground();
-			this.drawCenteredString(this.fontRendererObj, this.mainMessage,
+			this.drawCenteredString(this.fontRendererObj, this.title,
 					this.width / 2, 70, 0xFFFFFF);
-			this.drawCenteredString(this.fontRendererObj, this.subMessage,
+			
+			//TODO: Add percent text to these peices of text.
+			this.drawCenteredString(this.fontRendererObj, this.majorTaskMessage,
 					this.width / 2, 90, 0xFFFFFF);
+			this.drawProgressBar(100, 84, 89, majorTaskNumber, majorTaskCount);
 			
-			this.mc.getTextureManager().bindTexture(Gui.icons);
-			
-			drawTexturedModalRect(PROGRESS_BAR_X, PROGRESS_BAR_Y, 0, 74,
-					PROGRESS_BAR_WIDTH, 5);
-			drawTexturedModalRect(PROGRESS_BAR_X, PROGRESS_BAR_Y, 0, 74,
-					PROGRESS_BAR_WIDTH, 5);
-			drawTexturedModalRect(PROGRESS_BAR_X, PROGRESS_BAR_Y, 0, 79,
-					(this.progress * 182) / 100, 5);
-
-			drawCenteredString(this.fontRendererObj, this.progress + "%",
-					this.width / 2, PROGRESS_BAR_Y - 10, 0xFF00FF);
+			this.drawCenteredString(this.fontRendererObj, this.minorTaskMessage,
+					this.width / 2, 130, 0xFFFFFF);
+			this.drawProgressBar(140, 64, 69, minorTaskProgress, minorTaskMaximum);
 			
 			super.drawScreen(mouseX, mouseY, partialTicks);
 		}
+	}
+	
+	/**
+	 * Draws a progress bar on the screen. (A lot of things are always kept the
+	 * same and thus aren't arguments, such as x-position being the center of
+	 * the screen).
+	 * 
+	 * @param y
+	 *            Y-position of the progress bar.
+	 * @param emptyV
+	 *            The vertical coordinate of the empty part in the icon map
+	 *            (icons.png)
+	 * @param filledV
+	 *            The vertical coordinate of the full part in the icon map
+	 *            (icons.png)
+	 * @param progress
+	 *            The progress into the bar.
+	 * @param maximum
+	 *            The maximum value of progress.
+	 */
+	private void drawProgressBar(int y, int emptyV, int filledV, 
+			int progress, int maximum) {
+		if (maximum == 0) {
+			return;
+		}
+		
+		this.mc.getTextureManager().bindTexture(Gui.icons);
+		
+		final int fullWidth = 182;
+		final int currentWidth = (progress * fullWidth) / maximum;
+		final int height = 5;
+		
+		final int x = (this.width / 2) - (fullWidth / 2);
+		final int u = 0; //Texture position.
+		
+		drawTexturedModalRect(x, y, u, emptyV, fullWidth, height);
+		drawTexturedModalRect(x, y, u, filledV, currentWidth, height);
 	}
 	
 	@Override

@@ -1016,6 +1016,10 @@ public class WDL {
 	 * when stopping.
 	 */
 	public static void saveEverything() throws Exception {
+		GuiWDLSaveProgress progressScreen = new GuiWDLSaveProgress(
+				"Saving downloaded world", 4);
+		minecraft.displayGuiScreen(progressScreen);
+		
 		saveProps();
 
 		try {
@@ -1025,6 +1029,9 @@ public class WDL {
 				"WorldDownloader: Couldn't get session lock for saving the world!", e);
 		}
 
+		progressScreen.startMajorTask("Saving player and map info", 3);
+		
+		progressScreen.setMinorTaskProgress("Creating NBTs", 1);
 		NBTTagCompound playerNBT = new NBTTagCompound();
 		thePlayer.writeToNBT(playerNBT);
 		applyOverridesToPlayer(playerNBT);
@@ -1036,19 +1043,23 @@ public class WDL {
 		NBTTagCompound worldInfoNBT = worldClient.getWorldInfo()
 				.cloneNBTCompound(playerNBT);
 		applyOverridesToWorldInfo(worldInfoNBT);
-		savePlayer(playerNBT);
-		saveWorldInfo(worldInfoNBT);
-		saveMapData();
-		saveChunks();
+		savePlayer(playerNBT, progressScreen);
+		saveWorldInfo(worldInfoNBT, progressScreen);
+		saveMapData(progressScreen);
+		saveChunks(progressScreen);
+		
+		progressScreen.setDoneWorking();
 	}
 
 	/**
 	 * Save the player (position, health, inventory, ...) into its own file in
 	 * the players directory
 	 */
-	public static void savePlayer(NBTTagCompound playerNBT) {
+	public static void savePlayer(NBTTagCompound playerNBT, 
+			GuiWDLSaveProgress progressScreen) {
 		chatDebug(WDLDebugMessageCause.SAVING, "Saving player data...");
-
+		progressScreen.setMinorTaskProgress("Writing player data", 2);
+		
 		try {
 			File playersDirectory = new File(saveHandler.getWorldDirectory(),
 					"playerdata");
@@ -1075,8 +1086,11 @@ public class WDL {
 	 * Save the world metadata (time, gamemode, seed, ...) into the level.dat
 	 * file
 	 */
-	public static void saveWorldInfo(NBTTagCompound worldInfoNBT) {
+	public static void saveWorldInfo(NBTTagCompound worldInfoNBT,
+			GuiWDLSaveProgress progressScreen) {
 		chatDebug(WDLDebugMessageCause.SAVING, "Saving world metadata...");
+		progressScreen.setMinorTaskProgress("Writing world data", 3);
+		
 		File saveDirectory = saveHandler.getWorldDirectory();
 		NBTTagCompound dataNBT = new NBTTagCompound();
 		dataNBT.setTag("Data", worldInfoNBT);
@@ -1116,9 +1130,10 @@ public class WDL {
 	 * @throws IllegalAccessException
 	 * @throws IllegalArgumentException
 	 */
-	public static void saveChunks() throws IllegalArgumentException,
-		IllegalAccessException {
+	public static void saveChunks(GuiWDLSaveProgress progressScreen)
+			throws IllegalArgumentException, IllegalAccessException {
 		chatDebug(WDLDebugMessageCause.SAVING, "Saving chunks...");
+		
 		// Get the ChunkProviderClient from WorldClient
 		ChunkProviderClient chunkProvider = (ChunkProviderClient) worldClient
 				.getChunkProvider();
@@ -1186,27 +1201,33 @@ public class WDL {
 			valueField.setAccessible(true);
 			Field nextEntryField = Entry.getDeclaredFields()[2]; // nextEntry
 			nextEntryField.setAccessible(true);
-			WDLSaveProgressReporter progressReporter = new WDLSaveProgressReporter();
-			progressReporter.currentChunk = 0;
-
-			progressReporter.totalChunks = lhm.getNumHashElements();
-			progressReporter.start();
-
+			
+			progressScreen.startMajorTask("Saving chunks", 
+					lhm.getNumHashElements());
+			int currentChunk = 0;
+			
 			for (int i = 0; i < hashArray.length; ++i) {
-				// for (LongHashMap.Entry entry = hashArray[i]; entry != null;
-				// entry = entry.nextEntry)
-				for (Object lhme = hashArray[i]; lhme != null; lhme = nextEntryField
-						.get(lhme)) {
-					// Chunk c = (Chunk)lhme.getValue();
+				for (Object lhme = hashArray[i]; lhme != null; 
+						lhme = nextEntryField.get(lhme)) {
+					currentChunk++;
+					
 					Chunk c = (Chunk) valueField.get(lhme);
 
 					if (c != null) {
+						progressScreen.setMinorTaskProgress(
+								"Saving chunk at " + c.xPosition + ", " +
+										c.zPosition, currentChunk);
+						
 						saveChunk(c);
 					}
 				}
 			}
 
 			try {
+				progressScreen.startMajorTask("Procrastinating...", 1);
+				progressScreen.setMinorTaskProgress(
+						"(waiting for ThreadedFileIOBase to finish)", 1);
+				
 				// func_178779_a is a getter for the intsance.
 				// Look inside of ThreadedFileIOBase.java for
 				// such a getter.
@@ -1284,8 +1305,6 @@ public class WDL {
 			
 			e.printStackTrace();
 		}
-
-		WDLSaveProgressReporter.currentChunk++;
 	}
 
 	/** Loads the server specific set of properties */
@@ -1538,13 +1557,20 @@ public class WDL {
 	 * 
 	 * TODO: Overwrite / create IDCounts.dat.
 	 */
-	public static void saveMapData() {
+	public static void saveMapData(GuiWDLSaveProgress progressScreen) {
 		File dataDirectory = new File(saveHandler.getWorldDirectory(),
 				"data");
+		progressScreen.startMajorTask("Saving map item data", newMapDatas.size());
 		
 		chatDebug(WDLDebugMessageCause.SAVING, "Saving map data...");
 		
+		int count = 0;
 		for (Map.Entry<Integer, MapData> e : newMapDatas.entrySet()) {
+			count++;
+			
+			progressScreen.setMinorTaskProgress("Writing map #" + e.getKey(),
+					count);
+			
 			File mapFile = new File(dataDirectory, "map_" + e.getKey() + ".dat");
 			
 			NBTTagCompound mapNBT = new NBTTagCompound();
@@ -1855,8 +1881,6 @@ public class WDL {
 			}
 			if (WDL.downloading) {
 				WDL.stop();
-				WDL.minecraft.displayGuiScreen((GuiScreen) null);
-				WDL.minecraft.setIngameFocus();
 			} else {
 				WDL.start();
 			}
