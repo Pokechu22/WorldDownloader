@@ -27,7 +27,7 @@ public class WDLSaveProgressReporter implements Runnable {
 					ThreadedFileIOBase.func_178779_a(), List.class);
 			initialQueueSize = threadedFileIOBaseQueue.size();
 
-			GuiScreenWorking working = new GuiScreenWorking();
+			GuiWDLSaveProgress working = new GuiWDLSaveProgress();
 			Minecraft.getMinecraft().displayGuiScreen(working);
 			
 			working.displaySavingString("Saving downloaded world");

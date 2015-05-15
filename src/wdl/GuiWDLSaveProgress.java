@@ -1,5 +1,8 @@
 package wdl;
 
+import java.io.IOException;
+
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.IProgressUpdate;
 
@@ -10,14 +13,15 @@ import net.minecraft.util.IProgressUpdate;
  * {@link net.minecraft.client.gui.GuiScreenWorking GuiScreenWorking}.
  */
 public class GuiWDLSaveProgress extends GuiScreen implements IProgressUpdate {
-	private String field_146591_a = "";
-	private String field_146589_f = "";
-	private int field_146590_g;
-	private boolean field_146592_h;
-	private static final String __OBFID = "CL_00000707";
+	private String mainMessage = "";
+	private String subMessage = "";
+	private int progress;
+	private boolean doneWorking;
 
 	/**
-	 * Shows the 'Saving level' string.
+	 * Sets the main message for display.
+	 * <br/>
+	 * Blame the horrible name on {@link IProgressUpdate}.
 	 */
 	@Override
 	public void displaySavingString(String message) {
@@ -25,38 +29,40 @@ public class GuiWDLSaveProgress extends GuiScreen implements IProgressUpdate {
 	}
 
 	/**
-	 * this string, followed by "working..." and then the "% complete" are the 3
-	 * lines shown. This resets progress to 0, and the WorkingString to
-	 * "working...".
+	 * Sets the progress to 0, and changes the sub message.
 	 */
 	@Override
-	public void resetProgressAndMessage(String p_73721_1_) {
-		this.field_146591_a = p_73721_1_;
-		this.displayLoadingString("Working...");
-	}
-
-	/**
-	 * Displays a string on the loading screen supposed to indicate what is
-	 * being done currently.
-	 */
-	@Override
-	public void displayLoadingString(String message) {
-		this.field_146589_f = message;
+	public void resetProgressAndMessage(String subMessage) {
+		this.subMessage = subMessage;
 		this.setLoadingProgress(0);
 	}
 
 	/**
+	 * Sets the sub message.
+	 * <br/>
+	 * Blame the horrible name on {@link IProgressUpdate}.
+	 */
+	@Override
+	public void displayLoadingString(String message) {
+		this.subMessage = message;
+	}
+
+	/**
 	 * Updates the progress bar on the loading screen to the specified amount.
-	 * Args: loadProgress
+	 * 
+	 * @param progress The loading progress, a percentage.
 	 */
 	@Override
 	public void setLoadingProgress(int progress) {
-		this.field_146590_g = progress;
+		this.progress = progress;
 	}
 
+	/**
+	 * Sets the GUI as done working, meaning it will be closed next tick.
+	 */
 	@Override
 	public void setDoneWorking() {
-		this.field_146592_h = true;
+		this.doneWorking = true;
 	}
 
 	/**
@@ -65,16 +71,38 @@ public class GuiWDLSaveProgress extends GuiScreen implements IProgressUpdate {
 	 */
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		if (this.field_146592_h) {
+		final int PROGRESS_BAR_WIDTH = 182;
+		final int PROGRESS_BAR_X = (this.width / 2) - (PROGRESS_BAR_WIDTH / 2);
+		final int PROGRESS_BAR_Y = (this.height / 2);
+		
+		if (this.doneWorking) {
 			this.mc.displayGuiScreen((GuiScreen) null);
 		} else {
 			this.drawDefaultBackground();
-			this.drawCenteredString(this.fontRendererObj, this.field_146591_a,
-					this.width / 2, 70, 16777215);
-			this.drawCenteredString(this.fontRendererObj, this.field_146589_f
-					+ " " + this.field_146590_g + "%", this.width / 2, 90,
-					16777215);
+			this.drawCenteredString(this.fontRendererObj, this.mainMessage,
+					this.width / 2, 70, 0xFFFFFF);
+			this.drawCenteredString(this.fontRendererObj, this.subMessage,
+					this.width / 2, 90, 0xFFFFFF);
+			
+			this.mc.getTextureManager().bindTexture(Gui.icons);
+			
+			drawTexturedModalRect(PROGRESS_BAR_X, PROGRESS_BAR_Y, 0, 74,
+					PROGRESS_BAR_WIDTH, 5);
+			drawTexturedModalRect(PROGRESS_BAR_X, PROGRESS_BAR_Y, 0, 74,
+					PROGRESS_BAR_WIDTH, 5);
+			drawTexturedModalRect(PROGRESS_BAR_X, PROGRESS_BAR_Y, 0, 79,
+					(this.progress * 182) / 100, 5);
+
+			drawCenteredString(this.fontRendererObj, this.progress + "%",
+					this.width / 2, PROGRESS_BAR_Y - 10, 0xFF00FF);
+			
 			super.drawScreen(mouseX, mouseY, partialTicks);
 		}
+	}
+	
+	@Override
+	protected void keyTyped(char typedChar, int keyCode) throws IOException {
+		//Don't call the super method, as that causes the UI to close if escape
+		//is pressed.
 	}
 }
