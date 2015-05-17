@@ -808,14 +808,19 @@ public class WDL {
 	
 	/**
 	 * Must be called when Packet 0x34 (map data) is received, regardless
-	 * of whether a download is currently occuring.
+	 * of whether a download is currently occurring.
 	 */
 	public static void onMapDataLoaded(int mapID, 
 			MapData mapData) {
+		if (!WDL.canSaveEntities) {
+			//TODO: Is 'canSaveEntities' the right one to check?
+			return;
+		}
+		
 		newMapDatas.put(mapID, mapData);
 		
-		//chatDebug("onMapDataLoaded: Map " + mapID + " saved.");
-		//TODO: Less spammy version; this is called constantly.
+		chatDebug(WDLDebugMessageCause.ON_MAP_SAVED,
+				"onMapDataLoaded: Saved map " + mapID + ".");
 	}
 
 	/**

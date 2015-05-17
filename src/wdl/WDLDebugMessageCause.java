@@ -11,6 +11,7 @@ public enum WDLDebugMessageCause {
 	LOAD_TILE_ENTITY("Loading TileEntity"),
 	ON_WORLD_LOAD("World loaded"),
 	ON_BLOCK_EVENT("Block Event"),
+	ON_MAP_SAVED("Map data saved"),
 	ON_CHUNK_NO_LONGER_NEEDED("Chunk unloaded"), 
 	ON_GUI_CLOSED_INFO("GUI Closed -- Info"),
 	ON_GUI_CLOSED_WARNING("GUI Closed -- Warning"),
