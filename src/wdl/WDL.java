@@ -466,11 +466,15 @@ public class WDL {
 			networkManager = newNM;
 			loadBaseProps();
 			
+			// Load the debug settings.
+			WDLDebugMessageCause.resetEnabledToDefaults();
 			WDLDebugMessageCause.globalDebugEnabled = baseProps.getProperty(
 					"Debug.globalDebugEnabled", "true").equals("true");
 			for (WDLDebugMessageCause cause : WDLDebugMessageCause.values()) {
-				cause.setEnabled(baseProps.getProperty(
-						"Debug." + cause.name(), "true").equals("true"));
+				if (baseProps.containsKey("Debug." + cause.name())) {
+					cause.setEnabled(baseProps.getProperty(
+							"Debug." + cause.name(), "true").equals("true"));
+				}
 			}
 			
 			if (baseProps.getProperty("AutoStart").equals("true")) {
