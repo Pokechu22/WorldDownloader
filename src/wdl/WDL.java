@@ -205,7 +205,9 @@ public class WDL {
 	 */
 	public static boolean saving = false;
 	/**
-	 * (Unknown) Has loading the world been delayed? TODO Seems to be unused.
+	 * Has loading the world been delayed while the old one is being saved?
+	 * 
+	 * Used when going thru portals or otherwise saving data.
 	 */
 	public static boolean worldLoadingDeferred = false;
 
@@ -358,6 +360,10 @@ public class WDL {
 		if (minecraft.isIntegratedServerRunning()) {
 			return;
 		}
+		
+		if (worldLoadingDeferred) {
+			return;
+		}
 
 		// If already downloading
 		if (downloading) {
@@ -365,7 +371,7 @@ public class WDL {
 			// saving now
 			if (!saving) {
 				WDL.chatMsg("World change detected. Download will start once current save completes.");
-				// worldLoadingDeferred = true;
+				worldLoadingDeferred = true;
 				startSaveThread();
 			}
 
@@ -450,6 +456,10 @@ public class WDL {
 	}
 
 	public static void loadWorld() {
+		if (worldLoadingDeferred) {
+			return;
+		}
+		
 		initPluginChannels();
 		
 		worldName = ""; // The new (multi-)world name is unknown at the moment
@@ -501,6 +511,8 @@ public class WDL {
 		WDL.minecraft.getSaveLoader().flushCache();
 		WDL.saveHandler.flush();
 		WDL.worldClient = null;
+		
+		worldLoadingDeferred = false;
 
 		// If still downloading, load the current world and keep on downloading
 		if (downloading) {
