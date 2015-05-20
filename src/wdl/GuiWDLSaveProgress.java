@@ -83,8 +83,7 @@ public class GuiWDLSaveProgress extends GuiScreen {
 		if (this.doneWorking) {
 			this.mc.displayGuiScreen((GuiScreen) null);
 		} else {
-			//TODO: Dirt background, rather than transparent.
-			this.drawDefaultBackground();
+			this.drawBackground(0);
 			
 			String majorProgressInfo = "";
 			if (majorTaskCount > 1) {
