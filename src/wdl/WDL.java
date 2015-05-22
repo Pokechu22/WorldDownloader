@@ -958,6 +958,12 @@ public class WDL {
 		DataInputStream dis = RegionFileCache.getChunkInputStream(
 				chunkSaveLocation, chunk.xPosition, chunk.zPosition);
 
+		if (dis == null) {
+			// This happens whenever the chunk hasn't been saved before.
+			// It's a normal case.
+			return;
+		}
+		
 		try {
 			NBTTagCompound chunkNBT = CompressedStreamTools.read(dis);
 			// NBTTagCompound levelNBT = chunkNBT.getCompoundTag( "Level" );
@@ -973,6 +979,9 @@ public class WDL {
 							.getCompoundTagAt(i);
 					TileEntity te = TileEntity
 							.createAndLoadEntity(tileEntityNBT);
+					
+					te.setWorldObj(worldClient);
+					
 					String entityType = null;
 
 					if ((entityType = isImportableTileEntity(te)) != null) {
@@ -995,9 +1004,10 @@ public class WDL {
 				}
 			}
 		} catch (Exception e) {
-		} // Couldn't load the old chunk. Nothing unusual. Happens with every
-
-		// not downloaded chunk.
+			chatError("Failed to import tile entities for chunk at " + 
+					chunk.xPosition + ", " + chunk.zPosition + ": " + e);
+			e.printStackTrace();
+		}
 	}
 
 	/**
