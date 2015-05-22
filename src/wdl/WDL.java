@@ -512,6 +512,15 @@ public class WDL {
 		WDL.saveHandler.flush();
 		WDL.worldClient = null;
 		
+		// Force the world to redraw as if the player pressed F3+A.
+		// This fixes the world going invisible issue.
+		WDL.minecraft.addScheduledTask(new Runnable() {
+			@Override
+			public void run() {
+				WDL.minecraft.renderGlobal.loadRenderers();	
+			}
+		});
+		
 		worldLoadingDeferred = false;
 
 		// If still downloading, load the current world and keep on downloading
