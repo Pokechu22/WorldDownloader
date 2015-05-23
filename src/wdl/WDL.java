@@ -991,9 +991,10 @@ public class WDL {
 					
 					te.setWorldObj(worldClient);
 					
-					String entityType = null;
+					String entityType = tileEntityNBT.getString("id") +
+							" (" + te.getClass().getCanonicalName() +")";
 
-					if ((entityType = isImportableTileEntity(te)) != null) {
+					if (shouldImportTileEntity(te)) {
 						if (!newTileEntities.containsKey(te.getPos())) {
 							//The player didn't save this tile entity in
 							//this download session.  So we use the old one.
@@ -1013,8 +1014,8 @@ public class WDL {
 						}
 					} else {
 						chatDebug(WDLDebugMessageCause.LOAD_TILE_ENTITY,
-								"Old TE is not importable: " + entityType
-										+ " at " + te.getPos());
+								"Old TE does not need importing: "
+										+ entityType + " at " + te.getPos());
 					}
 				}
 			}
@@ -1030,30 +1031,30 @@ public class WDL {
 	 * those that require manual interaction such as chests) TileEntities
 	 * will be imported.
 	 */
-	public static String isImportableTileEntity(TileEntity te) {
+	public static boolean shouldImportTileEntity(TileEntity te) {
 		Block block = te.getBlockType();
 
 		if (block instanceof BlockChest && te instanceof TileEntityChest) {
-			return "TileEntityChest";
+			return true;
 		} else if (block instanceof BlockDispenser
 				&& te instanceof TileEntityDispenser) {
-			return "TileEntityDispenser";
+			return true;
 		} else if (block instanceof BlockFurnace
 				&& te instanceof TileEntityFurnace) {
-			return "TileEntityFurnace";
+			return true;
 		} else if (block instanceof BlockNote && te instanceof TileEntityNote) {
-			return "TileEntityNote";
+			return true;
 		} else if (block instanceof BlockBrewingStand
 				&& te instanceof TileEntityBrewingStand) {
-			return "TileEntityBrewingStand";
+			return true;
 		} else if (block instanceof BlockHopper
 				&& te instanceof TileEntityHopper) {
-			return "TileEntityHopper";
+			return true;
 		} else if (block instanceof BlockBeacon
 				&& te instanceof TileEntityBeacon) {
-			return "TileEntityBeacon";
+			return true;
 		} else {
-			return null;
+			return false;
 		}
 	}
 
