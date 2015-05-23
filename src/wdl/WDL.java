@@ -169,10 +169,10 @@ public class WDL {
 	public static IChunkLoader chunkLoader;
 
 	/**
-	 * Positions of newly created TileEntities that will overwrite the imported
-	 * ones when saving:
+	 * Positions and contents of all of the new tileentities, to be overwritten
+	 * from the old version when {@linkplain #importTileEntities(Chunk) saving}.
 	 */
-	public static HashSet<BlockPos> newTileEntities = new HashSet<BlockPos>();
+	public static HashMap<BlockPos, TileEntity> newTileEntities = new HashMap<BlockPos, TileEntity>();
 
 	/**
 	 * All of the {@link MapData}s that were sent to the client in the current
@@ -320,7 +320,7 @@ public class WDL {
 		saveHandler = (SaveHandler) minecraft.getSaveLoader().getSaveLoader(
 				getWorldFolderName(worldName), true);
 		chunkLoader = saveHandler.getChunkLoader(worldClient.provider);
-		newTileEntities = new HashSet<BlockPos>();
+		newTileEntities = new HashMap<BlockPos, TileEntity>();
 		newMapDatas = new HashMap<Integer, MapData>();
 
 		if (baseProps.getProperty("ServerName").isEmpty()) {
@@ -746,14 +746,14 @@ public class WDL {
 
 				saveContainerItems(windowContainer, tec1, 0);
 				saveContainerItems(windowContainer, tec2, 27);
-				newTileEntities.add(chestPos1);
-				newTileEntities.add(chestPos2);
+				newTileEntities.put(chestPos1, tec1);
+				newTileEntities.put(chestPos2, tec2);
 				saveName = "Double Chest contents";
 			}
 			// basic chest
 			else {
 				saveContainerItems(windowContainer, (TileEntityChest) te, 0);
-				newTileEntities.add(lastClickedBlock);
+				newTileEntities.put(lastClickedBlock, te);
 				saveName = "Chest contents";
 			}
 		} else if (windowContainer instanceof ContainerChest
@@ -774,22 +774,22 @@ public class WDL {
 					windowContainer, IInventory.class);
 			saveContainerItems(windowContainer, (TileEntityBrewingStand) te, 0);
 			saveInventoryFields(brewingInventory, (TileEntityBrewingStand) te);
-			newTileEntities.add(lastClickedBlock);
+			newTileEntities.put(lastClickedBlock, te);
 			saveName = "Brewing Stand contents";
 		} else if (windowContainer instanceof ContainerDispenser) {
 			saveContainerItems(windowContainer, (TileEntityDispenser) te, 0);
-			newTileEntities.add(lastClickedBlock);
+			newTileEntities.put(lastClickedBlock, te);
 			saveName = "Dispenser contents";
 		} else if (windowContainer instanceof ContainerFurnace) {
 			IInventory furnaceInventory = (IInventory) stealAndGetField(
 					windowContainer, IInventory.class);
 			saveContainerItems(windowContainer, (TileEntityFurnace) te, 0);
 			saveInventoryFields(furnaceInventory, (TileEntityFurnace) te);
-			newTileEntities.add(lastClickedBlock);
+			newTileEntities.put(lastClickedBlock, te);
 			saveName = "Furnace contents";
 		} else if (windowContainer instanceof ContainerHopper) {
 			saveContainerItems(windowContainer, (TileEntityHopper) te, 0);
-			newTileEntities.add(lastClickedBlock);
+			newTileEntities.put(lastClickedBlock, te);
 			saveName = "Hopper contents";
 		} else if (windowContainer instanceof ContainerBeacon) {
 			//func_180611_e returns the beacon's IInventory tileBeacon.
@@ -798,7 +798,7 @@ public class WDL {
 			TileEntityBeacon savedBeacon = (TileEntityBeacon)te;
 			saveContainerItems(windowContainer, savedBeacon, 0);
 			saveInventoryFields(beaconInventory, savedBeacon);
-			newTileEntities.add(lastClickedBlock);
+			newTileEntities.put(lastClickedBlock, te);
 			saveName = "Beacon effects";
 		} else {
 			WDL.chatDebug(WDLDebugMessageCause.ON_GUI_CLOSED_WARNING,
@@ -824,7 +824,7 @@ public class WDL {
 			TileEntityNote newTE = new TileEntityNote();
 			newTE.note = (byte)(param % 25);
 			worldClient.setTileEntity(pos, newTE);
-			newTileEntities.add(pos);
+			newTileEntities.put(pos, newTE);
 			chatDebug(WDLDebugMessageCause.ON_BLOCK_EVENT,
 					"onBlockEvent: Note Block: " + pos + " pitch: " + param
 							+ " - " + newTE);
@@ -994,15 +994,21 @@ public class WDL {
 					String entityType = null;
 
 					if ((entityType = isImportableTileEntity(te)) != null) {
-						if (!newTileEntities.contains(te.getPos())) {
+						if (!newTileEntities.containsKey(te.getPos())) {
+							//The player didn't save this tile entity in
+							//this download session.  So we use the old one.
+							//Note that this doesn't mean that the old one's
+							//a valid one; it could be empty.
 							worldClient.setTileEntity(te.getPos(), te);
 							chatDebug(
 									WDLDebugMessageCause.LOAD_TILE_ENTITY,
-									"Loaded TE: " + entityType + " at "
-											+ te.getPos());
+									"Using old TE from saved file: " +
+											entityType + " at " + te.getPos());
 						} else {
+							worldClient.setTileEntity(te.getPos(), 
+									newTileEntities.get(te.getPos()));
 							chatDebug(WDLDebugMessageCause.LOAD_TILE_ENTITY,
-									"Dropping old TE: " + entityType + " at "
+									"Using new TE: " + entityType + " at "
 											+ te.getPos());
 						}
 					} else {
