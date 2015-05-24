@@ -907,18 +907,13 @@ public class WDL {
 	 */
 	public static boolean shouldKeepEntity(Entity entity) {
 		// If the entity is being removed and it's outside the default tracking
-		// range,
-		// go ahead and remember it until the chunk is saved.
+		// range, go ahead and remember it until the chunk is saved.
 		if (WDL.downloading && WDL.canSaveEntities) {
 			if (entity != null) {
 				int threshold = 0;
 
 				if ((entity instanceof EntityFishHook)
-						||
-						// (entity instanceof EntityArrow) ||
-						// (entity instanceof EntitySmallFireball) ||
-						// (entity instanceof EntitySnowball) ||
-						(entity instanceof EntityEnderPearl)
+						|| (entity instanceof EntityEnderPearl)
 						|| (entity instanceof EntityEnderEye)
 						|| (entity instanceof EntityEgg)
 						|| (entity instanceof EntityPotion)
@@ -1751,8 +1746,8 @@ public class WDL {
 		}
 
 		if (saveVersion == 0) {
-			saveVersion = 19133; // Version for 1.7.2 just in case we can't get
-			// it
+			//Default version for 1.8
+			saveVersion = 19133;
 		}
 
 		return saveVersion;
@@ -1768,15 +1763,9 @@ public class WDL {
 	 * @return An Object of type Field
 	 */
 	public static Field stealField(Class typeOfClass, Class typeOfField) {
-		// System.out.println("stealField: typeOfClass = " +
-		// typeOfClass.getName());
-		// System.out.println("stealField: typeOfField = " +
-		// typeOfField.getName());
 		Field[] fields = typeOfClass.getDeclaredFields();
 
 		for (Field f : fields) {
-			// System.out.println("stealField: Found field " + f.getName() +
-			// " of type " + f.getType());
 			if (f.getType().equals(typeOfField)) {
 				try {
 					f.setAccessible(true);
@@ -1866,10 +1855,6 @@ public class WDL {
 			worldProps.setProperty("RandomSeed", seed);
 			WDL.chatMsg("Setting single-player world seed to " + seed);
 		}
-
-		/*
-		 * else { WDL.chatMsg("Could not retrieve server seed"); }
-		 */
 	}
 
 	// Add World Downloader buttons to GuiIngameMenu
