@@ -10,6 +10,11 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.entity.Entity;
 
+/**
+ * A GUI for selecting which world the player is currently in.
+ * 
+ * While open, the player spins around visually in the world.
+ */
 public class GuiWDLMultiworldSelect extends GuiScreen {
 	private GuiButton cancelBtn;
 	private GuiTextField newNameField;
