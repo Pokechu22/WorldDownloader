@@ -1090,6 +1090,21 @@ public class WDL {
 		saveMapData(progressScreen);
 		saveChunks(progressScreen);
 		
+		try {
+			chatDebug(WDLDebugMessageCause.SAVING, "Waiting for ThreadedFileIOBase to finish...");
+			
+			progressScreen.startMajorTask("Procrastinating...", 1);
+			progressScreen.setMinorTaskProgress(
+					"(waiting for ThreadedFileIOBase to finish)", 1);
+			
+			// func_178779_a is a getter for the intsance.
+			// Look inside of ThreadedFileIOBase.java for
+			// such a getter.
+			ThreadedFileIOBase.func_178779_a().waitForFinish();
+		} catch (Exception e) {
+			throw new RuntimeException("Threw exception waiting for asynchronous IO to finish. Hmmm.", e);
+		}
+		
 		progressScreen.setDoneWorking();
 	}
 
@@ -1183,10 +1198,7 @@ public class WDL {
 		Field hashArrayField = null;
 		Field[] lhmFields = LongHashMap.class.getDeclaredFields();
 
-		// System.out.println("Looking for hashArray field...");
 		for (Field f : lhmFields) {
-			// System.out.println("Found field " + f.getName() + " of type " +
-			// f.getType().getName());
 			if (f.getType().isArray()) {
 				hashArrayField = f;
 				break;
@@ -1198,28 +1210,21 @@ public class WDL {
 			return;
 		}
 
-		// System.out.println("Setting hashArrayField of type " +
-		// hashArrayField.getType().getName() + " accessible.");
 		hashArrayField.setAccessible(true);
 		// Steal the instance of LongHashMap from our chunk provider
-		// System.out.println("Stealing field from chunkProvider (type=" +
-		// chunkProvider.getClass().getName() + ") of type " +
-		// LongHashMap.class.getName());
 		LongHashMap lhm = (LongHashMap) stealAndGetField(chunkProvider,
 				LongHashMap.class);
-		/*
-		 * if (lhm != null) { System.out.println("Successfully got lhm of type"
-		 * + lhm.getClass().getName()); }
-		 */
+		
+		progressScreen.startMajorTask("Saving chunks", 
+				lhm.getNumHashElements());
+		
 		// Get the LongHashMap.Entry[] through the now accessible field using a
 		// LongHashMap we steal from our chunkProvider.
 		Object[] hashArray = (Object[]) hashArrayField.get(lhm);
-		// System.out.println("hashArray is of type " +
-		// hashArray.getClass().getName());
 
-		// System.out.println("hashArray.length = " + hashArray.length);
-		if (hashArray.length == 0) {
+		if (lhm.getNumHashElements() == 0 || hashArray.length == 0) {
 			chatError("ChunkProviderClient has no chunk data!");
+			chatError("(If you changed dimensions just now, this is normal)");
 			return;
 		} else {
 			// Get the actual class for LongHashMap.Entry
@@ -1244,8 +1249,6 @@ public class WDL {
 			Field nextEntryField = Entry.getDeclaredFields()[2]; // nextEntry
 			nextEntryField.setAccessible(true);
 			
-			progressScreen.startMajorTask("Saving chunks", 
-					lhm.getNumHashElements());
 			int currentChunk = 0;
 			
 			for (int i = 0; i < hashArray.length; ++i) {
@@ -1263,19 +1266,6 @@ public class WDL {
 						saveChunk(c);
 					}
 				}
-			}
-
-			try {
-				progressScreen.startMajorTask("Procrastinating...", 1);
-				progressScreen.setMinorTaskProgress(
-						"(waiting for ThreadedFileIOBase to finish)", 1);
-				
-				// func_178779_a is a getter for the intsance.
-				// Look inside of ThreadedFileIOBase.java for
-				// such a getter.
-				ThreadedFileIOBase.func_178779_a().waitForFinish();
-			} catch (Exception e) {
-				throw new RuntimeException("Threw exception waiting for asynchronous IO to finish. Hmmm.", e);
 			}
 
 			chatDebug(WDLDebugMessageCause.SAVING, "Chunk data saved.");
