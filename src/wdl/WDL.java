@@ -1704,9 +1704,11 @@ public class WDL {
 
 	/** Adds a chat message with a World Downloader prefix */
 	public static void chatDebug(WDLDebugMessageCause type, String msg) {
-		if (type.isEnabled()) {
+		if (type != null && type.isEnabled()) {
 			minecraft.ingameGUI.getChatGUI().printChatMessage(
 				new ChatComponentText("§2[WorldDL]§6 " + msg));
+		} else {
+			System.out.println("§2[WorldDL]§6 " + msg);
 		}
 	}
 
