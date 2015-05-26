@@ -101,9 +101,15 @@ public class GuiWDLSaveProgress extends GuiScreen {
 			
 			this.drawCenteredString(this.fontRendererObj, this.majorTaskMessage
 					+ majorProgressInfo, this.width / 2, 100, 0xFFFFFF);
-			this.drawProgressBar(110, 84, 89, 
-					(majorTaskNumber * minorTaskMaximum) + minorTaskProgress, 
-					majorTaskCount * minorTaskMaximum);
+			
+			if (minorTaskMaximum > 0) {
+				this.drawProgressBar(110, 84, 89, 
+						(majorTaskNumber * minorTaskMaximum) + minorTaskProgress, 
+						(majorTaskCount + 1) * minorTaskMaximum);
+			} else {
+				this.drawProgressBar(110, 84, 89, majorTaskNumber, 
+						majorTaskCount);
+			}
 			
 			this.drawCenteredString(this.fontRendererObj, this.minorTaskMessage
 					+ minorProgressInfo, this.width / 2, 130, 0xFFFFFF);
