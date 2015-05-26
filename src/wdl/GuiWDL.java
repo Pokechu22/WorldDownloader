@@ -68,12 +68,16 @@ public class GuiWDL extends GuiScreen {
 		this.playerOverrides = new GuiButton(6, w - 100, hi,
 				"Player Overrides...");
 		this.buttonList.add(this.playerOverrides);
+		hi += 22;
+		this.playerOverrides = new GuiButton(7, w - 100, hi,
+				"Backup options...");
+		this.buttonList.add(this.playerOverrides);
 		hi += 28;
-		this.debugOptions = new GuiButton(7, w - 100, hi,
+		this.debugOptions = new GuiButton(8, w - 100, hi,
 				"Debug options...");
 		this.buttonList.add(this.debugOptions);
 		hi += 28;
-		this.buttonList.add(new GuiButton(100, w - 100, h + 150, "Done"));
+		this.buttonList.add(new GuiButton(100, w - 100, hi, "Done"));
 	}
 
 	/**
@@ -96,7 +100,9 @@ public class GuiWDL extends GuiScreen {
 			this.mc.displayGuiScreen(new GuiWDLGenerator(this));
 		} else if (guibutton.id == 6) { // Player Overrides
 			this.mc.displayGuiScreen(new GuiWDLPlayer(this));
-		} else if (guibutton.id == 7) { // Debug options.
+		} else if (guibutton.id == 7) { // Backup options
+			this.mc.displayGuiScreen(new GuiWDLBackup(this));
+		} else if (guibutton.id == 8) { // Debug options
 			this.mc.displayGuiScreen(new GuiWDLDebug(this));
 		} else if (guibutton.id == 100) { // Done
 			WDL.saveProps();

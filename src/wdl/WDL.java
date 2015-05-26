@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import wdl.WorldBackup.WorldBackupType;
+
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
@@ -213,7 +215,7 @@ public class WDL {
 
 	// Names:
 	/**
-	 * The current world name.
+	 * The current world name, if the world is multiworld.
 	 */
 	public static String worldName = "WorldDownloaderERROR";
 	/**
@@ -271,6 +273,7 @@ public class WDL {
 		defaultProps.setProperty("WorldName", "");
 		defaultProps.setProperty("LinkedWorlds", "");
 		defaultProps.setProperty("AutoStart", "false");
+		defaultProps.setProperty("Backup", "ZIP");
 		defaultProps.setProperty("GameType", "keep");
 		defaultProps.setProperty("Time", "keep");
 		defaultProps.setProperty("Weather", "keep");
@@ -1058,8 +1061,12 @@ public class WDL {
 	 * when stopping.
 	 */
 	public static void saveEverything() throws Exception {
+		WorldBackupType backupType = 
+				WorldBackupType.match(baseProps.getProperty("Backup", "ZIP"));
+		
 		GuiWDLSaveProgress progressScreen = new GuiWDLSaveProgress(
-				"Saving downloaded world", 4);
+				"Saving downloaded world", 
+				(backupType != WorldBackupType.NONE ? 5 : 4));
 		minecraft.displayGuiScreen(progressScreen);
 		
 		saveProps();
@@ -1097,12 +1104,27 @@ public class WDL {
 			progressScreen.setMinorTaskProgress(
 					"(waiting for ThreadedFileIOBase to finish)", 1);
 			
-			// func_178779_a is a getter for the intsance.
+			// func_178779_a is a getter for the instance.
 			// Look inside of ThreadedFileIOBase.java for
 			// such a getter.
 			ThreadedFileIOBase.func_178779_a().waitForFinish();
 		} catch (Exception e) {
 			throw new RuntimeException("Threw exception waiting for asynchronous IO to finish. Hmmm.", e);
+		}
+		
+		if (backupType != WorldBackupType.NONE) {
+			chatDebug(WDLDebugMessageCause.SAVING, "Backing up the world...");
+			progressScreen.startMajorTask("Backing up world...", 1);
+			progressScreen.setMinorTaskProgress(
+					backupType.description, 1);
+			
+			try {
+				WorldBackup.backupWorld(saveHandler.getWorldDirectory(), 
+						getWorldFolderName(worldName), backupType);
+			} catch (IOException e) {
+				chatError("Error while backing up world: " + e);
+				e.printStackTrace();
+			}
 		}
 		
 		progressScreen.setDoneWorking();
