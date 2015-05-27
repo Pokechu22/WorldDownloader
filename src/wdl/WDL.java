@@ -20,6 +20,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import wdl.WorldBackup.WorldBackupType;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -121,6 +124,8 @@ import net.minecraft.world.storage.ThreadedFileIOBase;
  * This is the main class that does most of the work.
  */
 public class WDL {
+	private static Logger logger = LogManager.getLogger();
+	
 	// TODO: This class needs to be split into smaller classes. There is way too
 	// much different stuff in here.
 
@@ -899,7 +904,7 @@ public class WDL {
 				chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE,
 						"Received unkown plugin channel message #" + 
 								section + ".");
-				System.out.println(messageBuilder.toString());
+				logger.info(messageBuilder.toString());
 			}
 		}
 	}
@@ -1731,7 +1736,7 @@ public class WDL {
 			minecraft.ingameGUI.getChatGUI().printChatMessage(
 				new ChatComponentText("§2[WorldDL]§6 " + msg));
 		} else {
-			System.out.println("§2[WorldDL]§6 " + msg);
+			logger.info("§2[WorldDL]§6 " + msg);
 		}
 	}
 
