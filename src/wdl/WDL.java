@@ -861,45 +861,46 @@ public class WDL {
 			ByteArrayDataInput input = ByteStreams.newDataInput(packet
 					.getBufferData().array());
 
-			int version = input.readInt();
-			
-			if (version != 1) {
-				chatError("Unrecognized serverside control packet version: "
-						+ version + ".");
-				chatError("Disabling WDL; your version is out of date!");
-				
-				canDownloadInGeneral = false;
-				saveRadius = 0;
-				canCacheChunks = false;
-				canSaveEntities = false;
-				canSaveTileEntities = false;
-				canSaveContainers = false;
-				
-				return;
-			}
+			int section = input.readInt();
 
-			canDownloadInGeneral = input.readBoolean();
-			saveRadius = input.readInt();
-			canCacheChunks = input.readBoolean();
-			canSaveEntities = input.readBoolean();
-			canSaveTileEntities = input.readBoolean();
-			canSaveContainers = input.readBoolean();
-			
-			chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
-					"Successfully loaded settings from the server!");
-			
-			chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
-					"canDownloadInGeneral: " + canDownloadInGeneral);
-			chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
-					"saveRadius: " + saveRadius);
-			chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
-					"canCacheChunks: " + canCacheChunks);
-			chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
-					"canSaveEntities: " + canSaveEntities);
-			chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
-					"canSaveTileEntities: " + canSaveTileEntities);
-			chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
-					"canSaveContainers: " + canSaveContainers);
+			switch (section) {
+			case 1: 
+				canDownloadInGeneral = input.readBoolean();
+				saveRadius = input.readInt();
+				canCacheChunks = input.readBoolean();
+				canSaveEntities = input.readBoolean();
+				canSaveTileEntities = input.readBoolean();
+				canSaveContainers = input.readBoolean();
+
+				chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
+						"Successfully loaded settings from the server!");
+
+				chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
+						"canDownloadInGeneral: " + canDownloadInGeneral);
+				chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
+						"saveRadius: " + saveRadius);
+				chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
+						"canCacheChunks: " + canCacheChunks);
+				chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
+						"canSaveEntities: " + canSaveEntities);
+				chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
+						"canSaveTileEntities: " + canSaveTileEntities);
+				chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
+						"canSaveContainers: " + canSaveContainers);
+				break;
+			default:
+				byte[] data = packet.getBufferData().array();
+				
+				StringBuilder messageBuilder = new StringBuilder();
+				for (byte b : data) {
+					messageBuilder.append(b).append(' ');
+				}
+				
+				chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE,
+						"Received unkown plugin channel message #" + 
+								section + ".");
+				System.out.println(messageBuilder.toString());
+			}
 		}
 	}
 
