@@ -9,6 +9,7 @@ import net.minecraft.client.gui.GuiTextField;
 public class GuiWDLWorld extends GuiScreen {
 	private String title = "";
 	private GuiScreen parent;
+	private GuiButton allowCheatsBtn;
 	private GuiButton gameModeBtn;
 	private GuiButton timeBtn;
 	private GuiButton weatherBtn;
@@ -20,8 +21,8 @@ public class GuiWDLWorld extends GuiScreen {
 	private GuiTextField spawnZ;
 	private int spawnTextY;
 
-	public GuiWDLWorld(GuiScreen var1) {
-		this.parent = var1;
+	public GuiWDLWorld(GuiScreen parent) {
+		this.parent = parent;
 	}
 
 	/**
@@ -35,10 +36,15 @@ public class GuiWDLWorld extends GuiScreen {
 		int var1 = this.width / 2;
 		int var2 = this.height / 4;
 		int var3 = var2 - 15;
-		this.gameModeBtn = new GuiButton(1, var1 - 100, var3,
-				"Game Mode: ERROR");
-		this.buttonList.add(this.gameModeBtn);
-		this.updateGameMode(false);
+		
+		this.weatherBtn = new GuiButton(3, var1 - 100, var3, "Weather: ERROR");
+		this.buttonList.add(this.weatherBtn);
+		this.updateWeather(false);
+		var3 += 22;
+		this.allowCheatsBtn = new GuiButton(6, var1 - 100, var3,
+				"Allow cheats: ERROR");
+		this.buttonList.add(this.allowCheatsBtn);
+		this.updateAllowCheats(false);
 		var3 += 22;
 		this.timeBtn = new GuiButton(2, var1 - 100, var3, "Time: ERROR");
 		this.buttonList.add(this.timeBtn);
@@ -76,19 +82,21 @@ public class GuiWDLWorld extends GuiScreen {
 	 * ActionListener.actionPerformed(ActionEvent e).
 	 */
 	@Override
-	protected void actionPerformed(GuiButton var1) {
-		if (var1.enabled) {
-			if (var1.id == 1) {
+	protected void actionPerformed(GuiButton button) {
+		if (button.enabled) {
+			if (button.id == 1) {
 				this.updateGameMode(true);
-			} else if (var1.id == 2) {
+			} else if (button.id == 2) {
 				this.updateTime(true);
-			} else if (var1.id == 3) {
+			} else if (button.id == 3) {
 				this.updateWeather(true);
-			} else if (var1.id == 4) {
+			} else if (button.id == 4) {
 				this.updateSpawn(true);
-			} else if (var1.id == 5) {
+			} else if (button.id == 5) {
 				this.pickSpawn();
-			} else if (var1.id == 100) {
+			} else if (button.id == 6) {
+				this.updateAllowCheats(true);
+			} else if (button.id == 100) {
 				if (this.showSpawnFields) {
 					this.updateSpawnXYZ(true);
 				}
@@ -141,7 +149,7 @@ public class GuiWDLWorld extends GuiScreen {
 	 * Draws the screen and all the components in it.
 	 */
 	@Override
-	public void drawScreen(int var1, int var2, float var3) {
+	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		this.drawDefaultBackground();
 		this.drawCenteredString(this.fontRendererObj, this.title,
 				this.width / 2, this.height / 4 - 40, 16777215);
@@ -158,9 +166,29 @@ public class GuiWDLWorld extends GuiScreen {
 			this.spawnZ.drawTextBox();
 		}
 
-		super.drawScreen(var1, var2, var3);
+		super.drawScreen(mouseX, mouseY, partialTicks);
 	}
 
+	private void updateAllowCheats(boolean var1) {
+		String prop = WDL.baseProps.getProperty("AllowCheats");
+
+		if (prop.equals("true")) {
+			if (var1) {
+				WDL.baseProps.setProperty("AllowCheats", "false");
+				this.updateAllowCheats(false);
+			} else {
+				this.allowCheatsBtn.displayString = "Allow cheats: Yes";
+			}
+		} else {
+			if (var1) {
+				WDL.baseProps.setProperty("AllowCheats", "true");
+				this.updateAllowCheats(false);
+			} else {
+				this.allowCheatsBtn.displayString = "Allow cheats: No";
+			}
+		}
+	}
+	
 	private void updateGameMode(boolean var1) {
 		String var2 = WDL.baseProps.getProperty("GameType");
 

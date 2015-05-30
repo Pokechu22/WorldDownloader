@@ -279,6 +279,7 @@ public class WDL {
 		defaultProps.setProperty("LinkedWorlds", "");
 		defaultProps.setProperty("AutoStart", "false");
 		defaultProps.setProperty("Backup", "ZIP");
+		defaultProps.setProperty("AllowCheats", "true");
 		defaultProps.setProperty("GameType", "keep");
 		defaultProps.setProperty("Time", "keep");
 		defaultProps.setProperty("Weather", "keep");
@@ -1543,6 +1544,13 @@ public class WDL {
 			worldInfoNBT.setString("LevelName", baseName + " - " + worldName);
 		}
 
+		// Cheats
+		if (worldProps.getProperty("AllowCheats").equals("true")) {
+			worldInfoNBT.setBoolean("allowCommands", true);
+		} else {
+			worldInfoNBT.setBoolean("allowCommands", false);
+		}
+		
 		// GameType
 		String gametypeOption = worldProps.getProperty("GameType");
 
