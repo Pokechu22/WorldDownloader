@@ -242,7 +242,7 @@ public class WDL {
 	/**
 	 * The distance from a player that WDL can save chunks.
 	 * 
-	 * TODO: NYI.
+	 * This is only used when {@link #canCacheChunks} is false. 
 	 */
 	public static int saveRadius = 64;
 	/**
@@ -543,6 +543,8 @@ public class WDL {
 
 	/** Must be called when a chunk is no longer needed and should be removed */
 	public static void onChunkNoLongerNeeded(Chunk unneededChunk) {
+		if (!canDownloadInGeneral) { return; }
+		
 		if (unneededChunk == null) {
 			return;
 		}
@@ -584,6 +586,8 @@ public class WDL {
 	 * shown
 	 */
 	public static void onItemGuiClosed() {
+		if (!canDownloadInGeneral) { return; }
+		
 		String saveName = "";
 
 		if (thePlayer.ridingEntity != null &&
@@ -1067,6 +1071,10 @@ public class WDL {
 	 * when stopping.
 	 */
 	public static void saveEverything() throws Exception {
+		if (!WDL.canDownloadInGeneral) {
+			chatError("The server forbids downloading!");
+		}
+		
 		WorldBackupType backupType = 
 				WorldBackupType.match(baseProps.getProperty("Backup", "ZIP"));
 		
@@ -1142,6 +1150,8 @@ public class WDL {
 	 */
 	public static void savePlayer(NBTTagCompound playerNBT, 
 			GuiWDLSaveProgress progressScreen) {
+		if (!WDL.canDownloadInGeneral) { return; }
+		
 		chatDebug(WDLDebugMessageCause.SAVING, "Saving player data...");
 		progressScreen.setMinorTaskProgress("Writing player data", 2);
 		
@@ -1173,6 +1183,8 @@ public class WDL {
 	 */
 	public static void saveWorldInfo(NBTTagCompound worldInfoNBT,
 			GuiWDLSaveProgress progressScreen) {
+		if (!WDL.canDownloadInGeneral) { return; }
+		
 		chatDebug(WDLDebugMessageCause.SAVING, "Saving world metadata...");
 		progressScreen.setMinorTaskProgress("Writing world data", 3);
 		
@@ -1217,6 +1229,8 @@ public class WDL {
 	 */
 	public static void saveChunks(GuiWDLSaveProgress progressScreen)
 			throws IllegalArgumentException, IllegalAccessException {
+		if (!WDL.canDownloadInGeneral) { return; }
+		
 		chatDebug(WDLDebugMessageCause.SAVING, "Saving chunks...");
 		
 		// Get the ChunkProviderClient from WorldClient
@@ -1282,11 +1296,20 @@ public class WDL {
 			for (int i = 0; i < hashArray.length; ++i) {
 				for (Object lhme = hashArray[i]; lhme != null; 
 						lhme = nextEntryField.get(lhme)) {
-					currentChunk++;
-					
 					Chunk c = (Chunk) valueField.get(lhme);
 
 					if (c != null) {
+						//Serverside restrictions check
+						if (!canCacheChunks && saveRadius >= 0) {
+							int distanceX = c.xPosition - thePlayer.chunkCoordX;
+							int distanceZ = c.zPosition - thePlayer.chunkCoordZ;
+							
+							if (Math.abs(distanceX) > saveRadius ||
+									Math.abs(distanceZ) > saveRadius) {
+								continue;
+							}
+						}
+						
 						progressScreen.setMinorTaskProgress(
 								"Saving chunk at " + c.xPosition + ", " +
 										c.zPosition, currentChunk);
@@ -1304,6 +1327,8 @@ public class WDL {
 	 * Import all non-overwritten TileEntities, then save the chunk
 	 */
 	public static void saveChunk(Chunk c) {
+		if (!WDL.canDownloadInGeneral) { return; }
+		
 		//Force the entity into its serverside location.
 		//Needed for certain things that move clientside,
 		//such as my glitchboats (http://imgur.com/3QQchZL)
@@ -1325,6 +1350,7 @@ public class WDL {
 		try {
 			List<Entity> allEntities = new ArrayList<Entity>();
 			
+			//Temporarilly delete entiies if saving them is disabled.
 			if (!WDL.canSaveEntities) {
 				for (Iterable<Entity> entityList : c.getEntityLists()) {
 					for (Entity e : entityList) {
@@ -1353,6 +1379,7 @@ public class WDL {
 			
 			chunkLoader.saveChunk(worldClient, c);
 			
+			//Re-add previously deleted entities if they were removed.
 			if (!WDL.canSaveEntities) {
 				for (Entity e : allEntities) {
 					c.addEntity(e);
@@ -1618,6 +1645,8 @@ public class WDL {
 	 * TODO: Overwrite / create IDCounts.dat.
 	 */
 	public static void saveMapData(GuiWDLSaveProgress progressScreen) {
+		if (!canSaveEntities || !canDownloadInGeneral) { return; }
+		
 		File dataDirectory = new File(saveHandler.getWorldDirectory(),
 				"data");
 		progressScreen.startMajorTask("Saving map item data", newMapDatas.size());
