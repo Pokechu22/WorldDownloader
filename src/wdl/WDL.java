@@ -46,14 +46,19 @@ import net.minecraft.client.multiplayer.ChunkProviderClient;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityHanging;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.IMerchant;
 import net.minecraft.entity.boss.EntityDragon;
+import net.minecraft.entity.boss.EntityWither;
+import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.item.EntityBoat;
+import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.item.EntityEnderEye;
 import net.minecraft.entity.item.EntityEnderPearl;
 import net.minecraft.entity.item.EntityExpBottle;
 import net.minecraft.entity.item.EntityFallingBlock;
+import net.minecraft.entity.item.EntityFireworkRocket;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.item.EntityMinecartChest;
@@ -61,14 +66,19 @@ import net.minecraft.entity.item.EntityMinecartHopper;
 import net.minecraft.entity.item.EntityPainting;
 import net.minecraft.entity.item.EntityTNTPrimed;
 import net.minecraft.entity.item.EntityXPOrb;
+import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.passive.EntitySquid;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.passive.IAnimals;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.entity.projectile.EntityEgg;
+import net.minecraft.entity.projectile.EntityFireball;
 import net.minecraft.entity.projectile.EntityFishHook;
 import net.minecraft.entity.projectile.EntityPotion;
+import net.minecraft.entity.projectile.EntitySmallFireball;
+import net.minecraft.entity.projectile.EntitySnowball;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.AnimalChest;
 import net.minecraft.inventory.Container;
@@ -922,29 +932,51 @@ public class WDL {
 	public static boolean shouldKeepEntity(Entity entity) {
 		// If the entity is being removed and it's outside the default tracking
 		// range, go ahead and remember it until the chunk is saved.
+		
+		// Proper tracking ranges can be found in EntityTracker#trackEntity
+		// (the one that takes an Entity as a paremeter) -- it's the 2nd arg
+		// given to addEntityToTracker.
 		if (WDL.downloading && WDL.canSaveEntities) {
 			if (entity != null) {
-				int threshold = 0;
+				int threshold;
 
-				if ((entity instanceof EntityFishHook)
+				if (entity instanceof EntityPlayer) {
+					threshold = 512;
+				} else if ((entity instanceof EntityFishHook)
+						|| (entity instanceof EntityArrow)
+						|| (entity instanceof EntitySmallFireball)
+						|| (entity instanceof EntityFireball)
+						|| (entity instanceof EntitySnowball)
 						|| (entity instanceof EntityEnderPearl)
 						|| (entity instanceof EntityEnderEye)
 						|| (entity instanceof EntityEgg)
 						|| (entity instanceof EntityPotion)
 						|| (entity instanceof EntityExpBottle)
+						|| (entity instanceof EntityFireworkRocket)
 						|| (entity instanceof EntityItem)
 						|| (entity instanceof EntitySquid)) {
 					threshold = 64;
 				} else if ((entity instanceof EntityMinecart)
 						|| (entity instanceof EntityBoat)
+						|| (entity instanceof EntityWither)
+						|| (entity instanceof EntityBat)
 						|| (entity instanceof IAnimals)) {
-					threshold = 80;
+					threshold = 80; 
 				} else if ((entity instanceof EntityDragon)
 						|| (entity instanceof EntityTNTPrimed)
 						|| (entity instanceof EntityFallingBlock)
-						|| (entity instanceof EntityPainting)
+						|| (entity instanceof EntityHanging)
+						|| (entity instanceof EntityArmorStand)
 						|| (entity instanceof EntityXPOrb)) {
 					threshold = 160;
+				} else if (entity instanceof EntityEnderCrystal) {
+					threshold = 256;
+				} else {
+					WDL.chatDebug(WDLDebugMessageCause.REMOVE_ENTITY,
+							"removeEntityFromWorld: Allowing removal of "
+									+ EntityList.getEntityString(entity)
+									+ " with unknown track distance (!)");
+					return true;
 				}
 
 				double distance = entity.getDistance(WDL.thePlayer.posX,
@@ -952,7 +984,7 @@ public class WDL {
 
 				if (distance > threshold) {
 					WDL.chatDebug(WDLDebugMessageCause.REMOVE_ENTITY,
-							"removeEntityFromWorld: Refusing to remove "
+							"removeEntityFromWorld: Denying removal of "
 									+ EntityList.getEntityString(entity)
 									+ " at distance " + distance);
 					return true;
@@ -960,7 +992,7 @@ public class WDL {
 
 				WDL.chatDebug(
 						WDLDebugMessageCause.REMOVE_ENTITY,
-						"removeEntityFromWorld: Removing "
+						"removeEntityFromWorld: Allowing removal of "
 								+ EntityList.getEntityString(entity)
 								+ " at distance " + distance);
 			}
