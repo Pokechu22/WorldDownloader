@@ -952,7 +952,7 @@ public class WDL {
 						|| (entity instanceof EntityEgg)
 						|| (entity instanceof EntityPotion)
 						|| (entity instanceof EntityExpBottle)
-						|| (entity instanceof EntityFireworkRocket)
+//						|| (entity instanceof EntityFireworkRocket)
 						|| (entity instanceof EntityItem)
 						|| (entity instanceof EntitySquid)) {
 					threshold = 64;
@@ -974,8 +974,7 @@ public class WDL {
 				} else {
 					WDL.chatDebug(WDLDebugMessageCause.REMOVE_ENTITY,
 							"removeEntityFromWorld: Allowing removal of "
-									+ EntityList.getEntityString(entity)
-									+ " with unknown track distance (!)");
+									+ EntityList.getEntityString(entity));
 					return true;
 				}
 
