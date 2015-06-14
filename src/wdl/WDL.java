@@ -1370,17 +1370,6 @@ public class WDL {
 	public static void saveChunk(Chunk c) {
 		if (!WDL.canDownloadInGeneral) { return; }
 		
-		//Force the entity into its serverside location.
-		//Needed for certain things that move clientside,
-		//such as my glitchboats (http://imgur.com/3QQchZL)
-		for (Iterable<Entity> entityList : c.getEntityLists()) {
-			for (Entity e : entityList) {
-				e.posX = convertServerPos(e.serverPosX);
-				e.posY = convertServerPos(e.serverPosY);
-				e.posZ = convertServerPos(e.serverPosZ);
-			}
-		}
-
 		if (!WDL.canSaveTileEntities) {
 			c.getTileEntityMap().clear();
 		}
@@ -1427,6 +1416,17 @@ public class WDL {
 						c.addEntity(e);
 						addedEntities.add(e);
 					}
+				}
+			}
+			
+			// Force the entity into its serverside location.
+			// Needed for certain things that move clientside,
+			// such as boats (http://imgur.com/3QQchZL)
+			for (Iterable<Entity> entityList : c.getEntityLists()) {
+				for (Entity e : entityList) {
+					e.posX = convertServerPos(e.serverPosX);
+					e.posY = convertServerPos(e.serverPosY);
+					e.posZ = convertServerPos(e.serverPosZ);
 				}
 			}
 			
