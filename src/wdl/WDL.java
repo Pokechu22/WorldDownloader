@@ -117,6 +117,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ClassInheratanceMultiMap;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.LongHashMap;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.village.MerchantRecipe;
 import net.minecraft.village.MerchantRecipeList;
@@ -190,6 +191,11 @@ public class WDL {
 	 * from the old version when {@linkplain #importTileEntities(Chunk) saving}.
 	 */
 	public static HashMap<BlockPos, TileEntity> newTileEntities = new HashMap<BlockPos, TileEntity>();
+	
+	/**
+	 * All entities that were downloaded.  The key is the entity's EID.
+	 */
+	public static HashMap<Integer, Entity> newEntities = new HashMap<Integer, Entity>();
 	
 	/**
 	 * All of the {@link MapData}s that were sent to the client in the current
@@ -340,6 +346,7 @@ public class WDL {
 				getWorldFolderName(worldName), true);
 		chunkLoader = saveHandler.getChunkLoader(worldClient.provider);
 		newTileEntities = new HashMap<BlockPos, TileEntity>();
+		newEntities = new HashMap<Integer, Entity>();
 		newMapDatas = new HashMap<Integer, MapData>();
 
 		if (baseProps.getProperty("ServerName").isEmpty()) {
@@ -926,10 +933,8 @@ public class WDL {
 
 	/**
 	 * Must be called when an entity is about to be removed from the world.
-	 *
-	 * @return true if the entity should not be removed, false if it can be
 	 */
-	public static boolean shouldKeepEntity(Entity entity) {
+	public static void onRemoveEntityFromWorld(Entity entity) {
 		// If the entity is being removed and it's outside the default tracking
 		// range, go ahead and remember it until the chunk is saved.
 		
@@ -973,7 +978,7 @@ public class WDL {
 					WDL.chatDebug(WDLDebugMessageCause.REMOVE_ENTITY,
 							"removeEntityFromWorld: Allowing removal of "
 									+ EntityList.getEntityString(entity));
-					return false;
+					return;
 				}
 
 				double distance = entity.getDistance(WDL.thePlayer.posX,
@@ -981,10 +986,11 @@ public class WDL {
 
 				if (distance > threshold) {
 					WDL.chatDebug(WDLDebugMessageCause.REMOVE_ENTITY,
-							"removeEntityFromWorld: Denying removal of "
+							"removeEntityFromWorld: Saving "
 									+ EntityList.getEntityString(entity)
 									+ " at distance " + distance);
-					return true;
+					newEntities.put(entity.getEntityId(), entity);
+					return;
 				}
 
 				WDL.chatDebug(
@@ -994,8 +1000,6 @@ public class WDL {
 								+ " at distance " + distance);
 			}
 		}
-
-		return false;
 	}
 
 	/** Load the previously saved TileEntities and add them to the Chunk **/
@@ -1380,10 +1384,13 @@ public class WDL {
 		c.setTerrainPopulated(true);
 
 		try {
-			List<Entity> allEntities = new ArrayList<Entity>();
+			// Entities to re-add after chunk saving that were previously removed.
+			List<Entity> removedEntities = new ArrayList<Entity>();
+			// Entities to remove after chunk saving that were previously added.
+			List<Entity> addedEntities = new ArrayList<Entity>();
 			
-			//Temporarilly delete entiies if saving them is disabled.
 			if (!WDL.canSaveEntities) {
+				// Temporarily delete entities if saving them is disabled.
 				for (Iterable<Entity> entityList : c.getEntityLists()) {
 					for (Entity e : entityList) {
 						if (e instanceof EntityPlayer) {
@@ -1393,29 +1400,43 @@ public class WDL {
 							continue;
 						}
 						
-						allEntities.add(e);
+						removedEntities.add(e);
 					}
 				}
 				
-				for (Entity e : allEntities) {
-					if (e instanceof EntityPlayer) {
-						//Skip players, as otherwise bad things happen, 
-						//such as deleting the current player and causing
-						//the screen to flicker.
-						continue;
-					}
-					
+				for (Entity e : removedEntities) {
 					c.removeEntity(e);
+				}
+			} else {
+				// Add in new entities now.
+				// TODO: This is probably inefficient (as we go through ALL
+				// entities that were loaded.
+				for (Entity e : newEntities.values()) {
+					//TODO: Cache these values.
+					int entityChunkX = MathHelper.floor_double(e.posX / 16.0D);
+					int entityChunkZ = MathHelper.floor_double(e.posZ / 16.0D);
+					
+					if (entityChunkX == c.xPosition &&
+							entityChunkZ == c.zPosition) {
+						// Unkill the entity so that it doesn't despawn on
+						// world load.  Note that 'isDead' is a bad name, as
+						// it actually means "Delete this entity next tick",
+						// not "this entitiy was killed by a player".
+						e.isDead = false;
+						c.addEntity(e);
+						addedEntities.add(e);
+					}
 				}
 			}
 			
 			chunkLoader.saveChunk(worldClient, c);
 			
-			//Re-add previously deleted entities if they were removed.
-			if (!WDL.canSaveEntities) {
-				for (Entity e : allEntities) {
-					c.addEntity(e);
-				}
+			// Return entities to the previous state.
+			for (Entity e : removedEntities) {
+				c.addEntity(e);
+			}
+			for (Entity e : addedEntities) {
+				c.removeEntity(e);
 			}
 		} catch (Exception e) {
 			// Better tell the player that something didn't work:

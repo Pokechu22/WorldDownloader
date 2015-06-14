@@ -284,10 +284,8 @@ public class WorldClient extends World {
 		Entity var2 = (Entity) this.entitiesById.removeObject(p_73028_1_);
 
 		/* WDL >>> */
-		if (wdl.WDL.shouldKeepEntity(var2)) {
-			return null;
-			/* <<< WDL */
-		}
+		wdl.WDL.onRemoveEntityFromWorld(var2);
+		/* <<< WDL */
 
 		if (var2 != null) {
 			this.entityList.remove(var2);
