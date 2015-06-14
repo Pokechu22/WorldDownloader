@@ -190,7 +190,7 @@ public class WDL {
 	 * from the old version when {@linkplain #importTileEntities(Chunk) saving}.
 	 */
 	public static HashMap<BlockPos, TileEntity> newTileEntities = new HashMap<BlockPos, TileEntity>();
-
+	
 	/**
 	 * All of the {@link MapData}s that were sent to the client in the current
 	 * world.
@@ -940,9 +940,7 @@ public class WDL {
 			if (entity != null) {
 				int threshold;
 
-				if (entity instanceof EntityPlayer) {
-					threshold = 512;
-				} else if ((entity instanceof EntityFishHook)
+				if ((entity instanceof EntityFishHook)
 						|| (entity instanceof EntityArrow)
 						|| (entity instanceof EntitySmallFireball)
 						|| (entity instanceof EntityFireball)
@@ -975,7 +973,7 @@ public class WDL {
 					WDL.chatDebug(WDLDebugMessageCause.REMOVE_ENTITY,
 							"removeEntityFromWorld: Allowing removal of "
 									+ EntityList.getEntityString(entity));
-					return true;
+					return false;
 				}
 
 				double distance = entity.getDistance(WDL.thePlayer.posX,
