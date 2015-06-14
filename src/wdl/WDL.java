@@ -1344,6 +1344,8 @@ public class WDL {
 								"Saving chunk at " + c.xPosition + ", " +
 										c.zPosition, currentChunk);
 						
+						currentChunk++;
+						
 						saveChunk(c);
 					}
 				}
