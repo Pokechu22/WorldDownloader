@@ -989,6 +989,11 @@ public class WDL {
 							"removeEntityFromWorld: Saving "
 									+ EntityList.getEntityString(entity)
 									+ " at distance " + distance);
+					entity.chunkCoordX = MathHelper
+							.floor_double(entity.posX / 16.0D);
+					entity.chunkCoordZ = MathHelper
+							.floor_double(entity.posZ / 16.0D);
+					
 					newEntities.put(entity.getEntityId(), entity);
 					return;
 				}
@@ -1412,12 +1417,8 @@ public class WDL {
 				// TODO: This is probably inefficient (as we go through ALL
 				// entities that were loaded.
 				for (Entity e : newEntities.values()) {
-					//TODO: Cache these values.
-					int entityChunkX = MathHelper.floor_double(e.posX / 16.0D);
-					int entityChunkZ = MathHelper.floor_double(e.posZ / 16.0D);
-					
-					if (entityChunkX == c.xPosition &&
-							entityChunkZ == c.zPosition) {
+					if (e.chunkCoordX == c.xPosition &&
+							e.chunkCoordZ == c.zPosition) {
 						// Unkill the entity so that it doesn't despawn on
 						// world load.  Note that 'isDead' is a bad name, as
 						// it actually means "Delete this entity next tick",
