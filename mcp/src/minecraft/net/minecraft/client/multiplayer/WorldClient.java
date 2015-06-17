@@ -107,9 +107,9 @@ public class WorldClient extends World {
 		if (wdl.WDL.downloading) {
 			if (wdl.WDL.thePlayer.openContainer != wdl.WDL.windowContainer) {
 				if (wdl.WDL.thePlayer.openContainer == wdl.WDL.thePlayer.inventoryContainer) {
-					wdl.WDL.onItemGuiClosed();
+					wdl.WDLEvents.onItemGuiClosed();
 				} else {
-					wdl.WDL.onItemGuiOpened();
+					wdl.WDLEvents.onItemGuiOpened();
 				}
 
 				wdl.WDL.windowContainer = wdl.WDL.thePlayer.openContainer;
@@ -175,7 +175,7 @@ public class WorldClient extends World {
 		if (p_73025_3_) {
 			/* WDL >>> */
 			if (this != wdl.WDL.worldClient) {
-				wdl.WDL.onWorldLoad();
+				wdl.WDLEvents.onWorldLoad();
 				/* <<< WDL */
 			}
 
@@ -183,7 +183,7 @@ public class WorldClient extends World {
 		} else {
 			/* WDL >>> */
 			if (wdl.WDL.downloading) {
-				wdl.WDL.onChunkNoLongerNeeded(chunkProvider.provideChunk(
+				wdl.WDLEvents.onChunkNoLongerNeeded(chunkProvider.provideChunk(
 						p_73025_1_, p_73025_2_));
 				/* <<< WDL */
 			}
@@ -284,7 +284,7 @@ public class WorldClient extends World {
 		Entity var2 = (Entity) this.entitiesById.removeObject(p_73028_1_);
 
 		/* WDL >>> */
-		wdl.WDL.onRemoveEntityFromWorld(var2);
+		wdl.WDLEvents.onRemoveEntityFromWorld(var2);
 		/* <<< WDL */
 
 		if (var2 != null) {
@@ -507,7 +507,7 @@ public class WorldClient extends World {
 		super.addBlockEvent(pos, block, eventId, eventParam);
 
 		if (wdl.WDL.downloading) {
-			wdl.WDL.onBlockEvent(pos, block, eventId, eventParam);
+			wdl.WDLEvents.onBlockEvent(pos, block, eventId, eventParam);
 		}
 	}
 	/* <<< WDL */

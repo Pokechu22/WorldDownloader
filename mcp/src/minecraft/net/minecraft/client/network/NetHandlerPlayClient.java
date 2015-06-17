@@ -921,7 +921,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 	public void handleChat(S02PacketChat packetIn) {
 		/* WDL >>> */
 		String var2 = packetIn.func_148915_c().getFormattedText();
-		wdl.WDL.handleServerSeedMessage(var2);
+		wdl.WDLEvents.onChatMessage(var2);
 		/* <<< WDL */
 		PacketThreadUtil.func_180031_a(packetIn, this, this.gameController);
 
@@ -1549,7 +1549,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 			var2);
 		
 		/* WDL >>> */
-		wdl.WDL.onMapDataLoaded(packetIn.getMapId(), var2);
+		wdl.WDLEvents.onMapDataLoaded(packetIn.getMapId(), var2);
 		/* <<< WDL */
 	}
 
@@ -2039,7 +2039,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 		}
 		
 		/* WDL >>> */
-		wdl.WDL.onPluginChannelPacket(packetIn.getChannelName(), packetIn);
+		wdl.WDLEvents.onPluginChannelPacket(packetIn.getChannelName(), packetIn);
 		/* <<< WDL */
 	}
 

@@ -25,9 +25,7 @@ import org.apache.logging.log4j.Logger;
 
 import wdl.WorldBackup.WorldBackupType;
 
-import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBeacon;
@@ -46,52 +44,11 @@ import net.minecraft.client.multiplayer.ChunkProviderClient;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityHanging;
-import net.minecraft.entity.EntityList;
-import net.minecraft.entity.IMerchant;
-import net.minecraft.entity.boss.EntityDragon;
-import net.minecraft.entity.boss.EntityWither;
-import net.minecraft.entity.item.EntityArmorStand;
-import net.minecraft.entity.item.EntityBoat;
-import net.minecraft.entity.item.EntityEnderCrystal;
-import net.minecraft.entity.item.EntityEnderEye;
-import net.minecraft.entity.item.EntityEnderPearl;
-import net.minecraft.entity.item.EntityExpBottle;
-import net.minecraft.entity.item.EntityFallingBlock;
 import net.minecraft.entity.item.EntityFireworkRocket;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.item.EntityMinecart;
-import net.minecraft.entity.item.EntityMinecartChest;
-import net.minecraft.entity.item.EntityMinecartHopper;
 import net.minecraft.entity.item.EntityPainting;
-import net.minecraft.entity.item.EntityTNTPrimed;
-import net.minecraft.entity.item.EntityXPOrb;
-import net.minecraft.entity.passive.EntityBat;
-import net.minecraft.entity.passive.EntityHorse;
-import net.minecraft.entity.passive.EntitySquid;
-import net.minecraft.entity.passive.EntityVillager;
-import net.minecraft.entity.passive.IAnimals;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.entity.projectile.EntityEgg;
-import net.minecraft.entity.projectile.EntityFireball;
-import net.minecraft.entity.projectile.EntityFishHook;
-import net.minecraft.entity.projectile.EntityPotion;
-import net.minecraft.entity.projectile.EntitySmallFireball;
-import net.minecraft.entity.projectile.EntitySnowball;
-import net.minecraft.init.Blocks;
-import net.minecraft.inventory.AnimalChest;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ContainerBeacon;
-import net.minecraft.inventory.ContainerBrewingStand;
-import net.minecraft.inventory.ContainerChest;
-import net.minecraft.inventory.ContainerDispenser;
-import net.minecraft.inventory.ContainerFurnace;
-import net.minecraft.inventory.ContainerHopper;
-import net.minecraft.inventory.ContainerHorseInventory;
-import net.minecraft.inventory.ContainerMerchant;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryEnderChest;
 import net.minecraft.item.ItemMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
@@ -102,13 +59,11 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.client.C17PacketCustomPayload;
-import net.minecraft.network.play.server.S3FPacketCustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityBeacon;
 import net.minecraft.tileentity.TileEntityBrewingStand;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityDispenser;
-import net.minecraft.tileentity.TileEntityEnderChest;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.tileentity.TileEntityNote;
@@ -117,10 +72,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ClassInheratanceMultiMap;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.LongHashMap;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.village.MerchantRecipe;
-import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.MinecraftException;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.AnvilSaveConverter;
@@ -369,7 +321,7 @@ public class WDL {
 		}
 	}
 
-	private static void startSaveThread() {
+	static void startSaveThread() {
 		// Indicate that we are saving
 		WDL.chatMsg("Save started.");
 		WDL.saving = true;
@@ -378,35 +330,6 @@ public class WDL {
 		thread.start();
 	}
 
-	/**
-	 * Must be called after the static World object in Minecraft has been
-	 * replaced
-	 */
-	public static void onWorldLoad() {
-		if (minecraft.isIntegratedServerRunning()) {
-			return;
-		}
-		
-		if (worldLoadingDeferred) {
-			return;
-		}
-
-		// If already downloading
-		if (downloading) {
-			// If not currently saving, stop the current download and start
-			// saving now
-			if (!saving) {
-				WDL.chatMsg("World change detected. Download will start once current save completes.");
-				worldLoadingDeferred = true;
-				startSaveThread();
-			}
-
-			return;
-		}
-		
-		loadWorld();
-	}
-	
 	/**
 	 * Sends the packets that enable all of WDL's plugin channel support. <br/>
 	 * Current packets:
@@ -557,454 +480,6 @@ public class WDL {
 		}
 
 		WDL.chatMsg("Save complete. Your single player file is ready to play!");
-	}
-
-	/** Must be called when a chunk is no longer needed and should be removed */
-	public static void onChunkNoLongerNeeded(Chunk unneededChunk) {
-		if (!canDownloadInGeneral) { return; }
-		
-		if (unneededChunk == null) {
-			return;
-		}
-
-		if (canCacheChunks) {
-			chatDebug(WDLDebugMessageCause.ON_CHUNK_NO_LONGER_NEEDED,
-					"onChunkNoLongerNeeded: " + unneededChunk.xPosition + ", "
-							+ unneededChunk.zPosition);
-			saveChunk(unneededChunk);
-		} else {
-			chatDebug(WDLDebugMessageCause.ON_CHUNK_NO_LONGER_NEEDED,
-					"onChunkNoLongerNeeded cannot save chunk at " +
-					unneededChunk.xPosition + ", " + unneededChunk.zPosition
-					+ " due to server restrictions!");
-		}
-	}
-
-	/**
-	 * Must be called when a GUI that receives item stacks from the server is
-	 * shown
-	 */
-	public static void onItemGuiOpened() {
-		if (minecraft.objectMouseOver == null) {
-			return;
-		}
-
-		if (minecraft.objectMouseOver.typeOfHit == MovingObjectType.ENTITY) {
-			lastEntity = minecraft.objectMouseOver.entityHit;
-		} else {
-			lastEntity = null;
-			// func_178782_a returns a BlockPos; find another one
-			// if it is reobfuscated.
-			lastClickedBlock = minecraft.objectMouseOver.func_178782_a();
-		}
-	}
-
-	/**
-	 * Must be called when a GUI that triggered an onItemGuiOpened is no longer
-	 * shown
-	 */
-	public static void onItemGuiClosed() {
-		if (!canDownloadInGeneral) { return; }
-		
-		String saveName = "";
-
-		if (thePlayer.ridingEntity != null &&
-				thePlayer.ridingEntity instanceof EntityHorse) {
-			//If the player is on a horse, check if they are opening the
-			//inventory of the horse they are on.  If so, use that,
-			//rather than the entity being looked at.
-			if (windowContainer instanceof ContainerHorseInventory) {
-				EntityHorse horseInContainer = (EntityHorse)
-						stealAndGetField(windowContainer, EntityHorse.class);
-
-				//Intentional reference equals
-				if (horseInContainer == thePlayer.ridingEntity) {
-					if (!canSaveEntities) {
-						WDL.chatDebug(WDLDebugMessageCause.ON_GUI_CLOSED_INFO,
-								"Server configuration forbids saving of Entities!");
-						return;
-					}
-					
-					EntityHorse entityHorse = (EntityHorse)
-							thePlayer.ridingEntity;
-					//Resize the horse's chest.  Needed because... reasons.
-					//Apparently the saved horse has the wrong size by
-					//default.
-					//Based off of EntityHorse.func_110226_cD (in 1.8).
-					AnimalChest horseChest = new AnimalChest("HorseChest",
-							(entityHorse.isChested() &&
-									(entityHorse.getHorseType() == 1 ||
-											entityHorse.getHorseType() == 2)) ? 17 : 2);
-					//func_110133_a sets the custom name -- if changed look
-					//for one that sets hasCustomName to true and gives
-					//inventoryTitle the value of the parameter.
-					horseChest.func_110133_a(entityHorse.getName());
-					saveContainerItems(windowContainer, horseChest, 0);
-					//I don't even know what this does, but it's part of the
-					//other method...
-					horseChest.func_110134_a(entityHorse);
-					//Save the actual data value to the other horse.
-					stealAndSetField(entityHorse, AnimalChest.class, horseChest);
-					WDL.chatDebug(WDLDebugMessageCause.ON_GUI_CLOSED_INFO,
-							"Saved ridden horse inventory.");
-					return;
-				}
-			}
-		}
-
-		// If the last thing clicked was an ENTITY
-		if (lastEntity != null) {
-			if (!canSaveEntities) {
-				WDL.chatDebug(WDLDebugMessageCause.ON_GUI_CLOSED_INFO,
-						"Server configuration forbids saving of Entities!");
-				return;
-			}
-			
-			if (lastEntity instanceof EntityMinecartChest
-					&& windowContainer instanceof ContainerChest) {
-				EntityMinecartChest emcc = (EntityMinecartChest) lastEntity;
-
-				for (int i = 0; i < emcc.getSizeInventory(); i++) {
-					emcc.setInventorySlotContents(i, windowContainer
-							.getSlot(i).getStack());
-					saveName = "Storage Minecart contents";
-				}
-			} else if (lastEntity instanceof EntityMinecartHopper
-					&& windowContainer instanceof ContainerHopper) {
-				EntityMinecartHopper emch = (EntityMinecartHopper) lastEntity;
-
-				for (int i = 0; i < emch.getSizeInventory(); i++) {
-					emch.setInventorySlotContents(i, windowContainer
-							.getSlot(i).getStack());
-					saveName = "Hopper Minecart contents";
-				}
-			} else if (lastEntity instanceof EntityVillager
-					&& windowContainer instanceof ContainerMerchant) {
-				EntityVillager ev = (EntityVillager) lastEntity;
-				MerchantRecipeList list = ((IMerchant)stealAndGetField(
-						windowContainer, IMerchant.class)).getRecipes(
-								thePlayer);
-				stealAndSetField(ev, MerchantRecipeList.class, list);
-				saveName = "Villager offers";
-			} else if (lastEntity instanceof EntityHorse
-					&& windowContainer instanceof ContainerHorseInventory) {
-				EntityHorse entityHorse = (EntityHorse)lastEntity;
-				//Resize the horse's chest.  Needed because... reasons.
-				//Apparently the saved horse has the wrong size by
-				//default.
-				//Based off of EntityHorse.func_110226_cD (in 1.8).
-				AnimalChest horseChest = new AnimalChest("HorseChest",
-						(entityHorse.isChested() &&
-								(entityHorse.getHorseType() == 1 ||
-										entityHorse.getHorseType() == 2)) ? 17 : 2);
-				//func_110133_a sets the custom name -- if changed look
-				//for one that sets hasCustomName to true and gives
-				//inventoryTitle the value of the parameter.
-				horseChest.func_110133_a(entityHorse.getName());
-				saveContainerItems(windowContainer, horseChest, 0);
-				//I don't even know what this does, but it's part of the
-				//other method...
-				horseChest.func_110134_a(entityHorse);
-				//Save the actual data value to the other horse.
-				stealAndSetField(entityHorse, AnimalChest.class, horseChest);
-				saveName = "Horse Chest";
-			} else {
-				WDL.chatMsg("Unsupported entity cannot be saved:"
-						+ EntityList.getEntityString(lastEntity));
-			}
-
-			WDL.chatDebug(WDLDebugMessageCause.ON_GUI_CLOSED_INFO, "Saved "
-					+ saveName + ".");
-			return;
-		}
-		
-		// Else, the last thing clicked was a TILE ENTITY
-		if (!canSaveTileEntities || !canSaveContainers) {
-			WDL.chatDebug(WDLDebugMessageCause.ON_GUI_CLOSED_INFO,
-					"Server configuration forbids saving of TileEntities!");
-			return;
-		}
-		
-		// Get the tile entity which we are going to update the inventory for
-		TileEntity te = worldClient.getTileEntity(lastClickedBlock);
-
-		if (te == null) {
-			WDL.chatDebug(WDLDebugMessageCause.ON_GUI_CLOSED_WARNING,
-					"onItemGuiClosed could not get TE at " + lastClickedBlock);
-			return;
-		}
-
-		if (windowContainer instanceof ContainerChest
-				&& te instanceof TileEntityChest) {
-			if (windowContainer.inventorySlots.size() > 63) {
-				TileEntity te2;
-				BlockPos chestPos1 = lastClickedBlock;
-				BlockPos chestPos2;
-				TileEntityChest tec1, tec2;
-
-				if ((te2 = worldClient.getTileEntity(chestPos1.add(0, 0, 1))) instanceof TileEntityChest
-						&& ((TileEntityChest) te2).getChestType() == ((TileEntityChest) te)
-						.getChestType()) {
-					tec1 = (TileEntityChest) te;
-					tec2 = (TileEntityChest) te2;
-					chestPos2 = chestPos1.add(0, 0, 1);
-				} else if ((te2 = worldClient.getTileEntity(chestPos1.add(0, 0,
-						-1))) instanceof TileEntityChest
-						&& ((TileEntityChest) te2).getChestType() == ((TileEntityChest) te)
-						.getChestType()) {
-					tec1 = (TileEntityChest) te2;
-					tec2 = (TileEntityChest) te;
-					chestPos2 = chestPos1.add(0, 0, -1);
-				} else if ((te2 = worldClient.getTileEntity(chestPos1.add(1, 0,
-						0))) instanceof TileEntityChest
-						&& ((TileEntityChest) te2).getChestType() == ((TileEntityChest) te)
-						.getChestType()) {
-					tec1 = (TileEntityChest) te;
-					tec2 = (TileEntityChest) te2;
-					chestPos2 = chestPos1.add(-1, 0, 0);
-				} else if ((te2 = worldClient.getTileEntity(chestPos1.add(-1,
-						0, 0))) instanceof TileEntityChest
-						&& ((TileEntityChest) te2).getChestType() == ((TileEntityChest) te)
-						.getChestType()) {
-					tec1 = (TileEntityChest) te2;
-					tec2 = (TileEntityChest) te;
-					chestPos2 = chestPos1.add(-1, 0, 0);
-				} else {
-					WDL.chatMsg("Could not save this chest!");
-					return;
-				}
-
-				saveContainerItems(windowContainer, tec1, 0);
-				saveContainerItems(windowContainer, tec2, 27);
-				newTileEntities.put(chestPos1, tec1);
-				newTileEntities.put(chestPos2, tec2);
-				saveName = "Double Chest contents";
-			}
-			// basic chest
-			else {
-				saveContainerItems(windowContainer, (TileEntityChest) te, 0);
-				newTileEntities.put(lastClickedBlock, te);
-				saveName = "Chest contents";
-			}
-		} else if (windowContainer instanceof ContainerChest
-				&& te instanceof TileEntityEnderChest) {
-			InventoryEnderChest inventoryEnderChest = thePlayer
-					.getInventoryEnderChest();
-			int inventorySize = inventoryEnderChest.getSizeInventory();
-			int containerSize = windowContainer.inventorySlots.size();
-
-			for (int i = 0; i < containerSize && i < inventorySize; i++) {
-				inventoryEnderChest.setInventorySlotContents(i, windowContainer
-						.getSlot(i).getStack());
-			}
-
-			saveName = "Ender Chest contents";
-		} else if (windowContainer instanceof ContainerBrewingStand) {
-			IInventory brewingInventory = (IInventory) stealAndGetField(
-					windowContainer, IInventory.class);
-			saveContainerItems(windowContainer, (TileEntityBrewingStand) te, 0);
-			saveInventoryFields(brewingInventory, (TileEntityBrewingStand) te);
-			newTileEntities.put(lastClickedBlock, te);
-			saveName = "Brewing Stand contents";
-		} else if (windowContainer instanceof ContainerDispenser) {
-			saveContainerItems(windowContainer, (TileEntityDispenser) te, 0);
-			newTileEntities.put(lastClickedBlock, te);
-			saveName = "Dispenser contents";
-		} else if (windowContainer instanceof ContainerFurnace) {
-			IInventory furnaceInventory = (IInventory) stealAndGetField(
-					windowContainer, IInventory.class);
-			saveContainerItems(windowContainer, (TileEntityFurnace) te, 0);
-			saveInventoryFields(furnaceInventory, (TileEntityFurnace) te);
-			newTileEntities.put(lastClickedBlock, te);
-			saveName = "Furnace contents";
-		} else if (windowContainer instanceof ContainerHopper) {
-			saveContainerItems(windowContainer, (TileEntityHopper) te, 0);
-			newTileEntities.put(lastClickedBlock, te);
-			saveName = "Hopper contents";
-		} else if (windowContainer instanceof ContainerBeacon) {
-			//func_180611_e returns the beacon's IInventory tileBeacon.
-			IInventory beaconInventory =
-				((ContainerBeacon)windowContainer).func_180611_e();
-			TileEntityBeacon savedBeacon = (TileEntityBeacon)te;
-			saveContainerItems(windowContainer, savedBeacon, 0);
-			saveInventoryFields(beaconInventory, savedBeacon);
-			newTileEntities.put(lastClickedBlock, te);
-			saveName = "Beacon effects";
-		} else {
-			WDL.chatDebug(WDLDebugMessageCause.ON_GUI_CLOSED_WARNING,
-					"onItemGuiClosed unhandled TE: " + te);
-			return;
-		}
-
-		WDL.chatDebug(WDLDebugMessageCause.ON_GUI_CLOSED_INFO, "Saved "
-				+ saveName + ".");
-		return;
-	}
-
-	/**
-	 * Must be called when a block event is scheduled for the next tick. The
-	 * caller has to check if WDL.downloading is true!
-	 */
-	public static void onBlockEvent(BlockPos pos, Block block, int event,
-			int param) {
-		if (!canSaveTileEntities) {
-			return;
-		}
-		if (block == Blocks.noteblock) {
-			TileEntityNote newTE = new TileEntityNote();
-			newTE.note = (byte)(param % 25);
-			worldClient.setTileEntity(pos, newTE);
-			newTileEntities.put(pos, newTE);
-			chatDebug(WDLDebugMessageCause.ON_BLOCK_EVENT,
-					"onBlockEvent: Note Block: " + pos + " pitch: " + param
-							+ " - " + newTE);
-		}
-	}
-	
-	/**
-	 * Must be called when Packet 0x34 (map data) is received, regardless
-	 * of whether a download is currently occurring.
-	 */
-	public static void onMapDataLoaded(int mapID, 
-			MapData mapData) {
-		if (!WDL.canSaveEntities) {
-			//TODO: Is 'canSaveEntities' the right one to check?
-			return;
-		}
-		
-		newMapDatas.put(mapID, mapData);
-		
-		chatDebug(WDLDebugMessageCause.ON_MAP_SAVED,
-				"onMapDataLoaded: Saved map " + mapID + ".");
-	}
-
-	/**
-	 * Must be called whenever a {@link S3FPacketCustomPayload} is
-	 * received by the client.
-	 */
-	public static void onPluginChannelPacket(String channel,
-			S3FPacketCustomPayload packet) {
-		if ("WDL|CONTROL".equals(channel)) {
-			ByteArrayDataInput input = ByteStreams.newDataInput(packet
-					.getBufferData().array());
-
-			int section = input.readInt();
-
-			switch (section) {
-			case 1: 
-				canDownloadInGeneral = input.readBoolean();
-				saveRadius = input.readInt();
-				canCacheChunks = input.readBoolean();
-				canSaveEntities = input.readBoolean();
-				canSaveTileEntities = input.readBoolean();
-				canSaveContainers = input.readBoolean();
-
-				chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
-						"Successfully loaded settings from the server!");
-
-				chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
-						"canDownloadInGeneral: " + canDownloadInGeneral);
-				chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
-						"saveRadius: " + saveRadius);
-				chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
-						"canCacheChunks: " + canCacheChunks);
-				chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
-						"canSaveEntities: " + canSaveEntities);
-				chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
-						"canSaveTileEntities: " + canSaveTileEntities);
-				chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
-						"canSaveContainers: " + canSaveContainers);
-				break;
-			default:
-				byte[] data = packet.getBufferData().array();
-				
-				StringBuilder messageBuilder = new StringBuilder();
-				for (byte b : data) {
-					messageBuilder.append(b).append(' ');
-				}
-				
-				chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE,
-						"Received unkown plugin channel message #" + 
-								section + ".");
-				logger.info(messageBuilder.toString());
-			}
-		}
-	}
-
-	/**
-	 * Must be called when an entity is about to be removed from the world.
-	 */
-	public static void onRemoveEntityFromWorld(Entity entity) {
-		// If the entity is being removed and it's outside the default tracking
-		// range, go ahead and remember it until the chunk is saved.
-		
-		// Proper tracking ranges can be found in EntityTracker#trackEntity
-		// (the one that takes an Entity as a paremeter) -- it's the 2nd arg
-		// given to addEntityToTracker.
-		if (WDL.downloading && WDL.canSaveEntities) {
-			if (entity != null) {
-				int threshold;
-
-				if ((entity instanceof EntityFishHook)
-						|| (entity instanceof EntityArrow)
-						|| (entity instanceof EntitySmallFireball)
-						|| (entity instanceof EntityFireball)
-						|| (entity instanceof EntitySnowball)
-						|| (entity instanceof EntityEnderPearl)
-						|| (entity instanceof EntityEnderEye)
-						|| (entity instanceof EntityEgg)
-						|| (entity instanceof EntityPotion)
-						|| (entity instanceof EntityExpBottle)
-//						|| (entity instanceof EntityFireworkRocket)
-						|| (entity instanceof EntityItem)
-						|| (entity instanceof EntitySquid)) {
-					threshold = 64;
-				} else if ((entity instanceof EntityMinecart)
-						|| (entity instanceof EntityBoat)
-						|| (entity instanceof EntityWither)
-						|| (entity instanceof EntityBat)
-						|| (entity instanceof IAnimals)) {
-					threshold = 80; 
-				} else if ((entity instanceof EntityDragon)
-						|| (entity instanceof EntityTNTPrimed)
-						|| (entity instanceof EntityFallingBlock)
-						|| (entity instanceof EntityHanging)
-						|| (entity instanceof EntityArmorStand)
-						|| (entity instanceof EntityXPOrb)) {
-					threshold = 160;
-				} else if (entity instanceof EntityEnderCrystal) {
-					threshold = 256;
-				} else {
-					WDL.chatDebug(WDLDebugMessageCause.REMOVE_ENTITY,
-							"removeEntityFromWorld: Allowing removal of "
-									+ EntityList.getEntityString(entity));
-					return;
-				}
-
-				double distance = entity.getDistance(WDL.thePlayer.posX,
-						entity.posY, WDL.thePlayer.posZ);
-
-				if (distance > threshold) {
-					WDL.chatDebug(WDLDebugMessageCause.REMOVE_ENTITY,
-							"removeEntityFromWorld: Saving "
-									+ EntityList.getEntityString(entity)
-									+ " at distance " + distance);
-					entity.chunkCoordX = MathHelper
-							.floor_double(entity.posX / 16.0D);
-					entity.chunkCoordZ = MathHelper
-							.floor_double(entity.posZ / 16.0D);
-					
-					newEntities.put(entity.getEntityId(), entity);
-					return;
-				}
-
-				WDL.chatDebug(
-						WDLDebugMessageCause.REMOVE_ENTITY,
-						"removeEntityFromWorld: Allowing removal of "
-								+ EntityList.getEntityString(entity)
-								+ " at distance " + distance);
-			}
-		}
 	}
 
 	/** Load the previously saved TileEntities and add them to the Chunk **/
@@ -1956,14 +1431,6 @@ public class WDL {
 				"WorldDownloader: Couldn't set Field of type \""
 				+ typeOfField + "\" from object \"" + object
 				+ "\" to " + value + "!", e);
-		}
-	}
-
-	public static void handleServerSeedMessage(String msg) {
-		if (downloading && msg.startsWith("Seed: ")) {
-			String seed = msg.substring(6);
-			worldProps.setProperty("RandomSeed", seed);
-			WDL.chatMsg("Setting single-player world seed to " + seed);
 		}
 	}
 
