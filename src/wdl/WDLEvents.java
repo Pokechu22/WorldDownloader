@@ -101,13 +101,13 @@ public class WDLEvents {
 
 	/** Must be called when a chunk is no longer needed and should be removed */
 	public static void onChunkNoLongerNeeded(Chunk unneededChunk) {
-		if (!WDL.canDownloadInGeneral) { return; }
+		if (!WDLPluginChannels.canDownloadInGeneral()) { return; }
 
 		if (unneededChunk == null) {
 			return;
 		}
 
-		if (WDL.canCacheChunks) {
+		if (WDLPluginChannels.canSaveChunk(unneededChunk)) {
 			WDL.chatDebug(WDLDebugMessageCause.ON_CHUNK_NO_LONGER_NEEDED,
 					"onChunkNoLongerNeeded: " + unneededChunk.xPosition + ", "
 							+ unneededChunk.zPosition);
@@ -144,7 +144,7 @@ public class WDLEvents {
 	 * shown
 	 */
 	public static void onItemGuiClosed() {
-		if (!WDL.canDownloadInGeneral) { return; }
+		if (!WDLPluginChannels.canDownloadInGeneral()) { return; }
 
 		String saveName = "";
 
@@ -159,7 +159,7 @@ public class WDLEvents {
 
 				//Intentional reference equals
 				if (horseInContainer == WDL.thePlayer.ridingEntity) {
-					if (!WDL.canSaveEntities) {
+					if (!WDLPluginChannels.canSaveEntities()) {
 						WDL.chatDebug(WDLDebugMessageCause.ON_GUI_CLOSED_INFO,
 								"Server configuration forbids saving of Entities!");
 						return;
@@ -194,7 +194,7 @@ public class WDLEvents {
 
 		// If the last thing clicked was an ENTITY
 		if (WDL.lastEntity != null) {
-			if (!WDL.canSaveEntities) {
+			if (!WDLPluginChannels.canSaveEntities()) {
 				WDL.chatDebug(WDLDebugMessageCause.ON_GUI_CLOSED_INFO,
 						"Server configuration forbids saving of Entities!");
 				return;
@@ -259,7 +259,7 @@ public class WDLEvents {
 		}
 
 		// Else, the last thing clicked was a TILE ENTITY
-		if (!WDL.canSaveTileEntities || !WDL.canSaveContainers) {
+		if (!WDLPluginChannels.canSaveContainers()) {
 			WDL.chatDebug(WDLDebugMessageCause.ON_GUI_CLOSED_INFO,
 					"Server configuration forbids saving of TileEntities!");
 			return;
@@ -387,7 +387,7 @@ public class WDLEvents {
 	 */
 	public static void onBlockEvent(BlockPos pos, Block block, int event,
 			int param) {
-		if (!WDL.canSaveTileEntities) {
+		if (!WDLPluginChannels.canSaveTileEntities()) {
 			return;
 		}
 		if (block == Blocks.noteblock) {
@@ -407,8 +407,7 @@ public class WDLEvents {
 	 */
 	public static void onMapDataLoaded(int mapID, 
 			MapData mapData) {
-		if (!WDL.canSaveEntities) {
-			//TODO: Is 'canSaveEntities' the right one to check?
+		if (!WDLPluginChannels.canSaveMaps()) {
 			return;
 		}
 
@@ -424,51 +423,7 @@ public class WDLEvents {
 	 */
 	public static void onPluginChannelPacket(String channel,
 			S3FPacketCustomPayload packet) {
-		if ("WDL|CONTROL".equals(channel)) {
-			ByteArrayDataInput input = ByteStreams.newDataInput(packet
-					.getBufferData().array());
-
-			int section = input.readInt();
-
-			switch (section) {
-			case 1: 
-				WDL.canDownloadInGeneral = input.readBoolean();
-				WDL.saveRadius = input.readInt();
-				WDL.canCacheChunks = input.readBoolean();
-				WDL.canSaveEntities = input.readBoolean();
-				WDL.canSaveTileEntities = input.readBoolean();
-				WDL.canSaveContainers = input.readBoolean();
-
-				WDL.chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
-						"Successfully loaded settings from the server!");
-
-				WDL.chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
-						"canDownloadInGeneral: " + WDL.canDownloadInGeneral);
-				WDL.chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
-						"saveRadius: " + WDL.saveRadius);
-				WDL.chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
-						"canCacheChunks: " + WDL.canCacheChunks);
-				WDL.chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
-						"canSaveEntities: " + WDL.canSaveEntities);
-				WDL.chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
-						"canSaveTileEntities: " + WDL.canSaveTileEntities);
-				WDL.chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
-						"canSaveContainers: " + WDL.canSaveContainers);
-				break;
-			default:
-				byte[] data = packet.getBufferData().array();
-
-				StringBuilder messageBuilder = new StringBuilder();
-				for (byte b : data) {
-					messageBuilder.append(b).append(' ');
-				}
-
-				WDL.chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE,
-						"Received unkown plugin channel message #" + 
-								section + ".");
-				logger.info(messageBuilder.toString());
-			}
-		}
+		WDLPluginChannels.onPluginChannelPacket(channel, packet);
 	}
 
 	/**
@@ -481,7 +436,7 @@ public class WDLEvents {
 		// Proper tracking ranges can be found in EntityTracker#trackEntity
 		// (the one that takes an Entity as a paremeter) -- it's the 2nd arg
 		// given to addEntityToTracker.
-		if (WDL.downloading && WDL.canSaveEntities) {
+		if (WDL.downloading && WDLPluginChannels.canSaveEntities()) {
 			if (entity != null) {
 				int threshold;
 

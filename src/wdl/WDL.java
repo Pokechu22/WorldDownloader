@@ -201,42 +201,6 @@ public class WDL {
 	public static Properties worldProps;
 	public static Properties defaultProps;
 	
-	// Server-granted settings: 
-	/**
-	 * Whether all players are allowed to download the world in general.
-	 * If false, they aren't allowed, regardless of the other values below.
-	 */
-	public static boolean canDownloadInGeneral = true;
-	/**
-	 * The distance from a player that WDL can save chunks.
-	 * 
-	 * This is only used when {@link #canCacheChunks} is false. 
-	 */
-	public static int saveRadius = 64;
-	/**
-	 * Whether a player can cache chunks as they move.  In essence, this means
-	 * that if the value is true, the player can download the entire map while
-	 * moving about, but if false, the player will only save the nearby chunks
-	 * when they stop download.
-	 */
-	public static boolean canCacheChunks = true;
-	/**
-	 * Whether or not a player can save entities in the map.
-	 */
-	public static boolean canSaveEntities = true;
-	/**
-	 * Whether or not a player can save TileEntities in general.
-	 * <br/>
-	 * Chests and other containers also require {@link #canSaveContainers}. 
-	 */
-	public static boolean canSaveTileEntities = true;
-	/**
-	 * Whether a player can save containers that require opening to save their
-	 * contents, such as chests.  For this value to have meaning, the value of
-	 * {@link #canSaveTileEntities} must also be true.  
-	 */
-	public static boolean canSaveContainers = true;
-
 	// Initialization:
 	static {
 		minecraft = Minecraft.getMinecraft();
@@ -330,78 +294,8 @@ public class WDL {
 		thread.start();
 	}
 
-	/**
-	 * Sends the packets that enable all of WDL's plugin channel support. <br/>
-	 * Current packets:
-	 * <table>
-	 * <tr>
-	 * <th>Channel</th>
-	 * <th>Direction</th>
-	 * <th>Purpose</th>
-	 * <th>Contents</th>
-	 * </tr>
-	 * <tr>
-	 * <td><code>WDL|INIT</code></td>
-	 * <td>Client&nbsp;&#8594;&nbsp;Server</td>
-	 * <td>Tells the server that the client runs WDL and that it should send
-	 * WDL-specific settings. Server should respond with a
-	 * <code>WDL|CONTROL</code> packet. Until a response, assume the most
-	 * permissive options.</td>
-	 * <td>There is no payload -- should be 0 bytes.</td>
-	 * </tr>
-	 * <tr>
-	 * <td><code>WDL|CONTROL</code></td>
-	 * <td>Server&nbsp;&#8594;&nbsp;Client</td>
-	 * <td>Updates the client's settings.</td>
-	 * <td>
-	 * The following sequence (in {@link ByteArrayDataOutput} format):
-	 * <ol>
-	 * <li>an <code>int</code>: The version of the packet -- should be
-	 * <code>1</code> for now. If it's higher, tell the player to update and
-	 * disable all features.</li>
-	 * <li>a <code>boolean</code>: If false, all of WDL should be disabled.</li>
-	 * <li>an <code>int</code>: The "save distance".</li>
-	 * <li>a <code>boolean</code>: Whether or not the client can cache chunks as
-	 * they move. If false, only the nearby chunks can be saved when download
-	 * stops.</li>
-	 * <li>a <code>boolean</code>: Whether or not WDL can save entities.</li>
-	 * <li>a <code>boolean</code>: Whether or not WDL can save tile entities in
-	 * general -- both noncontainers such as signs and containers such as
-	 * chests.</li>
-	 * <li>a <code>boolean</code>: Whether or not WDL can save containers. The
-	 * previous value must be true as well.
-	 * </ol>
-	 * </td>
-	 * </tr>
-	 * </table>
-	 */
 	private static void initPluginChannels() {
-		// Set the default values, in case the server never responds.
-		canDownloadInGeneral = true;
-		saveRadius = 64;
-		canCacheChunks = true;
-		canSaveEntities = true;
-		canSaveTileEntities = true;
-		canSaveContainers = true;
 		
-		chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE,
-				"Sending plugin channels registration to the server.");
-		
-		// Register the WDL messages.
-		PacketBuffer registerPacketBuffer = new PacketBuffer(Unpooled.buffer());
-		// Done like this because "buffer.writeString" doesn't do the propper
-		// null-terminated strings.
-		registerPacketBuffer.writeBytes(new byte[] {
-				'W', 'D', 'L', '|', 'I', 'N', 'I', 'T', '\0',
-				'W', 'D', 'L', '|', 'C', 'O', 'N', 'T', 'R', 'O', 'L', '\0' });
-		C17PacketCustomPayload registerPacket = new C17PacketCustomPayload(
-				"REGISTER", registerPacketBuffer);
-		minecraft.getNetHandler().addToSendQueue(registerPacket);
-
-		// Send the init message.
-		C17PacketCustomPayload initPacket = new C17PacketCustomPayload(
-				"WDL|INIT", new PacketBuffer(Unpooled.EMPTY_BUFFER));
-		minecraft.getNetHandler().addToSendQueue(initPacket);
 	}
 
 	public static void loadWorld() {
@@ -409,7 +303,7 @@ public class WDL {
 			return;
 		}
 		
-		initPluginChannels();
+		WDLEvents.onWorldLoad();
 		
 		worldName = ""; // The new (multi-)world name is unknown at the moment
 		worldClient = minecraft.theWorld;
@@ -585,7 +479,7 @@ public class WDL {
 	 * when stopping.
 	 */
 	public static void saveEverything() throws Exception {
-		if (!WDL.canDownloadInGeneral) {
+		if (!WDLPluginChannels.canDownloadInGeneral()) {
 			chatError("The server forbids downloading!");
 		}
 		
@@ -664,7 +558,7 @@ public class WDL {
 	 */
 	public static void savePlayer(NBTTagCompound playerNBT, 
 			GuiWDLSaveProgress progressScreen) {
-		if (!WDL.canDownloadInGeneral) { return; }
+		if (!WDLPluginChannels.canDownloadInGeneral()) { return; }
 		
 		chatDebug(WDLDebugMessageCause.SAVING, "Saving player data...");
 		progressScreen.setMinorTaskProgress("Writing player data", 2);
@@ -697,7 +591,7 @@ public class WDL {
 	 */
 	public static void saveWorldInfo(NBTTagCompound worldInfoNBT,
 			GuiWDLSaveProgress progressScreen) {
-		if (!WDL.canDownloadInGeneral) { return; }
+		if (!WDLPluginChannels.canDownloadInGeneral()) { return; }
 		
 		chatDebug(WDLDebugMessageCause.SAVING, "Saving world metadata...");
 		progressScreen.setMinorTaskProgress("Writing world data", 3);
@@ -743,7 +637,7 @@ public class WDL {
 	 */
 	public static void saveChunks(GuiWDLSaveProgress progressScreen)
 			throws IllegalArgumentException, IllegalAccessException {
-		if (!WDL.canDownloadInGeneral) { return; }
+		if (!WDLPluginChannels.canDownloadInGeneral()) { return; }
 		
 		chatDebug(WDLDebugMessageCause.SAVING, "Saving chunks...");
 		
@@ -813,22 +707,16 @@ public class WDL {
 					Chunk c = (Chunk) valueField.get(lhme);
 
 					if (c != null) {
+						currentChunk++;
+						
 						//Serverside restrictions check
-						if (!canCacheChunks && saveRadius >= 0) {
-							int distanceX = c.xPosition - thePlayer.chunkCoordX;
-							int distanceZ = c.zPosition - thePlayer.chunkCoordZ;
-							
-							if (Math.abs(distanceX) > saveRadius ||
-									Math.abs(distanceZ) > saveRadius) {
-								continue;
-							}
+						if (!WDLPluginChannels.canSaveChunk(c)) {
+							continue;
 						}
 						
 						progressScreen.setMinorTaskProgress(
 								"Saving chunk at " + c.xPosition + ", " +
 										c.zPosition, currentChunk);
-						
-						currentChunk++;
 						
 						saveChunk(c);
 					}
@@ -843,9 +731,9 @@ public class WDL {
 	 * Import all non-overwritten TileEntities, then save the chunk
 	 */
 	public static void saveChunk(Chunk c) {
-		if (!WDL.canDownloadInGeneral) { return; }
+		if (!WDLPluginChannels.canDownloadInGeneral()) { return; }
 		
-		if (!WDL.canSaveTileEntities) {
+		if (!WDLPluginChannels.canDownloadInGeneral()) {
 			c.getTileEntityMap().clear();
 		}
 		
@@ -858,7 +746,7 @@ public class WDL {
 			// Entities to remove after chunk saving that were previously added.
 			List<Entity> addedEntities = new ArrayList<Entity>();
 			
-			if (!WDL.canSaveEntities) {
+			if (!WDLPluginChannels.canSaveEntities()) {
 				// Temporarily delete entities if saving them is disabled.
 				for (Iterable<Entity> entityList : c.getEntityLists()) {
 					for (Entity e : entityList) {
@@ -1181,7 +1069,7 @@ public class WDL {
 	 * TODO: Overwrite / create IDCounts.dat.
 	 */
 	public static void saveMapData(GuiWDLSaveProgress progressScreen) {
-		if (!canSaveEntities || !canDownloadInGeneral) { return; }
+		if (!WDLPluginChannels.canSaveMaps()) { return; }
 		
 		File dataDirectory = new File(saveHandler.getWorldDirectory(),
 				"data");
@@ -1466,13 +1354,13 @@ public class WDL {
 				insertAtYPos, 170, 20, "WDL bug!");
 		GuiButton wdlOptions = new GuiButton(0x57444C6F, gui.width / 2 + 71,
 				insertAtYPos, 28, 20, "...");
-		wdlDownload.displayString = (WDL.canDownloadInGeneral ? (WDL.downloading ? (WDL.saving ? "Still saving..."
+		wdlDownload.displayString = (WDLPluginChannels.canDownloadInGeneral() ? (WDL.downloading ? (WDL.saving ? "Still saving..."
 				: "Stop download")
 				: "Download this world")
 				: "§cDownload blocked by server");
-		wdlDownload.enabled = (WDL.canDownloadInGeneral
+		wdlDownload.enabled = (WDLPluginChannels.canDownloadInGeneral()
 				&& (!WDL.downloading || (WDL.downloading && !WDL.saving)));
-		wdlOptions.enabled = (WDL.canDownloadInGeneral
+		wdlOptions.enabled = (WDLPluginChannels.canDownloadInGeneral()
 				&& (!WDL.downloading || (WDL.downloading && !WDL.saving)));
 		buttonList.add(wdlDownload);
 		buttonList.add(wdlOptions);
@@ -1484,7 +1372,7 @@ public class WDL {
 		}
 
 		if (button.id == 0x57444C73) { // "Start/Stop Download"
-			if (!canDownloadInGeneral) {
+			if (!WDLPluginChannels.canDownloadInGeneral()) {
 				button.enabled = false;
 				return;
 			}
@@ -1494,7 +1382,7 @@ public class WDL {
 				WDL.start();
 			}
 		} else if (button.id == 0x57444C6F) { // "..." (options)
-			if (!canDownloadInGeneral) {
+			if (!WDLPluginChannels.canDownloadInGeneral()) {
 				button.enabled = false;
 				return;
 			}
