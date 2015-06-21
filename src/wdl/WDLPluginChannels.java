@@ -1,5 +1,7 @@
 package wdl;
 
+import java.util.HashSet;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -71,6 +73,16 @@ public class WDLPluginChannels {
 	private static Logger logger = LogManager.getLogger();
 	
 	/**
+	 * Packets that have been received.
+	 */
+	private static HashSet<Integer> receivedPackets;
+	
+	/**
+	 * Whether functions that the server is not aware of can be used.
+	 * (Packet #0)
+	 */
+	private static boolean canUseFunctionsUnknownToServer = true;
+	/**
 	 * Whether all players are allowed to download the world in general.
 	 * If false, they aren't allowed, regardless of the other values below.
 	 */
@@ -106,57 +118,108 @@ public class WDLPluginChannels {
 	private static boolean canSaveContainers = true;
 	
 	/**
+	 * Checks whether players can use functions unknown to the server.
+	 */
+	public static boolean canUseFunctionsUnknownToServer() {
+		if (receivedPackets.contains(0)) {
+			return canUseFunctionsUnknownToServer;
+		} else {
+			return true;
+		}
+	}
+	
+	/**
 	 * Checks whether players are allowed to download in general.
 	 */
 	public static boolean canDownloadInGeneral() {
-		return canDownloadInGeneral;
+		if (receivedPackets.contains(1)) {
+			return canDownloadInGeneral;
+		} else {
+			return canUseFunctionsUnknownToServer();
+		}
 	}
 	/**
 	 * Checks if a chunk is within the saveRadius 
 	 * (and chunk caching is disabled).
 	 */
 	public static boolean canSaveChunk(Chunk chunk) {
-		if (!canDownloadInGeneral) {
+		if (!canDownloadInGeneral()) {
 			return false;
 		}
 		
-		if (!canCacheChunks && saveRadius >= 0) {
-			int distanceX = chunk.xPosition - WDL.thePlayer.chunkCoordX;
-			int distanceZ = chunk.zPosition - WDL.thePlayer.chunkCoordZ;
-			
-			if (Math.abs(distanceX) > saveRadius ||
-					Math.abs(distanceZ) > saveRadius) {
-				return false;
+		if (receivedPackets.contains(1)) {
+			if (!canCacheChunks && saveRadius >= 0) {
+				int distanceX = chunk.xPosition - WDL.thePlayer.chunkCoordX;
+				int distanceZ = chunk.zPosition - WDL.thePlayer.chunkCoordZ;
+				
+				if (Math.abs(distanceX) > saveRadius ||
+						Math.abs(distanceZ) > saveRadius) {
+					return false;
+				}
 			}
+			
+			return true;
+		} else {
+			return canUseFunctionsUnknownToServer();
 		}
-		
-		return true;
 	}
 	/**
 	 * Checks whether entities are allowed to be saved.
 	 */
 	public static boolean canSaveEntities() {
-		return canDownloadInGeneral && canSaveEntities;
+		if (!canDownloadInGeneral()) {
+			return false;
+		}
+		
+		if (receivedPackets.contains(1)) {
+			return canSaveEntities;
+		} else {
+			return canUseFunctionsUnknownToServer();
+		}
 	}
 	/**
 	 * Checks whether a player can save tile entities.
 	 */
 	public static boolean canSaveTileEntities() {
-		return canDownloadInGeneral && canSaveTileEntities;
+		if (!canDownloadInGeneral()) {
+			return false;
+		}
+		
+		if (receivedPackets.contains(1)) {
+			return canSaveTileEntities;
+		} else {
+			return canUseFunctionsUnknownToServer();
+		}
 	}
 	/**
 	 * Checks whether containers (such as chests) can be saved.
 	 */
 	public static boolean canSaveContainers() {
-		return canDownloadInGeneral && canSaveTileEntities 
-				&& canSaveContainers;
+		if (!canDownloadInGeneral()) {
+			return false; 
+		}
+		if (!canSaveTileEntities()) {
+			return false;
+		}
+		if (receivedPackets.contains(1)) {
+			return canSaveContainers;
+		} else {
+			return canUseFunctionsUnknownToServer();
+		}
 	}
 	/**
 	 * Checks whether maps (the map item, not the world itself) can be saved.
 	 */
 	public static boolean canSaveMaps() {
+		if (!canDownloadInGeneral()) {
+			return false; 
+		}
 		//TODO: Better value than 'canSaveTileEntities'.
-		return canDownloadInGeneral && canSaveTileEntities;
+		if (receivedPackets.contains(1)) {
+			return canSaveTileEntities;
+		} else {
+			return canUseFunctionsUnknownToServer();
+		}
 	}
 	
 	/**
@@ -167,13 +230,9 @@ public class WDLPluginChannels {
 	static void onWorldLoad() {
 		Minecraft minecraft = Minecraft.getMinecraft();
 		
-		// Set the default values, in case the server never responds.
-		WDLPluginChannels.canDownloadInGeneral = true;
-		WDLPluginChannels.saveRadius = -1;
-		WDLPluginChannels.canCacheChunks = true;
-		WDLPluginChannels.canSaveEntities = true;
-		WDLPluginChannels.canSaveTileEntities = true;
-		WDLPluginChannels.canSaveContainers = true;
+		receivedPackets = new HashSet<Integer>();
+		
+		canUseFunctionsUnknownToServer = true;
 		
 		WDL.chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE,
 				"Sending plugin channels registration to the server.");
@@ -203,30 +262,43 @@ public class WDLPluginChannels {
 
 			int section = input.readInt();
 
+			receivedPackets.add(section);
+			
 			switch (section) {
+			case 0:
+				canUseFunctionsUnknownToServer = input.readBoolean();
+				
+				WDL.chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
+						"Loaded settings packet #0 from the server!");
+				
+				WDL.chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
+						"canUseFunctionsUnknownToServer: " +
+								canUseFunctionsUnknownToServer);
+				
+				break;
 			case 1: 
-				WDLPluginChannels.canDownloadInGeneral = input.readBoolean();
-				WDLPluginChannels.saveRadius = input.readInt();
-				WDLPluginChannels.canCacheChunks = input.readBoolean();
-				WDLPluginChannels.canSaveEntities = input.readBoolean();
-				WDLPluginChannels.canSaveTileEntities = input.readBoolean();
-				WDLPluginChannels.canSaveContainers = input.readBoolean();
+				canDownloadInGeneral = input.readBoolean();
+				saveRadius = input.readInt();
+				canCacheChunks = input.readBoolean();
+				canSaveEntities = input.readBoolean();
+				canSaveTileEntities = input.readBoolean();
+				canSaveContainers = input.readBoolean();
 
 				WDL.chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
-						"Successfully loaded settings from the server!");
+						"Loaded settings packet #1 from the server!");
 
 				WDL.chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
-						"canDownloadInGeneral: " + WDLPluginChannels.canDownloadInGeneral);
+						"canDownloadInGeneral: " + canDownloadInGeneral);
 				WDL.chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
-						"saveRadius: " + WDLPluginChannels.saveRadius);
+						"saveRadius: " + saveRadius);
 				WDL.chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
-						"canCacheChunks: " + WDLPluginChannels.canCacheChunks);
+						"canCacheChunks: " + canCacheChunks);
 				WDL.chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
-						"canSaveEntities: " + WDLPluginChannels.canSaveEntities);
+						"canSaveEntities: " + canSaveEntities);
 				WDL.chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
-						"canSaveTileEntities: " + WDLPluginChannels.canSaveTileEntities);
+						"canSaveTileEntities: " + canSaveTileEntities);
 				WDL.chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
-						"canSaveContainers: " + WDLPluginChannels.canSaveContainers);
+						"canSaveContainers: " + canSaveContainers);
 				break;
 			default:
 				byte[] data = packet.getBufferData().array();
