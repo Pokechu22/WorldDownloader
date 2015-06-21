@@ -303,7 +303,7 @@ public class WDL {
 			return;
 		}
 		
-		WDLEvents.onWorldLoad();
+		WDLPluginChannels.onWorldLoad();
 		
 		worldName = ""; // The new (multi-)world name is unknown at the moment
 		worldClient = minecraft.theWorld;
