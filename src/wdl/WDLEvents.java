@@ -476,6 +476,17 @@ public class WDLEvents {
 			// given to addEntityToTracker.
 			if (WDL.downloading && WDLPluginChannels.canSaveEntities()) {
 				if (entity != null) {
+					//TODO: Handle holograms
+					if (WDL.worldProps.getProperty("Entities." + EntityList
+							.getEntityString(entity) + ".Enabled")
+							.equals("true")) {
+						WDL.chatDebug(WDLDebugMessageCause.REMOVE_ENTITY,
+								"removeEntityFromWorld: Allowing removal of "
+										+ EntityList.getEntityString(entity)
+										+ " (user pref)");
+						return;
+					}
+					
 					int threshold;
 	
 					if ((entity instanceof EntityFishHook)
@@ -510,7 +521,8 @@ public class WDLEvents {
 					} else {
 						WDL.chatDebug(WDLDebugMessageCause.REMOVE_ENTITY,
 								"removeEntityFromWorld: Allowing removal of "
-										+ EntityList.getEntityString(entity));
+										+ EntityList.getEntityString(entity)
+										+ " (unrecognized distance)");
 						return;
 					}
 	

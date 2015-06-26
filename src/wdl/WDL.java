@@ -44,6 +44,7 @@ import net.minecraft.client.multiplayer.ChunkProviderClient;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.item.EntityFireworkRocket;
 import net.minecraft.entity.item.EntityPainting;
 import net.minecraft.entity.player.EntityPlayer;
@@ -233,6 +234,15 @@ public class WDL {
 		defaultProps.setProperty("Debug.globalDebugEnabled", "true");
 		for (WDLDebugMessageCause cause : WDLDebugMessageCause.values()) {
 			defaultProps.setProperty("Debug." + cause.name(), "true");
+		}
+		
+		//Set up entities.
+		defaultProps.setProperty("Entity.Hologram.Enabled", "true");
+		
+		//Method retreives a List of all entities by name.
+		List<String> entityInfo = (List<String>)EntityList.func_180124_b();
+		for (String entity : entityInfo) {
+			defaultProps.setProperty("Entity." + entity + ".Enabled", "true");
 		}
 		
 		baseProps = new Properties(defaultProps);
@@ -765,6 +775,27 @@ public class WDL {
 					c.removeEntity(e);
 				}
 			} else {
+				// Remove entities of unwanted types.
+				//TODO: Handle holograms
+				for (Iterable<Entity> entityList : c.getEntityLists()) {
+					for (Entity e : entityList) {
+						if (e instanceof EntityPlayer) {
+							//Skip players, as otherwise bad things happen, 
+							//such as deleting the current player and causing
+							//the screen to flicker.
+							continue;
+						}
+						
+						if (worldProps.getProperty("Entities." + EntityList
+								.getEntityString(e) + ".Enabled").equals("true")) {
+							removedEntities.add(e);
+						}
+					}
+				}
+				for (Entity e : removedEntities) {
+					c.removeEntity(e);
+				}
+				
 				// Add in new entities now.
 				// TODO: This is probably inefficient (as we go through ALL
 				// entities that were loaded.
