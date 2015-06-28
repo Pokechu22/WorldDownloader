@@ -13,10 +13,11 @@ public class GuiWDL extends GuiScreen {
 
 	private GuiTextField worldName;
 	private GuiButton autoStartBtn;
-	private GuiButton backupBtn;
 	private GuiButton worldOverrides;
 	private GuiButton generatorOverrides;
 	private GuiButton playerOverrides;
+	private GuiButton entityOptions;
+	private GuiButton backupOptions;
 	private GuiButton debugOptions;
 
 	public GuiWDL(GuiScreen parent) {
@@ -69,11 +70,15 @@ public class GuiWDL extends GuiScreen {
 				"Player Overrides...");
 		this.buttonList.add(this.playerOverrides);
 		hi += 22;
-		this.playerOverrides = new GuiButton(7, w - 100, hi,
+		this.entityOptions = new GuiButton(7, w - 100, hi,
+				"Entity options...");
+		this.buttonList.add(this.entityOptions);
+		hi += 22;
+		this.playerOverrides = new GuiButton(8, w - 100, hi,
 				"Backup options...");
 		this.buttonList.add(this.playerOverrides);
 		hi += 28;
-		this.debugOptions = new GuiButton(8, w - 100, hi,
+		this.debugOptions = new GuiButton(9, w - 100, hi,
 				"Debug options...");
 		this.buttonList.add(this.debugOptions);
 		hi += 28;
@@ -100,9 +105,11 @@ public class GuiWDL extends GuiScreen {
 			this.mc.displayGuiScreen(new GuiWDLGenerator(this));
 		} else if (guibutton.id == 6) { // Player Overrides
 			this.mc.displayGuiScreen(new GuiWDLPlayer(this));
-		} else if (guibutton.id == 7) { // Backup options
+		} else if (guibutton.id == 7) { // Entity options
+			this.mc.displayGuiScreen(new GuiWDLEntities(this));
+		} else if (guibutton.id == 8) { // Backup options
 			this.mc.displayGuiScreen(new GuiWDLBackup(this));
-		} else if (guibutton.id == 8) { // Debug options
+		} else if (guibutton.id == 9) { // Debug options
 			this.mc.displayGuiScreen(new GuiWDLDebug(this));
 		} else if (guibutton.id == 100) { // Done
 			WDL.saveProps();
