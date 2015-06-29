@@ -477,7 +477,7 @@ public class WDLEvents {
 			if (WDL.downloading && WDLPluginChannels.canSaveEntities()) {
 				if (entity != null) {
 					//TODO: Handle holograms
-					if (WDL.worldProps.getProperty("Entities." + EntityList
+					if (WDL.worldProps.getProperty("Entity." + EntityList
 							.getEntityString(entity) + ".Enabled")
 							.equals("true")) {
 						WDL.chatDebug(WDLDebugMessageCause.REMOVE_ENTITY,
