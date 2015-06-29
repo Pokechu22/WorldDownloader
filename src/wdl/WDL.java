@@ -786,7 +786,7 @@ public class WDL {
 							continue;
 						}
 						
-						if (worldProps.getProperty("Entity." + EntityList
+						if (!worldProps.getProperty("Entity." + EntityList
 								.getEntityString(e) + ".Enabled").equals("true")) {
 							removedEntities.add(e);
 						}
