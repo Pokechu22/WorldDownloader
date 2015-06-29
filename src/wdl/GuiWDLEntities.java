@@ -2,6 +2,7 @@ package wdl;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -59,6 +60,11 @@ public class GuiWDLEntities extends GuiScreen {
 						stringToClassMapping.entrySet()) {
 					String entity = e.getKey();
 					Class c = e.getValue();
+					
+					if (Modifier.isAbstract(c.getModifiers())) {
+						//Don't include abstract classes.
+						continue;
+					}
 					
 					if (IMob.class.isAssignableFrom(c)) {
 						hostileEntities.add(entity);
