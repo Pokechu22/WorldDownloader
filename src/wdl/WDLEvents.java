@@ -268,7 +268,7 @@ public class WDLEvents {
 					saveName = "Horse Chest";
 				} else {
 					WDL.chatMsg("Unsupported entity cannot be saved:"
-							+ EntityList.getEntityString(WDL.lastEntity));
+							+ EntityUtils.getEntityType(WDL.lastEntity));
 				}
 	
 				WDL.chatDebug(WDLDebugMessageCause.ON_GUI_CLOSED_INFO, "Saved "
@@ -476,13 +476,10 @@ public class WDLEvents {
 			// given to addEntityToTracker.
 			if (WDL.downloading && WDLPluginChannels.canSaveEntities()) {
 				if (entity != null) {
-					//TODO: Handle holograms
-					if (!WDL.worldProps.getProperty("Entity." + EntityList
-							.getEntityString(entity) + ".Enabled")
-							.equals("true")) {
+					if (!EntityUtils.isEntityEnabled(entity)) {
 						WDL.chatDebug(WDLDebugMessageCause.REMOVE_ENTITY,
 								"removeEntityFromWorld: Allowing removal of "
-										+ EntityList.getEntityString(entity)
+										+ EntityUtils.getEntityType(entity)
 										+ " (user pref)");
 						return;
 					}
@@ -521,7 +518,7 @@ public class WDLEvents {
 					} else {
 						WDL.chatDebug(WDLDebugMessageCause.REMOVE_ENTITY,
 								"removeEntityFromWorld: Allowing removal of "
-										+ EntityList.getEntityString(entity)
+										+ EntityUtils.getEntityType(entity)
 										+ " (unrecognized distance)");
 						return;
 					}
@@ -532,7 +529,7 @@ public class WDLEvents {
 					if (distance > threshold) {
 						WDL.chatDebug(WDLDebugMessageCause.REMOVE_ENTITY,
 								"removeEntityFromWorld: Saving "
-										+ EntityList.getEntityString(entity)
+										+ EntityUtils.getEntityType(entity)
 										+ " at distance " + distance);
 						entity.chunkCoordX = MathHelper
 								.floor_double(entity.posX / 16.0D);
@@ -546,7 +543,7 @@ public class WDLEvents {
 					WDL.chatDebug(
 							WDLDebugMessageCause.REMOVE_ENTITY,
 							"removeEntityFromWorld: Allowing removal of "
-									+ EntityList.getEntityString(entity)
+									+ EntityUtils.getEntityType(entity)
 									+ " at distance " + distance);
 				}
 			}

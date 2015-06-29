@@ -35,29 +35,9 @@ public class GuiWDLEntities extends GuiScreen {
 				List<String> hostileEntities = new ArrayList<String>();
 				List<String> otherEntities = new ArrayList<String>();
 				
-				//Attempt to steal the 'stringToClassMapping' field. 
-				Map<String, Class> stringToClassMapping = null;
-				
-				for (Field field : EntityList.class.getDeclaredFields()) {
-					if (field.getType().equals(Map.class)) {
-						field.setAccessible(true);
-						Map m = (Map)field.get(null);
-						
-						Map.Entry e = (Map.Entry)m.entrySet().toArray()[0];
-						if (e.getKey() instanceof String && 
-								e.getValue() instanceof Class) {
-							stringToClassMapping = (Map<String, Class>)m;
-						}
-					}
-				}
-				
-				if (stringToClassMapping == null) {
-					throw new Exception("Failed to find stringToClassMapping");
-				}
-				
 				//Now build an actual list.
 				for (Map.Entry<String, Class> e : 
-						stringToClassMapping.entrySet()) {
+						EntityUtils.stringToClassMapping.entrySet()) {
 					String entity = e.getKey();
 					Class c = e.getValue();
 					
@@ -179,8 +159,7 @@ public class GuiWDLEntities extends GuiScreen {
 			public EntityEntry(String entity) {
 				this.entity = entity;
 				
-				enabled = WDL.worldProps.getProperty("Entity." + entity + 
-						".Enabled").equals("true");
+				enabled = EntityUtils.isEntityEnabled(entity);
 				
 				this.onOffButton = new GuiButton(0, 0, 0, 75, 18, 
 						enabled ? "§aIncluded" : "§cIgnored");
