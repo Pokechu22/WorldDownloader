@@ -183,7 +183,7 @@ public class GuiWDLEntities extends GuiScreen {
 						".Enabled").equals("true");
 				
 				this.onOffButton = new GuiButton(0, 0, 0, 75, 18, 
-						"Enabled: " + enabled);
+						enabled ? "§aIncluded" : "§cIgnored");
 			}
 
 			@Override
@@ -195,7 +195,8 @@ public class GuiWDLEntities extends GuiScreen {
 				
 				this.onOffButton.xPosition = x + 105;
 				this.onOffButton.yPosition = y;
-				this.onOffButton.displayString = "Enabled: " + enabled;
+				this.onOffButton.displayString = 
+						enabled ? "§aIncluded" : "§cIgnored";
 				
 				this.onOffButton.drawButton(mc, mouseX, mouseY);
 			}
@@ -205,7 +206,8 @@ public class GuiWDLEntities extends GuiScreen {
 					int mouseEvent, int relativeX, int relativeY) {
 				if (onOffButton.mousePressed(mc, x, y)) {
 					enabled ^= true;
-					this.onOffButton.displayString = "Enabled: " + enabled;
+					this.onOffButton.displayString = 
+							enabled ? "§aIncluded" : "§cIgnored";
 					
 					WDL.worldProps.setProperty("Entity." + entity + 
 							".Enabled", Boolean.toString(enabled));
