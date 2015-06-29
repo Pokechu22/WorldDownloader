@@ -141,7 +141,7 @@ public class GuiWDLEntities extends GuiScreen {
 					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
 				mc.fontRendererObj.drawString(this.labelText,
 						mc.currentScreen.width / 2 - this.labelWidth / 2, y
-								+ slotHeight + mc.fontRendererObj.FONT_HEIGHT
+								+ slotHeight - mc.fontRendererObj.FONT_HEIGHT 
 								- 1, 0xFFFFFF);
 			}
 
@@ -171,25 +171,47 @@ public class GuiWDLEntities extends GuiScreen {
 		 * {@link net.minecraft.client.gui.GuiKeyBindingList.CategoryEntry}.
 		 */
 		private class EntityEntry implements GuiListExtended.IGuiListEntry {
-			private final String labelText;
-			private final int labelWidth;
-
+			private final String entity;
+			private final GuiButton onOffButton;
+			
+			private boolean enabled;
+			
 			public EntityEntry(String entity) {
-				this.labelText = entity;
-				this.labelWidth = mc.fontRendererObj.getStringWidth(this.labelText);
+				this.entity = entity;
+				
+				enabled = WDL.worldProps.getProperty("Entity." + entity + 
+						".Enabled").equals("true");
+				
+				this.onOffButton = new GuiButton(0, 0, 0, 75, 18, 
+						"Enabled: " + enabled);
 			}
 
 			@Override
 			public void drawEntry(int slotIndex, int x, int y, int listWidth,
 					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
-				mc.fontRendererObj.drawString(this.labelText,
-						x + 90 - largestWidth, y + slotHeight + 
-								mc.fontRendererObj.FONT_HEIGHT - 1, 0xFFFFFF);
+				mc.fontRendererObj.drawString(this.entity,
+						x + 90 - largestWidth, y + slotHeight / 2 - 
+								mc.fontRendererObj.FONT_HEIGHT / 2, 0xFFFFFF);
+				
+				this.onOffButton.xPosition = x + 105;
+				this.onOffButton.yPosition = y;
+				this.onOffButton.displayString = "Enabled: " + enabled;
+				
+				this.onOffButton.drawButton(mc, mouseX, mouseY);
 			}
 
 			@Override
 			public boolean mousePressed(int slotIndex, int x, int y,
 					int mouseEvent, int relativeX, int relativeY) {
+				if (onOffButton.mousePressed(mc, x, y)) {
+					enabled ^= true;
+					this.onOffButton.displayString = "Enabled: " + enabled;
+					
+					WDL.worldProps.setProperty("Entity." + entity + 
+							".Enabled", Boolean.toString(enabled));
+					return true;
+				}
+				
 				return false;
 			}
 
@@ -248,6 +270,8 @@ public class GuiWDLEntities extends GuiScreen {
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if (button.id == 200) {
+			WDL.saveProps();
+			
 			mc.displayGuiScreen(parent);
 		}
 	}
