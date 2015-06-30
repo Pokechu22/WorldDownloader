@@ -1,6 +1,8 @@
 package wdl;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,49 +25,8 @@ import net.minecraft.world.chunk.Chunk;
  * to control which functions of WDL are enabled, without using crappy
  * color codes in the MOTD.
  * 
- * <hr/>
- * <h1>Current packets</h1>
- * <table>
- * <tr>
- * <th>Channel</th>
- * <th>Direction</th>
- * <th>Purpose</th>
- * <th>Contents</th>
- * </tr>
- * <tr>
- * <td><code>WDL|INIT</code></td>
- * <td>Client&nbsp;&#8594;&nbsp;Server</td>
- * <td>Tells the server that the client runs WDL and that it should send
- * WDL-specific settings. Server should respond with a
- * <code>WDL|CONTROL</code> packet. Until a response, assume the most
- * permissive options.</td>
- * <td>There is no payload -- should be 0 bytes.</td>
- * </tr>
- * <tr>
- * <td><code>WDL|CONTROL</code></td>
- * <td>Server&nbsp;&#8594;&nbsp;Client</td>
- * <td>Updates the client's settings.</td>
- * <td>
- * The following sequence (in {@link ByteArrayDataOutput} format):
- * <ol>
- * <li>an <code>int</code>: The version of the packet -- should be
- * <code>1</code> for now. If it's higher, tell the player to update and
- * disable all features.</li>
- * <li>a <code>boolean</code>: If false, all of WDL should be disabled.</li>
- * <li>an <code>int</code>: The "save distance".</li>
- * <li>a <code>boolean</code>: Whether or not the client can cache chunks as
- * they move. If false, only the nearby chunks can be saved when download
- * stops.</li>
- * <li>a <code>boolean</code>: Whether or not WDL can save entities.</li>
- * <li>a <code>boolean</code>: Whether or not WDL can save tile entities in
- * general -- both noncontainers such as signs and containers such as
- * chests.</li>
- * <li>a <code>boolean</code>: Whether or not WDL can save containers. The
- * previous value must be true as well.
- * </ol>
- * </td>
- * </tr>
- * </table>
+ * The structure of the packets is documented on the WDLCompanion source: 
+ * https://github.com/Pokechu22/WorldDownloader-Serverside-Companion
  * 
  * @author Pokechu22
  */
@@ -116,6 +77,13 @@ public class WDLPluginChannels {
 	 * {@link #canSaveTileEntities} must also be true.  
 	 */
 	private static boolean canSaveContainers = true;
+	/**
+	 * Map of entity ranges.
+	 * 
+	 * Key is the entity string, int is the range.
+	 */
+	private static Map<String, Integer> entityRanges =
+			new HashMap<String, Integer>();
 	
 	/**
 	 * Checks whether players can use functions unknown to the server.
@@ -223,6 +191,36 @@ public class WDLPluginChannels {
 	}
 	
 	/**
+	 * Gets the server-set range for the given entity.
+	 * 
+	 * @param entity The entity's name (via {@link EntityUtils#getEntityType}).
+	 * @return The entity's range, or -1 if no data was recieved.
+	 */
+	public static int getEntityRange(String entity) {
+		if (!canSaveEntities()) {
+			return -1;
+		}
+		if (receivedPackets.contains(2)) {
+			if (entityRanges.containsKey(entity)) {
+				return entityRanges.get(entity);
+			} else {
+				return -1;
+			}
+		} else {
+			return -1;
+		}
+	}
+	
+	/**
+	 * Checks if the server-set entity range is configured.
+	 */
+	public static boolean hasServerEntityRange() {
+		return receivedPackets.contains(2) && entityRanges.size() > 0;
+	}
+	
+	//TODO: Getter for entityRanges.
+	
+	/**
 	 * Event that is called when the world is loaded.
 	 * Sets the default values, and then asks the server to give the
 	 * correct ones.
@@ -299,6 +297,22 @@ public class WDLPluginChannels {
 						"canSaveTileEntities: " + canSaveTileEntities);
 				WDL.chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
 						"canSaveContainers: " + canSaveContainers);
+				break;
+			case 2:
+				entityRanges.clear();
+				
+				int count = input.readInt();
+				for (int i = 0; i < count; i++) {
+					String name = input.readUTF();
+					int range = input.readInt();
+					
+					entityRanges.put(name, range);
+				}
+				WDL.chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
+						"Loaded settings packet #2 from the server!");
+				
+				WDL.chatDebug(WDLDebugMessageCause.PLUGIN_CHANNEL_MESSAGE, 
+						"entityRanges: total of " + entityRanges.size());
 				break;
 			default:
 				byte[] data = packet.getBufferData().array();
