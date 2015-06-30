@@ -1,29 +1,149 @@
 package wdl;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Collections;
-import java.text.Collator;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiKeyBindingList;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.EntityList;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.IAnimals;
+import net.minecraft.util.MathHelper;
 
 /**
  * GUI that controls what entities are saved.
  */
 public class GuiWDLEntities extends GuiScreen {
 	private class GuiEntityList extends GuiListExtended {
+		/**
+		 * A slider that doesn't require a bunch of interfaces to work.
+		 * 
+		 * Based off of {@link net.minecraft.client.gui.GuiOptionSlider}.
+		 */
+		private class GuiSlider extends GuiButton {
+			private float sliderValue;
+			private boolean dragging;
+			/**
+			 * Text put before to the progress.
+			 */
+			private final String prepend;
+			/**
+			 * Maximum value for the slider.
+			 */
+			private final int max;
+
+			public GuiSlider(int id, int x, int y, int width, int height, 
+					String text, int value, int max) {
+				super(id, x, y, width, height, text);
+				
+				this.prepend = text;
+				this.max = max;
+				
+				setValue(value);
+			}
+
+			/**
+			 * Returns 0 if the button is disabled, 1 if the mouse is NOT hovering over
+			 * this button and 2 if it IS hovering over this button.
+			 */
+			@Override
+			protected int getHoverState(boolean mouseOver) {
+				return 0;
+			}
+
+			/**
+			 * Fired when the mouse button is dragged. Equivalent of
+			 * MouseListener.mouseDragged(MouseEvent e).
+			 */
+			@Override
+			protected void mouseDragged(Minecraft mc, int mouseX, int mouseY) {
+				if (this.visible) {
+					if (this.dragging) {
+						this.sliderValue = (float)(mouseX - (this.xPosition + 4))
+								/ (float)(this.width - 8);
+						this.sliderValue = MathHelper.clamp_float(this.sliderValue, 0.0F,
+								1.0F);
+						this.dragging = true;
+						
+						this.displayString = prepend + ": " + getValue();
+					}
+
+					mc.getTextureManager().bindTexture(buttonTextures);
+					GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+					
+					if (this.enabled) {
+						this.drawTexturedModalRect(this.xPosition
+								+ (int) (this.sliderValue * (this.width - 8)),
+								this.yPosition, 0, 66, 4, 20);
+						this.drawTexturedModalRect(this.xPosition
+								+ (int) (this.sliderValue * (this.width - 8))
+								+ 4, this.yPosition, 196, 66, 4, 20);
+					} else {
+						this.drawTexturedModalRect(this.xPosition
+								+ (int) (this.sliderValue * (this.width - 8)),
+								this.yPosition, 0, 46, 4, 20);
+						this.drawTexturedModalRect(this.xPosition
+								+ (int) (this.sliderValue * (this.width - 8))
+								+ 4, this.yPosition, 196, 46, 4, 20);
+					}
+				}
+			}
+
+			/**
+			 * Returns true if the mouse has been pressed on this control. Equivalent of
+			 * MouseListener.mousePressed(MouseEvent e).
+			 */
+			@Override
+			public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
+				if (super.mousePressed(mc, mouseX, mouseY)) {
+					this.sliderValue = (float)(mouseX - (this.xPosition + 4))
+							/ (float)(this.width - 8);
+					this.sliderValue = MathHelper.clamp_float(this.sliderValue, 0.0F,
+							1.0F);
+					this.displayString = prepend + ": " + getValue();
+					
+					this.dragging = true;
+					return true;
+				} else {
+					return false;
+				}
+			}
+
+			/**
+			 * Gets the current value of the slider.
+			 * @return
+			 */
+			public int getValue() {
+				return (int)(sliderValue * max);
+			}
+			
+			/**
+			 * Gets the current value of the slider.
+			 * @return
+			 */
+			public void setValue(int value) {
+				this.sliderValue = value / (float)max;
+				
+				this.displayString = prepend + ": " + getValue();
+			}
+			
+			/**
+			 * Fired when the mouse button is released. Equivalent of
+			 * MouseListener.mouseReleased(MouseEvent e).
+			 */
+			@Override
+			public void mouseReleased(int mouseX, int mouseY) {
+				this.dragging = false;
+			}
+		}
+		
 		/**
 		 * Width of the largest entry.
 		 */
@@ -153,31 +273,55 @@ public class GuiWDLEntities extends GuiScreen {
 		private class EntityEntry implements GuiListExtended.IGuiListEntry {
 			private final String entity;
 			private final GuiButton onOffButton;
+			private final GuiSlider rangeSlider;
 			
 			private boolean enabled;
+			private int range;
+			
+			private String cachedMode;
 			
 			public EntityEntry(String entity) {
 				this.entity = entity;
 				
 				enabled = EntityUtils.isEntityEnabled(entity);
+				range = EntityUtils.getEntityTrackDistance(entity);
 				
 				this.onOffButton = new GuiButton(0, 0, 0, 75, 18, 
 						enabled ? "§aIncluded" : "§cIgnored");
+				
+				this.rangeSlider = new GuiSlider(1, 0, 0, 150, 18,
+						"Track Distance", range, 256);
+				
+				this.cachedMode = mode;
+				
+				rangeSlider.enabled = (cachedMode.equals("user"));
 			}
 
 			@Override
 			public void drawEntry(int slotIndex, int x, int y, int listWidth,
 					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
 				mc.fontRendererObj.drawString(this.entity,
-						x + 90 - largestWidth, y + slotHeight / 2 - 
+						x - 60 - largestWidth, y + slotHeight / 2 - 
 								mc.fontRendererObj.FONT_HEIGHT / 2, 0xFFFFFF);
 				
-				this.onOffButton.xPosition = x + 105;
+				this.onOffButton.xPosition = x - 45;
 				this.onOffButton.yPosition = y;
 				this.onOffButton.displayString = 
 						enabled ? "§aIncluded" : "§cIgnored";
 				
+				this.rangeSlider.xPosition = x + 50;
+				this.rangeSlider.yPosition = y;
+				
+				if (!this.cachedMode.equals(mode)) {
+					cachedMode = mode;
+					rangeSlider.enabled = (cachedMode.equals("user"));
+					
+					rangeSlider.setValue(EntityUtils
+							.getEntityTrackDistance(entity));
+				}
+				
 				this.onOffButton.drawButton(mc, mouseX, mouseY);
+				this.rangeSlider.drawButton(mc, mouseX, mouseY);
 			}
 
 			@Override
@@ -192,6 +336,15 @@ public class GuiWDLEntities extends GuiScreen {
 							".Enabled", Boolean.toString(enabled));
 					return true;
 				}
+				if (rangeSlider.mousePressed(mc, x, y)) {
+					range = rangeSlider.getValue();
+					
+					WDL.worldProps.setProperty("Entity." + entity
+							+ ".TrackDistance",
+							Integer.toString(range));
+					
+					return true;
+				}
 				
 				return false;
 			}
@@ -199,6 +352,15 @@ public class GuiWDLEntities extends GuiScreen {
 			@Override
 			public void mouseReleased(int slotIndex, int x, int y,
 					int mouseEvent, int relativeX, int relativeY) {
+				rangeSlider.mouseReleased(x, y);
+				
+				if (this.cachedMode.equals("user")) {
+					range = rangeSlider.getValue();
+					
+					WDL.worldProps.setProperty("Entity." + entity
+							+ ".TrackDistance",
+							Integer.toString(range));
+				}
 			}
 
 			@Override
@@ -229,6 +391,8 @@ public class GuiWDLEntities extends GuiScreen {
 	
 	private GuiButton rangeModeButton;
 	
+	private String mode;
+	
 	public GuiWDLEntities(GuiScreen parent) {
 		this.parent = parent;
 	}
@@ -240,7 +404,7 @@ public class GuiWDLEntities extends GuiScreen {
 		
 		rangeModeButton = new GuiButton(100, this.width / 2 - 155, 18, 150,
 				20, "Track distance: Error");
-		String mode = WDL.worldProps.getProperty("Entity.TrackDistanceMode");
+		this.mode = WDL.worldProps.getProperty("Entity.TrackDistanceMode");
 		if (mode.equals("default")) {
 			rangeModeButton.displayString = "Track distance: Default";
 		} else if (mode.equals("server")) {
@@ -269,7 +433,6 @@ public class GuiWDLEntities extends GuiScreen {
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if (button.id == 100) {
-			String mode = WDL.worldProps.getProperty("Entity.TrackDistanceMode");
 			if (mode.equals("default")) {
 				if (WDLPluginChannels.hasServerEntityRange()) {
 					mode = "server";

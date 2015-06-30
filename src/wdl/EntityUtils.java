@@ -148,6 +148,9 @@ public class EntityUtils {
 	 * @return
 	 */
 	public static int getVanillaEntityRange(Class<?> c) {
+		if (c == null) {
+			return -1;
+		}
 		if (EntityFishHook.class.isAssignableFrom(c)
 				|| EntityArrow.class.isAssignableFrom(c)
 				|| EntitySmallFireball.class.isAssignableFrom(c)
