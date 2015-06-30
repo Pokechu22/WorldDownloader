@@ -227,6 +227,8 @@ public class GuiWDLEntities extends GuiScreen {
 	private GuiEntityList entityList;
 	private GuiScreen parent;
 	
+	private GuiButton rangeModeButton;
+	
 	public GuiWDLEntities(GuiScreen parent) {
 		this.parent = parent;
 	}
@@ -235,6 +237,22 @@ public class GuiWDLEntities extends GuiScreen {
 	public void initGui() {
 		this.buttonList.add(new GuiButton(200, this.width / 2 - 155,
 				this.height - 29, 150, 20, "OK"));
+		
+		rangeModeButton = new GuiButton(100, this.width / 2 - 155, 18, 150,
+				20, "Track distance: Error");
+		String mode = WDL.worldProps.getProperty("Entity.TrackDistanceMode");
+		if (mode.equals("default")) {
+			rangeModeButton.displayString = "Track distance: Default";
+		} else if (mode.equals("server")) {
+			if (WDLPluginChannels.hasServerEntityRange()) {
+				rangeModeButton.displayString = "Track distance: Server";
+			} else {
+				rangeModeButton.displayString = "Track distance: Default";
+			}
+		} else {
+			rangeModeButton.displayString = "Track distance: User";
+		}
+		this.buttonList.add(rangeModeButton);
 		
 		this.entityList = new GuiEntityList();
 	}
@@ -250,6 +268,34 @@ public class GuiWDLEntities extends GuiScreen {
 	
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
+		if (button.id == 100) {
+			String mode = WDL.worldProps.getProperty("Entity.TrackDistanceMode");
+			if (mode.equals("default")) {
+				if (WDLPluginChannels.hasServerEntityRange()) {
+					mode = "server";
+				} else {
+					mode = "user";
+				}
+			} else if (mode.equals("server")) {
+				mode = "user";
+			} else {
+				mode = "default";
+			}
+			
+			if (mode.equals("default")) {
+				rangeModeButton.displayString = "Track distance: Default";
+			} else if (mode.equals("server")) {
+				if (WDLPluginChannels.hasServerEntityRange()) {
+					rangeModeButton.displayString = "Track distance: Server";
+				} else {
+					rangeModeButton.displayString = "Track distance: Default";
+				}
+			} else {
+				rangeModeButton.displayString = "Track distance: User";
+			}
+			
+			WDL.worldProps.setProperty("Entity.TrackDistanceMode", mode);
+		}
 		if (button.id == 200) {
 			WDL.saveProps();
 			

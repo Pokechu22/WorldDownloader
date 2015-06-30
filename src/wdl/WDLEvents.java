@@ -484,38 +484,9 @@ public class WDLEvents {
 						return;
 					}
 					
-					int threshold;
-	
-					if ((entity instanceof EntityFishHook)
-							|| (entity instanceof EntityArrow)
-							|| (entity instanceof EntitySmallFireball)
-							|| (entity instanceof EntityFireball)
-							|| (entity instanceof EntitySnowball)
-							|| (entity instanceof EntityEnderPearl)
-							|| (entity instanceof EntityEnderEye)
-							|| (entity instanceof EntityEgg)
-							|| (entity instanceof EntityPotion)
-							|| (entity instanceof EntityExpBottle)
-	//						|| (entity instanceof EntityFireworkRocket)
-							|| (entity instanceof EntityItem)
-							|| (entity instanceof EntitySquid)) {
-						threshold = 64;
-					} else if ((entity instanceof EntityMinecart)
-							|| (entity instanceof EntityBoat)
-							|| (entity instanceof EntityWither)
-							|| (entity instanceof EntityBat)
-							|| (entity instanceof IAnimals)) {
-						threshold = 80; 
-					} else if ((entity instanceof EntityDragon)
-							|| (entity instanceof EntityTNTPrimed)
-							|| (entity instanceof EntityFallingBlock)
-							|| (entity instanceof EntityHanging)
-							|| (entity instanceof EntityArmorStand)
-							|| (entity instanceof EntityXPOrb)) {
-						threshold = 160;
-					} else if (entity instanceof EntityEnderCrystal) {
-						threshold = 256;
-					} else {
+					int threshold = EntityUtils.getEntityTrackDistance(entity);
+					
+					if (threshold < 0) {
 						WDL.chatDebug(WDLDebugMessageCause.REMOVE_ENTITY,
 								"removeEntityFromWorld: Allowing removal of "
 										+ EntityUtils.getEntityType(entity)
@@ -530,7 +501,8 @@ public class WDLEvents {
 						WDL.chatDebug(WDLDebugMessageCause.REMOVE_ENTITY,
 								"removeEntityFromWorld: Saving "
 										+ EntityUtils.getEntityType(entity)
-										+ " at distance " + distance);
+										+ " at distance " + distance
+										+ " (> " + threshold + ")");
 						entity.chunkCoordX = MathHelper
 								.floor_double(entity.posX / 16.0D);
 						entity.chunkCoordZ = MathHelper
@@ -544,7 +516,8 @@ public class WDLEvents {
 							WDLDebugMessageCause.REMOVE_ENTITY,
 							"removeEntityFromWorld: Allowing removal of "
 									+ EntityUtils.getEntityType(entity)
-									+ " at distance " + distance);
+									+ " at distance " + distance
+									+ " (<= " + threshold + ")");
 				}
 			}
 		} catch (Throwable e) {

@@ -45,6 +45,7 @@ import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.item.EntityFireworkRocket;
 import net.minecraft.entity.item.EntityPainting;
 import net.minecraft.entity.player.EntityPlayer;
@@ -237,13 +238,20 @@ public class WDL {
 		}
 		
 		//Set up entities.
-		defaultProps.setProperty("Entity.Hologram.Enabled", "true");
+		defaultProps.setProperty("Entity.TrackDistanceMode", "server");
 		
-		//Method retreives a List of all entities by name.
-		List<String> entityInfo = (List<String>)EntityList.func_180124_b();
-		for (String entity : entityInfo) {
+		List<String> entityTypes = EntityUtils.getEntityTypes();
+		for (String entity : entityTypes) {
 			defaultProps.setProperty("Entity." + entity + ".Enabled", "true");
+			defaultProps.setProperty("Entity." + entity + ".TrackDistance", 
+					Integer.toString(EntityUtils.getVanillaEntityRange(entity)));
 		}
+		
+		defaultProps.setProperty("Entity.Hologram.Enabled", "true");
+		defaultProps.setProperty("Entity.Hologram.TrackDistance", Integer.toString(
+				EntityUtils.getVanillaEntityRange(EntityArmorStand.class)));
+		
+		defaultProps.setProperty("Entity.FireworksRocketEntity.Enabled", "false");
 		
 		baseProps = new Properties(defaultProps);
 		worldProps = new Properties(baseProps);
