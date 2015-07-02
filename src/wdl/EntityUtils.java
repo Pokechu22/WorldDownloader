@@ -134,6 +134,9 @@ public class EntityUtils {
 		if (type == null) {
 			return -1;
 		}
+		if (type.equals("Hologram")) {
+			return getVanillaEntityRange(EntityArmorStand.class);
+		}
 		return getVanillaEntityRange(stringToClassMapping.get(type));
 	}
 	
