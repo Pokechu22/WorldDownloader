@@ -319,7 +319,7 @@ public class WDLEvents {
 							.getChestType()) {
 						tec1 = (TileEntityChest) te;
 						tec2 = (TileEntityChest) te2;
-						chestPos2 = chestPos1.add(-1, 0, 0);
+						chestPos2 = chestPos1.add(1, 0, 0);
 					} else if ((te2 = WDL.worldClient.getTileEntity(chestPos1.add(-1,
 							0, 0))) instanceof TileEntityChest
 							&& ((TileEntityChest) te2).getChestType() == ((TileEntityChest) te)
