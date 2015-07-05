@@ -104,18 +104,15 @@ public class WorldClient extends World {
 		this.theProfiler.endSection();
 
 		/* WDL >>> */
-		if (wdl.WDL.downloading) {
-			if (wdl.WDL.thePlayer.openContainer != wdl.WDL.windowContainer) {
-				if (wdl.WDL.thePlayer.openContainer == wdl.WDL.thePlayer.inventoryContainer) {
-					wdl.WDLEvents.onItemGuiClosed();
-				} else {
-					wdl.WDLEvents.onItemGuiOpened();
-				}
-
-				wdl.WDL.windowContainer = wdl.WDL.thePlayer.openContainer;
+		if (wdl.WDL.thePlayer.openContainer != wdl.WDL.windowContainer) {
+			if (wdl.WDL.thePlayer.openContainer == wdl.WDL.thePlayer.inventoryContainer) {
+				wdl.WDLEvents.onItemGuiClosed();
+			} else {
+				wdl.WDLEvents.onItemGuiOpened();
 			}
-		}
 
+			wdl.WDL.windowContainer = wdl.WDL.thePlayer.openContainer;
+		}
 		/* <<< WDL */
 	}
 
@@ -176,17 +173,15 @@ public class WorldClient extends World {
 			/* WDL >>> */
 			if (this != wdl.WDL.worldClient) {
 				wdl.WDLEvents.onWorldLoad();
-				/* <<< WDL */
 			}
+			/* <<< WDL */
 
 			this.clientChunkProvider.loadChunk(p_73025_1_, p_73025_2_);
 		} else {
 			/* WDL >>> */
-			if (wdl.WDL.downloading) {
-				wdl.WDLEvents.onChunkNoLongerNeeded(chunkProvider.provideChunk(
+			wdl.WDLEvents.onChunkNoLongerNeeded(chunkProvider.provideChunk(
 						p_73025_1_, p_73025_2_));
-				/* <<< WDL */
-			}
+			/* <<< WDL */
 
 			this.clientChunkProvider.unloadChunk(p_73025_1_, p_73025_2_);
 		}
@@ -506,9 +501,7 @@ public class WorldClient extends World {
 			int eventParam) {
 		super.addBlockEvent(pos, block, eventId, eventParam);
 
-		if (wdl.WDL.downloading) {
-			wdl.WDLEvents.onBlockEvent(pos, block, eventId, eventParam);
-		}
+		wdl.WDLEvents.onBlockEvent(pos, block, eventId, eventParam);
 	}
 	/* <<< WDL */
 }

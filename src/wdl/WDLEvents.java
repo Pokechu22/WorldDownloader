@@ -69,6 +69,12 @@ import net.minecraft.world.storage.MapData;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 
+/**
+ * Contains all of the events for WDL.  
+ * 
+ * These should be called regardless of whether downloading is
+ * active; they handle that logic themselves.
+ */
 public class WDLEvents {
 	private static Logger logger = LogManager.getLogger();
 
@@ -109,6 +115,8 @@ public class WDLEvents {
 	/** Must be called when a chunk is no longer needed and should be removed */
 	public static void onChunkNoLongerNeeded(Chunk unneededChunk) {
 		try {
+			if (!WDL.downloading) { return; }
+			
 			if (!WDLPluginChannels.canDownloadInGeneral()) { return; }
 	
 			if (unneededChunk == null) {
@@ -138,6 +146,8 @@ public class WDLEvents {
 	 */
 	public static void onItemGuiOpened() {
 		try {
+			if (!WDL.downloading) { return; }
+			
 			if (WDL.minecraft.objectMouseOver == null) {
 				return;
 			}
@@ -162,6 +172,8 @@ public class WDLEvents {
 	 */
 	public static void onItemGuiClosed() {
 		try {
+			if (!WDL.downloading) { return; }
+			
 			if (!WDLPluginChannels.canDownloadInGeneral()) { return; }
 	
 			String saveName = "";
@@ -410,6 +422,8 @@ public class WDLEvents {
 	public static void onBlockEvent(BlockPos pos, Block block, int event,
 			int param) {
 		try {
+			if (!WDL.downloading) { return; }
+			
 			if (!WDLPluginChannels.canSaveTileEntities()) {
 				return;
 			}
@@ -429,12 +443,13 @@ public class WDLEvents {
 	}
 
 	/**
-	 * Must be called when Packet 0x34 (map data) is received, regardless
-	 * of whether a download is currently occurring.
+	 * Must be called when Packet 0x34 (map data) is received.
 	 */
 	public static void onMapDataLoaded(int mapID, 
 			MapData mapData) {
 		try {
+			if (!WDL.downloading) { return; }
+			
 			if (!WDLPluginChannels.canSaveMaps()) {
 				return;
 			}
