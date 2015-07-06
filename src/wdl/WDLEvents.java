@@ -279,8 +279,10 @@ public class WDLEvents {
 					WDL.stealAndSetField(entityHorse, AnimalChest.class, horseChest);
 					saveName = "Horse Chest";
 				} else {
-					WDL.chatMsg("Unsupported entity cannot be saved:"
+					WDL.chatDebug(WDLDebugMessageCause.ON_GUI_CLOSED_WARNING, 
+							"Unrecognized entity cannot be saved: "
 							+ EntityUtils.getEntityType(WDL.lastEntity));
+					return;
 				}
 	
 				WDL.chatDebug(WDLDebugMessageCause.ON_GUI_CLOSED_INFO, "Saved "
