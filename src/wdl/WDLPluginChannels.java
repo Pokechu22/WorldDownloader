@@ -37,7 +37,7 @@ public class WDLPluginChannels {
 	/**
 	 * Packets that have been received.
 	 */
-	private static HashSet<Integer> receivedPackets;
+	private static HashSet<Integer> receivedPackets = new HashSet<Integer>();
 	
 	/**
 	 * Whether functions that the server is not aware of can be used.

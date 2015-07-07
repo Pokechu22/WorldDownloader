@@ -104,14 +104,16 @@ public class WorldClient extends World {
 		this.theProfiler.endSection();
 
 		/* WDL >>> */
-		if (wdl.WDL.thePlayer.openContainer != wdl.WDL.windowContainer) {
-			if (wdl.WDL.thePlayer.openContainer == wdl.WDL.thePlayer.inventoryContainer) {
-				wdl.WDLEvents.onItemGuiClosed();
-			} else {
-				wdl.WDLEvents.onItemGuiOpened();
+		if (wdl.WDL.thePlayer != null) {
+			if (wdl.WDL.thePlayer.openContainer != wdl.WDL.windowContainer) {
+				if (wdl.WDL.thePlayer.openContainer == wdl.WDL.thePlayer.inventoryContainer) {
+					wdl.WDLEvents.onItemGuiClosed();
+				} else {
+					wdl.WDLEvents.onItemGuiOpened();
+				}
+	
+				wdl.WDL.windowContainer = wdl.WDL.thePlayer.openContainer;
 			}
-
-			wdl.WDL.windowContainer = wdl.WDL.thePlayer.openContainer;
 		}
 		/* <<< WDL */
 	}
