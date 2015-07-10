@@ -371,7 +371,7 @@ public class GuiWDLEntities extends GuiScreen {
 		
 		public GuiEntityList() {
 			super(GuiWDLEntities.this.mc, GuiWDLEntities.this.width,
-					GuiWDLEntities.this.height, 63,
+					GuiWDLEntities.this.height, 39,
 					GuiWDLEntities.this.height - 32, 20);
 		}
 
@@ -390,6 +390,7 @@ public class GuiWDLEntities extends GuiScreen {
 	private GuiScreen parent;
 	
 	private GuiButton rangeModeButton;
+	private GuiButton presetsButton;
 	
 	private String mode;
 	
@@ -404,19 +405,30 @@ public class GuiWDLEntities extends GuiScreen {
 		
 		rangeModeButton = new GuiButton(100, this.width / 2 - 155, 18, 150,
 				20, "Track distance: Error");
+		presetsButton = new GuiButton(101, this.width / 2 + 5, 18, 150, 20, 
+				"Presets...");
+		
 		this.mode = WDL.worldProps.getProperty("Entity.TrackDistanceMode");
 		if (mode.equals("default")) {
 			rangeModeButton.displayString = "Track distance: Default";
+			
+			presetsButton.enabled = false;
 		} else if (mode.equals("server")) {
 			if (WDLPluginChannels.hasServerEntityRange()) {
 				rangeModeButton.displayString = "Track distance: Server";
 			} else {
 				rangeModeButton.displayString = "Track distance: Default";
 			}
+			
+			presetsButton.enabled = false;
 		} else {
 			rangeModeButton.displayString = "Track distance: User";
+			
+			presetsButton.enabled = true;
 		}
+		
 		this.buttonList.add(rangeModeButton);
+		this.buttonList.add(presetsButton);
 		
 		this.entityList = new GuiEntityList();
 	}
@@ -447,17 +459,28 @@ public class GuiWDLEntities extends GuiScreen {
 			
 			if (mode.equals("default")) {
 				rangeModeButton.displayString = "Track distance: Default";
+				
+				presetsButton.enabled = false;
 			} else if (mode.equals("server")) {
 				if (WDLPluginChannels.hasServerEntityRange()) {
 					rangeModeButton.displayString = "Track distance: Server";
 				} else {
 					rangeModeButton.displayString = "Track distance: Default";
 				}
+				
+				presetsButton.enabled = false;
 			} else {
 				rangeModeButton.displayString = "Track distance: User";
+				
+				presetsButton.enabled = true;
 			}
 			
 			WDL.worldProps.setProperty("Entity.TrackDistanceMode", mode);
+		}
+		if (button.id == 101 && button.enabled) {
+			WDL.saveProps();
+			
+			mc.displayGuiScreen(new GuiWDLEntityPresets(this));
 		}
 		if (button.id == 200) {
 			WDL.saveProps();
