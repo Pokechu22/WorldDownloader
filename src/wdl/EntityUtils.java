@@ -6,10 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityHanging;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.boss.EntityDragon;
@@ -23,9 +21,15 @@ import net.minecraft.entity.item.EntityExpBottle;
 import net.minecraft.entity.item.EntityFallingBlock;
 import net.minecraft.entity.item.EntityFireworkRocket;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.item.EntityItemFrame;
 import net.minecraft.entity.item.EntityMinecart;
+import net.minecraft.entity.item.EntityPainting;
 import net.minecraft.entity.item.EntityTNTPrimed;
 import net.minecraft.entity.item.EntityXPOrb;
+import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.monster.EntitySlime;
+import net.minecraft.entity.passive.EntityAmbientCreature;
+import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.entity.passive.EntitySquid;
 import net.minecraft.entity.passive.IAnimals;
@@ -36,6 +40,9 @@ import net.minecraft.entity.projectile.EntityFishHook;
 import net.minecraft.entity.projectile.EntityPotion;
 import net.minecraft.entity.projectile.EntitySmallFireball;
 import net.minecraft.entity.projectile.EntitySnowball;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Provides utility functions for recognising entities.
@@ -102,6 +109,8 @@ public class EntityUtils {
 			
 			returned.add(e.getKey());
 		}
+		
+		returned.add("Hologram");
 		
 		return returned;
 	}
@@ -340,5 +349,40 @@ public class EntityUtils {
 		return (e instanceof EntityArmorStand &&
 				e.isInvisible() &&
 				e.hasCustomName());
+	}
+	
+	/**
+	 * Gets the entity range used by Spigot by default.
+	 * Mostly a utility method for presets.
+	 * 
+	 * @param entity
+	 * @return
+	 */
+	public static int getSpigotEntityRange(String entity) {
+		if (entity.equals("Hologram")) {
+			entity = "ArmorStand";
+		}
+		Class c = stringToClassMapping.get(entity);
+		
+		final int monsterRange = 48;
+		final int animalRange = 48;
+		final int miscRange = 32;
+		final int otherRange = 64;
+		
+		//Spigot's mapping.  It's silly.
+		if (EntityMob.class.isAssignableFrom(c) ||
+				EntitySlime.class.isAssignableFrom(c)) {
+			return monsterRange;
+		} else if (EntityCreature.class.isAssignableFrom(c) ||
+				EntityAmbientCreature.class.isAssignableFrom(c)) {
+			return animalRange;
+		} else if (EntityItemFrame.class.isAssignableFrom(c) ||
+				EntityPainting.class.isAssignableFrom(c) ||
+				EntityItem.class.isAssignableFrom(c) ||
+				EntityXPOrb.class.isAssignableFrom(c)) {
+			return miscRange;
+		} else {
+			return otherRange;
+		}
 	}
 }
