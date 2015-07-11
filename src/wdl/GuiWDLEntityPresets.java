@@ -25,24 +25,25 @@ public class GuiWDLEntityPresets extends GuiScreen implements GuiYesNoCallback {
 	
 	@Override
 	public void initGui() {
-		int y = this.height / 4 - 15;
+		int y = this.height / 4;
 		
-		this.vanillaButton = new GuiButton(0, this.width / 2 - 155, y, 150, 20,
+		this.vanillaButton = new GuiButton(0, this.width / 2 - 230, y, 150, 20,
 				"Vanilla minecraft ranges");
 		this.buttonList.add(vanillaButton);
 		
-		this.spigotButton = new GuiButton(1, this.width / 2 + 5, y, 150, 20,
+		this.spigotButton = new GuiButton(1, this.width / 2 - 75, y, 150, 20,
 				"Default spigot ranges");
 		this.buttonList.add(spigotButton);
 		
-		y += 22;
-		
-		this.serverButton = new GuiButton(2, this.width / 2 - 155, y, 150, 20,
+		this.serverButton = new GuiButton(2, this.width / 2 + 80, y, 150, 20,
 				"Server-configured ranges");
 		serverButton.enabled = WDLPluginChannels.hasServerEntityRange();
 		this.buttonList.add(serverButton);
 		
+		y += 28 + 2 + mc.fontRendererObj.FONT_HEIGHT;
+		
 		y += 28;
+		
 		this.okButton = new GuiButton(100, this.width / 2 - 100, y, "OK");
 		this.buttonList.add(okButton);
 	}
@@ -67,8 +68,10 @@ public class GuiWDLEntityPresets extends GuiScreen implements GuiYesNoCallback {
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		drawBackground(0);
 		
-		this.drawCenteredString(this.fontRendererObj, "Entity range presets",
+		this.drawCenteredString(this.fontRendererObj, "§n§lEntity presets",
 				this.width / 2, this.height / 4 - 40, 0xFFFFFF);
+		this.drawCenteredString(this.fontRendererObj, "Ranges", this.width / 2,
+				this.height / 4 - fontRendererObj.FONT_HEIGHT - 2, 0xFFFFFF);
 		
 		int infoX = this.width / 2 - 150;
 		int infoY = 2 * this.height / 3;
