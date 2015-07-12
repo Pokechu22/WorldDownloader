@@ -2,7 +2,9 @@ package wdl;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +30,7 @@ import net.minecraft.entity.item.EntityTNTPrimed;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntitySlime;
+import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.EntityAmbientCreature;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityBat;
@@ -58,6 +61,19 @@ public class EntityUtils {
 	 * Reference to the {@link EntityList#classToStringMapping} field.
 	 */
 	public static final Map<Class, String> classToStringMapping;
+	
+	/**
+	 * Names of all passive entities.
+	 */
+	public static final List<String> passiveEntityList;
+	/**
+	 * Names of all hostile entities.
+	 */
+	public static final List<String> hostileEntityList;
+	/**
+	 * Names of all other entities.  Includes hologram. 
+	 */
+	public static final List<String> otherEntityList;
 	
 	static {
 		try {
@@ -91,6 +107,40 @@ public class EntityUtils {
 			
 			stringToClassMapping = mappingSTC;
 			classToStringMapping = mappingCTS;
+			
+			List<String> passiveEntities = new ArrayList<String>();
+			List<String> hostileEntities = new ArrayList<String>();
+			List<String> otherEntities = new ArrayList<String>();
+			
+			//Now build an actual list.
+			for (Map.Entry<String, Class> e : 
+					EntityUtils.stringToClassMapping.entrySet()) {
+				String entity = e.getKey();
+				Class c = e.getValue();
+				
+				if (Modifier.isAbstract(c.getModifiers())) {
+					//Don't include abstract classes.
+					continue;
+				}
+				
+				if (IMob.class.isAssignableFrom(c)) {
+					hostileEntities.add(entity);
+				} else if (IAnimals.class.isAssignableFrom(c)) {
+					passiveEntities.add(entity);
+				} else {
+					otherEntities.add(entity);
+				}
+			}
+			
+			otherEntities.add("Hologram");
+			
+			Collections.sort(hostileEntities, Collator.getInstance());
+			Collections.sort(passiveEntities, Collator.getInstance());
+			Collections.sort(otherEntities, Collator.getInstance());
+			
+			passiveEntityList = passiveEntities;
+			hostileEntityList = hostileEntities;
+			otherEntityList = otherEntities;
 		} catch (Exception e) {
 			throw new Error("WDL: Failed to setup entity mappings!");
 		}

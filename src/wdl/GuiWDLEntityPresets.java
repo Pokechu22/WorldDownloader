@@ -9,7 +9,7 @@ import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.gui.GuiYesNoCallback;
 
 /**
- * Allows setting the current user range for each entity.
+ * Provides fast setting for various entity options.
  */
 public class GuiWDLEntityPresets extends GuiScreen implements GuiYesNoCallback {
 	private final GuiScreen parent;

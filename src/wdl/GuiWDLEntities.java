@@ -151,40 +151,10 @@ public class GuiWDLEntities extends GuiScreen {
 		
 		private List<IGuiListEntry> entries = new ArrayList<IGuiListEntry>() {{
 			try {
-				List<String> passiveEntities = new ArrayList<String>();
-				List<String> hostileEntities = new ArrayList<String>();
-				List<String> otherEntities = new ArrayList<String>();
-				
-				//Now build an actual list.
-				for (Map.Entry<String, Class> e : 
-						EntityUtils.stringToClassMapping.entrySet()) {
-					String entity = e.getKey();
-					Class c = e.getValue();
-					
-					if (Modifier.isAbstract(c.getModifiers())) {
-						//Don't include abstract classes.
-						continue;
-					}
-					
-					if (IMob.class.isAssignableFrom(c)) {
-						hostileEntities.add(entity);
-					} else if (IAnimals.class.isAssignableFrom(c)) {
-						passiveEntities.add(entity);
-					} else {
-						otherEntities.add(entity);
-					}
-				}
-				
-				otherEntities.add("Hologram");
-				
-				Collections.sort(hostileEntities, Collator.getInstance());
-				Collections.sort(passiveEntities, Collator.getInstance());
-				Collections.sort(otherEntities, Collator.getInstance());
-				
 				int largestWidthSoFar = 0;
 				
 				add(new CategoryEntry("General"));
-				for (String entity : otherEntities) {
+				for (String entity : EntityUtils.otherEntityList) {
 					add(new EntityEntry(entity));
 					
 					int width = fontRendererObj.getStringWidth(entity);
@@ -193,7 +163,7 @@ public class GuiWDLEntities extends GuiScreen {
 					}
 				}
 				add(new CategoryEntry("Passive mobs"));
-				for (String entity : passiveEntities) {
+				for (String entity : EntityUtils.passiveEntityList) {
 					add(new EntityEntry(entity));
 					
 					int width = fontRendererObj.getStringWidth(entity);
@@ -202,7 +172,7 @@ public class GuiWDLEntities extends GuiScreen {
 					}
 				}
 				add(new CategoryEntry("Hostile mobs"));
-				for (String entity : hostileEntities) {
+				for (String entity : EntityUtils.hostileEntityList) {
 					add(new EntityEntry(entity));
 					
 					int width = fontRendererObj.getStringWidth(entity);
