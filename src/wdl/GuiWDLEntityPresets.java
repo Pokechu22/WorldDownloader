@@ -1,12 +1,15 @@
 package wdl;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiUtilRenderComponents;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.gui.GuiYesNoCallback;
+import net.minecraft.util.ChatComponentText;
 
 /**
  * Provides fast setting for various entity options.
@@ -108,48 +111,38 @@ public class GuiWDLEntityPresets extends GuiScreen implements GuiYesNoCallback {
 		int infoY = 2 * this.height / 3;
 		int y = infoY + 5;
 		
+		String infoText = null;
+		
 		if (vanillaButton.isMouseOver()) {
-			drawRect(infoX, infoY, infoX + 300, infoY + 100, 0x7F000000);
-			
-			drawString(fontRendererObj, "Set the ranges to those used by " +
-					"an unmodified (vanilla)", infoX + 5, y, 0xFFFFFF);
-			y += fontRendererObj.FONT_HEIGHT;
-			drawString(fontRendererObj, "Minecraft server, and " +
-					"for some Bukkit servers.", infoX + 5, y, 0xFFFFFF);
+			infoText = "Set the ranges to those used by " +
+					"an unmodified (vanilla) Minecraft server, and " +
+					"for some Bukkit servers.";
 		} else if (spigotButton.isMouseOver()) {
-			drawRect(infoX, infoY, infoX + 300, infoY + 100, 0x7F000000);
-			
-			drawString(fontRendererObj, "Set the ranges to the default " +
-					"values for spigot servers.", infoX + 5, y, 0xFFFFFF);
-			y += fontRendererObj.FONT_HEIGHT;
-			drawString(fontRendererObj, "Spigot allows these values to be " +
-					"customized, but these",
-					infoX + 5, y, 0xFFFFFF);
-			y += fontRendererObj.FONT_HEIGHT;
-			drawString(fontRendererObj, "are the defaults.",
-					infoX + 5, y, 0xFFFFFF);
+			infoText = "Set the ranges to the default values for spigot " +
+					"servers.\nSpigot allows these values to be " +
+					"customized, but these are the defaults.";
 		} else if (serverButton.isMouseOver()) {
-			drawRect(infoX, infoY, infoX + 300, infoY + 100, 0x7F000000);
+			infoText = "Set the ranges to the values that are actually used " +
+					"on the server.  This option is only available if the " +
+					"server has the WDLCompanion plugin installed.\n\n";
 			
-			drawString(fontRendererObj, "Set the ranges to the values " +
-					"that are actually used on", infoX + 5, y, 0xFFFFFF);
-			y += fontRendererObj.FONT_HEIGHT;
-			drawString(fontRendererObj, "the server.  This option is only " +
-					"available if the server", infoX + 5, y, 0xFFFFFF);
-			y += fontRendererObj.FONT_HEIGHT;
-			drawString(fontRendererObj, "has the WDLCompanion " +
-					"plugin installed.", infoX + 5, y, 0xFFFFFF);
-			y += fontRendererObj.FONT_HEIGHT;
-			y += fontRendererObj.FONT_HEIGHT;
 			if (serverButton.enabled) {
-				drawString(fontRendererObj, "§aAs it is installed, this may " +
-						"be used.", infoX + 5, y, 0xFFFFFF);
+				infoText += "§aAs it is installed, this may be used.";
 			} else {
-				drawString(fontRendererObj, "§cAs it is not installed, this " +
-						"cannot be used.", infoX + 5, y, 0xFFFFFF);
+				infoText += "§cAs it is not installed, this cannot be used.";
 			}
 		}
-		//TODO: Entity button mouse overs.
+		
+		if (infoText != null) {
+			drawRect(infoX, infoY, infoX + 300, infoY + 100, 0x7F000000);
+			
+			List<String> info = paginate(infoText, 290);
+			
+			for (String s : info) {
+				drawString(fontRendererObj, s, infoX + 5, y, 0xFFFFFF);
+				y += fontRendererObj.FONT_HEIGHT;
+			}
+		}
 		
 		super.drawScreen(mouseX, mouseY, partialTicks);
 	}
@@ -183,5 +176,35 @@ public class GuiWDLEntityPresets extends GuiScreen implements GuiYesNoCallback {
 		}
 		
 		mc.displayGuiScreen(this);
+	}
+	
+	/**
+	 * Converts a string into a list of lines that are each shorter than the 
+	 * given width.  Takes \n into consideration.
+	 * 
+	 * @return A list of lines.
+	 */
+	private List<String> paginate(String s, int width) {
+		/**
+		 * It's a method that formats and paginates text.
+		 * 
+		 * Args: 
+		 * <ul>
+		 * <li>The text to format.</li>
+		 * <li>The width</li>
+		 * <li>The font renderer.</li>
+		 * <li>IDK</li>
+		 * <li>Whether to include color codes.</li>
+		 * </ul>
+		 */
+		List<ChatComponentText> texts = GuiUtilRenderComponents.func_178908_a(
+				new ChatComponentText(s), width, fontRendererObj, true, true);
+		
+		List<String> returned = new ArrayList<String>();
+		for (ChatComponentText component : texts) {
+			returned.add(component.getFormattedText());
+		}
+		
+		return returned;
 	}
 }
