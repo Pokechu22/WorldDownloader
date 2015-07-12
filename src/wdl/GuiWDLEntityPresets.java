@@ -86,11 +86,43 @@ public class GuiWDLEntityPresets extends GuiScreen implements GuiYesNoCallback {
 			return;
 		}
 		
-		if (button.id < 3) {
-			mc.displayGuiScreen(new GuiYesNo(this,
-					"Are you sure you want to reset your entity ranges?",
-					"(Setting to " + button.displayString + ")", button.id));
+		if (button.id < 9) {
+			String upper;
+			String lower = "§c§n§lThis cannot be undone.§r";
+			if (button.id < 3) {
+				upper = "Are you sure you want to reset your entity ranges?";
+				
+				if (button.id == 0) {
+					lower = "§rSetting to vanilla Minecraft ranges -- " +
+							"§c§n§lThis cannot be undone.§r";
+				} else if (button.id == 1) {
+					lower = "§rSetting to default spigot ranges -- " +
+							"§c§n§lThis cannot be undone.§r";
+				} else if (button.id == 2) {
+					lower = "§rSetting to server configured ranges -- " +
+							"§c§n§lThis cannot be undone.§r";
+				}
+			} else {
+				if (button.id < 6) { 
+					upper = "Are you sure you want to enable all ";
+				} else {
+					upper = "Are you sure you want to disable all ";
+				}
+				
+				if (button.id % 3 == 0) {
+					upper += "other";
+				} else if (button.id % 3 == 1) {
+					upper += "passive";
+				} else if (button.id % 3 == 2) {
+					upper += "hostile";
+				}
+				
+				upper += " entities?";
+			}
+			
+			mc.displayGuiScreen(new GuiYesNo(this, upper, lower, button.id));
 		}
+		
 		if (button.id == 100) {
 			mc.displayGuiScreen(parent);
 		}
@@ -168,27 +200,43 @@ public class GuiWDLEntityPresets extends GuiScreen implements GuiYesNoCallback {
 	@Override
 	public void confirmClicked(boolean result, int id) {
 		if (result) {
-			List<String> entities = EntityUtils.getEntityTypes();
-			
-			if (id == 0) {
-				for (String entity : entities) {
-					WDL.worldProps.setProperty("Entity." + entity
-							+ ".TrackDistance", Integer.toString(
-							EntityUtils.getVanillaEntityRange(entity)));
+			if (id < 3) {
+				List<String> entities = EntityUtils.getEntityTypes();
+				
+				if (id == 0) {
+					for (String entity : entities) {
+						WDL.worldProps.setProperty("Entity." + entity
+								+ ".TrackDistance", Integer.toString(
+								EntityUtils.getVanillaEntityRange(entity)));
+					}
+				} else if (id == 1) {
+					for (String entity : entities) {
+						WDL.worldProps.setProperty("Entity." + entity
+								+ ".TrackDistance", Integer.toString(
+								EntityUtils.getSpigotEntityRange(entity)));
+					}
+				} else if (id == 2) { 
+					for (String entity : entities) {
+						WDL.worldProps.setProperty("Entity." + entity
+								+ ".TrackDistance", Integer.toString(
+								WDLPluginChannels.getEntityRange(entity)));
+					}
 				}
-			}
-			if (id == 1) {
-				for (String entity : entities) {
-					WDL.worldProps.setProperty("Entity." + entity
-							+ ".TrackDistance", Integer.toString(
-							EntityUtils.getSpigotEntityRange(entity)));
+			} else {
+				List<String> entities = null;
+				String value = Boolean.toString(id < 6);
+				
+				if (id % 3 == 0) {
+					entities = EntityUtils.otherEntityList;
+				} else if (id % 3 == 1) {
+					entities = EntityUtils.passiveEntityList;
+				} else if (id % 3 == 2) {
+					entities = EntityUtils.hostileEntityList;
 				}
-			}
-			if (id == 2) { 
+				
 				for (String entity : entities) {
 					WDL.worldProps.setProperty("Entity." + entity
-							+ ".TrackDistance", Integer.toString(
-							WDLPluginChannels.getEntityRange(entity)));
+							+ ".Enabled", value);
 				}
 			}
 		}
