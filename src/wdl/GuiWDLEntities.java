@@ -299,6 +299,9 @@ public class GuiWDLEntities extends GuiScreen {
 					int mouseEvent, int relativeX, int relativeY) {
 				if (onOffButton.mousePressed(mc, x, y)) {
 					enabled ^= true;
+					
+					onOffButton.playPressSound(mc.getSoundHandler());
+					
 					this.onOffButton.displayString = 
 							enabled ? "§aIncluded" : "§cIgnored";
 					
@@ -376,7 +379,7 @@ public class GuiWDLEntities extends GuiScreen {
 		rangeModeButton = new GuiButton(100, this.width / 2 - 155, 18, 150,
 				20, "Track distance: Error");
 		presetsButton = new GuiButton(101, this.width / 2 + 5, 18, 150, 20, 
-				"Track distance presets...");
+				"Presets...");
 		
 		this.mode = WDL.worldProps.getProperty("Entity.TrackDistanceMode");
 		if (mode.equals("default")) {

@@ -72,6 +72,7 @@ public class GuiWDL extends GuiScreen {
 		hi += 22;
 		this.entityOptions = new GuiButton(7, w - 100, hi,
 				"Entity options...");
+		this.entityOptions.enabled = WDLPluginChannels.canSaveEntities();
 		this.buttonList.add(this.entityOptions);
 		hi += 22;
 		this.playerOverrides = new GuiButton(8, w - 100, hi,
