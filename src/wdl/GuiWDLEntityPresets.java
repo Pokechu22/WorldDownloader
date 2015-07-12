@@ -131,6 +131,24 @@ public class GuiWDLEntityPresets extends GuiScreen implements GuiYesNoCallback {
 			} else {
 				infoText += "§cAs it is not installed, this cannot be used.";
 			}
+		} else if (allOtherButton.isMouseOver()) {
+			infoText = "Enable all `other' entities.\n\n(Other means " +
+					"anything that is not an animal or a monster)";
+		} else if (noOtherButton.isMouseOver()) {
+			infoText = "Disable all `other' entities.\n\n(Other means " +
+					"anything that is not an animal or a monster)";
+		} else if (allPassiveButton.isMouseOver()) {
+			infoText = "Enable all `pasive' entities.\n\n(Passive means " +
+					"all animals, including bats and squids)";
+		} else if (noPassiveButton.isMouseOver()) {
+			infoText = "Disable all `pasive' entities.\n\n(Passive means " +
+					"all animals, including bats and squids)";
+		} else if (allHostileButton.isMouseOver()) {
+			infoText = "Enable all `hostile' entities.\n\n(Hostile means " +
+					"monsters)";
+		} else if (noHostileButton.isMouseOver()) {
+			infoText = "Disable all `hostile' entities.\n\n(Hostile means " +
+					"monsters)";
 		}
 		
 		if (infoText != null) {
