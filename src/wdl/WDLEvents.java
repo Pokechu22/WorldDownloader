@@ -1,42 +1,13 @@
 package wdl;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityHanging;
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.IMerchant;
-import net.minecraft.entity.boss.EntityDragon;
-import net.minecraft.entity.boss.EntityWither;
-import net.minecraft.entity.item.EntityArmorStand;
-import net.minecraft.entity.item.EntityBoat;
-import net.minecraft.entity.item.EntityEnderCrystal;
-import net.minecraft.entity.item.EntityEnderEye;
-import net.minecraft.entity.item.EntityEnderPearl;
-import net.minecraft.entity.item.EntityExpBottle;
-import net.minecraft.entity.item.EntityFallingBlock;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.item.EntityMinecartChest;
 import net.minecraft.entity.item.EntityMinecartHopper;
-import net.minecraft.entity.item.EntityTNTPrimed;
-import net.minecraft.entity.item.EntityXPOrb;
-import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.entity.passive.EntityHorse;
-import net.minecraft.entity.passive.EntitySquid;
 import net.minecraft.entity.passive.EntityVillager;
-import net.minecraft.entity.passive.IAnimals;
-import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.entity.projectile.EntityEgg;
-import net.minecraft.entity.projectile.EntityFireball;
-import net.minecraft.entity.projectile.EntityFishHook;
-import net.minecraft.entity.projectile.EntityPotion;
-import net.minecraft.entity.projectile.EntitySmallFireball;
-import net.minecraft.entity.projectile.EntitySnowball;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.AnimalChest;
 import net.minecraft.inventory.ContainerBeacon;
@@ -66,14 +37,17 @@ import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.storage.MapData;
 
-import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteStreams;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
- * Contains all of the events for WDL.  
+ * Handles all of the events for WDL.
  * 
  * These should be called regardless of whether downloading is
  * active; they handle that logic themselves.
+ * <br/>
+ * The difference between this class and {@link WDLHooks} is that WDLEvents
+ * should be called directly from the source and does a bit of processing, while
  */
 public class WDLEvents {
 	private static Logger logger = LogManager.getLogger();
@@ -507,9 +481,9 @@ public class WDLEvents {
 	 * received by the client.
 	 */
 	public static void onPluginChannelPacket(String channel,
-			S3FPacketCustomPayload packet) {
+			byte[] bytes) {
 		try {
-			WDLPluginChannels.onPluginChannelPacket(channel, packet);
+			WDLPluginChannels.onPluginChannelPacket(channel, bytes);
 		} catch (Throwable e) {
 			WDL.minecraft.crashed(CrashReport.makeCrashReport(e,
 					"WDL mod: onPluginChannelPacket event"));
@@ -594,5 +568,4 @@ public class WDLEvents {
 					"WDL mod: onChatMessage event"));
 		}
 	}
-
 }

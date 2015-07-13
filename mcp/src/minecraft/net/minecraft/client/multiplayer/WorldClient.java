@@ -104,17 +104,7 @@ public class WorldClient extends World {
 		this.theProfiler.endSection();
 
 		/* WDL >>> */
-		if (wdl.WDL.thePlayer != null) {
-			if (wdl.WDL.thePlayer.openContainer != wdl.WDL.windowContainer) {
-				if (wdl.WDL.thePlayer.openContainer == wdl.WDL.thePlayer.inventoryContainer) {
-					wdl.WDLEvents.onItemGuiClosed();
-				} else {
-					wdl.WDLEvents.onItemGuiOpened();
-				}
-	
-				wdl.WDL.windowContainer = wdl.WDL.thePlayer.openContainer;
-			}
-		}
+		wdl.WDLHooks.onWorldClientTick(this);
 		/* <<< WDL */
 	}
 
@@ -171,20 +161,13 @@ public class WorldClient extends World {
 	}
 
 	public void doPreChunk(int p_73025_1_, int p_73025_2_, boolean p_73025_3_) {
+		/* WDL >>> */
+		wdl.WDLHooks.onWorldClientDoPreChunk(this, p_73025_1_, p_73025_2_, p_73025_3_);
+		/* <<< WDL */
+		
 		if (p_73025_3_) {
-			/* WDL >>> */
-			if (this != wdl.WDL.worldClient) {
-				wdl.WDLEvents.onWorldLoad();
-			}
-			/* <<< WDL */
-
 			this.clientChunkProvider.loadChunk(p_73025_1_, p_73025_2_);
 		} else {
-			/* WDL >>> */
-			wdl.WDLEvents.onChunkNoLongerNeeded(chunkProvider.provideChunk(
-						p_73025_1_, p_73025_2_));
-			/* <<< WDL */
-
 			this.clientChunkProvider.unloadChunk(p_73025_1_, p_73025_2_);
 		}
 
@@ -278,11 +261,11 @@ public class WorldClient extends World {
 	}
 
 	public Entity removeEntityFromWorld(int p_73028_1_) {
-		Entity var2 = (Entity) this.entitiesById.removeObject(p_73028_1_);
-
 		/* WDL >>> */
-		wdl.WDLEvents.onRemoveEntityFromWorld(var2);
+		wdl.WDLHooks.onWorldClientRemoveEntityFromWorld(this, p_73028_1_);
 		/* <<< WDL */
+		
+		Entity var2 = (Entity) this.entitiesById.removeObject(p_73028_1_);
 
 		if (var2 != null) {
 			this.entityList.remove(var2);
@@ -496,14 +479,4 @@ public class WorldClient extends World {
 
 		super.setWorldTime(time);
 	}
-
-	/* WDL >>> */
-	@Override
-	public void addBlockEvent(BlockPos pos, Block block, int eventId,
-			int eventParam) {
-		super.addBlockEvent(pos, block, eventId, eventParam);
-
-		wdl.WDLEvents.onBlockEvent(pos, block, eventId, eventParam);
-	}
-	/* <<< WDL */
 }

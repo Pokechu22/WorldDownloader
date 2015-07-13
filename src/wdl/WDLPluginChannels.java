@@ -1,23 +1,21 @@
 package wdl;
 
-import java.util.Arrays;
+import io.netty.buffer.Unpooled;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.play.client.C17PacketCustomPayload;
+import net.minecraft.world.chunk.Chunk;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
-
-import io.netty.buffer.Unpooled;
-import net.minecraft.client.Minecraft;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.client.C17PacketCustomPayload;
-import net.minecraft.network.play.server.S3FPacketCustomPayload;
-import net.minecraft.world.chunk.Chunk;
 
 /**
  * Plugin channel handler.
@@ -253,11 +251,9 @@ public class WDLPluginChannels {
 		minecraft.getNetHandler().addToSendQueue(initPacket);
 	}
 	
-	static void onPluginChannelPacket(String channel,
-			S3FPacketCustomPayload packet) {
+	static void onPluginChannelPacket(String channel, byte[] bytes) {
 		if ("WDL|CONTROL".equals(channel)) {
-			ByteArrayDataInput input = ByteStreams.newDataInput(packet
-					.getBufferData().array());
+			ByteArrayDataInput input = ByteStreams.newDataInput(bytes);
 
 			int section = input.readInt();
 
@@ -316,10 +312,8 @@ public class WDLPluginChannels {
 						"entityRanges: total of " + entityRanges.size());
 				break;
 			default:
-				byte[] data = packet.getBufferData().array();
-
 				StringBuilder messageBuilder = new StringBuilder();
-				for (byte b : data) {
+				for (byte b : bytes) {
 					messageBuilder.append(b).append(' ');
 				}
 

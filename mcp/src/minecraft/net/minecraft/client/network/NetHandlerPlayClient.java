@@ -919,10 +919,6 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 	 */
 	@Override
 	public void handleChat(S02PacketChat packetIn) {
-		/* WDL >>> */
-		String var2 = packetIn.func_148915_c().getFormattedText();
-		wdl.WDLEvents.onChatMessage(var2);
-		/* <<< WDL */
 		PacketThreadUtil.func_180031_a(packetIn, this, this.gameController);
 
 		if (packetIn.func_179841_c() == 2) {
@@ -932,6 +928,10 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 			this.gameController.ingameGUI.getChatGUI().printChatMessage(
 				packetIn.func_148915_c());
 		}
+		
+		/* WDL >>> */
+		wdl.WDLHooks.onNHPCHandleChat(this, packetIn);
+		/* <<< WDL */
 	}
 
 	/**
@@ -1413,6 +1413,10 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 		this.gameController.theWorld.addBlockEvent(packetIn.func_179825_a(),
 				packetIn.getBlockType(), packetIn.getData1(),
 				packetIn.getData2());
+		
+		/* WDL >>> */
+		wdl.WDLHooks.onNHPCHandleBlockAction(this, packetIn);
+		/* <<< WDL */
 	}
 
 	/**
@@ -1549,7 +1553,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 			var2);
 		
 		/* WDL >>> */
-		wdl.WDLEvents.onMapDataLoaded(packetIn.getMapId(), var2);
+		wdl.WDLHooks.onNHPCHandleMaps(this, packetIn);
 		/* <<< WDL */
 	}
 
@@ -2039,7 +2043,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 		}
 		
 		/* WDL >>> */
-		wdl.WDLEvents.onPluginChannelPacket(packetIn.getChannelName(), packetIn);
+		wdl.WDLHooks.onNHPCHandleCustomPayload(this, packetIn);
 		/* <<< WDL */
 	}
 
