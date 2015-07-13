@@ -2,6 +2,7 @@ package wdl;
 
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.network.NetHandlerPlayClient;
+import net.minecraft.crash.CrashReport;
 import net.minecraft.item.ItemMap;
 import net.minecraft.network.play.server.S02PacketChat;
 import net.minecraft.network.play.server.S24PacketBlockAction;
@@ -18,20 +19,25 @@ public class WDLHooks {
 	 * Should be at end of the method.
 	 */
 	public static void onWorldClientTick(WorldClient sender) {
-		if (sender != WDL.worldClient) {
-			WDLEvents.onWorldLoad();
-		} else {
-			if (WDL.thePlayer != null) {
-				if (WDL.thePlayer.openContainer != WDL.windowContainer) {
-					if (WDL.thePlayer.openContainer == WDL.thePlayer.inventoryContainer) {
-						WDLEvents.onItemGuiClosed();
-					} else {
-						WDLEvents.onItemGuiOpened();
+		try {
+			if (sender != WDL.worldClient) {
+				WDLEvents.onWorldLoad();
+			} else {
+				if (WDL.thePlayer != null) {
+					if (WDL.thePlayer.openContainer != WDL.windowContainer) {
+						if (WDL.thePlayer.openContainer == WDL.thePlayer.inventoryContainer) {
+							WDLEvents.onItemGuiClosed();
+						} else {
+							WDLEvents.onItemGuiOpened();
+						}
+	
+						WDL.windowContainer = WDL.thePlayer.openContainer;
 					}
-
-					WDL.windowContainer = WDL.thePlayer.openContainer;
 				}
 			}
+		} catch (Throwable e) {
+			WDL.minecraft.crashed(CrashReport.makeCrashReport(e,
+					"WDL mod: exception in onWorldClientTick event"));
 		}
 	}
 
@@ -41,9 +47,14 @@ public class WDLHooks {
 	 */
 	public static void onWorldClientDoPreChunk(WorldClient sender, int x,
 			int z, boolean loading) {
-		if (!loading) {
-			wdl.WDLEvents.onChunkNoLongerNeeded(WDL.worldClient
-					.getChunkFromChunkCoords(x, z));
+		try {
+			if (!loading) {
+				wdl.WDLEvents.onChunkNoLongerNeeded(WDL.worldClient
+						.getChunkFromChunkCoords(x, z));
+			}
+		} catch (Throwable e) {
+			WDL.minecraft.crashed(CrashReport.makeCrashReport(e,
+					"WDL mod: exception in onWorldDoPreChunk event"));
 		}
 	}
 
@@ -56,7 +67,12 @@ public class WDLHooks {
 	 */
 	public static void onWorldClientRemoveEntityFromWorld(WorldClient sender,
 			int eid) {
-		WDLEvents.onRemoveEntityFromWorld(WDL.worldClient.getEntityByID(eid));
+		try {
+			WDLEvents.onRemoveEntityFromWorld(WDL.worldClient.getEntityByID(eid));
+		} catch (Throwable e) {
+			WDL.minecraft.crashed(CrashReport.makeCrashReport(e,
+					"WDL mod: exception in onWorldRemoveEntityFromWorld event"));
+		}
 	}
 
 	/**
@@ -65,7 +81,12 @@ public class WDLHooks {
 	 */
 	public static void onNHPCHandleChat(NetHandlerPlayClient sender,
 			S02PacketChat packet) {
-		WDLEvents.onChatMessage(packet.func_148915_c().toString());
+		try {
+			WDLEvents.onChatMessage(packet.func_148915_c().toString());
+		} catch (Throwable e) {
+			WDL.minecraft.crashed(CrashReport.makeCrashReport(e,
+					"WDL mod: exception in onNHPCHandleChat event"));
+		}
 	}
 
 	/**
@@ -74,9 +95,13 @@ public class WDLHooks {
 	 */
 	public static void onNHPCHandleMaps(NetHandlerPlayClient sender,
 			S34PacketMaps packet) {
-		
-		WDLEvents.onMapDataLoaded(packet.getMapId(),
-				ItemMap.loadMapData(packet.getMapId(), WDL.worldClient));
+		try {
+			WDLEvents.onMapDataLoaded(packet.getMapId(),
+					ItemMap.loadMapData(packet.getMapId(), WDL.worldClient));
+		} catch (Throwable e) {
+			WDL.minecraft.crashed(CrashReport.makeCrashReport(e,
+					"WDL mod: exception in onNHPCHandleMaps event"));
+		}
 	}
 
 	/**
@@ -86,8 +111,13 @@ public class WDLHooks {
 	 */
 	public static void onNHPCHandleCustomPayload(NetHandlerPlayClient sender,
 			S3FPacketCustomPayload packet) {
-		WDLEvents.onPluginChannelPacket(packet.getChannelName(), packet
-				.getBufferData().array());
+		try {
+			WDLEvents.onPluginChannelPacket(packet.getChannelName(), packet
+					.getBufferData().array());
+		} catch (Throwable e) {
+			WDL.minecraft.crashed(CrashReport.makeCrashReport(e,
+					"WDL mod: exception in onNHPCHandleCustomPayload event"));
+		}
 	}
 
 	/**
@@ -97,7 +127,12 @@ public class WDLHooks {
 	 */
 	public static void onNHPCHandleBlockAction(NetHandlerPlayClient sender,
 			S24PacketBlockAction packet) {
-		WDLEvents.onBlockEvent(packet.func_179825_a(), packet.getBlockType(),
-				packet.getData1(), packet.getData2());
+		try {
+			WDLEvents.onBlockEvent(packet.func_179825_a(), packet.getBlockType(),
+					packet.getData1(), packet.getData2());
+		} catch (Throwable e) {
+			WDL.minecraft.crashed(CrashReport.makeCrashReport(e,
+					"WDL mod: exception in onNHPCHandleBlockAction event"));
+		}
 	}
 }
