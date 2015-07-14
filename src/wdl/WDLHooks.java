@@ -20,6 +20,7 @@ public class WDLHooks {
 	
 	/**
 	 * Called when {@link WorldClient#tick()} is called.
+	 * <br/>
 	 * Should be at end of the method.
 	 */
 	public static void onWorldClientTick(WorldClient sender) {
@@ -59,6 +60,7 @@ public class WDLHooks {
 
 	/**
 	 * Called when {@link WorldClient#doPreChunk(int, int, boolean)} is called.
+	 * <br/>
 	 * Should be at the start of the method.
 	 */
 	public static void onWorldClientDoPreChunk(WorldClient sender, int x,
@@ -82,6 +84,7 @@ public class WDLHooks {
 
 	/**
 	 * Called when {@link WorldClient#removeEntityFromWorld(int)} is called.
+	 * <br/>
 	 * Should be at the start of the method.
 	 * 
 	 * @param eid
@@ -103,7 +106,9 @@ public class WDLHooks {
 
 	/**
 	 * Called when {@link NetHandlerPlayClient#handleChat(S02PacketChat)} is
-	 * called.  Should be at the end of the method.
+	 * called.
+	 * <br/>
+	 * Should be at the end of the method.
 	 */
 	public static void onNHPCHandleChat(NetHandlerPlayClient sender,
 			S02PacketChat packet) {
@@ -121,7 +126,9 @@ public class WDLHooks {
 
 	/**
 	 * Called when {@link NetHandlerPlayClient#handleMaps(S34PacketMaps)} is
-	 * called.  Should be at the end of the method.
+	 * called.
+	 * <br/>
+	 * Should be at the end of the method.
 	 */
 	public static void onNHPCHandleMaps(NetHandlerPlayClient sender,
 			S34PacketMaps packet) {
@@ -141,7 +148,9 @@ public class WDLHooks {
 	/**
 	 * Called when
 	 * {@link NetHandlerPlayClient#handleCustomPayload(S3FPacketCustomPayload)}
-	 * is called.  Should be at the end of the method.
+	 * is called.
+	 * <br/>
+	 * Should be at the end of the method.
 	 */
 	public static void onNHPCHandleCustomPayload(NetHandlerPlayClient sender,
 			S3FPacketCustomPayload packet) {
@@ -161,7 +170,9 @@ public class WDLHooks {
 	/**
 	 * Called when
 	 * {@link NetHandlerPlayClient#handleBlockAction(S24PacketBlockAction)} is
-	 * called.  Should be at the end of the method.
+	 * called.
+	 * <br/>
+	 * Should be at the end of the method.
 	 */
 	public static void onNHPCHandleBlockAction(NetHandlerPlayClient sender,
 			S24PacketBlockAction packet) {
