@@ -30,59 +30,6 @@ public class WDLHooks {
 	
 	public static Map<String, IWDLMod> wdlMods = new HashMap<String, IWDLMod>();
 	
-	static {
-		class TestMod implements IWDLMod {
-
-			@Override
-			public String getName() {
-				return "FOOOOO";
-			}
-
-			@Override
-			public void onWorldLoad(WorldClient world) {
-				WDL.chatMsg("TESTMOD");
-			}
-
-			@Override
-			public void onBlockGuiClosed(WorldClient world, BlockPos pos,
-					Container container) {
-				WDL.chatMsg(world + " " + pos + " " + container);
-			}
-
-			@Override
-			public void onEntityGuiClosed(WorldClient world, Entity entity,
-					Container container) {
-				//Test.
-				try {
-				Thread.sleep(20);
-				} catch (Exception e) {e.printStackTrace();}
-			}
-
-			@Override
-			public void onBlockEvent(WorldClient world, BlockPos pos,
-					Block block, int data1, int data2) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void onPluginChannelPacket(WorldClient world,
-					String channel, byte[] packetData) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void onChat(WorldClient world, String message) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-		}
-		
-		wdl.api.WDLApi.addWDLMod(new TestMod());
-	}
-	
 	/**
 	 * Called when {@link WorldClient#tick()} is called.
 	 * <br/>
