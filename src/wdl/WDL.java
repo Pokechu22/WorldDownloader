@@ -396,7 +396,7 @@ public class WDL {
 
 	/** Load the previously saved TileEntities and add them to the Chunk **/
 	public static void importTileEntities(Chunk chunk) {
-		File chunkSaveLocation = (File) stealAndGetField(chunkLoader,
+		File chunkSaveLocation = (File) ReflectionUtils.stealAndGetField(chunkLoader,
 				File.class);
 		DataInputStream dis = RegionFileCache.getChunkInputStream(
 				chunkSaveLocation, chunk.xPosition, chunk.zPosition);
@@ -680,7 +680,7 @@ public class WDL {
 
 		hashArrayField.setAccessible(true);
 		// Steal the instance of LongHashMap from our chunk provider
-		LongHashMap lhm = (LongHashMap) stealAndGetField(chunkProvider,
+		LongHashMap lhm = (LongHashMap) ReflectionUtils.stealAndGetField(chunkProvider,
 				LongHashMap.class);
 		
 		progressScreen.startMajorTask("Saving chunks", 
@@ -1262,102 +1262,6 @@ public class WDL {
 		}
 
 		return saveVersion;
-	}
-
-	/**
-	 * Uses Java's reflection API to get access to an unaccessible field
-	 *
-	 * @param typeOfClass
-	 *            Class that the field should be read from
-	 * @param typeOfField
-	 *            The type of the field
-	 * @return An Object of type Field
-	 */
-	public static Field stealField(Class typeOfClass, Class typeOfField) {
-		Field[] fields = typeOfClass.getDeclaredFields();
-
-		for (Field f : fields) {
-			if (f.getType().equals(typeOfField)) {
-				try {
-					f.setAccessible(true);
-					return f;
-				} catch (Exception e) {
-					throw new RuntimeException(
-						"WorldDownloader: Couldn't steal Field of type \""
-						+ typeOfField + "\" from class \"" + typeOfClass
-						+ "\" !", e);
-				}
-			}
-		}
-
-		throw new RuntimeException(
-			"WorldDownloader: Couldn't steal Field of type \""
-			+ typeOfField + "\" from class \"" + typeOfClass
-			+ "\" !");
-	}
-
-	/**
-	 * Uses Java's reflection API to get access to an unaccessible field
-	 *
-	 * @param object
-	 *            Object that the field should be read from or the type of the
-	 *            object if the field is static
-	 * @param typeOfField
-	 *            The type of the field
-	 * @return The value of the field
-	 */
-	public static Object stealAndGetField(Object object, Class typeOfField) {
-		Class typeOfObject;
-
-		if (object instanceof Class) { // User asked for static field:
-			typeOfObject = (Class) object;
-			object = null;
-		} else {
-			typeOfObject = object.getClass();
-		}
-
-		try {
-			Field f = stealField(typeOfObject, typeOfField);
-			return f.get(object);
-		} catch (Exception e) {
-			throw new RuntimeException(
-				"WorldDownloader: Couldn't get Field of type \""
-				+ typeOfField + "\" from object \"" + object
-				+ "\" !", e);
-		}
-	}
-
-	/**
-	 * Uses Java's reflection API to set the value of an unaccessible field
-	 *
-	 * @param object
-	 *            Object that the field should be read from or the type of the
-	 *            object if the field is static
-	 * @param typeOfField
-	 *            The type of the field
-	 * @param value
-	 *            The value to set the field to.
-	 */
-	public static void stealAndSetField(Object object, Class typeOfField,
-			Object value) {
-		Class typeOfObject;
-
-		if (object instanceof Class) { // User asked for static field:
-			typeOfObject = (Class) object;
-			object = null;
-		} else {
-			typeOfObject = object.getClass();
-		}
-
-		try {
-			Field f = stealField(typeOfObject, typeOfField);
-			f.set(object, value);
-		} catch (Exception e) {
-			throw new RuntimeException(
-				"WorldDownloader: Couldn't set Field of type \""
-				+ typeOfField + "\" from object \"" + object
-				+ "\" to " + value + "!", e);
-		}
 	}
 
 	// Add World Downloader buttons to GuiIngameMenu
