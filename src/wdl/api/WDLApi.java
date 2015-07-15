@@ -7,6 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import wdl.WDL;
+import wdl.WDLHooks;
 import wdl.WDLPluginChannels;
 
 /**
@@ -32,6 +33,25 @@ public class WDLApi {
 		}
 		
 		WDL.newTileEntities.put(pos, te);
+	}
+	
+	/**
+	 * Adds a mod to the list of the listened mods.
+	 */
+	public static void addWDLMod(IWDLMod mod) {
+		if (mod == null) {
+			throw new IllegalArgumentException("mod must not be null!");
+		}
+		
+		String modName = mod.getName();
+		if (WDLHooks.wdlMods.containsKey(modName)) {
+			throw new IllegalArgumentException("A mod by the name of '"
+					+ modName + "' is already registered by "
+					+ WDLHooks.wdlMods.get(modName) + " (tried to register "
+					+ mod + " over it)");
+		}
+		
+		WDLHooks.wdlMods.put(modName, mod);
 	}
 	
 	/**
