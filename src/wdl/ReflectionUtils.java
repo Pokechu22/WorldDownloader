@@ -49,7 +49,7 @@ public class ReflectionUtils {
 	 *            The type of the field
 	 * @return The value of the field
 	 */
-	public static Object stealAndGetField(Object object, Class typeOfField) {
+	public static <T> T stealAndGetField(Object object, Class<T> typeOfField) {
 		Class typeOfObject;
 	
 		if (object instanceof Class) { // User asked for static field:
@@ -61,7 +61,7 @@ public class ReflectionUtils {
 	
 		try {
 			Field f = stealField(typeOfObject, typeOfField);
-			return f.get(object);
+			return (T)f.get(object);
 		} catch (Exception e) {
 			throw new RuntimeException(
 				"WorldDownloader: Couldn't get Field of type \""

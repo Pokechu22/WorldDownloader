@@ -396,7 +396,7 @@ public class WDL {
 
 	/** Load the previously saved TileEntities and add them to the Chunk **/
 	public static void importTileEntities(Chunk chunk) {
-		File chunkSaveLocation = (File) ReflectionUtils.stealAndGetField(chunkLoader,
+		File chunkSaveLocation = ReflectionUtils.stealAndGetField(chunkLoader,
 				File.class);
 		DataInputStream dis = RegionFileCache.getChunkInputStream(
 				chunkSaveLocation, chunk.xPosition, chunk.zPosition);
@@ -680,7 +680,7 @@ public class WDL {
 
 		hashArrayField.setAccessible(true);
 		// Steal the instance of LongHashMap from our chunk provider
-		LongHashMap lhm = (LongHashMap) ReflectionUtils.stealAndGetField(chunkProvider,
+		LongHashMap lhm = ReflectionUtils.stealAndGetField(chunkProvider,
 				LongHashMap.class);
 		
 		progressScreen.startMajorTask("Saving chunks", 
