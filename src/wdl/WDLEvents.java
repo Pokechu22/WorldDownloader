@@ -142,8 +142,9 @@ public class WDLEvents {
 			//inventory of the horse they are on.  If so, use that,
 			//rather than the entity being looked at.
 			if (WDL.windowContainer instanceof ContainerHorseInventory) {
-				EntityHorse horseInContainer = (EntityHorse)
-						ReflectionUtils.stealAndGetField(WDL.windowContainer, EntityHorse.class);
+				EntityHorse horseInContainer = ReflectionUtils
+						.stealAndGetField(WDL.windowContainer,
+								EntityHorse.class);
 
 				//Intentional reference equals
 				if (horseInContainer == WDL.thePlayer.ridingEntity) {
@@ -209,7 +210,7 @@ public class WDLEvents {
 			} else if (WDL.lastEntity instanceof EntityVillager
 					&& WDL.windowContainer instanceof ContainerMerchant) {
 				EntityVillager ev = (EntityVillager) WDL.lastEntity;
-				MerchantRecipeList list = ((IMerchant)ReflectionUtils.stealAndGetField(
+				MerchantRecipeList list = (ReflectionUtils.stealAndGetField(
 						WDL.windowContainer, IMerchant.class)).getRecipes(
 								WDL.thePlayer);
 				ReflectionUtils.stealAndSetField(ev, MerchantRecipeList.class, list);
@@ -366,7 +367,7 @@ public class WDLEvents {
 
 			saveName = "Ender Chest contents";
 		} else if (WDL.windowContainer instanceof ContainerBrewingStand) {
-			IInventory brewingInventory = (IInventory) ReflectionUtils.stealAndGetField(
+			IInventory brewingInventory = ReflectionUtils.stealAndGetField(
 					WDL.windowContainer, IInventory.class);
 			WDL.saveContainerItems(WDL.windowContainer, (TileEntityBrewingStand) te, 0);
 			WDL.saveInventoryFields(brewingInventory, (TileEntityBrewingStand) te);
@@ -377,7 +378,7 @@ public class WDLEvents {
 			WDL.newTileEntities.put(WDL.lastClickedBlock, te);
 			saveName = "Dispenser contents";
 		} else if (WDL.windowContainer instanceof ContainerFurnace) {
-			IInventory furnaceInventory = (IInventory) ReflectionUtils.stealAndGetField(
+			IInventory furnaceInventory = ReflectionUtils.stealAndGetField(
 					WDL.windowContainer, IInventory.class);
 			WDL.saveContainerItems(WDL.windowContainer, (TileEntityFurnace) te, 0);
 			WDL.saveInventoryFields(furnaceInventory, (TileEntityFurnace) te);
