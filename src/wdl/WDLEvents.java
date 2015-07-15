@@ -139,7 +139,7 @@ public class WDLEvents {
 			//rather than the entity being looked at.
 			if (WDL.windowContainer instanceof ContainerHorseInventory) {
 				EntityHorse horseInContainer = (EntityHorse)
-						WDL.stealAndGetField(WDL.windowContainer, EntityHorse.class);
+						ReflectionUtils.stealAndGetField(WDL.windowContainer, EntityHorse.class);
 
 				//Intentional reference equals
 				if (horseInContainer == WDL.thePlayer.ridingEntity) {
@@ -168,7 +168,7 @@ public class WDLEvents {
 					//other method...
 					horseChest.func_110134_a(entityHorse);
 					//Save the actual data value to the other horse.
-					WDL.stealAndSetField(entityHorse, AnimalChest.class, horseChest);
+					ReflectionUtils.stealAndSetField(entityHorse, AnimalChest.class, horseChest);
 					WDL.chatDebug(WDLDebugMessageCause.ON_GUI_CLOSED_INFO,
 							"Saved ridden horse inventory.");
 					return;
@@ -205,10 +205,10 @@ public class WDLEvents {
 			} else if (WDL.lastEntity instanceof EntityVillager
 					&& WDL.windowContainer instanceof ContainerMerchant) {
 				EntityVillager ev = (EntityVillager) WDL.lastEntity;
-				MerchantRecipeList list = ((IMerchant)WDL.stealAndGetField(
+				MerchantRecipeList list = ((IMerchant)ReflectionUtils.stealAndGetField(
 						WDL.windowContainer, IMerchant.class)).getRecipes(
 								WDL.thePlayer);
-				WDL.stealAndSetField(ev, MerchantRecipeList.class, list);
+				ReflectionUtils.stealAndSetField(ev, MerchantRecipeList.class, list);
 				saveName = "Villager offers";
 			} else if (WDL.lastEntity instanceof EntityHorse
 					&& WDL.windowContainer instanceof ContainerHorseInventory) {
@@ -230,7 +230,7 @@ public class WDLEvents {
 				//other method...
 				horseChest.func_110134_a(entityHorse);
 				//Save the actual data value to the other horse.
-				WDL.stealAndSetField(entityHorse, AnimalChest.class, horseChest);
+				ReflectionUtils.stealAndSetField(entityHorse, AnimalChest.class, horseChest);
 				saveName = "Horse Chest";
 			} else {
 				WDL.chatDebug(WDLDebugMessageCause.ON_GUI_CLOSED_WARNING, 
@@ -362,7 +362,7 @@ public class WDLEvents {
 
 			saveName = "Ender Chest contents";
 		} else if (WDL.windowContainer instanceof ContainerBrewingStand) {
-			IInventory brewingInventory = (IInventory) WDL.stealAndGetField(
+			IInventory brewingInventory = (IInventory) ReflectionUtils.stealAndGetField(
 					WDL.windowContainer, IInventory.class);
 			WDL.saveContainerItems(WDL.windowContainer, (TileEntityBrewingStand) te, 0);
 			WDL.saveInventoryFields(brewingInventory, (TileEntityBrewingStand) te);
@@ -373,7 +373,7 @@ public class WDLEvents {
 			WDL.newTileEntities.put(WDL.lastClickedBlock, te);
 			saveName = "Dispenser contents";
 		} else if (WDL.windowContainer instanceof ContainerFurnace) {
-			IInventory furnaceInventory = (IInventory) WDL.stealAndGetField(
+			IInventory furnaceInventory = (IInventory) ReflectionUtils.stealAndGetField(
 					WDL.windowContainer, IInventory.class);
 			WDL.saveContainerItems(WDL.windowContainer, (TileEntityFurnace) te, 0);
 			WDL.saveInventoryFields(furnaceInventory, (TileEntityFurnace) te);
