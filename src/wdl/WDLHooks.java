@@ -172,6 +172,10 @@ public class WDLHooks {
 	public static void onNHPCHandleChat(NetHandlerPlayClient sender,
 			S02PacketChat packet) {
 		try {
+			if (!Minecraft.getMinecraft().isCallingFromMinecraftThread()) {
+				return;
+			}
+			
 			profiler.startSection("wdl.onChatMessage");
 			
 			//func_148915_c returns the IChatComponent.
@@ -203,6 +207,10 @@ public class WDLHooks {
 	public static void onNHPCHandleMaps(NetHandlerPlayClient sender,
 			S34PacketMaps packet) {
 		try {
+			if (!Minecraft.getMinecraft().isCallingFromMinecraftThread()) {
+				return;
+			}
+			
 			profiler.startSection("wdl.onMapDataLoaded");
 			
 			int id = packet.getMapId();
@@ -230,6 +238,10 @@ public class WDLHooks {
 	public static void onNHPCHandleCustomPayload(NetHandlerPlayClient sender,
 			S3FPacketCustomPayload packet) {
 		try {
+			if (!Minecraft.getMinecraft().isCallingFromMinecraftThread()) {
+				return;
+			}
+			
 			profiler.startSection("wdl.onPluginChannelPacket");
 			
 			String channel = packet.getChannelName();
@@ -263,6 +275,10 @@ public class WDLHooks {
 	public static void onNHPCHandleBlockAction(NetHandlerPlayClient sender,
 			S24PacketBlockAction packet) {
 		try {
+			if (!Minecraft.getMinecraft().isCallingFromMinecraftThread()) {
+				return;
+			}
+			
 			profiler.startSection("wdl.onBlockEvent");
 			
 			BlockPos pos = packet.func_179825_a();
