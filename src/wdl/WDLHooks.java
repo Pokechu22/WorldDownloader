@@ -32,6 +32,8 @@ public class WDLHooks {
 				WDLEvents.onWorldLoad();
 				profiler.endSection();
 			} else {
+				if (!WDL.downloading) { return; }
+				
 				profiler.startSection("inventoryCheck");
 				if (WDL.thePlayer != null) {
 					if (WDL.thePlayer.openContainer != WDL.windowContainer) {
@@ -66,6 +68,8 @@ public class WDLHooks {
 	public static void onWorldClientDoPreChunk(WorldClient sender, int x,
 			int z, boolean loading) {
 		try {
+			if (!WDL.downloading) { return; }
+			
 			profiler.startSection("wdl");
 			
 			if (!loading) {
@@ -93,6 +97,8 @@ public class WDLHooks {
 	public static void onWorldClientRemoveEntityFromWorld(WorldClient sender,
 			int eid) {
 		try {
+			if (!WDL.downloading) { return; }
+			
 			profiler.startSection("wdl.onRemoveEntityFromWorld");
 			
 			WDLEvents.onRemoveEntityFromWorld(WDL.worldClient.getEntityByID(eid));
@@ -117,6 +123,8 @@ public class WDLHooks {
 				return;
 			}
 			
+			if (!WDL.downloading) { return; }
+			
 			profiler.startSection("wdl.onChatMessage");
 			
 			WDLEvents.onChatMessage(packet.func_148915_c().toString());
@@ -140,6 +148,8 @@ public class WDLHooks {
 			if (!Minecraft.getMinecraft().isCallingFromMinecraftThread()) {
 				return;
 			}
+			
+			if (!WDL.downloading) { return; }
 			
 			profiler.startSection("wdl.onMapDataLoaded");
 			
@@ -192,6 +202,8 @@ public class WDLHooks {
 			if (!Minecraft.getMinecraft().isCallingFromMinecraftThread()) {
 				return;
 			}
+			
+			if (!WDL.downloading) { return; }
 			
 			profiler.startSection("wdl.onBlockEvent");
 			
