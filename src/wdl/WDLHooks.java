@@ -61,38 +61,64 @@ public class WDLHooks {
 				if (WDL.downloading && WDL.thePlayer != null) {
 					if (WDL.thePlayer.openContainer != WDL.windowContainer) {
 						if (WDL.thePlayer.openContainer == WDL.thePlayer.inventoryContainer) {
+							boolean handled;
+							
 							profiler.startSection("onItemGuiClosed");
 							profiler.startSection("Core");
-							WDLEvents.onItemGuiClosed();
-							profiler.endSection();
-							profiler.endSection();
-						} else {
-							profiler.startSection("onItemGuiOpened");
-							
-							profiler.startSection("Core");
-							WDLEvents.onItemGuiOpened();
+							handled = WDLEvents.onItemGuiClosed();
 							profiler.endSection();
 							
 							Container container = WDL.thePlayer.openContainer;
 							if (WDL.lastEntity != null) {
 								Entity entity = WDL.lastEntity;
-								
-								for (Map.Entry<String, IWDLMod> e : wdlMods.entrySet()) {
+
+								for (Map.Entry<String, IWDLMod> e : wdlMods
+										.entrySet()) {
+									if (handled) {
+										break;
+									}
+
 									profiler.startSection(e.getKey());
-									e.getValue().onEntityGuiClosed(sender,
-											entity, container);
+									handled = e.getValue().onEntityGuiClosed(
+											sender, entity, container);
 									profiler.endSection();
+								}
+								
+								if (!handled) {
+									WDL.chatDebug(WDLDebugMessageCause.
+											ON_GUI_CLOSED_WARNING,
+											"onItemGuiClosed: Unrecognised " +
+											"entity could not be saved: " + 
+											EntityUtils.getEntityType(entity));
 								}
 							} else {
 								BlockPos pos = WDL.lastClickedBlock;
-								for (Map.Entry<String, IWDLMod> e : wdlMods.entrySet()) {
+								for (Map.Entry<String, IWDLMod> e : wdlMods
+										.entrySet()) {
+									if (handled) {
+										break;
+									}
+
 									profiler.startSection(e.getKey());
-									e.getValue().onBlockGuiClosed(sender, pos,
-											container);
+									handled = e.getValue().onBlockGuiClosed(
+											sender, pos, container);
 									profiler.endSection();
+								}
+								
+								if (!handled) {
+									WDL.chatDebug(WDLDebugMessageCause.
+											ON_GUI_CLOSED_WARNING,
+											"onItemGuiClosed: unhandled TE @" + 
+											pos + ": " + sender.getTileEntity(pos));
 								}
 							}
 							
+							profiler.endSection();
+						} else {
+							profiler.startSection("onItemGuiOpened");
+							profiler.startSection("Core");
+							WDLEvents.onItemGuiOpened();
+							profiler.endSection();
 							profiler.endSection();
 						}
 	

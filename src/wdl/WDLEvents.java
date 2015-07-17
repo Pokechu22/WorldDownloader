@@ -125,10 +125,10 @@ public class WDLEvents {
 	 * Must be called when a GUI that triggered an onItemGuiOpened is no longer
 	 * shown
 	 */
-	public static void onItemGuiClosed() {
-		if (!WDL.downloading) { return; }
+	public static boolean onItemGuiClosed() {
+		if (!WDL.downloading) { return true; }
 		
-		if (!WDLPluginChannels.canDownloadInGeneral()) { return; }
+		if (!WDLPluginChannels.canDownloadInGeneral()) { return true; }
 
 		String saveName = "";
 
@@ -147,7 +147,7 @@ public class WDLEvents {
 					if (!WDLPluginChannels.canSaveEntities()) {
 						WDL.chatDebug(WDLDebugMessageCause.ON_GUI_CLOSED_INFO,
 								"Server configuration forbids saving of Entities!");
-						return;
+						return true;
 					}
 
 					EntityHorse entityHorse = (EntityHorse)
@@ -172,7 +172,7 @@ public class WDLEvents {
 					ReflectionUtils.stealAndSetField(entityHorse, AnimalChest.class, horseChest);
 					WDL.chatDebug(WDLDebugMessageCause.ON_GUI_CLOSED_INFO,
 							"Saved ridden horse inventory.");
-					return;
+					return true;
 				}
 			}
 		}
@@ -182,7 +182,7 @@ public class WDLEvents {
 			if (!WDLPluginChannels.canSaveEntities()) {
 				WDL.chatDebug(WDLDebugMessageCause.ON_GUI_CLOSED_INFO,
 						"Server configuration forbids saving of Entities!");
-				return;
+				return true;
 			}
 
 			if (WDL.lastEntity instanceof EntityMinecartChest
@@ -234,31 +234,29 @@ public class WDLEvents {
 				ReflectionUtils.stealAndSetField(entityHorse, AnimalChest.class, horseChest);
 				saveName = "Horse Chest";
 			} else {
-				WDL.chatDebug(WDLDebugMessageCause.ON_GUI_CLOSED_WARNING, 
-						"Unrecognized entity cannot be saved: "
-						+ EntityUtils.getEntityType(WDL.lastEntity));
-				return;
+				return false;
 			}
 
 			WDL.chatDebug(WDLDebugMessageCause.ON_GUI_CLOSED_INFO, "Saved "
 					+ saveName + ".");
-			return;
+			return true;
 		}
 
 		// Else, the last thing clicked was a TILE ENTITY
 		if (!WDLPluginChannels.canSaveContainers()) {
 			WDL.chatDebug(WDLDebugMessageCause.ON_GUI_CLOSED_INFO,
 					"Server configuration forbids saving of TileEntities!");
-			return;
+			return true;
 		}
 
 		// Get the tile entity which we are going to update the inventory for
 		TileEntity te = WDL.worldClient.getTileEntity(WDL.lastClickedBlock);
 
 		if (te == null) {
+			//TODO: Is this a good way to stop?  Is the event truely handled here?
 			WDL.chatDebug(WDLDebugMessageCause.ON_GUI_CLOSED_WARNING,
 					"onItemGuiClosed could not get TE at " + WDL.lastClickedBlock);
-			return;
+			return true;
 		}
 
 		if (WDL.windowContainer instanceof ContainerChest
@@ -333,7 +331,7 @@ public class WDLEvents {
 						chestPos1 == null || chestPos2 == null) {
 					WDL.chatError("Could not save this double chest!");
 					WDL.chatError("Not all chest blocks were found!");
-					return;
+					return true;
 				}
 
 				WDL.saveContainerItems(WDL.windowContainer, chest1, 0);
@@ -394,14 +392,12 @@ public class WDLEvents {
 			WDL.newTileEntities.put(WDL.lastClickedBlock, te);
 			saveName = "Beacon effects";
 		} else {
-			WDL.chatDebug(WDLDebugMessageCause.ON_GUI_CLOSED_WARNING,
-					"onItemGuiClosed unhandled TE: " + te);
-			return;
+			return false;
 		}
 
 		WDL.chatDebug(WDLDebugMessageCause.ON_GUI_CLOSED_INFO, "Saved "
 				+ saveName + ".");
-		return;
+		return true;
 	}
 
 	/**

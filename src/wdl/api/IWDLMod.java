@@ -1,8 +1,10 @@
 package wdl.api;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.util.BlockPos;
 
@@ -42,8 +44,11 @@ public interface IWDLMod {
 	 *            the actual location of the block.)
 	 * @param container
 	 *            The container that the closing player had open.
+	 * 
+	 * @return Whether the given mod handled the event (if <code>false</code> is
+	 *         returned, it'll be passed on to the next mod).
 	 */
-	public abstract void onBlockGuiClosed(WorldClient world, BlockPos pos,
+	public abstract boolean onBlockGuiClosed(WorldClient world, BlockPos pos,
 			Container container);
 
 	/**
@@ -59,8 +64,11 @@ public interface IWDLMod {
 	 *            The entity whose GUI was closed.
 	 * @param container
 	 *            The container that the closing player had open.
+	 * 
+	 * @return Whether the given mod handled the event (if <code>false</code> is
+	 *         returned, it'll be passed on to the next mod).
 	 */
-	public abstract void onEntityGuiClosed(WorldClient world, Entity entity,
+	public abstract boolean onEntityGuiClosed(WorldClient world, Entity entity,
 			Container container);
 
 	/**
