@@ -57,10 +57,8 @@ public class WDLHooks {
 				
 				profiler.endSection();
 			} else {
-				if (!WDL.downloading) { return; }
-				
 				profiler.startSection("inventoryCheck");
-				if (WDL.thePlayer != null) {
+				if (WDL.downloading && WDL.thePlayer != null) {
 					if (WDL.thePlayer.openContainer != WDL.windowContainer) {
 						if (WDL.thePlayer.openContainer == WDL.thePlayer.inventoryContainer) {
 							profiler.startSection("onItemGuiClosed");
