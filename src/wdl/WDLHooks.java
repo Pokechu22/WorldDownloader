@@ -57,6 +57,8 @@ public class WDLHooks {
 				
 				profiler.endSection();
 			} else {
+				if (!WDL.downloading) { return; }
+				
 				profiler.startSection("inventoryCheck");
 				if (WDL.thePlayer != null) {
 					if (WDL.thePlayer.openContainer != WDL.windowContainer) {
@@ -117,6 +119,8 @@ public class WDLHooks {
 	public static void onWorldClientDoPreChunk(WorldClient sender, int x,
 			int z, boolean loading) {
 		try {
+			if (!WDL.downloading) { return; }
+			
 			profiler.startSection("wdl");
 			
 			if (!loading) {
@@ -148,6 +152,8 @@ public class WDLHooks {
 	public static void onWorldClientRemoveEntityFromWorld(WorldClient sender,
 			int eid) {
 		try {
+			if (!WDL.downloading) { return; }
+			
 			profiler.startSection("wdl.onRemoveEntityFromWorld");
 			
 			Entity entity = WDL.worldClient.getEntityByID(eid);
@@ -175,6 +181,8 @@ public class WDLHooks {
 			if (!Minecraft.getMinecraft().isCallingFromMinecraftThread()) {
 				return;
 			}
+			
+			if (!WDL.downloading) { return; }
 			
 			profiler.startSection("wdl.onChatMessage");
 			
@@ -211,6 +219,8 @@ public class WDLHooks {
 				return;
 			}
 			
+			if (!WDL.downloading) { return; }
+			
 			profiler.startSection("wdl.onMapDataLoaded");
 			
 			int id = packet.getMapId();
@@ -241,9 +251,7 @@ public class WDLHooks {
 			if (!Minecraft.getMinecraft().isCallingFromMinecraftThread()) {
 				return;
 			}
-			
-			profiler.startSection("wdl.onPluginChannelPacket");
-			
+						
 			String channel = packet.getChannelName();
 			byte[] payload = packet.getBufferData().array();
 			
@@ -278,6 +286,8 @@ public class WDLHooks {
 			if (!Minecraft.getMinecraft().isCallingFromMinecraftThread()) {
 				return;
 			}
+			
+			if (!WDL.downloading) { return; }
 			
 			profiler.startSection("wdl.onBlockEvent");
 			
