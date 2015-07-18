@@ -331,12 +331,6 @@ public class WDL {
 		NetworkManager newNM = thePlayer.sendQueue.getNetworkManager();
 
 		if (networkManager != newNM) {
-			// Different server, different world!
-			chatDebug(WDLDebugMessageCause.ON_WORLD_LOAD,
-					"onWorldLoad: different server!");
-			networkManager = newNM;
-			loadBaseProps();
-			
 			// Load the debug settings.
 			WDLDebugMessageCause.resetEnabledToDefaults();
 			WDLDebugMessageCause.globalDebugEnabled = baseProps.getProperty(
@@ -347,6 +341,12 @@ public class WDL {
 							"Debug." + cause.name(), "true").equals("true"));
 				}
 			}
+			
+			// Different server, different world!
+			chatDebug(WDLDebugMessageCause.ON_WORLD_LOAD,
+					"onWorldLoad: different server!");
+			networkManager = newNM;
+			loadBaseProps();
 			
 			if (baseProps.getProperty("AutoStart").equals("true")) {
 				start();
