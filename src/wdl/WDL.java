@@ -345,6 +345,15 @@ public class WDL {
 			// Different server, different world!
 			chatDebug(WDLDebugMessageCause.ON_WORLD_LOAD,
 					"onWorldLoad: different server!");
+			
+			// It may look a bit silly, but getClientBrand() returns the server
+			// brand, not the client one.  Blame MCP.
+			chatDebug(WDLDebugMessageCause.ON_WORLD_LOAD,
+					"Server brand=" + thePlayer.getClientBrand() +
+					".  Using " + (thePlayer.getClientBrand().toLowerCase()
+							.contains("spigot") ? "Spigot" : "Vanilla") +
+							" track distances.");
+			
 			networkManager = newNM;
 			loadBaseProps();
 			
@@ -358,6 +367,14 @@ public class WDL {
 			chatDebug(WDLDebugMessageCause.ON_WORLD_LOAD,
 					"onWorldLoad: same server!");
 
+			// It may look a bit silly, but getClientBrand() returns the server
+			// brand, not the client one.  Blame MCP.
+			chatDebug(WDLDebugMessageCause.ON_WORLD_LOAD,
+					"Server brand=" + thePlayer.getClientBrand() +
+					".  Using " + (thePlayer.getClientBrand().toLowerCase()
+							.contains("spigot") ? "Spigot" : "Vanilla") +
+							" track distances.");
+			
 			if (startOnChange) {
 				start();
 			}
