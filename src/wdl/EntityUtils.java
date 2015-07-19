@@ -288,12 +288,12 @@ public class EntityUtils {
 	 */
 	public static int getEntityTrackDistance(String mode, String type) {
 		if ("default".equals(mode)) {
-			return getVanillaEntityRange(type);
+			return getMostLikelyEntityTrackDistance(type);
 		} else if ("server".equals(mode)) {
 			int serverDistance = WDLPluginChannels.getEntityRange(type);
 			
 			if (serverDistance < 0) {
-				return getVanillaEntityRange(type);
+				return getMostLikelyEntityTrackDistance(type);
 			}
 			
 			return serverDistance;
@@ -399,6 +399,19 @@ public class EntityUtils {
 		return (e instanceof EntityArmorStand &&
 				e.isInvisible() &&
 				e.hasCustomName());
+	}
+	
+	/**
+	 * Gets the track distance for the given entity, making a guess about
+	 * whether to use spigot track distances based off of the server brand.
+	 */
+	public static int getMostLikelyEntityTrackDistance(String entity) {
+		// getClientBrand() returns the server's brand.  Blame MCP.
+		if (WDL.thePlayer.getClientBrand().toLowerCase().contains("spigot")) {
+			return getSpigotEntityRange(entity);
+		} else {
+			return getVanillaEntityRange(entity);
+		}
 	}
 	
 	/**
