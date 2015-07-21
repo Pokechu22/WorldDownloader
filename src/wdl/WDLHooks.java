@@ -3,6 +3,7 @@ package wdl;
 import java.util.HashMap;
 import java.util.Map;
 
+import wdl.api.IGuiHooksListener;
 import wdl.api.IWDLMod;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -29,6 +30,11 @@ public class WDLHooks {
 	private static final Profiler profiler = Minecraft.getMinecraft().mcProfiler;
 	
 	public static Map<String, IWDLMod> wdlMods = new HashMap<String, IWDLMod>();
+	/**
+	 * All WDLMods that implement {@link IGuiHooksListener}.
+	 */
+	public static Map<String, IGuiHooksListener> guiListeners =
+			new HashMap<String, IGuiHooksListener>();
 	
 	/**
 	 * Called when {@link WorldClient#tick()} is called.
@@ -72,8 +78,8 @@ public class WDLHooks {
 							if (WDL.lastEntity != null) {
 								Entity entity = WDL.lastEntity;
 
-								for (Map.Entry<String, IWDLMod> e : wdlMods
-										.entrySet()) {
+								for (Map.Entry<String, IGuiHooksListener> e :
+										guiListeners.entrySet()) {
 									if (handled) {
 										break;
 									}
@@ -93,8 +99,8 @@ public class WDLHooks {
 								}
 							} else {
 								BlockPos pos = WDL.lastClickedBlock;
-								for (Map.Entry<String, IWDLMod> e : wdlMods
-										.entrySet()) {
+								for (Map.Entry<String, IGuiHooksListener> e :
+										guiListeners.entrySet()) {
 									if (handled) {
 										break;
 									}

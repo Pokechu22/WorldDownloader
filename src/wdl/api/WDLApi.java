@@ -52,6 +52,9 @@ public class WDLApi {
 		}
 		
 		WDLHooks.wdlMods.put(modName, mod);
+		if (mod instanceof IGuiHooksListener) {
+			WDLHooks.guiListeners.put(modName, (IGuiHooksListener) mod);
+		}
 	}
 	
 	/**
