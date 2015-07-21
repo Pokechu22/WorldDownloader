@@ -180,7 +180,7 @@ public class WDLHooks {
 			
 			profiler.startSection("wdl.onRemoveEntityFromWorld");
 			
-			Entity entity = WDL.worldClient.getEntityByID(eid);
+			Entity entity = sender.getEntityByID(eid);
 			
 			profiler.startSection("Core");
 			WDLEvents.onRemoveEntityFromWorld(entity);
