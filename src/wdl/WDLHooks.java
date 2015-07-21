@@ -4,12 +4,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.crash.CrashReport;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemMap;
 import net.minecraft.network.play.server.S02PacketChat;
 import net.minecraft.network.play.server.S24PacketBlockAction;
 import net.minecraft.network.play.server.S34PacketMaps;
 import net.minecraft.network.play.server.S3FPacketCustomPayload;
 import net.minecraft.profiler.Profiler;
+import net.minecraft.world.chunk.Chunk;
 
 /**
  * The various hooks for WDL. <br/>
@@ -72,8 +74,9 @@ public class WDLHooks {
 			
 			if (!loading) {
 				profiler.startSection("onChunkNoLongerNeeded");
-				wdl.WDLEvents.onChunkNoLongerNeeded(WDL.worldClient
-						.getChunkFromChunkCoords(x, z));
+				Chunk c = sender.getChunkFromChunkCoords(x, z); 
+				
+				wdl.WDLEvents.onChunkNoLongerNeeded(c);
 				profiler.endSection();
 			}
 			
@@ -98,9 +101,9 @@ public class WDLHooks {
 			if (!WDL.downloading) { return; }
 			
 			profiler.startSection("wdl.onRemoveEntityFromWorld");
+			Entity entity = sender.getEntityByID(eid);
 			
-			WDLEvents.onRemoveEntityFromWorld(WDL.worldClient.getEntityByID(eid));
-			
+			WDLEvents.onRemoveEntityFromWorld(entity);
 			profiler.endSection();
 		} catch (Throwable e) {
 			WDL.minecraft.crashed(CrashReport.makeCrashReport(e,
