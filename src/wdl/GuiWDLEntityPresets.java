@@ -20,12 +20,6 @@ public class GuiWDLEntityPresets extends GuiScreen implements GuiYesNoCallback {
 	private GuiButton vanillaButton;
 	private GuiButton spigotButton;
 	private GuiButton serverButton;
-	private GuiButton allOtherButton;
-	private GuiButton noOtherButton;
-	private GuiButton allPassiveButton;
-	private GuiButton noPassiveButton;
-	private GuiButton allHostileButton;
-	private GuiButton noHostileButton;
 	private GuiButton okButton;
 	
 	public GuiWDLEntityPresets(GuiScreen parent) {
@@ -51,31 +45,6 @@ public class GuiWDLEntityPresets extends GuiScreen implements GuiYesNoCallback {
 		
 		y += 28 + 2 + mc.fontRendererObj.FONT_HEIGHT;
 		
-		this.allOtherButton = new GuiButton(3, this.width / 2 - 230, y, 150, 20,
-				"Enable all other entities");
-		this.allPassiveButton = new GuiButton(4, this.width / 2 - 75, y, 150, 20,
-				"Enable all passive entities");
-		this.allHostileButton = new GuiButton(5, this.width / 2 + 80, y, 150, 20,
-				"Enable all hostile entities");
-		
-		y += 22;
-		
-		this.noOtherButton = new GuiButton(6, this.width / 2 - 230, y, 150, 20,
-				"Disable all other entities");
-		this.noPassiveButton = new GuiButton(7, this.width / 2 - 75, y, 150, 20,
-				"Disable all passive entities");
-		this.noHostileButton = new GuiButton(8, this.width / 2 + 80, y, 150, 20,
-				"Disable all hostile entities");
-		
-		this.buttonList.add(allOtherButton);
-		this.buttonList.add(allPassiveButton);
-		this.buttonList.add(allHostileButton);
-		this.buttonList.add(noOtherButton);
-		this.buttonList.add(noPassiveButton);
-		this.buttonList.add(noHostileButton);
-		
-		y += 28 + 2 + mc.fontRendererObj.FONT_HEIGHT;
-		
 		this.okButton = new GuiButton(100, this.width / 2 - 100, y, "OK");
 		this.buttonList.add(okButton);
 	}
@@ -86,38 +55,24 @@ public class GuiWDLEntityPresets extends GuiScreen implements GuiYesNoCallback {
 			return;
 		}
 		
-		if (button.id < 9) {
+		if (button.id < 3) {
 			String upper;
-			String lower = "§c§n§lThis cannot be undone.§r";
-			if (button.id < 3) {
-				upper = "Are you sure you want to reset your entity ranges?";
-				
-				if (button.id == 0) {
-					lower = "§rSetting to vanilla Minecraft ranges -- " +
-							"§c§n§lThis cannot be undone.§r";
-				} else if (button.id == 1) {
-					lower = "§rSetting to default spigot ranges -- " +
-							"§c§n§lThis cannot be undone.§r";
-				} else if (button.id == 2) {
-					lower = "§rSetting to server configured ranges -- " +
-							"§c§n§lThis cannot be undone.§r";
-				}
+			String lower;
+			
+			upper = "Are you sure you want to reset your entity ranges?";
+			
+			if (button.id == 0) {
+				lower = "§rSetting to vanilla Minecraft ranges -- " +
+						"§c§n§lThis cannot be undone.§r";
+			} else if (button.id == 1) {
+				lower = "§rSetting to default spigot ranges -- " +
+						"§c§n§lThis cannot be undone.§r";
+			} else if (button.id == 2) {
+				lower = "§rSetting to server configured ranges -- " +
+						"§c§n§lThis cannot be undone.§r";
 			} else {
-				if (button.id < 6) { 
-					upper = "Are you sure you want to enable all ";
-				} else {
-					upper = "Are you sure you want to disable all ";
-				}
-				
-				if (button.id % 3 == 0) {
-					upper += "other";
-				} else if (button.id % 3 == 1) {
-					upper += "passive";
-				} else if (button.id % 3 == 2) {
-					upper += "hostile";
-				}
-				
-				upper += " entities?";
+				//Should not happen.
+				throw new Error("Button.id should never be negative.");
 			}
 			
 			mc.displayGuiScreen(new GuiYesNo(this, upper, lower, button.id));
@@ -163,24 +118,6 @@ public class GuiWDLEntityPresets extends GuiScreen implements GuiYesNoCallback {
 			} else {
 				infoText += "§cAs it is not installed, this cannot be used.";
 			}
-		} else if (allOtherButton.isMouseOver()) {
-			infoText = "Enable all `other' entities.\n\n(Other means " +
-					"anything that is not an animal or a monster)";
-		} else if (noOtherButton.isMouseOver()) {
-			infoText = "Disable all `other' entities.\n\n(Other means " +
-					"anything that is not an animal or a monster)";
-		} else if (allPassiveButton.isMouseOver()) {
-			infoText = "Enable all `pasive' entities.\n\n(Passive means " +
-					"all animals, including bats and squids)";
-		} else if (noPassiveButton.isMouseOver()) {
-			infoText = "Disable all `pasive' entities.\n\n(Passive means " +
-					"all animals, including bats and squids)";
-		} else if (allHostileButton.isMouseOver()) {
-			infoText = "Enable all `hostile' entities.\n\n(Hostile means " +
-					"monsters)";
-		} else if (noHostileButton.isMouseOver()) {
-			infoText = "Disable all `hostile' entities.\n\n(Hostile means " +
-					"monsters)";
 		}
 		
 		if (infoText != null) {
@@ -200,45 +137,26 @@ public class GuiWDLEntityPresets extends GuiScreen implements GuiYesNoCallback {
 	@Override
 	public void confirmClicked(boolean result, int id) {
 		if (result) {
-			if (id < 3) {
-				List<String> entities = EntityUtils.getEntityTypes();
-				
-				if (id == 0) {
-					for (String entity : entities) {
-						WDL.worldProps.setProperty("Entity." + entity
-								+ ".TrackDistance", Integer.toString(
-								EntityUtils.getVanillaEntityRange(entity)));
-					}
-				} else if (id == 1) {
-					for (String entity : entities) {
-						WDL.worldProps.setProperty("Entity." + entity
-								+ ".TrackDistance", Integer.toString(
-								EntityUtils.getSpigotEntityRange(entity)));
-					}
-				} else if (id == 2) { 
-					for (String entity : entities) {
-						WDL.worldProps.setProperty("Entity." + entity
-								+ ".TrackDistance", Integer.toString(
-								WDLPluginChannels.getEntityRange(entity)));
-					}
-				}
-			} else {
-				List<String> entities = null;
-				String value = Boolean.toString(id < 6);
-				
-				//TODO
-				/*if (id % 3 == 0) {
-					entities = EntityUtils.otherEntityList;
-				} else if (id % 3 == 1) {
-					entities = EntityUtils.passiveEntityList;
-				} else if (id % 3 == 2) {
-					entities = EntityUtils.hostileEntityList;
-				}
-				
+			List<String> entities = EntityUtils.getEntityTypes();
+			
+			if (id == 0) {
 				for (String entity : entities) {
 					WDL.worldProps.setProperty("Entity." + entity
-							+ ".Enabled", value);
-				}*/
+							+ ".TrackDistance", Integer.toString(
+							EntityUtils.getVanillaEntityRange(entity)));
+				}
+			} else if (id == 1) {
+				for (String entity : entities) {
+					WDL.worldProps.setProperty("Entity." + entity
+							+ ".TrackDistance", Integer.toString(
+							EntityUtils.getSpigotEntityRange(entity)));
+				}
+			} else if (id == 2) { 
+				for (String entity : entities) {
+					WDL.worldProps.setProperty("Entity." + entity
+							+ ".TrackDistance", Integer.toString(
+							WDLPluginChannels.getEntityRange(entity)));
+				}
 			}
 		}
 		
