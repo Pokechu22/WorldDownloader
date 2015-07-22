@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -153,36 +154,23 @@ public class GuiWDLEntities extends GuiScreen {
 			try {
 				int largestWidthSoFar = 0;
 				
-				add(new CategoryEntry("General"));
-				for (String entity : EntityUtils.otherEntityList) {
-					add(new EntityEntry(entity));
-					
-					int width = fontRendererObj.getStringWidth(entity);
-					if (width > largestWidthSoFar) {
-						largestWidthSoFar = width;
-					}
-				}
-				add(new CategoryEntry("Passive mobs"));
-				for (String entity : EntityUtils.passiveEntityList) {
-					add(new EntityEntry(entity));
-					
-					int width = fontRendererObj.getStringWidth(entity);
-					if (width > largestWidthSoFar) {
-						largestWidthSoFar = width;
-					}
-				}
-				add(new CategoryEntry("Hostile mobs"));
-				for (String entity : EntityUtils.hostileEntityList) {
-					add(new EntityEntry(entity));
-					
-					int width = fontRendererObj.getStringWidth(entity);
-					if (width > largestWidthSoFar) {
-						largestWidthSoFar = width;
+				Map<String, Collection<String>> entities = 
+						EntityUtils.entitiesByGroup.asMap();
+				for (Map.Entry<String, Collection<String>> e : entities
+						.entrySet()) {
+					add(new CategoryEntry(e.getKey()));
+
+					for (String entity : e.getValue()) {
+						add(new EntityEntry(entity));
+
+						int width = fontRendererObj.getStringWidth(entity);
+						if (width > largestWidthSoFar) {
+							largestWidthSoFar = width;
+						}
 					}
 				}
 				
 				largestWidth = largestWidthSoFar;
-				
 			} catch (Exception e) {
 				WDL.chatError("Error setting up Entity List UI: " + e);
 				e.printStackTrace();

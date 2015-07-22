@@ -226,7 +226,8 @@ public class GuiWDLEntityPresets extends GuiScreen implements GuiYesNoCallback {
 				List<String> entities = null;
 				String value = Boolean.toString(id < 6);
 				
-				if (id % 3 == 0) {
+				//TODO
+				/*if (id % 3 == 0) {
 					entities = EntityUtils.otherEntityList;
 				} else if (id % 3 == 1) {
 					entities = EntityUtils.passiveEntityList;
@@ -237,7 +238,7 @@ public class GuiWDLEntityPresets extends GuiScreen implements GuiYesNoCallback {
 				for (String entity : entities) {
 					WDL.worldProps.setProperty("Entity." + entity
 							+ ".Enabled", value);
-				}
+				}*/
 			}
 		}
 		

@@ -47,6 +47,9 @@ import net.minecraft.entity.projectile.EntitySnowball;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+
 /**
  * Provides utility functions for recognising entities.
  */
@@ -63,18 +66,15 @@ public class EntityUtils {
 	public static final Map<Class, String> classToStringMapping;
 	
 	/**
-	 * Names of all passive entities.
+	 * Entities arranged by the grouping used in the entity GUI.
 	 */
-	public static final List<String> passiveEntityList;
-	/**
-	 * Names of all hostile entities.
-	 */
-	public static final List<String> hostileEntityList;
-	/**
-	 * Names of all other entities.  Includes hologram. 
-	 */
-	public static final List<String> otherEntityList;
+	public static final Multimap<String, String> entitiesByGroup = 
+			HashMultimap.<String, String>create();
 	
+	/*
+	 * Add the vanilla entities to entitiesByGroup and steal the 
+	 * classToStringMapping and stringToClassMapping fields.
+	 */
 	static {
 		try {
 			Map<String, Class> mappingSTC = null;
@@ -138,9 +138,9 @@ public class EntityUtils {
 			Collections.sort(passiveEntities, Collator.getInstance());
 			Collections.sort(otherEntities, Collator.getInstance());
 			
-			passiveEntityList = passiveEntities;
-			hostileEntityList = hostileEntities;
-			otherEntityList = otherEntities;
+			entitiesByGroup.putAll("Hostile", hostileEntities);
+			entitiesByGroup.putAll("Passive", passiveEntities);
+			entitiesByGroup.putAll("Other", otherEntities);
 		} catch (Exception e) {
 			throw new Error("WDL: Failed to setup entity mappings!");
 		}
