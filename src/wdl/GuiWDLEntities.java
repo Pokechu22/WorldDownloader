@@ -158,10 +158,11 @@ public class GuiWDLEntities extends GuiScreen {
 						EntityUtils.entitiesByGroup.asMap();
 				for (Map.Entry<String, Collection<String>> e : entities
 						.entrySet()) {
-					add(new CategoryEntry(e.getKey()));
+					CategoryEntry category = new CategoryEntry(e.getKey());
+					add(category);
 
 					for (String entity : e.getValue()) {
-						add(new EntityEntry(entity));
+						add(new EntityEntry(category, entity));
 
 						int width = fontRendererObj.getStringWidth(entity);
 						if (width > largestWidthSoFar) {
@@ -186,26 +187,54 @@ public class GuiWDLEntities extends GuiScreen {
 		 * {@link net.minecraft.client.gui.GuiKeyBindingList.CategoryEntry}.
 		 */
 		private class CategoryEntry implements GuiListExtended.IGuiListEntry {
-			private final String labelText;
+			private final String group;
 			private final int labelWidth;
+			
+			private final GuiButton enableGroupButton; 
+			
+			private boolean groupEnabled;
 
-			public CategoryEntry(String text) {
-				this.labelText = text; //I18n.format(text, new Object[0]);
-				this.labelWidth = mc.fontRendererObj.getStringWidth(this.labelText);
+			public CategoryEntry(String group) {
+				this.group = group;
+				this.labelWidth = mc.fontRendererObj.getStringWidth(group);
+				
+				this.groupEnabled = WDL.worldProps.getProperty("EntityGroup."
+						+ group + ".Enabled", "true").equals("true");
+				
+				this.enableGroupButton = new GuiButton(0, 0, 0, 90, 18, 
+						groupEnabled ? "§aEnabled" : "§cAll disabled");
 			}
 
 			@Override
 			public void drawEntry(int slotIndex, int x, int y, int listWidth,
 					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
-				mc.fontRendererObj.drawString(this.labelText,
-						mc.currentScreen.width / 2 - this.labelWidth / 2, y
-								+ slotHeight - mc.fontRendererObj.FONT_HEIGHT 
-								- 1, 0xFFFFFF);
+				mc.fontRendererObj.drawString(this.group, (x + 110 / 2)
+						- (this.labelWidth / 2), y + slotHeight
+						- mc.fontRendererObj.FONT_HEIGHT - 1, 0xFFFFFF);
+				
+				this.enableGroupButton.xPosition = x + 110;
+				this.enableGroupButton.yPosition = y;
+				this.enableGroupButton.displayString = groupEnabled ? "§aEnabled"
+						: "§cAll disabled";
+				
+				this.enableGroupButton.drawButton(mc, mouseX, mouseY);
 			}
 
 			@Override
 			public boolean mousePressed(int slotIndex, int x, int y,
 					int mouseEvent, int relativeX, int relativeY) {
+				if (enableGroupButton.mousePressed(mc, x, y)) {
+					groupEnabled ^= true;
+					
+					enableGroupButton.playPressSound(mc.getSoundHandler());
+					
+					this.enableGroupButton.displayString = 
+							groupEnabled ? "§aEnabled" : "§cAll disabled";
+					
+					WDL.worldProps.setProperty("EntityGroup." + group
+							+ ".Enabled", Boolean.toString(groupEnabled));
+					return true;
+				}
 				return false;
 			}
 
@@ -218,34 +247,41 @@ public class GuiWDLEntities extends GuiScreen {
 			public void setSelected(int p_178011_1_, int p_178011_2_,
 					int p_178011_3_) {
 			}
+			
+			boolean isGroupEnabled() {
+				return groupEnabled;
+			}
 		}
 		
 		/**
 		 * Contains an actual entity's data.
 		 * 
-		 * TODO: Implement buttons and such.
-		 * 
 		 * Based off of 
-		 * {@link net.minecraft.client.gui.GuiKeyBindingList.CategoryEntry}.
+		 * {@link net.minecraft.client.gui.GuiKeyBindingList.KeyEntry}.
 		 */
 		private class EntityEntry implements GuiListExtended.IGuiListEntry {
+			private final CategoryEntry category;
 			private final String entity;
+			
 			private final GuiButton onOffButton;
 			private final GuiSlider rangeSlider;
 			
-			private boolean enabled;
+			private boolean entityEnabled;
 			private int range;
 			
 			private String cachedMode;
 			
-			public EntityEntry(String entity) {
+			public EntityEntry(CategoryEntry category, String entity) {
+				this.category = category;
 				this.entity = entity;
 				
-				enabled = EntityUtils.isEntityEnabled(entity);
+				entityEnabled = WDL.worldProps.getProperty("Entity." + entity + 
+						".Enabled", "true").equals("true");
 				range = EntityUtils.getEntityTrackDistance(entity);
 				
 				this.onOffButton = new GuiButton(0, 0, 0, 75, 18, 
-						enabled ? "§aIncluded" : "§cIgnored");
+						entityEnabled ? "§aIncluded" : "§cIgnored");
+				this.onOffButton.enabled = category.isGroupEnabled();
 				
 				this.rangeSlider = new GuiSlider(1, 0, 0, 150, 18,
 						"Track Distance", range, 256);
@@ -264,8 +300,10 @@ public class GuiWDLEntities extends GuiScreen {
 				
 				this.onOffButton.xPosition = x - 45;
 				this.onOffButton.yPosition = y;
+				this.onOffButton.enabled = category.isGroupEnabled();
 				this.onOffButton.displayString = 
-						enabled ? "§aIncluded" : "§cIgnored";
+						onOffButton.enabled && entityEnabled ? 
+								"§aIncluded" : "§cIgnored";
 				
 				this.rangeSlider.xPosition = x + 50;
 				this.rangeSlider.yPosition = y;
@@ -286,15 +324,15 @@ public class GuiWDLEntities extends GuiScreen {
 			public boolean mousePressed(int slotIndex, int x, int y,
 					int mouseEvent, int relativeX, int relativeY) {
 				if (onOffButton.mousePressed(mc, x, y)) {
-					enabled ^= true;
+					entityEnabled ^= true;
 					
 					onOffButton.playPressSound(mc.getSoundHandler());
 					
 					this.onOffButton.displayString = 
-							enabled ? "§aIncluded" : "§cIgnored";
+							entityEnabled ? "§aIncluded" : "§cIgnored";
 					
 					WDL.worldProps.setProperty("Entity." + entity + 
-							".Enabled", Boolean.toString(enabled));
+							".Enabled", Boolean.toString(entityEnabled));
 					return true;
 				}
 				if (rangeSlider.mousePressed(mc, x, y)) {

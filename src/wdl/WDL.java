@@ -253,6 +253,10 @@ public class WDL {
 		
 		defaultProps.setProperty("Entity.FireworksRocketEntity.Enabled", "false");
 		
+		defaultProps.setProperty("EntityGroup.Other.Enabled", "true");
+		defaultProps.setProperty("EntityGroup.Hostile.Enabled", "true");
+		defaultProps.setProperty("EntityGroup.Passive.Enabled", "true");
+		
 		baseProps = new Properties(defaultProps);
 		worldProps = new Properties(baseProps);
 	}

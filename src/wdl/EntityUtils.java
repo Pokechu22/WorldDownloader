@@ -324,6 +324,22 @@ public class EntityUtils {
 	}
 	
 	/**
+	 * Gets the group for the given entity type.
+	 * 
+	 * @param type
+	 * @return The group, or <code>null</code> if none is found.
+	 */
+	public static String getEntityGroup(String type) {
+		for (Map.Entry<String, String> e : entitiesByGroup.entries()) {
+			if (type.equals(e.getValue())) {
+				return e.getKey();
+			}
+		}
+		
+		return null;
+	}
+	
+	/**
 	 * Gets the track distance for the given entity in the given mode.
 	 * 
 	 * @param c
@@ -354,16 +370,12 @@ public class EntityUtils {
 			return false; //Shouldn't get here, but an extra check.
 		}
 		
-		String prop = WDL.worldProps.getProperty("Entity." +
-				type + ".Enabled");
+		boolean groupEnabled = WDL.worldProps.getProperty("EntityGroup." +
+				getEntityGroup(type) + ".Enabled", "true").equals("true");
+		boolean singleEnabled = WDL.worldProps.getProperty("Entity." +
+				type + ".Enabled", "true").equals("true");
 		
-		if (prop == null) {
-			logger.warn("Entity enabled property is null for " + type + "!");
-			logger.warn("(Tried key 'Entity." + type + ".Enabled'.)");
-			return false;
-		}
-		
-		return prop.equals("true");
+		return groupEnabled && singleEnabled;
 	}
 	
 	/**
