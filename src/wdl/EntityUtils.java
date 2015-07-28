@@ -5,6 +5,7 @@ import java.lang.reflect.Modifier;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -46,6 +47,9 @@ import net.minecraft.entity.projectile.EntitySnowball;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import wdl.api.IEntityAdder;
+import wdl.api.ISpecialEntityHandler;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -143,6 +147,78 @@ public class EntityUtils {
 			entitiesByGroup.putAll("Other", otherEntities);
 		} catch (Exception e) {
 			throw new Error("WDL: Failed to setup entity mappings!");
+		}
+	}
+	
+	/**
+	 * Custom entity handlers.
+	 * 
+	 * @see ISpecialEntityHandler
+	 */
+	private static final List<ISpecialEntityHandler> specialEntityHandlers =
+			new ArrayList<ISpecialEntityHandler>();
+	/**
+	 * List of all entities that have special variants and the mods that handle
+	 * said special variants.
+	 */
+	private static final Multimap<String, ISpecialEntityHandler> extendedEntities =
+			HashMultimap.<String, ISpecialEntityHandler>create();
+	
+	/**
+	 * New entity adders.
+	 * 
+	 * @see IEntityAdder
+	 */
+	private static final List<IEntityAdder> entityAdders =
+			new ArrayList<IEntityAdder>();
+	/**
+	 * New entities and the mods that handle them.
+	 */
+	private static final Map<String, IEntityAdder> addedEntities = 
+			new HashMap<String, IEntityAdder>();
+	
+	public static void addSpecialEntityHandler(ISpecialEntityHandler handler) {
+		specialEntityHandlers.add(handler);
+		
+		for (String s : handler.getSpecialEntities().keySet()) {
+			extendedEntities.put(s, handler);
+		}
+		for (Map.Entry<String, String> e : handler.getSpecialEntities().entries()) {
+			WDL.defaultProps.setProperty("Entity." + e.getValue() + ".Enabled", 
+					"true");
+			int trackDistance = handler.getSpecialEntityTrackDistance(e
+					.getValue());
+			if (trackDistance < 0) {
+				trackDistance = getEntityTrackDistance(e.getKey());
+			}
+			WDL.defaultProps.setProperty("Entity." + e.getValue()
+					+ ".TrackDistance", Integer.toString(trackDistance));
+			
+			String group = handler.getSpecialEntityCategory(e.getValue());
+			entitiesByGroup.put(group, e.getValue());
+			
+			WDL.defaultProps.setProperty("EntityGroup." + group + ".Enabled",
+					"true");
+		}
+	}
+	
+	public static void addEntityAdder(IEntityAdder adder) {
+		entityAdders.add(adder);
+		
+		for (String s : adder.getModEntities()) {
+			addedEntities.put(s, adder);
+			
+			WDL.defaultProps.setProperty("Entity." + s + ".Enabled", 
+					"true");
+			int trackDistance = adder.getDefaultEntityTrackDistance(s);
+			WDL.defaultProps.setProperty("Entity." + s
+					+ ".TrackDistance", Integer.toString(trackDistance));
+			
+			String group = adder.getEntityCategory(s);
+			entitiesByGroup.put(group, s);
+			
+			WDL.defaultProps.setProperty("EntityGroup." + group + ".Enabled",
+					"true");
 		}
 	}
 	

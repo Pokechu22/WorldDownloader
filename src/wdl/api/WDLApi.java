@@ -6,6 +6,7 @@ import net.minecraft.util.BlockPos;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import wdl.EntityUtils;
 import wdl.WDL;
 import wdl.WDLHooks;
 import wdl.WDLPluginChannels;
@@ -54,6 +55,12 @@ public class WDLApi {
 		WDLHooks.wdlMods.put(modName, mod);
 		if (mod instanceof IGuiHooksListener) {
 			WDLHooks.guiListeners.put(modName, (IGuiHooksListener) mod);
+		}
+		if (mod instanceof IEntityAdder) {
+			EntityUtils.addEntityAdder((IEntityAdder) mod);
+		}
+		if (mod instanceof ISpecialEntityHandler) {
+			EntityUtils.addSpecialEntityHandler((ISpecialEntityHandler) mod);
 		}
 	}
 	
