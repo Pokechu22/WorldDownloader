@@ -4,6 +4,7 @@ import io.netty.buffer.Unpooled;
 
 import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -40,6 +41,8 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiIngameMenu;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiYesNo;
+import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraft.client.multiplayer.ChunkProviderClient;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.resources.I18n;
@@ -176,6 +179,11 @@ public class WDL {
 	 * Automatically restart after world changes?
 	 */
 	public static boolean startOnChange = false;
+	/**
+	 * Whether to ignore the check as to whether a player
+	 * previously modified the world before downloading it.
+	 */
+	public static boolean overrideLastModifiedCheck = false;
 
 	/**
 	 * Is the world currently being saved?
@@ -257,6 +265,9 @@ public class WDL {
 		defaultProps.setProperty("EntityGroup.Hostile.Enabled", "true");
 		defaultProps.setProperty("EntityGroup.Passive.Enabled", "true");
 		
+		//Last saved time, so that you can tell if the world was modified.
+		defaultProps.setProperty("LastSaved", "-1");
+		
 		baseProps = new Properties(defaultProps);
 		worldProps = new Properties(baseProps);
 	}
@@ -276,12 +287,45 @@ public class WDL {
 			minecraft.displayGuiScreen(new GuiWDLMultiworld(null));
 			return;
 		}
-
-		WDL.minecraft.displayGuiScreen((GuiScreen) null);
-		WDL.minecraft.setIngameFocus();
+		
 		worldProps = loadWorldProps(worldName);
 		saveHandler = (SaveHandler) minecraft.getSaveLoader().getSaveLoader(
 				getWorldFolderName(worldName), true);
+		
+		FileInputStream worldDat = null;
+		try {
+			long lastSaved = Long.parseLong(worldProps.getProperty("LastSaved"));
+			//Can't directly use worldClient.getWorldInfo, as that doesn't use
+			//the saved version.
+			worldDat = new FileInputStream(new File(
+					saveHandler.getWorldDirectory(), "level.dat"));
+			long lastPlayed = CompressedStreamTools.readCompressed(worldDat)
+					.getCompoundTag("Data").getLong("LastPlayed");
+			if (!overrideLastModifiedCheck && lastSaved != -1 &&
+					lastPlayed > lastSaved) {
+				// The world was played later than it was saved; confirm that the
+				// user is willing for possible changes they made to be overwritten.
+				minecraft.displayGuiScreen(new GuiWDLOverwriteChanges(
+						lastSaved, lastPlayed));
+				System.out.println("chk");
+				return;
+			}
+		} catch (Exception e) {
+			//TODO: handle this in a useful way -- will always happen
+			//on new worlds.
+			e.printStackTrace();
+		} finally {
+			if (worldDat != null) {
+				try {
+					worldDat.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		WDL.minecraft.displayGuiScreen((GuiScreen) null);
+		WDL.minecraft.setIngameFocus();
 		chunkLoader = saveHandler.getChunkLoader(worldClient.provider);
 		newTileEntities = new HashMap<BlockPos, TileEntity>();
 		newEntities = new HashMap<Integer, Entity>();
@@ -331,6 +375,7 @@ public class WDL {
 		worldClient = minecraft.theWorld;
 		thePlayer = minecraft.thePlayer;
 		windowContainer = thePlayer.openContainer;
+		overrideLastModifiedCheck = false;
 		// Is this a different server?
 		NetworkManager newNM = thePlayer.sendQueue.getNetworkManager();
 
@@ -558,6 +603,8 @@ public class WDL {
 		saveMapData(progressScreen);
 		saveChunks(progressScreen);
 		
+		saveProps();
+		
 		try {
 			chatDebug(WDLDebugMessageCause.SAVING, "Waiting for ThreadedFileIOBase to finish...");
 			
@@ -638,6 +685,9 @@ public class WDL {
 		File saveDirectory = saveHandler.getWorldDirectory();
 		NBTTagCompound dataNBT = new NBTTagCompound();
 		dataNBT.setTag("Data", worldInfoNBT);
+		
+		worldProps.setProperty("LastSaved",
+				Long.toString(worldInfoNBT.getLong("LastPlayed")));
 
 		try {
 			File dataFile = new File(saveDirectory, "level.dat_new");
