@@ -1,5 +1,6 @@
 package wdl;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -22,28 +23,44 @@ public class GuiWDLOverwriteChanges extends GuiScreen {
 		private final DateFormat folderDateFormat = 
 				new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
 		
+		public BackupThread(boolean zip) {
+			this.zip = zip;
+		}
+		
+		private final boolean zip;
+		
 		@Override
 		public void run() {
 			try {
 				backingUp = true;
 				
-				String backupName = WDL.worldName + "_"
-						+ folderDateFormat.format(new Date());
+				String backupName = WDL.getWorldFolderName(WDL.worldName) + "_"
+						+ folderDateFormat.format(new Date())
+						+ "_user" + (zip ? ".zip" : "");
 				
-				boolean folderBackup = WDL.baseProps.getProperty("Backup",
-						"ZIP").equals("FOLDER");
-				
-				backupData = "Backing up to " + (folderBackup ? "zip " : " ")
+				backupData = "Backing up to " + (zip ? "zip " : " ")
 						+ "folder " + backupName + ".";
 				
-				WorldBackupType type = folderBackup ? WorldBackupType.FOLDER
-						: WorldBackupType.ZIP; 
-				WorldBackup.backupWorld(WDL.saveHandler.getWorldDirectory(),
-						WDL.getWorldFolderName(WDL.worldName), type);
+				File fromFolder = WDL.saveHandler.getWorldDirectory();
+				File backupFile = new File(fromFolder.getParentFile(),
+						backupName);
+				
+				if (backupFile.exists()) {
+					throw new IOException("Backup target (" + backupFile
+							+ ") already exists!");
+				}
+				
+				if (zip) {
+					WorldBackup.zipDirectory(fromFolder, backupFile);
+				} else {
+					WorldBackup.copyDirectory(fromFolder, backupFile);
+				}
 			} catch (Exception e) {
 				WDL.chatError("Exception while backing up world: " + e);
 				e.printStackTrace();
 			} finally {
+				backingUp = false;
+				
 				WDL.overrideLastModifiedCheck = true;
 				mc.displayGuiScreen(null);
 				
@@ -74,15 +91,18 @@ public class GuiWDLOverwriteChanges extends GuiScreen {
 		backingUp = false;
 		
 		int x = (this.width / 2) - 100;
-		int y = (this.height / 4) - 15;
+		int y = (this.height / 4) + 15;
 		
 		this.buttonList.add(new GuiButton(0, x, y,
-				"Backup first (then start download)"));
+				"Backup as zip (then start download)"));
 		y += 22;
 		this.buttonList.add(new GuiButton(1, x, y,
-				"Allow overwriting (start download)"));
+				"Backup folder (then start download)"));
 		y += 22;
 		this.buttonList.add(new GuiButton(2, x, y,
+				"Allow overwriting (start download)"));
+		y += 22;
+		this.buttonList.add(new GuiButton(3, x, y,
 				"Cancel (don't start download)"));
 	}
 	
@@ -102,15 +122,18 @@ public class GuiWDLOverwriteChanges extends GuiScreen {
 		}
 		
 		if (button.id == 0) {
-			new BackupThread().run();
+			new BackupThread(true).start();
 		}
 		if (button.id == 1) {
+			new BackupThread(false).start();
+		}
+		if (button.id == 2) {
 			WDL.overrideLastModifiedCheck = true;
 			mc.displayGuiScreen(null);
 			
 			WDL.start();
 		}
-		if (button.id == 2) {
+		if (button.id == 3) {
 			mc.displayGuiScreen(null);
 		}
 	}
