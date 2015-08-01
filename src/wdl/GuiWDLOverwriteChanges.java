@@ -148,9 +148,10 @@ public class GuiWDLOverwriteChanges extends GuiScreen {
 			drawCenteredString(fontRendererObj, backupData,
 					width / 2, height / 4 - 10, 0xFFFFFF); 
 		} else {
-			//TODO: Better description (it's last played, not last modified).
+			drawDefaultBackground();
+			
 			drawCenteredString(fontRendererObj, 
-					"The world appears to have been changed.  Overwrite?",
+					"The world may have been changed.  Overwrite changes?",
 					width / 2, height / 4 - 40, 0xFFFFFF);
 			drawCenteredString(fontRendererObj, "Saved on " + savedText
 					+ ", last played " + playedText,
