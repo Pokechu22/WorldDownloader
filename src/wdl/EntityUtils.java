@@ -189,7 +189,7 @@ public class EntityUtils {
 			int trackDistance = handler.getSpecialEntityTrackDistance(e
 					.getValue());
 			if (trackDistance < 0) {
-				trackDistance = getEntityTrackDistance(e.getKey());
+				trackDistance = getDefaultEntityRange(e.getKey());
 			}
 			WDL.defaultProps.setProperty("Entity." + e.getValue()
 					+ ".TrackDistance", Integer.toString(trackDistance));
@@ -236,23 +236,11 @@ public class EntityUtils {
 			returned.add(e.getKey());
 		}
 		
-		returned.add("Hologram");
+		for (ISpecialEntityHandler adder : specialEntityHandlers) {
+			returned.addAll(adder.getSpecialEntities().values());
+		}
 		
 		return returned;
-	}
-	
-	/**
-	 * Gets the entity tracking range used by vanilla minecraft.
-	 * <br/>
-	 * Proper tracking ranges can be found in EntityTracker#trackEntity
-	 * (the one that takes an Entity as a paremeter) -- it's the 2nd arg
-	 * given to addEntityToTracker.
-	 * 
-	 * @param e
-	 * @return 
-	 */
-	public static int getVanillaEntityRange(Entity e) {
-		return getVanillaEntityRange(e.getClass());
 	}
 	
 	/**
@@ -265,14 +253,224 @@ public class EntityUtils {
 	 * @param type The vanilla minecraft entity string.
 	 * @return 
 	 */
-	public static int getVanillaEntityRange(String type) {
+	public static int getDefaultEntityRange(String type) {
 		if (type == null) {
 			return -1;
 		}
-		if (type.equals("Hologram")) {
-			return getVanillaEntityRange(EntityArmorStand.class);
+		if (addedEntities.get(type) != null) {
+			return addedEntities.get(type).getDefaultEntityTrackDistance(type);
 		}
+		for (ISpecialEntityHandler handler : specialEntityHandlers) {
+			if (handler.getSpecialEntities().containsValue(type)) {
+				return handler.getSpecialEntityTrackDistance(type);
+			}
+		}
+		
 		return getVanillaEntityRange(stringToClassMapping.get(type));
+	}
+	
+	/**
+	 * Gets the track distance for the given entity in the current mode.
+	 * 
+	 * @param e
+	 * @return
+	 */
+	public static int getEntityTrackDistance(Entity e) {
+		return getEntityTrackDistance(
+				WDL.worldProps.getProperty("Entity.TrackDistanceMode"), e);
+	}
+	
+	/**
+	 * Gets the track distance for the given entity in the given mode.
+	 * 
+	 * @param type
+	 * @return
+	 */
+	public static int getEntityTrackDistance(String mode, Entity e) {
+		if ("default".equals(mode)) {
+			return getMostLikelyEntityTrackDistance(e);
+		} else if ("server".equals(mode)) {
+			int serverDistance = WDLPluginChannels
+					.getEntityRange(getEntityType(e));
+			
+			if (serverDistance < 0) {
+				return getMostLikelyEntityTrackDistance(e);
+			}
+			
+			return serverDistance;
+		} else if ("user".equals(mode)) {
+			String prop = WDL.worldProps.getProperty("Entity." +
+					getEntityType(e) + ".TrackDistance", "-1");
+			
+			return Integer.valueOf(prop);
+		} else {
+			throw new IllegalArgumentException("Mode is not a valid mode: " + mode);
+		}
+	}
+	
+	/**
+	 * Gets the track distance for the given entity in the current mode.
+	 * 
+	 * @param type
+	 * @return
+	 */
+	public static int getEntityTrackDistance(String type) {
+		return getEntityTrackDistance(
+				WDL.worldProps.getProperty("Entity.TrackDistanceMode"), type);
+	}
+	
+	/**
+	 * Gets the track distance for the given entity in the specified mode.
+	 * 
+	 * @param mode
+	 * @param type
+	 * @return
+	 */
+	public static int getEntityTrackDistance(String mode, String type) {
+		if ("default".equals(mode)) {
+			return getMostLikelyEntityTrackDistance(type);
+		} else if ("server".equals(mode)) {
+			int serverDistance = WDLPluginChannels
+					.getEntityRange(mode);
+			
+			if (serverDistance < 0) {
+				return getMostLikelyEntityTrackDistance(type);
+			}
+			
+			return serverDistance;
+		} else if ("user".equals(mode)) {
+			String prop = WDL.worldProps.getProperty("Entity." +
+					type + ".TrackDistance", "-1");
+			
+			return Integer.valueOf(prop);
+		} else {
+			throw new IllegalArgumentException("Mode is not a valid mode: " + mode);
+		}
+	}
+	
+	/**
+	 * Gets the group for the given entity type.
+	 * 
+	 * @param type
+	 * @return The group, or <code>null</code> if none is found.
+	 */
+	public static String getEntityGroup(String type) {
+		for (Map.Entry<String, String> e : entitiesByGroup.entries()) {
+			if (type.equals(e.getValue())) {
+				return e.getKey();
+			}
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Checks if an entity is enabled.
+	 * 
+	 * @param e The entity to check.
+	 * @return
+	 */
+	public static boolean isEntityEnabled(Entity e) {
+		return isEntityEnabled(getEntityType(e));
+	}
+	
+	/**
+	 * Checks if an entity is enabled.
+	 * 
+	 * @param type The type of the entity (from {@link #getEntityType(Entity)})
+	 * @return
+	 */
+	public static boolean isEntityEnabled(String type) {
+		if (!WDLPluginChannels.canSaveEntities()) {
+			return false; //Shouldn't get here, but an extra check.
+		}
+		
+		boolean groupEnabled = WDL.worldProps.getProperty("EntityGroup." +
+				getEntityGroup(type) + ".Enabled", "true").equals("true");
+		boolean singleEnabled = WDL.worldProps.getProperty("Entity." +
+				type + ".Enabled", "true").equals("true");
+		
+		return groupEnabled && singleEnabled;
+	}
+	
+	/**
+	 * Gets the type string for an entity.
+	 * 
+	 * @param e
+	 * @return
+	 */
+	public static String getEntityType(Entity e) {
+		String vanillaName = EntityList.getEntityString(e);
+		
+		for (ISpecialEntityHandler handler : extendedEntities.get(vanillaName)) {
+			String specialName = handler.getSpecialEntityName(e);
+			if (specialName != null) {
+				return specialName;
+			}
+		}
+		
+		return vanillaName;
+	}
+	
+	/**
+	 * Checks if an entity is a hologram.
+	 * 
+	 * Right now, the definition of a hologram is an invisible ArmorStand 
+	 * with a custom name set.  This is how holograms are generated by the
+	 * <a href="http://dev.bukkit.org/bukkit-plugins/holographic-displays/">
+	 * Holographic Displays</a> plugin, which is the most popular version.
+	 * However, the older style of holograms created by Asdjke's method 
+	 * <a href="https://www.youtube.com/watch?v=q1B19JvX5TE">(showcased in
+	 * this video)</a> do not get recognized.  I don't think this is a big
+	 * problem, but it is something to keep in mind.
+	 * 
+	 * @param e
+	 * @return
+	 */
+	public static boolean isHologram(Entity e) {
+		return (e instanceof EntityArmorStand &&
+				e.isInvisible() &&
+				e.hasCustomName());
+	}
+	
+	/**
+	 * Gets the track distance for the given entity, making a guess about
+	 * whether to use spigot track distances based off of the server brand.
+	 */
+	public static int getMostLikelyEntityTrackDistance(Entity e) {
+		// getClientBrand() returns the server's brand.  Blame MCP.
+		if (WDL.thePlayer.getClientBrand().toLowerCase().contains("spigot")) {
+			return getDefaultSpigotEntityRange(e.getClass());
+		} else {
+			return getDefaultEntityRange(getEntityType(e));
+		}
+	}
+	
+	/**
+	 * Gets the track distance for the given entity, making a guess about
+	 * whether to use spigot track distances based off of the server brand.
+	 */
+	public static int getMostLikelyEntityTrackDistance(String type) {
+		// getClientBrand() returns the server's brand.  Blame MCP.
+		if (WDL.thePlayer.getClientBrand().toLowerCase().contains("spigot")) {
+			return getDefaultSpigotEntityRange(stringToClassMapping.get(type));
+		} else {
+			return getDefaultEntityRange(type);
+		}
+	}
+	
+	/**
+	 * Gets the entity tracking range used by vanilla minecraft.
+	 * <br/>
+	 * Proper tracking ranges can be found in EntityTracker#trackEntity
+	 * (the one that takes an Entity as a paremeter) -- it's the 2nd arg
+	 * given to addEntityToTracker.
+	 * 
+	 * @param type The name of the entity.
+	 * @return
+	 */
+	public static int getVanillaEntityRange(String type) {
+		return getVanillaEntityRange(classToStringMapping.get(type)); 
 	}
 	
 	/**
@@ -322,186 +520,7 @@ public class EntityUtils {
 			return -1;
 		}
 	}
-	
-	/**
-	 * Gets the track distance for the given entity in the current mode.
-	 * 
-	 * @param type
-	 * @return
-	 */
-	public static int getEntityTrackDistance(String type) {
-		return getEntityTrackDistance(
-				WDL.worldProps.getProperty("Entity.TrackDistanceMode"), type);
-	}
-	
-	/**
-	 * Gets the track distance for the given entity in the current mode.
-	 * 
-	 * @param e
-	 * @return
-	 */
-	public static int getEntityTrackDistance(Entity e) {
-		return getEntityTrackDistance(
-				WDL.worldProps.getProperty("Entity.TrackDistanceMode"), e);
-	}
-	
-	/**
-	 * Gets the track distance for the given entity in the current mode.
-	 * 
-	 * @param c
-	 * @return
-	 */
-	public static int getEntityTrackDistance(Class<?> c) {
-		return getEntityTrackDistance(
-				WDL.worldProps.getProperty("Entity.TrackDistanceMode"), c);
-	}
-	
-	/**
-	 * Gets the track distance for the given entity in the given mode.
-	 * 
-	 * @param type
-	 * @return
-	 */
-	public static int getEntityTrackDistance(String mode, String type) {
-		if ("default".equals(mode)) {
-			return getMostLikelyEntityTrackDistance(type);
-		} else if ("server".equals(mode)) {
-			int serverDistance = WDLPluginChannels.getEntityRange(type);
-			
-			if (serverDistance < 0) {
-				return getMostLikelyEntityTrackDistance(type);
-			}
-			
-			return serverDistance;
-		} else if ("user".equals(mode)) {
-			String prop = WDL.worldProps.getProperty("Entity." +
-					type + ".TrackDistance");
-			
-			if (prop == null) {
-				logger.warn("Entity range property is null for " + type + "!");
-				logger.warn("(Tried key 'Entity." + type + ".TrackDistance'.)");
-				return -1;
-			}
-			
-			return Integer.valueOf(prop);
-		} else {
-			throw new IllegalArgumentException("Mode is not a valid mode: " + mode);
-		}
-	}
-	
-	/**
-	 * Gets the track distance for the given entity in the given mode.
-	 * 
-	 * @param e
-	 * @return
-	 */
-	public static int getEntityTrackDistance(String mode, Entity e) {
-		return getEntityTrackDistance(mode, e.getClass());
-	}
-	
-	/**
-	 * Gets the group for the given entity type.
-	 * 
-	 * @param type
-	 * @return The group, or <code>null</code> if none is found.
-	 */
-	public static String getEntityGroup(String type) {
-		for (Map.Entry<String, String> e : entitiesByGroup.entries()) {
-			if (type.equals(e.getValue())) {
-				return e.getKey();
-			}
-		}
-		
-		return null;
-	}
-	
-	/**
-	 * Gets the track distance for the given entity in the given mode.
-	 * 
-	 * @param c
-	 * @return
-	 */
-	public static int getEntityTrackDistance(String mode, Class<?> c) {
-		return getEntityTrackDistance(mode, classToStringMapping.get(c));
-	}
-	
-	/**
-	 * Checks if an entity is enabled.
-	 * 
-	 * @param e The entity to check.
-	 * @return
-	 */
-	public static boolean isEntityEnabled(Entity e) {
-		return isEntityEnabled(getEntityType(e));
-	}
-	
-	/**
-	 * Checks if an entity is enabled.
-	 * 
-	 * @param type The type of the entity (from {@link #getEntityType(Entity)})
-	 * @return
-	 */
-	public static boolean isEntityEnabled(String type) {
-		if (!WDLPluginChannels.canSaveEntities()) {
-			return false; //Shouldn't get here, but an extra check.
-		}
-		
-		boolean groupEnabled = WDL.worldProps.getProperty("EntityGroup." +
-				getEntityGroup(type) + ".Enabled", "true").equals("true");
-		boolean singleEnabled = WDL.worldProps.getProperty("Entity." +
-				type + ".Enabled", "true").equals("true");
-		
-		return groupEnabled && singleEnabled;
-	}
-	
-	/**
-	 * Gets the type string for an entity.
-	 * 
-	 * @param e
-	 * @return
-	 */
-	public static String getEntityType(Entity e) {
-		if (isHologram(e)) {
-			return "Hologram";
-		}
-		
-		return EntityList.getEntityString(e);
-	}
-	
-	/**
-	 * Checks if an entity is a hologram.
-	 * 
-	 * Right now, the definition of a hologram is an invisible ArmorStand 
-	 * with a custom name set.  This is how holograms are generated by the
-	 * <a href="http://dev.bukkit.org/bukkit-plugins/holographic-displays/">
-	 * Holographic Displays</a> plugin, which is the most popular version.
-	 * However, the older style of holograms created by Asdjke's method 
-	 * <a href="https://www.youtube.com/watch?v=q1B19JvX5TE">(showcased in
-	 * this video)</a> do not get recognized.  I don't think this is a big
-	 * problem, but it is something to keep in mind.
-	 * 
-	 * @param e
-	 * @return
-	 */
-	public static boolean isHologram(Entity e) {
-		return (e instanceof EntityArmorStand &&
-				e.isInvisible() &&
-				e.hasCustomName());
-	}
-	
-	/**
-	 * Gets the track distance for the given entity, making a guess about
-	 * whether to use spigot track distances based off of the server brand.
-	 */
-	public static int getMostLikelyEntityTrackDistance(String entity) {
-		// getClientBrand() returns the server's brand.  Blame MCP.
-		if (WDL.thePlayer.getClientBrand().toLowerCase().contains("spigot")) {
-			return getSpigotEntityRange(entity);
-		} else {
-			return getVanillaEntityRange(entity);
-		}
-	}
-	
+
 	/**
 	 * Gets the entity range used by Spigot by default.
 	 * Mostly a utility method for presets.
@@ -509,12 +528,7 @@ public class EntityUtils {
 	 * @param entity
 	 * @return
 	 */
-	public static int getSpigotEntityRange(String entity) {
-		if (entity.equals("Hologram")) {
-			entity = "ArmorStand";
-		}
-		Class c = stringToClassMapping.get(entity);
-		
+	public static int getDefaultSpigotEntityRange(Class<?> c) {
 		final int monsterRange = 48;
 		final int animalRange = 48;
 		final int miscRange = 32;

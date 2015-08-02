@@ -143,13 +143,18 @@ public class GuiWDLEntityPresets extends GuiScreen implements GuiYesNoCallback {
 				for (String entity : entities) {
 					WDL.worldProps.setProperty("Entity." + entity
 							+ ".TrackDistance", Integer.toString(
-							EntityUtils.getVanillaEntityRange(entity)));
+							EntityUtils.getDefaultEntityRange(entity)));
 				}
 			} else if (id == 1) {
 				for (String entity : entities) {
+					Class<?> c = EntityUtils.stringToClassMapping.get(entity);
+					if (c == null) {
+						continue;
+					}
+					
 					WDL.worldProps.setProperty("Entity." + entity
 							+ ".TrackDistance", Integer.toString(
-							EntityUtils.getSpigotEntityRange(entity)));
+							EntityUtils.getDefaultSpigotEntityRange(c)));
 				}
 			} else if (id == 2) { 
 				for (String entity : entities) {

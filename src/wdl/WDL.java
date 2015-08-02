@@ -252,7 +252,7 @@ public class WDL {
 		for (String entity : entityTypes) {
 			defaultProps.setProperty("Entity." + entity + ".Enabled", "true");
 			defaultProps.setProperty("Entity." + entity + ".TrackDistance", 
-					Integer.toString(EntityUtils.getVanillaEntityRange(entity)));
+					Integer.toString(EntityUtils.getDefaultEntityRange(entity)));
 		}
 		
 		defaultProps.setProperty("Entity.Hologram.Enabled", "true");
