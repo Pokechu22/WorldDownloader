@@ -25,6 +25,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import wdl.WorldBackup.WorldBackupType;
+import wdl.api.WDLApi;
 
 import com.google.common.io.ByteArrayDataOutput;
 
@@ -255,10 +256,6 @@ public class WDL {
 					Integer.toString(EntityUtils.getDefaultEntityRange(entity)));
 		}
 		
-		defaultProps.setProperty("Entity.Hologram.Enabled", "true");
-		defaultProps.setProperty("Entity.Hologram.TrackDistance", Integer.toString(
-				EntityUtils.getVanillaEntityRange(EntityArmorStand.class)));
-		
 		defaultProps.setProperty("Entity.FireworksRocketEntity.Enabled", "false");
 		
 		defaultProps.setProperty("EntityGroup.Other.Enabled", "true");
@@ -270,6 +267,9 @@ public class WDL {
 		
 		baseProps = new Properties(defaultProps);
 		worldProps = new Properties(baseProps);
+		
+		//Add in the basic API handler, for holograms.
+		WDLApi.addWDLMod(new HologramHandler());
 	}
 
 	/** Starts the download */

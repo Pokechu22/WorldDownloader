@@ -16,7 +16,8 @@ public interface ISpecialEntityHandler extends IWDLMod {
 	/**
 	 * Gets the special entities handled by this mod.
 	 * 
-	 * @return A map of vanilla entity name to special entity names.
+	 * @return A map of vanilla entity name to special entity names. Key is the
+	 *         vanilla entity, values are the overriding entities.
 	 */
 	public abstract Multimap<String, String> getSpecialEntities();
 
