@@ -7,7 +7,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import wdl.EntityUtils;
-import wdl.HologramHandler;
 import wdl.WDL;
 import wdl.WDLHooks;
 import wdl.WDLPluginChannels;

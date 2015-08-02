@@ -1,11 +1,7 @@
 package wdl.api;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.multiplayer.WorldClient;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.util.BlockPos;
 
 /**

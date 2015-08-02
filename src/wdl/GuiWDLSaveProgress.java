@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.util.IProgressUpdate;
 
 /**
  * GUI screen shown while the world is being saved.

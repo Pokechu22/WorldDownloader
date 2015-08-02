@@ -51,7 +51,6 @@ import org.apache.logging.log4j.Logger;
 
 import wdl.api.IEntityAdder;
 import wdl.api.ISpecialEntityHandler;
-import wdl.api.WDLApi;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;

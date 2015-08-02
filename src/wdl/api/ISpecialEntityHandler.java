@@ -1,11 +1,8 @@
 package wdl.api;
 
-import java.util.List;
-import java.util.Map;
+import net.minecraft.entity.Entity;
 
 import com.google.common.collect.Multimap;
-
-import net.minecraft.entity.Entity;
 
 /**
  * Interface for WDL mods that handle entities that have non-standard purposes. <br/>

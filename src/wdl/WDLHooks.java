@@ -3,8 +3,6 @@ package wdl;
 import java.util.HashMap;
 import java.util.Map;
 
-import wdl.api.IGuiHooksListener;
-import wdl.api.IWDLMod;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
@@ -21,6 +19,8 @@ import net.minecraft.profiler.Profiler;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.storage.MapData;
+import wdl.api.IGuiHooksListener;
+import wdl.api.IWDLMod;
 
 /**
  * The various hooks for WDL. <br/>

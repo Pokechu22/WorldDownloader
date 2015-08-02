@@ -2,9 +2,9 @@ package wdl;
 
 import java.io.IOException;
 
-import wdl.WorldBackup.WorldBackupType;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import wdl.WorldBackup.WorldBackupType;
 
 /**
  * GUI allowing control over the way the world is backed up.

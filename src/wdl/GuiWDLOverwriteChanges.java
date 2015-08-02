@@ -6,11 +6,10 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.lwjgl.input.Keyboard;
-
-import wdl.WorldBackup.WorldBackupType;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+
+import org.lwjgl.input.Keyboard;
 
 /**
  * GUI shown before possibly overwriting data in the world.

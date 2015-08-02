@@ -2,8 +2,6 @@ package wdl.api;
 
 import java.util.List;
 
-import net.minecraft.entity.Entity;
-
 /**
  * Interface for WDL mods that deal with new types of entities.
  * <br/>
