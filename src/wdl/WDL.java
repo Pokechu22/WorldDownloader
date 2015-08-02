@@ -212,6 +212,12 @@ public class WDL {
 	public static Properties worldProps;
 	public static Properties defaultProps;
 	
+	/**
+	 * Check to see if the API handlers have been added yet.
+	 * Used for loading purposes.
+	 */
+	private static boolean addedAPIHandlers = false;
+	
 	// Initialization:
 	static {
 		minecraft = Minecraft.getMinecraft();
@@ -267,9 +273,6 @@ public class WDL {
 		
 		baseProps = new Properties(defaultProps);
 		worldProps = new Properties(baseProps);
-		
-		//Add in the basic API handler, for holograms.
-		WDLApi.addWDLMod(new HologramHandler());
 	}
 
 	/** Starts the download */
@@ -365,6 +368,11 @@ public class WDL {
 	}
 
 	public static void loadWorld() {
+		if (!addedAPIHandlers) {
+			WDLApi.addWDLMod(new HologramHandler());
+			addedAPIHandlers = true;
+		}
+		
 		if (worldLoadingDeferred) {
 			return;
 		}
@@ -395,16 +403,12 @@ public class WDL {
 			chatDebug(WDLDebugMessageCause.ON_WORLD_LOAD,
 					"onWorldLoad: different server!");
 			
-			// It may look a bit silly, but getClientBrand() returns the server
-			// brand, not the client one.  Blame MCP.
-			chatDebug(WDLDebugMessageCause.ON_WORLD_LOAD,
-					"Server brand=" + thePlayer.getClientBrand() +
-					".  Using " + (thePlayer.getClientBrand().toLowerCase()
-							.contains("spigot") ? "Spigot" : "Vanilla") +
-							" track distances.");
-			
 			networkManager = newNM;
 			loadBaseProps();
+			chatDebug(WDLDebugMessageCause.ON_WORLD_LOAD,
+					"Server brand=" + thePlayer.getClientBrand() +
+					".  Using " + (isSpigot() ? "Spigot" : "Vanilla") +
+							" track distances.");
 			
 			if (baseProps.getProperty("AutoStart").equals("true")) {
 				start();
@@ -415,23 +419,11 @@ public class WDL {
 			// Same server, different world!
 			chatDebug(WDLDebugMessageCause.ON_WORLD_LOAD,
 					"onWorldLoad: same server!");
-
-			// It may look a bit silly, but getClientBrand() returns the server
-			// brand, not the client one.  Blame MCP.
-			chatDebug(WDLDebugMessageCause.ON_WORLD_LOAD,
-					"Server brand=" + thePlayer.getClientBrand() +
-					".  Using " + (thePlayer.getClientBrand().toLowerCase()
-							.contains("spigot") ? "Spigot" : "Vanilla") +
-							" track distances.");
 			
 			if (startOnChange) {
 				start();
 			}
 		}
-	}
-
-	/** Must be called when the world is no longer used */
-	public static void onWorldUnload() {
 	}
 
 	public static void onSaveComplete() {
@@ -1418,5 +1410,16 @@ public class WDL {
 	 */
 	public static double convertServerPos(int serverPos) {
 		return serverPos / 32.0;
+	}
+	
+	/**
+	 * Is the current server running spigot?
+	 */
+	public static boolean isSpigot() {
+		//getClientBrand() returns the server brand; blame MCP.
+		if (thePlayer != null && thePlayer.getClientBrand() != null) {
+			return thePlayer.getClientBrand().toLowerCase().contains("spigot");
+		}
+		return false;
 	}
 }

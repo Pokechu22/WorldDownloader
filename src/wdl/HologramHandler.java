@@ -68,7 +68,7 @@ public class HologramHandler implements ISpecialEntityHandler {
 		if (entity instanceof EntityArmorStand &&
 				entity.isInvisible() &&
 				entity.hasCustomName()) {
-			return "ArmorStand";
+			return "Hologram";
 		}
 		
 		return null;
