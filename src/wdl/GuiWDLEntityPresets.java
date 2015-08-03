@@ -62,14 +62,14 @@ public class GuiWDLEntityPresets extends GuiScreen implements GuiYesNoCallback {
 			upper = "Are you sure you want to reset your entity ranges?";
 			
 			if (button.id == 0) {
-				lower = "§rSetting to vanilla Minecraft ranges -- " +
-						"§c§n§lThis cannot be undone.§r";
+				lower = "Â§rSetting to vanilla Minecraft ranges -- " +
+						"Â§cÂ§nÂ§lThis cannot be undone.Â§r";
 			} else if (button.id == 1) {
-				lower = "§rSetting to default spigot ranges -- " +
-						"§c§n§lThis cannot be undone.§r";
+				lower = "Â§rSetting to default spigot ranges -- " +
+						"Â§cÂ§nÂ§lThis cannot be undone.Â§r";
 			} else if (button.id == 2) {
-				lower = "§rSetting to server configured ranges -- " +
-						"§c§n§lThis cannot be undone.§r";
+				lower = "Â§rSetting to server configured ranges -- " +
+						"Â§cÂ§nÂ§lThis cannot be undone.Â§r";
 			} else {
 				//Should not happen.
 				throw new Error("Button.id should never be negative.");
@@ -87,7 +87,7 @@ public class GuiWDLEntityPresets extends GuiScreen implements GuiYesNoCallback {
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		drawBackground(0);
 		
-		this.drawCenteredString(this.fontRendererObj, "§n§lEntity presets",
+		this.drawCenteredString(this.fontRendererObj, "Â§nÂ§lEntity presets",
 				this.width / 2, this.height / 4 - 40, 0xFFFFFF);
 		this.drawCenteredString(this.fontRendererObj, "Ranges", this.width / 2,
 				this.height / 4 - fontRendererObj.FONT_HEIGHT - 2, 0xFFFFFF);
@@ -114,9 +114,9 @@ public class GuiWDLEntityPresets extends GuiScreen implements GuiYesNoCallback {
 					"server has the WDLCompanion plugin installed.\n\n";
 			
 			if (serverButton.enabled) {
-				infoText += "§aAs it is installed, this may be used.";
+				infoText += "Â§aAs it is installed, this may be used.";
 			} else {
-				infoText += "§cAs it is not installed, this cannot be used.";
+				infoText += "Â§cAs it is not installed, this cannot be used.";
 			}
 		}
 		

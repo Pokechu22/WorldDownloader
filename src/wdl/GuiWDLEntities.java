@@ -197,7 +197,7 @@ public class GuiWDLEntities extends GuiScreen {
 						+ group + ".Enabled", "true").equals("true");
 				
 				this.enableGroupButton = new GuiButton(0, 0, 0, 90, 18, 
-						groupEnabled ? "§aEnabled" : "§cAll disabled");
+						groupEnabled ? "Â§aEnabled" : "Â§cAll disabled");
 			}
 
 			@Override
@@ -209,8 +209,8 @@ public class GuiWDLEntities extends GuiScreen {
 				
 				this.enableGroupButton.xPosition = x + 110;
 				this.enableGroupButton.yPosition = y;
-				this.enableGroupButton.displayString = groupEnabled ? "§aEnabled"
-						: "§cAll disabled";
+				this.enableGroupButton.displayString = groupEnabled ? "Â§aEnabled"
+						: "Â§cAll disabled";
 				
 				this.enableGroupButton.drawButton(mc, mouseX, mouseY);
 			}
@@ -224,7 +224,7 @@ public class GuiWDLEntities extends GuiScreen {
 					enableGroupButton.playPressSound(mc.getSoundHandler());
 					
 					this.enableGroupButton.displayString = 
-							groupEnabled ? "§aEnabled" : "§cAll disabled";
+							groupEnabled ? "Â§aEnabled" : "Â§cAll disabled";
 					
 					WDL.worldProps.setProperty("EntityGroup." + group
 							+ ".Enabled", Boolean.toString(groupEnabled));
@@ -275,7 +275,7 @@ public class GuiWDLEntities extends GuiScreen {
 				range = EntityUtils.getEntityTrackDistance(entity);
 				
 				this.onOffButton = new GuiButton(0, 0, 0, 75, 18, 
-						entityEnabled ? "§aIncluded" : "§cIgnored");
+						entityEnabled ? "Â§aIncluded" : "Â§cIgnored");
 				this.onOffButton.enabled = category.isGroupEnabled();
 				
 				this.rangeSlider = new GuiSlider(1, 0, 0, 150, 18,
@@ -298,7 +298,7 @@ public class GuiWDLEntities extends GuiScreen {
 				this.onOffButton.enabled = category.isGroupEnabled();
 				this.onOffButton.displayString = 
 						onOffButton.enabled && entityEnabled ? 
-								"§aIncluded" : "§cIgnored";
+								"Â§aIncluded" : "Â§cIgnored";
 				
 				this.rangeSlider.xPosition = x + 50;
 				this.rangeSlider.yPosition = y;
@@ -324,7 +324,7 @@ public class GuiWDLEntities extends GuiScreen {
 					onOffButton.playPressSound(mc.getSoundHandler());
 					
 					this.onOffButton.displayString = 
-							entityEnabled ? "§aIncluded" : "§cIgnored";
+							entityEnabled ? "Â§aIncluded" : "Â§cIgnored";
 					
 					WDL.worldProps.setProperty("Entity." + entity + 
 							".Enabled", Boolean.toString(entityEnabled));
