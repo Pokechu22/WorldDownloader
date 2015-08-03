@@ -475,15 +475,16 @@ public class GuiWDLEntities extends GuiScreen {
 			WDL.worldProps.setProperty("Entity.TrackDistanceMode", mode);
 		}
 		if (button.id == 101 && button.enabled) {
-			WDL.saveProps();
-			
 			mc.displayGuiScreen(new GuiWDLEntityPresets(this));
 		}
 		if (button.id == 200) {
-			WDL.saveProps();
-			
 			mc.displayGuiScreen(parent);
 		}
+	}
+	
+	@Override
+	public void onGuiClosed() {
+		WDL.saveProps();
 	}
 	
 	@Override

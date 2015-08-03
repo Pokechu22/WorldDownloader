@@ -171,6 +171,11 @@ public class GuiWDLEntityPresets extends GuiScreen implements GuiYesNoCallback {
 		mc.displayGuiScreen(this);
 	}
 	
+	@Override
+	public void onGuiClosed() {
+		WDL.saveProps();
+	}
+	
 	/**
 	 * Converts a string into a list of lines that are each shorter than the 
 	 * given width.  Takes \n into consideration.

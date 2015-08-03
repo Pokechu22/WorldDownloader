@@ -58,11 +58,15 @@ public class GuiWDLGenerator extends GuiScreen {
 			} else if (var1.id == 2) {
 				this.updateGenerateStructures(true);
 			} else if (var1.id == 100) {
-				this.updateSeed(true);
-				WDL.saveProps();
 				this.mc.displayGuiScreen(this.parent);
 			}
 		}
+	}
+	
+	@Override
+	public void onGuiClosed() {
+		this.updateSeed(true);
+		WDL.saveProps();
 	}
 
 	/**

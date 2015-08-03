@@ -98,14 +98,18 @@ public class GuiWDLWorld extends GuiScreen {
 			} else if (button.id == 6) {
 				this.updateAllowCheats(true);
 			} else if (button.id == 100) {
-				if (this.showSpawnFields) {
-					this.updateSpawnXYZ(true);
-				}
-
-				WDL.saveProps();
 				this.mc.displayGuiScreen(this.parent);
 			}
 		}
+	}
+	
+	@Override
+	public void onGuiClosed() {
+		if (this.showSpawnFields) {
+			this.updateSpawnXYZ(true);
+		}
+
+		WDL.saveProps();
 	}
 
 	/**

@@ -115,9 +115,13 @@ public class GuiWDL extends GuiScreen {
 		} else if (guibutton.id == 9) { // Debug options
 			this.mc.displayGuiScreen(new GuiWDLDebug(this));
 		} else if (guibutton.id == 100) { // Done
-			WDL.saveProps();
 			this.mc.displayGuiScreen(this.parent);
 		}
+	}
+	
+	@Override
+	public void onGuiClosed() {
+		WDL.saveProps();
 	}
 
 	/**

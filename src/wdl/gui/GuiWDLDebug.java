@@ -63,14 +63,6 @@ public class GuiWDLDebug extends GuiScreen {
 				}
 			}
 		} else if (button.id == 101) {
-			WDL.baseProps.setProperty("Debug.globalDebugEnabled", 
-					WDLDebugMessageCause.globalDebugEnabled ? "true" : "false");
-			for (WDLDebugMessageCause cause : WDLDebugMessageCause.values()) {
-				WDL.baseProps.setProperty("Debug." + cause.name(),
-						cause.isEnabled() ? "true" : "false");
-			}
-			WDL.saveProps();
-			
 			this.mc.displayGuiScreen(this.parent);
 		} else {
 			WDLDebugMessageCause cause = 
@@ -80,6 +72,17 @@ public class GuiWDLDebug extends GuiScreen {
 			
 			button.displayString = cause.toString();
 		}
+	}
+	
+	@Override
+	public void onGuiClosed() {
+		WDL.baseProps.setProperty("Debug.globalDebugEnabled", 
+				WDLDebugMessageCause.globalDebugEnabled ? "true" : "false");
+		for (WDLDebugMessageCause cause : WDLDebugMessageCause.values()) {
+			WDL.baseProps.setProperty("Debug." + cause.name(),
+					cause.isEnabled() ? "true" : "false");
+		}
+		WDL.saveProps();
 	}
 	
 	@Override

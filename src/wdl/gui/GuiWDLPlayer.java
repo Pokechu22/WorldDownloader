@@ -82,16 +82,20 @@ public class GuiWDLPlayer extends GuiScreen {
 			} else if (var1.id == 4) {
 				this.pickPlayerPos();
 			} else if (var1.id == 100) {
-				if (this.showPosFields) {
-					this.updatePosXYZ(true);
-				}
-
-				WDL.saveProps();
 				this.mc.displayGuiScreen(this.parent);
 			}
 		}
 	}
 
+	@Override
+	public void onGuiClosed() {
+		if (this.showPosFields) {
+			this.updatePosXYZ(true);
+		}
+
+		WDL.saveProps();
+	}
+	
 	/**
 	 * Called when the mouse is clicked.
 	 */

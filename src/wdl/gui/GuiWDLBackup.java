@@ -54,12 +54,15 @@ public class GuiWDLBackup extends GuiScreen {
 			
 			button.displayString = "Backup mode: " + backupType.description;
 		} else if (button.id == 100) { //Done
-			WDL.baseProps.setProperty("Backup", backupType.name());
-			
-			WDL.saveProps();
-			
 			this.mc.displayGuiScreen(this.parent);
 		}
+	}
+	
+	@Override
+	public void onGuiClosed() {
+		WDL.baseProps.setProperty("Backup", backupType.name());
+		
+		WDL.saveProps();
 	}
 	
 	@Override
