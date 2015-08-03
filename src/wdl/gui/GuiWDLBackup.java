@@ -1,9 +1,12 @@
-package wdl;
+package wdl.gui;
 
 import java.io.IOException;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import wdl.WDL;
+import wdl.WDLDebugMessageCause;
+import wdl.WorldBackup;
 import wdl.WorldBackup.WorldBackupType;
 
 /**

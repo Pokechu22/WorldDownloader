@@ -69,6 +69,11 @@ import org.apache.logging.log4j.Logger;
 
 import wdl.WorldBackup.WorldBackupType;
 import wdl.api.WDLApi;
+import wdl.gui.GuiWDL;
+import wdl.gui.GuiWDLMultiworld;
+import wdl.gui.GuiWDLMultiworldSelect;
+import wdl.gui.GuiWDLOverwriteChanges;
+import wdl.gui.GuiWDLSaveProgress;
 
 /**
  * This is the main class that does most of the work.

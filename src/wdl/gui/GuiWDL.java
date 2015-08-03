@@ -1,7 +1,9 @@
-package wdl;
+package wdl.gui;
 
 import java.io.IOException;
 
+import wdl.WDL;
+import wdl.WDLPluginChannels;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;

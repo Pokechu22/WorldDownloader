@@ -1,4 +1,4 @@
-package wdl;
+package wdl.gui;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -6,6 +6,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import wdl.EntityUtils;
+import wdl.WDL;
+import wdl.WDLPluginChannels;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;

@@ -1,4 +1,4 @@
-package wdl;
+package wdl.gui;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,6 +10,9 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 
 import org.lwjgl.input.Keyboard;
+
+import wdl.WDL;
+import wdl.WorldBackup;
 
 /**
  * GUI shown before possibly overwriting data in the world.

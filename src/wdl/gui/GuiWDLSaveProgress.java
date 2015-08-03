@@ -1,4 +1,4 @@
-package wdl;
+package wdl.gui;
 
 import java.io.IOException;
 
