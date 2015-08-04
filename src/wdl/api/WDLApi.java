@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 
 import wdl.EntityUtils;
 import wdl.WDL;
+import wdl.WDLEvents;
 import wdl.WDLHooks;
 import wdl.WDLPluginChannels;
 
@@ -60,6 +61,18 @@ public class WDLApi {
 		wdlMods.put(modName, mod);
 		if (mod instanceof IGuiHooksListener) {
 			WDLHooks.guiListeners.put(modName, (IGuiHooksListener) mod);
+		}
+		if (mod instanceof IBlockEventListener) {
+			WDLHooks.blockEventListeners.put(modName, (IBlockEventListener) mod);
+		}
+		if (mod instanceof IChatMessageListener) {
+			WDLHooks.chatMessageListeners.put(modName, (IChatMessageListener) mod);
+		}
+		if (mod instanceof IPluginChannelListener) {
+			WDLHooks.pluginChannelListeners.put(modName, (IPluginChannelListener) mod);
+		}
+		if (mod instanceof IWorldLoadListener) {
+			WDLEvents.worldLoadListeners.put(modName, (IWorldLoadListener) mod);
 		}
 		if (mod instanceof IEntityAdder) {
 			EntityUtils.addEntityAdder((IEntityAdder) mod);
