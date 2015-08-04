@@ -1,5 +1,8 @@
 package wdl.api;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 
@@ -16,6 +19,8 @@ import wdl.WDLPluginChannels;
  */
 public class WDLApi {
 	private static Logger logger = LogManager.getLogger();
+	
+	private static Map<String, IWDLMod> wdlMods = new HashMap<String, IWDLMod>();
 	
 	/**
 	 * Saved a TileEntity to the given position.
@@ -45,14 +50,14 @@ public class WDLApi {
 		}
 		
 		String modName = mod.getName();
-		if (WDLHooks.wdlMods.containsKey(modName)) {
+		if (wdlMods.containsKey(modName)) {
 			throw new IllegalArgumentException("A mod by the name of '"
 					+ modName + "' is already registered by "
-					+ WDLHooks.wdlMods.get(modName) + " (tried to register "
+					+ wdlMods.get(modName) + " (tried to register "
 					+ mod + " over it)");
 		}
 		
-		WDLHooks.wdlMods.put(modName, mod);
+		wdlMods.put(modName, mod);
 		if (mod instanceof IGuiHooksListener) {
 			WDLHooks.guiListeners.put(modName, (IGuiHooksListener) mod);
 		}

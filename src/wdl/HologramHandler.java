@@ -30,29 +30,7 @@ public class HologramHandler implements ISpecialEntityHandler {
 	public String getName() {
 		return "Hologram";
 	}
-
-	@Override
-	public void onWorldLoad(WorldClient world) {
-		
-	}
-
-	@Override
-	public void onBlockEvent(WorldClient world, BlockPos pos, Block block,
-			int data1, int data2) {
-		
-	}
-
-	@Override
-	public void onPluginChannelPacket(WorldClient world, String channel,
-			byte[] packetData) {
-		
-	}
-
-	@Override
-	public void onChat(WorldClient world, String message) {
-		
-	}
-
+	
 	@Override
 	public Multimap<String, String> getSpecialEntities() {
 		Multimap<String, String> returned = HashMultimap.<String, String>create();

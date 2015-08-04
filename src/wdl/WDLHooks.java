@@ -19,7 +19,10 @@ import net.minecraft.profiler.Profiler;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.storage.MapData;
+import wdl.api.IBlockEventListener;
+import wdl.api.IChatMessageListener;
 import wdl.api.IGuiHooksListener;
+import wdl.api.IPluginChannelListener;
 import wdl.api.IWDLMod;
 
 /**
@@ -29,12 +32,26 @@ import wdl.api.IWDLMod;
 public class WDLHooks {
 	private static final Profiler profiler = Minecraft.getMinecraft().mcProfiler;
 	
-	public static Map<String, IWDLMod> wdlMods = new HashMap<String, IWDLMod>();
 	/**
 	 * All WDLMods that implement {@link IGuiHooksListener}.
 	 */
 	public static Map<String, IGuiHooksListener> guiListeners =
 			new HashMap<String, IGuiHooksListener>();
+	/**
+	 * All WDLMods that implement {@link IChatMessageListener}.
+	 */
+	public static Map<String, IChatMessageListener> chatMessageListeners =
+			new HashMap<String, IChatMessageListener>();
+	/**
+	 * All WDLMods that implement {@link IPluginChannelListener}.
+	 */
+	public static Map<String, IPluginChannelListener> pluginChannelListeners =
+			new HashMap<String, IPluginChannelListener>();
+	/**
+	 * All WDLMods that implement {@link IBlockEventListener}.
+	 */
+	public static Map<String, IBlockEventListener> blockEventListeners =
+			new HashMap<String, IBlockEventListener>();
 	
 	/**
 	 * Called when {@link WorldClient#tick()} is called.
@@ -55,11 +72,12 @@ public class WDLHooks {
 				WDLEvents.onWorldLoad(sender);
 				profiler.endSection();
 				
-				for (Map.Entry<String, IWDLMod> e : wdlMods.entrySet()) {
+				//TODO: Relocate this logic.
+				/*for (Map.Entry<String, IWDLMod> e : wdlMods.entrySet()) {
 					profiler.startSection(e.getKey());
 					e.getValue().onWorldLoad(sender);
 					profiler.endSection();
-				}
+				}*/
 				
 				profiler.endSection();
 			} else {
@@ -223,7 +241,8 @@ public class WDLHooks {
 			WDLEvents.onChatMessage(chatMessage);
 			profiler.endSection();
 			
-			for (Map.Entry<String, IWDLMod> e : wdlMods.entrySet()) {
+			for (Map.Entry<String, IChatMessageListener> e : 
+					chatMessageListeners.entrySet()) {
 				profiler.startSection(e.getKey());
 				e.getValue().onChat(WDL.worldClient, chatMessage);
 				profiler.endSection();
@@ -289,7 +308,8 @@ public class WDLHooks {
 			WDLEvents.onPluginChannelPacket(channel, payload);
 			profiler.endSection();
 			
-			for (Map.Entry<String, IWDLMod> e : wdlMods.entrySet()) {
+			for (Map.Entry<String, IPluginChannelListener> e : 
+					pluginChannelListeners.entrySet()) {
 				profiler.startSection(e.getKey());
 				e.getValue().onPluginChannelPacket(WDL.worldClient, channel,
 						payload);
@@ -330,7 +350,8 @@ public class WDLHooks {
 			WDLEvents.onBlockEvent(pos, block, data1, data2);
 			profiler.endSection();
 			
-			for (Map.Entry<String, IWDLMod> e : wdlMods.entrySet()) {
+			for (Map.Entry<String, IBlockEventListener> e : 
+					blockEventListeners.entrySet()) {
 				profiler.startSection(e.getKey());
 				e.getValue().onBlockEvent(WDL.worldClient, pos, block, 
 						data1, data2);
