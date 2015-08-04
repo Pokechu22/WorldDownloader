@@ -353,14 +353,15 @@ public class WDL {
 		
 	}
 
-	public static void loadWorld() {
+	/**
+	 * Called when the world has loaded.
+	 * 
+	 * @return Whether on the same server.
+	 */
+	public static boolean loadWorld() {
 		if (!addedAPIHandlers) {
 			WDLApi.addWDLMod(new HologramHandler());
 			addedAPIHandlers = true;
-		}
-		
-		if (worldLoadingDeferred) {
-			return;
 		}
 		
 		WDLPluginChannels.onWorldLoad();
@@ -401,6 +402,8 @@ public class WDL {
 			} else {
 				startOnChange = false;
 			}
+			
+			return true;
 		} else {
 			// Same server, different world!
 			chatDebug(WDLDebugMessageCause.ON_WORLD_LOAD,
@@ -409,6 +412,8 @@ public class WDL {
 			if (startOnChange) {
 				start();
 			}
+			
+			return false;
 		}
 	}
 

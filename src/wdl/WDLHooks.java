@@ -68,17 +68,7 @@ public class WDLHooks {
 					return;
 				}
 				
-				profiler.startSection("Core");
 				WDLEvents.onWorldLoad(sender);
-				profiler.endSection();
-				
-				//TODO: Relocate this logic.
-				/*for (Map.Entry<String, IWDLMod> e : wdlMods.entrySet()) {
-					profiler.startSection(e.getKey());
-					e.getValue().onWorldLoad(sender);
-					profiler.endSection();
-				}*/
-				
 				profiler.endSection();
 			} else {
 				profiler.startSection("inventoryCheck");

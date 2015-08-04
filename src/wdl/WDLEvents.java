@@ -1,6 +1,10 @@
 package wdl;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.IMerchant;
@@ -21,6 +25,7 @@ import net.minecraft.inventory.ContainerMerchant;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryEnderChest;
 import net.minecraft.network.play.server.S3FPacketCustomPayload;
+import net.minecraft.profiler.Profiler;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityBeacon;
 import net.minecraft.tileentity.TileEntityBrewingStand;
@@ -40,6 +45,8 @@ import net.minecraft.world.storage.MapData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import wdl.api.IWorldLoadListener;
+
 /**
  * Handles all of the events for WDL.
  * 
@@ -50,13 +57,22 @@ import org.apache.logging.log4j.Logger;
  * should be called directly from the source and does a bit of processing, while
  */
 public class WDLEvents {
-	private static Logger logger = LogManager.getLogger();
+	private static final Logger logger = LogManager.getLogger();
+	private static final Profiler profiler = Minecraft.getMinecraft().mcProfiler;
 
 	/**
+	 * All WDLMods that implement {@link IWorldLoadListener}.
+	 */
+	public static Map<String, IWorldLoadListener> worldLoadListeners =
+			new HashMap<String, IWorldLoadListener>();
+	
+	/**
 	 * Must be called after the static World object in Minecraft has been
-	 * replaced
+	 * replaced.
 	 */
 	public static void onWorldLoad(WorldClient world) {
+		profiler.startSection("Core");
+		
 		if (WDL.minecraft.isIntegratedServerRunning()) {
 			return;
 		}
@@ -70,11 +86,19 @@ public class WDLEvents {
 				WDL.worldLoadingDeferred = true;
 				WDL.startSaveThread();
 			}
-
+			
+			profiler.endSection();
 			return;
 		}
 
-		WDL.loadWorld();
+		boolean sameServer = WDL.loadWorld();
+		profiler.endSection();
+		
+		for (Map.Entry<String, IWorldLoadListener> e : worldLoadListeners.entrySet()) {
+			profiler.startSection(e.getKey());
+			e.getValue().onWorldLoad(world, sameServer);
+			profiler.endSection();
+		}
 	}
 
 	/** Must be called when a chunk is no longer needed and should be removed */
