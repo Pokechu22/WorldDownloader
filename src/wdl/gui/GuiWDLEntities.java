@@ -403,7 +403,7 @@ public class GuiWDLEntities extends GuiScreen {
 		rangeModeButton = new GuiButton(100, this.width / 2 - 155, 18, 150,
 				20, "Track distance: Error");
 		presetsButton = new GuiButton(101, this.width / 2 + 5, 18, 150, 20, 
-				"Presets...");
+				"Range presets...");
 		
 		this.mode = WDL.worldProps.getProperty("Entity.TrackDistanceMode");
 		if (mode.equals("default")) {
@@ -475,7 +475,7 @@ public class GuiWDLEntities extends GuiScreen {
 			WDL.worldProps.setProperty("Entity.TrackDistanceMode", mode);
 		}
 		if (button.id == 101 && button.enabled) {
-			mc.displayGuiScreen(new GuiWDLEntityPresets(this));
+			mc.displayGuiScreen(new GuiWDLEntityRangePresets(this));
 		}
 		if (button.id == 200) {
 			mc.displayGuiScreen(parent);

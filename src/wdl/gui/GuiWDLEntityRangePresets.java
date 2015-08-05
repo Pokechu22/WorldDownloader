@@ -17,15 +17,15 @@ import net.minecraft.util.ChatComponentText;
 /**
  * Provides fast setting for various entity options.
  */
-public class GuiWDLEntityPresets extends GuiScreen implements GuiYesNoCallback {
+public class GuiWDLEntityRangePresets extends GuiScreen implements GuiYesNoCallback {
 	private final GuiScreen parent;
 	
 	private GuiButton vanillaButton;
 	private GuiButton spigotButton;
 	private GuiButton serverButton;
-	private GuiButton okButton;
+	private GuiButton cancelButton;
 	
-	public GuiWDLEntityPresets(GuiScreen parent) {
+	public GuiWDLEntityRangePresets(GuiScreen parent) {
 		this.parent = parent;
 	}
 	
@@ -33,11 +33,13 @@ public class GuiWDLEntityPresets extends GuiScreen implements GuiYesNoCallback {
 	public void initGui() {
 		int y = this.height / 4;
 		
-		this.vanillaButton = new GuiButton(0, this.width / 2 - 230, y, 150, 20,
+		this.vanillaButton = new GuiButton(0, this.width / 2 - 100, y,
 				"Vanilla minecraft ranges");
-		this.spigotButton = new GuiButton(1, this.width / 2 - 75, y, 150, 20,
+		y += 22;
+		this.spigotButton = new GuiButton(1, this.width / 2 - 100, y,
 				"Default spigot ranges");
-		this.serverButton = new GuiButton(2, this.width / 2 + 80, y, 150, 20,
+		y += 22;
+		this.serverButton = new GuiButton(2, this.width / 2 - 100, y,
 				"Server-configured ranges");
 		
 		serverButton.enabled = WDLPluginChannels.hasServerEntityRange();
@@ -46,10 +48,10 @@ public class GuiWDLEntityPresets extends GuiScreen implements GuiYesNoCallback {
 		this.buttonList.add(spigotButton);
 		this.buttonList.add(serverButton);
 		
-		y += 28 + 2 + mc.fontRendererObj.FONT_HEIGHT;
+		y += 28;
 		
-		this.okButton = new GuiButton(100, this.width / 2 - 100, y, "OK");
-		this.buttonList.add(okButton);
+		this.cancelButton = new GuiButton(100, this.width / 2 - 100, y, "Cancel");
+		this.buttonList.add(cancelButton);
 	}
 	
 	@Override
@@ -90,12 +92,9 @@ public class GuiWDLEntityPresets extends GuiScreen implements GuiYesNoCallback {
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		drawBackground(0);
 		
-		this.drawCenteredString(this.fontRendererObj, "§n§lEntity presets",
-				this.width / 2, this.height / 4 - 40, 0xFFFFFF);
-		this.drawCenteredString(this.fontRendererObj, "Ranges", this.width / 2,
-				this.height / 4 - fontRendererObj.FONT_HEIGHT - 2, 0xFFFFFF);
-		this.drawCenteredString(this.fontRendererObj, "Enable / Disable",
-				this.width / 2, this.height / 4 + 28, 0xFFFFFF);
+		this.drawCenteredString(this.fontRendererObj, "Range presets",
+				this.width / 2, this.height / 4 - fontRendererObj.FONT_HEIGHT
+						- 2, 0xFFFFFF);
 		
 		int infoX = this.width / 2 - 150;
 		int infoY = 2 * this.height / 3;
@@ -121,6 +120,8 @@ public class GuiWDLEntityPresets extends GuiScreen implements GuiYesNoCallback {
 			} else {
 				infoText += "§cAs it is not installed, this cannot be used.";
 			}
+		} else if (cancelButton.isMouseOver()) {
+			infoText = "Cancel without making changes.";
 		}
 		
 		if (infoText != null) {
@@ -168,7 +169,7 @@ public class GuiWDLEntityPresets extends GuiScreen implements GuiYesNoCallback {
 			}
 		}
 		
-		mc.displayGuiScreen(this);
+		mc.displayGuiScreen(parent);
 	}
 	
 	@Override
