@@ -247,7 +247,7 @@ public class WDLPluginChannels {
 
 		// Send the init message.
 		C17PacketCustomPayload initPacket = new C17PacketCustomPayload(
-				"WDL|INIT", new PacketBuffer(Unpooled.EMPTY_BUFFER)
+				"WDL|INIT", new PacketBuffer(Unpooled.buffer())
 						.writeString(WDL.VERSION));
 		minecraft.getNetHandler().addToSendQueue(initPacket);
 	}
