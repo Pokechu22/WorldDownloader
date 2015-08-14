@@ -1,26 +1,106 @@
 package wdl.gui;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import wdl.WDL;
+import wdl.WDLDebugMessageCause;
 import wdl.WDLPluginChannels;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.GuiListExtended.IGuiListEntry;
 
 public class GuiWDL extends GuiScreen {
+	private class GuiWDLButtonList extends GuiListExtended {
+		public GuiWDLButtonList() {
+			super(GuiWDL.this.mc, GuiWDL.this.width, GuiWDL.this.height, 39,
+					GuiWDL.this.height - 32, 20);
+		}
+
+		private class ButtonEntry implements IGuiListEntry {
+			private final GuiButton button;
+			private final GuiScreen toOpen;
+			
+			public ButtonEntry(String text, GuiScreen toOpen) {
+				this.button = new GuiButton(0, 0, 0, text);
+				this.toOpen = toOpen;
+			}
+			
+			@Override
+			public void setSelected(int p_178011_1_, int p_178011_2_,
+					int p_178011_3_) {
+				
+			}
+
+			@Override
+			public void drawEntry(int slotIndex, int x, int y, int listWidth,
+					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
+				button.xPosition = GuiWDL.this.width / 2 - 100;
+				button.yPosition = y;
+				
+				button.drawButton(mc, mouseX, mouseY);
+			}
+
+			@Override
+			public boolean mousePressed(int slotIndex, int x, int y,
+					int mouseEvent, int relativeX, int relativeY) {
+				if (button.mousePressed(mc, x, y)) {
+					mc.displayGuiScreen(toOpen);
+					
+					button.playPressSound(mc.getSoundHandler());
+					
+					return true;
+				}
+				
+				return false;
+			}
+
+			@Override
+			public void mouseReleased(int slotIndex, int x, int y,
+					int mouseEvent, int relativeX, int relativeY) {
+				
+			}
+		}
+		
+		private List<IGuiListEntry> entries = new ArrayList<IGuiListEntry>() {{
+			// TODO: This might be a performance bottleneck, as a bunch of
+			// GUI instances are created.  Although they aren't displayed.
+			
+			add(new ButtonEntry("World Overrides...", 
+					new GuiWDLWorld(GuiWDL.this)));
+			add(new ButtonEntry("World Generator Overrides...", 
+					new GuiWDLGenerator(GuiWDL.this)));
+			add(new ButtonEntry("Player Overrides...", 
+					new GuiWDLPlayer(GuiWDL.this)));
+			add(new ButtonEntry("Entity Options...", 
+					new GuiWDLEntities(GuiWDL.this)));
+			add(new ButtonEntry("Backup Options...", 
+					new GuiWDLBackup(GuiWDL.this)));
+			add(new ButtonEntry("Debug Options...", 
+					new GuiWDLDebug(GuiWDL.this)));
+		}};
+		
+		@Override
+		public IGuiListEntry getListEntry(int index) {
+			return entries.get(index);
+		}
+
+		@Override
+		protected int getSize() {
+			return entries.size();
+		}
+	}
+	
 	private String title = "";
 
 	private GuiScreen parent;
 
 	private GuiTextField worldName;
 	private GuiButton autoStartBtn;
-	private GuiButton worldOverrides;
-	private GuiButton generatorOverrides;
-	private GuiButton playerOverrides;
-	private GuiButton entityOptions;
-	private GuiButton backupOptions;
-	private GuiButton debugOptions;
+	private GuiWDLButtonList list;
 
 	public GuiWDL(GuiScreen parent) {
 		this.parent = parent;
@@ -43,49 +123,23 @@ public class GuiWDL extends GuiScreen {
 
 		this.buttonList.clear();
 		this.title = "Options for " + WDL.baseFolderName.replace('@', ':');
-		int w = this.width / 2;
-		int h = this.height / 4;
-		int hi = h - 15;
 
 		if (WDL.baseProps.getProperty("ServerName").isEmpty()) {
 			WDL.baseProps.setProperty("ServerName", WDL.getServerName());
 		}
 
 		this.worldName = new GuiTextField(42, this.fontRendererObj,
-				this.width / 2 - 70, hi, 168, 18);
+				this.width / 2 - 155, 19, 150, 18);
 		this.updateServerName(false);
-		hi += 22;
-		this.autoStartBtn = new GuiButton(1, w - 100, hi,
+		this.autoStartBtn = new GuiButton(1, this.width / 2 + 5, 18, 150, 20,
 				"Start Download: ERROR");
 		this.buttonList.add(this.autoStartBtn);
 		this.updateAutoStart(false);
-		hi += 28;
-		this.worldOverrides = new GuiButton(4, w - 100, hi,
-				"World Overrides...");
-		this.buttonList.add(this.worldOverrides);
-		hi += 22;
-		this.generatorOverrides = new GuiButton(5, w - 100, hi,
-				"World Generator Overrides...");
-		this.buttonList.add(this.generatorOverrides);
-		hi += 22;
-		this.playerOverrides = new GuiButton(6, w - 100, hi,
-				"Player Overrides...");
-		this.buttonList.add(this.playerOverrides);
-		hi += 22;
-		this.entityOptions = new GuiButton(7, w - 100, hi,
-				"Entity options...");
-		this.entityOptions.enabled = WDLPluginChannels.canSaveEntities();
-		this.buttonList.add(this.entityOptions);
-		hi += 22;
-		this.playerOverrides = new GuiButton(8, w - 100, hi,
-				"Backup options...");
-		this.buttonList.add(this.playerOverrides);
-		hi += 28;
-		this.debugOptions = new GuiButton(9, w - 100, hi,
-				"Debug options...");
-		this.buttonList.add(this.debugOptions);
-		hi += 28;
-		this.buttonList.add(new GuiButton(100, w - 100, hi, "Done"));
+
+		this.buttonList.add(new GuiButton(100, this.width / 2 - 100,
+				this.height - 29, "Done"));
+		
+		this.list = new GuiWDLButtonList();
 	}
 
 	/**
@@ -102,18 +156,6 @@ public class GuiWDL extends GuiScreen {
 
 		if (guibutton.id == 1) { // Auto start
 			this.updateAutoStart(true);
-		} else if (guibutton.id == 4) { // World Overrides
-			this.mc.displayGuiScreen(new GuiWDLWorld(this));
-		} else if (guibutton.id == 5) { // Generator Overrides
-			this.mc.displayGuiScreen(new GuiWDLGenerator(this));
-		} else if (guibutton.id == 6) { // Player Overrides
-			this.mc.displayGuiScreen(new GuiWDLPlayer(this));
-		} else if (guibutton.id == 7) { // Entity options
-			this.mc.displayGuiScreen(new GuiWDLEntities(this));
-		} else if (guibutton.id == 8) { // Backup options
-			this.mc.displayGuiScreen(new GuiWDLBackup(this));
-		} else if (guibutton.id == 9) { // Debug options
-			this.mc.displayGuiScreen(new GuiWDLDebug(this));
 		} else if (guibutton.id == 100) { // Done
 			this.mc.displayGuiScreen(this.parent);
 		}
@@ -130,8 +172,26 @@ public class GuiWDL extends GuiScreen {
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
 	throws IOException {
+		list.func_148179_a(mouseX, mouseY, mouseButton);
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 		this.worldName.mouseClicked(mouseX, mouseY, mouseButton);
+	}
+	
+	/**
+	 * Handles mouse input.
+	 */
+	@Override
+	public void handleMouseInput() throws IOException {
+		super.handleMouseInput();
+		this.list.func_178039_p();
+	}
+	
+	@Override
+	protected void mouseReleased(int mouseX, int mouseY, int state) {
+		if (list.func_148181_b(mouseX, mouseY, state)) {
+			return;
+		}
+		super.mouseReleased(mouseX, mouseY, state);
 	}
 
 	/**
@@ -157,14 +217,18 @@ public class GuiWDL extends GuiScreen {
 	 * Draws the screen and all the components in it.
 	 */
 	@Override
-	public void drawScreen(int var1, int var2, float var3) {
-		this.drawDefaultBackground(); // drawDefaultBackground
+	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		this.drawDefaultBackground();
+		
+		this.list.drawScreen(mouseX, mouseY, partialTicks);
+		
 		this.drawCenteredString(this.fontRendererObj, this.title,
-				this.width / 2, this.height / 4 - 40, 16777215);
-		this.drawString(this.fontRendererObj, "Name:", this.width / 2 - 99,
-				this.height / 4 - 10, 16777215);
-		this.worldName.drawTextBox(); // drawTextBox
-		super.drawScreen(var1, var2, var3);
+				this.width / 2, 8, 0xFFFFFF);
+		this.drawString(this.fontRendererObj, "Name:", this.worldName.xPosition
+				- this.fontRendererObj.getStringWidth("Name: "), 26, 0xFFFFFF);
+		this.worldName.drawTextBox();
+		
+		super.drawScreen(mouseX, mouseY, partialTicks);
 	}
 
 	public void updateAutoStart(boolean btnClicked) {
