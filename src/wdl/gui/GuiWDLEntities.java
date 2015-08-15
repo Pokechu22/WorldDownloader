@@ -397,8 +397,8 @@ public class GuiWDLEntities extends GuiScreen {
 	
 	@Override
 	public void initGui() {
-		this.buttonList.add(new GuiButton(200, this.width / 2 - 155,
-				this.height - 29, 150, 20, "OK"));
+		this.buttonList.add(new GuiButton(200, this.width / 2 - 100,
+				this.height - 29, "OK"));
 		
 		rangeModeButton = new GuiButton(100, this.width / 2 - 155, 18, 150,
 				20, "Track distance: Error");
