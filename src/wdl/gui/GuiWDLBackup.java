@@ -5,7 +5,6 @@ import java.io.IOException;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import wdl.WDL;
-import wdl.WDLDebugMessageCause;
 import wdl.WorldBackup;
 import wdl.WorldBackup.WorldBackupType;
 
@@ -31,8 +30,6 @@ public class GuiWDLBackup extends GuiScreen {
 		
 		this.buttonList.add(new GuiButton(0, x, y, 
 				"Backup mode: " + backupType.description));
-		
-		WDLDebugMessageCause[] causes = WDLDebugMessageCause.values();
 		
 		y += 28;
 		

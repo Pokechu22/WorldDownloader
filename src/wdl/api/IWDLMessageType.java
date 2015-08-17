@@ -1,7 +1,5 @@
 package wdl.api;
 
-import wdl.WDLDebugMessageCause;
-
 /**
  * Represents a message type capable of being used in WDL logging.
  */

@@ -2,14 +2,17 @@ package wdl;
 
 import wdl.api.IWDLMessageType;
 
+public class WDLMessages {
+	//TODO: Move logic for what types of messages are enabled here.
+}
+
 /**
- * Enum containing various causes for debug text, and whether or not that
- * cause is currently enabled.
+ * Enum containing WDL's default {@link IWDLMessageType}s.
  * <br/>
  * Contains a modifiable boolean that states whether the level is
  * enabled.  
  */
-public enum WDLDebugMessageCause implements IWDLMessageType {
+enum WDLMessageTypes implements IWDLMessageType {
 	LOAD_TILE_ENTITY("Loading TileEntity", false),
 	ON_WORLD_LOAD("World loaded", false),
 	ON_BLOCK_EVENT("Block Event", true),
@@ -21,7 +24,7 @@ public enum WDLDebugMessageCause implements IWDLMessageType {
 	REMOVE_ENTITY("Removing entity", false),
 	PLUGIN_CHANNEL_MESSAGE("Plugin channel message", true);
 	
-	private WDLDebugMessageCause(String displayText, boolean enabledByDefault) {
+	private WDLMessageTypes(String displayText, boolean enabledByDefault) {
 		this.displayText = displayText;
 		this.enabledByDefault = enabledByDefault;
 		
@@ -53,7 +56,7 @@ public enum WDLDebugMessageCause implements IWDLMessageType {
 	public static void resetEnabledToDefaults() {
 		globalDebugEnabled = true;
 		
-		for (WDLDebugMessageCause value : values()) {
+		for (WDLMessageTypes value : values()) {
 			value.enabled = value.enabledByDefault;
 		}
 	}

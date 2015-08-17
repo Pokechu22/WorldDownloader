@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import wdl.WDL;
-import wdl.WDLDebugMessageCause;
+import wdl.WDLMessageTypes;
 import wdl.WDLPluginChannels;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -22,9 +22,9 @@ public class GuiWDLDebug extends GuiScreen {
 
 		private class DebugEntry implements IGuiListEntry {
 			private final GuiButton button;
-			private final WDLDebugMessageCause type;
+			private final WDLMessageTypes type;
 			
-			public DebugEntry(WDLDebugMessageCause type) {
+			public DebugEntry(WDLMessageTypes type) {
 				this.type = type;
 				this.button = new GuiButton(0, 0, 0, type.toString());
 			}
@@ -42,7 +42,7 @@ public class GuiWDLDebug extends GuiScreen {
 				button.yPosition = y;
 				
 				button.displayString = type.toString();
-				button.enabled = WDLDebugMessageCause.globalDebugEnabled;
+				button.enabled = WDLMessageTypes.globalDebugEnabled;
 				
 				button.drawButton(mc, mouseX, mouseY);
 			}
@@ -69,7 +69,7 @@ public class GuiWDLDebug extends GuiScreen {
 		}
 		
 		private List<IGuiListEntry> entries = new ArrayList<IGuiListEntry>() {{
-			for (WDLDebugMessageCause cause : WDLDebugMessageCause.values()) {
+			for (WDLMessageTypes cause : WDLMessageTypes.values()) {
 				add(new DebugEntry(cause));
 			}
 		}};
@@ -100,7 +100,7 @@ public class GuiWDLDebug extends GuiScreen {
 		int x = (this.width / 2) - 100;
 		
 		masterDebugSwitch = new GuiButton(100, x, 18, "Master debug switch: " + 
-				(WDLDebugMessageCause.globalDebugEnabled ? "On" : "Off"));
+				(WDLMessageTypes.globalDebugEnabled ? "On" : "Off"));
 		this.buttonList.add(masterDebugSwitch);
 		
 		this.list = new GuiDebugList();
@@ -116,10 +116,10 @@ public class GuiWDLDebug extends GuiScreen {
 		
 		if (button.id == 100) {
 			//"Master switch"
-			WDLDebugMessageCause.globalDebugEnabled ^= true;
+			WDLMessageTypes.globalDebugEnabled ^= true;
 			
 			button.displayString = "Master debug switch: " + 
-					(WDLDebugMessageCause.globalDebugEnabled ? "On" : "Off");
+					(WDLMessageTypes.globalDebugEnabled ? "On" : "Off");
 		} else if (button.id == 101) {
 			this.mc.displayGuiScreen(this.parent);
 		}
@@ -128,8 +128,8 @@ public class GuiWDLDebug extends GuiScreen {
 	@Override
 	public void onGuiClosed() {
 		WDL.baseProps.setProperty("Debug.globalDebugEnabled", 
-				WDLDebugMessageCause.globalDebugEnabled ? "true" : "false");
-		for (WDLDebugMessageCause cause : WDLDebugMessageCause.values()) {
+				WDLMessageTypes.globalDebugEnabled ? "true" : "false");
+		for (WDLMessageTypes cause : WDLMessageTypes.values()) {
 			WDL.baseProps.setProperty("Debug." + cause.name(),
 					cause.isEnabled() ? "true" : "false");
 		}

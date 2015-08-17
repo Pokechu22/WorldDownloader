@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import wdl.WDL;
-import wdl.WDLDebugMessageCause;
 import wdl.WDLPluginChannels;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;

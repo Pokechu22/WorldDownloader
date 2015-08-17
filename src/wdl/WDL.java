@@ -236,7 +236,7 @@ public class WDL {
 		defaultProps.setProperty("PlayerFood", "20");
 		
 		defaultProps.setProperty("Debug.globalDebugEnabled", "true");
-		for (WDLDebugMessageCause cause : WDLDebugMessageCause.values()) {
+		for (WDLMessageTypes cause : WDLMessageTypes.values()) {
 			defaultProps.setProperty("Debug." + cause.name(), "true");
 		}
 		
@@ -378,10 +378,10 @@ public class WDL {
 
 		if (networkManager != newNM) {
 			// Load the debug settings.
-			WDLDebugMessageCause.resetEnabledToDefaults();
-			WDLDebugMessageCause.globalDebugEnabled = baseProps.getProperty(
+			WDLMessageTypes.resetEnabledToDefaults();
+			WDLMessageTypes.globalDebugEnabled = baseProps.getProperty(
 					"Debug.globalDebugEnabled", "true").equals("true");
-			for (WDLDebugMessageCause cause : WDLDebugMessageCause.values()) {
+			for (WDLMessageTypes cause : WDLMessageTypes.values()) {
 				if (baseProps.containsKey("Debug." + cause.name())) {
 					cause.setEnabled(baseProps.getProperty(
 							"Debug." + cause.name(), "true").equals("true"));
@@ -389,12 +389,12 @@ public class WDL {
 			}
 			
 			// Different server, different world!
-			chatDebug(WDLDebugMessageCause.ON_WORLD_LOAD,
+			chatDebug(WDLMessageTypes.ON_WORLD_LOAD,
 					"onWorldLoad: different server!");
 			
 			networkManager = newNM;
 			loadBaseProps();
-			chatDebug(WDLDebugMessageCause.ON_WORLD_LOAD,
+			chatDebug(WDLMessageTypes.ON_WORLD_LOAD,
 					"Server brand=" + thePlayer.getClientBrand() +
 					".  Using " + (isSpigot() ? "Spigot" : "Vanilla") +
 							" track distances.");
@@ -408,7 +408,7 @@ public class WDL {
 			return true;
 		} else {
 			// Same server, different world!
-			chatDebug(WDLDebugMessageCause.ON_WORLD_LOAD,
+			chatDebug(WDLMessageTypes.ON_WORLD_LOAD,
 					"onWorldLoad: same server!");
 			
 			if (startOnChange) {
@@ -487,18 +487,18 @@ public class WDL {
 							//a valid one; it could be empty.
 							worldClient.setTileEntity(te.getPos(), te);
 							chatDebug(
-									WDLDebugMessageCause.LOAD_TILE_ENTITY,
+									WDLMessageTypes.LOAD_TILE_ENTITY,
 									"Using old TE from saved file: " +
 											entityType + " at " + te.getPos());
 						} else {
 							worldClient.setTileEntity(te.getPos(), 
 									newTileEntities.get(te.getPos()));
-							chatDebug(WDLDebugMessageCause.LOAD_TILE_ENTITY,
+							chatDebug(WDLMessageTypes.LOAD_TILE_ENTITY,
 									"Using new TE: " + entityType + " at "
 											+ te.getPos());
 						}
 					} else {
-						chatDebug(WDLDebugMessageCause.LOAD_TILE_ENTITY,
+						chatDebug(WDLMessageTypes.LOAD_TILE_ENTITY,
 								"Old TE does not need importing: "
 										+ entityType + " at " + te.getPos());
 					}
@@ -591,7 +591,7 @@ public class WDL {
 		saveProps();
 		
 		try {
-			chatDebug(WDLDebugMessageCause.SAVING, "Waiting for ThreadedFileIOBase to finish...");
+			chatDebug(WDLMessageTypes.SAVING, "Waiting for ThreadedFileIOBase to finish...");
 			
 			progressScreen.startMajorTask("Procrastinating...", 1);
 			progressScreen.setMinorTaskProgress(
@@ -606,7 +606,7 @@ public class WDL {
 		}
 		
 		if (backupType != WorldBackupType.NONE) {
-			chatDebug(WDLDebugMessageCause.SAVING, "Backing up the world...");
+			chatDebug(WDLMessageTypes.SAVING, "Backing up the world...");
 			progressScreen.startMajorTask("Backing up world...", 1);
 			progressScreen.setMinorTaskProgress(
 					backupType.description, 1);
@@ -631,7 +631,7 @@ public class WDL {
 			GuiWDLSaveProgress progressScreen) {
 		if (!WDLPluginChannels.canDownloadInGeneral()) { return; }
 		
-		chatDebug(WDLDebugMessageCause.SAVING, "Saving player data...");
+		chatDebug(WDLMessageTypes.SAVING, "Saving player data...");
 		progressScreen.setMinorTaskProgress("Writing player data", 2);
 		
 		try {
@@ -653,7 +653,7 @@ public class WDL {
 			throw new RuntimeException("Couldn't save the player!", e);
 		}
 
-		chatDebug(WDLDebugMessageCause.SAVING, "Player data saved.");
+		chatDebug(WDLMessageTypes.SAVING, "Player data saved.");
 	}
 
 	/**
@@ -664,7 +664,7 @@ public class WDL {
 			GuiWDLSaveProgress progressScreen) {
 		if (!WDLPluginChannels.canDownloadInGeneral()) { return; }
 		
-		chatDebug(WDLDebugMessageCause.SAVING, "Saving world metadata...");
+		chatDebug(WDLMessageTypes.SAVING, "Saving world metadata...");
 		progressScreen.setMinorTaskProgress("Writing world data", 3);
 		
 		File saveDirectory = saveHandler.getWorldDirectory();
@@ -700,7 +700,7 @@ public class WDL {
 			throw new RuntimeException("Couldn't save the world metadata!", e);
 		}
 
-		chatDebug(WDLDebugMessageCause.SAVING, "World data saved.");
+		chatDebug(WDLMessageTypes.SAVING, "World data saved.");
 	}
 
 	/**
@@ -713,7 +713,7 @@ public class WDL {
 			throws IllegalArgumentException, IllegalAccessException {
 		if (!WDLPluginChannels.canDownloadInGeneral()) { return; }
 		
-		chatDebug(WDLDebugMessageCause.SAVING, "Saving chunks...");
+		chatDebug(WDLMessageTypes.SAVING, "Saving chunks...");
 		
 		// Get the ChunkProviderClient from WorldClient
 		ChunkProviderClient chunkProvider = (ChunkProviderClient) worldClient
@@ -797,7 +797,7 @@ public class WDL {
 				}
 			}
 
-			chatDebug(WDLDebugMessageCause.SAVING, "Chunk data saved.");
+			chatDebug(WDLMessageTypes.SAVING, "Chunk data saved.");
 		}
 	}
 
@@ -1169,7 +1169,7 @@ public class WDL {
 				"data");
 		progressScreen.startMajorTask("Saving map item data", newMapDatas.size());
 		
-		chatDebug(WDLDebugMessageCause.SAVING, "Saving map data...");
+		chatDebug(WDLMessageTypes.SAVING, "Saving map data...");
 		
 		int count = 0;
 		for (Map.Entry<Integer, MapData> e : newMapDatas.entrySet()) {
@@ -1196,7 +1196,7 @@ public class WDL {
 			}
 		}
 		
-		chatDebug(WDLDebugMessageCause.SAVING, "Map data saved.");
+		chatDebug(WDLMessageTypes.SAVING, "Map data saved.");
 	}
 
 	/** Get the name of the server the user specified it in the server list */
@@ -1278,7 +1278,7 @@ public class WDL {
 	}
 
 	/** Adds a chat message with a World Downloader prefix */
-	public static void chatDebug(WDLDebugMessageCause type, String msg) {
+	public static void chatDebug(WDLMessageTypes type, String msg) {
 		if (type != null && type.isEnabled()) {
 			minecraft.ingameGUI.getChatGUI().printChatMessage(
 				new ChatComponentText("§2[WorldDL]§6 " + msg));

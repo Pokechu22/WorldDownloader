@@ -99,7 +99,7 @@ public class WDLHooks {
 								}
 								
 								if (!handled) {
-									WDL.chatDebug(WDLDebugMessageCause.
+									WDL.chatDebug(WDLMessageTypes.
 											ON_GUI_CLOSED_WARNING,
 											"onItemGuiClosed: Unrecognised " +
 											"entity could not be saved: " + 
@@ -120,7 +120,7 @@ public class WDLHooks {
 								}
 								
 								if (!handled) {
-									WDL.chatDebug(WDLDebugMessageCause.
+									WDL.chatDebug(WDLMessageTypes.
 											ON_GUI_CLOSED_WARNING,
 											"onItemGuiClosed: unhandled TE @" + 
 											pos + ": " + sender.getTileEntity(pos));
