@@ -1,5 +1,7 @@
 package wdl;
 
+import wdl.api.IWDLMessageType;
+
 /**
  * Enum containing various causes for debug text, and whether or not that
  * cause is currently enabled.
@@ -7,7 +9,7 @@ package wdl;
  * Contains a modifiable boolean that states whether the level is
  * enabled.  
  */
-public enum WDLDebugMessageCause {
+public enum WDLDebugMessageCause implements IWDLMessageType {
 	LOAD_TILE_ENTITY("Loading TileEntity", false),
 	ON_WORLD_LOAD("World loaded", false),
 	ON_BLOCK_EVENT("Block Event", true),
@@ -68,12 +70,33 @@ public enum WDLDebugMessageCause {
 		this.enabled = !this.enabled;
 	}
 	
-	public String getDisplayText() {
+	public String getDisplayName() {
 		return this.displayText;
 	}
 	
 	@Override
 	public String toString() {
 		return displayText + ": " + (enabled ? "On" : "Off");
+	}
+
+	@Override
+	public String getTitleColor() {
+		return "§2";
+	}
+	
+	@Override
+	public String getTextColor() {
+		return "§6";
+	}
+
+	@Override
+	public String getName() {
+		return this.name();
+	}
+
+	@Override
+	public String getDescription() {
+		// TODO NYI
+		return "";
 	}
 }
