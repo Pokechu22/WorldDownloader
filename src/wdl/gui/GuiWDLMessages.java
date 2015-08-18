@@ -3,6 +3,8 @@ package wdl.gui;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Collection;
 
 import wdl.WDL;
 import wdl.WDLMessages;
@@ -14,18 +16,71 @@ import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
 
 public class GuiWDLMessages extends GuiScreen {
-	private class GuiDebugList extends GuiListExtended {
-		public GuiDebugList() {
+	private class GuiMessageTypeList extends GuiListExtended {
+		public GuiMessageTypeList() {
 			super(GuiWDLMessages.this.mc, GuiWDLMessages.this.width,
 					GuiWDLMessages.this.height, 39,
 					GuiWDLMessages.this.height - 32, 20);
 		}
 
-		private class DebugEntry implements IGuiListEntry {
+		private class CategoryEntry implements IGuiListEntry {
+			private final GuiButton button;
+			private final String category;
+			
+			public CategoryEntry(String category) {
+				this.category = category;
+				this.button = new GuiButton(0, 0, 0, 80, 20, "");
+			}
+			
+			@Override
+			public void setSelected(int p_178011_1_, int p_178011_2_,
+					int p_178011_3_) {
+				
+			}
+
+			@Override
+			public void drawEntry(int slotIndex, int x, int y, int listWidth,
+					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
+				drawCenteredString(fontRendererObj, category,
+						GuiWDLMessages.this.width / 2 - 40, y + slotHeight
+						- mc.fontRendererObj.FONT_HEIGHT - 1, 0xFFFFFF);
+				
+				button.xPosition = GuiWDLMessages.this.width / 2 + 20;
+				button.yPosition = y;
+				
+				//TODO logic for enabling groups
+				button.displayString = (true ? "Group enabled" : "Group disabled");
+				button.enabled = false; //WDLMessages.enableAllMessages;
+				
+				button.drawButton(mc, mouseX, mouseY);
+			}
+
+			@Override
+			public boolean mousePressed(int slotIndex, int x, int y,
+					int mouseEvent, int relativeX, int relativeY) {
+				if (button.mousePressed(mc, x, y)) {
+					//TODO logic for enabling groups
+					
+					button.playPressSound(mc.getSoundHandler());
+					
+					return true;
+				}
+				
+				return false;
+			}
+
+			@Override
+			public void mouseReleased(int slotIndex, int x, int y,
+					int mouseEvent, int relativeX, int relativeY) {
+				
+			}
+		}
+		
+		private class MessageTypeEntry implements IGuiListEntry {
 			private final GuiButton button;
 			private final IWDLMessageType type;
 			
-			public DebugEntry(IWDLMessageType type) {
+			public MessageTypeEntry(IWDLMessageType type) {
 				this.type = type;
 				this.button = new GuiButton(0, 0, 0, type.toString());
 			}
@@ -71,8 +126,13 @@ public class GuiWDLMessages extends GuiScreen {
 		}
 		
 		private List<IGuiListEntry> entries = new ArrayList<IGuiListEntry>() {{
-			for (IWDLMessageType cause : WDLMessages.getTypes().values()) {
-				add(new DebugEntry(cause));
+			Map<String, Collection<IWDLMessageType>> map = WDLMessages.getTypes().asMap();
+			for (Map.Entry<String, Collection<IWDLMessageType>> e : map.entrySet()) {
+				add(new CategoryEntry(e.getKey()));
+				
+				for (IWDLMessageType type : e.getValue()) {
+					add(new MessageTypeEntry(type));
+				}
 			}
 		}};
 		
@@ -89,7 +149,7 @@ public class GuiWDLMessages extends GuiScreen {
 	}
 	
 	private GuiScreen parent;
-	private GuiDebugList list;
+	private GuiMessageTypeList list;
 	
 	public GuiWDLMessages(GuiScreen parent) {
 		this.parent = parent;
@@ -105,7 +165,7 @@ public class GuiWDLMessages extends GuiScreen {
 				(WDLMessages.enableAllMessages ? "Yes" : "No"));
 		this.buttonList.add(masterDebugSwitch);
 		
-		this.list = new GuiDebugList();
+		this.list = new GuiMessageTypeList();
 		
 		this.buttonList.add(new GuiButton(101, x, this.height - 29, "Done"));
 	}
@@ -122,7 +182,7 @@ public class GuiWDLMessages extends GuiScreen {
 			
 			WDL.baseProps.setProperty("Messages.enableAll",
 					Boolean.toString(WDLMessages.enableAllMessages));
-			button.displayString = "Show WDL messages: " + 
+			button.displayString = "Show WDL messages (Recomended): " + 
 					(WDLMessages.enableAllMessages ? "Yes" : "No");
 		} else if (button.id == 101) {
 			this.mc.displayGuiScreen(this.parent);

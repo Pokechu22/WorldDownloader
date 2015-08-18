@@ -203,7 +203,7 @@ public class WDLMessages {
 		ListMultimap<String, IWDLMessageType> returned = LinkedListMultimap.create();
 		
 		for (MessageRegistration r : registrations) {
-			returned.put(r.name, r.type);
+			returned.put(r.owner, r.type);
 		}
 		
 		return ImmutableListMultimap.copyOf(returned);
@@ -288,7 +288,7 @@ enum WDLMessageTypes implements IWDLMessageType {
 	private WDLMessageTypes(String displayText, String description,
 			boolean enabledByDefault) {
 		this(displayText, EnumChatFormatting.DARK_GREEN,
-				EnumChatFormatting.GOLD, description, enabledByDefault, "Core");
+				EnumChatFormatting.GOLD, description, enabledByDefault, "Core (Debug)");
 	}
 	/**
 	 * Constructor that allows specification of all values.
