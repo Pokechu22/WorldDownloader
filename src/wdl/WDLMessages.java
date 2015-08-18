@@ -1,9 +1,198 @@
 package wdl;
 
-import wdl.api.IWDLMessageType;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import com.google.common.collect.LinkedListMultimap;
+import com.google.common.collect.ListMultimap;
+import com.google.common.collect.ImmutableListMultimap;
+import com.google.common.collect.Multimap;
+
+import wdl.api.IWDLMessageType;
+import wdl.api.IWDLMod;
+
+/**
+ * Handles enabling and disabling of all of the messages.
+ */
 public class WDLMessages {
-	//TODO: Move logic for what types of messages are enabled here.
+	/**
+	 * Information about an individual message type.
+	 */
+	private static class MessageRegistration {
+		public final String name;
+		public final IWDLMessageType type;
+		public final String owner;
+		
+		/**
+		 * Creates a MessageRegistration.
+		 * 
+		 * @param name The name to use.
+		 * @param type The type bound to this registration.
+		 * @param owner The name of the mod adding it.  ("Core" for base WDL)
+		 */
+		public MessageRegistration(String name, IWDLMessageType type,
+				String owner) {
+			this.name = name;
+			this.type = type;
+			this.owner = owner;
+		}
+		
+		@Override
+		public String toString() {
+			return "MessageRegistration [name=" + name + ", type=" + type
+					+ ", owner=" + owner + "]";
+		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + ((name == null) ? 0 : name.hashCode());
+			result = prime * result + ((owner == null) ? 0 : owner.hashCode());
+			result = prime * result + ((type == null) ? 0 : type.hashCode());
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj) {
+				return true;
+			}
+			if (obj == null) {
+				return false;
+			}
+			if (!(obj instanceof MessageRegistration)) {
+				return false;
+			}
+			MessageRegistration other = (MessageRegistration) obj;
+			if (name == null) {
+				if (other.name != null) {
+					return false;
+				}
+			} else if (!name.equals(other.name)) {
+				return false;
+			}
+			if (owner == null) {
+				if (other.owner != null) {
+					return false;
+				}
+			} else if (!owner.equals(other.owner)) {
+				return false;
+			}
+			if (type == null) {
+				if (other.type != null) {
+					return false;
+				}
+			} else if (!type.equals(other.type)) {
+				return false;
+			}
+			return true;
+		}
+	}
+	
+	/**
+	 * If <code>false</code>, all messages are disabled.  Otherwise, per-
+	 * message settings are used.
+	 */
+	public static boolean enableAllMessages = true;
+	
+	/**
+	 * List of all registrations.
+	 */
+	private static List<MessageRegistration> registrations =
+			new ArrayList<MessageRegistration>();
+	/**
+	 * Which types of messages are enabled.
+	 */
+	private static Map<MessageRegistration, Boolean> enabled = 
+			new HashMap<MessageRegistration, Boolean>();
+	
+	/**
+	 * Gets the {@link MessageRegistration} for the given name.
+	 * @param name
+	 * @return The registration or null if none is found.
+	 */
+	private static MessageRegistration getRegistration(String name) {
+		for (MessageRegistration r : registrations) {
+			if (r.name.equals(name)) {
+				return r;
+			}
+		}
+		return null;
+	}
+	/**
+	 * Gets the {@link MessageRegistration} for the given {@link IWDLMessageType}.
+	 * @param name
+	 * @return The registration or null if none is found.
+	 */
+	private static MessageRegistration getRegistration(IWDLMessageType type) {
+		for (MessageRegistration r : registrations) {
+			if (r.type.equals(type)) {
+				return r;
+			}
+		}
+		return null;
+	}
+	
+	public static void registerMessage(IWDLMessageType type, String owner) {
+		registrations.add(new MessageRegistration(type.getName(), type, owner));
+		//TODO: Set enabled to default; load value.
+	}
+	
+	/**
+	 * Is the specified type enabled?
+	 */
+	public static boolean isEnabled(IWDLMessageType type) {
+		if (type == null) {
+			return false;
+		}
+		if (!enableAllMessages) {
+			return false;
+		}
+		MessageRegistration r = getRegistration(type);
+		if (r == null) {
+			return false;
+		}
+		if (!enabled.containsKey(r)) {
+			enabled.put(r, false); //TODO default value
+		}
+		return enabled.get(r);
+	}
+	
+	/**
+	 * Toggles whether the given type is enabled.
+	 * @param type
+	 */
+	public static void toggleEnabled(IWDLMessageType type) {
+		MessageRegistration r = getRegistration(type);
+		
+		if (r != null) {
+			enabled.put(r, !isEnabled(type));
+		}
+	}
+	
+	/**
+	 * Gets all of the MessageTypes 
+	 * @return All the types, ordered by the creating mod.
+	 */
+	public static ListMultimap<String, IWDLMessageType> getTypes() {
+		ListMultimap<String, IWDLMessageType> returned = LinkedListMultimap.create();
+		
+		for (MessageRegistration r : registrations) {
+			returned.put(r.name, r.type);
+		}
+		
+		return ImmutableListMultimap.copyOf(returned);
+	}
+	
+	/**
+	 * Should be called when the server has changed.
+	 */
+	public static void onNewServer() {
+		// TODO: Load values from the config.
+	}
 }
 
 /**
@@ -26,60 +215,17 @@ enum WDLMessageTypes implements IWDLMessageType {
 	
 	private WDLMessageTypes(String displayText, boolean enabledByDefault) {
 		this.displayText = displayText;
-		this.enabledByDefault = enabledByDefault;
 		
-		this.enabled = this.enabledByDefault;
+		WDLMessages.registerMessage(this, "Core");
 	}
 	
-	/**
-	 * Whether this enum value is enabled by default.
-	 */
-	private final boolean enabledByDefault;
-	
-	/**
-	 * Whether this enum value is currently enabled.
-	 */
-	private boolean enabled;
 	/**
 	 * Text to display on a button for this enum value.
 	 */
 	private final String displayText;
-
-	/**
-	 * Whether or not the global debug logging is enabled.
-	 */
-	public static boolean globalDebugEnabled = true;
-	
-	/**
-	 * Resets all values to their default enabled state.
-	 */
-	public static void resetEnabledToDefaults() {
-		globalDebugEnabled = true;
-		
-		for (WDLMessageTypes value : values()) {
-			value.enabled = value.enabledByDefault;
-		}
-	}
-	
-	public boolean isEnabled() {
-		return globalDebugEnabled && this.enabled;
-	}
-
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
-	
-	public void toggleEnabled() {
-		this.enabled = !this.enabled;
-	}
 	
 	public String getDisplayName() {
 		return this.displayText;
-	}
-	
-	@Override
-	public String toString() {
-		return displayText + ": " + (enabled ? "On" : "Off");
 	}
 
 	@Override

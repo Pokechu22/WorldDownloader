@@ -68,6 +68,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import wdl.WorldBackup.WorldBackupType;
+import wdl.api.IWDLMessageType;
 import wdl.api.WDLApi;
 import wdl.gui.GuiWDL;
 import wdl.gui.GuiWDLMultiworld;
@@ -377,16 +378,7 @@ public class WDL {
 		NetworkManager newNM = thePlayer.sendQueue.getNetworkManager();
 
 		if (networkManager != newNM) {
-			// Load the debug settings.
-			WDLMessageTypes.resetEnabledToDefaults();
-			WDLMessageTypes.globalDebugEnabled = baseProps.getProperty(
-					"Debug.globalDebugEnabled", "true").equals("true");
-			for (WDLMessageTypes cause : WDLMessageTypes.values()) {
-				if (baseProps.containsKey("Debug." + cause.name())) {
-					cause.setEnabled(baseProps.getProperty(
-							"Debug." + cause.name(), "true").equals("true"));
-				}
-			}
+			WDLMessages.onNewServer();
 			
 			// Different server, different world!
 			chatDebug(WDLMessageTypes.ON_WORLD_LOAD,
@@ -1278,8 +1270,9 @@ public class WDL {
 	}
 
 	/** Adds a chat message with a World Downloader prefix */
-	public static void chatDebug(WDLMessageTypes type, String msg) {
-		if (type != null && type.isEnabled()) {
+	public static void chatDebug(IWDLMessageType type, String msg) {
+		//TODO: Relocate this and the above methods?
+		if (WDLMessages.isEnabled(type)) {
 			minecraft.ingameGUI.getChatGUI().printChatMessage(
 				new ChatComponentText("§2[WorldDL]§6 " + msg));
 		} else {
