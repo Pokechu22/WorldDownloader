@@ -120,6 +120,8 @@ public class GuiWDLDebug extends GuiScreen {
 			//"Master switch"
 			WDLMessages.enableAllMessages ^= true;
 			
+			WDL.baseProps.setProperty("Messages.enableAll",
+					Boolean.toString(WDLMessages.enableAllMessages));
 			button.displayString = "Master debug switch: " + 
 					(WDLMessages.enableAllMessages ? "On" : "Off");
 		} else if (button.id == 101) {
@@ -129,12 +131,6 @@ public class GuiWDLDebug extends GuiScreen {
 	
 	@Override
 	public void onGuiClosed() {
-		WDL.baseProps.setProperty("Debug.globalDebugEnabled", 
-				WDLMessages.enableAllMessages ? "true" : "false");
-		for (IWDLMessageType type : WDLMessages.getTypes().values()) {
-			WDL.baseProps.setProperty("Debug." + type.getName(),
-					WDLMessages.isEnabled(type) ? "true" : "false");
-		}
 		WDL.saveProps();
 	}
 	

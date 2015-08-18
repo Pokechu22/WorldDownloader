@@ -103,11 +103,6 @@ public class WDLMessages {
 	 */
 	private static List<MessageRegistration> registrations =
 			new ArrayList<MessageRegistration>();
-	/**
-	 * Which types of messages are enabled.
-	 */
-	private static Map<MessageRegistration, Boolean> enabled = 
-			new HashMap<MessageRegistration, Boolean>();
 	
 	/**
 	 * Gets the {@link MessageRegistration} for the given name.
@@ -122,6 +117,7 @@ public class WDLMessages {
 		}
 		return null;
 	}
+	
 	/**
 	 * Gets the {@link MessageRegistration} for the given {@link IWDLMessageType}.
 	 * @param name
@@ -136,9 +132,16 @@ public class WDLMessages {
 		return null;
 	}
 	
-	public static void registerMessage(IWDLMessageType type, String owner) {
-		registrations.add(new MessageRegistration(type.getName(), type, owner));
-		//TODO: Set enabled to default; load value.
+	/**
+	 * Adds registration for another type of message.
+	 * 
+	 * @param name The programmatic name.
+	 * @param type The type.
+	 * @param owner The owning mod (used as a category).
+	 */
+	public static void registerMessage(String name, IWDLMessageType type,
+			String owner) {
+		registrations.add(new MessageRegistration(name, type, owner));
 	}
 	
 	/**
@@ -155,10 +158,18 @@ public class WDLMessages {
 		if (r == null) {
 			return false;
 		}
-		if (!enabled.containsKey(r)) {
-			enabled.put(r, false); //TODO default value
+		
+		if (!WDL.baseProps.containsKey("Messages." + r.name)) {
+			if (WDL.baseProps.containsKey("Debug." + r.name)) {
+				//Updating from older version
+				WDL.baseProps.put("Messages." + r.name,
+						WDL.baseProps.remove("Debug." + r.name));
+			} else {
+				WDL.baseProps.setProperty("Messages." + r.name,
+						Boolean.toString(r.type.isEnabledByDefault()));
+			}
 		}
-		return enabled.get(r);
+		return WDL.baseProps.getProperty("Messages." + r.name).equals("true");
 	}
 	
 	/**
@@ -169,7 +180,8 @@ public class WDLMessages {
 		MessageRegistration r = getRegistration(type);
 		
 		if (r != null) {
-			enabled.put(r, !isEnabled(type));
+			WDL.baseProps.setProperty("Messages." + r.name,
+					Boolean.toString(!isEnabled(type)));
 		}
 	}
 	
@@ -191,7 +203,17 @@ public class WDLMessages {
 	 * Should be called when the server has changed.
 	 */
 	public static void onNewServer() {
-		// TODO: Load values from the config.
+		if (!WDL.baseProps.containsKey("Messages.enableAll")) {
+			if (WDL.baseProps.containsKey("Debug.globalDebugEnabled")) {
+				//Port from old version.
+				WDL.baseProps.put("Messages.enableAll",
+						WDL.baseProps.remove("Debug.globalDebugEnabled"));
+			} else {
+				WDL.baseProps.setProperty("Messages.enableAll", "true");
+			}
+			enableAllMessages = WDL.baseProps.getProperty("Messages.enableAll")
+					.equals("true");
+		}
 	}
 }
 
@@ -215,14 +237,19 @@ enum WDLMessageTypes implements IWDLMessageType {
 	
 	private WDLMessageTypes(String displayText, boolean enabledByDefault) {
 		this.displayText = displayText;
+		this.enabledByDefault = enabledByDefault;
 		
-		WDLMessages.registerMessage(this, "Core");
+		WDLMessages.registerMessage(this.name(), this, "Core");
 	}
 	
 	/**
 	 * Text to display on a button for this enum value.
 	 */
 	private final String displayText;
+	/**
+	 * Whether this type of message is enabled by default.
+	 */
+	private final boolean enabledByDefault;
 	
 	public String getDisplayName() {
 		return this.displayText;
@@ -239,13 +266,13 @@ enum WDLMessageTypes implements IWDLMessageType {
 	}
 
 	@Override
-	public String getName() {
-		return this.name();
-	}
-
-	@Override
 	public String getDescription() {
 		// TODO NYI
 		return "";
+	}
+	
+	@Override
+	public boolean isEnabledByDefault() {
+		return enabledByDefault;
 	}
 }

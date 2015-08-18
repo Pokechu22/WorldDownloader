@@ -378,6 +378,7 @@ public class WDL {
 		NetworkManager newNM = thePlayer.sendQueue.getNetworkManager();
 
 		if (networkManager != newNM) {
+			loadBaseProps();
 			WDLMessages.onNewServer();
 			
 			// Different server, different world!
@@ -385,7 +386,7 @@ public class WDL {
 					"onWorldLoad: different server!");
 			
 			networkManager = newNM;
-			loadBaseProps();
+			
 			chatDebug(WDLMessageTypes.ON_WORLD_LOAD,
 					"Server brand=" + thePlayer.getClientBrand() +
 					".  Using " + (isSpigot() ? "Spigot" : "Vanilla") +

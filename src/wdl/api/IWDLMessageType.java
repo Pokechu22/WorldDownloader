@@ -19,10 +19,6 @@ public interface IWDLMessageType {
 	 */
 	public abstract String getTextColor();
 	/**
-	 * Gets the name to use programmatically for checking if enabled.
-	 */
-	public abstract String getName();
-	/**
 	 * Gets the name to use on buttons and such.
 	 */
 	public abstract String getDisplayName();
@@ -32,4 +28,8 @@ public interface IWDLMessageType {
 	 * If you want to include a newline, use <code>\n</code>.
 	 */
 	public abstract String getDescription();
+	/**
+	 * Wheter this type of message should be enabled by default.
+	 */
+	public abstract boolean isEnabledByDefault();
 }
