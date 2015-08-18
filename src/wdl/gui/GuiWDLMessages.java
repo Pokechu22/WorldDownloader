@@ -13,12 +13,12 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
 
-public class GuiWDLDebug extends GuiScreen {
+public class GuiWDLMessages extends GuiScreen {
 	private class GuiDebugList extends GuiListExtended {
 		public GuiDebugList() {
-			super(GuiWDLDebug.this.mc, GuiWDLDebug.this.width,
-					GuiWDLDebug.this.height, 39,
-					GuiWDLDebug.this.height - 32, 20);
+			super(GuiWDLMessages.this.mc, GuiWDLMessages.this.width,
+					GuiWDLMessages.this.height, 39,
+					GuiWDLMessages.this.height - 32, 20);
 		}
 
 		private class DebugEntry implements IGuiListEntry {
@@ -39,7 +39,7 @@ public class GuiWDLDebug extends GuiScreen {
 			@Override
 			public void drawEntry(int slotIndex, int x, int y, int listWidth,
 					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
-				button.xPosition = GuiWDLDebug.this.width / 2 - 100;
+				button.xPosition = GuiWDLMessages.this.width / 2 - 100;
 				button.yPosition = y;
 				
 				button.displayString = type.getDisplayName() + ": " + 
@@ -91,7 +91,7 @@ public class GuiWDLDebug extends GuiScreen {
 	private GuiScreen parent;
 	private GuiDebugList list;
 	
-	public GuiWDLDebug(GuiScreen parent) {
+	public GuiWDLMessages(GuiScreen parent) {
 		this.parent = parent;
 	}
 	
@@ -101,8 +101,8 @@ public class GuiWDLDebug extends GuiScreen {
 	public void initGui() {
 		int x = (this.width / 2) - 100;
 		
-		masterDebugSwitch = new GuiButton(100, x, 18, "Master debug switch: " + 
-				(WDLMessages.enableAllMessages ? "On" : "Off"));
+		masterDebugSwitch = new GuiButton(100, x, 18, "Show WDL messages: " + 
+				(WDLMessages.enableAllMessages ? "Yes" : "No"));
 		this.buttonList.add(masterDebugSwitch);
 		
 		this.list = new GuiDebugList();
@@ -122,8 +122,8 @@ public class GuiWDLDebug extends GuiScreen {
 			
 			WDL.baseProps.setProperty("Messages.enableAll",
 					Boolean.toString(WDLMessages.enableAllMessages));
-			button.displayString = "Master debug switch: " + 
-					(WDLMessages.enableAllMessages ? "On" : "Off");
+			button.displayString = "Show WDL messages: " + 
+					(WDLMessages.enableAllMessages ? "Yes" : "No");
 		} else if (button.id == 101) {
 			this.mc.displayGuiScreen(this.parent);
 		}
@@ -165,7 +165,7 @@ public class GuiWDLDebug extends GuiScreen {
 		this.drawDefaultBackground();
 		this.list.drawScreen(mouseX, mouseY, partialTicks);
 		
-		this.drawCenteredString(this.fontRendererObj, "Debug options",
+		this.drawCenteredString(this.fontRendererObj, "Message options",
 				this.width / 2, 8, 0xFFFFFF);
 		
 		super.drawScreen(mouseX, mouseY, partialTicks);

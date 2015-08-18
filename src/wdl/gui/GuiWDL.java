@@ -78,8 +78,8 @@ public class GuiWDL extends GuiScreen {
 					new GuiWDLEntities(GuiWDL.this)));
 			add(new ButtonEntry("Backup Options...", 
 					new GuiWDLBackup(GuiWDL.this)));
-			add(new ButtonEntry("Debug Options...", 
-					new GuiWDLDebug(GuiWDL.this)));
+			add(new ButtonEntry("Message Options...", 
+					new GuiWDLMessages(GuiWDL.this)));
 		}};
 		
 		@Override
