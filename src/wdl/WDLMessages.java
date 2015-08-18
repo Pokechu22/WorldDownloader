@@ -5,8 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 
 import com.google.common.collect.LinkedListMultimap;
@@ -21,6 +25,8 @@ import wdl.api.IWDLMod;
  * Handles enabling and disabling of all of the messages.
  */
 public class WDLMessages {
+	private static Logger logger = LogManager.getLogger();
+	
 	/**
 	 * Information about an individual message type.
 	 */
@@ -237,14 +243,21 @@ public class WDLMessages {
 	 * @param message The message to display.
 	 */
 	public static void chatMessage(IWDLMessageType type, IChatComponent message) {
-		IChatComponent text = new ChatComponentText(type.getTitleColor()
-				+ "[WorldDL]" + type.getTextColor() + " ");
-		text.appendSibling(message);
-		
+		IChatComponent text = new ChatComponentText("[WorldDL] ");
+		text.getChatStyle().setColor(type.getTitleColor());
+
+		// If the message has its own style, it'll use that instead.
+		// TODO: Better way?
+		ChatComponentText messageFormat = new ChatComponentText("");
+		messageFormat.getChatStyle().setColor(type.getTextColor());
+
+		messageFormat.appendSibling(message);
+		text.appendSibling(messageFormat);
 		if (isEnabled(type)) {
-			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(text);
+			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(
+					text);
 		} else {
-			System.out.println(text.getUnformattedText());
+			logger.info(text.getUnformattedText());
 		}
 	}
 }
@@ -256,8 +269,8 @@ public class WDLMessages {
  * enabled.  
  */
 enum WDLMessageTypes implements IWDLMessageType {
-	INFO("General info", "§c", "§6", "", true, "Core (Recomended)"),
-	ERROR("General errors", "§2", "§4", "", true, "Core (Recomended)"),
+	INFO("General info", EnumChatFormatting.RED, EnumChatFormatting.GOLD, "", true, "Core (Recomended)"),
+	ERROR("General errors", EnumChatFormatting.DARK_GREEN, EnumChatFormatting.DARK_RED, "", true, "Core (Recomended)"),
 	LOAD_TILE_ENTITY("Loading TileEntity", "", false),
 	ON_WORLD_LOAD("World loaded", "", false),
 	ON_BLOCK_EVENT("Block Event", "", true),
@@ -274,13 +287,14 @@ enum WDLMessageTypes implements IWDLMessageType {
 	 */
 	private WDLMessageTypes(String displayText, String description,
 			boolean enabledByDefault) {
-		this(displayText, "§2", "§6", description, enabledByDefault, "Core");
+		this(displayText, EnumChatFormatting.DARK_GREEN,
+				EnumChatFormatting.GOLD, description, enabledByDefault, "Core");
 	}
 	/**
 	 * Constructor that allows specification of all values.
 	 */
-	private WDLMessageTypes(String displayText, String titleColor,
-			String textColor, String description, boolean enabledByDefault,
+	private WDLMessageTypes(String displayText, EnumChatFormatting titleColor,
+			EnumChatFormatting textColor, String description, boolean enabledByDefault,
 			String group) {
 		this.displayText = displayText;
 		this.titleColor = titleColor;
@@ -298,11 +312,11 @@ enum WDLMessageTypes implements IWDLMessageType {
 	/**
 	 * Format code for the '[WorldDL]' label.
 	 */
-	private final String titleColor;
+	private final EnumChatFormatting titleColor;
 	/**
 	 * Format code for the text after the label.
 	 */
-	private final String textColor;
+	private final EnumChatFormatting textColor;
 	/**
 	 * Description text.
 	 */
@@ -317,12 +331,12 @@ enum WDLMessageTypes implements IWDLMessageType {
 	}
 
 	@Override
-	public String getTitleColor() {
+	public EnumChatFormatting getTitleColor() {
 		return titleColor;
 	}
 	
 	@Override
-	public String getTextColor() {
+	public EnumChatFormatting getTextColor() {
 		return textColor;
 	}
 

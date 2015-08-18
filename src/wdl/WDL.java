@@ -52,7 +52,6 @@ import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.tileentity.TileEntityNote;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.LongHashMap;
 import net.minecraft.world.MinecraftException;
 import net.minecraft.world.chunk.Chunk;
@@ -63,10 +62,6 @@ import net.minecraft.world.storage.ISaveHandler;
 import net.minecraft.world.storage.MapData;
 import net.minecraft.world.storage.SaveHandler;
 import net.minecraft.world.storage.ThreadedFileIOBase;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import wdl.WorldBackup.WorldBackupType;
 import wdl.api.IWDLMessageType;
 import wdl.api.WDLApi;
@@ -80,8 +75,6 @@ import wdl.gui.GuiWDLSaveProgress;
  * This is the main class that does most of the work.
  */
 public class WDL {
-	private static Logger logger = LogManager.getLogger();
-	
 	public static final String VERSION = "1.8d";
 	
 	// TODO: This class needs to be split into smaller classes. There is way too
