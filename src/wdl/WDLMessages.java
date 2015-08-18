@@ -5,6 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
+
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.ImmutableListMultimap;
@@ -215,6 +219,34 @@ public class WDLMessages {
 					.equals("true");
 		}
 	}
+	
+	/**
+	 * Prints the given message into the chat.
+	 * 
+	 * @param type The type of the message.
+	 * @param message The message to display.
+	 */
+	public static void chatMessage(IWDLMessageType type, String message) {
+		chatMessage(type, new ChatComponentText(message));
+	}
+	
+	/**
+	 * Prints the given message into the chat.
+	 * 
+	 * @param type The type of the message.
+	 * @param message The message to display.
+	 */
+	public static void chatMessage(IWDLMessageType type, IChatComponent message) {
+		IChatComponent text = new ChatComponentText(type.getTitleColor()
+				+ "[WorldDL]" + type.getTextColor() + " ");
+		text.appendSibling(message);
+		
+		if (isEnabled(type)) {
+			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(text);
+		} else {
+			System.out.println(text.getUnformattedText());
+		}
+	}
 }
 
 /**
@@ -224,28 +256,57 @@ public class WDLMessages {
  * enabled.  
  */
 enum WDLMessageTypes implements IWDLMessageType {
-	LOAD_TILE_ENTITY("Loading TileEntity", false),
-	ON_WORLD_LOAD("World loaded", false),
-	ON_BLOCK_EVENT("Block Event", true),
-	ON_MAP_SAVED("Map data saved", false),
-	ON_CHUNK_NO_LONGER_NEEDED("Chunk unloaded", false), 
-	ON_GUI_CLOSED_INFO("GUI Closed -- Info", true),
-	ON_GUI_CLOSED_WARNING("GUI Closed -- Warning", true),
-	SAVING("Saving data", true),
-	REMOVE_ENTITY("Removing entity", false),
-	PLUGIN_CHANNEL_MESSAGE("Plugin channel message", true);
+	INFO("General info", "§c", "§6", "", true, "Core (Recomended)"),
+	ERROR("General errors", "§2", "§4", "", true, "Core (Recomended)"),
+	LOAD_TILE_ENTITY("Loading TileEntity", "", false),
+	ON_WORLD_LOAD("World loaded", "", false),
+	ON_BLOCK_EVENT("Block Event", "", true),
+	ON_MAP_SAVED("Map data saved", "", false),
+	ON_CHUNK_NO_LONGER_NEEDED("Chunk unloaded", "", false), 
+	ON_GUI_CLOSED_INFO("GUI Closed -- Info", "", true),
+	ON_GUI_CLOSED_WARNING("GUI Closed -- Warning", "", true),
+	SAVING("Saving data", "", true),
+	REMOVE_ENTITY("Removing entity", "", false),
+	PLUGIN_CHANNEL_MESSAGE("Plugin channel message", "", true);
 	
-	private WDLMessageTypes(String displayText, boolean enabledByDefault) {
+	/**
+	 * Constructor with the default values for a debug message.
+	 */
+	private WDLMessageTypes(String displayText, String description,
+			boolean enabledByDefault) {
+		this(displayText, "§2", "§6", description, enabledByDefault, "Core");
+	}
+	/**
+	 * Constructor that allows specification of all values.
+	 */
+	private WDLMessageTypes(String displayText, String titleColor,
+			String textColor, String description, boolean enabledByDefault,
+			String group) {
 		this.displayText = displayText;
+		this.titleColor = titleColor;
+		this.textColor = textColor;
+		this.description = description;
 		this.enabledByDefault = enabledByDefault;
 		
-		WDLMessages.registerMessage(this.name(), this, "Core");
+		WDLMessages.registerMessage(this.name(), this, group);
 	}
 	
 	/**
 	 * Text to display on a button for this enum value.
 	 */
 	private final String displayText;
+	/**
+	 * Format code for the '[WorldDL]' label.
+	 */
+	private final String titleColor;
+	/**
+	 * Format code for the text after the label.
+	 */
+	private final String textColor;
+	/**
+	 * Description text.
+	 */
+	private final String description;
 	/**
 	 * Whether this type of message is enabled by default.
 	 */
@@ -257,18 +318,17 @@ enum WDLMessageTypes implements IWDLMessageType {
 
 	@Override
 	public String getTitleColor() {
-		return "§2";
+		return titleColor;
 	}
 	
 	@Override
 	public String getTextColor() {
-		return "§6";
+		return textColor;
 	}
 
 	@Override
 	public String getDescription() {
-		// TODO NYI
-		return "";
+		return description;
 	}
 	
 	@Override
