@@ -1,6 +1,7 @@
 package wdl;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -231,6 +232,20 @@ public class WDLMessages {
 		}
 		
 		return ImmutableListMultimap.copyOf(returned);
+	}
+	
+	/**
+	 * Reset all settings to default.
+	 */
+	public static void resetEnabledToDefaults() {
+		WDL.baseProps.setProperty("Messages.enableAll", "true");
+		enableAllMessages = true;
+		
+		for (MessageRegistration r : registrations) {
+			WDL.baseProps.setProperty("MessageGroup." + r.owner, "true");
+			WDL.baseProps.setProperty("Messages." + r.name,
+					Boolean.toString(r.type.isEnabledByDefault()));
+		}
 	}
 	
 	/**

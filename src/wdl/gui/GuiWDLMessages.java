@@ -14,6 +14,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiYesNo;
+import net.minecraft.client.gui.GuiYesNoCallback;
 
 public class GuiWDLMessages extends GuiScreen {
 	private class GuiMessageTypeList extends GuiListExtended {
@@ -158,19 +160,23 @@ public class GuiWDLMessages extends GuiScreen {
 		this.parent = parent;
 	}
 	
-	private GuiButton masterDebugSwitch;
+	private GuiButton enableAllButtonch;
+	private GuiButton resetButton;
 	
 	@Override
 	public void initGui() {
-		int x = (this.width / 2) - 100;
-		
-		masterDebugSwitch = new GuiButton(100, x, 18, "Show WDL messages: " + 
-				(WDLMessages.enableAllMessages ? "Yes" : "No"));
-		this.buttonList.add(masterDebugSwitch);
-		
+		enableAllButtonch = new GuiButton(100, (this.width / 2) - 155, 18, 150,
+				20, "Show WDL messages: "
+						+ (WDLMessages.enableAllMessages ? "Yes" : "No"));
+		this.buttonList.add(enableAllButtonch);
+		resetButton = new GuiButton(101, (this.width / 2) + 5, 18, 150, 20,
+				"Reset to defaults");
+		this.buttonList.add(resetButton);
+
 		this.list = new GuiMessageTypeList();
-		
-		this.buttonList.add(new GuiButton(101, x, this.height - 29, "Done"));
+
+		this.buttonList.add(new GuiButton(102, (this.width / 2) - 100,
+				this.height - 29, "Done"));
 	}
 	
 	@Override
@@ -185,11 +191,27 @@ public class GuiWDLMessages extends GuiScreen {
 			
 			WDL.baseProps.setProperty("Messages.enableAll",
 					Boolean.toString(WDLMessages.enableAllMessages));
-			button.displayString = "Show WDL messages (Recomended): " + 
+			button.displayString = "Show WDL messages: " + 
 					(WDLMessages.enableAllMessages ? "Yes" : "No");
 		} else if (button.id == 101) {
+			this.mc.displayGuiScreen(new GuiYesNo(this,
+					"Are you sure you want to reset your message settings?",
+					"Your old settings will be lost forever! (A long time!)",
+					101));
+		} else if (button.id == 102) {
 			this.mc.displayGuiScreen(this.parent);
 		}
+	}
+	
+	@Override
+	public void confirmClicked(boolean result, int id) {
+		if (result) {
+			if (id == 101) {
+				WDLMessages.resetEnabledToDefaults();
+			}
+		}
+		
+		mc.displayGuiScreen(this);
 	}
 	
 	@Override
