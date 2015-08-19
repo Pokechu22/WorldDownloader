@@ -96,10 +96,6 @@ public class GuiWDLEntityRangePresets extends GuiScreen implements GuiYesNoCallb
 				this.width / 2, this.height / 4 - fontRendererObj.FONT_HEIGHT
 						- 2, 0xFFFFFF);
 		
-		int infoX = this.width / 2 - 150;
-		int infoY = 2 * this.height / 3;
-		int y = infoY + 5;
-		
 		String infoText = null;
 		
 		if (vanillaButton.isMouseOver()) {
@@ -125,14 +121,7 @@ public class GuiWDLEntityRangePresets extends GuiScreen implements GuiYesNoCallb
 		}
 		
 		if (infoText != null) {
-			drawRect(infoX, infoY, infoX + 300, infoY + 100, 0x7F000000);
-			
-			List<String> info = paginate(infoText, 290);
-			
-			for (String s : info) {
-				drawString(fontRendererObj, s, infoX + 5, y, 0xFFFFFF);
-				y += fontRendererObj.FONT_HEIGHT;
-			}
+			TextUtils.drawGuiInfoBox(infoText, width, height);
 		}
 		
 		super.drawScreen(mouseX, mouseY, partialTicks);
@@ -175,35 +164,5 @@ public class GuiWDLEntityRangePresets extends GuiScreen implements GuiYesNoCallb
 	@Override
 	public void onGuiClosed() {
 		WDL.saveProps();
-	}
-	
-	/**
-	 * Converts a string into a list of lines that are each shorter than the 
-	 * given width.  Takes \n into consideration.
-	 * 
-	 * @return A list of lines.
-	 */
-	private List<String> paginate(String s, int width) {
-		/**
-		 * It's a method that formats and paginates text.
-		 * 
-		 * Args: 
-		 * <ul>
-		 * <li>The text to format.</li>
-		 * <li>The width</li>
-		 * <li>The font renderer.</li>
-		 * <li>IDK</li>
-		 * <li>Whether to include color codes.</li>
-		 * </ul>
-		 */
-		List<ChatComponentText> texts = GuiUtilRenderComponents.func_178908_a(
-				new ChatComponentText(s), width, fontRendererObj, true, true);
-		
-		List<String> returned = new ArrayList<String>();
-		for (ChatComponentText component : texts) {
-			returned.add(component.getFormattedText());
-		}
-		
-		return returned;
 	}
 }
