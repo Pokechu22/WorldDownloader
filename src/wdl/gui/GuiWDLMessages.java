@@ -18,6 +18,11 @@ import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.gui.GuiYesNoCallback;
 
 public class GuiWDLMessages extends GuiScreen {
+	/**
+	 * Set from inner classes; this is the text to draw.
+	 */
+	private String hoveredButtonDescription = null;
+	
 	private class GuiMessageTypeList extends GuiListExtended {
 		public GuiMessageTypeList() {
 			super(GuiWDLMessages.this.mc, GuiWDLMessages.this.width,
@@ -107,6 +112,10 @@ public class GuiWDLMessages extends GuiScreen {
 						WDLMessages.isGroupEnabled(group);
 				
 				button.drawButton(mc, mouseX, mouseY);
+				
+				if (button.isMouseOver()) {
+					hoveredButtonDescription = type.getDescription();
+				}
 			}
 
 			@Override
@@ -160,15 +169,15 @@ public class GuiWDLMessages extends GuiScreen {
 		this.parent = parent;
 	}
 	
-	private GuiButton enableAllButtonch;
+	private GuiButton enableAllButton;
 	private GuiButton resetButton;
 	
 	@Override
 	public void initGui() {
-		enableAllButtonch = new GuiButton(100, (this.width / 2) - 155, 18, 150,
+		enableAllButton = new GuiButton(100, (this.width / 2) - 155, 18, 150,
 				20, "Show WDL messages: "
 						+ (WDLMessages.enableAllMessages ? "Yes" : "No"));
-		this.buttonList.add(enableAllButtonch);
+		this.buttonList.add(enableAllButton);
 		resetButton = new GuiButton(101, (this.width / 2) + 5, 18, 150, 20,
 				"Reset to defaults");
 		this.buttonList.add(resetButton);
@@ -247,6 +256,8 @@ public class GuiWDLMessages extends GuiScreen {
 	
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		hoveredButtonDescription = null;
+		
 		this.drawDefaultBackground();
 		this.list.drawScreen(mouseX, mouseY, partialTicks);
 		
@@ -254,5 +265,18 @@ public class GuiWDLMessages extends GuiScreen {
 				this.width / 2, 8, 0xFFFFFF);
 		
 		super.drawScreen(mouseX, mouseY, partialTicks);
+		
+		if (hoveredButtonDescription != null) {
+			TextUtils.drawGuiInfoBox(hoveredButtonDescription, width, height);
+		} else if (enableAllButton.isMouseOver()) {
+			TextUtils.drawGuiInfoBox(
+					"Enable / disable all WDL messages.\n\n" +
+					"Disabling all is §lNOT§r recomended, as you may miss " +
+					"important errors.",
+					width, height);
+		} else if (resetButton.isMouseOver()) {
+			TextUtils.drawGuiInfoBox(
+					"Reset to defaults.", width, height);
+		}
 	}
 }

@@ -308,18 +308,49 @@ public class WDLMessages {
  * enabled.  
  */
 enum WDLMessageTypes implements IWDLMessageType {
-	INFO("General info", EnumChatFormatting.RED, EnumChatFormatting.GOLD, "", true, "Core (Recomended)"),
-	ERROR("General errors", EnumChatFormatting.DARK_GREEN, EnumChatFormatting.DARK_RED, "", true, "Core (Recomended)"),
-	LOAD_TILE_ENTITY("Loading TileEntity", "", false),
-	ON_WORLD_LOAD("World loaded", "", false),
-	ON_BLOCK_EVENT("Block Event", "", true),
-	ON_MAP_SAVED("Map data saved", "", false),
-	ON_CHUNK_NO_LONGER_NEEDED("Chunk unloaded", "", false), 
-	ON_GUI_CLOSED_INFO("GUI Closed -- Info", "", true),
-	ON_GUI_CLOSED_WARNING("GUI Closed -- Warning", "", true),
-	SAVING("Saving data", "", true),
-	REMOVE_ENTITY("Removing entity", "", false),
-	PLUGIN_CHANNEL_MESSAGE("Plugin channel message", "", true);
+	INFO("General info", EnumChatFormatting.RED, EnumChatFormatting.GOLD, 
+			"General messages, such as \"Download started\" and \"Save " + 
+			"complete\".\n\nRecomended as it includes information about " +
+			"when it is safe to stop playing, and generally is very minimal.",
+			true, "Core (Recomended)"),
+	ERROR("General errors", EnumChatFormatting.DARK_GREEN, EnumChatFormatting.DARK_RED,
+			"General errors, such as \"Failed to save chunk\" and \"Failed " +
+			"to import tile entities\".\n\nRecomended as it is generally " + 
+			"important information.", true, "Core (Recomended)"),
+	LOAD_TILE_ENTITY("Loading TileEntity", 
+			"Occurs when a tile entity is imported from the previously " +
+			"saved version of a chunk.  There may be many tile " + 
+			"entities in a chunk.", false),
+	ON_WORLD_LOAD("World loaded", 
+			"Information when a world loads, including whether the player " +
+			"is on the same server or changed servers, and the server's " +
+			"brand (version).", false),
+	ON_BLOCK_EVENT("Block Event", 
+			"Information about a block event.  This is only used for note " +
+			"blocks to include the saved pitch.", true),
+	ON_MAP_SAVED("Map data saved", 
+			"Occurs when new map (the item) data is saved.  Note that map " +
+			"data is sent about once per second when a map is in an item " +
+			"frame, and even more frequently when in one's inventory.", false),
+	ON_CHUNK_NO_LONGER_NEEDED("Chunk unloaded", 
+			"Occurs when a chunk is unloaded and saved.", false), 
+	ON_GUI_CLOSED_INFO("GUI Closed -- Info", 
+			"Information about when an item's GUI is closed.  This message " + 
+			"is used to state that the contents of the item were saved " + 
+			"successfully.", true),
+	ON_GUI_CLOSED_WARNING("GUI Closed -- Warning", 
+			"Warnings when an item's GUI is closed.  This message is used " +
+			"when something went wrong -- usually, when you are looking at " +
+			"something else.", true),
+	SAVING("Saving data", 
+			"Gives details about the current progress in saving the " + 
+			"downloaded world.", true),
+	REMOVE_ENTITY("Removing entity", 
+			"Occurs whenever an entity is removed from the world, and " +
+			"whether that entity was saved.", false),
+	PLUGIN_CHANNEL_MESSAGE("Plugin channel message", 
+			"Information about the serverside configuration system and user " +
+			"rights.", true);
 	
 	/**
 	 * Constructor with the default values for a debug message.
