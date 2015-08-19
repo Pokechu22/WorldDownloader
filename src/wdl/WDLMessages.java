@@ -169,6 +169,10 @@ public class WDLMessages {
 			return false;
 		}
 		
+		if (!isGroupEnabled(r.owner)) {
+			return false;
+		}
+		
 		if (!WDL.baseProps.containsKey("Messages." + r.name)) {
 			if (WDL.baseProps.containsKey("Debug." + r.name)) {
 				//Updating from older version
@@ -193,6 +197,26 @@ public class WDLMessages {
 			WDL.baseProps.setProperty("Messages." + r.name,
 					Boolean.toString(!isEnabled(type)));
 		}
+	}
+	
+	/**
+	 * Gets whether the given group is enabled.
+	 */
+	public static boolean isGroupEnabled(String group) {
+		if (!enableAllMessages) {
+			return false;
+		}
+		
+		return WDL.baseProps.getProperty("MessageGroup." + group, "true")
+				.equals("true");
+	}
+	
+	/**
+	 * Toggles whether a group is enabled or not.
+	 */
+	public static void toggleGroupEnabled(String group) {
+		WDL.baseProps.setProperty("MessageGroup." + group,
+				Boolean.toString(!isGroupEnabled(group)));
 	}
 	
 	/**

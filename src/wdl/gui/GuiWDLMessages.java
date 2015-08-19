@@ -48,9 +48,9 @@ public class GuiWDLMessages extends GuiScreen {
 				button.xPosition = GuiWDLMessages.this.width / 2 + 20;
 				button.yPosition = y;
 				
-				//TODO logic for enabling groups
-				button.displayString = (true ? "Group enabled" : "Group disabled");
-				button.enabled = false; //WDLMessages.enableAllMessages;
+				button.displayString = (WDLMessages.isGroupEnabled(category)
+						? "Group enabled" : "Group disabled");
+				button.enabled = WDLMessages.enableAllMessages;
 				
 				button.drawButton(mc, mouseX, mouseY);
 			}
@@ -59,7 +59,7 @@ public class GuiWDLMessages extends GuiScreen {
 			public boolean mousePressed(int slotIndex, int x, int y,
 					int mouseEvent, int relativeX, int relativeY) {
 				if (button.mousePressed(mc, x, y)) {
-					//TODO logic for enabling groups
+					WDLMessages.toggleGroupEnabled(category);
 					
 					button.playPressSound(mc.getSoundHandler());
 					
@@ -79,10 +79,12 @@ public class GuiWDLMessages extends GuiScreen {
 		private class MessageTypeEntry implements IGuiListEntry {
 			private final GuiButton button;
 			private final IWDLMessageType type;
+			private final String group;
 			
-			public MessageTypeEntry(IWDLMessageType type) {
+			public MessageTypeEntry(IWDLMessageType type, String group) {
 				this.type = type;
 				this.button = new GuiButton(0, 0, 0, type.toString());
+				this.group = group;
 			}
 			
 			@Override
@@ -99,7 +101,8 @@ public class GuiWDLMessages extends GuiScreen {
 				
 				button.displayString = type.getDisplayName() + ": " + 
 						(WDLMessages.isEnabled(type) ? "On" : "Off");
-				button.enabled = WDLMessages.enableAllMessages;
+				button.enabled = WDLMessages.enableAllMessages && 
+						WDLMessages.isGroupEnabled(group);
 				
 				button.drawButton(mc, mouseX, mouseY);
 			}
@@ -131,7 +134,7 @@ public class GuiWDLMessages extends GuiScreen {
 				add(new CategoryEntry(e.getKey()));
 				
 				for (IWDLMessageType type : e.getValue()) {
-					add(new MessageTypeEntry(type));
+					add(new MessageTypeEntry(type, e.getKey()));
 				}
 			}
 		}};
