@@ -8,7 +8,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiUtilRenderComponents;
 import net.minecraft.util.ChatComponentText;
 
-class TextUtils {
+class Utils {
 	private static final Minecraft mc = Minecraft.getMinecraft();
 	
 	/**

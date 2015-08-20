@@ -267,15 +267,15 @@ public class GuiWDLMessages extends GuiScreen {
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		
 		if (hoveredButtonDescription != null) {
-			TextUtils.drawGuiInfoBox(hoveredButtonDescription, width, height);
+			Utils.drawGuiInfoBox(hoveredButtonDescription, width, height);
 		} else if (enableAllButton.isMouseOver()) {
-			TextUtils.drawGuiInfoBox(
+			Utils.drawGuiInfoBox(
 					"Enable / disable all WDL messages.\n\n" +
 					"Disabling all is §lNOT§r recomended, as you may miss " +
 					"important errors.",
 					width, height);
 		} else if (resetButton.isMouseOver()) {
-			TextUtils.drawGuiInfoBox(
+			Utils.drawGuiInfoBox(
 					"Reset to defaults.", width, height);
 		}
 	}
