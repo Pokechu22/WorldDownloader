@@ -4,6 +4,9 @@ import net.minecraft.util.EnumChatFormatting;
 
 /**
  * Represents a message type capable of being used in WDL logging.
+ * <br/>
+ * It is recomended that an enum is used to implement this.  See
+ * {@link wdl.WDLMessageTypes} for an example.
  */
 public interface IWDLMessageType {
 	/**

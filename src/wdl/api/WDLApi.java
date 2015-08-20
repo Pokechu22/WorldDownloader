@@ -13,6 +13,7 @@ import wdl.EntityUtils;
 import wdl.WDL;
 import wdl.WDLEvents;
 import wdl.WDLHooks;
+import wdl.WDLMessages;
 import wdl.WDLPluginChannels;
 
 /**
@@ -79,6 +80,14 @@ public class WDLApi {
 		}
 		if (mod instanceof ISpecialEntityHandler) {
 			EntityUtils.addSpecialEntityHandler((ISpecialEntityHandler) mod);
+		}
+		if (mod instanceof IMessageTypeAdder) {
+			Map<String, IWDLMessageType> types = 
+					((IMessageTypeAdder) mod).getMessageTypes();
+			
+			for (Map.Entry<String, IWDLMessageType> e : types.entrySet()) {
+				WDLMessages.registerMessage(e.getKey(), e.getValue(), modName);
+			}
 		}
 	}
 	
