@@ -147,6 +147,12 @@ public class GuiWDLEntities extends GuiScreen {
 		 * Width of the largest entry.
 		 */
 		private int largestWidth;
+		/**
+		 * Width of an entire entry.
+		 * 
+		 * Equal to largestWidth + 255.
+		 */
+		private int totalWidth;
 		
 		private List<IGuiListEntry> entries = new ArrayList<IGuiListEntry>() {{
 			try {
@@ -170,6 +176,7 @@ public class GuiWDLEntities extends GuiScreen {
 				}
 				
 				largestWidth = largestWidthSoFar;
+				totalWidth = largestWidth + 255;
 			} catch (Exception e) {
 				WDL.chatError("Error setting up Entity List UI: " + e);
 				e.printStackTrace();
@@ -292,18 +299,22 @@ public class GuiWDLEntities extends GuiScreen {
 			@Override
 			public void drawEntry(int slotIndex, int x, int y, int listWidth,
 					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
+				//Center for everything but the labels.
+				int center = (GuiWDLEntities.this.width / 2) - (totalWidth / 2)
+						+ largestWidth + 10;
+				
 				mc.fontRendererObj.drawString(this.entity,
-						x - 60 - largestWidth, y + slotHeight / 2 - 
+						center - largestWidth - 10, y + slotHeight / 2 - 
 								mc.fontRendererObj.FONT_HEIGHT / 2, 0xFFFFFF);
 				
-				this.onOffButton.xPosition = x - 45;
+				this.onOffButton.xPosition = center;
 				this.onOffButton.yPosition = y;
 				this.onOffButton.enabled = category.isGroupEnabled();
 				this.onOffButton.displayString = 
 						onOffButton.enabled && entityEnabled ? 
 								"§aIncluded" : "§cIgnored";
 				
-				this.rangeSlider.xPosition = x + 50;
+				this.rangeSlider.xPosition = center + 85;
 				this.rangeSlider.yPosition = y;
 				
 				if (!this.cachedMode.equals(mode)) {
@@ -380,6 +391,11 @@ public class GuiWDLEntities extends GuiScreen {
 		@Override
 		protected int getSize() {
 			return entries.size();
+		}
+		
+		@Override
+		protected int getScrollBarX() {
+			return (GuiWDLEntities.this.width) / 2 + (totalWidth / 2) + 10;
 		}
 	}
 	
