@@ -80,6 +80,8 @@ public class GuiWDL extends GuiScreen {
 					new GuiWDLBackup(GuiWDL.this)));
 			add(new ButtonEntry("Message Options...", 
 					new GuiWDLMessages(GuiWDL.this)));
+			add(new ButtonEntry("About World Downloader...",
+					new GuiWDLAbout(GuiWDL.this)));
 		}};
 		
 		@Override
