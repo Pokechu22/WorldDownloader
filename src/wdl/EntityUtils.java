@@ -416,7 +416,7 @@ public class EntityUtils {
 	 */
 	public static int getSpigotEntityRange(String entity) {
 		if (entity.equals("Hologram")) {
-			entity = "ArmorStand";
+			entity = "EntityHorse";
 		}
 		Class c = stringToClassMapping.get(entity);
 		
