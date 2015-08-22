@@ -42,7 +42,7 @@ public class GuiWDLDebug extends GuiScreen {
 	}
 	
 	@Override
-	protected void actionPerformed(GuiButton button) throws IOException {
+	protected void actionPerformed(GuiButton button) {
 		if (!button.enabled) {
 			return;
 		}

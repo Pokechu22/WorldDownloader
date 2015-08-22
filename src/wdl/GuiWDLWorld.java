@@ -59,11 +59,11 @@ public class GuiWDLWorld extends GuiScreen {
 		this.buttonList.add(this.spawnBtn);
 		var3 += 22;
 		this.spawnTextY = var3 + 4;
-		this.spawnX = new GuiTextField(40, this.fontRendererObj, var1 - 87,
+		this.spawnX = new GuiTextField(this.fontRendererObj, var1 - 87,
 				var3, 50, 16);
-		this.spawnY = new GuiTextField(41, this.fontRendererObj, var1 - 19,
+		this.spawnY = new GuiTextField(this.fontRendererObj, var1 - 19,
 				var3, 50, 16);
-		this.spawnZ = new GuiTextField(42, this.fontRendererObj, var1 + 48,
+		this.spawnZ = new GuiTextField(this.fontRendererObj, var1 + 48,
 				var3, 50, 16);
 		this.spawnX.setMaxStringLength(7);
 		this.spawnY.setMaxStringLength(7);
@@ -111,8 +111,7 @@ public class GuiWDLWorld extends GuiScreen {
 	 * Called when the mouse is clicked.
 	 */
 	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
-	throws IOException {
+	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 
 		if (this.showSpawnFields) {
@@ -127,7 +126,7 @@ public class GuiWDLWorld extends GuiScreen {
 	 * KeyListener.keyTyped(KeyEvent e).
 	 */
 	@Override
-	protected void keyTyped(char typedChar, int keyCode) throws IOException {
+	protected void keyTyped(char typedChar, int keyCode) {
 		super.keyTyped(typedChar, keyCode);
 		this.spawnX.textboxKeyTyped(typedChar, keyCode);
 		this.spawnY.textboxKeyTyped(typedChar, keyCode);

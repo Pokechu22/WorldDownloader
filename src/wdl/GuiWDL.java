@@ -49,7 +49,7 @@ public class GuiWDL extends GuiScreen {
 			WDL.baseProps.setProperty("ServerName", WDL.getServerName());
 		}
 
-		this.worldName = new GuiTextField(42, this.fontRendererObj,
+		this.worldName = new GuiTextField(this.fontRendererObj,
 				this.width / 2 - 70, hi, 168, 18);
 		this.updateServerName(false);
 		hi += 22;
@@ -122,8 +122,7 @@ public class GuiWDL extends GuiScreen {
 	 * Called when the mouse is clicked.
 	 */
 	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
-	throws IOException {
+	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 		this.worldName.mouseClicked(mouseX, mouseY, mouseButton);
 	}
@@ -133,7 +132,7 @@ public class GuiWDL extends GuiScreen {
 	 * KeyListener.keyTyped(KeyEvent e).
 	 */
 	@Override
-	protected void keyTyped(char typedChar, int keyCode) throws IOException {
+	protected void keyTyped(char typedChar, int keyCode) {
 		super.keyTyped(typedChar, keyCode);
 		this.worldName.textboxKeyTyped(typedChar, keyCode);
 	}

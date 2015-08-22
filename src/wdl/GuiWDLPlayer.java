@@ -47,11 +47,11 @@ public class GuiWDLPlayer extends GuiScreen {
 		this.buttonList.add(this.playerPosBtn);
 		var3 += 22;
 		this.posTextY = var3 + 4;
-		this.posX = new GuiTextField(40, this.fontRendererObj, var1 - 87, var3,
+		this.posX = new GuiTextField(this.fontRendererObj, var1 - 87, var3,
 				50, 16);
-		this.posY = new GuiTextField(41, this.fontRendererObj, var1 - 19, var3,
+		this.posY = new GuiTextField(this.fontRendererObj, var1 - 19, var3,
 				50, 16);
-		this.posZ = new GuiTextField(42, this.fontRendererObj, var1 + 48, var3,
+		this.posZ = new GuiTextField(this.fontRendererObj, var1 + 48, var3,
 				50, 16);
 		this.posX.setMaxStringLength(7);
 		this.posY.setMaxStringLength(7);
@@ -95,8 +95,7 @@ public class GuiWDLPlayer extends GuiScreen {
 	 * Called when the mouse is clicked.
 	 */
 	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
-	throws IOException {
+	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 
 		if (this.showPosFields) {
@@ -111,7 +110,7 @@ public class GuiWDLPlayer extends GuiScreen {
 	 * KeyListener.keyTyped(KeyEvent e).
 	 */
 	@Override
-	protected void keyTyped(char typedChar, int keyCode) throws IOException {
+	protected void keyTyped(char typedChar, int keyCode) {
 		super.keyTyped(typedChar, keyCode);
 		this.posX.textboxKeyTyped(typedChar, keyCode);
 		this.posY.textboxKeyTyped(typedChar, keyCode);

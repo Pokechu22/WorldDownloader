@@ -9,6 +9,8 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.Session;
 
 /**
  * A GUI for selecting which world the player is currently in.
@@ -26,27 +28,22 @@ public class GuiWDLMultiworldSelect extends GuiScreen {
 	private String[] worlds;
 	private GuiScreen parent;
 	EntityPlayerSP cam;
-	Entity oldRenderViewEntity;
+	EntityLivingBase oldRenderViewEntity;
 
 	public GuiWDLMultiworldSelect(GuiScreen var1) {
 		this.parent = var1;
 		EntityPlayerSP tempPlayer = WDL.thePlayer;
 		this.cam = new EntityPlayerSP(WDL.minecraft, WDL.worldClient,
-				tempPlayer.sendQueue, tempPlayer.getStatFileWriter());
+				new Session("Camera", "", "", "legacy"), tempPlayer.dimension);
 		this.cam.setLocationAndAngles(tempPlayer.posX, tempPlayer.posY
 				- tempPlayer.getYOffset(), tempPlayer.posZ,
 				tempPlayer.rotationYaw, 0.0F);
 		this.yaw = tempPlayer.rotationYaw;
 		this.thirdPersonViewSave = WDL.minecraft.gameSettings.thirdPersonView;
 		WDL.minecraft.gameSettings.thirdPersonView = 0;
-		//Sets the render view entity for minecraft.
-		//When obfuscation changes, look in EntityRenderer.java for code that
-		//looks something like this in updateRenderer.java: 
-        //if (this.mc.renderViewEntity == null) {
-        //    this.mc.renderViewEntity = this.mc.thePlayer;
-        //}
-		this.oldRenderViewEntity = WDL.minecraft.func_175606_aa();
-		WDL.minecraft.func_175607_a(this.cam);
+		
+		this.oldRenderViewEntity = WDL.minecraft.renderViewEntity;
+		WDL.minecraft.renderViewEntity = this.cam;
 	}
 
 	/**
@@ -118,7 +115,7 @@ public class GuiWDLMultiworldSelect extends GuiScreen {
 			this.buttonList.add(this.buttons[var11]);
 		}
 
-		this.newNameField = new GuiTextField(40, this.fontRendererObj, var11
+		this.newNameField = new GuiTextField(this.fontRendererObj, var11
 				% var3 * var4 + var9, this.height - 60 - var11 / var3 * 21 + 1,
 				var4, 18);
 	}
@@ -148,8 +145,7 @@ public class GuiWDLMultiworldSelect extends GuiScreen {
 	 * Called when the mouse is clicked.
 	 */
 	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
-	throws IOException {
+	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 
 		if (this.newWorld) {
@@ -162,7 +158,7 @@ public class GuiWDLMultiworldSelect extends GuiScreen {
 	 * KeyListener.keyTyped(KeyEvent e).
 	 */
 	@Override
-	protected void keyTyped(char typedChar, int keyCode) throws IOException {
+	protected void keyTyped(char typedChar, int keyCode) {
 		super.keyTyped(typedChar, keyCode);
 
 		if (this.newNameField.isFocused()) {
@@ -235,7 +231,7 @@ public class GuiWDLMultiworldSelect extends GuiScreen {
 	public void onGuiClosed() {
 		super.onGuiClosed();
 		WDL.minecraft.gameSettings.thirdPersonView = this.thirdPersonViewSave;
-		WDL.minecraft.func_175607_a(this.oldRenderViewEntity);
+		WDL.minecraft.renderViewEntity = this.oldRenderViewEntity;
 	}
 
 	private void worldSelected(String var1) {

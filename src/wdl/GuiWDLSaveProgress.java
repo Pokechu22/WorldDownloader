@@ -157,7 +157,7 @@ public class GuiWDLSaveProgress extends GuiScreen {
 	}
 	
 	@Override
-	protected void keyTyped(char typedChar, int keyCode) throws IOException {
+	protected void keyTyped(char typedChar, int keyCode) {
 		//Don't call the super method, as that causes the UI to close if escape
 		//is pressed.
 	}

@@ -28,7 +28,7 @@ public class GuiWDLGenerator extends GuiScreen {
 		int var1 = this.width / 2;
 		int var2 = this.height / 4;
 		int var3 = var2 - 15;
-		this.seedField = new GuiTextField(40, this.fontRendererObj,
+		this.seedField = new GuiTextField(this.fontRendererObj,
 				this.width / 2 - 70, var3, 168, 18);
 		this.seedField.setText("ERROR");
 		this.updateSeed(false);
@@ -68,8 +68,7 @@ public class GuiWDLGenerator extends GuiScreen {
 	 * Called when the mouse is clicked.
 	 */
 	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
-	throws IOException {
+	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 		this.seedField.mouseClicked(mouseX, mouseY, mouseButton);
 	}
@@ -79,7 +78,7 @@ public class GuiWDLGenerator extends GuiScreen {
 	 * KeyListener.keyTyped(KeyEvent e).
 	 */
 	@Override
-	protected void keyTyped(char typedChar, int keyCode) throws IOException {
+	protected void keyTyped(char typedChar, int keyCode) {
 		super.keyTyped(typedChar, keyCode);
 		this.seedField.textboxKeyTyped(typedChar, keyCode);
 	}

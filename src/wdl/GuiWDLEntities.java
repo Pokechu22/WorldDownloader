@@ -12,7 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.IAnimals;
 import net.minecraft.util.MathHelper;
@@ -54,7 +54,7 @@ public class GuiWDLEntities extends GuiScreen {
 			 * this button and 2 if it IS hovering over this button.
 			 */
 			@Override
-			protected int getHoverState(boolean mouseOver) {
+			public int getHoverState(boolean mouseOver) {
 				return 0;
 			}
 
@@ -76,7 +76,6 @@ public class GuiWDLEntities extends GuiScreen {
 					}
 
 					mc.getTextureManager().bindTexture(buttonTextures);
-					GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 					
 					if (this.enabled) {
 						this.drawTexturedModalRect(this.xPosition
@@ -208,7 +207,7 @@ public class GuiWDLEntities extends GuiScreen {
 
 			@Override
 			public void drawEntry(int slotIndex, int x, int y, int listWidth,
-					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
+					int slotHeight, Tessellator t, int mouseX, int mouseY, boolean isSelected) {
 				mc.fontRendererObj.drawString(this.labelText,
 						mc.currentScreen.width / 2 - this.labelWidth / 2, y
 								+ slotHeight - mc.fontRendererObj.FONT_HEIGHT 
@@ -224,11 +223,6 @@ public class GuiWDLEntities extends GuiScreen {
 			@Override
 			public void mouseReleased(int slotIndex, int x, int y,
 					int mouseEvent, int relativeX, int relativeY) {
-			}
-
-			@Override
-			public void setSelected(int p_178011_1_, int p_178011_2_,
-					int p_178011_3_) {
 			}
 		}
 		
@@ -269,7 +263,8 @@ public class GuiWDLEntities extends GuiScreen {
 
 			@Override
 			public void drawEntry(int slotIndex, int x, int y, int listWidth,
-					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
+					int slotHeight, Tessellator t, int mouseX, int mouseY,
+					boolean isSelected) {
 				mc.fontRendererObj.drawString(this.entity,
 						x - 60 - largestWidth, y + slotHeight / 2 - 
 								mc.fontRendererObj.FONT_HEIGHT / 2, 0xFFFFFF);
@@ -334,11 +329,6 @@ public class GuiWDLEntities extends GuiScreen {
 							+ ".TrackDistance",
 							Integer.toString(range));
 				}
-			}
-
-			@Override
-			public void setSelected(int p_178011_1_, int p_178011_2_,
-					int p_178011_3_) {
 			}
 		}
 		
@@ -406,17 +396,8 @@ public class GuiWDLEntities extends GuiScreen {
 		this.entityList = new GuiEntityList();
 	}
 	
-	/**
-	 * Handles mouse input.
-	 */
 	@Override
-	public void handleMouseInput() throws IOException {
-		super.handleMouseInput();
-		this.entityList.func_178039_p();
-	}
-	
-	@Override
-	protected void actionPerformed(GuiButton button) throws IOException {
+	protected void actionPerformed(GuiButton button) {
 		if (button.id == 100) {
 			if (mode.equals("default")) {
 				if (WDLPluginChannels.hasServerEntityRange()) {
@@ -463,8 +444,7 @@ public class GuiWDLEntities extends GuiScreen {
 	}
 	
 	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
-			throws IOException {
+	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
 		if (entityList.func_148179_a(mouseX, mouseY, mouseButton)) {
 			return;
 		}
