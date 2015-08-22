@@ -1153,6 +1153,8 @@ public class WDL {
 		
 		File dataDirectory = new File(saveHandler.getWorldDirectory(),
 				"data");
+		dataDirectory.mkdirs();
+		
 		progressScreen.startMajorTask("Saving map item data", newMapDatas.size());
 		
 		chatDebug(WDLMessageTypes.SAVING, "Saving map data...");
