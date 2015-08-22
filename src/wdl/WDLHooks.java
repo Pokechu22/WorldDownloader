@@ -180,8 +180,10 @@ public class WDLHooks {
 			
 			profiler.startSection("wdl.onPluginChannelPacket");
 			
-			WDLEvents.onPluginChannelPacket(packet.getChannelName(), packet
-					.getBufferData().array());
+			//func_149169_c() = getChannelName();
+			//func_149168_d() = getBufferData(); (more or less)
+			WDLEvents.onPluginChannelPacket(packet.func_149169_c(), packet
+					.func_149168_d());
 			
 			profiler.endSection();
 		} catch (Throwable e) {
@@ -208,8 +210,9 @@ public class WDLHooks {
 			
 			profiler.startSection("wdl.onBlockEvent");
 			
-			WDLEvents.onBlockEvent(packet.func_179825_a(), packet.getBlockType(),
-					packet.getData1(), packet.getData2());
+			WDLEvents.onBlockEvent(new BlockPos(packet.getX(), packet.getY(),
+					packet.getZ()), packet.getBlockType(), packet.getData1(),
+					packet.getData2());
 			
 			profiler.endSection();
 		} catch (Throwable e) {

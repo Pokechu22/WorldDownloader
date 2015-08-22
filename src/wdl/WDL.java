@@ -766,11 +766,11 @@ public class WDL {
 		if (!WDLPluginChannels.canDownloadInGeneral()) { return; }
 		
 		if (!WDLPluginChannels.canDownloadInGeneral()) {
-			c.getTileEntityMap().clear();
+			c.chunkTileEntityMap.clear();
 		}
 		
 		importTileEntities(c);
-		c.setTerrainPopulated(true);
+		c.isTerrainPopulated = true;
 
 		try {
 			// Entities to re-add after chunk saving that were previously removed.
@@ -780,7 +780,7 @@ public class WDL {
 			
 			if (!WDLPluginChannels.canSaveEntities()) {
 				// Temporarily delete entities if saving them is disabled.
-				for (Iterable<Entity> entityList : c.getEntityLists()) {
+				for (Iterable<Entity> entityList : c.entityLists) {
 					for (Entity e : entityList) {
 						if (e instanceof EntityPlayer) {
 							//Skip players, as otherwise bad things happen, 
@@ -799,7 +799,7 @@ public class WDL {
 			} else {
 				// Remove entities of unwanted types.
 				//TODO: Handle holograms
-				for (Iterable<Entity> entityList : c.getEntityLists()) {
+				for (Iterable<Entity> entityList : c.entityLists) {
 					for (Entity e : entityList) {
 						if (e instanceof EntityPlayer) {
 							//Skip players, as otherwise bad things happen, 
@@ -837,7 +837,7 @@ public class WDL {
 			// Force the entity into its serverside location.
 			// Needed for certain things that move clientside,
 			// such as boats (http://imgur.com/3QQchZL)
-			for (Iterable<Entity> entityList : c.getEntityLists()) {
+			for (Iterable<Entity> entityList : c.entityLists) {
 				for (Entity e : entityList) {
 					e.posX = convertServerPos(e.serverPosX);
 					e.posY = convertServerPos(e.serverPosY);
@@ -1224,9 +1224,11 @@ public class WDL {
 	 */
 	public static void saveInventoryFields(IInventory inventory,
 			IInventory tileEntity) {
-		for (int i = 0; i < inventory.getFieldCount(); i++) {
-			tileEntity.setField(i, inventory.getField(i));
-		}
+		//TODO: This doesn't seem possible to do.
+		
+		//for (int i = 0; i < inventory.getFieldCount(); i++) {
+		//	tileEntity.setField(i, inventory.getField(i));
+		//}
 	}
 
 	/** Adds a chat message with a World Downloader prefix */

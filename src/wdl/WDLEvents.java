@@ -169,7 +169,7 @@ public class WDLEvents {
 					//func_110133_a sets the custom name -- if changed look
 					//for one that sets hasCustomName to true and gives
 					//inventoryTitle the value of the parameter.
-					horseChest.func_110133_a(entityHorse.getName());
+					horseChest.func_110133_a(entityHorse.getCustomNameTag());
 					WDL.saveContainerItems(WDL.windowContainer, horseChest, 0);
 					//I don't even know what this does, but it's part of the
 					//other method...
@@ -231,7 +231,7 @@ public class WDLEvents {
 				//func_110133_a sets the custom name -- if changed look
 				//for one that sets hasCustomName to true and gives
 				//inventoryTitle the value of the parameter.
-				horseChest.func_110133_a(entityHorse.getName());
+				horseChest.func_110133_a(entityHorse.getCustomNameTag());
 				WDL.saveContainerItems(WDL.windowContainer, horseChest, 0);
 				//I don't even know what this does, but it's part of the
 				//other method...
@@ -397,9 +397,9 @@ public class WDLEvents {
 			WDL.newTileEntities.put(WDL.lastClickedBlock, te);
 			saveName = "Hopper contents";
 		} else if (WDL.windowContainer instanceof ContainerBeacon) {
-			//func_180611_e returns the beacon's IInventory tileBeacon.
+			//func_148327_e returns the beacon's IInventory tileBeacon.
 			IInventory beaconInventory =
-					((ContainerBeacon)WDL.windowContainer).func_180611_e();
+					((ContainerBeacon)WDL.windowContainer).func_148327_e();
 			TileEntityBeacon savedBeacon = (TileEntityBeacon)te;
 			WDL.saveContainerItems(WDL.windowContainer, savedBeacon, 0);
 			WDL.saveInventoryFields(beaconInventory, savedBeacon);
