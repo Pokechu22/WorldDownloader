@@ -30,7 +30,7 @@ import net.minecraft.tileentity.TileEntityEnderChest;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.tileentity.TileEntityNote;
-import net.minecraft.util.BlockPos;
+import wdl.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.village.MerchantRecipeList;
