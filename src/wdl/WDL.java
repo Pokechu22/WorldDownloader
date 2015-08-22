@@ -36,6 +36,7 @@ import net.minecraft.block.BlockFurnace;
 import net.minecraft.block.BlockHopper;
 import net.minecraft.block.BlockNote;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiIngameMenu;
@@ -45,10 +46,10 @@ import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
-import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.item.EntityFireworkRocket;
 import net.minecraft.entity.item.EntityPainting;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemMap;
@@ -107,12 +108,9 @@ public class WDL {
 	 */
 	public static NetworkManager networkManager = null;
 	/**
-	 * The current player. <br/>
-	 * In 1.7.10, a net.minecraft.client.entity.EntityClientPlayerMP was used
-	 * here, but now that does not exist, and it appears that the SinglePlayer
-	 * type is what is supposed to be used instead.
+	 * The current player. 
 	 */
-	public static EntityPlayerSP thePlayer;
+	public static EntityClientPlayerMP thePlayer;
 
 	/**
 	 * Reference to the place where all the item stacks end up after receiving
@@ -248,7 +246,7 @@ public class WDL {
 		
 		defaultProps.setProperty("Entity.Hologram.Enabled", "true");
 		defaultProps.setProperty("Entity.Hologram.TrackDistance", Integer.toString(
-				EntityUtils.getVanillaEntityRange(EntityArmorStand.class)));
+				EntityUtils.getVanillaEntityRange(EntityHorse.class)));
 		
 		defaultProps.setProperty("Entity.FireworksRocketEntity.Enabled", "false");
 		
