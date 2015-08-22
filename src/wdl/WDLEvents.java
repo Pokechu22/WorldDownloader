@@ -32,6 +32,7 @@ import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.tileentity.TileEntityNote;
 import wdl.BlockPos;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.chunk.Chunk;
@@ -115,13 +116,14 @@ public class WDLEvents {
 			return;
 		}
 
-		if (WDL.minecraft.objectMouseOver.typeOfHit == MovingObjectType.ENTITY) {
-			WDL.lastEntity = WDL.minecraft.objectMouseOver.entityHit;
+		MovingObjectPosition pos = WDL.minecraft.objectMouseOver;
+		if (pos.typeOfHit == MovingObjectType.ENTITY) {
+			WDL.lastEntity = pos.entityHit;
 		} else {
 			WDL.lastEntity = null;
-			// func_178782_a returns a BlockPos; find another one
-			// if it is reobfuscated.
-			WDL.lastClickedBlock = WDL.minecraft.objectMouseOver.func_178782_a();
+			
+			WDL.lastClickedBlock = new BlockPos(pos.blockX, pos.blockY,
+					pos.blockZ);
 		}
 	}
 
@@ -257,7 +259,9 @@ public class WDLEvents {
 		}
 
 		// Get the tile entity which we are going to update the inventory for
-		TileEntity te = WDL.worldClient.getTileEntity(WDL.lastClickedBlock);
+		TileEntity te = WDL.worldClient.getTileEntity(
+				WDL.lastClickedBlock.getX(), WDL.lastClickedBlock.getY(),
+				WDL.lastClickedBlock.getZ());
 
 		if (te == null) {
 			WDL.chatDebug(WDLDebugMessageCause.ON_GUI_CLOSED_WARNING,
@@ -284,51 +288,55 @@ public class WDLEvents {
 				TileEntityChest chest1 = null, chest2 = null;
 				
 				pos2 = pos1.add(0, 0, 1);
-				te2 = WDL.worldClient.getTileEntity(pos2);
-				if (te2 instanceof TileEntityChest && 
-						((TileEntityChest) te2).getChestType() == 
-						((TileEntityChest) te1).getChestType()) {
-					
+				te2 = WDL.worldClient.getTileEntity(pos2.getX(), pos2.getY(),
+						pos2.getZ());
+				if (te2 instanceof TileEntityChest
+						&& ((TileEntityChest) te2).getChestType() == ((TileEntityChest) te1)
+								.getChestType()) {
+
 					chest1 = (TileEntityChest) te1;
 					chest2 = (TileEntityChest) te2;
-					
+
 					chestPos1 = pos1;
 					chestPos2 = pos2;
 				}
-				
+
 				pos2 = pos1.add(0, 0, -1);
-				te2 = WDL.worldClient.getTileEntity(pos2);
-				if (te2 instanceof TileEntityChest && 
-						((TileEntityChest) te2).getChestType() == 
-						((TileEntityChest) te1).getChestType()) {
-					
+				te2 = WDL.worldClient.getTileEntity(pos2.getX(), pos2.getY(),
+						pos2.getZ());
+				if (te2 instanceof TileEntityChest
+						&& ((TileEntityChest) te2).getChestType() == ((TileEntityChest) te1)
+								.getChestType()) {
+
 					chest1 = (TileEntityChest) te2;
 					chest2 = (TileEntityChest) te1;
-					
+
 					chestPos1 = pos2;
 					chestPos2 = pos1;
 				}
 
 				pos2 = pos1.add(1, 0, 0);
-				te2 = WDL.worldClient.getTileEntity(pos2);
-				if (te2 instanceof TileEntityChest && 
-						((TileEntityChest) te2).getChestType() == 
-						((TileEntityChest) te1).getChestType()) {
+				te2 = WDL.worldClient.getTileEntity(pos2.getX(), pos2.getY(),
+						pos2.getZ());
+				if (te2 instanceof TileEntityChest
+						&& ((TileEntityChest) te2).getChestType() == ((TileEntityChest) te1)
+								.getChestType()) {
 					chest1 = (TileEntityChest) te1;
 					chest2 = (TileEntityChest) te2;
-					
+
 					chestPos1 = pos1;
 					chestPos2 = pos2;
 				}
-				
+
 				pos2 = pos1.add(-1, 0, 0);
-				te2 = WDL.worldClient.getTileEntity(pos2);
-				if (te2 instanceof TileEntityChest && 
-						((TileEntityChest) te2).getChestType() == 
-						((TileEntityChest) te1).getChestType()) {
+				te2 = WDL.worldClient.getTileEntity(pos2.getX(), pos2.getY(),
+						pos2.getZ());
+				if (te2 instanceof TileEntityChest
+						&& ((TileEntityChest) te2).getChestType() == ((TileEntityChest) te1)
+								.getChestType()) {
 					chest1 = (TileEntityChest) te2;
 					chest2 = (TileEntityChest) te1;
-					
+
 					chestPos1 = pos2;
 					chestPos2 = pos1;
 				}
@@ -422,7 +430,8 @@ public class WDLEvents {
 		if (block == Blocks.noteblock) {
 			TileEntityNote newTE = new TileEntityNote();
 			newTE.note = (byte)(param % 25);
-			WDL.worldClient.setTileEntity(pos, newTE);
+			WDL.worldClient.setTileEntity(pos.getX(), pos.getY(), pos.getZ(),
+					newTE);
 			WDL.newTileEntities.put(pos, newTE);
 			WDL.chatDebug(WDLDebugMessageCause.ON_BLOCK_EVENT,
 					"onBlockEvent: Note Block: " + pos + " pitch: " + param

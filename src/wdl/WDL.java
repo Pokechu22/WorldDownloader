@@ -437,33 +437,36 @@ public class WDL {
 					TileEntity te = TileEntity
 							.createAndLoadEntity(tileEntityNBT);
 					
+					BlockPos pos = new BlockPos(te.xCoord, te.yCoord, te.zCoord);
+					
 					te.setWorldObj(worldClient);
 					
 					String entityType = tileEntityNBT.getString("id") +
 							" (" + te.getClass().getCanonicalName() +")";
 
 					if (shouldImportTileEntity(te)) {
-						if (!newTileEntities.containsKey(te.getPos())) {
+						if (!newTileEntities.containsKey(pos)) {
 							//The player didn't save this tile entity in
 							//this download session.  So we use the old one.
 							//Note that this doesn't mean that the old one's
 							//a valid one; it could be empty.
-							worldClient.setTileEntity(te.getPos(), te);
+							worldClient.setTileEntity(te.xCoord, te.yCoord,
+									te.zCoord, te);
 							chatDebug(
 									WDLDebugMessageCause.LOAD_TILE_ENTITY,
 									"Using old TE from saved file: " +
-											entityType + " at " + te.getPos());
+											entityType + " at " + pos);
 						} else {
-							worldClient.setTileEntity(te.getPos(), 
-									newTileEntities.get(te.getPos()));
+							worldClient.setTileEntity(te.xCoord, te.yCoord,
+									te.zCoord, newTileEntities.get(pos));
 							chatDebug(WDLDebugMessageCause.LOAD_TILE_ENTITY,
 									"Using new TE: " + entityType + " at "
-											+ te.getPos());
+											+ pos);
 						}
 					} else {
 						chatDebug(WDLDebugMessageCause.LOAD_TILE_ENTITY,
 								"Old TE does not need importing: "
-										+ entityType + " at " + te.getPos());
+										+ entityType + " at " + pos);
 					}
 				}
 			}
@@ -558,10 +561,7 @@ public class WDL {
 			progressScreen.setMinorTaskProgress(
 					"(waiting for ThreadedFileIOBase to finish)", 1);
 			
-			// func_178779_a is a getter for the instance.
-			// Look inside of ThreadedFileIOBase.java for
-			// such a getter.
-			ThreadedFileIOBase.func_178779_a().waitForFinish();
+			ThreadedFileIOBase.threadedIOInstance.waitForFinish();
 		} catch (Exception e) {
 			throw new RuntimeException("Threw exception waiting for asynchronous IO to finish. Hmmm.", e);
 		}
