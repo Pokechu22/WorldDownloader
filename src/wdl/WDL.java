@@ -1236,23 +1236,23 @@ public class WDL {
 	/** Adds a chat message with a World Downloader prefix */
 	public static void chatMsg(String msg) {
 		minecraft.ingameGUI.getChatGUI().printChatMessage(
-			new ChatComponentText("§c[WorldDL]§6 " + msg));
+			new ChatComponentText("Â§c[WorldDL]Â§6 " + msg));
 	}
 
 	/** Adds a chat message with a World Downloader prefix */
 	public static void chatDebug(WDLDebugMessageCause type, String msg) {
 		if (type != null && type.isEnabled()) {
 			minecraft.ingameGUI.getChatGUI().printChatMessage(
-				new ChatComponentText("§2[WorldDL]§6 " + msg));
+				new ChatComponentText("Â§2[WorldDL]Â§6 " + msg));
 		} else {
-			logger.info("§2[WorldDL]§6 " + msg);
+			logger.info("Â§2[WorldDL]Â§6 " + msg);
 		}
 	}
 
 	/** Adds a chat message with a World Downloader prefix */
 	public static void chatError(String msg) {
 		minecraft.ingameGUI.getChatGUI().printChatMessage(
-			new ChatComponentText("§2[WorldDL]§4 " + msg));
+			new ChatComponentText("Â§2[WorldDL]Â§4 " + msg));
 	}
 
 	private static int getSaveVersion(AnvilSaveConverter asc) {
@@ -1317,7 +1317,7 @@ public class WDL {
 		wdlDownload.displayString = (WDLPluginChannels.canDownloadInGeneral() ? (WDL.downloading ? (WDL.saving ? "Still saving..."
 				: "Stop download")
 				: "Download this world")
-				: "§cDownload blocked by server");
+				: "Â§cDownload blocked by server");
 		wdlDownload.enabled = (WDLPluginChannels.canDownloadInGeneral()
 				&& (!WDL.downloading || (WDL.downloading && !WDL.saving)));
 		wdlOptions.enabled = (WDLPluginChannels.canDownloadInGeneral()
