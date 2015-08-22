@@ -4,7 +4,9 @@
 !/mcp/conf/astyle.cfg
 !/mcp/conf/fields.csv
 !/mcp/conf/methods.csv
+!/mcp/conf/params.csv
 
+!/net/minecraft/client/ClientBrandRetreiver.java
 !/net/minecraft/client/gui/GuiIngameMenu.java
 !/net/minecraft/client/multiplayer/WorldClient.java
 !/net/minecraft/client/network/NetHandlerPlayClient.java
