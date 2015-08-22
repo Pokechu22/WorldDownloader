@@ -1303,10 +1303,6 @@ public class WDL {
 
 	// Add World Downloader buttons to GuiIngameMenu
 	public static void injectWDLButtons(GuiIngameMenu gui, List buttonList) {
-		if (minecraft.isIntegratedServerRunning()) {
-			return; // WDL not available if in singleplayer or LAN server mode
-		}
-
 		int insertAtYPos = 0;
 
 		for (Object obj : buttonList) {
@@ -1333,14 +1329,24 @@ public class WDL {
 				insertAtYPos, 170, 20, "WDL bug!");
 		GuiButton wdlOptions = new GuiButton(0x57444C6F, gui.width / 2 + 71,
 				insertAtYPos, 28, 20, "...");
-		wdlDownload.displayString = (WDLPluginChannels.canDownloadInGeneral() ? (WDL.downloading ? (WDL.saving ? "Still saving..."
-				: "Stop download")
-				: "Download this world")
-				: "§cDownload blocked by server");
-		wdlDownload.enabled = (WDLPluginChannels.canDownloadInGeneral()
-				&& (!WDL.downloading || (WDL.downloading && !WDL.saving)));
-		wdlOptions.enabled = (WDLPluginChannels.canDownloadInGeneral()
-				&& (!WDL.downloading || (WDL.downloading && !WDL.saving)));
+		if (minecraft.isIntegratedServerRunning()) {
+			wdlDownload.displayString = "§cCan't download in single player!";
+			wdlDownload.enabled = false;
+			wdlOptions.enabled = false;
+		} else if (!WDLPluginChannels.canDownloadInGeneral()) {
+			wdlDownload.displayString = "§cDownload blocked by server";
+			wdlDownload.enabled = false;
+			wdlOptions.enabled = false;
+		} else if (saving) {
+			wdlDownload.displayString = "Still saving...";
+			wdlDownload.enabled = false;
+			wdlOptions.enabled = false;
+		} else if (downloading) {
+			wdlDownload.displayString = "Stop download";
+		} else {
+			wdlDownload.displayString = "Download this world";
+		}
+		
 		buttonList.add(wdlDownload);
 		buttonList.add(wdlOptions);
 	}
@@ -1348,6 +1354,9 @@ public class WDL {
 	public static void handleWDLButtonClick(GuiIngameMenu gui, GuiButton button) {
 		if (minecraft.isIntegratedServerRunning()) {
 			return; // WDL not available if in singleplayer or LAN server mode
+		}
+		if (!button.enabled) {
+			return;
 		}
 
 		if (button.id == 0x57444C73) { // "Start/Stop Download"
