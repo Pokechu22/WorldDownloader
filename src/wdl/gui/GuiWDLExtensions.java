@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import wdl.WDL;
+import wdl.api.IWDLMod;
+import wdl.api.WDLApi;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
@@ -21,16 +23,20 @@ public class GuiWDLExtensions extends GuiScreen {
 		}
 		
 		private class ModEntry implements IGuiListEntry {
-			String text;
-			public ModEntry(String text) {
-				this.text = text;
+			public final IWDLMod mod;
+			private final String modDesc;
+			
+			public ModEntry(IWDLMod mod) {
+				this.mod = mod;
+				this.modDesc = mod.getName() + " v" + mod.getVersion();
 			}
 			
 			@Override
 			public void drawEntry(int slotIndex, int x, int y, int listWidth,
 					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
-				fontRendererObj.drawString(text, x, y + slotHeight
-						- fontRendererObj.FONT_HEIGHT - 1, 0xFFFFFF);
+				int centerY = y + slotHeight / 2
+						- fontRendererObj.FONT_HEIGHT / 2;
+				fontRendererObj.drawString(modDesc, x, centerY, 0xFFFFFF);
 			}
 
 			@Override
@@ -60,8 +66,9 @@ public class GuiWDLExtensions extends GuiScreen {
 		}
 		
 		private List<IGuiListEntry> entries = new ArrayList<IGuiListEntry>() {{
-			add(new ModEntry("1"));
-			add(new ModEntry("2"));
+			for (IWDLMod mod : WDLApi.getWDLMods().values()) {
+				add (new ModEntry(mod));
+			}
 		}};
 		
 		@Override

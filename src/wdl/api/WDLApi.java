@@ -9,6 +9,8 @@ import net.minecraft.util.BlockPos;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.google.common.collect.ImmutableMap;
+
 import wdl.EntityUtils;
 import wdl.WDL;
 import wdl.WDLEvents;
@@ -89,6 +91,13 @@ public class WDLApi {
 				WDLMessages.registerMessage(e.getKey(), e.getValue(), modName);
 			}
 		}
+	}
+	
+	/**
+	 * Gets an immutable map of WDL mods.
+	 */
+	public static Map<String, IWDLMod> getWDLMods() {
+		return ImmutableMap.copyOf(wdlMods);
 	}
 	
 	/**
