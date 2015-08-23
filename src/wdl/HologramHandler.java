@@ -5,6 +5,7 @@ import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.util.BlockPos;
+import wdl.api.IDescriptionWDLMod;
 import wdl.api.ISpecialEntityHandler;
 
 import com.google.common.collect.HashMultimap;
@@ -24,7 +25,8 @@ import com.google.common.collect.Multimap;
  * <br/>
  * This is also an example of 
  */
-public class HologramHandler implements ISpecialEntityHandler {
+public class HologramHandler implements ISpecialEntityHandler,
+		IDescriptionWDLMod {
 
 	@Override
 	public String getName() {
@@ -67,5 +69,25 @@ public class HologramHandler implements ISpecialEntityHandler {
 	@Override
 	public int getSpecialEntityTrackDistance(String name) {
 		return -1;
+	}
+
+	@Override
+	public String getMainAuthor() {
+		return "Pokechu22";
+	}
+
+	@Override
+	public String[] getAuthors() {
+		return null;
+	}
+
+	@Override
+	public String getURL() {
+		return null;
+	}
+
+	@Override
+	public String getDescription() {
+		return "Provides basic support for disabling holograms.";
 	}
 }
