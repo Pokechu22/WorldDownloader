@@ -32,6 +32,11 @@ public class HologramHandler implements ISpecialEntityHandler {
 	}
 	
 	@Override
+	public String getVersion() {
+		return "1.0";
+	}
+	
+	@Override
 	public Multimap<String, String> getSpecialEntities() {
 		Multimap<String, String> returned = HashMultimap.<String, String>create();
 		
