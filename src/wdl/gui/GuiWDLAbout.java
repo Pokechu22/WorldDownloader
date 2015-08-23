@@ -57,7 +57,7 @@ ClientBrandRetriever.getClientModName() + ".";
 	@Override
 	public void initGui() {
 		buttonList.add(new GuiButton(0, (this.width / 2) - 155, 18, 150, 20,
-				"Extensions") {{this.enabled = false; /* TODO */}});
+				"Extensions"));
 		buttonList.add(new GuiButton(1, (this.width / 2) + 5, 18, 150, 20,
 				"Copy debug info") {{this.enabled = false; /* TODO */}});
 		buttonList.add(new GuiButton(2, (this.width / 2) - 100,
@@ -67,7 +67,7 @@ ClientBrandRetriever.getClientModName() + ".";
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if (button.id == 0) {
-			//TODO
+			mc.displayGuiScreen(new GuiWDLExtensions(this));
 		} else if (button.id == 1) {
 			//TODO
 		} else if (button.id == 2) {
