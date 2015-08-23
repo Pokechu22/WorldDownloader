@@ -10,6 +10,7 @@ import wdl.api.WDLApi;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiListExtended.IGuiListEntry;
@@ -27,7 +28,7 @@ public class GuiWDLExtensions extends GuiScreen {
 	/**
 	 * Height of the bottom area.
 	 */
-	private static final int TOP_HEIGHT = 39;
+	private static final int TOP_HEIGHT = 23;
 	/**
 	 * Height of the middle section.
 	 * 
@@ -142,7 +143,7 @@ public class GuiWDLExtensions extends GuiScreen {
 			super(GuiWDLExtensions.this.mc, GuiWDLExtensions.this.width,
 					GuiWDLExtensions.this.height - bottomLocation,
 					MIDDLE_HEIGHT, GuiWDLExtensions.this.height - bottomLocation
-							- BOTTOM_HEIGHT, 20);
+							- BOTTOM_HEIGHT, fontRendererObj.FONT_HEIGHT + 1);
 		}
 		
 		@Override
@@ -167,6 +168,7 @@ public class GuiWDLExtensions extends GuiScreen {
 		
 		@Override
 		protected int getSize() {
+			// TODO Auto-generated method stub
 			return 0;
 		}
 		
@@ -189,6 +191,11 @@ public class GuiWDLExtensions extends GuiScreen {
 				
 				GlStateManager.translate(0, bottomLocation, 0);
 			}
+		}
+		
+		@Override
+		public int getListWidth() {
+			return GuiWDLExtensions.this.width - 20;
 		}
 		
 		@Override
@@ -232,6 +239,15 @@ public class GuiWDLExtensions extends GuiScreen {
 		
 		this.list = new ModList();
 		this.details = new ModDetailList();
+		
+		this.buttonList.add(new GuiButton(0, width / 2 - 100, height - 30, "Done"));
+	}
+	
+	@Override
+	protected void actionPerformed(GuiButton button) throws IOException {
+		if (button.id == 0) {
+			mc.displayGuiScreen(parent);
+		}
 	}
 	
 	/**
@@ -303,11 +319,11 @@ public class GuiWDLExtensions extends GuiScreen {
 		this.drawDefaultBackground();
 		
 		//Clamp bottomLocation.
-		if (bottomLocation < TOP_HEIGHT + 8) {
-			bottomLocation = TOP_HEIGHT + 8;
+		if (bottomLocation < TOP_HEIGHT + 32) {
+			bottomLocation = TOP_HEIGHT + 32;
 		}
-		if (bottomLocation > height - MIDDLE_HEIGHT - BOTTOM_HEIGHT - 8) {
-			bottomLocation = height - MIDDLE_HEIGHT - BOTTOM_HEIGHT - 8;
+		if (bottomLocation > height - MIDDLE_HEIGHT - BOTTOM_HEIGHT - 32) {
+			bottomLocation = height - MIDDLE_HEIGHT - BOTTOM_HEIGHT - 32;
 		}
 		
 		this.list.drawScreen(mouseX, mouseY, partialTicks);
