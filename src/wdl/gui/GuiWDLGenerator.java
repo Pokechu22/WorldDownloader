@@ -43,7 +43,8 @@ public class GuiWDLGenerator extends GuiScreen {
 				"Generate Structures: ERROR");
 		this.buttonList.add(this.generateStructuresBtn);
 		this.updateGenerateStructures(false);
-		this.buttonList.add(new GuiButton(100, var1 - 100, var2 + 150, "Done"));
+		
+		this.buttonList.add(new GuiButton(100, var1 - 100, height - 29, "Done"));
 	}
 
 	/**
@@ -103,11 +104,12 @@ public class GuiWDLGenerator extends GuiScreen {
 	 */
 	@Override
 	public void drawScreen(int var1, int var2, float var3) {
-		this.drawDefaultBackground();
+		Utils.drawBorder(23, 32, 0, 0, height, width);
+		
 		this.drawCenteredString(this.fontRendererObj, this.title,
-				this.width / 2, this.height / 4 - 40, 16777215);
+				this.width / 2, 8, 0xFFFFFF);
 		this.drawString(this.fontRendererObj, "Seed:", this.width / 2 - 99,
-				this.height / 4 - 10, 16777215);
+				this.height / 4 - 10, 0xFFFFFF);
 		this.seedField.drawTextBox();
 		super.drawScreen(var1, var2, var3);
 	}

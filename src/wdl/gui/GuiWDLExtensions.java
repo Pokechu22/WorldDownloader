@@ -240,7 +240,7 @@ public class GuiWDLExtensions extends GuiScreen {
 		this.list = new ModList();
 		this.details = new ModDetailList();
 		
-		this.buttonList.add(new GuiButton(0, width / 2 - 100, height - 30, "Done"));
+		this.buttonList.add(new GuiButton(0, width / 2 - 100, height - 29, "Done"));
 	}
 	
 	@Override

@@ -75,7 +75,7 @@ public class GuiWDLWorld extends GuiScreen {
 		this.buttonList.add(this.pickSpawnBtn);
 		this.updateSpawn(false);
 		this.updateSpawnXYZ(false);
-		this.buttonList.add(new GuiButton(100, var1 - 100, var2 + 150, "Done"));
+		this.buttonList.add(new GuiButton(100, var1 - 100, height - 29, "Done"));
 	}
 
 	/**
@@ -155,17 +155,18 @@ public class GuiWDLWorld extends GuiScreen {
 	 */
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		this.drawDefaultBackground();
+		Utils.drawBorder(23, 32, 0, 0, height, width);
+		
 		this.drawCenteredString(this.fontRendererObj, this.title,
-				this.width / 2, this.height / 4 - 40, 16777215);
+				this.width / 2, 8, 0xFFFFFF);
 
 		if (this.showSpawnFields) {
 			this.drawString(this.fontRendererObj, "X:", this.width / 2 - 99,
-					this.spawnTextY, 16777215);
+					this.spawnTextY, 0xFFFFFF);
 			this.drawString(this.fontRendererObj, "Y:", this.width / 2 - 31,
-					this.spawnTextY, 16777215);
+					this.spawnTextY, 0xFFFFFF);
 			this.drawString(this.fontRendererObj, "Z:", this.width / 2 + 37,
-					this.spawnTextY, 16777215);
+					this.spawnTextY, 0xFFFFFF);
 			this.spawnX.drawTextBox();
 			this.spawnY.drawTextBox();
 			this.spawnZ.drawTextBox();

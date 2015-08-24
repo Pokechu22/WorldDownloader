@@ -31,9 +31,7 @@ public class GuiWDLBackup extends GuiScreen {
 		this.buttonList.add(new GuiButton(0, x, y, 
 				"Backup mode: " + backupType.description));
 		
-		y += 28;
-		
-		this.buttonList.add(new GuiButton(100, x, y, "Done"));
+		this.buttonList.add(new GuiButton(100, x, height - 29, "Done"));
 	}
 	
 	@Override
@@ -64,9 +62,10 @@ public class GuiWDLBackup extends GuiScreen {
 	
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		this.drawDefaultBackground();
+		Utils.drawBorder(23, 32, 0, 0, height, width);
+		
 		this.drawCenteredString(this.fontRendererObj, "Backup options",
-				this.width / 2, this.height / 4 - 40, 0xFFFFFF);
+				this.width / 2, 8, 0xFFFFFF);
 		
 		super.drawScreen(mouseX, mouseY, partialTicks);
 	}
