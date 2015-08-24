@@ -1,5 +1,6 @@
 package wdl.api;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -98,6 +99,91 @@ public class WDLApi {
 	 */
 	public static Map<String, IWDLMod> getWDLMods() {
 		return ImmutableMap.copyOf(wdlMods);
+	}
+	
+	/**
+	 * Gets detailed information on the given mod.
+	 * @param name Name of the mod.
+	 * @return The details.
+	 */
+	public static String getModInfo(String name) {
+		if (!wdlMods.containsKey(name)) {
+			return null;
+		}
+		
+		return getModInfo(wdlMods.get(name));
+	}
+	
+	/**
+	 * Gets detailed information on the given mod.
+	 * @param mod The mod to get info of.
+	 * @return The details.
+	 */
+	public static String getModInfo(IWDLMod mod) {
+		if (mod == null) {
+			return null;
+		}
+		
+		StringBuilder info = new StringBuilder();
+		
+		info.append("Name: ").append(mod.getName()).append('\n');
+		info.append("Version: ").append(mod.getVersion()).append('\n');
+		if (mod instanceof IDescriptionWDLMod) {
+			IDescriptionWDLMod dmod = (IDescriptionWDLMod)mod;
+			
+			String mainAuthor = dmod.getMainAuthor();
+			String[] authors = dmod.getAuthors();
+			String url = dmod.getURL();
+			String description = dmod.getDescription();
+			
+			if (mainAuthor != null && !mainAuthor.isEmpty()) {
+				info.append("Main author: ").append(mainAuthor).append('\n');
+			}
+			if (authors != null && authors.length > 0) {
+				info.append("Authors: ");
+				
+				for (int i = 0; i < authors.length; i++) {
+					if (authors[i].equals(mainAuthor)) {
+						continue;
+					}
+					
+					if (i <= authors.length - 2) {
+						info.append(", ");
+					} else if (i == authors.length - 1) {
+						info.append(", and ");
+					} else {
+						info.append('\n');
+					}
+				}
+			}
+			
+			if (url != null && !url.isEmpty()) {
+				info.append("URL: ").append(url).append('\n');
+			}
+			if (description != null && !description.isEmpty()) {
+				info.append("Description: \n").append(description).append('\n');
+			}
+		}
+		
+		info.append("Main class: ").append(mod.getClass().getName()).append('\n');
+		info.append("Containing jar: ");
+		try {
+			//http://stackoverflow.com/q/320542/3991344
+			info.append(new File(mod.getClass().getProtectionDomain()
+					.getCodeSource().getLocation().toURI()).getPath());
+		} catch (Exception e) {
+			info.append("Unknown (").append(e.toString()).append(')');
+		}
+		info.append('\n');
+		Class<?>[] interfaces = mod.getClass().getInterfaces();
+		info.append("Implemented interfaces (").append(interfaces.length)
+				.append(")\n");
+		for (int i = 0; i < interfaces.length; i++) {
+			info.append(i).append(": ").append(interfaces[i].getName())
+					.append('\n');
+		}
+		
+		return info.toString();
 	}
 	
 	/**
