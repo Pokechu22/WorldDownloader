@@ -19,6 +19,16 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.util.ResourceLocation;
 
+/**
+ * GUI showing the currently enabled mods, and their information.
+ * 
+ * It's composed of two halves, one that lists enabled extensions that can
+ * be clicked, and the other that shows the details on the selected extension.
+ * The two halves can be dragged up and down (which is why the logic is so
+ * complex here; {@link GuiListExtended} was not designed for that).
+ * 
+ * @author Pokechu22
+ */
 public class GuiWDLExtensions extends GuiScreen {
 	/**
 	 * Top of the bottom list.
