@@ -232,9 +232,9 @@ public class WDL {
 		defaultProps.setProperty("PlayerHealth", "20");
 		defaultProps.setProperty("PlayerFood", "20");
 		
-		defaultProps.setProperty("Debug.globalDebugEnabled", "true");
+		defaultProps.setProperty("Messages.globalDebugEnabled", "true");
 		for (WDLMessageTypes cause : WDLMessageTypes.values()) {
-			defaultProps.setProperty("Debug." + cause.name(), "true");
+			defaultProps.setProperty("Messages." + cause.name(), "true");
 		}
 		
 		//Set up entities.
