@@ -59,7 +59,7 @@ ClientBrandRetriever.getClientModName() + ".";
 		buttonList.add(new GuiButton(0, (this.width / 2) - 155, 18, 150, 20,
 				"Extensions"));
 		buttonList.add(new GuiButton(1, (this.width / 2) + 5, 18, 150, 20,
-				"Copy debug info") {{this.enabled = false; /* TODO */}});
+				"Copy debug info"));
 		buttonList.add(new GuiButton(2, (this.width / 2) - 100,
 				this.height - 29, "Done"));
 	}
@@ -69,7 +69,7 @@ ClientBrandRetriever.getClientModName() + ".";
 		if (button.id == 0) {
 			mc.displayGuiScreen(new GuiWDLExtensions(this));
 		} else if (button.id == 1) {
-			//TODO
+			setClipboardString(WDL.getDebugInfo());
 		} else if (button.id == 2) {
 			mc.displayGuiScreen(parent);
 		}

@@ -24,12 +24,14 @@ import net.minecraft.block.BlockDispenser;
 import net.minecraft.block.BlockFurnace;
 import net.minecraft.block.BlockHopper;
 import net.minecraft.block.BlockNote;
+import net.minecraft.client.ClientBrandRetriever;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiIngameMenu;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.ChunkProviderClient;
+import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
@@ -64,6 +66,7 @@ import net.minecraft.world.storage.SaveHandler;
 import net.minecraft.world.storage.ThreadedFileIOBase;
 import wdl.WorldBackup.WorldBackupType;
 import wdl.api.IWDLMessageType;
+import wdl.api.IWDLMod;
 import wdl.api.WDLApi;
 import wdl.gui.GuiWDL;
 import wdl.gui.GuiWDLMultiworld;
@@ -1404,5 +1407,109 @@ public class WDL {
 			return thePlayer.getClientBrand().toLowerCase().contains("spigot");
 		}
 		return false;
+	}
+	
+	/**
+	 * Gets the current setup information.
+	 */
+	public static String getDebugInfo() {
+		StringBuilder info = new StringBuilder();
+		info.append("### CORE INFO\n\n");
+		info.append("WDL version: ").append(VERSION).append('\n');
+		info.append("Launched version: ")
+				.append(Minecraft.getMinecraft().func_175600_c()).append('\n');
+		info.append("Client brand: ")
+				.append(ClientBrandRetriever.getClientModName()).append('\n');
+		info.append("\n### EXTENSIONS\n\n");
+		Map<String, IWDLMod> extensions = WDLApi.getWDLMods();
+		info.append(extensions.size()).append(" loaded\n");
+		for (Map.Entry<String, IWDLMod> e : extensions.entrySet()) {
+			info.append("\n#### ").append(e.getKey()).append("\n\n");
+			try {
+				info.append(WDLApi.getModInfo(e.getValue()));
+			} catch (Exception ex) {
+				info.append("ERROR: ").append(ex).append('\n');
+				for (StackTraceElement elm : ex.getStackTrace()) {
+					info.append(elm).append('\n');
+				}
+			}
+		}
+		info.append("\n### STATE\n\n");
+		info.append("minecraft: ").append(minecraft).append('\n');
+		info.append("worldClient: ").append(worldClient).append('\n');
+		info.append("networkManager: ").append(networkManager).append('\n');
+		info.append("thePlayer: ").append(thePlayer).append('\n');
+		info.append("windowContainer: ").append(windowContainer).append('\n');
+		info.append("lastClickedBlock: ").append(lastClickedBlock).append('\n');
+		info.append("lastEntity: ").append(lastEntity).append('\n');
+		info.append("saveHandler: ").append(saveHandler).append('\n');
+		info.append("chunkLoader: ").append(chunkLoader).append('\n');
+		info.append("newTileEntities: ").append(newTileEntities).append('\n');
+		info.append("newEntities: ").append(newEntities).append('\n');
+		info.append("newMapDatas: ").append(newMapDatas).append('\n');
+		info.append("downloading: ").append(downloading).append('\n');
+		info.append("isMultiworld: ").append(isMultiworld).append('\n');
+		info.append("propsFound: ").append(propsFound).append('\n');
+		info.append("startOnChange: ").append(startOnChange).append('\n');
+		info.append("overrideLastModifiedCheck: ")
+				.append(overrideLastModifiedCheck).append('\n');
+		info.append("saving: ").append(saving).append('\n');
+		info.append("worldLoadingDeferred: ").append(worldLoadingDeferred)
+				.append('\n');
+		info.append("worldName: ").append(worldName).append('\n');
+		info.append("baseFolderName: ").append(baseFolderName).append('\n');
+		info.append("addedAPIHandlers: ").append(addedAPIHandlers).append('\n');
+		
+		info.append("### CONNECTED SERVER\n\n");
+		ServerData data = Minecraft.getMinecraft().getCurrentServerData();
+		if (data == null) {
+			info.append("No data\n");
+		} else {
+			info.append("Name: ").append(data.serverName).append('\n');
+			info.append("IP: ").append(data.serverIP).append('\n');
+		}
+		
+		info.append("\n### PROPERTIES\n\n");
+		info.append("\n#### BASE\n\n");
+		if (baseProps != null) {
+			if (!baseProps.isEmpty()) {
+				for (Map.Entry<Object, Object> e : baseProps.entrySet()) {
+					info.append(e.getKey()).append(": ").append(e.getValue());
+					info.append('\n');
+				}
+			} else {
+				info.append("empty\n");
+			}
+		} else {
+			info.append("null\n");
+		}
+		info.append("\n#### WORLD\n\n");
+		if (worldProps != null) {
+			if (!worldProps.isEmpty()) {
+				for (Map.Entry<Object, Object> e : worldProps.entrySet()) {
+					info.append(e.getKey()).append(": ").append(e.getValue());
+					info.append('\n');
+				}
+			} else {
+				info.append("empty\n");
+			}
+		} else {
+			info.append("null\n");
+		}
+		info.append("\n#### DEFAULT\n\n");
+		if (defaultProps != null) {
+			if (!defaultProps.isEmpty()) {
+				for (Map.Entry<Object, Object> e : defaultProps.entrySet()) {
+					info.append(e.getKey()).append(": ").append(e.getValue());
+					info.append('\n');
+				}
+			} else {
+				info.append("empty\n");
+			}
+		} else {
+			info.append("null\n");
+		}
+		
+		return info.toString();
 	}
 }
