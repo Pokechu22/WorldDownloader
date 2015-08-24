@@ -166,11 +166,17 @@ public class WDLApi {
 		}
 		
 		info.append("Main class: ").append(mod.getClass().getName()).append('\n');
-		info.append("Containing jar: ");
+		info.append("Containing file: ");
 		try {
 			//http://stackoverflow.com/q/320542/3991344
-			info.append(new File(mod.getClass().getProtectionDomain()
-					.getCodeSource().getLocation().toURI()).getPath());
+			String path = new File(mod.getClass().getProtectionDomain()
+					.getCodeSource().getLocation().toURI()).getPath();
+			
+			//Censor username.
+			String username = System.getProperty("user.name");
+			path = path.replace(username, "<USERNAME>");
+			
+			info.append(path);
 		} catch (Exception e) {
 			info.append("Unknown (").append(e.toString()).append(')');
 		}
