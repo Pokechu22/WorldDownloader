@@ -2,6 +2,7 @@ package wdl;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -353,5 +354,20 @@ public class WDLHooks {
 			WDL.minecraft.crashed(CrashReport.makeCrashReport(e,
 					"WDL mod: exception in onNHPCHandleBlockAction event"));
 		}
+	}
+	
+	/**
+	 * Injects WDL information into a crash report.
+	 * 
+	 * Called at the end of {@link CrashReport#populateEnvironment()}.
+	 * @param report
+	 */
+	public static void onCrashReportPopulateEnvironment(CrashReport report) {
+		report.makeCategory("World Downloader Mod").addCrashSectionCallable("Info",
+			new Callable() {
+				public String call() {
+					return WDL.getDebugInfo();
+				}
+			});
 	}
 }
