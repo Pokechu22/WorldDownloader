@@ -386,11 +386,11 @@ public class GuiWDLExtensions extends GuiScreen {
 		this.drawDefaultBackground();
 		
 		//Clamp bottomLocation.
-		if (bottomLocation < TOP_HEIGHT + 32) {
-			bottomLocation = TOP_HEIGHT + 32;
+		if (bottomLocation < TOP_HEIGHT + 33) {
+			bottomLocation = TOP_HEIGHT + 33;
 		}
-		if (bottomLocation > height - MIDDLE_HEIGHT - BOTTOM_HEIGHT - 32) {
-			bottomLocation = height - MIDDLE_HEIGHT - BOTTOM_HEIGHT - 32;
+		if (bottomLocation > height - MIDDLE_HEIGHT - BOTTOM_HEIGHT - 33) {
+			bottomLocation = height - MIDDLE_HEIGHT - BOTTOM_HEIGHT - 33;
 		}
 		
 		this.list.drawScreen(mouseX, mouseY, partialTicks);
