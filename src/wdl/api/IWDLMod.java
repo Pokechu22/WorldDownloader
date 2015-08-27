@@ -12,7 +12,7 @@ import net.minecraft.util.BlockPos;
  * <br/>
  * Also, implement the subinterfaces for this to be useful.
  * <br/>
- * It is recomended to implement {@link IDescriptionWDLMod} to provide
+ * It is recomended to implement {@link IWDLModDescripted} to provide
  * aditional information on the mod, but that is not required.
  */
 public interface IWDLMod {

@@ -3,7 +3,7 @@ package wdl.api;
 /**
  * WDL mod that has additional description.
  */
-public interface IDescriptionWDLMod extends IWDLMod {
+public interface IWDLModDescripted extends IWDLMod {
 	/**
 	 * Get the author of the mod.
 	 * If there is more than 1, return the main author here, and use

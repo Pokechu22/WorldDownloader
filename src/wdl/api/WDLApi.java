@@ -128,8 +128,8 @@ public class WDLApi {
 		
 		info.append("Name: ").append(mod.getName()).append('\n');
 		info.append("Version: ").append(mod.getVersion()).append('\n');
-		if (mod instanceof IDescriptionWDLMod) {
-			IDescriptionWDLMod dmod = (IDescriptionWDLMod)mod;
+		if (mod instanceof IWDLModDescripted) {
+			IWDLModDescripted dmod = (IWDLModDescripted)mod;
 			
 			String mainAuthor = dmod.getMainAuthor();
 			String[] authors = dmod.getAuthors();

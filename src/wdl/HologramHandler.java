@@ -5,7 +5,7 @@ import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.util.BlockPos;
-import wdl.api.IDescriptionWDLMod;
+import wdl.api.IWDLModDescripted;
 import wdl.api.ISpecialEntityHandler;
 
 import com.google.common.collect.HashMultimap;
@@ -26,7 +26,7 @@ import com.google.common.collect.Multimap;
  * This is also an example of 
  */
 public class HologramHandler implements ISpecialEntityHandler,
-		IDescriptionWDLMod {
+		IWDLModDescripted {
 
 	@Override
 	public String getName() {
