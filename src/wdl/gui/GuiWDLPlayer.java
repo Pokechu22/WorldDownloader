@@ -138,11 +138,13 @@ public class GuiWDLPlayer extends GuiScreen {
 	 * Draws the screen and all the components in it.
 	 */
 	@Override
-	public void drawScreen(int var1, int var2, float var3) {
+	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		Utils.drawBorder(23, 32, 0, 0, height, width);
 		
 		this.drawCenteredString(this.fontRendererObj, this.title,
 				this.width / 2, 8, 0xFFFFFF);
+		
+		String tooltip = null;
 
 		if (this.showPosFields) {
 			this.drawString(this.fontRendererObj, "X:", this.width / 2 - 99,
@@ -154,9 +156,53 @@ public class GuiWDLPlayer extends GuiScreen {
 			this.posX.drawTextBox();
 			this.posY.drawTextBox();
 			this.posZ.drawTextBox();
+			
+			String posToolTip = "Use these text boxes to specify the exact " +
+			"player position.\n\n";
+			
+			if (Utils.isMouseOverTextBox(mouseX, mouseY, posX)) {
+				tooltip = posToolTip
+						+ "This text box specifies your X coordinate.";
+			} else if (Utils.isMouseOverTextBox(mouseX, mouseY, posY)) {
+				tooltip = posToolTip
+						+ "This text box specifies your Y coordinate.";
+			} else if (Utils.isMouseOverTextBox(mouseX, mouseY, posZ)) {
+				tooltip = posToolTip
+						+ "This text box specifies your Z coordinate.";
+			}
+			
+			if (pickPosBtn.isMouseOver()) {
+				tooltip = "Set the position to your current position.";
+			}
+		}
+		
+		if (healthBtn.isMouseOver()) {
+			tooltip = "This option sets the health that the player has in " +
+					"in the downloaded copy of the world.\n\n" + 
+					"§lDon't change§r: Keep the health at its value from " +
+					"when the download was stopped.\n" +
+					"§lFull§r: Set the player's health to the maximum value.";
+		}
+		if (hungerBtn.isMouseOver()) {
+			tooltip = "This option sets the hunger that the player has in " +
+					"in the downloaded copy of the world.\n\n" + 
+					"§lDon't change§r: Keep the hunger at its value from " +
+					"when the download was stopped.\n" +
+					"§lFull§r: Set the player's hunger to the maximum value.";
+		}
+		if (playerPosBtn.isMouseOver()) {
+			tooltip = "This option allows choosing where you want the " +
+					"player to be located in the downloaded world.\n\n" +
+					"§lDon't change§r: Use the position that the player was " +
+					"in when the download was stopped.\n" +
+					"§lXYZ§r: Allows specifying the exact coordinates.";
 		}
 
-		super.drawScreen(var1, var2, var3);
+		super.drawScreen(mouseX, mouseY, partialTicks);
+		
+		if (tooltip != null) {
+			Utils.drawGuiInfoBox(tooltip, width, height);
+		}
 	}
 
 	private void updateHealth(boolean var1) {

@@ -8,6 +8,7 @@ import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.GuiUtilRenderComponents;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -25,6 +26,10 @@ class Utils {
 	 * @param height Height of the GUI.
 	 */
 	public static void drawGuiInfoBox(String text, int width, int height) {
+		if (text == null) {
+			return;
+		}
+		
 		int infoX = width / 2 - 150;
 		int infoY = 2 * height / 3;
 		int y = infoY + 5;
@@ -174,5 +179,25 @@ class Utils {
 		GlStateManager.shadeModel(GL_FLAT);
 		GlStateManager.enableAlpha();
 		GlStateManager.disableBlend();
+	}
+	
+	/**
+	 * Is the mouse over the given text box?
+	 * @param mouseX The mouse's current (scaled) x.
+	 * @param mouseY The mouse's current (scaled) y.
+	 * @param textBox The text box.
+	 * @return Whether the mouse is over the given text box.
+	 */
+	public static boolean isMouseOverTextBox(int mouseX, int mouseY,
+			GuiTextField textBox) {
+		int scaledX = mouseX - textBox.xPosition;
+		int scaledY = mouseY - textBox.yPosition;
+		
+		// Standard text box height -- there is no actual getter for the real
+		// one.
+		final int height = 20;
+
+		return scaledX >= 0 && scaledX < textBox.getWidth() && scaledY >= 0
+				&& scaledY < height;
 	}
 }
