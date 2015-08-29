@@ -5,6 +5,7 @@ import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.util.BlockPos;
+import wdl.api.IWDLMod;
 import wdl.api.IWDLModDescripted;
 import wdl.api.ISpecialEntityHandler;
 
@@ -23,7 +24,7 @@ import com.google.common.collect.Multimap;
  * this video)</a> do not get recognized.  I don't think this is a big
  * problem, but it is something to keep in mind.
  * <br/>
- * This is also an example of 
+ * This is also an example of how a {@link IWDLMod} would be implemented.
  */
 public class HologramHandler implements ISpecialEntityHandler,
 		IWDLModDescripted {

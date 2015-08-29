@@ -1,5 +1,6 @@
 package wdl.api;
 
+import wdl.HologramHandler;
 import net.minecraft.entity.Entity;
 
 import com.google.common.collect.Multimap;
@@ -8,6 +9,9 @@ import com.google.common.collect.Multimap;
  * Interface for WDL mods that handle entities that have non-standard purposes. <br/>
  * This is for holograms and such that are vanilla minecraft entities being
  * (ab)used for new purposes. Use {@link IEntityAdder} for new entities.
+ * <br>
+ * For an example of how one of these might be implemented, see the built-in
+ * {@link HologramHandler} class.
  */
 public interface ISpecialEntityHandler extends IWDLMod {
 	/**
