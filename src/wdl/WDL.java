@@ -1420,7 +1420,21 @@ public class WDL {
 				.append(Minecraft.getMinecraft().func_175600_c()).append('\n');
 		info.append("Client brand: ")
 				.append(ClientBrandRetriever.getClientModName()).append('\n');
-		info.append("\n### EXTENSIONS\n\n");
+		info.append("File location: ");
+		try {
+			//http://stackoverflow.com/q/320542/3991344
+			String path = new File(WDL.class.getProtectionDomain()
+					.getCodeSource().getLocation().toURI()).getPath();
+			
+			//Censor username.
+			String username = System.getProperty("user.name");
+			path = path.replace(username, "<USERNAME>");
+			
+			info.append(path);
+		} catch (Exception e) {
+			info.append("Unknown (").append(e.toString()).append(')');
+		}
+		info.append("\n\n### EXTENSIONS\n\n");
 		Map<String, IWDLMod> extensions = WDLApi.getWDLMods();
 		info.append(extensions.size()).append(" loaded\n");
 		for (Map.Entry<String, IWDLMod> e : extensions.entrySet()) {
