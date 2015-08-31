@@ -362,7 +362,7 @@ enum WDLMessageTypes implements IWDLMessageType {
 			"whether that entity was saved.", false),
 	PLUGIN_CHANNEL_MESSAGE("Plugin channel message", 
 			"Information about the serverside configuration system and user " +
-			"rights.", true);
+			"rights.", false);
 	
 	/**
 	 * Constructor with the default values for a debug message.
