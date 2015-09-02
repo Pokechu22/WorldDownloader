@@ -40,12 +40,14 @@ public class GuiWDLPermissions extends GuiScreen {
 		
 		if (!WDLPluginChannels.hasPermissions()) {
 			this.drawCenteredString(this.fontRendererObj,
-					"No permissions loaded.", this.width / 2, this.height / 2,
-					0xFFFFFF);
+					"No permissions loaded.", this.width / 2,
+					(this.height - 32 - 23) / 2 + 23
+							- fontRendererObj.FONT_HEIGHT / 2, 0xFFFFFF);
 		} else {
 			this.drawCenteredString(this.fontRendererObj,
 					"Some permissions loaded.", this.width / 2,
-					this.height / 2, 0xFFFFFF);
+					(this.height - 32 - 23) / 2 + 23
+							- fontRendererObj.FONT_HEIGHT / 2, 0xFFFFFF);
 		}
 		
 		super.drawScreen(mouseX, mouseY, partialTicks);
