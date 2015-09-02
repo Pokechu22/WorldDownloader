@@ -219,7 +219,12 @@ public class WDLPluginChannels {
 		return receivedPackets.contains(2) && entityRanges.size() > 0;
 	}
 	
-	//TODO: Getter for entityRanges.
+	/**
+	 * Gets whether permissions are available.
+	 */
+	public static boolean hasPermissions() {
+		return receivedPackets != null && !receivedPackets.isEmpty();
+	}
 	
 	/**
 	 * Event that is called when the world is loaded.
