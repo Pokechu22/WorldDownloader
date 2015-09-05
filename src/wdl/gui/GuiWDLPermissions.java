@@ -1,6 +1,8 @@
 package wdl.gui;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import wdl.WDL;
 import wdl.WDLPluginChannels;
@@ -25,17 +27,66 @@ public class GuiWDLPermissions extends GuiScreen {
 		public PermissionsList() {
 			super(GuiWDLPermissions.this.mc, GuiWDLPermissions.this.width,
 					GuiWDLPermissions.this.height, TOP_MARGIN,
-					GuiWDLPermissions.this.height - BOTTOM_MARGIN, 20);
+					GuiWDLPermissions.this.height - BOTTOM_MARGIN, 
+					fontRendererObj.FONT_HEIGHT + 1);
 		}
+		
+		private class TextEntry implements IGuiListEntry {
+			private final String text;
+			
+			public TextEntry(String text) {
+				this.text = text;
+			}
+			
+			@Override
+			public void drawEntry(int slotIndex, int x, int y, int listWidth,
+					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
+				fontRendererObj.drawString(text, x, y + 1, 0xFFFFFF);
+			}
+
+			@Override
+			public boolean mousePressed(int slotIndex, int x, int y,
+					int mouseEvent, int relativeX, int relativeY) {
+				return false;
+			}
+
+			@Override
+			public void mouseReleased(int slotIndex, int x, int y,
+					int mouseEvent, int relativeX, int relativeY) {
+			}
+
+			@Override
+			public void setSelected(int slotIndex, int p_178011_2_,
+					int p_178011_3_) {
+				
+			}
+		}
+		
+		private List<IGuiListEntry> entries = new ArrayList<IGuiListEntry>() {{
+			if (WDLPluginChannels.hasPermissions()) {
+				add(new TextEntry("Can download: " + 
+						WDLPluginChannels.canDownloadInGeneral()));
+				//TODO canCacheChunks & saveradius
+				add(new TextEntry("Can save entities: " + 
+						WDLPluginChannels.canSaveEntities()));
+				add(new TextEntry("Can save tile entities: " + 
+						WDLPluginChannels.canSaveTileEntities()));
+				add(new TextEntry("Can save containers: " + 
+						WDLPluginChannels.canSaveContainers()));
+				add(new TextEntry("Can use functions unknown to the server: " + 
+						WDLPluginChannels.canUseFunctionsUnknownToServer()));
+				//TODO: Entity ranges.
+			}
+		}};
 		
 		@Override
 		public IGuiListEntry getListEntry(int index) {
-			return null;
+			return entries.get(index);
 		}
 		
 		@Override
 		protected int getSize() {
-			return 0;
+			return entries.size();
 		}
 	}
 	
