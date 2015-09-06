@@ -43,7 +43,7 @@ public class GuiWDLPermissions extends GuiScreen {
 			
 			public TextEntry(String line1, String line2) {
 				this.line1 = line1;
-				this.line2 = line2;
+				this.line2 = "§7" + line2;
 			}
 			
 			@Override
@@ -102,6 +102,16 @@ public class GuiWDLPermissions extends GuiScreen {
 		@Override
 		protected int getSize() {
 			return entries.size();
+		}
+		
+		@Override
+		protected int getScrollBarX() {
+			return GuiWDLPermissions.this.width - 10;
+		}
+		
+		@Override
+		public int getListWidth() {
+			return GuiWDLPermissions.this.width - 18;
 		}
 	}
 	
