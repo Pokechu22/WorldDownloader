@@ -8,5 +8,5 @@ You can also try [@uyjulian's liteloader version](https://github.com/uyjulian/Li
 
 ##Resources 
 
- * [Minecraft Forums Thread](http://www.minecraftforum.net/topic/1444862-)
+ * [Minecraft Forums Thread]((http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465-)
  * [Issue tracker](https://github.com/Pokechu22/WorldDownloader/issues)
