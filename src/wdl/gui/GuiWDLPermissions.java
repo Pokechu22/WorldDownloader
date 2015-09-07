@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import wdl.WDL;
+import wdl.WDLMessages;
 import wdl.WDLPluginChannels;
 import wdl.WorldBackup.WorldBackupType;
 import net.minecraft.client.gui.GuiButton;
@@ -18,13 +19,18 @@ public class GuiWDLPermissions extends GuiScreen {
 	/**
 	 * Margins for the top and the bottom of the list.
 	 */
-	private static final int TOP_MARGIN = 23, BOTTOM_MARGIN = 32;
+	private static final int TOP_MARGIN = 39, BOTTOM_MARGIN = 32;
 	
 	/**
 	 * Whether the UI is in the request mode.  True: requesting new
 	 * permissions; false, displaying current permissions.
 	 */
 	private boolean requestMode;
+	
+	/**
+	 * Request mode button.
+	 */
+	private GuiButton requestButton;
 	
 	/**
 	 * List of permissions.
@@ -127,6 +133,11 @@ public class GuiWDLPermissions extends GuiScreen {
 	public void initGui() {
 		this.buttonList.add(new GuiButton(100, width / 2 - 100, height - 29,
 				"Done"));
+		
+		requestButton = new GuiButton(0, (this.width / 2) - 155, 18, 150,
+				20, "Switch to request mode");
+		this.buttonList.add(requestButton);
+		
 		this.list = new PermissionsList();
 	}
 	
@@ -159,6 +170,11 @@ public class GuiWDLPermissions extends GuiScreen {
 	
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
+		if (button.id == 0) {
+			requestMode ^= true;
+			requestButton.displayString = requestMode ? "Cancel request"
+					: "Switch to request mode";
+		}
 		if (button.id == 100) {
 			this.mc.displayGuiScreen(this.parent);
 		}
