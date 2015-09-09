@@ -43,15 +43,41 @@ public class GuiWDLPermissions extends GuiScreen {
 					fontRendererObj.FONT_HEIGHT * 2 + 2);
 		}
 		
-		private class TextEntry implements IGuiListEntry {
+		/**
+		 * IGuiListEntry that displays or requests a permission.
+		 */
+		private class PermissionEntry implements IGuiListEntry {
 			private final String line1;
 			private final String line2;
 			
+			private final PermissionEntry parent;
+			
 			private final GuiButton button;
 			
-			public TextEntry(String line1, String line2) {
+			/**
+			 * Creates a PermissionEntry with no parent.
+			 * 
+			 * @param line1 Main line of description (title)
+			 * @param line2 Detail of permission
+			 */
+			public PermissionEntry(String line1, String line2) {
+				this(line1, line2, null);
+			}
+			
+			/**
+			 * Creates a PermissionEntry.
+			 * 
+			 * @param line1 Main line of description (title)
+			 * @param line2 Detail of permission
+			 * @param parent A permission that is required for this permission.
+			 * May be null.
+			 */
+			public PermissionEntry(String line1, String line2, 
+					PermissionEntry parent) {
 				this.line1 = line1;
 				this.line2 = "§7" + line2;
+				
+				this.parent = parent;
 				
 				this.button = new GuiButton(0, 0, 0, 70, 20, "Request");
 				button.visible = requestMode;
@@ -97,22 +123,32 @@ public class GuiWDLPermissions extends GuiScreen {
 		
 		private List<IGuiListEntry> entries = new ArrayList<IGuiListEntry>() {{
 			if (WDLPluginChannels.hasPermissions()) {
-				add(new TextEntry("Can download: " + 
-						WDLPluginChannels.canDownloadInGeneral(), 
-						"Controls whether you are able to download"));
+				PermissionEntry canDownloadInGeneral = new PermissionEntry(
+						"Can download: "
+								+ WDLPluginChannels.canDownloadInGeneral(),
+						"Controls whether you are able to download");
 				//TODO canCacheChunks & saveradius
-				add(new TextEntry("Can save entities: " + 
-						WDLPluginChannels.canSaveEntities(),
-						"Controls whether you can save entities"));
-				add(new TextEntry("Can save tile entities: " + 
-						WDLPluginChannels.canSaveTileEntities(),
-						"Controls whether you can save tile entities"));
-				add(new TextEntry("Can save containers: " + 
-						WDLPluginChannels.canSaveContainers(),
-						"Controls whether you can save containers"));
-				add(new TextEntry("Can use functions unknown to the server: " + 
-						WDLPluginChannels.canUseFunctionsUnknownToServer(),
-						"Controls whether you can use newer functions of WDL."));
+				PermissionEntry canSaveEntities = new PermissionEntry(
+						"Can save entities: "
+								+ WDLPluginChannels.canSaveEntities(),
+						"Controls whether you can save entities",
+						canDownloadInGeneral);
+				PermissionEntry canSaveTileEntities = new PermissionEntry(
+						"Can save tile entities: "
+								+ WDLPluginChannels.canSaveTileEntities(),
+						"Controls whether you can save tile entities",
+						canDownloadInGeneral);
+				PermissionEntry canSaveContainers = new PermissionEntry(
+						"Can save containers: "
+								+ WDLPluginChannels.canSaveContainers(),
+						"Controls whether you can save containers",
+						canSaveTileEntities);
+				PermissionEntry canDoUnknownThings = new PermissionEntry(
+						"Can use functions unknown to the server: "
+								+ WDLPluginChannels
+										.canUseFunctionsUnknownToServer(),
+						"Controls whether you can use newer functions of WDL.",
+						canDownloadInGeneral);
 				//TODO: Entity ranges.
 			}
 		}};
