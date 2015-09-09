@@ -47,9 +47,14 @@ public class GuiWDLPermissions extends GuiScreen {
 			private final String line1;
 			private final String line2;
 			
+			private final GuiButton button;
+			
 			public TextEntry(String line1, String line2) {
 				this.line1 = line1;
 				this.line2 = "§7" + line2;
+				
+				this.button = new GuiButton(0, 0, 0, 70, 20, "Request");
+				button.visible = requestMode;
 			}
 			
 			@Override
@@ -58,17 +63,29 @@ public class GuiWDLPermissions extends GuiScreen {
 				fontRendererObj.drawString(line1, x, y + 1, 0xFFFFFF);
 				fontRendererObj.drawString(line2, x, y + 2
 						+ fontRendererObj.FONT_HEIGHT, 0xFFFFFF);
+
+				button.xPosition = GuiWDLPermissions.this.width - 80;
+				button.yPosition = y;
+				button.visible = requestMode;
+				
+				button.drawButton(mc, mouseX, mouseY);
 			}
 
 			@Override
 			public boolean mousePressed(int slotIndex, int x, int y,
 					int mouseEvent, int relativeX, int relativeY) {
+				if (button.mousePressed(mc, x, y)) {
+					button.playPressSound(mc.getSoundHandler());
+					//TODO
+					return true;
+				}
 				return false;
 			}
 
 			@Override
 			public void mouseReleased(int slotIndex, int x, int y,
 					int mouseEvent, int relativeX, int relativeY) {
+				button.mouseReleased(x, y);
 			}
 
 			@Override
@@ -134,8 +151,8 @@ public class GuiWDLPermissions extends GuiScreen {
 		this.buttonList.add(new GuiButton(100, width / 2 - 100, height - 29,
 				"Done"));
 		
-		requestButton = new GuiButton(0, (this.width / 2) - 155, 18, 150,
-				20, "Switch to request mode");
+		requestButton = new GuiButton(0, (this.width / 2) - 155, 18, 150, 20,
+				requestMode ? "Cancel request" : "Switch to request mode");
 		this.buttonList.add(requestButton);
 		
 		this.list = new PermissionsList();
