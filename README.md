@@ -1,6 +1,8 @@
-#WorldDownloader 1.8b for Minecraft 1.8 using MCP 9.10
+#WorldDownloader 1.8c-fix2 for Minecraft 1.8 using MCP 9.10
 
 A minecraft mod that downloads a copy of a world on a multiplayer server for personal singleplayer use.  This is a fork of [@dslake's original version](https://github.com/dslake/WorldDownloader), updated to 1.8.
+
+The 1.8c-fix1 branch contains side builds that fix bugs while the next full release is in development.
 
 MCP is used for decompilation and recompilation.  Download it from [here](http://www.modcoderpack.com/website/releases).
 
@@ -8,5 +10,5 @@ You can also try [@uyjulian's liteloader version](https://github.com/uyjulian/Li
 
 ##Resources 
 
- * [Minecraft Forums Thread](http://www.minecraftforum.net/topic/1444862-)
+ * [Minecraft Forums Thread](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465-worlddownloader-create-backups-of-your-builds-on)
  * [Issue tracker](https://github.com/Pokechu22/WorldDownloader/issues)
