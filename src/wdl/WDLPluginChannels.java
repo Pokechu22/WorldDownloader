@@ -2,6 +2,7 @@ package wdl;
 
 import io.netty.buffer.Unpooled;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -246,8 +247,19 @@ public class WDLPluginChannels {
 		minecraft.getNetHandler().addToSendQueue(registerPacket);
 
 		// Send the init message.
-		C17PacketCustomPayload initPacket = new C17PacketCustomPayload(
-				"WDL|INIT", new PacketBuffer(Unpooled.EMPTY_BUFFER));
+		C17PacketCustomPayload initPacket;
+		try {
+			initPacket = new C17PacketCustomPayload("WDL|INIT",
+					new PacketBuffer(Unpooled.copiedBuffer(WDL.VERSION
+							.getBytes("UTF-8"))));
+		} catch (UnsupportedEncodingException e) {
+			WDL.chatError("Your computer doesn't support the UTF-8 charset."
+					+ "You should feel bad.  " + (e.toString()));
+			e.printStackTrace();
+
+			initPacket = new C17PacketCustomPayload("WDL|INIT",
+					new PacketBuffer(Unpooled.buffer()));
+		}
 		minecraft.getNetHandler().addToSendQueue(initPacket);
 	}
 	
