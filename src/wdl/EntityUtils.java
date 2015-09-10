@@ -406,8 +406,7 @@ public class EntityUtils {
 	 * whether to use spigot track distances based off of the server brand.
 	 */
 	public static int getMostLikelyEntityTrackDistance(String entity) {
-		// getClientBrand() returns the server's brand.  Blame MCP.
-		if (WDL.thePlayer.getClientBrand().toLowerCase().contains("spigot")) {
+		if (WDL.isSpigot()) {
 			return getSpigotEntityRange(entity);
 		} else {
 			return getVanillaEntityRange(entity);

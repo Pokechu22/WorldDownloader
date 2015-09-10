@@ -349,12 +349,9 @@ public class WDL {
 			chatDebug(WDLDebugMessageCause.ON_WORLD_LOAD,
 					"onWorldLoad: different server!");
 			
-			// It may look a bit silly, but getClientBrand() returns the server
-			// brand, not the client one.  Blame MCP.
 			chatDebug(WDLDebugMessageCause.ON_WORLD_LOAD,
 					"Server brand=" + thePlayer.getClientBrand() +
-					".  Using " + (thePlayer.getClientBrand().toLowerCase()
-							.contains("spigot") ? "Spigot" : "Vanilla") +
+					".  Using " + (isSpigot() ? "Spigot" : "Vanilla") +
 							" track distances.");
 			
 			if (baseProps.getProperty("AutoStart").equals("true")) {
@@ -367,12 +364,9 @@ public class WDL {
 			chatDebug(WDLDebugMessageCause.ON_WORLD_LOAD,
 					"onWorldLoad: same server!");
 
-			// It may look a bit silly, but getClientBrand() returns the server
-			// brand, not the client one.  Blame MCP.
 			chatDebug(WDLDebugMessageCause.ON_WORLD_LOAD,
 					"Server brand=" + thePlayer.getClientBrand() +
-					".  Using " + (thePlayer.getClientBrand().toLowerCase()
-							.contains("spigot") ? "Spigot" : "Vanilla") +
+					".  Using " + (isSpigot() ? "Spigot" : "Vanilla") +
 							" track distances.");
 			
 			if (startOnChange) {
@@ -1364,5 +1358,15 @@ public class WDL {
 	 */
 	public static double convertServerPos(int serverPos) {
 		return serverPos / 32.0;
+	}
+	
+	/**
+	 * Is the current server spigot?
+	 * @return
+	 */
+	public static boolean isSpigot() {
+		// getClientBrand() returns the server's brand.  Blame MCP.
+		return thePlayer.getClientBrand() != null
+				&& thePlayer.getClientBrand().toLowerCase().contains("spigot");
 	}
 }
