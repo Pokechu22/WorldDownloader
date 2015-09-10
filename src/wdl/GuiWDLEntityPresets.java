@@ -88,19 +88,19 @@ public class GuiWDLEntityPresets extends GuiScreen implements GuiYesNoCallback {
 		
 		if (button.id < 9) {
 			String upper;
-			String lower = "§c§n§lThis cannot be undone.§r";
+			String lower = "\u00A7c\u00A7n\u00A7lThis cannot be undone.\u00A7r";
 			if (button.id < 3) {
 				upper = "Are you sure you want to reset your entity ranges?";
 				
 				if (button.id == 0) {
-					lower = "§rSetting to vanilla Minecraft ranges -- " +
-							"§c§n§lThis cannot be undone.§r";
+					lower = "\u00A7rSetting to vanilla Minecraft ranges -- " +
+							"\u00A7c\u00A7n\u00A7lThis cannot be undone.\u00A7r";
 				} else if (button.id == 1) {
-					lower = "§rSetting to default spigot ranges -- " +
-							"§c§n§lThis cannot be undone.§r";
+					lower = "\u00A7rSetting to default spigot ranges -- " +
+							"\u00A7c\u00A7n\u00A7lThis cannot be undone.\u00A7r";
 				} else if (button.id == 2) {
-					lower = "§rSetting to server configured ranges -- " +
-							"§c§n§lThis cannot be undone.§r";
+					lower = "\u00A7rSetting to server configured ranges -- " +
+							"\u00A7c\u00A7n\u00A7lThis cannot be undone.\u00A7r";
 				}
 			} else {
 				if (button.id < 6) { 
@@ -132,7 +132,7 @@ public class GuiWDLEntityPresets extends GuiScreen implements GuiYesNoCallback {
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		drawBackground(0);
 		
-		this.drawCenteredString(this.fontRendererObj, "§n§lEntity presets",
+		this.drawCenteredString(this.fontRendererObj, "\u00A7n\u00A7lEntity presets",
 				this.width / 2, this.height / 4 - 40, 0xFFFFFF);
 		this.drawCenteredString(this.fontRendererObj, "Ranges", this.width / 2,
 				this.height / 4 - fontRendererObj.FONT_HEIGHT - 2, 0xFFFFFF);
@@ -159,9 +159,9 @@ public class GuiWDLEntityPresets extends GuiScreen implements GuiYesNoCallback {
 					"server has the WDLCompanion plugin installed.\n\n";
 			
 			if (serverButton.enabled) {
-				infoText += "§aAs it is installed, this may be used.";
+				infoText += "\u00A7aAs it is installed, this may be used.";
 			} else {
-				infoText += "§cAs it is not installed, this cannot be used.";
+				infoText += "\u00A7cAs it is not installed, this cannot be used.";
 			}
 		} else if (allOtherButton.isMouseOver()) {
 			infoText = "Enable all `other' entities.\n\n(Other means " +

@@ -257,7 +257,7 @@ public class GuiWDLEntities extends GuiScreen {
 				range = EntityUtils.getEntityTrackDistance(entity);
 				
 				this.onOffButton = new GuiButton(0, 0, 0, 75, 18, 
-						enabled ? "§aIncluded" : "§cIgnored");
+						enabled ? "\u00A7aIncluded" : "\u00A7cIgnored");
 				
 				this.rangeSlider = new GuiSlider(1, 0, 0, 150, 18,
 						"Track Distance", range, 256);
@@ -277,7 +277,7 @@ public class GuiWDLEntities extends GuiScreen {
 				this.onOffButton.xPosition = x - 45;
 				this.onOffButton.yPosition = y;
 				this.onOffButton.displayString = 
-						enabled ? "§aIncluded" : "§cIgnored";
+						enabled ? "\u00A7aIncluded" : "\u00A7cIgnored";
 				
 				this.rangeSlider.xPosition = x + 50;
 				this.rangeSlider.yPosition = y;
@@ -303,7 +303,7 @@ public class GuiWDLEntities extends GuiScreen {
 					onOffButton.playPressSound(mc.getSoundHandler());
 					
 					this.onOffButton.displayString = 
-							enabled ? "§aIncluded" : "§cIgnored";
+							enabled ? "\u00A7aIncluded" : "\u00A7cIgnored";
 					
 					WDL.worldProps.setProperty("Entity." + entity + 
 							".Enabled", Boolean.toString(enabled));
