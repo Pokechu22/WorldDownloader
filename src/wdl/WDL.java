@@ -331,6 +331,9 @@ public class WDL {
 		NetworkManager newNM = thePlayer.sendQueue.getNetworkManager();
 
 		if (networkManager != newNM) {
+			networkManager = newNM;
+			loadBaseProps();
+			
 			// Load the debug settings.
 			WDLDebugMessageCause.resetEnabledToDefaults();
 			WDLDebugMessageCause.globalDebugEnabled = baseProps.getProperty(
@@ -353,9 +356,6 @@ public class WDL {
 					".  Using " + (thePlayer.getClientBrand().toLowerCase()
 							.contains("spigot") ? "Spigot" : "Vanilla") +
 							" track distances.");
-			
-			networkManager = newNM;
-			loadBaseProps();
 			
 			if (baseProps.getProperty("AutoStart").equals("true")) {
 				start();
@@ -1235,23 +1235,23 @@ public class WDL {
 	/** Adds a chat message with a World Downloader prefix */
 	public static void chatMsg(String msg) {
 		minecraft.ingameGUI.getChatGUI().printChatMessage(
-			new ChatComponentText("§c[WorldDL]§6 " + msg));
+			new ChatComponentText("ï¿½c[WorldDL]ï¿½6 " + msg));
 	}
 
 	/** Adds a chat message with a World Downloader prefix */
 	public static void chatDebug(WDLDebugMessageCause type, String msg) {
 		if (type != null && type.isEnabled()) {
 			minecraft.ingameGUI.getChatGUI().printChatMessage(
-				new ChatComponentText("§2[WorldDL]§6 " + msg));
+				new ChatComponentText("ï¿½2[WorldDL]ï¿½6 " + msg));
 		} else {
-			logger.info("§2[WorldDL]§6 " + msg);
+			logger.info("ï¿½2[WorldDL]ï¿½6 " + msg);
 		}
 	}
 
 	/** Adds a chat message with a World Downloader prefix */
 	public static void chatError(String msg) {
 		minecraft.ingameGUI.getChatGUI().printChatMessage(
-			new ChatComponentText("§2[WorldDL]§4 " + msg));
+			new ChatComponentText("ï¿½2[WorldDL]ï¿½4 " + msg));
 	}
 
 	private static int getSaveVersion(AnvilSaveConverter asc) {
@@ -1316,7 +1316,7 @@ public class WDL {
 		wdlDownload.displayString = (WDLPluginChannels.canDownloadInGeneral() ? (WDL.downloading ? (WDL.saving ? "Still saving..."
 				: "Stop download")
 				: "Download this world")
-				: "§cDownload blocked by server");
+				: "ï¿½cDownload blocked by server");
 		wdlDownload.enabled = (WDLPluginChannels.canDownloadInGeneral()
 				&& (!WDL.downloading || (WDL.downloading && !WDL.saving)));
 		wdlOptions.enabled = (WDLPluginChannels.canDownloadInGeneral()
