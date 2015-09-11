@@ -121,6 +121,54 @@ public class GuiWDLPermissions extends GuiScreen {
 			}
 		}
 		
+		/**
+		 * Permission entry that is only visible when requesting permissions.
+		 */
+		private class RequestOnlyPermissionEntry extends PermissionEntry {
+			/**
+			 * Creates a RequestOnlyPermissionEntry with no parent.
+			 * 
+			 * @param line1 Main line of description (title)
+			 * @param line2 Detail of permission
+			 */
+			public RequestOnlyPermissionEntry(String line1, String line2) {
+				super(line1, line2);
+			}
+			
+			/**
+			 * Creates a RequestOnlyPermissionEntry.
+			 * 
+			 * @param line1 Main line of description (title)
+			 * @param line2 Detail of permission
+			 * @param parent A permission that is required for this permission.
+			 * May be null.
+			 */
+			public RequestOnlyPermissionEntry(String line1, String line2, 
+					PermissionEntry parent) {
+				super(line1, line2, parent);
+			}
+			
+			@Override
+			public void drawEntry(int slotIndex, int x, int y, int listWidth,
+					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
+				if (requestMode) {
+					super.drawEntry(slotIndex, x, y, listWidth, slotHeight,
+							mouseX, mouseY, isSelected);
+				}
+			}
+			
+			@Override
+			public boolean mousePressed(int slotIndex, int x, int y,
+					int mouseEvent, int relativeX, int relativeY) {
+				if (requestMode) {
+					return super.mousePressed(slotIndex, x, y, mouseEvent,
+							relativeX, relativeY);
+				} else {
+					return false;
+				}
+			}
+		}
+		
 		private List<IGuiListEntry> entries = new ArrayList<IGuiListEntry>() {{
 			if (WDLPluginChannels.hasPermissions()) {
 				PermissionEntry canDownloadInGeneral = new PermissionEntry(
@@ -150,6 +198,10 @@ public class GuiWDLPermissions extends GuiScreen {
 						"Controls whether you can use newer functions of WDL.",
 						canDownloadInGeneral);
 				//TODO: Entity ranges.
+				PermissionEntry allWorlds = new RequestOnlyPermissionEntry(
+						"Single world: TODO",
+						"Controls whether the options effect all worlds or " +
+						"just the current one");
 			}
 		}};
 		
