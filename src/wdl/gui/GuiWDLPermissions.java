@@ -202,6 +202,13 @@ public class GuiWDLPermissions extends GuiScreen {
 						"Single world: TODO",
 						"Controls whether the options effect all worlds or " +
 						"just the current one");
+				
+				add(canDownloadInGeneral);
+				add(canSaveEntities);
+				add(canSaveTileEntities);
+				add(canSaveContainers);
+				add(canDoUnknownThings);
+				add(allWorlds);
 			}
 		}};
 		
