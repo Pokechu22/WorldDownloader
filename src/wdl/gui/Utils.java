@@ -7,6 +7,7 @@ import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.GuiUtilRenderComponents;
@@ -14,6 +15,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.MathHelper;
 
 class Utils {
 	private static final Minecraft mc = Minecraft.getMinecraft();
@@ -199,5 +201,127 @@ class Utils {
 
 		return scaledX >= 0 && scaledX < textBox.getWidth() && scaledY >= 0
 				&& scaledY < height;
+	}
+}
+
+/**
+ * A slider that doesn't require a bunch of interfaces to work.
+ * 
+ * Based off of {@link net.minecraft.client.gui.GuiOptionSlider}.
+ */
+class GuiSlider extends GuiButton {
+	private float sliderValue;
+	private boolean dragging;
+	/**
+	 * Text put before to the progress.
+	 */
+	private final String prepend;
+	/**
+	 * Maximum value for the slider.
+	 */
+	private final int max;
+
+	public GuiSlider(int id, int x, int y, int width, int height, 
+			String text, int value, int max) {
+		super(id, x, y, width, height, text);
+		
+		this.prepend = text;
+		this.max = max;
+		
+		setValue(value);
+	}
+
+	/**
+	 * Returns 0 if the button is disabled, 1 if the mouse is NOT hovering over
+	 * this button and 2 if it IS hovering over this button.
+	 */
+	@Override
+	protected int getHoverState(boolean mouseOver) {
+		return 0;
+	}
+
+	/**
+	 * Fired when the mouse button is dragged. Equivalent of
+	 * MouseListener.mouseDragged(MouseEvent e).
+	 */
+	@Override
+	protected void mouseDragged(Minecraft mc, int mouseX, int mouseY) {
+		if (this.visible) {
+			if (this.dragging) {
+				this.sliderValue = (float)(mouseX - (this.xPosition + 4))
+						/ (float)(this.width - 8);
+				this.sliderValue = MathHelper.clamp_float(this.sliderValue, 0.0F,
+						1.0F);
+				this.dragging = true;
+				
+				this.displayString = prepend + ": " + getValue();
+			}
+
+			mc.getTextureManager().bindTexture(buttonTextures);
+			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+			
+			if (this.enabled) {
+				this.drawTexturedModalRect(this.xPosition
+						+ (int) (this.sliderValue * (this.width - 8)),
+						this.yPosition, 0, 66, 4, 20);
+				this.drawTexturedModalRect(this.xPosition
+						+ (int) (this.sliderValue * (this.width - 8))
+						+ 4, this.yPosition, 196, 66, 4, 20);
+			} else {
+				this.drawTexturedModalRect(this.xPosition
+						+ (int) (this.sliderValue * (this.width - 8)),
+						this.yPosition, 0, 46, 4, 20);
+				this.drawTexturedModalRect(this.xPosition
+						+ (int) (this.sliderValue * (this.width - 8))
+						+ 4, this.yPosition, 196, 46, 4, 20);
+			}
+		}
+	}
+
+	/**
+	 * Returns true if the mouse has been pressed on this control. Equivalent of
+	 * MouseListener.mousePressed(MouseEvent e).
+	 */
+	@Override
+	public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
+		if (super.mousePressed(mc, mouseX, mouseY)) {
+			this.sliderValue = (float)(mouseX - (this.xPosition + 4))
+					/ (float)(this.width - 8);
+			this.sliderValue = MathHelper.clamp_float(this.sliderValue, 0.0F,
+					1.0F);
+			this.displayString = prepend + ": " + getValue();
+			
+			this.dragging = true;
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Gets the current value of the slider.
+	 * @return
+	 */
+	public int getValue() {
+		return (int)(sliderValue * max);
+	}
+	
+	/**
+	 * Gets the current value of the slider.
+	 * @return
+	 */
+	public void setValue(int value) {
+		this.sliderValue = value / (float)max;
+		
+		this.displayString = prepend + ": " + getValue();
+	}
+	
+	/**
+	 * Fired when the mouse button is released. Equivalent of
+	 * MouseListener.mouseReleased(MouseEvent e).
+	 */
+	@Override
+	public void mouseReleased(int mouseX, int mouseY) {
+		this.dragging = false;
 	}
 }
