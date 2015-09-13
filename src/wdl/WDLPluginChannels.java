@@ -213,6 +213,18 @@ public class WDLPluginChannels {
 	}
 	
 	/**
+	 * Gets the save radius.
+	 * 
+	 * Note that using {@link #canSaveChunk(Chunk)} is generally better
+	 * as it handles most of the radius logic.
+	 * 
+	 * @return {@link #saveRadius}.
+	 */
+	public static int getSaveRadius() {
+		return saveRadius;
+	}
+	
+	/**
 	 * Checks if the server-set entity range is configured.
 	 */
 	public static boolean hasServerEntityRange() {

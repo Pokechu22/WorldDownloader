@@ -169,6 +169,74 @@ public class GuiWDLPermissions extends GuiScreen {
 			}
 		}
 		
+		/**
+		 * IGuiListEntry for the download radius option.
+		 */
+		private class DownloadRadiusEntry implements IGuiListEntry {
+			private final String line1;
+			private final String line2;
+			
+			private final PermissionEntry parent;
+			
+			private final GuiButton slider;
+			
+			/**
+			 * Creates a DownloadRadiusEntry.
+			 * 
+			 * @param line1 Main line of description (title)
+			 * @param line2 Detail of permission
+			 * @param parent A permission that is required for this permission.
+			 * May be null.
+			 */
+			public DownloadRadiusEntry(String line1, String line2, 
+					PermissionEntry parent) {
+				this.line1 = line1;
+				this.line2 = "§7" + line2;
+				
+				this.parent = parent;
+				
+				this.slider = new GuiSlider(0, 0, 0, 70, 20, "Save radius", 0, 32);
+				slider.visible = requestMode;
+			}
+			
+			@Override
+			public void drawEntry(int slotIndex, int x, int y, int listWidth,
+					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
+				fontRendererObj.drawString(line1, x, y + 1, 0xFFFFFF);
+				fontRendererObj.drawString(line2, x, y + 2
+						+ fontRendererObj.FONT_HEIGHT, 0xFFFFFF);
+
+				slider.xPosition = GuiWDLPermissions.this.width - 80;
+				slider.yPosition = y;
+				slider.visible = requestMode;
+				
+				slider.drawButton(mc, mouseX, mouseY);
+			}
+
+			@Override
+			public boolean mousePressed(int slotIndex, int x, int y,
+					int mouseEvent, int relativeX, int relativeY) {
+				if (slider.mousePressed(mc, x, y)) {
+					slider.playPressSound(mc.getSoundHandler());
+				}
+				return false;
+			}
+
+			@Override
+			public void mouseReleased(int slotIndex, int x, int y,
+					int mouseEvent, int relativeX, int relativeY) {
+				slider.mouseReleased(x, y);
+				
+				//TODO update value.
+			}
+
+			@Override
+			public void setSelected(int slotIndex, int p_178011_2_,
+					int p_178011_3_) {
+				
+			}
+		}
+		
 		private List<IGuiListEntry> entries = new ArrayList<IGuiListEntry>() {{
 			if (WDLPluginChannels.hasPermissions()) {
 				PermissionEntry canDownloadInGeneral = new PermissionEntry(
@@ -176,6 +244,11 @@ public class GuiWDLPermissions extends GuiScreen {
 								+ WDLPluginChannels.canDownloadInGeneral(),
 						"Controls whether you are able to download");
 				//TODO canCacheChunks & saveradius
+				DownloadRadiusEntry saveRadius = new DownloadRadiusEntry(
+						"Download radius: "
+								+ WDLPluginChannels.getSaveRadius(),
+						"Radius for downloading chunks (only when caching disabled)",
+						canDownloadInGeneral);
 				PermissionEntry canSaveEntities = new PermissionEntry(
 						"Can save entities: "
 								+ WDLPluginChannels.canSaveEntities(),
@@ -204,6 +277,7 @@ public class GuiWDLPermissions extends GuiScreen {
 						"just the current one");
 				
 				add(canDownloadInGeneral);
+				add(saveRadius);
 				add(canSaveEntities);
 				add(canSaveTileEntities);
 				add(canSaveContainers);
