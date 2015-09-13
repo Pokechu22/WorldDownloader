@@ -225,6 +225,18 @@ public class WDLPluginChannels {
 	}
 	
 	/**
+	 * Gets whether chunks can be cached.
+	 * 
+	 * Note that using {@link #canSaveChunk(Chunk)} is generally better
+	 * as it handles most of the radius logic.
+	 * 
+	 * @return {@link #canCacheChunks}.
+	 */
+	public static boolean canCacheChunks() {
+		return canCacheChunks;
+	}
+	
+	/**
 	 * Checks if the server-set entity range is configured.
 	 */
 	public static boolean hasServerEntityRange() {

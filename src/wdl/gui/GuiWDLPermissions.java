@@ -243,12 +243,16 @@ public class GuiWDLPermissions extends GuiScreen {
 						"Can download: "
 								+ WDLPluginChannels.canDownloadInGeneral(),
 						"Controls whether you are able to download");
-				//TODO canCacheChunks & saveradius
+				PermissionEntry canCacheChunks = new PermissionEntry(
+						"Can cache chunks: "
+								+ WDLPluginChannels.canCacheChunks(),
+						"Controls whether chunks are saved as you move about "
+								+ "the world");
 				DownloadRadiusEntry saveRadius = new DownloadRadiusEntry(
 						"Download radius: "
 								+ WDLPluginChannels.getSaveRadius(),
 						"Radius for downloading chunks (only when caching disabled)",
-						canDownloadInGeneral);
+						canCacheChunks);
 				PermissionEntry canSaveEntities = new PermissionEntry(
 						"Can save entities: "
 								+ WDLPluginChannels.canSaveEntities(),
@@ -277,6 +281,7 @@ public class GuiWDLPermissions extends GuiScreen {
 						"just the current one");
 				
 				add(canDownloadInGeneral);
+				add(canCacheChunks);
 				add(saveRadius);
 				add(canSaveEntities);
 				add(canSaveTileEntities);
