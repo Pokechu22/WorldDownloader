@@ -55,6 +55,11 @@ public class GuiWDLPermissions extends GuiScreen {
 			private final GuiButton button;
 			
 			/**
+			 * How far to indent the text.
+			 */
+			private final int indent;
+			
+			/**
 			 * Creates a PermissionEntry with no parent.
 			 * 
 			 * @param line1 Main line of description (title)
@@ -81,13 +86,19 @@ public class GuiWDLPermissions extends GuiScreen {
 				
 				this.button = new GuiButton(0, 0, 0, 70, 20, "Request");
 				button.visible = requestMode;
+				
+				if (parent != null) {
+					this.indent = parent.indent + 5;
+				} else {
+					this.indent = 0;
+				}
 			}
 			
 			@Override
 			public void drawEntry(int slotIndex, int x, int y, int listWidth,
 					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
-				fontRendererObj.drawString(line1, x, y + 1, 0xFFFFFF);
-				fontRendererObj.drawString(line2, x, y + 2
+				fontRendererObj.drawString(line1, x + indent, y + 1, 0xFFFFFF);
+				fontRendererObj.drawString(line2, x + indent, y + 2
 						+ fontRendererObj.FONT_HEIGHT, 0xFFFFFF);
 
 				button.xPosition = GuiWDLPermissions.this.width - 80;
@@ -119,6 +130,8 @@ public class GuiWDLPermissions extends GuiScreen {
 					int p_178011_3_) {
 				
 			}
+			
+			
 		}
 		
 		/**
@@ -180,6 +193,8 @@ public class GuiWDLPermissions extends GuiScreen {
 			
 			private final GuiButton slider;
 			
+			private final int indent;
+			
 			/**
 			 * Creates a DownloadRadiusEntry.
 			 * 
@@ -197,13 +212,19 @@ public class GuiWDLPermissions extends GuiScreen {
 				
 				this.slider = new GuiSlider(0, 0, 0, 70, 20, "Save radius", 0, 32);
 				slider.visible = requestMode;
+				
+				if (parent != null) {
+					this.indent = parent.indent + 5;
+				} else {
+					this.indent = 0;
+				}
 			}
 			
 			@Override
 			public void drawEntry(int slotIndex, int x, int y, int listWidth,
 					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
-				fontRendererObj.drawString(line1, x, y + 1, 0xFFFFFF);
-				fontRendererObj.drawString(line2, x, y + 2
+				fontRendererObj.drawString(line1, x + indent, y + 1, 0xFFFFFF);
+				fontRendererObj.drawString(line2, x + indent, y + 2
 						+ fontRendererObj.FONT_HEIGHT, 0xFFFFFF);
 
 				slider.xPosition = GuiWDLPermissions.this.width - 80;
