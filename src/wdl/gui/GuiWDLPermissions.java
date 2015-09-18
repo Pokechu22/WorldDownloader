@@ -59,6 +59,8 @@ public class GuiWDLPermissions extends GuiScreen {
 			 */
 			private final int indent;
 			
+			public boolean checked;
+			
 			/**
 			 * Creates a PermissionEntry with no parent.
 			 * 
@@ -84,7 +86,7 @@ public class GuiWDLPermissions extends GuiScreen {
 				
 				this.parent = parent;
 				
-				this.button = new GuiButton(0, 0, 0, 70, 20, "Request");
+				this.button = new GuiButton(0, 0, 0, 120, 20, "Request");
 				button.visible = requestMode;
 				
 				if (parent != null) {
@@ -101,9 +103,20 @@ public class GuiWDLPermissions extends GuiScreen {
 				fontRendererObj.drawString(line2, x + indent, y + 2
 						+ fontRendererObj.FONT_HEIGHT, 0xFFFFFF);
 
-				button.xPosition = GuiWDLPermissions.this.width - 80;
+				button.xPosition = GuiWDLPermissions.this.width - 130;
 				button.yPosition = y;
 				button.visible = requestMode;
+				
+				if (!areRequirementsMet()) {
+					button.displayString = "Prerequisites not met";
+					button.enabled = false;
+				} else if (!checked) {
+					button.displayString = "Not requested";
+					button.enabled = true;
+				} else {
+					button.displayString = "Requested";
+					button.enabled = true;
+				}
 				
 				button.drawButton(mc, mouseX, mouseY);
 			}
@@ -113,7 +126,9 @@ public class GuiWDLPermissions extends GuiScreen {
 					int mouseEvent, int relativeX, int relativeY) {
 				if (button.mousePressed(mc, x, y)) {
 					button.playPressSound(mc.getSoundHandler());
-					//TODO
+					
+					checked ^= true;
+					
 					return true;
 				}
 				return false;
@@ -131,7 +146,13 @@ public class GuiWDLPermissions extends GuiScreen {
 				
 			}
 			
-			
+			/**
+			 * Are the requirements for this permission met?
+			 */
+			public boolean areRequirementsMet() {
+				return parent == null ||
+						parent.areRequirementsMet() && parent.checked;
+			}
 		}
 		
 		/**
@@ -184,6 +205,8 @@ public class GuiWDLPermissions extends GuiScreen {
 		
 		/**
 		 * IGuiListEntry for the download radius option.
+		 * 
+		 * TODO: Shared base class with PermissionEntry.
 		 */
 		private class DownloadRadiusEntry implements IGuiListEntry {
 			private final String line1;
@@ -210,7 +233,7 @@ public class GuiWDLPermissions extends GuiScreen {
 				
 				this.parent = parent;
 				
-				this.slider = new GuiSlider(0, 0, 0, 70, 20, "Save radius", 0, 32);
+				this.slider = new GuiSlider(0, 0, 0, 120, 20, "Save radius", 0, 32);
 				slider.visible = requestMode;
 				
 				if (parent != null) {
@@ -227,9 +250,17 @@ public class GuiWDLPermissions extends GuiScreen {
 				fontRendererObj.drawString(line2, x + indent, y + 2
 						+ fontRendererObj.FONT_HEIGHT, 0xFFFFFF);
 
-				slider.xPosition = GuiWDLPermissions.this.width - 80;
+				slider.xPosition = GuiWDLPermissions.this.width - 130;
 				slider.yPosition = y;
 				slider.visible = requestMode;
+				
+				if (!areRequirementsMet()) {
+					slider.displayString = "Prerequisites not met";
+					slider.enabled = false;
+				} else {
+					slider.displayString = "Requested range";
+					slider.enabled = true;
+				}
 				
 				slider.drawButton(mc, mouseX, mouseY);
 			}
@@ -255,6 +286,14 @@ public class GuiWDLPermissions extends GuiScreen {
 			public void setSelected(int slotIndex, int p_178011_2_,
 					int p_178011_3_) {
 				
+			}
+			
+			/**
+			 * Are the requirements for this permission met?
+			 */
+			public boolean areRequirementsMet() {
+				return parent != null ||
+						!parent.areRequirementsMet() || !parent.checked;
 			}
 		}
 		
