@@ -307,7 +307,8 @@ public class GuiWDLPermissions extends GuiScreen {
 						"Can cache chunks: "
 								+ WDLPluginChannels.canCacheChunks(),
 						"Controls whether chunks are saved as you move about "
-								+ "the world");
+								+ "the world", 
+						canDownloadInGeneral);
 				DownloadRadiusEntry saveRadius = new DownloadRadiusEntry(
 						"Download radius: "
 								+ WDLPluginChannels.getSaveRadius(),
