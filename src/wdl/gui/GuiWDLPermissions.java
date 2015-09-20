@@ -1,6 +1,9 @@
 package wdl.gui;
 
+import io.netty.buffer.Unpooled;
+
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +14,8 @@ import wdl.WorldBackup.WorldBackupType;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.play.client.C17PacketCustomPayload;
 
 /**
  * GUI that shows the current permissions for the user.
@@ -31,6 +36,10 @@ public class GuiWDLPermissions extends GuiScreen {
 	 * Request mode button.
 	 */
 	private GuiButton requestButton;
+	/**
+	 * Reload permissions button
+	 */
+	private GuiButton reloadButton;
 	
 	/**
 	 * List of permissions.
@@ -389,6 +398,9 @@ public class GuiWDLPermissions extends GuiScreen {
 		requestButton = new GuiButton(0, (this.width / 2) - 155, 18, 150, 20,
 				requestMode ? "Cancel request" : "Switch to request mode");
 		this.buttonList.add(requestButton);
+		reloadButton = new GuiButton(1, (this.width / 2) + 5, 18, 150, 20,
+				"Reload permissions");
+		this.buttonList.add(reloadButton);
 		
 		this.list = new PermissionsList();
 	}
@@ -426,6 +438,26 @@ public class GuiWDLPermissions extends GuiScreen {
 			requestMode ^= true;
 			requestButton.displayString = requestMode ? "Cancel request"
 					: "Switch to request mode";
+		}
+		if (button.id == 1) {
+			// Send the init packet.
+			C17PacketCustomPayload initPacket;
+			try {
+				initPacket = new C17PacketCustomPayload("WDL|INIT",
+						new PacketBuffer(Unpooled.copiedBuffer(WDL.VERSION
+								.getBytes("UTF-8"))));
+			} catch (UnsupportedEncodingException e) {
+				WDL.chatError("Your computer doesn't support the UTF-8 charset."
+						+ "You should feel bad.  " + (e.toString()));
+				e.printStackTrace();
+
+				initPacket = new C17PacketCustomPayload("WDL|INIT",
+						new PacketBuffer(Unpooled.buffer()));
+			}
+			WDL.minecraft.getNetHandler().addToSendQueue(initPacket);
+			
+			button.enabled = false;
+			button.displayString = "Refershing...";
 		}
 		if (button.id == 100) {
 			this.mc.displayGuiScreen(this.parent);
