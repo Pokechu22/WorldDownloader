@@ -15,6 +15,8 @@ import net.minecraft.world.chunk.Chunk;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import wdl.gui.GuiWDLPermissions;
+
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
@@ -33,6 +35,10 @@ import com.google.common.io.ByteStreams;
  */
 public class WDLPluginChannels {
 	private static Logger logger = LogManager.getLogger();
+	/**
+	 * Number of seconds to wait before opening the permissions GUI.
+	 */
+	private static final int GUI_OPEN_DELAY = 2000;
 	
 	/**
 	 * Packets that have been received.
@@ -86,6 +92,11 @@ public class WDLPluginChannels {
 	private static Map<String, Integer> entityRanges =
 			new HashMap<String, Integer>();
 	
+	/**
+	 * Thread used to delay opening a {@link GuiWDLPermissions}.
+	 */
+	private static Thread displayGuiThread;
+
 	/**
 	 * Checks whether players can use functions unknown to the server.
 	 */
@@ -363,6 +374,22 @@ public class WDLPluginChannels {
 						"Received unkown plugin channel message #" + 
 								section + ".");
 				logger.info(messageBuilder.toString());
+			}
+			
+			if (displayGuiThread == null) {
+				displayGuiThread = new Thread() {
+					@Override
+					public void run() {
+						try {
+							sleep(2000);
+						} catch (InterruptedException e) { }
+						
+						WDL.minecraft.displayGuiScreen(new GuiWDLPermissions());
+						
+						displayGuiThread = null;
+					}
+				};
+				displayGuiThread.start();
 			}
 		}
 	}

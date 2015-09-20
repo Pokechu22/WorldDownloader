@@ -386,8 +386,30 @@ public class GuiWDLPermissions extends GuiScreen {
 	
 	private PermissionsList list;
 	
+	/**
+	 * Creates a new GUI with the given parent.
+	 * 
+	 * @param parent
+	 */
 	public GuiWDLPermissions(GuiScreen parent) {
 		this.parent = parent;
+	}
+	
+	/**
+	 * Creates a new GUI.
+	 * 
+	 * Attempts to infer the parent based off of the currently open GUI.
+	 */
+	public GuiWDLPermissions() {
+		GuiScreen openGui = WDL.minecraft.currentScreen;
+		
+		if (openGui instanceof GuiWDLPermissions) {
+			this.parent = ((GuiWDLPermissions) openGui).parent;
+		} else {
+			//openGui may be null, but that's not an issue, as that
+			//would just close the GUI.
+			this.parent = openGui;
+		}
 	}
 	
 	@Override
