@@ -424,6 +424,9 @@ public class GuiWDLPermissions extends GuiScreen {
 				"Reload permissions");
 		this.buttonList.add(reloadButton);
 		
+		// Plugin not installed? No point in requesting.
+		this.requestButton.enabled = WDLPluginChannels.hasPermissions();
+		
 		this.list = new PermissionsList();
 	}
 	
