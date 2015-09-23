@@ -344,7 +344,13 @@ public class GuiWDLPermissions extends GuiScreen {
 										.canUseFunctionsUnknownToServer(),
 						"Controls whether you can use newer functions of WDL.",
 						canDownloadInGeneral);
-				//TODO: Entity ranges.
+				PermissionEntry sendEntityRanges = new PermissionEntry(
+						"Send entity ranges: "
+								+ WDLPluginChannels.hasServerEntityRange(),
+						"Required if the server runs spigot and edits the " +
+								"entity track distances.  Not all servers " +
+								"do, and if not this permission is useless.",
+						canDownloadInGeneral);
 				PermissionEntry allWorlds = new RequestOnlyPermissionEntry(
 						"Single world: TODO",
 						"Controls whether the options effect all worlds or " +
@@ -357,6 +363,7 @@ public class GuiWDLPermissions extends GuiScreen {
 				add(canSaveTileEntities);
 				add(canSaveContainers);
 				add(canDoUnknownThings);
+				add(sendEntityRanges);
 				add(allWorlds);
 			}
 		}};
