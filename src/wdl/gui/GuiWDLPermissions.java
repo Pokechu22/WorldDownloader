@@ -346,7 +346,9 @@ public class GuiWDLPermissions extends GuiScreen {
 						canDownloadInGeneral);
 				PermissionEntry sendEntityRanges = new PermissionEntry(
 						"Send entity ranges: "
-								+ WDLPluginChannels.hasServerEntityRange(),
+								+ WDLPluginChannels.hasServerEntityRange() + 
+								"(received " + WDLPluginChannels
+										.getEntityRanges().size() + ")",
 						"Required if the server runs spigot and edits the " +
 								"entity track distances.  Not all servers " +
 								"do, and if not this permission is useless.",

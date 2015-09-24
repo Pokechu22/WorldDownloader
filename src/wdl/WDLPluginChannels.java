@@ -254,6 +254,10 @@ public class WDLPluginChannels {
 		return receivedPackets.contains(2) && entityRanges.size() > 0;
 	}
 	
+	public static Map<String, Integer> getEntityRanges() {
+		return new HashMap<String, Integer>(entityRanges);
+	}
+	
 	/**
 	 * Gets whether permissions are available.
 	 */
