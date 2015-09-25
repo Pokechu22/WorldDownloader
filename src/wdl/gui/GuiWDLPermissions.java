@@ -306,58 +306,61 @@ public class GuiWDLPermissions extends GuiScreen {
 			}
 		}
 		
+		private PermissionEntry canDownloadInGeneral;
+		private PermissionEntry canCacheChunks;
+		private DownloadRadiusEntry saveRadius;
+		private PermissionEntry canSaveEntities;
+		private PermissionEntry canSaveTileEntities;
+		private PermissionEntry canSaveContainers;
+		private PermissionEntry canDoUnknownThings;
+		private PermissionEntry sendEntityRanges;
+		private PermissionEntry allWorlds;
+		
 		private List<IGuiListEntry> entries = new ArrayList<IGuiListEntry>() {{
 			if (WDLPluginChannels.hasPermissions()) {
-				PermissionEntry canDownloadInGeneral = new PermissionEntry(
-						"Can download: "
-								+ WDLPluginChannels.canDownloadInGeneral(),
+				canDownloadInGeneral = new PermissionEntry("Can download: "
+						+ WDLPluginChannels.canDownloadInGeneral(),
 						"Controls whether you are able to download");
-				PermissionEntry canCacheChunks = new PermissionEntry(
-						"Can cache chunks: "
-								+ WDLPluginChannels.canCacheChunks(),
+				canCacheChunks = new PermissionEntry("Can cache chunks: "
+						+ WDLPluginChannels.canCacheChunks(),
 						"Controls whether chunks are saved as you move about "
-								+ "the world", 
-						canDownloadInGeneral);
-				DownloadRadiusEntry saveRadius = new DownloadRadiusEntry(
-						"Download radius: "
-								+ WDLPluginChannels.getSaveRadius(),
+								+ "the world", canDownloadInGeneral);
+				saveRadius = new DownloadRadiusEntry(
+						"Download radius: " + WDLPluginChannels.getSaveRadius(),
 						"Radius for downloading chunks (only when caching disabled)",
 						canCacheChunks);
-				PermissionEntry canSaveEntities = new PermissionEntry(
-						"Can save entities: "
-								+ WDLPluginChannels.canSaveEntities(),
+				canSaveEntities = new PermissionEntry("Can save entities: "
+						+ WDLPluginChannels.canSaveEntities(),
 						"Controls whether you can save entities",
 						canDownloadInGeneral);
-				PermissionEntry canSaveTileEntities = new PermissionEntry(
+				canSaveTileEntities = new PermissionEntry(
 						"Can save tile entities: "
 								+ WDLPluginChannels.canSaveTileEntities(),
 						"Controls whether you can save tile entities",
 						canDownloadInGeneral);
-				PermissionEntry canSaveContainers = new PermissionEntry(
-						"Can save containers: "
-								+ WDLPluginChannels.canSaveContainers(),
+				canSaveContainers = new PermissionEntry("Can save containers: "
+						+ WDLPluginChannels.canSaveContainers(),
 						"Controls whether you can save containers",
 						canSaveTileEntities);
-				PermissionEntry canDoUnknownThings = new PermissionEntry(
+				canDoUnknownThings = new PermissionEntry(
 						"Can use functions unknown to the server: "
 								+ WDLPluginChannels
 										.canUseFunctionsUnknownToServer(),
 						"Controls whether you can use newer functions of WDL.",
 						canDownloadInGeneral);
-				PermissionEntry sendEntityRanges = new PermissionEntry(
-						"Send entity ranges: "
-								+ WDLPluginChannels.hasServerEntityRange() + 
-								"(received " + WDLPluginChannels
-										.getEntityRanges().size() + ")",
-						"Required if the server runs spigot and edits the " +
-								"entity track distances.  Not all servers " +
-								"do, and if not this permission is useless.",
+				sendEntityRanges = new PermissionEntry("Send entity ranges: "
+						+ WDLPluginChannels.hasServerEntityRange()
+						+ "(received "
+						+ WDLPluginChannels.getEntityRanges().size() + ")",
+						"Required if the server runs spigot and edits the "
+								+ "entity track distances.  Not all servers "
+								+ "do, and if not this permission is useless.",
 						canDownloadInGeneral);
-				PermissionEntry allWorlds = new RequestOnlyPermissionEntry(
+				allWorlds = new RequestOnlyPermissionEntry(
 						"Single world: TODO",
-						"Controls whether the options effect all worlds or " +
-						"just the current one");
-				
+						"Controls whether the options effect all worlds or "
+								+ "just the current one");
+
 				add(canDownloadInGeneral);
 				add(canCacheChunks);
 				add(saveRadius);
