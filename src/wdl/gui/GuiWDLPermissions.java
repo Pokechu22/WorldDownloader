@@ -13,6 +13,7 @@ import wdl.WDLPluginChannels;
 import wdl.WorldBackup.WorldBackupType;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
+import net.minecraft.client.gui.GuiListExtended.IGuiListEntry;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.client.C17PacketCustomPayload;
@@ -42,6 +43,284 @@ public class GuiWDLPermissions extends GuiScreen {
 	private GuiButton reloadButton;
 	
 	/**
+	 * IGuiListEntry that displays or requests a permission.
+	 */
+	private class PermissionEntry implements IGuiListEntry {
+		private final String line1;
+		private final String line2;
+		
+		private final PermissionEntry parent;
+		
+		private final GuiButton button;
+		
+		/**
+		 * How far to indent the text.
+		 */
+		private final int indent;
+		
+		public boolean checked;
+		
+		/**
+		 * Creates a PermissionEntry with no parent.
+		 * 
+		 * @param line1 Main line of description (title)
+		 * @param line2 Detail of permission
+		 */
+		public PermissionEntry(String line1, String line2) {
+			this(line1, line2, null);
+		}
+		
+		/**
+		 * Creates a PermissionEntry.
+		 * 
+		 * @param line1 Main line of description (title)
+		 * @param line2 Detail of permission
+		 * @param parent A permission that is required for this permission.
+		 * May be null.
+		 */
+		public PermissionEntry(String line1, String line2, 
+				PermissionEntry parent) {
+			this.line1 = line1;
+			this.line2 = "§7" + line2;
+			
+			this.parent = parent;
+			
+			this.button = new GuiButton(0, 0, 0, 120, 20, "Request");
+			button.visible = requestMode;
+			
+			if (parent != null) {
+				this.indent = parent.indent + 5;
+			} else {
+				this.indent = 0;
+			}
+		}
+		
+		@Override
+		public void drawEntry(int slotIndex, int x, int y, int listWidth,
+				int slotHeight, int mouseX, int mouseY, boolean isSelected) {
+			fontRendererObj.drawString(line1, x + indent, y + 1, 0xFFFFFF);
+			fontRendererObj.drawString(line2, x + indent, y + 2
+					+ fontRendererObj.FONT_HEIGHT, 0xFFFFFF);
+
+			button.xPosition = GuiWDLPermissions.this.width - 130;
+			button.yPosition = y;
+			button.visible = requestMode;
+			
+			if (!areRequirementsMet()) {
+				button.displayString = "Prerequisites not met";
+				button.enabled = false;
+			} else if (!checked) {
+				button.displayString = "Not requested";
+				button.enabled = true;
+			} else {
+				button.displayString = "Requested";
+				button.enabled = true;
+			}
+			
+			button.drawButton(mc, mouseX, mouseY);
+		}
+
+		@Override
+		public boolean mousePressed(int slotIndex, int x, int y,
+				int mouseEvent, int relativeX, int relativeY) {
+			if (button.mousePressed(mc, x, y)) {
+				button.playPressSound(mc.getSoundHandler());
+				
+				checked ^= true;
+				
+				return true;
+			}
+			return false;
+		}
+
+		@Override
+		public void mouseReleased(int slotIndex, int x, int y,
+				int mouseEvent, int relativeX, int relativeY) {
+			button.mouseReleased(x, y);
+		}
+
+		@Override
+		public void setSelected(int slotIndex, int p_178011_2_,
+				int p_178011_3_) {
+			
+		}
+		
+		/**
+		 * Are the requirements for this permission met?
+		 */
+		public boolean areRequirementsMet() {
+			return parent == null ||
+					parent.areRequirementsMet() && parent.checked;
+		}
+	}
+	
+	/**
+	 * Permission entry that is only visible when requesting permissions.
+	 */
+	private class RequestOnlyPermissionEntry extends PermissionEntry {
+		/**
+		 * Creates a RequestOnlyPermissionEntry with no parent.
+		 * 
+		 * @param line1 Main line of description (title)
+		 * @param line2 Detail of permission
+		 */
+		public RequestOnlyPermissionEntry(String line1, String line2) {
+			super(line1, line2);
+		}
+		
+		/**
+		 * Creates a RequestOnlyPermissionEntry.
+		 * 
+		 * @param line1 Main line of description (title)
+		 * @param line2 Detail of permission
+		 * @param parent A permission that is required for this permission.
+		 * May be null.
+		 */
+		public RequestOnlyPermissionEntry(String line1, String line2, 
+				PermissionEntry parent) {
+			super(line1, line2, parent);
+		}
+		
+		@Override
+		public void drawEntry(int slotIndex, int x, int y, int listWidth,
+				int slotHeight, int mouseX, int mouseY, boolean isSelected) {
+			if (requestMode) {
+				super.drawEntry(slotIndex, x, y, listWidth, slotHeight,
+						mouseX, mouseY, isSelected);
+			}
+		}
+		
+		@Override
+		public boolean mousePressed(int slotIndex, int x, int y,
+				int mouseEvent, int relativeX, int relativeY) {
+			if (requestMode) {
+				return super.mousePressed(slotIndex, x, y, mouseEvent,
+						relativeX, relativeY);
+			} else {
+				return false;
+			}
+		}
+	}
+	
+	/**
+	 * IGuiListEntry for the download radius option.
+	 * 
+	 * TODO: Shared base class with PermissionEntry.
+	 */
+	private class DownloadRadiusEntry implements IGuiListEntry {
+		private final String line1;
+		private final String line2;
+		
+		private final PermissionEntry parent;
+		
+		private final GuiButton slider;
+		
+		private final int indent;
+		
+		/**
+		 * Creates a DownloadRadiusEntry.
+		 * 
+		 * @param line1 Main line of description (title)
+		 * @param line2 Detail of permission
+		 * @param parent A permission that is required for this permission.
+		 * May be null.
+		 */
+		public DownloadRadiusEntry(String line1, String line2, 
+				PermissionEntry parent) {
+			this.line1 = line1;
+			this.line2 = "§7" + line2;
+			
+			this.parent = parent;
+			
+			this.slider = new GuiSlider(0, 0, 0, 120, 20, "Save radius", 0, 32);
+			slider.visible = requestMode;
+			
+			if (parent != null) {
+				this.indent = parent.indent + 5;
+			} else {
+				this.indent = 0;
+			}
+		}
+		
+		@Override
+		public void drawEntry(int slotIndex, int x, int y, int listWidth,
+				int slotHeight, int mouseX, int mouseY, boolean isSelected) {
+			fontRendererObj.drawString(line1, x + indent, y + 1, 0xFFFFFF);
+			fontRendererObj.drawString(line2, x + indent, y + 2
+					+ fontRendererObj.FONT_HEIGHT, 0xFFFFFF);
+
+			slider.xPosition = GuiWDLPermissions.this.width - 130;
+			slider.yPosition = y;
+			slider.visible = requestMode;
+			
+			if (!areRequirementsMet()) {
+				slider.displayString = "Prerequisites not met";
+				slider.enabled = false;
+			} else {
+				slider.displayString = "Requested range";
+				slider.enabled = true;
+			}
+			
+			slider.drawButton(mc, mouseX, mouseY);
+		}
+
+		@Override
+		public boolean mousePressed(int slotIndex, int x, int y,
+				int mouseEvent, int relativeX, int relativeY) {
+			if (slider.mousePressed(mc, x, y)) {
+				slider.playPressSound(mc.getSoundHandler());
+			}
+			return false;
+		}
+
+		@Override
+		public void mouseReleased(int slotIndex, int x, int y,
+				int mouseEvent, int relativeX, int relativeY) {
+			slider.mouseReleased(x, y);
+			
+			//TODO update value.
+		}
+
+		@Override
+		public void setSelected(int slotIndex, int p_178011_2_,
+				int p_178011_3_) {
+			
+		}
+		
+		/**
+		 * Are the requirements for this permission met?
+		 */
+		public boolean areRequirementsMet() {
+			return parent != null ||
+					!parent.areRequirementsMet() || !parent.checked;
+		}
+	}
+	
+	private PermissionEntry canDownloadInGeneral;
+	private PermissionEntry canCacheChunks;
+	private DownloadRadiusEntry saveRadius;
+	private PermissionEntry canSaveEntities;
+	private PermissionEntry canSaveTileEntities;
+	private PermissionEntry canSaveContainers;
+	private PermissionEntry canDoUnknownThings;
+	private PermissionEntry sendEntityRanges;
+	private PermissionEntry allWorlds;
+	
+	private List<IGuiListEntry> entries = new ArrayList<IGuiListEntry>() {{
+		if (WDLPluginChannels.hasPermissions()) {
+			add(canDownloadInGeneral);
+			add(canCacheChunks);
+			add(saveRadius);
+			add(canSaveEntities);
+			add(canSaveTileEntities);
+			add(canSaveContainers);
+			add(canDoUnknownThings);
+			add(sendEntityRanges);
+			add(allWorlds);
+		}
+	}};
+	
+	/**
 	 * List of permissions.
 	 */
 	private class PermissionsList extends GuiListExtended {
@@ -51,327 +330,6 @@ public class GuiWDLPermissions extends GuiScreen {
 					GuiWDLPermissions.this.height - BOTTOM_MARGIN, 
 					fontRendererObj.FONT_HEIGHT * 2 + 2);
 		}
-		
-		/**
-		 * IGuiListEntry that displays or requests a permission.
-		 */
-		private class PermissionEntry implements IGuiListEntry {
-			private final String line1;
-			private final String line2;
-			
-			private final PermissionEntry parent;
-			
-			private final GuiButton button;
-			
-			/**
-			 * How far to indent the text.
-			 */
-			private final int indent;
-			
-			public boolean checked;
-			
-			/**
-			 * Creates a PermissionEntry with no parent.
-			 * 
-			 * @param line1 Main line of description (title)
-			 * @param line2 Detail of permission
-			 */
-			public PermissionEntry(String line1, String line2) {
-				this(line1, line2, null);
-			}
-			
-			/**
-			 * Creates a PermissionEntry.
-			 * 
-			 * @param line1 Main line of description (title)
-			 * @param line2 Detail of permission
-			 * @param parent A permission that is required for this permission.
-			 * May be null.
-			 */
-			public PermissionEntry(String line1, String line2, 
-					PermissionEntry parent) {
-				this.line1 = line1;
-				this.line2 = "§7" + line2;
-				
-				this.parent = parent;
-				
-				this.button = new GuiButton(0, 0, 0, 120, 20, "Request");
-				button.visible = requestMode;
-				
-				if (parent != null) {
-					this.indent = parent.indent + 5;
-				} else {
-					this.indent = 0;
-				}
-			}
-			
-			@Override
-			public void drawEntry(int slotIndex, int x, int y, int listWidth,
-					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
-				fontRendererObj.drawString(line1, x + indent, y + 1, 0xFFFFFF);
-				fontRendererObj.drawString(line2, x + indent, y + 2
-						+ fontRendererObj.FONT_HEIGHT, 0xFFFFFF);
-
-				button.xPosition = GuiWDLPermissions.this.width - 130;
-				button.yPosition = y;
-				button.visible = requestMode;
-				
-				if (!areRequirementsMet()) {
-					button.displayString = "Prerequisites not met";
-					button.enabled = false;
-				} else if (!checked) {
-					button.displayString = "Not requested";
-					button.enabled = true;
-				} else {
-					button.displayString = "Requested";
-					button.enabled = true;
-				}
-				
-				button.drawButton(mc, mouseX, mouseY);
-			}
-
-			@Override
-			public boolean mousePressed(int slotIndex, int x, int y,
-					int mouseEvent, int relativeX, int relativeY) {
-				if (button.mousePressed(mc, x, y)) {
-					button.playPressSound(mc.getSoundHandler());
-					
-					checked ^= true;
-					
-					return true;
-				}
-				return false;
-			}
-
-			@Override
-			public void mouseReleased(int slotIndex, int x, int y,
-					int mouseEvent, int relativeX, int relativeY) {
-				button.mouseReleased(x, y);
-			}
-
-			@Override
-			public void setSelected(int slotIndex, int p_178011_2_,
-					int p_178011_3_) {
-				
-			}
-			
-			/**
-			 * Are the requirements for this permission met?
-			 */
-			public boolean areRequirementsMet() {
-				return parent == null ||
-						parent.areRequirementsMet() && parent.checked;
-			}
-		}
-		
-		/**
-		 * Permission entry that is only visible when requesting permissions.
-		 */
-		private class RequestOnlyPermissionEntry extends PermissionEntry {
-			/**
-			 * Creates a RequestOnlyPermissionEntry with no parent.
-			 * 
-			 * @param line1 Main line of description (title)
-			 * @param line2 Detail of permission
-			 */
-			public RequestOnlyPermissionEntry(String line1, String line2) {
-				super(line1, line2);
-			}
-			
-			/**
-			 * Creates a RequestOnlyPermissionEntry.
-			 * 
-			 * @param line1 Main line of description (title)
-			 * @param line2 Detail of permission
-			 * @param parent A permission that is required for this permission.
-			 * May be null.
-			 */
-			public RequestOnlyPermissionEntry(String line1, String line2, 
-					PermissionEntry parent) {
-				super(line1, line2, parent);
-			}
-			
-			@Override
-			public void drawEntry(int slotIndex, int x, int y, int listWidth,
-					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
-				if (requestMode) {
-					super.drawEntry(slotIndex, x, y, listWidth, slotHeight,
-							mouseX, mouseY, isSelected);
-				}
-			}
-			
-			@Override
-			public boolean mousePressed(int slotIndex, int x, int y,
-					int mouseEvent, int relativeX, int relativeY) {
-				if (requestMode) {
-					return super.mousePressed(slotIndex, x, y, mouseEvent,
-							relativeX, relativeY);
-				} else {
-					return false;
-				}
-			}
-		}
-		
-		/**
-		 * IGuiListEntry for the download radius option.
-		 * 
-		 * TODO: Shared base class with PermissionEntry.
-		 */
-		private class DownloadRadiusEntry implements IGuiListEntry {
-			private final String line1;
-			private final String line2;
-			
-			private final PermissionEntry parent;
-			
-			private final GuiButton slider;
-			
-			private final int indent;
-			
-			/**
-			 * Creates a DownloadRadiusEntry.
-			 * 
-			 * @param line1 Main line of description (title)
-			 * @param line2 Detail of permission
-			 * @param parent A permission that is required for this permission.
-			 * May be null.
-			 */
-			public DownloadRadiusEntry(String line1, String line2, 
-					PermissionEntry parent) {
-				this.line1 = line1;
-				this.line2 = "§7" + line2;
-				
-				this.parent = parent;
-				
-				this.slider = new GuiSlider(0, 0, 0, 120, 20, "Save radius", 0, 32);
-				slider.visible = requestMode;
-				
-				if (parent != null) {
-					this.indent = parent.indent + 5;
-				} else {
-					this.indent = 0;
-				}
-			}
-			
-			@Override
-			public void drawEntry(int slotIndex, int x, int y, int listWidth,
-					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
-				fontRendererObj.drawString(line1, x + indent, y + 1, 0xFFFFFF);
-				fontRendererObj.drawString(line2, x + indent, y + 2
-						+ fontRendererObj.FONT_HEIGHT, 0xFFFFFF);
-
-				slider.xPosition = GuiWDLPermissions.this.width - 130;
-				slider.yPosition = y;
-				slider.visible = requestMode;
-				
-				if (!areRequirementsMet()) {
-					slider.displayString = "Prerequisites not met";
-					slider.enabled = false;
-				} else {
-					slider.displayString = "Requested range";
-					slider.enabled = true;
-				}
-				
-				slider.drawButton(mc, mouseX, mouseY);
-			}
-
-			@Override
-			public boolean mousePressed(int slotIndex, int x, int y,
-					int mouseEvent, int relativeX, int relativeY) {
-				if (slider.mousePressed(mc, x, y)) {
-					slider.playPressSound(mc.getSoundHandler());
-				}
-				return false;
-			}
-
-			@Override
-			public void mouseReleased(int slotIndex, int x, int y,
-					int mouseEvent, int relativeX, int relativeY) {
-				slider.mouseReleased(x, y);
-				
-				//TODO update value.
-			}
-
-			@Override
-			public void setSelected(int slotIndex, int p_178011_2_,
-					int p_178011_3_) {
-				
-			}
-			
-			/**
-			 * Are the requirements for this permission met?
-			 */
-			public boolean areRequirementsMet() {
-				return parent != null ||
-						!parent.areRequirementsMet() || !parent.checked;
-			}
-		}
-		
-		private PermissionEntry canDownloadInGeneral;
-		private PermissionEntry canCacheChunks;
-		private DownloadRadiusEntry saveRadius;
-		private PermissionEntry canSaveEntities;
-		private PermissionEntry canSaveTileEntities;
-		private PermissionEntry canSaveContainers;
-		private PermissionEntry canDoUnknownThings;
-		private PermissionEntry sendEntityRanges;
-		private PermissionEntry allWorlds;
-		
-		private List<IGuiListEntry> entries = new ArrayList<IGuiListEntry>() {{
-			if (WDLPluginChannels.hasPermissions()) {
-				canDownloadInGeneral = new PermissionEntry("Can download: "
-						+ WDLPluginChannels.canDownloadInGeneral(),
-						"Controls whether you are able to download");
-				canCacheChunks = new PermissionEntry("Can cache chunks: "
-						+ WDLPluginChannels.canCacheChunks(),
-						"Controls whether chunks are saved as you move about "
-								+ "the world", canDownloadInGeneral);
-				saveRadius = new DownloadRadiusEntry(
-						"Download radius: " + WDLPluginChannels.getSaveRadius(),
-						"Radius for downloading chunks (only when caching disabled)",
-						canCacheChunks);
-				canSaveEntities = new PermissionEntry("Can save entities: "
-						+ WDLPluginChannels.canSaveEntities(),
-						"Controls whether you can save entities",
-						canDownloadInGeneral);
-				canSaveTileEntities = new PermissionEntry(
-						"Can save tile entities: "
-								+ WDLPluginChannels.canSaveTileEntities(),
-						"Controls whether you can save tile entities",
-						canDownloadInGeneral);
-				canSaveContainers = new PermissionEntry("Can save containers: "
-						+ WDLPluginChannels.canSaveContainers(),
-						"Controls whether you can save containers",
-						canSaveTileEntities);
-				canDoUnknownThings = new PermissionEntry(
-						"Can use functions unknown to the server: "
-								+ WDLPluginChannels
-										.canUseFunctionsUnknownToServer(),
-						"Controls whether you can use newer functions of WDL.",
-						canDownloadInGeneral);
-				sendEntityRanges = new PermissionEntry("Send entity ranges: "
-						+ WDLPluginChannels.hasServerEntityRange()
-						+ "(received "
-						+ WDLPluginChannels.getEntityRanges().size() + ")",
-						"Required if the server runs spigot and edits the "
-								+ "entity track distances.  Not all servers "
-								+ "do, and if not this permission is useless.",
-						canDownloadInGeneral);
-				allWorlds = new RequestOnlyPermissionEntry(
-						"Single world: TODO",
-						"Controls whether the options effect all worlds or "
-								+ "just the current one");
-
-				add(canDownloadInGeneral);
-				add(canCacheChunks);
-				add(saveRadius);
-				add(canSaveEntities);
-				add(canSaveTileEntities);
-				add(canSaveContainers);
-				add(canDoUnknownThings);
-				add(sendEntityRanges);
-				add(allWorlds);
-			}
-		}};
 		
 		@Override
 		public IGuiListEntry getListEntry(int index) {
