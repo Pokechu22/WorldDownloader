@@ -93,6 +93,19 @@ public class WDLPluginChannels {
 			new HashMap<String, Integer>();
 	
 	/**
+	 * Whether players can request permissions.
+	 * 
+	 * With the default implementation, this is ALWAYS true.
+	 */
+	private static boolean canRequestPermissions = true;
+	
+	/**
+	 * Message to display when requesting.  If empty, nothing
+	 * is displayed.
+	 */
+	private static String requestMessage = "";
+	
+	/**
 	 * Thread used to delay opening a {@link GuiWDLPermissions}.
 	 */
 	private static Thread displayGuiThread;
@@ -266,6 +279,13 @@ public class WDLPluginChannels {
 	}
 	
 	/**
+	 * Gets whether permissions are available.
+	 */
+	public static boolean canRequestPermissions() {
+		return receivedPackets != null && !receivedPackets.isEmpty();
+	}
+	
+	/**
 	 * Event that is called when the world is loaded.
 	 * Sets the default values, and then asks the server to give the
 	 * correct ones.
@@ -367,6 +387,16 @@ public class WDLPluginChannels {
 				
 				WDL.chatDebug(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
 						"entityRanges: total of " + entityRanges.size());
+				break;
+			case 3: 
+				canRequestPermissions = input.readBoolean();
+				requestMessage = input.readUTF();
+				
+				WDL.chatDebug(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
+						"Loaded settings packet #3 from the server!");
+				//Don't bother printing out any exact info.
+				//The user will only need this in the perm UI, and
+				//it'll be true all of the time as of the current plugin.
 				break;
 			default:
 				StringBuilder messageBuilder = new StringBuilder();

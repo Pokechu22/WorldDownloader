@@ -41,6 +41,10 @@ public class GuiWDLPermissions extends GuiScreen {
 	 * Reload permissions button
 	 */
 	private GuiButton reloadButton;
+	/**
+	 * Reload permissions button
+	 */
+	private GuiButton doneButton;
 	
 	/**
 	 * IGuiListEntry that displays or requests a permission.
