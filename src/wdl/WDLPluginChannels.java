@@ -95,9 +95,11 @@ public class WDLPluginChannels {
 	/**
 	 * Whether players can request permissions.
 	 * 
-	 * With the default implementation, this is ALWAYS true.
+	 * With the default implementation, this is always <i>sent</i> as
+	 * <code>true</code>.  However, this needs to be sent for it to be useful -
+	 * if the plugin does NOT send it, it does not support permission requests.
 	 */
-	private static boolean canRequestPermissions = true;
+	private static boolean canRequestPermissions = false;
 	
 	/**
 	 * Message to display when requesting.  If empty, nothing
@@ -282,7 +284,7 @@ public class WDLPluginChannels {
 	 * Gets whether permissions are available.
 	 */
 	public static boolean canRequestPermissions() {
-		return receivedPackets != null && !receivedPackets.isEmpty();
+		return receivedPackets.contains(3) && canRequestPermissions;
 	}
 	
 	/**
