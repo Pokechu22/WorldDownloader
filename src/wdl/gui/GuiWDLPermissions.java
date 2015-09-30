@@ -353,6 +353,54 @@ public class GuiWDLPermissions extends GuiScreen {
 	
 	private List<IGuiListEntry> globalEntries = new ArrayList<IGuiListEntry>() {{
 		if (WDLPluginChannels.hasPermissions()) {
+			canDownloadInGeneral = new PermissionEntry(
+					"Can download: "
+							+ WDLPluginChannels.canDownloadInGeneral(),
+					"Controls whether you are able to download");
+			canCacheChunks = new PermissionEntry(
+					"Can cache chunks: "
+							+ WDLPluginChannels.canCacheChunks(),
+					"Controls whether chunks are saved as you move about "
+							+ "the world", 
+					canDownloadInGeneral);
+			saveRadius = new DownloadRadiusEntry(
+					"Download radius: "
+							+ WDLPluginChannels.getSaveRadius(),
+					"Radius for downloading chunks (only when caching disabled)",
+					canCacheChunks);
+			canSaveEntities = new PermissionEntry(
+					"Can save entities: "
+							+ WDLPluginChannels.canSaveEntities(),
+					"Controls whether you can save entities",
+					canDownloadInGeneral);
+			canSaveTileEntities = new PermissionEntry(
+					"Can save tile entities: "
+							+ WDLPluginChannels.canSaveTileEntities(),
+					"Controls whether you can save tile entities",
+					canDownloadInGeneral);
+			canSaveContainers = new PermissionEntry(
+					"Can save containers: "
+							+ WDLPluginChannels.canSaveContainers(),
+					"Controls whether you can save containers",
+					canSaveTileEntities);
+			canDoUnknownThings = new PermissionEntry(
+					"Can use functions unknown to the server: "
+							+ WDLPluginChannels
+									.canUseFunctionsUnknownToServer(),
+					"Controls whether you can use newer functions of WDL.",
+					canDownloadInGeneral);
+			sendEntityRanges = new PermissionEntry("Send entity ranges: "
+					+ WDLPluginChannels.hasServerEntityRange()
+					+ "(received "
+					+ WDLPluginChannels.getEntityRanges().size() + ")",
+					"Required if the server runs spigot and edits the "
+							+ "entity track distances.  Not all servers "
+							+ "do, and if not this permission is useless.");
+			allWorlds = new RequestOnlyPermissionEntry(
+					"Single world: TODO",
+					"Controls whether the options effect all worlds or " +
+					"just the current one");
+			
 			add(canDownloadInGeneral);
 			add(canCacheChunks);
 			add(saveRadius);
