@@ -7,6 +7,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.util.Iterator;
+
 import wdl.WDL;
 import wdl.WDLMessages;
 import wdl.WDLPluginChannels;
@@ -300,6 +302,45 @@ public class GuiWDLPermissions extends GuiScreen {
 		}
 	}
 	
+	private class TextEntry implements IGuiListEntry {
+		private final String line1;
+		private final String line2;
+		
+		/**
+		 * Creates a TextEntry.
+		 */
+		public TextEntry(String line1, String line2) {
+			this.line1 = line1;
+			this.line2 = line2;
+		}
+		
+		@Override
+		public void drawEntry(int slotIndex, int x, int y, int listWidth,
+				int slotHeight, int mouseX, int mouseY, boolean isSelected) {
+			fontRendererObj.drawString(line1, x + 5, y + 1, 0xFFFFFF);
+			fontRendererObj.drawString(line2, x + 5, y + 2
+					+ fontRendererObj.FONT_HEIGHT, 0xFFFFFF);
+		}
+
+		@Override
+		public boolean mousePressed(int slotIndex, int x, int y,
+				int mouseEvent, int relativeX, int relativeY) {
+			return false;
+		}
+
+		@Override
+		public void mouseReleased(int slotIndex, int x, int y,
+				int mouseEvent, int relativeX, int relativeY) {
+			
+		}
+
+		@Override
+		public void setSelected(int slotIndex, int p_178011_2_,
+				int p_178011_3_) {
+			
+		}
+	}
+	
 	private PermissionEntry canDownloadInGeneral;
 	private PermissionEntry canCacheChunks;
 	private DownloadRadiusEntry saveRadius;
@@ -310,7 +351,7 @@ public class GuiWDLPermissions extends GuiScreen {
 	private PermissionEntry sendEntityRanges;
 	private PermissionEntry allWorlds;
 	
-	private List<IGuiListEntry> entries = new ArrayList<IGuiListEntry>() {{
+	private List<IGuiListEntry> globalEntries = new ArrayList<IGuiListEntry>() {{
 		if (WDLPluginChannels.hasPermissions()) {
 			add(canDownloadInGeneral);
 			add(canCacheChunks);
@@ -333,7 +374,29 @@ public class GuiWDLPermissions extends GuiScreen {
 					GuiWDLPermissions.this.height, TOP_MARGIN,
 					GuiWDLPermissions.this.height - BOTTOM_MARGIN, 
 					fontRendererObj.FONT_HEIGHT * 2 + 2);
+			
+			entries = new ArrayList<IGuiListEntry>();
+			
+			String message = WDLPluginChannels.getRequestMessage();
+			if (message != null && !message.isEmpty()) {
+				message = "§lNote from the server moderators: §r" + message;
+				
+				List<String> lines = Utils.wordWrap(message, this.width - 10);
+				
+				Iterator<String> ittr = lines.iterator();
+				
+				while (ittr.hasNext()) {
+					String line1 = ittr.next();
+					String line2 = (ittr.hasNext() ? ittr.next() : "");
+					
+					entries.add(new TextEntry(line1, line2));
+				}
+			}
+			
+			entries.addAll(globalEntries);
 		}
+		
+		private ArrayList<IGuiListEntry> entries;
 		
 		@Override
 		public IGuiListEntry getListEntry(int index) {

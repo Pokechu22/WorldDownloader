@@ -288,6 +288,14 @@ public class WDLPluginChannels {
 	}
 	
 	/**
+	 * Gets the request message.
+	 * @return The {@link #requestMessage}.
+	 */
+	public static String getRequestMessage() {
+		return requestMessage;
+	}
+	
+	/**
 	 * Event that is called when the world is loaded.
 	 * Sets the default values, and then asks the server to give the
 	 * correct ones.
