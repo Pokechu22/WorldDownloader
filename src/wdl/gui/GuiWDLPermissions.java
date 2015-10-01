@@ -317,8 +317,8 @@ public class GuiWDLPermissions extends GuiScreen {
 		@Override
 		public void drawEntry(int slotIndex, int x, int y, int listWidth,
 				int slotHeight, int mouseX, int mouseY, boolean isSelected) {
-			fontRendererObj.drawString(line1, x + 5, y + 1, 0xFFFFFF);
-			fontRendererObj.drawString(line2, x + 5, y + 2
+			fontRendererObj.drawString(line1, x, y + 1, 0xFFFFFF);
+			fontRendererObj.drawString(line2, x, y + 2
 					+ fontRendererObj.FONT_HEIGHT, 0xFFFFFF);
 		}
 
@@ -429,7 +429,7 @@ public class GuiWDLPermissions extends GuiScreen {
 			if (message != null && !message.isEmpty()) {
 				message = "§lNote from the server moderators: §r" + message;
 				
-				List<String> lines = Utils.wordWrap(message, this.width - 10);
+				List<String> lines = Utils.wordWrap(message, getListWidth());
 				
 				Iterator<String> ittr = lines.iterator();
 				
@@ -576,6 +576,10 @@ public class GuiWDLPermissions extends GuiScreen {
 	
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		if (this.list == null) {
+			return;
+		}
+		
 		this.list.drawScreen(mouseX, mouseY, partialTicks);
 		
 		this.drawCenteredString(this.fontRendererObj, "Permission info",
