@@ -27,7 +27,7 @@ public class GuiWDLPermissions extends GuiScreen {
 	/**
 	 * Margins for the top and the bottom of the list.
 	 */
-	private static final int TOP_MARGIN = 39, BOTTOM_MARGIN = 32;
+	private static final int TOP_MARGIN = 61, BOTTOM_MARGIN = 32;
 	
 	/**
 	 * Whether the UI is in the request mode.  True: requesting new
@@ -47,6 +47,11 @@ public class GuiWDLPermissions extends GuiScreen {
 	 * Reload permissions button
 	 */
 	private GuiButton doneButton;
+	
+	/**
+	 * Show on new permissions button.
+	 */
+	private GuiButton showOnNewPermsButton;
 	
 	/**
 	 * IGuiListEntry that displays or requests a permission.
@@ -508,11 +513,22 @@ public class GuiWDLPermissions extends GuiScreen {
 		reloadButton = new GuiButton(1, (this.width / 2) + 5, 18, 150, 20,
 				"Reload permissions");
 		this.buttonList.add(reloadButton);
+		boolean shown = WDL.baseProps.getProperty("ShowPermsUIOnNewPerms",
+				"true").equalsIgnoreCase("true");
+		this.showOnNewPermsButton = new GuiButton(2, (this.width / 2) - 155,
+				40, 310, 20, (shown ? "UI shown " : "UI not shown ")
+						+ "when new permissions are recieved");
+		this.buttonList.add(showOnNewPermsButton);
 		
 		// Plugin not installed? No point in requesting.
 		this.requestButton.enabled = WDLPluginChannels.hasPermissions();
 		
 		this.list = new PermissionsList();
+	}
+	
+	@Override
+	public void onGuiClosed() {
+		WDL.saveProps();
 	}
 	
 	/**
@@ -568,6 +584,15 @@ public class GuiWDLPermissions extends GuiScreen {
 			
 			button.enabled = false;
 			button.displayString = "Refershing...";
+		}
+		if (button.id == 2) {
+			boolean shown = WDL.baseProps.getProperty("ShowPermsUIOnNewPerms",
+					"true").equalsIgnoreCase("true");
+			WDL.baseProps.setProperty("ShowPermsUIOnNewPerms",
+					Boolean.toString(!shown));
+			
+			showOnNewPermsButton.displayString = (!shown ? "UI shown "
+					: "UI not shown ") + "when new permissions are recieved";
 		}
 		if (button.id == 100) {
 			this.mc.displayGuiScreen(this.parent);

@@ -420,7 +420,9 @@ public class WDLPluginChannels {
 				logger.info(messageBuilder.toString());
 			}
 			
-			if (displayGuiThread == null) {
+			if (displayGuiThread == null
+					&& WDL.baseProps.getProperty("ShowPermsUIOnNewPerms",
+							"true").equalsIgnoreCase("true")) {
 				displayGuiThread = new Thread() {
 					@Override
 					public void run() {
