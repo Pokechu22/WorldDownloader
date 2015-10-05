@@ -113,6 +113,12 @@ public class WDLPluginChannels {
 	private static Thread displayGuiThread;
 
 	/**
+	 * Whether the permissions gui should be displayed regardless of the user's
+	 * setting.  Needed when refreshing permissions.
+	 */
+	public static boolean displayGuiOverride;
+	
+	/**
 	 * Checks whether players can use functions unknown to the server.
 	 */
 	public static boolean canUseFunctionsUnknownToServer() {
@@ -301,6 +307,8 @@ public class WDLPluginChannels {
 	 * correct ones.
 	 */
 	static void onWorldLoad() {
+		displayGuiOverride = false;
+		
 		Minecraft minecraft = Minecraft.getMinecraft();
 		
 		receivedPackets = new HashSet<Integer>();
@@ -421,8 +429,9 @@ public class WDLPluginChannels {
 			}
 			
 			if (displayGuiThread == null
-					&& WDL.baseProps.getProperty("ShowPermsUIOnNewPerms",
-							"true").equalsIgnoreCase("true")) {
+					&& (WDL.baseProps.getProperty("ShowPermsUIOnNewPerms",
+							"true").equalsIgnoreCase("true")
+							|| displayGuiOverride)) {
 				displayGuiThread = new Thread() {
 					@Override
 					public void run() {
@@ -436,6 +445,7 @@ public class WDLPluginChannels {
 					}
 				};
 				displayGuiThread.start();
+				displayGuiOverride = false;
 			}
 		}
 	}

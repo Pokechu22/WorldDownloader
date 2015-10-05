@@ -582,6 +582,7 @@ public class GuiWDLPermissions extends GuiScreen {
 			}
 			WDL.minecraft.getNetHandler().addToSendQueue(initPacket);
 			
+			WDLPluginChannels.displayGuiOverride = true;			
 			button.enabled = false;
 			button.displayString = "Refershing...";
 		}
