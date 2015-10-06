@@ -34,8 +34,6 @@ public class GuiWDLOverwriteChanges extends GuiScreen {
 		@Override
 		public void run() {
 			try {
-				backingUp = true;
-				
 				String backupName = WDL.getWorldFolderName(WDL.worldName) + "_"
 						+ folderDateFormat.format(new Date())
 						+ "_user" + (zip ? ".zip" : "");
@@ -124,9 +122,13 @@ public class GuiWDLOverwriteChanges extends GuiScreen {
 		}
 		
 		if (button.id == 0) {
+			backingUp = true;
+			
 			new BackupThread(true).start();
 		}
 		if (button.id == 1) {
+			backingUp = true;
+			
 			new BackupThread(false).start();
 		}
 		if (button.id == 2) {
