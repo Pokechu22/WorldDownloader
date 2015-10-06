@@ -297,7 +297,6 @@ public class WDL {
 				// user is willing for possible changes they made to be overwritten.
 				minecraft.displayGuiScreen(new GuiWDLOverwriteChanges(
 						lastSaved, lastPlayed));
-				System.out.println("chk");
 				return;
 			}
 		} catch (Exception e) {
@@ -313,7 +312,6 @@ public class WDL {
 				}
 			}
 		}
-		
 		WDL.minecraft.displayGuiScreen((GuiScreen) null);
 		WDL.minecraft.setIngameFocus();
 		chunkLoader = saveHandler.getChunkLoader(worldClient.provider);
