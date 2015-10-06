@@ -110,8 +110,8 @@ public class GuiWDLOverwriteChanges extends GuiScreen {
 	
 	@Override
 	protected void keyTyped(char typedChar, int keyCode) throws IOException {
-		if (backingUp && keyCode == Keyboard.KEY_ESCAPE) {
-			//Don't allow closing while a backup is underway. 
+		if (keyCode == Keyboard.KEY_ESCAPE) {
+			//Don't allow closing at all. 
 			return;
 		}
 		super.keyTyped(typedChar, keyCode);
