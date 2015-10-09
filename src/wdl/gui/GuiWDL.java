@@ -13,6 +13,11 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.GuiListExtended.IGuiListEntry;
 
 public class GuiWDL extends GuiScreen {
+	/**
+	 * Tooltip to display on the given frame.
+	 */
+	private String displayedTooltip = null;
+	
 	private class GuiWDLButtonList extends GuiListExtended {
 		public GuiWDLButtonList() {
 			super(GuiWDL.this.mc, GuiWDL.this.width, GuiWDL.this.height, 39,
@@ -23,9 +28,13 @@ public class GuiWDL extends GuiScreen {
 			private final GuiButton button;
 			private final GuiScreen toOpen;
 			
-			public ButtonEntry(String text, GuiScreen toOpen) {
+			private final String tooltip;
+			
+			public ButtonEntry(String text, GuiScreen toOpen, String tooltip) {
 				this.button = new GuiButton(0, 0, 0, text);
 				this.toOpen = toOpen;
+				
+				this.tooltip = tooltip;
 			}
 			
 			@Override
@@ -41,6 +50,10 @@ public class GuiWDL extends GuiScreen {
 				button.yPosition = y;
 				
 				button.drawButton(mc, mouseX, mouseY);
+				
+				if (button.isMouseOver()) {
+					displayedTooltip = tooltip;
+				}
 			}
 
 			@Override
@@ -69,21 +82,35 @@ public class GuiWDL extends GuiScreen {
 			// GUI instances are created.  Although they aren't displayed.
 			
 			add(new ButtonEntry("World Overrides...", 
-					new GuiWDLWorld(GuiWDL.this)));
+					new GuiWDLWorld(GuiWDL.this),
+					"Control specific metadata about the saved world, " +
+					"such as the spawn point and game mode."));
 			add(new ButtonEntry("World Generator Overrides...", 
-					new GuiWDLGenerator(GuiWDL.this)));
+					new GuiWDLGenerator(GuiWDL.this),
+					"Control specific info about how the world is generated, " +
+					"such as the seed."));
 			add(new ButtonEntry("Player Overrides...", 
-					new GuiWDLPlayer(GuiWDL.this)));
+					new GuiWDLPlayer(GuiWDL.this),
+					"Control specific options about the saved player, " +
+					"such as their health and position."));
 			add(new ButtonEntry("Entity Options...", 
-					new GuiWDLEntities(GuiWDL.this)));
+					new GuiWDLEntities(GuiWDL.this),
+					"Control what types of entities to save, and the " +
+					"track distances of those entities."));
 			add(new ButtonEntry("Backup Options...", 
-					new GuiWDLBackup(GuiWDL.this)));
+					new GuiWDLBackup(GuiWDL.this),
+					"Control how the world is backed up after saving"));
 			add(new ButtonEntry("Message Options...", 
-					new GuiWDLMessages(GuiWDL.this)));
+					new GuiWDLMessages(GuiWDL.this),
+					"Control what messages appear in the chat."));
 			add(new ButtonEntry("Permissions info...", 
-					new GuiWDLPermissions(GuiWDL.this)));
+					new GuiWDLPermissions(GuiWDL.this),
+					"Information about permissions setup on this server, " +
+					"and the form for requesting new permissions."));
 			add(new ButtonEntry("About World Downloader...",
-					new GuiWDLAbout(GuiWDL.this)));
+					new GuiWDLAbout(GuiWDL.this), 
+					"Information about your current installation of WDL, " +
+					"and any extensions."));
 		}};
 		
 		@Override
@@ -223,6 +250,8 @@ public class GuiWDL extends GuiScreen {
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		this.drawDefaultBackground();
 		
+		displayedTooltip = null;
+		
 		this.list.drawScreen(mouseX, mouseY, partialTicks);
 		
 		this.drawCenteredString(this.fontRendererObj, this.title,
@@ -232,6 +261,8 @@ public class GuiWDL extends GuiScreen {
 		this.worldName.drawTextBox();
 		
 		super.drawScreen(mouseX, mouseY, partialTicks);
+		
+		Utils.drawGuiInfoBox(displayedTooltip, width, height);
 	}
 
 	public void updateAutoStart(boolean btnClicked) {
