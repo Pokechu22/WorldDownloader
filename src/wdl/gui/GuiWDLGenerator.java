@@ -103,7 +103,7 @@ public class GuiWDLGenerator extends GuiScreen {
 	 * Draws the screen and all the components in it.
 	 */
 	@Override
-	public void drawScreen(int var1, int var2, float var3) {
+	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		Utils.drawBorder(23, 32, 0, 0, height, width);
 		
 		this.drawCenteredString(this.fontRendererObj, this.title,
@@ -111,7 +111,20 @@ public class GuiWDLGenerator extends GuiScreen {
 		this.drawString(this.fontRendererObj, "Seed:", this.width / 2 - 99,
 				this.height / 4 - 10, 0xFFFFFF);
 		this.seedField.drawTextBox();
-		super.drawScreen(var1, var2, var3);
+		super.drawScreen(mouseX, mouseY, partialTicks);
+		
+		String tooltip = null;
+		
+		if (Utils.isMouseOverTextBox(mouseX, mouseY, seedField)) {
+			tooltip = "Set the seed used for generating new chunks in " +
+					"the downloaded world.";
+		} else if (generatorBtn.isMouseOver()) {
+			tooltip = "The world generator used when generating new chunks.";
+		} else if (generateStructuresBtn.isMouseOver()) {
+			tooltip = "Whether structures (villages, strongholds, ect) " +
+					"should be generated in new chunks.";
+		}
+		Utils.drawGuiInfoBox(tooltip, width, height);
 	}
 
 	private void updateGenerator(boolean var1) {
