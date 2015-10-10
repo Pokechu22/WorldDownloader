@@ -38,6 +38,11 @@ public class GuiWDLWorld extends GuiScreen {
 		int var2 = this.height / 4;
 		int var3 = var2 - 15;
 		
+		this.gameModeBtn = new GuiButton(1, var1 - 100, var3,
+						"Game Mode: ERROR");
+		this.buttonList.add(this.gameModeBtn);
+		this.updateGameMode(false);
+		var3 += 22;
 		this.weatherBtn = new GuiButton(3, var1 - 100, var3, "Weather: ERROR");
 		this.buttonList.add(this.weatherBtn);
 		this.updateWeather(false);
