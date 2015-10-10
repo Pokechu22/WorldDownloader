@@ -43,10 +43,6 @@ public class GuiWDLWorld extends GuiScreen {
 		this.buttonList.add(this.gameModeBtn);
 		this.updateGameMode(false);
 		var3 += 22;
-		this.weatherBtn = new GuiButton(3, var1 - 100, var3, "Weather: ERROR");
-		this.buttonList.add(this.weatherBtn);
-		this.updateWeather(false);
-		var3 += 22;
 		this.allowCheatsBtn = new GuiButton(6, var1 - 100, var3,
 				"Allow cheats: ERROR");
 		this.buttonList.add(this.allowCheatsBtn);
@@ -191,7 +187,7 @@ public class GuiWDLWorld extends GuiScreen {
 		} else if (weatherBtn.isMouseOver()) {
 			tooltip = "Controls the weather in the downloaded world.";
 		} else if (spawnBtn.isMouseOver()) {
-			tooltip = "Controls the spawn point in the downloaded world.\n\n " +
+			tooltip = "Controls the spawn point in the downloaded world.\n\n" +
 					"§lDon't change§r: Use the server spawn position.\n" +
 					"§lPlayer position§r: Use the position that the player was " +
 					"in when the download was stopped.\n" +
