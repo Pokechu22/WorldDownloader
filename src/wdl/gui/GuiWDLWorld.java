@@ -173,6 +173,45 @@ public class GuiWDLWorld extends GuiScreen {
 		}
 
 		super.drawScreen(mouseX, mouseY, partialTicks);
+		
+		String tooltip = null;
+		
+		if (allowCheatsBtn.isMouseOver()) {
+			tooltip = "Controls whether commands (such as /gamemode) are " +
+					"allowed in the downloaded world.";
+		} else if (gameModeBtn.isMouseOver()) {
+			tooltip = "Controls which gamemode is used in the downloaded world.";
+		} else if (timeBtn.isMouseOver()) {
+			tooltip = "Controls the time in the downloaded world.";
+		} else if (weatherBtn.isMouseOver()) {
+			tooltip = "Controls the weather in the downloaded world.";
+		} else if (spawnBtn.isMouseOver()) {
+			tooltip = "Controls the spawn point in the downloaded world.\n\n " +
+					"§lDon't change§r: Use the server spawn position.\n" +
+					"§lPlayer position§r: Use the position that the player was " +
+					"in when the download was stopped.\n" +
+					"§lXYZ§r: Allows specifying the exact coordinates.";
+		} else if (pickSpawnBtn.isMouseOver()) {
+			tooltip = "Set the spawn position to your current position.";
+		}
+		
+		if (showSpawnFields) {
+			String posToolTip = "Use these text boxes to specify the exact " +
+					"spawn position.\n\n";
+					
+			if (Utils.isMouseOverTextBox(mouseX, mouseY, spawnX)) {
+				tooltip = posToolTip
+						+ "This text box specifies the X coordinate.";
+			} else if (Utils.isMouseOverTextBox(mouseX, mouseY, spawnY)) {
+				tooltip = posToolTip
+						+ "This text box specifies the Y coordinate.";
+			} else if (Utils.isMouseOverTextBox(mouseX, mouseY, spawnZ)) {
+				tooltip = posToolTip
+						+ "This text box specifies the Z coordinate.";
+			}
+		}
+		
+		Utils.drawGuiInfoBox(tooltip, width, height);
 	}
 
 	private void updateAllowCheats(boolean var1) {
