@@ -62,7 +62,7 @@ public class GuiWDLBackup extends GuiScreen {
 	
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		Utils.drawBorder(23, 32, 0, 0, height, width);
+		Utils.drawListBackground(23, 32, 0, 0, height, width);
 		
 		this.drawCenteredString(this.fontRendererObj, "Backup options",
 				this.width / 2, 8, 0xFFFFFF);

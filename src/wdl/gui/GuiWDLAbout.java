@@ -94,7 +94,7 @@ ClientBrandRetriever.getClientModName() + ".";
 	
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		Utils.drawBorder(39, 32, 0, 0, height, width);
+		Utils.drawListBackground(39, 32, 0, 0, height, width);
 		
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		

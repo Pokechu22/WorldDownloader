@@ -93,7 +93,7 @@ class Utils {
 	 * @param bottom Where to stop drawing (usually, height).
 	 * @param right Where to stop drawing (usually, width)
 	 */
-	public static void drawBorder(int topMargin, int bottomMargin, int top, int left, int bottom, int right) {
+	public static void drawListBackground(int topMargin, int bottomMargin, int top, int left, int bottom, int right) {
 		GlStateManager.disableLighting();
 		GlStateManager.disableFog();
 		Tessellator t = Tessellator.getInstance();
@@ -117,8 +117,39 @@ class Utils {
 				top / textureSize);
 		t.draw();
 		
+		drawBorder(topMargin, bottomMargin, top, left, bottom, right);
+		
+		//Flags are reset by drawBorder
+	}
+	
+	/**
+	 * Draws the top and bottom borders found on gui lists (but no background).
+	 * <br/> 
+	 * Based off of
+	 * {@link net.minecraft.client.gui.GuiSlot#overlayBackground(int, int, int, int)}.
+	 * 
+	 * Note that there is an additional 4-pixel padding on the margins for the gradient.
+	 * 
+	 * @param topMargin Amount of space to give for the upper box.
+	 * @param bottomMargin Amount of space to give for the lower box.
+	 * @param top Where to start drawing (usually, 0)
+	 * @param left Where to start drawing (usually, 0)
+	 * @param bottom Where to stop drawing (usually, height).
+	 * @param right Where to stop drawing (usually, width)
+	 */
+	public static void drawBorder(int topMargin, int bottomMargin, int top, int left, int bottom, int right) {
+		GlStateManager.disableLighting();
+		GlStateManager.disableFog();
 		GlStateManager.disableDepth();
 		byte padding = 4;
+		
+		mc.getTextureManager().bindTexture(Gui.optionsBackground);
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+		
+		float textureSize = 32.0F;
+		
+		Tessellator t = Tessellator.getInstance();
+		WorldRenderer wr = t.getWorldRenderer();
 		
 		//Box code is GuiSlot.overlayBackground
 		//Upper box
