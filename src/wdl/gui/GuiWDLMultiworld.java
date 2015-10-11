@@ -1,6 +1,7 @@
 package wdl.gui;
 
 import java.io.IOException;
+import java.util.List;
 
 import wdl.WDL;
 import net.minecraft.client.gui.GuiButton;
@@ -11,6 +12,25 @@ public class GuiWDLMultiworld extends GuiScreen {
 	private GuiButton multiworldEnabledBtn;
 	boolean newMultiworldState = false;
 
+	private static final String multiworldMessage = 
+			"Multiworld support is required if at least one of the " +
+			"following conditions are met:\n" +
+			" - \"Multiworld\" is mentioned on the server\'s website\n" +
+			" - The server has more than 3 dimensions (or worlds)\n" +
+			" - The server has other dimensions than the official ones " +
+			"(the overworld, the nether, and the end)\n\n" +
+			"Multiworld support requests which world you are in before " +
+			"the download is started.  If it isn't enabled but the server " +
+			"is a multiworld server, parts of the map may be overwritten.";
+	
+	//TODO: Some of these things can be constants, but for consistancy aren't.
+	//Maybe refactor it?
+	private int infoBoxWidth;
+	private int infoBoxHeight;
+	private int infoBoxX;
+	private int infoBoxY;
+	private List<String> infoBoxLines;
+	
 	public GuiWDLMultiworld(GuiScreen var1) {
 		this.parent = var1;
 	}
@@ -21,14 +41,22 @@ public class GuiWDLMultiworld extends GuiScreen {
 	@Override
 	public void initGui() {
 		this.buttonList.clear();
-		int var1 = this.width / 2;
-		int var2 = this.height / 4;
-		int var3 = var2 + 115;
-		this.multiworldEnabledBtn = new GuiButton(1, var1 - 100, var3,
+		
+		infoBoxWidth = 320;
+		infoBoxLines = Utils.wordWrap(multiworldMessage, infoBoxWidth - 20);
+		infoBoxHeight = (fontRendererObj.FONT_HEIGHT * (infoBoxLines.size() + 1)) + 40;
+		
+		infoBoxX = this.width / 2 - infoBoxWidth / 2;
+		infoBoxY = this.height / 2 - infoBoxHeight / 2;
+		
+		this.multiworldEnabledBtn = new GuiButton(1, this.width / 2 - 100,
+				infoBoxY + infoBoxHeight - 30, 
 				"Multiworld support: ERROR");
 		this.buttonList.add(this.multiworldEnabledBtn);
 		this.updateMultiworldEnabled(false);
-		this.buttonList.add(new GuiButton(100, var1 - 100, var2 + 150, "OK"));
+		
+		this.buttonList.add(new GuiButton(100, this.width / 2 - 100,
+				this.height - 29, "OK"));
 	}
 
 	/**
@@ -91,31 +119,34 @@ public class GuiWDLMultiworld extends GuiScreen {
 	 * Draws the screen and all the components in it.
 	 */
 	@Override
-	public void drawScreen(int var1, int var2, float var3) {
+	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		this.drawDefaultBackground();
-		drawRect(this.width / 2 - 160, this.height / 4 - 60,
-				this.width / 2 + 160, this.height / 4 + 180, -1342177280);
-		this.drawCenteredString(this.fontRendererObj, "Multiworld Support",
-				this.width / 2, this.height / 4 - 40, 16711680);
-		this.drawString(this.fontRendererObj,
-				"Multiworld support is required if at least one of the",
-				this.width / 2 - 150, this.height / 4 - 15, 16777215);
-		this.drawString(this.fontRendererObj, " following conditions is met:",
-				this.width / 2 - 150, this.height / 4 - 5, 16777215);
-		this.drawString(this.fontRendererObj,
-				"- \"Multiworld\" is mentioned on the server\'s website",
-				this.width / 2 - 150, this.height / 4 + 15, 16777215);
-		this.drawString(this.fontRendererObj,
-				"- The server has more than 3 dimensions (or worlds)",
-				this.width / 2 - 150, this.height / 4 + 35, 16777215);
-		this.drawString(this.fontRendererObj,
-				"- The server has other dimensions than the official ones",
-				this.width / 2 - 150, this.height / 4 + 55, 16777215);
-		this.drawString(this.fontRendererObj, "   (Earth, Nether, The End)",
-				this.width / 2 - 150, this.height / 4 + 65, 16777215);
-		drawRect(this.width / 2 - 102, this.height / 4 + 113,
-				this.width / 2 + 102, this.height / 4 + 137, -65536);
-		super.drawScreen(var1, var2, var3);
+		Utils.drawBorder(32, 32, 0, 0, height, width);
+		
+		this.drawCenteredString(this.fontRendererObj, 
+				"WorldDownloader: §cMultiworld support",
+				this.width / 2, 8, 0xFFFFFF);
+		
+		drawRect(infoBoxX, infoBoxY, infoBoxX + infoBoxWidth, infoBoxY
+				+ infoBoxHeight, 0xB0000000);
+		
+		int x = infoBoxX + 10;
+		int y = infoBoxY + 10;
+		
+		for (String s : infoBoxLines) {
+			this.drawString(fontRendererObj, s, x, y, 0xFFFFFF);
+			y += fontRendererObj.FONT_HEIGHT;
+		}
+		
+		//Red box around "multiworld support" button.
+		drawRect(
+				multiworldEnabledBtn.xPosition - 2,
+				multiworldEnabledBtn.yPosition - 2,
+				multiworldEnabledBtn.xPosition
+						+ multiworldEnabledBtn.getButtonWidth() + 2,
+				multiworldEnabledBtn.yPosition + 20 + 2, 0xFFFF0000);
+		
+		super.drawScreen(mouseX, mouseY, partialTicks);
 	}
 
 	private void updateMultiworldEnabled(boolean var1) {
