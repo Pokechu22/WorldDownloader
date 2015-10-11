@@ -298,7 +298,11 @@ public class WDLPluginChannels {
 	 * @return The {@link #requestMessage}.
 	 */
 	public static String getRequestMessage() {
-		return requestMessage;
+		if (receivedPackets.contains(3)) {
+			return requestMessage;
+		} else {
+			return null;
+		}
 	}
 	
 	/**
