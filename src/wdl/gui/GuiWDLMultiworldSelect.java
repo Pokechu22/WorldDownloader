@@ -17,37 +17,54 @@ import net.minecraft.entity.Entity;
  * While open, the player spins around visually in the world.
  */
 public class GuiWDLMultiworldSelect extends GuiScreen {
+	/**
+	 * The cancel button.
+	 */
 	private GuiButton cancelBtn;
+	/**
+	 * The "New name" field.
+	 */
 	private GuiTextField newNameField;
+	/**
+	 * Whether a new multiworld is being created.
+	 */
 	private boolean newWorld = false;
-	private int positionID;
+	/**
+	 * Current yaw.
+	 */
 	private float yaw;
-	private int thirdPersonViewSave;
+	/**
+	 * The previous mode for the camera (First person, 3rd person, ect)
+	 */
+	private int oldCameraMode;
+	/**
+	 * A list of all buttons.
+	 */
 	private GuiButton[] buttons;
+	/**
+	 * A list of all worlds that can be selected.
+	 */
 	private String[] worlds;
+	/**
+	 * The parent GUI screen.
+	 */
 	private GuiScreen parent;
-	EntityPlayerSP cam;
-	Entity oldRenderViewEntity;
+	/**
+	 * The player to preview.
+	 */
+	private EntityPlayerSP cam;
+	/**
+	 * The previous render view entity (the entity which Minecraft uses
+	 * for the camera)
+	 */
+	private Entity oldRenderViewEntity;
+	/**
+	 * Whether the camera has been set up.
+	 */
+	private boolean initializedCamera = false;
 
-	public GuiWDLMultiworldSelect(GuiScreen var1) {
-		this.parent = var1;
-		EntityPlayerSP tempPlayer = WDL.thePlayer;
-		this.cam = new EntityPlayerSP(WDL.minecraft, WDL.worldClient,
-				tempPlayer.sendQueue, tempPlayer.getStatFileWriter());
-		this.cam.setLocationAndAngles(tempPlayer.posX, tempPlayer.posY
-				- tempPlayer.getYOffset(), tempPlayer.posZ,
-				tempPlayer.rotationYaw, 0.0F);
-		this.yaw = tempPlayer.rotationYaw;
-		this.thirdPersonViewSave = WDL.minecraft.gameSettings.thirdPersonView;
-		WDL.minecraft.gameSettings.thirdPersonView = 0;
-		//Sets the render view entity for minecraft.
-		//When obfuscation changes, look in EntityRenderer.java for code that
-		//looks something like this in updateRenderer.java: 
-        //if (this.mc.renderViewEntity == null) {
-        //    this.mc.renderViewEntity = this.mc.thePlayer;
-        //}
-		this.oldRenderViewEntity = WDL.minecraft.func_175606_aa();
-		WDL.minecraft.func_175607_a(this.cam);
+	public GuiWDLMultiworldSelect(GuiScreen parent) {
+		this.parent = parent;
 	}
 
 	/**
@@ -55,7 +72,32 @@ public class GuiWDLMultiworldSelect extends GuiScreen {
 	 */
 	@Override
 	public void initGui() {
-		this.buttonList.clear();
+		if (!initializedCamera) {
+			this.cam = new EntityPlayerSP(WDL.minecraft, WDL.worldClient,
+					WDL.thePlayer.sendQueue, WDL.thePlayer.getStatFileWriter());
+			this.cam.setLocationAndAngles(WDL.thePlayer.posX, WDL.thePlayer.posY
+					- WDL.thePlayer.getYOffset(), WDL.thePlayer.posZ,
+					WDL.thePlayer.rotationYaw, 0.0F);
+			this.yaw = WDL.thePlayer.rotationYaw;
+			this.oldCameraMode = WDL.minecraft.gameSettings.thirdPersonView;
+			WDL.minecraft.gameSettings.thirdPersonView = 0;
+			
+			// Gets the render view entity for minecraft.
+			this.oldRenderViewEntity = WDL.minecraft.func_175606_aa();
+			
+			initializedCamera = true;
+		}
+		
+		// Sets the render view entity for minecraft.
+		// When obfuscation changes, look in
+		// net.minecraft.client.renderer.EntityRenderer.updateRenderer() for
+		// code that looks something like this:
+		//
+		// if (this.mc.renderViewEntity == null) {
+		//     this.mc.renderViewEntity = this.mc.thePlayer;
+        // }
+		WDL.minecraft.func_175607_a(this.cam);
+		
 		int var1 = this.width / 2;
 		int var2 = this.height / 4;
 		int var3 = this.width / 150;
@@ -69,7 +111,7 @@ public class GuiWDLMultiworldSelect extends GuiScreen {
 				"Cancel");
 		this.buttonList.add(this.cancelBtn);
 		String var5 = WDL.baseProps.getProperty("LinkedWorlds");
-		String[] var6 = var5.split("[|]");
+		String[] var6 = var5.split("|");
 		String[] var7 = new String[var6.length];
 		int var8 = 0;
 		int var9;
@@ -235,7 +277,7 @@ public class GuiWDLMultiworldSelect extends GuiScreen {
 	@Override
 	public void onGuiClosed() {
 		super.onGuiClosed();
-		WDL.minecraft.gameSettings.thirdPersonView = this.thirdPersonViewSave;
+		WDL.minecraft.gameSettings.thirdPersonView = this.oldCameraMode;
 		WDL.minecraft.func_175607_a(this.oldRenderViewEntity);
 	}
 
