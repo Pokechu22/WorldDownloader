@@ -86,12 +86,20 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase {
 	private String savedText = "";
 	private String playedText = "";
 	
+	private int infoBoxX, infoBoxY;
+	private int infoBoxWidth, infoBoxHeight;
+	
 	@Override
 	public void initGui() {
 		backingUp = false;
 		
+		infoBoxY = 48;
+		infoBoxX = (this.width / 2) - 150;
+		infoBoxWidth = 300;
+		infoBoxHeight = 22 * 5;
+		
 		int x = (this.width / 2) - 100;
-		int y = (this.height / 4) + 15;
+		int y = infoBoxY + 22;
 		
 		this.buttonList.add(new GuiButton(0, x, y,
 				"Backup as zip (then start download)"));
@@ -155,13 +163,24 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase {
 					width / 2, height / 4 - 10, 0xFFFFFF); 
 		} else {
 			drawDefaultBackground();
+			Utils.drawBorder(32, 22, 0, 0, height, width);
+			
+			drawCenteredString(fontRendererObj,
+					"WorldDownloader: Overwrite changes?", width / 2, 8,
+					0xFFFFFF);
+			drawCenteredString(fontRendererObj, "Last downloaded at " + savedText
+					+ ", last played at " + playedText,
+					width / 2, height - 8 - fontRendererObj.FONT_HEIGHT, 0xFFFFFF);
+			
+			drawRect(infoBoxX - 5, infoBoxY - 5, infoBoxX + infoBoxWidth + 5,
+					infoBoxY + infoBoxHeight + 5, 0xB0000000);
 			
 			drawCenteredString(fontRendererObj, 
-					"The world may have been changed.  Overwrite changes?",
-					width / 2, height / 4 - 40, 0xFFFFFF);
-			drawCenteredString(fontRendererObj, "Last downloaded on " + savedText
-					+ ", last played " + playedText,
-					width / 2, height / 4 - 10, 0xFFFFFF);
+					"The saved copy of the world may have been changed.",
+					width / 2, infoBoxY, 0xFFFFFF);
+			drawCenteredString(fontRendererObj,
+					"Changes may be lost if not backed up.", width / 2,
+					infoBoxY + fontRendererObj.FONT_HEIGHT, 0xFFFFFF);
 			
 			super.drawScreen(mouseX, mouseY, partialTicks);
 		}
