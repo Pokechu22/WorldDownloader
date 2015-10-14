@@ -13,10 +13,8 @@ import net.minecraft.entity.Entity;
 
 /**
  * A GUI for selecting which world the player is currently in.
- * 
- * While open, the player spins around visually in the world.
  */
-public class GuiWDLMultiworldSelect extends GuiScreen {
+public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	/**
 	 * The cancel button.
 	 */
@@ -30,14 +28,6 @@ public class GuiWDLMultiworldSelect extends GuiScreen {
 	 */
 	private boolean newWorld = false;
 	/**
-	 * Current yaw.
-	 */
-	private float yaw;
-	/**
-	 * The previous mode for the camera (First person, 3rd person, ect)
-	 */
-	private int oldCameraMode;
-	/**
 	 * A list of all buttons.
 	 */
 	private GuiButton[] buttons;
@@ -49,54 +39,14 @@ public class GuiWDLMultiworldSelect extends GuiScreen {
 	 * The parent GUI screen.
 	 */
 	private GuiScreen parent;
-	/**
-	 * The player to preview.
-	 */
-	private EntityPlayerSP cam;
-	/**
-	 * The previous render view entity (the entity which Minecraft uses
-	 * for the camera)
-	 */
-	private Entity oldRenderViewEntity;
-	/**
-	 * Whether the camera has been set up.
-	 */
-	private boolean initializedCamera = false;
 
 	public GuiWDLMultiworldSelect(GuiScreen parent) {
 		this.parent = parent;
 	}
 
-	/**
-	 * Adds the buttons (and other controls) to the screen in question.
-	 */
 	@Override
 	public void initGui() {
-		if (!initializedCamera) {
-			this.cam = new EntityPlayerSP(WDL.minecraft, WDL.worldClient,
-					WDL.thePlayer.sendQueue, WDL.thePlayer.getStatFileWriter());
-			this.cam.setLocationAndAngles(WDL.thePlayer.posX, WDL.thePlayer.posY
-					- WDL.thePlayer.getYOffset(), WDL.thePlayer.posZ,
-					WDL.thePlayer.rotationYaw, 0.0F);
-			this.yaw = WDL.thePlayer.rotationYaw;
-			this.oldCameraMode = WDL.minecraft.gameSettings.thirdPersonView;
-			WDL.minecraft.gameSettings.thirdPersonView = 0;
-			
-			// Gets the render view entity for minecraft.
-			this.oldRenderViewEntity = WDL.minecraft.func_175606_aa();
-			
-			initializedCamera = true;
-		}
-		
-		// Sets the render view entity for minecraft.
-		// When obfuscation changes, look in
-		// net.minecraft.client.renderer.EntityRenderer.updateRenderer() for
-		// code that looks something like this:
-		//
-		// if (this.mc.renderViewEntity == null) {
-		//     this.mc.renderViewEntity = this.mc.thePlayer;
-        // }
-		WDL.minecraft.func_175607_a(this.cam);
+		super.initGui();
 		
 		int var1 = this.width / 2;
 		int var2 = this.height / 4;
@@ -250,35 +200,12 @@ public class GuiWDLMultiworldSelect extends GuiScreen {
 
 		this.drawCenteredString(this.fontRendererObj, "Where are you?",
 				this.width / 2, this.height / 16 + 10, 16711680);
-		this.cam.prevRotationPitch = this.cam.rotationPitch = 0.0F;
-		this.cam.prevRotationYaw = this.cam.rotationYaw = this.yaw;
-		float var4 = 0.475F;
-		this.cam.lastTickPosY = this.cam.prevPosY = this.cam.posY = WDL.thePlayer.posY;
-		this.cam.lastTickPosX = this.cam.prevPosX = this.cam.posX = WDL.thePlayer.posX
-				- var4 * Math.sin(this.yaw / 180.0D * Math.PI);
-		this.cam.lastTickPosZ = this.cam.prevPosZ = this.cam.posZ = WDL.thePlayer.posZ
-				+ var4 * Math.cos(this.yaw / 180.0D * Math.PI);
-		float var5 = 1.0F;
-		this.yaw = (float)(this.yaw + var5
-				* (1.0D + 0.699999988079071D * Math.cos((this.yaw + 45.0F)
-						/ 45.0D * Math.PI)));
-
+		
 		if (this.newWorld) {
 			this.newNameField.drawTextBox();
 		}
 
 		super.drawScreen(var1, var2, var3);
-	}
-
-	/**
-	 * Called when the screen is unloaded. Used to disable keyboard repeat
-	 * events
-	 */
-	@Override
-	public void onGuiClosed() {
-		super.onGuiClosed();
-		WDL.minecraft.gameSettings.thirdPersonView = this.oldCameraMode;
-		WDL.minecraft.func_175607_a(this.oldRenderViewEntity);
 	}
 
 	private void worldSelected(String var1) {
