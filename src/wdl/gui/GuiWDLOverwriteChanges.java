@@ -88,30 +88,48 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase {
 	
 	private int infoBoxX, infoBoxY;
 	private int infoBoxWidth, infoBoxHeight;
+	private GuiButton backupAsZipButton;
+	private GuiButton backupAsFolderButton;
+	private GuiButton downloadNowButton;
+	private GuiButton cancelButton;
+	
+	private static final String TITLE =
+			"The saved copy of the world may have been changed.";
 	
 	@Override
 	public void initGui() {
 		backingUp = false;
 		
-		infoBoxY = 48;
-		infoBoxX = (this.width / 2) - 150;
-		infoBoxWidth = 300;
+		infoBoxWidth = fontRendererObj.getStringWidth(TITLE);
 		infoBoxHeight = 22 * 5;
+		
+		// Future compatibility -- TITLE may be far shorter
+		// if i18n is ever setup.
+		if (infoBoxWidth < 200) {
+			infoBoxWidth = 200;
+		}
+		
+		infoBoxY = 48;
+		infoBoxX = (this.width / 2) - (infoBoxWidth / 2);
 		
 		int x = (this.width / 2) - 100;
 		int y = infoBoxY + 22;
 		
-		this.buttonList.add(new GuiButton(0, x, y,
-				"Backup as zip (then start download)"));
+		backupAsZipButton = new GuiButton(0, x, y,
+				"Backup as zip (then start download)");
+		this.buttonList.add(backupAsZipButton);
 		y += 22;
-		this.buttonList.add(new GuiButton(1, x, y,
-				"Backup folder (then start download)"));
+		backupAsFolderButton = new GuiButton(1, x, y,
+				"Backup folder (then start download)");
+		this.buttonList.add(backupAsFolderButton);
 		y += 22;
-		this.buttonList.add(new GuiButton(2, x, y,
-				"Allow overwriting (start download)"));
+		downloadNowButton = new GuiButton(2, x, y,
+				"Allow overwriting (start download now)");
+		this.buttonList.add(downloadNowButton);
 		y += 22;
-		this.buttonList.add(new GuiButton(3, x, y,
-				"Cancel (don't start download)"));
+		cancelButton = new GuiButton(3, x, y,
+				"Cancel (don't start download)");
+		this.buttonList.add(cancelButton);
 		
 		super.initGui();
 	}
@@ -175,14 +193,35 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase {
 			drawRect(infoBoxX - 5, infoBoxY - 5, infoBoxX + infoBoxWidth + 5,
 					infoBoxY + infoBoxHeight + 5, 0xB0000000);
 			
-			drawCenteredString(fontRendererObj, 
-					"The saved copy of the world may have been changed.",
-					width / 2, infoBoxY, 0xFFFFFF);
+			drawCenteredString(fontRendererObj, TITLE, width / 2, infoBoxY,
+					0xFFFFFF);
 			drawCenteredString(fontRendererObj,
 					"Changes may be lost if not backed up.", width / 2,
 					infoBoxY + fontRendererObj.FONT_HEIGHT, 0xFFFFFF);
 			
 			super.drawScreen(mouseX, mouseY, partialTicks);
+			
+			String tooltip = null;
+			if (backupAsZipButton.isMouseOver()) {
+				tooltip = "Creates a .zip folder in the saves folder.\n\n" +
+						"This backup can't be played in game unless extracted, " +
+						"but is useful if you just want to archive the changes.";
+			} else if (backupAsFolderButton.isMouseOver()) {
+				tooltip = "Creates a copy of the existing world folder.\n\n" +
+						"This backup can be loaded in-game and will appear " +
+						"in the world list.";
+			} else if (downloadNowButton.isMouseOver()) {
+				tooltip = "Don't create any backup at all.\n\n" +
+						"§cAny changes made to the world will be overwritten.§r\n" +
+						"If you haven't made any changes you want to keep, " +
+						"this is the right option.";
+			} else if (cancelButton.isMouseOver()) {
+				tooltip = "Don't start any download.\n\n" +
+						"Return to the sever.  You can manually make a " +
+						"backup or just not download for the moment.";
+			}
+			
+			Utils.drawGuiInfoBox(tooltip, width, height);
 		}
 	}
 }
