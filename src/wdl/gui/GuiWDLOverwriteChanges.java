@@ -17,7 +17,7 @@ import wdl.WorldBackup;
 /**
  * GUI shown before possibly overwriting data in the world.
  */
-public class GuiWDLOverwriteChanges extends GuiScreen {
+public class GuiWDLOverwriteChanges extends GuiTurningCameraBase {
 	private static final DateFormat displayDateFormat = 
 			new SimpleDateFormat();
 	
@@ -104,6 +104,8 @@ public class GuiWDLOverwriteChanges extends GuiScreen {
 		y += 22;
 		this.buttonList.add(new GuiButton(3, x, y,
 				"Cancel (don't start download)"));
+		
+		super.initGui();
 	}
 	
 	@Override
