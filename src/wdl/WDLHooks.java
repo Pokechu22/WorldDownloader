@@ -145,8 +145,7 @@ public class WDLHooks {
 			
 			profiler.endSection();
 		} catch (Throwable e) {
-			WDL.minecraft.crashed(CrashReport.makeCrashReport(e,
-					"WDL mod: exception in onWorldClientTick event"));
+			WDL.crashed(e, "WDL mod: exception in onWorldClientTick event");
 		}
 	}
 
@@ -175,8 +174,7 @@ public class WDLHooks {
 			
 			profiler.endSection();
 		} catch (Throwable e) {
-			WDL.minecraft.crashed(CrashReport.makeCrashReport(e,
-					"WDL mod: exception in onWorldDoPreChunk event"));
+			WDL.crashed(e, "WDL mod: exception in onWorldDoPreChunk event");
 		}
 	}
 
@@ -203,8 +201,8 @@ public class WDLHooks {
 			
 			profiler.endSection();
 		} catch (Throwable e) {
-			WDL.minecraft.crashed(CrashReport.makeCrashReport(e,
-					"WDL mod: exception in onWorldRemoveEntityFromWorld event"));
+			WDL.crashed(e,
+					"WDL mod: exception in onWorldRemoveEntityFromWorld event");
 		}
 	}
 
@@ -241,8 +239,7 @@ public class WDLHooks {
 			
 			profiler.endSection();
 		} catch (Throwable e) {
-			WDL.minecraft.crashed(CrashReport.makeCrashReport(e,
-					"WDL mod: exception in onNHPCHandleChat event"));
+			WDL.crashed(e, "WDL mod: exception in onNHPCHandleChat event");
 		}
 	}
 
@@ -273,8 +270,7 @@ public class WDLHooks {
 			
 			profiler.endSection();
 		} catch (Throwable e) {
-			WDL.minecraft.crashed(CrashReport.makeCrashReport(e,
-					"WDL mod: exception in onNHPCHandleMaps event"));
+			WDL.crashed(e, "WDL mod: exception in onNHPCHandleMaps event");
 		}
 	}
 
@@ -309,8 +305,8 @@ public class WDLHooks {
 			
 			profiler.endSection();
 		} catch (Throwable e) {
-			WDL.minecraft.crashed(CrashReport.makeCrashReport(e,
-					"WDL mod: exception in onNHPCHandleCustomPayload event"));
+			WDL.crashed(e,
+					"WDL mod: exception in onNHPCHandleCustomPayload event");
 		}
 	}
 
@@ -351,8 +347,8 @@ public class WDLHooks {
 			
 			profiler.endSection();
 		} catch (Throwable e) {
-			WDL.minecraft.crashed(CrashReport.makeCrashReport(e,
-					"WDL mod: exception in onNHPCHandleBlockAction event"));
+			WDL.crashed(e,
+					"WDL mod: exception in onNHPCHandleBlockAction event");
 		}
 	}
 	

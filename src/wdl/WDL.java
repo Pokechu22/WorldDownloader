@@ -34,6 +34,7 @@ import net.minecraft.client.multiplayer.ChunkProviderClient;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.crash.CrashReport;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -55,6 +56,7 @@ import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.tileentity.TileEntityNote;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.LongHashMap;
+import net.minecraft.util.ReportedException;
 import net.minecraft.world.MinecraftException;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.AnvilSaveConverter;
@@ -1525,5 +1527,42 @@ public class WDL {
 		}
 		
 		return info.toString();
+	}
+	
+	/**
+	 * Call to properly crash the game when an exception is caught.
+	 * 
+	 * @param category
+	 */
+	public static void crashed(Throwable t, String category) {
+		CrashReport report;
+		
+		if (t instanceof ReportedException) {
+			CrashReport oldReport = 
+					((ReportedException) t).getCrashReport();
+			
+			report = CrashReport.makeCrashReport(oldReport.getCrashCause(),
+					category + " (" + oldReport.getCauseStackTraceOrString());
+			
+			try {
+				//Steal crashReportSections, and replace it.
+				List crashReportSectionsOld = ReflectionUtils.stealAndGetField(
+						oldReport, List.class);
+				List crashReportSectionsNew = ReflectionUtils.stealAndGetField(
+						report, List.class);
+				
+				crashReportSectionsNew.addAll(crashReportSectionsOld);
+			} catch (Exception e) {
+				//Well... some kind of reflection error.
+				//No use trying to do anything else.
+				report.makeCategory(
+						"An exception occured while trying to copy " +
+						"the origional categories.")
+						.addCrashSectionThrowable(":(", e);
+			}
+		} else {
+			report = CrashReport.makeCrashReport(t, category);
+		}
+		minecraft.crashed(report);
 	}
 }
