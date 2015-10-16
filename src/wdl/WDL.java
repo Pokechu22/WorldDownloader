@@ -249,7 +249,12 @@ public class WDL {
 					Integer.toString(EntityUtils.getDefaultEntityRange(entity)));
 		}
 		
+		//Don't save these entities by default -- they're problematic.
 		defaultProps.setProperty("Entity.FireworksRocketEntity.Enabled", "false");
+		defaultProps.setProperty("Entity.EnderDragon.Enabled", "false");
+		defaultProps.setProperty("Entity.PrimedTnt.Enabled", "false");
+		defaultProps.setProperty("Entity.null.Enabled", "false"); // :(
+		//
 		
 		defaultProps.setProperty("EntityGroup.Other.Enabled", "true");
 		defaultProps.setProperty("EntityGroup.Hostile.Enabled", "true");
