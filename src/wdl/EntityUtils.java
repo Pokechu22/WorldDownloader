@@ -368,6 +368,9 @@ public class EntityUtils {
 	 * @return The group, or <code>null</code> if none is found.
 	 */
 	public static String getEntityGroup(String type) {
+		if (type == null) {
+			return null;
+		}
 		for (Map.Entry<String, String> e : entitiesByGroup.entries()) {
 			if (type.equals(e.getValue())) {
 				return e.getKey();
