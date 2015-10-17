@@ -549,4 +549,26 @@ public class EntityUtils {
 			return otherRange;
 		}
 	}
+	
+	/**
+	 * Is the given entity not safe to save?
+	 * 
+	 * If it isn't safe, it may cause a crash or another issue when attempting
+	 * to save it.
+	 * 
+	 * TODO: This is basically a bandaid for a base issue with broken entities.
+	 * Solve that if possible.
+	 * 
+	 * @return <code>null</code> if it is safe to save, or a message explaining
+	 *         why the entity is NOT safe to save if so.
+	 */
+	public static String isUnsafeToSaveEntity(Entity e) {
+		try {
+			e.getCustomNameTag();
+		} catch (ClassCastException ex) {
+			return "Invalid custom name!  (" + ex + ")";
+		}
+		
+		return null;
+	}
 }

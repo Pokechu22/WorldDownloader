@@ -848,6 +848,18 @@ public class WDL {
 						
 						if (!EntityUtils.isEntityEnabled(e)) {
 							removedEntities.add(e);
+						} else {
+							String unsafeReason = EntityUtils.isUnsafeToSaveEntity(e);
+							if (unsafeReason != null) {
+								WDL.chatDebug(
+										WDLMessageTypes.REMOVE_ENTITY,
+										"saveChunk: Not saving "
+												+ EntityUtils.getEntityType(e)
+												+ " (not safe to save - "
+												+ unsafeReason + ")");
+								
+								removedEntities.add(e);
+							}
 						}
 					}
 				}
@@ -896,6 +908,7 @@ public class WDL {
 			// Better tell the player that something didn't work:
 			chatError("Chunk at chunk position " + c.xPosition + ","
 					+ c.zPosition + " can't be saved!");
+			chatError(e.toString());
 			
 			e.printStackTrace();
 		}
