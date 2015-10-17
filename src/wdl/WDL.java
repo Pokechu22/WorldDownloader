@@ -848,6 +848,11 @@ public class WDL {
 						
 						if (!EntityUtils.isEntityEnabled(e)) {
 							removedEntities.add(e);
+							WDL.chatDebug(
+									WDLMessageTypes.REMOVE_ENTITY,
+									"saveChunk: Not saving "
+											+ EntityUtils.getEntityType(e)
+											+ " (User preference)");
 						} else {
 							String unsafeReason = EntityUtils.isUnsafeToSaveEntity(e);
 							if (unsafeReason != null) {
