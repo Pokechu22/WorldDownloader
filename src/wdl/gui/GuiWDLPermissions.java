@@ -613,7 +613,7 @@ public class GuiWDLPermissions extends GuiScreen {
 		
 		if (!WDLPluginChannels.hasPermissions()) {
 			this.drawCenteredString(this.fontRendererObj,
-					"No permissions sent; defaulting to everything enabled.",
+					"No permissions received; defaulting to everything enabled.",
 					this.width / 2, (this.height - 32 - 23) / 2 + 23
 							- fontRendererObj.FONT_HEIGHT / 2, 0xFFFFFF);
 		}
