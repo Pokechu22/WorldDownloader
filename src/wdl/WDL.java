@@ -252,6 +252,7 @@ public class WDL {
 		//Don't save these entities by default -- they're problematic.
 		defaultProps.setProperty("Entity.FireworksRocketEntity.Enabled", "false");
 		defaultProps.setProperty("Entity.EnderDragon.Enabled", "false");
+		defaultProps.setProperty("Entity.WitherBoss.Enabled", "false");
 		defaultProps.setProperty("Entity.PrimedTnt.Enabled", "false");
 		defaultProps.setProperty("Entity.null.Enabled", "false"); // :(
 		//
