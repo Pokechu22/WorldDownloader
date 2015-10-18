@@ -255,8 +255,8 @@ public class WDL {
 		defaultProps.setProperty("Entity.WitherBoss.Enabled", "false");
 		defaultProps.setProperty("Entity.PrimedTnt.Enabled", "false");
 		defaultProps.setProperty("Entity.null.Enabled", "false"); // :(
-		//
 		
+		//Groups
 		defaultProps.setProperty("EntityGroup.Other.Enabled", "true");
 		defaultProps.setProperty("EntityGroup.Hostile.Enabled", "true");
 		defaultProps.setProperty("EntityGroup.Passive.Enabled", "true");
