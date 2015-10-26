@@ -134,6 +134,7 @@ public class GuiWDL extends GuiScreen {
 
 	public GuiWDL(GuiScreen parent) {
 		this.parent = parent;
+		System.out.println(net.minecraft.client.resources.I18n.format("test.test"));
 	}
 
 	/**

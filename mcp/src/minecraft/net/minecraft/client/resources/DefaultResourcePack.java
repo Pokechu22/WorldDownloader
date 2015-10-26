@@ -18,7 +18,7 @@ import com.google.common.collect.ImmutableSet;
 
 public class DefaultResourcePack implements IResourcePack {
 	public static final Set defaultResourceDomains = ImmutableSet.of(
-			"minecraft", "realms");
+			"minecraft", "realms", "wdl");
 	private final Map field_152781_b;
 	private static final String __OBFID = "CL_00001073";
 
