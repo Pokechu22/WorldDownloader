@@ -7,6 +7,7 @@
 !/mcp/src/minecraft/net/minecraft/client/gui/GuiIngameMenu.java
 !/mcp/src/minecraft/net/minecraft/client/multiplayer/WorldClient.java
 !/mcp/src/minecraft/net/minecraft/client/network/NetHandlerPlayClient.java
+!/mcp/src/minecraft/net/minecraft/client/resources/DefaultResourcePack.java
 
 /bin/
 /mcp/
