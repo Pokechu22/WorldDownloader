@@ -11,6 +11,7 @@ import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.GuiListExtended.IGuiListEntry;
+import net.minecraft.client.resources.I18n;
 
 public class GuiWDL extends GuiScreen {
 	/**
@@ -30,11 +31,18 @@ public class GuiWDL extends GuiScreen {
 			
 			private final String tooltip;
 			
-			public ButtonEntry(String text, GuiScreen toOpen, String tooltip) {
-				this.button = new GuiButton(0, 0, 0, text);
+			/**
+			 * Constructor.
+			 * 
+			 * @param key The I18n key, which will have the base for this GUI prepended.
+			 * @param toOpen The gui screen to open when the button is clicked.
+			 */
+			public ButtonEntry(String key, GuiScreen toOpen) {
+				this.button = new GuiButton(0, 0, 0, I18n.format("wdl.gui.wdl."
+						+ key + ".name"));
 				this.toOpen = toOpen;
 				
-				this.tooltip = tooltip;
+				this.tooltip = I18n.format("wdl.gui.wdl." + key + ".description");
 			}
 			
 			@Override
@@ -81,36 +89,21 @@ public class GuiWDL extends GuiScreen {
 			// TODO: This might be a performance bottleneck, as a bunch of
 			// GUI instances are created.  Although they aren't displayed.
 			
-			add(new ButtonEntry("World Overrides...", 
-					new GuiWDLWorld(GuiWDL.this),
-					"Control specific metadata about the saved world, " +
-					"such as the spawn point and game mode."));
-			add(new ButtonEntry("World Generator Overrides...", 
-					new GuiWDLGenerator(GuiWDL.this),
-					"Control specific info about how the world is generated, " +
-					"such as the seed."));
-			add(new ButtonEntry("Player Overrides...", 
-					new GuiWDLPlayer(GuiWDL.this),
-					"Control specific options about the saved player, " +
-					"such as their health and position."));
-			add(new ButtonEntry("Entity Options...", 
-					new GuiWDLEntities(GuiWDL.this),
-					"Control what types of entities to save, and the " +
-					"track distances of those entities."));
-			add(new ButtonEntry("Backup Options...", 
-					new GuiWDLBackup(GuiWDL.this),
-					"Control how the world is backed up after saving"));
-			add(new ButtonEntry("Message Options...", 
-					new GuiWDLMessages(GuiWDL.this),
-					"Control what messages appear in the chat."));
-			add(new ButtonEntry("Permissions info...", 
-					new GuiWDLPermissions(GuiWDL.this),
-					"Information about permissions setup on this server, " +
-					"and the form for requesting new permissions."));
-			add(new ButtonEntry("About World Downloader...",
-					new GuiWDLAbout(GuiWDL.this), 
-					"Information about your current installation of WDL, " +
-					"and any extensions."));
+				add(new ButtonEntry("worldOverrides", new GuiWDLWorld(
+						GuiWDL.this)));
+				add(new ButtonEntry("generatorOverrides", new GuiWDLGenerator(
+						GuiWDL.this)));
+				add(new ButtonEntry("playerOverrides", new GuiWDLPlayer(
+						GuiWDL.this)));
+				add(new ButtonEntry("entityOptions", new GuiWDLEntities(
+						GuiWDL.this)));
+				add(new ButtonEntry("backupOptions", new GuiWDLBackup(
+						GuiWDL.this)));
+				add(new ButtonEntry("messageOptions", new GuiWDLMessages(
+						GuiWDL.this)));
+				add(new ButtonEntry("permissionsInfo", new GuiWDLPermissions(
+						GuiWDL.this)));
+				add(new ButtonEntry("about", new GuiWDLAbout(GuiWDL.this)));
 		}};
 		
 		@Override
@@ -128,13 +121,12 @@ public class GuiWDL extends GuiScreen {
 
 	private GuiScreen parent;
 
-	private GuiTextField worldName;
-	private GuiButton autoStartBtn;
+	private GuiTextField worldname;
+	private GuiButton autostartBtn;
 	private GuiWDLButtonList list;
 
 	public GuiWDL(GuiScreen parent) {
 		this.parent = parent;
-		System.out.println(net.minecraft.client.resources.I18n.format("test.test"));
 	}
 
 	/**
@@ -153,22 +145,23 @@ public class GuiWDL extends GuiScreen {
 		}
 
 		this.buttonList.clear();
-		this.title = "Options for " + WDL.baseFolderName.replace('@', ':');
+		this.title = I18n.format("wdl.gui.wdl.title",
+				WDL.baseFolderName.replace('@', ':'));
 
 		if (WDL.baseProps.getProperty("ServerName").isEmpty()) {
 			WDL.baseProps.setProperty("ServerName", WDL.getServerName());
 		}
 
-		this.worldName = new GuiTextField(42, this.fontRendererObj,
+		this.worldname = new GuiTextField(42, this.fontRendererObj,
 				this.width / 2 - 155, 19, 150, 18);
-		this.updateServerName(false);
-		this.autoStartBtn = new GuiButton(1, this.width / 2 + 5, 18, 150, 20,
-				"Start Download: ERROR");
-		this.buttonList.add(this.autoStartBtn);
-		this.updateAutoStart(false);
+		this.worldname.setText(WDL.baseProps.getProperty("ServerName"));
+		
+		this.autostartBtn = new GuiButton(1, this.width / 2 + 5, 18, 150, 20,
+				getAutoStartButtonText());
+		this.buttonList.add(this.autostartBtn);
 
 		this.buttonList.add(new GuiButton(100, this.width / 2 - 100,
-				this.height - 29, "Done"));
+				this.height - 29, I18n.format("gui.done")));
 		
 		this.list = new GuiWDLButtonList();
 	}
@@ -178,22 +171,22 @@ public class GuiWDL extends GuiScreen {
 	 * ActionListener.actionPerformed(ActionEvent e).
 	 */
 	@Override
-	protected void actionPerformed(GuiButton guibutton) {
-		if (!guibutton.enabled) {
+	protected void actionPerformed(GuiButton button) {
+		if (!button.enabled) {
 			return;
 		}
 
-		this.updateServerName(true);
-
-		if (guibutton.id == 1) { // Auto start
-			this.updateAutoStart(true);
-		} else if (guibutton.id == 100) { // Done
+		if (button.id == 1) { // Auto start
+			this.cycleAutoStart();
+		} else if (button.id == 100) { // Done
 			this.mc.displayGuiScreen(this.parent);
 		}
 	}
 	
 	@Override
 	public void onGuiClosed() {
+		WDL.baseProps.setProperty("ServerName", this.worldname.getText());
+		
 		WDL.saveProps();
 	}
 
@@ -205,7 +198,7 @@ public class GuiWDL extends GuiScreen {
 	throws IOException {
 		list.func_148179_a(mouseX, mouseY, mouseButton);
 		super.mouseClicked(mouseX, mouseY, mouseButton);
-		this.worldName.mouseClicked(mouseX, mouseY, mouseButton);
+		this.worldname.mouseClicked(mouseX, mouseY, mouseButton);
 	}
 	
 	/**
@@ -232,7 +225,7 @@ public class GuiWDL extends GuiScreen {
 	@Override
 	protected void keyTyped(char typedChar, int keyCode) throws IOException {
 		super.keyTyped(typedChar, keyCode);
-		this.worldName.textboxKeyTyped(typedChar, keyCode);
+		this.worldname.textboxKeyTyped(typedChar, keyCode);
 	}
 
 	/**
@@ -240,7 +233,7 @@ public class GuiWDL extends GuiScreen {
 	 */
 	@Override
 	public void updateScreen() {
-		this.worldName.updateCursorCounter(); // updateCursorCounter
+		this.worldname.updateCursorCounter(); // updateCursorCounter
 		super.updateScreen();
 	}
 
@@ -257,38 +250,34 @@ public class GuiWDL extends GuiScreen {
 		
 		this.drawCenteredString(this.fontRendererObj, this.title,
 				this.width / 2, 8, 0xFFFFFF);
-		this.drawString(this.fontRendererObj, "Name:", this.worldName.xPosition
-				- this.fontRendererObj.getStringWidth("Name: "), 26, 0xFFFFFF);
-		this.worldName.drawTextBox();
+		String name = I18n.format("wdl.gui.wdl.worldname");
+		this.drawString(this.fontRendererObj, name, this.worldname.xPosition
+				- this.fontRendererObj.getStringWidth(name + " "), 26, 0xFFFFFF);
+		this.worldname.drawTextBox();
 		
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		
 		Utils.drawGuiInfoBox(displayedTooltip, width, height);
 	}
 
-	public void updateAutoStart(boolean btnClicked) {
-		String autoStart = WDL.baseProps.getProperty("AutoStart");
+	public void cycleAutoStart() {
+		String autostart = WDL.baseProps.getProperty("AutoStart");
 
-		if (autoStart.equals("true")) {
-			if (btnClicked) {
-				WDL.baseProps.setProperty("AutoStart", "false");
-				this.updateAutoStart(false);
-			} else {
-				this.autoStartBtn.displayString = "Start Download: Automatically";
-			}
-		} else if (btnClicked) {
+		if (autostart.equals("true")) {
+			WDL.baseProps.setProperty("AutoStart", "false");
+		} else {
 			WDL.baseProps.setProperty("AutoStart", "true");
-			this.updateAutoStart(false);
-		} else {
-			this.autoStartBtn.displayString = "Start Download: Only in menu";
 		}
+		
+		autostartBtn.displayString = getAutoStartButtonText();
 	}
-
-	private void updateServerName(boolean var1) {
-		if (var1) {
-			WDL.baseProps.setProperty("ServerName", this.worldName.getText());
-		} else {
-			this.worldName.setText(WDL.baseProps.getProperty("ServerName"));
-		}
+	
+	public String getAutoStartButtonText() {
+		String autostart = WDL.baseProps.getProperty("AutoStart");
+		
+		String key = "wdl.gui.wdl.autostart."
+				+ (autostart.equals("true") ? "autostart" : "onlyInMenu");
+		
+		return I18n.format(key);
 	}
 }
