@@ -411,4 +411,17 @@ class GuiNumericTextField extends GuiTextField {
 		lastSafeText = text;
 		setText(text);
 	}
+	
+	@Override
+	public String getText() {
+		String text = super.getText();
+		
+		try {
+			Integer.parseInt(text);
+			return text;
+		} catch (NumberFormatException e) {
+			setText(lastSafeText);
+			return lastSafeText;
+		}
+	}
 }
