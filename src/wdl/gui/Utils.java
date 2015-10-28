@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -354,5 +355,60 @@ class GuiSlider extends GuiButton {
 	@Override
 	public void mouseReleased(int mouseX, int mouseY) {
 		this.dragging = false;
+	}
+}
+
+/**
+ * {@link GuiTextField} that only accepts numbers.
+ */
+class GuiNumericTextField extends GuiTextField {
+	public GuiNumericTextField(int id, FontRenderer fontRenderer,
+			int x, int y, int width, int height) {
+		super(id, fontRenderer, x, y, width,
+				height);
+		setText("0");
+	}
+	
+	/**
+	 * Last text that was successfully entered.
+	 */
+	private String lastSafeText = "0";
+	
+	@Override
+	public void drawTextBox() {
+		// Save last safe text.
+		try {
+			Integer.parseInt(getText());
+			lastSafeText = getText();
+		} catch (NumberFormatException e) {
+			setText(lastSafeText);
+		}
+		
+		super.drawTextBox();
+	}
+	
+	/**
+	 * Gets the current value.
+	 * @return
+	 */
+	public int getValue() {
+		try {
+			return Integer.parseInt(getText());
+		} catch (NumberFormatException e) {
+			// Should not happen, hopefully.
+			e.printStackTrace();
+			return 0;
+		}
+	}
+	
+	/**
+	 * Sets the value.
+	 * @param value
+	 * @return
+	 */
+	public void setValue(int value) {
+		String text = String.valueOf(value);
+		lastSafeText = text;
+		setText(text);
 	}
 }
