@@ -380,7 +380,7 @@ class GuiNumericTextField extends GuiTextField {
 	public void drawTextBox() {
 		// Save last safe text.
 		try {
-			Integer.parseInt(getText());
+			Integer.parseInt("0" + getText());
 			lastSafeText = getText();
 		} catch (NumberFormatException e) {
 			setText(lastSafeText);
@@ -395,7 +395,7 @@ class GuiNumericTextField extends GuiTextField {
 	 */
 	public int getValue() {
 		try {
-			return Integer.parseInt(getText());
+			return Integer.parseInt("0" + getText());
 		} catch (NumberFormatException e) {
 			// Should not happen, hopefully.
 			e.printStackTrace();
@@ -419,11 +419,25 @@ class GuiNumericTextField extends GuiTextField {
 		String text = super.getText();
 		
 		try {
-			Integer.parseInt(text);
-			return text;
+			int value = Integer.parseInt("0" + text);
+			return String.valueOf(value);
 		} catch (NumberFormatException e) {
 			setText(lastSafeText);
 			return lastSafeText;
 		}
+	}
+	
+	@Override
+	public void setText(String text) {
+		String value;
+		
+		try {
+			value = String.valueOf(Integer.parseInt("0" + text));
+		} catch (NumberFormatException e) {
+			value = lastSafeText;
+		}
+		
+		super.setText(value);
+		lastSafeText = value;
 	}
 }
