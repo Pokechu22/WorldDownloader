@@ -65,6 +65,9 @@ public class GuiWDLWorld extends GuiScreen {
 				y, 50, 16);
 		this.spawnZ = new GuiNumericTextField(42, this.fontRendererObj, this.width / 2 + 48,
 				y, 50, 16);
+		spawnX.setText(WDL.worldProps.getProperty("SpawnX"));
+		spawnY.setText(WDL.worldProps.getProperty("SpawnY"));
+		spawnZ.setText(WDL.worldProps.getProperty("SpawnZ"));
 		this.spawnX.setMaxStringLength(7);
 		this.spawnY.setMaxStringLength(7);
 		this.spawnZ.setMaxStringLength(7);
