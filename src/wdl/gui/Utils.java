@@ -56,6 +56,8 @@ class Utils {
 	 * @return A list of lines.
 	 */
 	public static List<String> wordWrap(String s, int width) {
+		s = s.replace("\r", ""); // If we got a \r\n in the text somehow, remove it.
+		
 		/**
 		 * It's a method that formats and paginates text.
 		 * 
