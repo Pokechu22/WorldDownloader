@@ -6,20 +6,21 @@ import wdl.WDL;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.resources.I18n;
 
 public class GuiWDLWorld extends GuiScreen {
-	private String title = "";
+	private String title;
 	private GuiScreen parent;
 	private GuiButton allowCheatsBtn;
-	private GuiButton gameModeBtn;
+	private GuiButton gamemodeBtn;
 	private GuiButton timeBtn;
 	private GuiButton weatherBtn;
 	private GuiButton spawnBtn;
 	private GuiButton pickSpawnBtn;
 	private boolean showSpawnFields = false;
-	private GuiTextField spawnX;
-	private GuiTextField spawnY;
-	private GuiTextField spawnZ;
+	private GuiNumericTextField spawnX;
+	private GuiNumericTextField spawnY;
+	private GuiNumericTextField spawnZ;
 	private int spawnTextY;
 
 	public GuiWDLWorld(GuiScreen parent) {
@@ -34,49 +35,48 @@ public class GuiWDLWorld extends GuiScreen {
 		this.buttonList.clear();
 		this.title = "World Options for "
 				+ WDL.baseFolderName.replace('@', ':');
-		int var1 = this.width / 2;
-		int var2 = this.height / 4;
-		int var3 = var2 - 15;
 		
-		this.gameModeBtn = new GuiButton(1, var1 - 100, var3,
-						"Game Mode: ERROR");
-		this.buttonList.add(this.gameModeBtn);
-		this.updateGameMode(false);
-		var3 += 22;
-		this.allowCheatsBtn = new GuiButton(6, var1 - 100, var3,
-				"Allow cheats: ERROR");
+		int y = this.height / 4 - 15;
+		
+		this.gamemodeBtn = new GuiButton(1, this.width / 2 - 100, y,
+				this.getGamemodeText());
+		this.buttonList.add(this.gamemodeBtn);
+		y += 22;
+		this.allowCheatsBtn = new GuiButton(6, this.width / 2 - 100, y,
+				this.getAllowCheatsText());
 		this.buttonList.add(this.allowCheatsBtn);
-		this.updateAllowCheats(false);
-		var3 += 22;
-		this.timeBtn = new GuiButton(2, var1 - 100, var3, "Time: ERROR");
+		y += 22;
+		this.timeBtn = new GuiButton(2, this.width / 2 - 100, y, 
+				this.getTimeText());
 		this.buttonList.add(this.timeBtn);
-		this.updateTime(false);
-		var3 += 22;
-		this.weatherBtn = new GuiButton(3, var1 - 100, var3, "Weather: ERROR");
+		y += 22;
+		this.weatherBtn = new GuiButton(3, this.width / 2 - 100, y, 
+				this.getWeatherText());
 		this.buttonList.add(this.weatherBtn);
-		this.updateWeather(false);
-		var3 += 22;
-		this.spawnBtn = new GuiButton(4, var1 - 100, var3,
-				"Spawn Position: ERROR");
+		y += 22;
+		this.spawnBtn = new GuiButton(4, this.width / 2 - 100, y,
+				this.getSpawnText());
 		this.buttonList.add(this.spawnBtn);
-		var3 += 22;
-		this.spawnTextY = var3 + 4;
-		this.spawnX = new GuiTextField(40, this.fontRendererObj, var1 - 87,
-				var3, 50, 16);
-		this.spawnY = new GuiTextField(41, this.fontRendererObj, var1 - 19,
-				var3, 50, 16);
-		this.spawnZ = new GuiTextField(42, this.fontRendererObj, var1 + 48,
-				var3, 50, 16);
+		y += 22;
+		this.spawnTextY = y + 4;
+		this.spawnX = new GuiNumericTextField(40, this.fontRendererObj, this.width / 2 - 87,
+				y, 50, 16);
+		this.spawnY = new GuiNumericTextField(41, this.fontRendererObj, this.width / 2 - 19,
+				y, 50, 16);
+		this.spawnZ = new GuiNumericTextField(42, this.fontRendererObj, this.width / 2 + 48,
+				y, 50, 16);
 		this.spawnX.setMaxStringLength(7);
 		this.spawnY.setMaxStringLength(7);
 		this.spawnZ.setMaxStringLength(7);
-		var3 += 18;
-		this.pickSpawnBtn = new GuiButton(5, var1 - 0, var3, 100, 20,
-				"Current position");
+		y += 18;
+		this.pickSpawnBtn = new GuiButton(5, this.width / 2, y, 100, 20,
+				I18n.format("wdl.gui.world.setSpawnToCurrentPosition"));
 		this.buttonList.add(this.pickSpawnBtn);
-		this.updateSpawn(false);
-		this.updateSpawnXYZ(false);
-		this.buttonList.add(new GuiButton(100, var1 - 100, height - 29, "Done"));
+		
+		updateSpawnTextBoxVisibility();
+		
+		this.buttonList.add(new GuiButton(100, this.width / 2 - 100,
+				this.height - 29, I18n.format("gui.done")));
 	}
 
 	/**
@@ -87,17 +87,17 @@ public class GuiWDLWorld extends GuiScreen {
 	protected void actionPerformed(GuiButton button) {
 		if (button.enabled) {
 			if (button.id == 1) {
-				this.updateGameMode(true);
+				this.cycleGamemode();
 			} else if (button.id == 2) {
-				this.updateTime(true);
+				this.cycleTime();
 			} else if (button.id == 3) {
-				this.updateWeather(true);
+				this.cycleWeather();
 			} else if (button.id == 4) {
-				this.updateSpawn(true);
+				this.cycleSpawn();
 			} else if (button.id == 5) {
-				this.pickSpawn();
+				this.setSpawnToPlayerPosition();
 			} else if (button.id == 6) {
-				this.updateAllowCheats(true);
+				this.cycleAllowCheats();
 			} else if (button.id == 100) {
 				this.mc.displayGuiScreen(this.parent);
 			}
@@ -107,7 +107,9 @@ public class GuiWDLWorld extends GuiScreen {
 	@Override
 	public void onGuiClosed() {
 		if (this.showSpawnFields) {
-			this.updateSpawnXYZ(true);
+			WDL.worldProps.setProperty("SpawnX", spawnX.getText());
+			WDL.worldProps.setProperty("SpawnY", spawnY.getText());
+			WDL.worldProps.setProperty("SpawnZ", spawnZ.getText());
 		}
 
 		WDL.saveProps();
@@ -178,242 +180,159 @@ public class GuiWDLWorld extends GuiScreen {
 		String tooltip = null;
 		
 		if (allowCheatsBtn.isMouseOver()) {
-			tooltip = "Controls whether commands (such as /gamemode) are " +
-					"allowed in the downloaded world.";
-		} else if (gameModeBtn.isMouseOver()) {
-			tooltip = "Controls which gamemode is used in the downloaded world.";
+			tooltip = I18n.format("wdl.gui.world.allowCheats.description");
+		} else if (gamemodeBtn.isMouseOver()) {
+			tooltip = I18n.format("wdl.gui.world.gamemode.description");
 		} else if (timeBtn.isMouseOver()) {
-			tooltip = "Controls the time in the downloaded world.";
+			tooltip = I18n.format("wdl.gui.world.time.description");
 		} else if (weatherBtn.isMouseOver()) {
-			tooltip = "Controls the weather in the downloaded world.";
+			tooltip = I18n.format("wdl.gui.world.weather.description");
 		} else if (spawnBtn.isMouseOver()) {
-			tooltip = "Controls the spawn point in the downloaded world.\n\n" +
-					"§lDon't change§r: Use the server spawn position.\n" +
-					"§lPlayer position§r: Use the position that the player was " +
-					"in when the download was stopped.\n" +
-					"§lXYZ§r: Allows specifying the exact coordinates.";
+			tooltip = I18n.format("wdl.gui.world.spawn.description");
 		} else if (pickSpawnBtn.isMouseOver()) {
-			tooltip = "Set the spawn position to your current position.";
+			tooltip = I18n.format("wdl.gui.world.setSpawnToCurrentPosition.description");
 		}
 		
 		if (showSpawnFields) {
-			String posToolTip = "Use these text boxes to specify the exact " +
-					"spawn position.\n\n";
-					
 			if (Utils.isMouseOverTextBox(mouseX, mouseY, spawnX)) {
-				tooltip = posToolTip
-						+ "This text box specifies the X coordinate.";
+				tooltip = I18n.format("wdl.gui.world.spawnPos.description", "X");
 			} else if (Utils.isMouseOverTextBox(mouseX, mouseY, spawnY)) {
-				tooltip = posToolTip
-						+ "This text box specifies the Y coordinate.";
+				tooltip = I18n.format("wdl.gui.world.spawnPos.description", "Y");
 			} else if (Utils.isMouseOverTextBox(mouseX, mouseY, spawnZ)) {
-				tooltip = posToolTip
-						+ "This text box specifies the Z coordinate.";
+				tooltip = I18n.format("wdl.gui.world.spawnPos.description", "Z");
 			}
 		}
 		
 		Utils.drawGuiInfoBox(tooltip, width, height);
 	}
 
-	private void updateAllowCheats(boolean var1) {
-		String prop = WDL.baseProps.getProperty("AllowCheats");
-
-		if (prop.equals("true")) {
-			if (var1) {
-				WDL.baseProps.setProperty("AllowCheats", "false");
-				this.updateAllowCheats(false);
-			} else {
-				this.allowCheatsBtn.displayString = "Allow cheats: Yes";
-			}
+	private void cycleAllowCheats() {
+		if (WDL.baseProps.getProperty("AllowCheats").equals("true")) {
+			WDL.baseProps.setProperty("AllowCheats", "false");
 		} else {
-			if (var1) {
-				WDL.baseProps.setProperty("AllowCheats", "true");
-				this.updateAllowCheats(false);
-			} else {
-				this.allowCheatsBtn.displayString = "Allow cheats: No";
-			}
+			WDL.baseProps.setProperty("AllowCheats", "true");
 		}
+		
+		this.allowCheatsBtn.displayString = getAllowCheatsText();
 	}
 	
-	private void updateGameMode(boolean var1) {
-		String var2 = WDL.baseProps.getProperty("GameType");
+	private void cycleGamemode() {
+		String prop = WDL.baseProps.getProperty("GameType");
 
-		if (var2.equals("keep")) {
-			if (var1) {
-				WDL.baseProps.setProperty("GameType", "creative");
-				this.updateGameMode(false);
-			} else {
-				this.gameModeBtn.displayString = "Game Mode: Don\'t change";
-			}
-		} else if (var2.equals("creative")) {
-			if (var1) {
-				WDL.baseProps.setProperty("GameType", "survival");
-				this.updateGameMode(false);
-			} else {
-				this.gameModeBtn.displayString = "Game Mode: Creative";
-			}
-		} else if (var2.equals("survival")) {
-			if (var1) {
-				WDL.baseProps.setProperty("GameType", "hardcore");
-				this.updateGameMode(false);
-			} else {
-				this.gameModeBtn.displayString = "Game Mode: Survival";
-			}
-		} else if (var2.equals("hardcore")) {
-			if (var1) {
-				WDL.baseProps.setProperty("GameType", "keep");
-				this.updateGameMode(false);
-			} else {
-				this.gameModeBtn.displayString = "Game Mode: Survival Hardcore";
-			}
+		if (prop.equals("keep")) {
+			WDL.baseProps.setProperty("GameType", "creative");
+		} else if (prop.equals("creative")) {
+			WDL.baseProps.setProperty("GameType", "survival");
+		} else if (prop.equals("survival")) {
+			WDL.baseProps.setProperty("GameType", "hardcore");
+		} else if (prop.equals("hardcore")) {
+			WDL.baseProps.setProperty("GameType", "keep");
 		}
+		
+		this.gamemodeBtn.displayString = getGamemodeText();
 	}
 
-	private void updateTime(boolean var1) {
-		String var2 = WDL.baseProps.getProperty("Time");
+	private void cycleTime() {
+		String prop = WDL.baseProps.getProperty("Time");
 
-		if (var2.equals("keep")) {
-			if (var1) {
-				WDL.baseProps.setProperty("Time", "23000");
-				this.updateTime(false);
-			} else {
-				this.timeBtn.displayString = "Time: Don\'t change";
-			}
-		} else if (var2.equals("23000")) {
-			if (var1) {
-				WDL.baseProps.setProperty("Time", "0");
-				this.updateTime(false);
-			} else {
-				this.timeBtn.displayString = "Time: Sunrise";
-			}
-		} else if (var2.equals("0")) {
-			if (var1) {
-				WDL.baseProps.setProperty("Time", "6000");
-				this.updateTime(false);
-			} else {
-				this.timeBtn.displayString = "Time: Morning";
-			}
-		} else if (var2.equals("6000")) {
-			if (var1) {
-				WDL.baseProps.setProperty("Time", "11500");
-				this.updateTime(false);
-			} else {
-				this.timeBtn.displayString = "Time: Noon";
-			}
-		} else if (var2.equals("11500")) {
-			if (var1) {
-				WDL.baseProps.setProperty("Time", "12500");
-				this.updateTime(false);
-			} else {
-				this.timeBtn.displayString = "Time: Evening";
-			}
-		} else if (var2.equals("12500")) {
-			if (var1) {
-				WDL.baseProps.setProperty("Time", "18000");
-				this.updateTime(false);
-			} else {
-				this.timeBtn.displayString = "Time: Sunset";
-			}
-		} else if (var2.equals("18000")) {
-			if (var1) {
-				WDL.baseProps.setProperty("Time", "keep");
-				this.updateTime(false);
-			} else {
-				this.timeBtn.displayString = "Time: Midnight";
-			}
+		if (prop.equals("keep")) {
+			WDL.baseProps.setProperty("Time", "23000");
+		} else if (prop.equals("23000")) {
+			WDL.baseProps.setProperty("Time", "0");
+		} else if (prop.equals("0")) {
+			WDL.baseProps.setProperty("Time", "6000");
+		} else if (prop.equals("6000")) {
+			WDL.baseProps.setProperty("Time", "11500");
+		} else if (prop.equals("11500")) {
+			WDL.baseProps.setProperty("Time", "12500");
+		} else if (prop.equals("12500")) {
+			WDL.baseProps.setProperty("Time", "18000");
+		} else { // prop.equals("18000")
+			WDL.baseProps.setProperty("Time", "keep");
 		}
+		
+		this.timeBtn.displayString = getTimeText();
 	}
 
-	private void updateWeather(boolean var1) {
-		String var2 = WDL.baseProps.getProperty("Weather");
+	private void cycleWeather() {
+		String prop = WDL.baseProps.getProperty("Weather");
 
-		if (var2.equals("keep")) {
-			if (var1) {
-				WDL.baseProps.setProperty("Weather", "sunny");
-				this.updateWeather(false);
-			} else {
-				this.weatherBtn.displayString = "Weather: Don\'t change";
-			}
-		} else if (var2.equals("sunny")) {
-			if (var1) {
-				WDL.baseProps.setProperty("Weather", "rain");
-				this.updateWeather(false);
-			} else {
-				this.weatherBtn.displayString = "Weather: Sunny";
-			}
-		} else if (var2.equals("rain")) {
-			if (var1) {
-				WDL.baseProps.setProperty("Weather", "thunderstorm");
-				this.updateWeather(false);
-			} else {
-				this.weatherBtn.displayString = "Weather: Rain";
-			}
-		} else if (var2.equals("thunderstorm")) {
-			if (var1) {
-				WDL.baseProps.setProperty("Weather", "keep");
-				this.updateWeather(false);
-			} else {
-				this.weatherBtn.displayString = "Weather: Thunderstorm";
-			}
+		if (prop.equals("keep")) {
+			WDL.baseProps.setProperty("Weather", "sunny");
+		} else if (prop.equals("sunny")) {
+			WDL.baseProps.setProperty("Weather", "rain");
+		} else if (prop.equals("rain")) {
+			WDL.baseProps.setProperty("Weather", "thunderstorm");
+		} else if (prop.equals("thunderstorm")) {
+			WDL.baseProps.setProperty("Weather", "keep");
 		}
+		
+		this.weatherBtn.displayString = getWeatherText();
 	}
 
-	private void updateSpawn(boolean var1) {
-		String var2 = WDL.worldProps.getProperty("Spawn");
-		this.showSpawnFields = false;
-		this.pickSpawnBtn.visible = false;
-
-		if (var2.equals("auto")) {
-			if (var1) {
-				WDL.worldProps.setProperty("Spawn", "player");
-				this.updateSpawn(false);
-			} else {
-				this.spawnBtn.displayString = "Spawn Position: Automatic";
-			}
-		} else if (var2.equals("player")) {
-			if (var1) {
-				WDL.worldProps.setProperty("Spawn", "xyz");
-				this.updateSpawn(false);
-			} else {
-				this.spawnBtn.displayString = "Spawn Position: Player position";
-			}
-		} else if (var2.equals("xyz")) {
-			if (var1) {
-				WDL.worldProps.setProperty("Spawn", "auto");
-				this.updateSpawn(false);
-			} else {
-				this.spawnBtn.displayString = "Spawn Position:";
-				this.showSpawnFields = true;
-				this.pickSpawnBtn.visible = true;
-			}
+	private void cycleSpawn() {
+		String prop = WDL.worldProps.getProperty("Spawn");
+		
+		if (prop.equals("auto")) {
+			WDL.worldProps.setProperty("Spawn", "player");
+		} else if (prop.equals("player")) {
+			WDL.worldProps.setProperty("Spawn", "xyz");
+		} else if (prop.equals("xyz")) {
+			WDL.worldProps.setProperty("Spawn", "auto");
 		}
+		
+		this.spawnBtn.displayString = getSpawnText();
+		updateSpawnTextBoxVisibility();
+	}
+	
+	private String getAllowCheatsText() {
+		return I18n.format("wdl.gui.world.allowCheats."
+				+ WDL.baseProps.getProperty("AllowCheats"));
+	}
+	
+	private String getGamemodeText() {
+		return I18n.format("wdl.gui.world.gamemode."
+				+ WDL.baseProps.getProperty("GameType"));
+	}
+	
+	private String getTimeText() {
+		String result = I18n.format("wdl.gui.world.time."
+				+ WDL.baseProps.getProperty("Time"));
+		
+		if (result.startsWith("wdl.gui.world.time.")) {
+			// Unrecognized time -- not translated
+			// Only done with time because time can have a value that
+			// isn't on the normal list but still can be parsed
+			result = I18n.format("wdl.gui.world.time.custom",
+					WDL.baseProps.getProperty("Time"));
+		}
+		
+		return result;
+	}
+	
+	private String getWeatherText() {
+		return I18n.format("wdl.gui.world.weather."
+				+ WDL.baseProps.getProperty("Weather"));
+	}
+	
+	private String getSpawnText() {
+		return I18n.format("wdl.gui.world.spawn."
+				+ WDL.worldProps.getProperty("Spawn"));
+	}
+	
+	/**
+	 * Recalculates whether the spawn text boxes should be displayed.
+	 */
+	private void updateSpawnTextBoxVisibility() {
+		boolean show = WDL.worldProps.getProperty("Spawn").equals("xyz");
+		
+		this.showSpawnFields = show;
+		this.pickSpawnBtn.visible = show;
 	}
 
-	private void updateSpawnXYZ(boolean var1) {
-		if (var1) {
-			try {
-				int var2 = Integer.parseInt(this.spawnX.getText());
-				int var3 = Integer.parseInt(this.spawnY.getText());
-				int var4 = Integer.parseInt(this.spawnZ.getText());
-				WDL.worldProps.setProperty("SpawnX", String.valueOf(var2));
-				WDL.worldProps.setProperty("SpawnY", String.valueOf(var3));
-				WDL.worldProps.setProperty("SpawnZ", String.valueOf(var4));
-			} catch (NumberFormatException var5) {
-				this.updateSpawn(true);
-			}
-		} else {
-			this.spawnX.setText(WDL.worldProps.getProperty("SpawnX"));
-			this.spawnY.setText(WDL.worldProps.getProperty("SpawnY"));
-			this.spawnZ.setText(WDL.worldProps.getProperty("SpawnZ"));
-		}
-	}
-
-	private void pickSpawn() {
-		int var1 = (int) Math.floor(WDL.thePlayer.posX);
-		int var2 = (int) Math.floor(WDL.thePlayer.posY);
-		int var3 = (int) Math.floor(WDL.thePlayer.posZ);
-		this.spawnX.setText(String.valueOf(var1));
-		this.spawnY.setText(String.valueOf(var2));
-		this.spawnZ.setText(String.valueOf(var3));
+	private void setSpawnToPlayerPosition() {
+		this.spawnX.setValue((int)WDL.thePlayer.posX);
+		this.spawnY.setValue((int)WDL.thePlayer.posY);
+		this.spawnZ.setValue((int)WDL.thePlayer.posZ);
 	}
 }
