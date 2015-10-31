@@ -81,6 +81,7 @@ wdl.gui.generator.generateStructures.description=Whether structures (villages, s
 
 wdl.gui.ingameMenu.downloadStatus.singlePlayer=Can't download in single player
 wdl.gui.ingameMenu.downloadStatus.disabled=Download disabled by server
+wdl.gui.ingameMenu.downloadStatus.request=Request permission to download
 wdl.gui.ingameMenu.downloadStatus.saving=Still saving...
 wdl.gui.ingameMenu.downloadStatus.stop=Stop download
 wdl.gui.ingameMenu.downloadStatus.start=Download this world

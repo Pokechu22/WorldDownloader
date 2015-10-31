@@ -30,6 +30,7 @@ import wdl.api.IGuiHooksListener;
 import wdl.api.IPluginChannelListener;
 import wdl.api.IWDLMod;
 import wdl.gui.GuiWDL;
+import wdl.gui.GuiWDLPermissions;
 
 /**
  * The various hooks for WDL. <br/>
@@ -373,6 +374,17 @@ public class WDLHooks {
 	}
 
 	/**
+	 * Start button ID. Ascii-encoded 'WDLs' (World Downloader Start).
+	 * Chosen to be unique.
+	 */
+	private static final int WDLs = 0x57444C73;
+	/**
+	 * Options button ID. Ascii-encoded 'WDLo' (World Downloader Options).
+	 * Chosen to be unique.
+	 */
+	private static final int WDLo = 0x57444C6F;
+	
+	/**
 	 * Adds the "Download this world" button to the ingame pause GUI.
 	 * 
 	 * @param gui
@@ -399,23 +411,32 @@ public class WDLHooks {
 			}
 		}
 	
-		// Insert buttons... The IDs are chosen to be unique (hopefully). They
-		// are ASCII encoded strings: "WDLs" and "WDLo"
-		GuiButton wdlDownload = new GuiButton(0x57444C73, gui.width / 2 - 100,
+		// Insert wdl buttons.
+		GuiButton wdlDownload = new GuiButton(WDLs, gui.width / 2 - 100,
 				insertAtYPos, 170, 20, null);
-		GuiButton wdlOptions = new GuiButton(0x57444C6F, gui.width / 2 + 71,
+		
+		GuiButton wdlOptions = new GuiButton(WDLo, gui.width / 2 + 71,
 				insertAtYPos, 28, 20,
 				I18n.format("wdl.gui.ingameMenu.settings"));
+		
 		if (WDL.minecraft.isIntegratedServerRunning()) {
 			wdlDownload.displayString = I18n
 					.format("wdl.gui.ingameMenu.downloadStatus.singlePlayer");
 			wdlDownload.enabled = false;
 			wdlOptions.enabled = false;
 		} else if (!WDLPluginChannels.canDownloadInGeneral()) {
-			wdlDownload.displayString = I18n
-					.format("wdl.gui.ingameMenu.downloadStatus.disabled");
-			wdlDownload.enabled = false;
-			wdlOptions.enabled = false;
+			if (WDLPluginChannels.canRequestPermissions()) {
+				// Allow requesting permissions.
+				wdlDownload.displayString = I18n
+						.format("wdl.gui.ingameMenu.downloadStatus.request");
+				wdlOptions.enabled = false;
+			} else {
+				// Out of date plugin :/
+				wdlDownload.displayString = I18n
+						.format("wdl.gui.ingameMenu.downloadStatus.disabled");
+				wdlDownload.enabled = false;
+				wdlOptions.enabled = false;
+			}
 		} else if (WDL.saving) {
 			wdlDownload.displayString = I18n
 					.format("wdl.gui.ingameMenu.downloadStatus.saving");
@@ -446,9 +467,14 @@ public class WDLHooks {
 			return;
 		}
 	
-		if (button.id == 0x57444C73) { // "Start/Stop Download"
+		if (button.id == WDLs) { // "Start/Stop Download"
 			if (!WDLPluginChannels.canDownloadInGeneral()) {
-				button.enabled = false;
+				if (WDLPluginChannels.canRequestPermissions()) {
+					WDL.minecraft.displayGuiScreen(new GuiWDLPermissions(gui));
+				} else {
+					button.enabled = false;
+				}
+				
 				return;
 			}
 			if (WDL.downloading) {
@@ -456,7 +482,7 @@ public class WDLHooks {
 			} else {
 				WDL.start();
 			}
-		} else if (button.id == 0x57444C6F) { // "..." (options)
+		} else if (button.id == WDLo) { // "..." (options)
 			if (!WDLPluginChannels.canDownloadInGeneral()) {
 				button.enabled = false;
 				return;
