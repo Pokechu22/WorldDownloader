@@ -24,8 +24,7 @@ public class GuiWDLAbout extends GuiScreen {
 	 */
 	private final GuiScreen parent;
 	
-	//TODO: Update this thread when the new one is launched.
-	private static final String FORUMS_THREAD = "http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1285484-world-downloader-mod";
+	private static final String FORUMS_THREAD = "http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465";
 	private static final String COREMOD_GITHUB = "https://github.com/Pokechu22/WorldDownloader";
 	private static final String LITEMOD_GITHUB = "https://github.com/uyjulian/LiteModWDL/";
 	
@@ -36,8 +35,9 @@ public class GuiWDLAbout extends GuiScreen {
 	 */
 	private static final String INFO = 
 "WorldDownloader is a mod developed by nariol, cubic72, and pokechu22 (" +
-"litemod version by julialy) that allows downloading of a multiplayer world " +
-"for singleplayer use.  Source code is publicly available.\n\n" +
+"litemod version by julialy), with help from others (including soccerguy3, " +
+"UltiNaruto, Net32, and El_garoo) that allows downloading a copy of a " +
+"multiplayer world for singleplayer use.  Source code is publicly available.\n\n" +
 "You are running version " + WDL.VERSION + " on Minecraft version " + 
 Minecraft.getMinecraft().func_175600_c() /* returns launched version */ + "/" + 
 ClientBrandRetriever.getClientModName() + ".";
