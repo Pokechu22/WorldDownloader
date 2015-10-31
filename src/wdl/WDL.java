@@ -264,8 +264,6 @@ public class WDL {
 		//Last saved time, so that you can tell if the world was modified.
 		defaultProps.setProperty("LastSaved", "-1");
 		
-		defaultProps.setProperty("ShowPermsUIOnNewPerms", "true");
-		
 		baseProps = new Properties(defaultProps);
 		worldProps = new Properties(baseProps);
 	}

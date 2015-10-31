@@ -49,9 +49,11 @@ public class GuiWDLPermissions extends GuiScreen {
 	private GuiButton doneButton;
 	
 	/**
-	 * Show on new permissions button.
+	 * Ticks (20ths of a second) until this UI needs to refresh.
+	 * 
+	 * If -1, don't refresh.
 	 */
-	private GuiButton showOnNewPermsButton;
+	private int refreshTicks = -1;
 	
 	/**
 	 * IGuiListEntry that displays or requests a permission.
@@ -356,7 +358,17 @@ public class GuiWDLPermissions extends GuiScreen {
 	private PermissionEntry sendEntityRanges;
 	private PermissionEntry allWorlds;
 	
-	private List<IGuiListEntry> globalEntries = new ArrayList<IGuiListEntry>() {{
+	/**
+	 * Global list of entries.
+	 */
+	private List<IGuiListEntry> globalEntries;
+	
+	/**
+	 * Recalculates the {@link #globalEntries} list.
+	 */
+	private void calculateEntries() {
+		globalEntries = new ArrayList<IGuiListEntry>();
+		
 		if (WDLPluginChannels.hasPermissions()) {
 			canDownloadInGeneral = new PermissionEntry(
 					"Can download: "
@@ -406,17 +418,17 @@ public class GuiWDLPermissions extends GuiScreen {
 					"Controls whether the options effect all worlds or " +
 					"just the current one");
 			
-			add(canDownloadInGeneral);
-			add(canCacheChunks);
-			add(saveRadius);
-			add(canSaveEntities);
-			add(canSaveTileEntities);
-			add(canSaveContainers);
-			add(canDoUnknownThings);
-			add(sendEntityRanges);
-			add(allWorlds);
+			globalEntries.add(canDownloadInGeneral);
+			globalEntries.add(canCacheChunks);
+			globalEntries.add(saveRadius);
+			globalEntries.add(canSaveEntities);
+			globalEntries.add(canSaveTileEntities);
+			globalEntries.add(canSaveContainers);
+			globalEntries.add(canDoUnknownThings);
+			globalEntries.add(sendEntityRanges);
+			globalEntries.add(allWorlds);
 		}
-	}};
+	}
 	
 	/**
 	 * List of permissions.
@@ -428,7 +440,7 @@ public class GuiWDLPermissions extends GuiScreen {
 					GuiWDLPermissions.this.height - BOTTOM_MARGIN, 
 					fontRendererObj.FONT_HEIGHT * 2 + 2);
 			
-			entries = new ArrayList<IGuiListEntry>();
+			localEntries = new ArrayList<IGuiListEntry>();
 			
 			String message = WDLPluginChannels.getRequestMessage();
 			if (message != null && !message.isEmpty()) {
@@ -442,23 +454,28 @@ public class GuiWDLPermissions extends GuiScreen {
 					String line1 = ittr.next();
 					String line2 = (ittr.hasNext() ? ittr.next() : "");
 					
-					entries.add(new TextEntry(line1, line2));
+					localEntries.add(new TextEntry(line1, line2));
 				}
 			}
-			
-			entries.addAll(globalEntries);
 		}
 		
-		private ArrayList<IGuiListEntry> entries;
+		/**
+		 * Line-wrapped message entries.  Stored here because it can change.
+		 */
+		private ArrayList<IGuiListEntry> localEntries;
 		
 		@Override
 		public IGuiListEntry getListEntry(int index) {
-			return entries.get(index);
+			if (index < localEntries.size()) {
+				return localEntries.get(index);
+			} else {
+				return globalEntries.get(index - localEntries.size());
+			}
 		}
 		
 		@Override
 		protected int getSize() {
-			return entries.size();
+			return localEntries.size() + globalEntries.size();
 		}
 		
 		@Override
@@ -485,25 +502,10 @@ public class GuiWDLPermissions extends GuiScreen {
 		this.parent = parent;
 	}
 	
-	/**
-	 * Creates a new GUI.
-	 * 
-	 * Attempts to infer the parent based off of the currently open GUI.
-	 */
-	public GuiWDLPermissions() {
-		GuiScreen openGui = WDL.minecraft.currentScreen;
-		
-		if (openGui instanceof GuiWDLPermissions) {
-			this.parent = ((GuiWDLPermissions) openGui).parent;
-		} else {
-			//openGui may be null, but that's not an issue, as that
-			//would just close the GUI.
-			this.parent = openGui;
-		}
-	}
-	
 	@Override
 	public void initGui() {
+		this.buttonList.clear();
+		
 		this.buttonList.add(new GuiButton(100, width / 2 - 100, height - 29,
 				"Done"));
 		
@@ -513,17 +515,25 @@ public class GuiWDLPermissions extends GuiScreen {
 		reloadButton = new GuiButton(1, (this.width / 2) + 5, 18, 150, 20,
 				"Reload permissions");
 		this.buttonList.add(reloadButton);
-		boolean shown = WDL.baseProps.getProperty("ShowPermsUIOnNewPerms",
-				"true").equalsIgnoreCase("true");
-		this.showOnNewPermsButton = new GuiButton(2, (this.width / 2) - 155,
-				40, 310, 20, (shown ? "UI shown " : "UI not shown ")
-						+ "when new permissions are recieved");
-		this.buttonList.add(showOnNewPermsButton);
 		
 		// Plugin not installed? No point in requesting.
 		this.requestButton.enabled = WDLPluginChannels.hasPermissions();
 		
+		calculateEntries();
+		
 		this.list = new PermissionsList();
+	}
+	
+	@Override
+	public void updateScreen() {
+		if (refreshTicks > 0) {
+			refreshTicks--;
+		} else if (refreshTicks == 0) {
+			calculateEntries();
+			reloadButton.enabled = true;
+			reloadButton.displayString = "Reload permissions";
+			refreshTicks = -1;
+		}
 	}
 	
 	@Override
@@ -582,18 +592,10 @@ public class GuiWDLPermissions extends GuiScreen {
 			}
 			WDL.minecraft.getNetHandler().addToSendQueue(initPacket);
 			
-			WDLPluginChannels.displayGuiOverride = true;			
 			button.enabled = false;
 			button.displayString = "Refershing...";
-		}
-		if (button.id == 2) {
-			boolean shown = WDL.baseProps.getProperty("ShowPermsUIOnNewPerms",
-					"true").equalsIgnoreCase("true");
-			WDL.baseProps.setProperty("ShowPermsUIOnNewPerms",
-					Boolean.toString(!shown));
 			
-			showOnNewPermsButton.displayString = (!shown ? "UI shown "
-					: "UI not shown ") + "when new permissions are recieved";
+			refreshTicks = 50; // 2.5 seconds
 		}
 		if (button.id == 100) {
 			this.mc.displayGuiScreen(this.parent);

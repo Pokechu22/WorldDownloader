@@ -108,17 +108,6 @@ public class WDLPluginChannels {
 	private static String requestMessage = "";
 	
 	/**
-	 * Thread used to delay opening a {@link GuiWDLPermissions}.
-	 */
-	private static Thread displayGuiThread;
-
-	/**
-	 * Whether the permissions gui should be displayed regardless of the user's
-	 * setting.  Needed when refreshing permissions.
-	 */
-	public static boolean displayGuiOverride;
-	
-	/**
 	 * Checks whether players can use functions unknown to the server.
 	 */
 	public static boolean canUseFunctionsUnknownToServer() {
@@ -311,8 +300,6 @@ public class WDLPluginChannels {
 	 * correct ones.
 	 */
 	static void onWorldLoad() {
-		displayGuiOverride = false;
-		
 		Minecraft minecraft = Minecraft.getMinecraft();
 		
 		receivedPackets = new HashSet<Integer>();
@@ -430,26 +417,6 @@ public class WDLPluginChannels {
 						"Received unkown plugin channel message #" + 
 								section + ".");
 				logger.info(messageBuilder.toString());
-			}
-			
-			if (displayGuiThread == null
-					&& (WDL.baseProps.getProperty("ShowPermsUIOnNewPerms",
-							"true").equalsIgnoreCase("true")
-							|| displayGuiOverride)) {
-				displayGuiThread = new Thread() {
-					@Override
-					public void run() {
-						try {
-							sleep(2000);
-						} catch (InterruptedException e) { }
-						
-						WDL.minecraft.displayGuiScreen(new GuiWDLPermissions());
-						
-						displayGuiThread = null;
-					}
-				};
-				displayGuiThread.start();
-				displayGuiOverride = false;
 			}
 		}
 	}
