@@ -86,3 +86,16 @@ wdl.gui.ingameMenu.downloadStatus.saving=Still saving...
 wdl.gui.ingameMenu.downloadStatus.stop=Stop download
 wdl.gui.ingameMenu.downloadStatus.start=Download this world
 wdl.gui.ingameMenu.settings=...
+
+wdl.gui.messages.message.title=Message options
+wdl.gui.messages.message.true=%s: On
+wdl.gui.messages.message.false=%s: Off
+wdl.gui.messages.group.true=Group enabled
+wdl.gui.messages.group.false=Group disabled
+wdl.gui.messages.all.true=Show WDL messages: Yes
+wdl.gui.messages.all.false=Show WDL messages: No
+wdl.gui.messages.reset=Reset to defaults
+wdl.gui.messages.reset.confirm.title=Are you sure you want to reset your message settings?
+wdl.gui.messages.reset.confirm.subtitle=Your old settings will be lost forever! (A long time!)
+wdl.gui.messages.all.description=Enable / disable all WDL messages.%n%nDisabling all is §lNOT§r recommended, as you may miss important errors.
+wdl.gui.messages.reset.description=Reset whether each message is enabled to its default value.

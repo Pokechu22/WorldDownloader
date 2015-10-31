@@ -16,6 +16,7 @@ import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.gui.GuiYesNoCallback;
+import net.minecraft.client.resources.I18n;
 
 public class GuiWDLMessages extends GuiScreen {
 	/**
@@ -55,8 +56,8 @@ public class GuiWDLMessages extends GuiScreen {
 				button.xPosition = GuiWDLMessages.this.width / 2 + 20;
 				button.yPosition = y;
 				
-				button.displayString = (WDLMessages.isGroupEnabled(category)
-						? "Group enabled" : "Group disabled");
+				button.displayString = I18n.format("wdl.gui.messages.group."
+						+ WDLMessages.isGroupEnabled(category));
 				button.enabled = WDLMessages.enableAllMessages;
 				
 				button.drawButton(mc, mouseX, mouseY);
@@ -106,8 +107,8 @@ public class GuiWDLMessages extends GuiScreen {
 				button.xPosition = GuiWDLMessages.this.width / 2 - 100;
 				button.yPosition = y;
 				
-				button.displayString = type.getDisplayName() + ": " + 
-						(WDLMessages.isEnabled(type) ? "On" : "Off");
+				button.displayString = I18n.format("wdl.gui.messages.message."
+						+ WDLMessages.isEnabled(type), type.getDisplayName());
 				button.enabled = WDLMessages.enableAllMessages && 
 						WDLMessages.isGroupEnabled(group);
 				
@@ -175,17 +176,16 @@ public class GuiWDLMessages extends GuiScreen {
 	@Override
 	public void initGui() {
 		enableAllButton = new GuiButton(100, (this.width / 2) - 155, 18, 150,
-				20, "Show WDL messages: "
-						+ (WDLMessages.enableAllMessages ? "Yes" : "No"));
+				20, getAllEnabledText());
 		this.buttonList.add(enableAllButton);
 		resetButton = new GuiButton(101, (this.width / 2) + 5, 18, 150, 20,
-				"Reset to defaults");
+				I18n.format("wdl.gui.messages.reset"));
 		this.buttonList.add(resetButton);
 
 		this.list = new GuiMessageTypeList();
 
 		this.buttonList.add(new GuiButton(102, (this.width / 2) - 100,
-				this.height - 29, "Done"));
+				this.height - 29, I18n.format("gui.done")));
 	}
 	
 	@Override
@@ -200,12 +200,12 @@ public class GuiWDLMessages extends GuiScreen {
 			
 			WDL.baseProps.setProperty("Messages.enableAll",
 					Boolean.toString(WDLMessages.enableAllMessages));
-			button.displayString = "Show WDL messages: " + 
-					(WDLMessages.enableAllMessages ? "Yes" : "No");
+			
+			button.displayString = getAllEnabledText();
 		} else if (button.id == 101) {
 			this.mc.displayGuiScreen(new GuiYesNo(this,
-					"Are you sure you want to reset your message settings?",
-					"Your old settings will be lost forever! (A long time!)",
+					I18n.format("wdl.gui.messages.reset.confirm.title"),
+					I18n.format("wdl.gui.messages.reset.confirm.subtitle"),
 					101));
 		} else if (button.id == 102) {
 			this.mc.displayGuiScreen(this.parent);
@@ -261,7 +261,8 @@ public class GuiWDLMessages extends GuiScreen {
 		this.drawDefaultBackground();
 		this.list.drawScreen(mouseX, mouseY, partialTicks);
 		
-		this.drawCenteredString(this.fontRendererObj, "Message options",
+		this.drawCenteredString(this.fontRendererObj,
+				I18n.format("wdl.gui.messages.message.title"),
 				this.width / 2, 8, 0xFFFFFF);
 		
 		super.drawScreen(mouseX, mouseY, partialTicks);
@@ -270,13 +271,20 @@ public class GuiWDLMessages extends GuiScreen {
 			Utils.drawGuiInfoBox(hoveredButtonDescription, width, height);
 		} else if (enableAllButton.isMouseOver()) {
 			Utils.drawGuiInfoBox(
-					"Enable / disable all WDL messages.\n\n" +
-					"Disabling all is §lNOT§r recomended, as you may miss " +
-					"important errors.",
-					width, height);
+					I18n.format("wdl.gui.messages.all.description"), width,
+					height);
 		} else if (resetButton.isMouseOver()) {
 			Utils.drawGuiInfoBox(
-					"Reset to defaults.", width, height);
+					I18n.format("wdl.gui.messages.reset.description"), width,
+					height);
 		}
+	}
+	
+	/**
+	 * Gets the text for the "Enable all" button.
+	 */
+	private String getAllEnabledText() {
+		return I18n.format("wdl.gui.messages.all."
+				+ WDLMessages.enableAllMessages);
 	}
 }
