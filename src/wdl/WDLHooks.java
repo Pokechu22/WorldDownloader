@@ -1,11 +1,14 @@
 package wdl;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiIngameMenu;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.crash.CrashReport;
@@ -25,6 +28,7 @@ import wdl.api.IChatMessageListener;
 import wdl.api.IGuiHooksListener;
 import wdl.api.IPluginChannelListener;
 import wdl.api.IWDLMod;
+import wdl.gui.GuiWDL;
 
 /**
  * The various hooks for WDL. <br/>
@@ -365,5 +369,95 @@ public class WDLHooks {
 					return WDL.getDebugInfo();
 				}
 			});
+	}
+
+	/**
+	 * Adds the "Download this world" button to the ingame pause GUI.
+	 * 
+	 * @param gui
+	 * @param buttonList
+	 */
+	public static void injectWDLButtons(GuiIngameMenu gui, List buttonList) {
+		int insertAtYPos = 0;
+	
+		for (Object obj : buttonList) {
+			GuiButton btn = (GuiButton) obj;
+	
+			if (btn.id == 5) { // Button "Achievements"
+				insertAtYPos = btn.yPosition + 24;
+				break;
+			}
+		}
+	
+		// Move other buttons down one slot (= 24 height units)
+		for (Object obj : buttonList) {
+			GuiButton btn = (GuiButton) obj;
+	
+			if (btn.yPosition >= insertAtYPos) {
+				btn.yPosition += 24;
+			}
+		}
+	
+		// Insert buttons... The IDs are chosen to be unique (hopefully). They
+		// are ASCII encoded strings: "WDLs" and "WDLo"
+		GuiButton wdlDownload = new GuiButton(0x57444C73, gui.width / 2 - 100,
+				insertAtYPos, 170, 20, "WDL bug!");
+		GuiButton wdlOptions = new GuiButton(0x57444C6F, gui.width / 2 + 71,
+				insertAtYPos, 28, 20, "...");
+		if (WDL.minecraft.isIntegratedServerRunning()) {
+			wdlDownload.displayString = "§cCan't download in single player!";
+			wdlDownload.enabled = false;
+			wdlOptions.enabled = false;
+		} else if (!WDLPluginChannels.canDownloadInGeneral()) {
+			wdlDownload.displayString = "§cDownload blocked by server";
+			wdlDownload.enabled = false;
+			wdlOptions.enabled = false;
+		} else if (WDL.saving) {
+			wdlDownload.displayString = "Still saving...";
+			wdlDownload.enabled = false;
+			wdlOptions.enabled = false;
+		} else if (WDL.downloading) {
+			wdlDownload.displayString = "Stop download";
+		} else {
+			wdlDownload.displayString = "Download this world";
+		}
+		
+		buttonList.add(wdlDownload);
+		buttonList.add(wdlOptions);
+	}
+
+	/**
+	 * Handle clicks in the ingame pause GUI.
+	 * 
+	 * @param gui
+	 * @param button
+	 */
+	public static void handleWDLButtonClick(GuiIngameMenu gui, GuiButton button) {
+		if (WDL.minecraft.isIntegratedServerRunning()) {
+			return; // WDL not available if in singleplayer or LAN server mode
+		}
+		if (!button.enabled) {
+			return;
+		}
+	
+		if (button.id == 0x57444C73) { // "Start/Stop Download"
+			if (!WDLPluginChannels.canDownloadInGeneral()) {
+				button.enabled = false;
+				return;
+			}
+			if (WDL.downloading) {
+				WDL.stop();
+			} else {
+				WDL.start();
+			}
+		} else if (button.id == 0x57444C6F) { // "..." (options)
+			if (!WDLPluginChannels.canDownloadInGeneral()) {
+				button.enabled = false;
+				return;
+			}
+			WDL.minecraft.displayGuiScreen(new GuiWDL(gui));
+		} else if (button.id == 1) { // "Disconnect"
+			WDL.stop();
+		}
 	}
 }
