@@ -11,6 +11,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiIngameMenu;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.network.NetHandlerPlayClient;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.Container;
@@ -401,27 +402,32 @@ public class WDLHooks {
 		// Insert buttons... The IDs are chosen to be unique (hopefully). They
 		// are ASCII encoded strings: "WDLs" and "WDLo"
 		GuiButton wdlDownload = new GuiButton(0x57444C73, gui.width / 2 - 100,
-				insertAtYPos, 170, 20, "WDL bug!");
+				insertAtYPos, 170, 20, null);
 		GuiButton wdlOptions = new GuiButton(0x57444C6F, gui.width / 2 + 71,
-				insertAtYPos, 28, 20, "...");
+				insertAtYPos, 28, 20,
+				I18n.format("wdl.gui.ingameMenu.settings"));
 		if (WDL.minecraft.isIntegratedServerRunning()) {
-			wdlDownload.displayString = "§cCan't download in single player!";
+			wdlDownload.displayString = I18n
+					.format("wdl.gui.ingameMenu.downloadStatus.singlePlayer");
 			wdlDownload.enabled = false;
 			wdlOptions.enabled = false;
 		} else if (!WDLPluginChannels.canDownloadInGeneral()) {
-			wdlDownload.displayString = "§cDownload blocked by server";
+			wdlDownload.displayString = I18n
+					.format("wdl.gui.ingameMenu.downloadStatus.disabled");
 			wdlDownload.enabled = false;
 			wdlOptions.enabled = false;
 		} else if (WDL.saving) {
-			wdlDownload.displayString = "Still saving...";
+			wdlDownload.displayString = I18n
+					.format("wdl.gui.ingameMenu.downloadStatus.saving");
 			wdlDownload.enabled = false;
 			wdlOptions.enabled = false;
 		} else if (WDL.downloading) {
-			wdlDownload.displayString = "Stop download";
+			wdlDownload.displayString = I18n
+					.format("wdl.gui.ingameMenu.downloadStatus.stop");
 		} else {
-			wdlDownload.displayString = "Download this world";
+			wdlDownload.displayString = I18n
+					.format("wdl.gui.ingameMenu.downloadStatus.start");
 		}
-		
 		buttonList.add(wdlDownload);
 		buttonList.add(wdlOptions);
 	}
