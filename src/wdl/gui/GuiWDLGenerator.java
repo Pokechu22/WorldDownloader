@@ -130,12 +130,23 @@ public class GuiWDLGenerator extends GuiScreen {
 	}
 
 	private void cycleGenerator() {
-		if (WDL.worldProps.getProperty("GeneratorName").equals("default")) {
-			WDL.worldProps.setProperty("GeneratorName", "flat");
-			WDL.worldProps.setProperty("GeneratorVersion", "0");
-		} else {
+		String prop = WDL.worldProps.getProperty("GeneratorName");
+		if (prop.equals("flat")) {
 			WDL.worldProps.setProperty("GeneratorName", "default");
 			WDL.worldProps.setProperty("GeneratorVersion", "1");
+		} else if (prop.equals("default")) {
+			WDL.worldProps.setProperty("GeneratorName", "largeBiomes");
+			WDL.worldProps.setProperty("GeneratorVersion", "0");
+		} else if (prop.equals("largeBiomes")) {
+			WDL.worldProps.setProperty("GeneratorName", "amplified");
+			WDL.worldProps.setProperty("GeneratorVersion", "0");
+		} else if (prop.equals("amplified")) {
+			// Legacy (1.1) world generator
+			WDL.worldProps.setProperty("GeneratorName", "default_1_1");
+			WDL.worldProps.setProperty("GeneratorVersion", "0");
+		} else {
+			WDL.worldProps.setProperty("GeneratorName", "flat");
+			WDL.worldProps.setProperty("GeneratorVersion", "0");
 		}
 		
 		this.generatorBtn.displayString = getGeneratorText();
