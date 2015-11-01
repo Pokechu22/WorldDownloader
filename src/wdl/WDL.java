@@ -53,6 +53,7 @@ import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.tileentity.TileEntityNote;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.ClassInheratanceMultiMap;
 import net.minecraft.util.LongHashMap;
 import net.minecraft.util.ReportedException;
 import net.minecraft.world.MinecraftException;
@@ -807,15 +808,16 @@ public class WDL {
 		c.setTerrainPopulated(true);
 
 		try {
-			// Entities to re-add after chunk saving that were previously removed.
-			List<Entity> removedEntities = new ArrayList<Entity>();
-			// Entities to remove after chunk saving that were previously added.
-			List<Entity> addedEntities = new ArrayList<Entity>();
+			ClassInheratanceMultiMap[] oldMaps = c.getEntityLists().clone();
+			ClassInheratanceMultiMap[] maps = c.getEntityLists();
 			
 			if (!WDLPluginChannels.canSaveEntities()) {
 				// Temporarily delete entities if saving them is disabled.
-				for (Iterable<Entity> entityList : c.getEntityLists()) {
-					for (Entity e : entityList) {
+				for (int i = 0; i < maps.length; i++) {
+					WrappedClassInheratanceMultiMap map = WrappedClassInheratanceMultiMap
+							.copyOf(maps[i]);
+					maps[i] = map;
+					for (Entity e : (Iterable<Entity>)map) {
 						if (e instanceof EntityPlayer) {
 							//Skip players, as otherwise bad things happen, 
 							//such as deleting the current player and causing
@@ -823,18 +825,16 @@ public class WDL {
 							continue;
 						}
 						
-						removedEntities.add(e);
+						map.removeWDL(e);
 					}
-				}
-				
-				for (Entity e : removedEntities) {
-					c.removeEntity(e);
 				}
 			} else {
 				// Remove entities of unwanted types.
-				//TODO: Handle holograms
-				for (Iterable<Entity> entityList : c.getEntityLists()) {
-					for (Entity e : entityList) {
+				for (int i = 0; i < maps.length; i++) {
+					WrappedClassInheratanceMultiMap map = WrappedClassInheratanceMultiMap
+							.copyOf(maps[i]);
+					maps[i] = map;
+					for (Entity e : (Iterable<Entity>)map) {
 						if (e instanceof EntityPlayer) {
 							//Skip players, as otherwise bad things happen, 
 							//such as deleting the current player and causing
@@ -843,12 +843,13 @@ public class WDL {
 						}
 						
 						if (!EntityUtils.isEntityEnabled(e)) {
-							removedEntities.add(e);
 							WDL.chatDebug(
 									WDLMessageTypes.REMOVE_ENTITY,
 									"saveChunk: Not saving "
 											+ EntityUtils.getEntityType(e)
 											+ " (User preference)");
+							
+							map.removeWDL(e);
 						} else {
 							String unsafeReason = EntityUtils.isUnsafeToSaveEntity(e);
 							if (unsafeReason != null) {
@@ -859,13 +860,10 @@ public class WDL {
 												+ " (not safe to save - "
 												+ unsafeReason + ")");
 								
-								removedEntities.add(e);
+								map.removeWDL(e);
 							}
 						}
 					}
-				}
-				for (Entity e : removedEntities) {
-					c.removeEntity(e);
 				}
 				
 				// Add in new entities now.
@@ -879,8 +877,11 @@ public class WDL {
 						// it actually means "Delete this entity next tick",
 						// not "this entitiy was killed by a player".
 						e.isDead = false;
-						c.addEntity(e);
-						addedEntities.add(e);
+						e.posX = convertServerPos(e.serverPosX);
+						e.posY = convertServerPos(e.serverPosY);
+						e.posZ = convertServerPos(e.serverPosZ);
+						((WrappedClassInheratanceMultiMap) maps[e.chunkCoordY])
+								.addWDL(e);
 					}
 				}
 			}
@@ -898,12 +899,9 @@ public class WDL {
 			
 			chunkLoader.saveChunk(worldClient, c);
 			
-			// Return entities to the previous state.
-			for (Entity e : removedEntities) {
-				c.addEntity(e);
-			}
-			for (Entity e : addedEntities) {
-				c.removeEntity(e);
+			// Return the entity maps to the previous state.
+			for (int i = 0; i < oldMaps.length; i++) {
+				maps[i] = oldMaps[i];
 			}
 		} catch (Exception e) {
 			// Better tell the player that something didn't work:

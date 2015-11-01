@@ -102,5 +102,54 @@ public class ReflectionUtils {
 				+ "\" to " + value + "!", e);
 		}
 	}
+	
+	/**
+	 * Uses Java's reflection API to get access to an unaccessible field
+	 *
+	 * @param object
+	 *            Object that the field should be read from or the type of the
+	 *            object if the field is static
+	 * @param typeOfField
+	 *            The type of the field
+	 * @return The value of the field
+	 */
+	public static <T> T stealAndGetField(Object object, Class typeOfObject,
+			Class<T> typeOfField) {
+		try {
+			Field f = stealField(typeOfObject, typeOfField);
+			return (T)f.get(object);
+		} catch (Exception e) {
+			throw new RuntimeException(
+				"WorldDownloader: Couldn't get Field of type \""
+				+ typeOfField + "\" from object \"" + object
+				+ "\" !", e);
+		}
+	}
+
+	/**
+	 * Uses Java's reflection API to set the value of an unaccessible field
+	 *
+	 * @param object
+	 *            Object that the field should be read from or the type of the
+	 *            object if the field is static
+	 * @param typeOfObject
+	 *            The type that the given field is located in.
+	 * @param typeOfField
+	 *            The type of the field
+	 * @param value
+	 *            The value to set the field to.
+	 */
+	public static void stealAndSetField(Object object, Class typeOfObject,
+			Class typeOfField, Object value) {
+		try {
+			Field f = stealField(typeOfObject, typeOfField);
+			f.set(object, value);
+		} catch (Exception e) {
+			throw new RuntimeException(
+				"WorldDownloader: Couldn't set Field of type \""
+				+ typeOfField + "\" from object \"" + object
+				+ "\" to " + value + "!", e);
+		}
+	}
 
 }
