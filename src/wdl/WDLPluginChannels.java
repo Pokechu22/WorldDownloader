@@ -306,7 +306,7 @@ public class WDLPluginChannels {
 		
 		canUseFunctionsUnknownToServer = true;
 		
-		WDL.chatDebug(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
+		WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
 				"Sending plugin channels registration to the server.");
 		
 		// Register the WDL messages.
@@ -349,10 +349,10 @@ public class WDLPluginChannels {
 			case 0:
 				canUseFunctionsUnknownToServer = input.readBoolean();
 				
-				WDL.chatDebug(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
+				WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
 						"Loaded settings packet #0 from the server!");
 				
-				WDL.chatDebug(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
+				WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
 						"canUseFunctionsUnknownToServer: " +
 								canUseFunctionsUnknownToServer);
 				
@@ -365,20 +365,20 @@ public class WDLPluginChannels {
 				canSaveTileEntities = input.readBoolean();
 				canSaveContainers = input.readBoolean();
 
-				WDL.chatDebug(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
+				WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
 						"Loaded settings packet #1 from the server!");
 
-				WDL.chatDebug(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
+				WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
 						"canDownloadInGeneral: " + canDownloadInGeneral);
-				WDL.chatDebug(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
+				WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
 						"saveRadius: " + saveRadius);
-				WDL.chatDebug(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
+				WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
 						"canCacheChunks: " + canCacheChunks);
-				WDL.chatDebug(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
+				WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
 						"canSaveEntities: " + canSaveEntities);
-				WDL.chatDebug(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
+				WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
 						"canSaveTileEntities: " + canSaveTileEntities);
-				WDL.chatDebug(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
+				WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
 						"canSaveContainers: " + canSaveContainers);
 				break;
 			case 2:
@@ -391,17 +391,17 @@ public class WDLPluginChannels {
 					
 					entityRanges.put(name, range);
 				}
-				WDL.chatDebug(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
+				WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
 						"Loaded settings packet #2 from the server!");
 				
-				WDL.chatDebug(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
+				WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
 						"entityRanges: total of " + entityRanges.size());
 				break;
 			case 3: 
 				canRequestPermissions = input.readBoolean();
 				requestMessage = input.readUTF();
 				
-				WDL.chatDebug(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
+				WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
 						"Loaded settings packet #3 from the server!");
 				//Don't bother printing out any exact info.
 				//The user will only need this in the perm UI, and
@@ -413,7 +413,7 @@ public class WDLPluginChannels {
 					messageBuilder.append(b).append(' ');
 				}
 
-				WDL.chatDebug(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
+				WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
 						"Received unkown plugin channel message #" + 
 								section + ".");
 				logger.info(messageBuilder.toString());

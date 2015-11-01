@@ -82,7 +82,7 @@ public class WDLEvents {
 			// If not currently saving, stop the current download and start
 			// saving now
 			if (!WDL.saving) {
-				WDL.chatMsg("World change detected. Download will start once current save completes.");
+				WDL.chatInfo("World change detected. Download will start once current save completes.");
 				WDL.worldLoadingDeferred = true;
 				WDL.startSaveThread();
 			}
@@ -112,12 +112,12 @@ public class WDLEvents {
 		}
 
 		if (WDLPluginChannels.canSaveChunk(unneededChunk)) {
-			WDL.chatDebug(WDLMessageTypes.ON_CHUNK_NO_LONGER_NEEDED,
+			WDL.chatMessage(WDLMessageTypes.ON_CHUNK_NO_LONGER_NEEDED,
 					"onChunkNoLongerNeeded: " + unneededChunk.xPosition + ", "
 							+ unneededChunk.zPosition);
 			WDL.saveChunk(unneededChunk);
 		} else {
-			WDL.chatDebug(WDLMessageTypes.ON_CHUNK_NO_LONGER_NEEDED,
+			WDL.chatMessage(WDLMessageTypes.ON_CHUNK_NO_LONGER_NEEDED,
 					"onChunkNoLongerNeeded cannot save chunk at " +
 							unneededChunk.xPosition + ", " + unneededChunk.zPosition
 							+ " due to server restrictions!");
@@ -169,7 +169,7 @@ public class WDLEvents {
 				//Intentional reference equals
 				if (horseInContainer == WDL.thePlayer.ridingEntity) {
 					if (!WDLPluginChannels.canSaveEntities()) {
-						WDL.chatDebug(WDLMessageTypes.ON_GUI_CLOSED_INFO,
+						WDL.chatMessage(WDLMessageTypes.ON_GUI_CLOSED_INFO,
 								"Server configuration forbids saving of Entities!");
 						return true;
 					}
@@ -194,7 +194,7 @@ public class WDLEvents {
 					horseChest.func_110134_a(entityHorse);
 					//Save the actual data value to the other horse.
 					ReflectionUtils.stealAndSetField(entityHorse, AnimalChest.class, horseChest);
-					WDL.chatDebug(WDLMessageTypes.ON_GUI_CLOSED_INFO,
+					WDL.chatMessage(WDLMessageTypes.ON_GUI_CLOSED_INFO,
 							"Saved ridden horse inventory.");
 					return true;
 				}
@@ -204,7 +204,7 @@ public class WDLEvents {
 		// If the last thing clicked was an ENTITY
 		if (WDL.lastEntity != null) {
 			if (!WDLPluginChannels.canSaveEntities()) {
-				WDL.chatDebug(WDLMessageTypes.ON_GUI_CLOSED_INFO,
+				WDL.chatMessage(WDLMessageTypes.ON_GUI_CLOSED_INFO,
 						"Server configuration forbids saving of Entities!");
 				return true;
 			}
@@ -261,14 +261,14 @@ public class WDLEvents {
 				return false;
 			}
 
-			WDL.chatDebug(WDLMessageTypes.ON_GUI_CLOSED_INFO, "Saved "
+			WDL.chatMessage(WDLMessageTypes.ON_GUI_CLOSED_INFO, "Saved "
 					+ saveName + ".");
 			return true;
 		}
 
 		// Else, the last thing clicked was a TILE ENTITY
 		if (!WDLPluginChannels.canSaveContainers()) {
-			WDL.chatDebug(WDLMessageTypes.ON_GUI_CLOSED_INFO,
+			WDL.chatMessage(WDLMessageTypes.ON_GUI_CLOSED_INFO,
 					"Server configuration forbids saving of TileEntities!");
 			return true;
 		}
@@ -278,7 +278,7 @@ public class WDLEvents {
 
 		if (te == null) {
 			//TODO: Is this a good way to stop?  Is the event truely handled here?
-			WDL.chatDebug(WDLMessageTypes.ON_GUI_CLOSED_WARNING,
+			WDL.chatMessage(WDLMessageTypes.ON_GUI_CLOSED_WARNING,
 					"onItemGuiClosed could not get TE at " + WDL.lastClickedBlock);
 			return true;
 		}
@@ -419,7 +419,7 @@ public class WDLEvents {
 			return false;
 		}
 
-		WDL.chatDebug(WDLMessageTypes.ON_GUI_CLOSED_INFO, "Saved "
+		WDL.chatMessage(WDLMessageTypes.ON_GUI_CLOSED_INFO, "Saved "
 				+ saveName + ".");
 		return true;
 	}
@@ -440,7 +440,7 @@ public class WDLEvents {
 			newTE.note = (byte)(param % 25);
 			WDL.worldClient.setTileEntity(pos, newTE);
 			WDL.newTileEntities.put(pos, newTE);
-			WDL.chatDebug(WDLMessageTypes.ON_BLOCK_EVENT,
+			WDL.chatMessage(WDLMessageTypes.ON_BLOCK_EVENT,
 					"onBlockEvent: Note Block: " + pos + " pitch: " + param
 					+ " - " + newTE);
 		}
@@ -459,7 +459,7 @@ public class WDLEvents {
 
 		WDL.newMapDatas.put(mapID, mapData);
 
-		WDL.chatDebug(WDLMessageTypes.ON_MAP_SAVED,
+		WDL.chatMessage(WDLMessageTypes.ON_MAP_SAVED,
 				"onMapDataLoaded: Saved map " + mapID + ".");
 	}
 
@@ -485,7 +485,7 @@ public class WDLEvents {
 		if (WDL.downloading && WDLPluginChannels.canSaveEntities()) {
 			if (entity != null) {
 				if (!EntityUtils.isEntityEnabled(entity)) {
-					WDL.chatDebug(WDLMessageTypes.REMOVE_ENTITY,
+					WDL.chatMessage(WDLMessageTypes.REMOVE_ENTITY,
 							"removeEntityFromWorld: Allowing removal of "
 									+ EntityUtils.getEntityType(entity)
 									+ " (user pref)");
@@ -494,7 +494,7 @@ public class WDLEvents {
 				
 				String unsafeMessage = EntityUtils.isUnsafeToSaveEntity(entity);
 				if (unsafeMessage != null) {
-					WDL.chatDebug(WDLMessageTypes.REMOVE_ENTITY,
+					WDL.chatMessage(WDLMessageTypes.REMOVE_ENTITY,
 							"removeEntityFromWorld: Allowing removal of "
 									+ EntityUtils.getEntityType(entity)
 									+ " (not safe to save - "
@@ -505,7 +505,7 @@ public class WDLEvents {
 				int threshold = EntityUtils.getEntityTrackDistance(entity);
 				
 				if (threshold < 0) {
-					WDL.chatDebug(WDLMessageTypes.REMOVE_ENTITY,
+					WDL.chatMessage(WDLMessageTypes.REMOVE_ENTITY,
 							"removeEntityFromWorld: Allowing removal of "
 									+ EntityUtils.getEntityType(entity)
 									+ " (unrecognized distance)");
@@ -516,7 +516,7 @@ public class WDLEvents {
 						entity.posY, WDL.thePlayer.posZ);
 
 				if (distance > threshold) {
-					WDL.chatDebug(WDLMessageTypes.REMOVE_ENTITY,
+					WDL.chatMessage(WDLMessageTypes.REMOVE_ENTITY,
 							"removeEntityFromWorld: Saving "
 									+ EntityUtils.getEntityType(entity)
 									+ " at distance " + distance
@@ -530,7 +530,7 @@ public class WDLEvents {
 					return;
 				}
 
-				WDL.chatDebug(
+				WDL.chatMessage(
 						WDLMessageTypes.REMOVE_ENTITY,
 						"removeEntityFromWorld: Allowing removal of "
 								+ EntityUtils.getEntityType(entity)
@@ -547,7 +547,7 @@ public class WDLEvents {
 		if (WDL.downloading && msg.startsWith("Seed: ")) {
 			String seed = msg.substring(6);
 			WDL.worldProps.setProperty("RandomSeed", seed);
-			WDL.chatMsg("Setting single-player world seed to " + seed);
+			WDL.chatInfo("Setting single-player world seed to " + seed);
 		}
 	}
 }

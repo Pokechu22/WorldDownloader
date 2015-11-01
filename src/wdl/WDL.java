@@ -349,7 +349,7 @@ public class WDL {
 
 		startOnChange = true;
 		downloading = true;
-		chatMsg("Download started");
+		chatInfo("Download started");
 	}
 
 	/** Stops the download */
@@ -358,14 +358,14 @@ public class WDL {
 			// Indicate that downloading has stopped
 			downloading = false;
 			startOnChange = false;
-			chatMsg("Download stopped");
+			chatInfo("Download stopped");
 			startSaveThread();
 		}
 	}
 
 	static void startSaveThread() {
 		// Indicate that we are saving
-		WDL.chatMsg("Save started.");
+		WDL.chatInfo("Save started.");
 		WDL.saving = true;
 		WDLSaveAsync saver = new WDLSaveAsync();
 		Thread thread = new Thread(saver, "WDL Save Thread");
@@ -402,12 +402,12 @@ public class WDL {
 			WDLMessages.onNewServer();
 			
 			// Different server, different world!
-			chatDebug(WDLMessageTypes.ON_WORLD_LOAD,
+			chatMessage(WDLMessageTypes.ON_WORLD_LOAD,
 					"onWorldLoad: different server!");
 			
 			networkManager = newNM;
 			
-			chatDebug(WDLMessageTypes.ON_WORLD_LOAD,
+			chatMessage(WDLMessageTypes.ON_WORLD_LOAD,
 					"Server brand=" + thePlayer.getClientBrand() +
 					".  Using " + (isSpigot() ? "Spigot" : "Vanilla") +
 							" track distances.");
@@ -421,7 +421,7 @@ public class WDL {
 			return true;
 		} else {
 			// Same server, different world!
-			chatDebug(WDLMessageTypes.ON_WORLD_LOAD,
+			chatMessage(WDLMessageTypes.ON_WORLD_LOAD,
 					"onWorldLoad: same server!");
 			
 			if (startOnChange) {
@@ -450,12 +450,12 @@ public class WDL {
 
 		// If still downloading, load the current world and keep on downloading
 		if (downloading) {
-			WDL.chatMsg("Save complete. Starting download again.");
+			WDL.chatInfo("Save complete. Starting download again.");
 			WDL.loadWorld();
 			return;
 		}
 
-		WDL.chatMsg("Save complete. Your single player file is ready to play!");
+		WDL.chatInfo("Save complete. Your single player file is ready to play!");
 	}
 
 	/** Load the previously saved TileEntities and add them to the Chunk **/
@@ -499,19 +499,19 @@ public class WDL {
 							//Note that this doesn't mean that the old one's
 							//a valid one; it could be empty.
 							worldClient.setTileEntity(te.getPos(), te);
-							chatDebug(
+							chatMessage(
 									WDLMessageTypes.LOAD_TILE_ENTITY,
 									"Using old TE from saved file: " +
 											entityType + " at " + te.getPos());
 						} else {
 							worldClient.setTileEntity(te.getPos(), 
 									newTileEntities.get(te.getPos()));
-							chatDebug(WDLMessageTypes.LOAD_TILE_ENTITY,
+							chatMessage(WDLMessageTypes.LOAD_TILE_ENTITY,
 									"Using new TE: " + entityType + " at "
 											+ te.getPos());
 						}
 					} else {
-						chatDebug(WDLMessageTypes.LOAD_TILE_ENTITY,
+						chatMessage(WDLMessageTypes.LOAD_TILE_ENTITY,
 								"Old TE does not need importing: "
 										+ entityType + " at " + te.getPos());
 					}
@@ -604,7 +604,7 @@ public class WDL {
 		saveProps();
 		
 		try {
-			chatDebug(WDLMessageTypes.SAVING, "Waiting for ThreadedFileIOBase to finish...");
+			chatMessage(WDLMessageTypes.SAVING, "Waiting for ThreadedFileIOBase to finish...");
 			
 			progressScreen.startMajorTask("Procrastinating...", 1);
 			progressScreen.setMinorTaskProgress(
@@ -619,7 +619,7 @@ public class WDL {
 		}
 		
 		if (backupType != WorldBackupType.NONE) {
-			chatDebug(WDLMessageTypes.SAVING, "Backing up the world...");
+			chatMessage(WDLMessageTypes.SAVING, "Backing up the world...");
 			progressScreen.startMajorTask("Backing up world...", 1);
 			progressScreen.setMinorTaskProgress(
 					backupType.description, 1);
@@ -644,7 +644,7 @@ public class WDL {
 			GuiWDLSaveProgress progressScreen) {
 		if (!WDLPluginChannels.canDownloadInGeneral()) { return; }
 		
-		chatDebug(WDLMessageTypes.SAVING, "Saving player data...");
+		chatMessage(WDLMessageTypes.SAVING, "Saving player data...");
 		progressScreen.setMinorTaskProgress("Writing player data", 2);
 		
 		try {
@@ -666,7 +666,7 @@ public class WDL {
 			throw new RuntimeException("Couldn't save the player!", e);
 		}
 
-		chatDebug(WDLMessageTypes.SAVING, "Player data saved.");
+		chatMessage(WDLMessageTypes.SAVING, "Player data saved.");
 	}
 
 	/**
@@ -677,7 +677,7 @@ public class WDL {
 			GuiWDLSaveProgress progressScreen) {
 		if (!WDLPluginChannels.canDownloadInGeneral()) { return; }
 		
-		chatDebug(WDLMessageTypes.SAVING, "Saving world metadata...");
+		chatMessage(WDLMessageTypes.SAVING, "Saving world metadata...");
 		progressScreen.setMinorTaskProgress("Writing world data", 3);
 		
 		File saveDirectory = saveHandler.getWorldDirectory();
@@ -713,7 +713,7 @@ public class WDL {
 			throw new RuntimeException("Couldn't save the world metadata!", e);
 		}
 
-		chatDebug(WDLMessageTypes.SAVING, "World data saved.");
+		chatMessage(WDLMessageTypes.SAVING, "World data saved.");
 	}
 
 	/**
@@ -726,7 +726,7 @@ public class WDL {
 			throws IllegalArgumentException, IllegalAccessException {
 		if (!WDLPluginChannels.canDownloadInGeneral()) { return; }
 		
-		chatDebug(WDLMessageTypes.SAVING, "Saving chunks...");
+		chatMessage(WDLMessageTypes.SAVING, "Saving chunks...");
 		
 		// Get the ChunkProviderClient from WorldClient
 		ChunkProviderClient chunkProvider = (ChunkProviderClient) worldClient
@@ -743,7 +743,7 @@ public class WDL {
 		}
 
 		if (hashArrayField == null) {
-			chatMsg("Could not save chunks. Reflection error.");
+			chatInfo("Could not save chunks. Reflection error.");
 			return;
 		}
 
@@ -810,7 +810,7 @@ public class WDL {
 				}
 			}
 
-			chatDebug(WDLMessageTypes.SAVING, "Chunk data saved.");
+			chatMessage(WDLMessageTypes.SAVING, "Chunk data saved.");
 		}
 	}
 
@@ -863,7 +863,7 @@ public class WDL {
 						}
 						
 						if (!EntityUtils.isEntityEnabled(e)) {
-							WDL.chatDebug(
+							WDL.chatMessage(
 									WDLMessageTypes.REMOVE_ENTITY,
 									"saveChunk: Not saving "
 											+ EntityUtils.getEntityType(e)
@@ -873,7 +873,7 @@ public class WDL {
 						} else {
 							String unsafeReason = EntityUtils.isUnsafeToSaveEntity(e);
 							if (unsafeReason != null) {
-								WDL.chatDebug(
+								WDL.chatMessage(
 										WDLMessageTypes.REMOVE_ENTITY,
 										"saveChunk: Not saving "
 												+ EntityUtils.getEntityType(e)
@@ -1009,6 +1009,10 @@ public class WDL {
 		} catch (Exception e) {
 		}
 		
+		saveDefaultProps();
+	}
+	
+	public static void saveDefaultProps() {
 		try {
 			defaultProps.store(new FileWriter(new File(minecraft.mcDataDir,
 					"WorldDownloader.txt")), "");
@@ -1206,7 +1210,7 @@ public class WDL {
 		
 		progressScreen.startMajorTask("Saving map item data", newMapDatas.size());
 		
-		chatDebug(WDLMessageTypes.SAVING, "Saving map data...");
+		chatMessage(WDLMessageTypes.SAVING, "Saving map data...");
 		
 		int count = 0;
 		for (Map.Entry<Integer, MapData> e : newMapDatas.entrySet()) {
@@ -1233,7 +1237,7 @@ public class WDL {
 			}
 		}
 		
-		chatDebug(WDLMessageTypes.SAVING, "Map data saved.");
+		chatMessage(WDLMessageTypes.SAVING, "Map data saved.");
 	}
 
 	/** Get the name of the server the user specified it in the server list */
@@ -1308,17 +1312,23 @@ public class WDL {
 		}
 	}
 
-	/** Adds a chat message with a World Downloader prefix */
-	public static void chatMsg(String msg) {
+	/**
+	 * Prints a message to the chat, with the given type. 
+	 */
+	public static void chatMessage(IWDLMessageType type, String msg) {
+		WDLMessages.chatMessage(type, msg);
+	}
+	
+	/**
+	 * Prints a message to the chat, with a type of {@link WDLMessageTypes#INFO}.
+	 */
+	public static void chatInfo(String msg) {
 		WDLMessages.chatMessage(WDLMessageTypes.INFO, msg);
 	}
 
-	/** Adds a chat message with a World Downloader prefix */
-	public static void chatDebug(IWDLMessageType type, String msg) {
-		WDLMessages.chatMessage(type, msg);
-	}
-
-	/** Adds a chat message with a World Downloader prefix */
+	/**
+	 * Prints a message to the chat, with a type of {@link WDLMessageTypes#ERROR}.
+	 */
 	public static void chatError(String msg) {
 		WDLMessages.chatMessage(WDLMessageTypes.ERROR, msg);
 	}
