@@ -185,9 +185,11 @@ public class GuiWDL extends GuiScreen {
 	
 	@Override
 	public void onGuiClosed() {
-		WDL.baseProps.setProperty("ServerName", this.worldname.getText());
+		if (this.worldname != null) {
+			WDL.baseProps.setProperty("ServerName", this.worldname.getText());
 		
-		WDL.saveProps();
+			WDL.saveProps();
+		}
 	}
 
 	/**
