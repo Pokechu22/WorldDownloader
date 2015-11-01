@@ -340,6 +340,8 @@ enum WDLMessageTypes implements IWDLMessageType {
 	ERROR("wdl.messages.message.error", EnumChatFormatting.DARK_GREEN,
 			EnumChatFormatting.DARK_RED, true,
 			MessageTypeCategory.CORE_RECOMMENDED),
+	UPDATES("wdl.messages.message.updates", EnumChatFormatting.RED,
+			EnumChatFormatting.GOLD, true, MessageTypeCategory.CORE_RECOMMENDED),
 	LOAD_TILE_ENTITY("wdl.messages.message.loadingTileEntity", false),
 	ON_WORLD_LOAD("wdl.messages.message.onWorldLoad",false),
 	ON_BLOCK_EVENT("wdl.messages.message.blockEvent", true),
@@ -349,7 +351,8 @@ enum WDLMessageTypes implements IWDLMessageType {
 	ON_GUI_CLOSED_WARNING("wdl.messages.message.guiClosedWarning", true),
 	SAVING("wdl.messages.message.saving", true),
 	REMOVE_ENTITY("wdl.messages.message.removeEntity", false),
-	PLUGIN_CHANNEL_MESSAGE("wdl.messages.message.pluginChannel", false);
+	PLUGIN_CHANNEL_MESSAGE("wdl.messages.message.pluginChannel", false),
+	UPDATE_DEBUG("wdl.messages.message.updateDebug", false);
 	
 	/**
 	 * Constructor with the default values for a debug message.
