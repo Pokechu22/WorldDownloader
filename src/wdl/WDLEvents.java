@@ -46,6 +46,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import wdl.api.IWorldLoadListener;
+import wdl.update.WDLUpdateChecker;
 
 /**
  * Handles all of the events for WDL.
@@ -76,6 +77,9 @@ public class WDLEvents {
 		if (WDL.minecraft.isIntegratedServerRunning()) {
 			return;
 		}
+		
+		WDLUpdateChecker.startIfNeeded(WDLMessageTypes.UPDATES,
+				WDLMessageTypes.UPDATE_DEBUG);
 
 		// If already downloading
 		if (WDL.downloading) {

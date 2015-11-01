@@ -275,6 +275,9 @@ public class WDL {
 		//Last saved time, so that you can tell if the world was modified.
 		superDefaultProps.setProperty("LastSaved", "-1");
 		
+		// Whether the 1-time tutorial has been shown.
+		superDefaultProps.setProperty("TutorialShown", "false");
+		
 		defaultProps = new Properties(superDefaultProps);
 		try {
 			defaultProps.load(new FileReader(new File(minecraft.mcDataDir,
