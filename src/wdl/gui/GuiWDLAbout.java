@@ -14,6 +14,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiSlot;
+import net.minecraft.client.resources.I18n;
 
 /**
  * Contains information about the current installation of WDL.
@@ -33,14 +34,10 @@ public class GuiWDLAbout extends GuiScreen {
 	/**
 	 * Info text.
 	 */
-	private static final String INFO = 
-"WorldDownloader is a mod developed by nariol, cubic72, and pokechu22 (" +
-"litemod version by julialy), with help from others (including soccerguy3, " +
-"UltiNaruto, Net32, and El_garoo) that allows downloading a copy of a " +
-"multiplayer world for singleplayer use.  Source code is publicly available.\n\n" +
-"You are running version " + WDL.VERSION + " on Minecraft version " + 
-Minecraft.getMinecraft().func_175600_c() /* returns launched version */ + "/" + 
-ClientBrandRetriever.getClientModName() + ".";
+	private String info;
+	//WDL.VERSION
+	//
+	///* returns launched version */
 	
 	/**
 	 * Locations of the various labels, updated whenever the screen is drawn.
@@ -51,26 +48,49 @@ ClientBrandRetriever.getClientModName() + ".";
 	 * Creates a GUI with the specified parent.
 	 */
 	public GuiWDLAbout(GuiScreen parent) {
+		String wdlVersion = WDL.VERSION;
+		// Gets the launched version (appears in F3)
+		String launchedVersion = Minecraft.getMinecraft().func_175600_c();
+		String brand = ClientBrandRetriever.getClientModName();
+		
+		info = I18n.format("wdl.gui.about.blurb") + "\n\n" +
+				I18n.format("wdl.gui.about.version", wdlVersion,
+						launchedVersion, brand);
+		
+		String currentLanguage = WDL.minecraft.getLanguageManager()
+				.getCurrentLanguage().toString();
+		String translatorCredit = I18n.format("wdl.gui.about.translatorCredit",
+				currentLanguage);
+		if (translatorCredit != null && !translatorCredit.startsWith("!!!!!!!!")) {
+			info += "\n\n" + translatorCredit;
+		}
+		
 		this.parent = parent;
 	}
 	
 	@Override
 	public void initGui() {
 		buttonList.add(new GuiButton(0, (this.width / 2) - 155, 18, 150, 20,
-				"Extensions"));
+				I18n.format("wdl.gui.about.extensions")));
 		buttonList.add(new GuiButton(1, (this.width / 2) + 5, 18, 150, 20,
-				"Copy debug info"));
+				I18n.format("wdl.gui.about.debugInfo")));
 		buttonList.add(new GuiButton(2, (this.width / 2) - 100,
-				this.height - 29, "Done"));
+				this.height - 29, I18n.format("gui.done")));
 	}
 	
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if (button.id == 0) {
+			// Extensions
 			mc.displayGuiScreen(new GuiWDLExtensions(this));
 		} else if (button.id == 1) {
+			// Copy debug info
 			setClipboardString(WDL.getDebugInfo());
+			// Change text to "copied" once clicked
+			button.displayString = I18n
+					.format("wdl.gui.about.debugInfo.copied");
 		} else if (button.id == 2) {
+			// Done
 			mc.displayGuiScreen(parent);
 		}
 	}
@@ -98,10 +118,10 @@ ClientBrandRetriever.getClientModName() + ".";
 		
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		
-		drawCenteredString(fontRendererObj, "About WorldDownloader", width / 2,
-				2, 0xFFFFFF);
+		drawCenteredString(fontRendererObj, I18n.format("wdl.gui.about.title"),
+				width / 2, 2, 0xFFFFFF);
 		
-		List<String> lines = Utils.wordWrap(INFO, width - 10);
+		List<String> lines = Utils.wordWrap(info, width - 10);
 		
 		int y = 43;
 		for (String s : lines) {
@@ -110,17 +130,17 @@ ClientBrandRetriever.getClientModName() + ".";
 		}
 		y += fontRendererObj.FONT_HEIGHT;
 		forumLinkY = y;
-		drawString(fontRendererObj, "§9§nView the minecraft forum thread", 
+		drawString(fontRendererObj, "§9§n" + I18n.format("wdl.gui.about.forumThread"), 
 				5, y, 0xFFFFFF);
 		y += fontRendererObj.FONT_HEIGHT;
 		y += fontRendererObj.FONT_HEIGHT;
 		coremodLinkY = y;
-		drawString(fontRendererObj, "§9§nCoremod source code on github", 
+		drawString(fontRendererObj, "§9§n" + I18n.format("wdl.gui.about.coremodSrc"), 
 				5, y, 0xFFFFFF);
 		y += fontRendererObj.FONT_HEIGHT;
 		y += fontRendererObj.FONT_HEIGHT;
 		litemodLinkY = y;
-		drawString(fontRendererObj, "§9§nLitemod source code on github", 
+		drawString(fontRendererObj, "§9§n" + I18n.format("wdl.gui.about.litemodSrc"), 
 				5, y, 0xFFFFFF);
 		
 		if (mouseY > forumLinkY

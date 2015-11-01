@@ -1,3 +1,5 @@
+wdl.gui.about.translatorCredit=!!!!!!!! Put your name here, in the format of 'Translated to %s by Pokechu22' (language is automatically inserted).  Will not be displayed if this message starts with '!!!!!!!!'.
+
 wdl.gui.wdl.title=Options for %s
 wdl.gui.wdl.worldname=Name:
 wdl.gui.wdl.autostart.autostart=Start Download: Automatically
@@ -99,3 +101,13 @@ wdl.gui.messages.reset.confirm.title=Are you sure you want to reset your message
 wdl.gui.messages.reset.confirm.subtitle=Your old settings will be lost forever! (A long time!)
 wdl.gui.messages.all.description=Enable / disable all WDL messages.%n%nDisabling all is §lNOT§r recommended, as you may miss important errors.
 wdl.gui.messages.reset.description=Reset whether each message is enabled to its default value.
+
+wdl.gui.about.title=About WorldDownloader
+wdl.gui.about.blurb=WorldDownloader is a mod developed by nariol, cubic72, and pokechu22 (litemod version by julialy), with help from others (including soccerguy3, UltiNaruto, Net32, and El_garoo) that allows downloading a copy of a multiplayer world for singleplayer use.  Source code is publicly available.
+wdl.gui.about.version=You are running %s on Minecraft version %s/%s.
+wdl.gui.about.forumThread=View the MinecraftForum thread
+wdl.gui.about.coremodSrc=View the Coremod source code on GitHub
+wdl.gui.about.litemodSrc=View the Litemod source code on GitHub
+wdl.gui.about.extensions=Extensions
+wdl.gui.about.debugInfo=Copy debug info
+wdl.gui.about.debugInfo.copied=Copied!
