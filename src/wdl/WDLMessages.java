@@ -156,6 +156,11 @@ public class WDLMessages {
 	public static void registerMessage(String name, IWDLMessageType type,
 			MessageTypeCategory category) {
 		registrations.add(new MessageRegistration(name, type, category));
+		
+		WDL.superDefaultProps.setProperty("Messages." + name, 
+					Boolean.toString(type.isEnabledByDefault()));
+		WDL.superDefaultProps.setProperty("MessageGroup." + category.internalName, 
+				"true");
 	}
 	
 	/**
@@ -254,8 +259,7 @@ public class WDLMessages {
 							+ r.category.internalName, "true"));
 			WDL.baseProps.setProperty(
 					"Messages." + r.name,
-					WDL.defaultProps.getProperty("Messages." + r.name,
-							Boolean.toString(r.type.isEnabledByDefault())));
+					WDL.defaultProps.getProperty("Messages." + r.name));
 		}
 	}
 	

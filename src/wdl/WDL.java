@@ -249,10 +249,6 @@ public class WDL {
 		superDefaultProps.setProperty("PlayerFood", "20");
 		
 		superDefaultProps.setProperty("Messages.enableAll", "true");
-		for (WDLMessageTypes cause : WDLMessageTypes.values()) {
-			superDefaultProps.setProperty("Messages." + cause.name(), 
-					Boolean.toString(cause.isEnabledByDefault()));
-		}
 		
 		//Set up entities.
 		superDefaultProps.setProperty("Entity.TrackDistanceMode", "server");
