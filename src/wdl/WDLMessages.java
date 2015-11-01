@@ -10,6 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.event.HoverEvent;
 import net.minecraft.event.HoverEvent.Action;
 import net.minecraft.util.ChatComponentText;
@@ -323,78 +324,50 @@ public class WDLMessages {
  * enabled.  
  */
 enum WDLMessageTypes implements IWDLMessageType {
-	INFO("General info", EnumChatFormatting.RED, EnumChatFormatting.GOLD, 
-			"General messages, such as \"Download started\" and \"Save " + 
-			"complete\".\n\nRecomended as it includes information about " +
-			"when it is safe to stop playing, and generally is very minimal.",
-			true, MessageTypeCategory.CORE_RECOMMENDED),
-	ERROR("General errors", EnumChatFormatting.DARK_GREEN, EnumChatFormatting.DARK_RED,
-			"General errors, such as \"Failed to save chunk\" and \"Failed " +
-			"to import tile entities\".\n\nRecomended as it is generally " + 
-			"important information.", true, MessageTypeCategory.CORE_RECOMMENDED),
-	LOAD_TILE_ENTITY("Loading TileEntity", 
-			"Occurs when a tile entity is imported from the previously " +
-			"saved version of a chunk.  There may be many tile " + 
-			"entities in a chunk.", false),
-	ON_WORLD_LOAD("World loaded", 
-			"Information when a world loads, including whether the player " +
-			"is on the same server or changed servers, and the server's " +
-			"brand (version).", false),
-	ON_BLOCK_EVENT("Block Event", 
-			"Information about a block event.  This is only used for note " +
-			"blocks to include the saved pitch.", true),
-	ON_MAP_SAVED("Map data saved", 
-			"Occurs when new map (the item) data is saved.  Note that map " +
-			"data is sent about once per second when a map is in an item " +
-			"frame, and even more frequently when in one's inventory.", false),
-	ON_CHUNK_NO_LONGER_NEEDED("Chunk unloaded", 
-			"Occurs when a chunk is unloaded and saved.", false), 
-	ON_GUI_CLOSED_INFO("GUI Closed -- Info", 
-			"Information about when an item's GUI is closed.  This message " + 
-			"is used to state that the contents of the item were saved " + 
-			"successfully.", true),
-	ON_GUI_CLOSED_WARNING("GUI Closed -- Warning", 
-			"Warnings when an item's GUI is closed.  This message is used " +
-			"when something went wrong -- usually, when you are looking at " +
-			"something else.", true),
-	SAVING("Saving data", 
-			"Gives details about the current progress in saving the " + 
-			"downloaded world.", true),
-	REMOVE_ENTITY("Removing entity", 
-			"Occurs whenever an entity is removed from the world, and " +
-			"whether that entity was saved.", false),
-	PLUGIN_CHANNEL_MESSAGE("Plugin channel message", 
-			"Information about the serverside configuration system and user " +
-			"rights.", false);
+	INFO("wdl.messages.message.info", EnumChatFormatting.RED,
+			EnumChatFormatting.GOLD, true, MessageTypeCategory.CORE_RECOMMENDED),
+	ERROR("wdl.messages.message.error", EnumChatFormatting.DARK_GREEN,
+			EnumChatFormatting.DARK_RED, true,
+			MessageTypeCategory.CORE_RECOMMENDED),
+	LOAD_TILE_ENTITY("wdl.messages.message.loadingTileEntity", false),
+	ON_WORLD_LOAD("wdl.messages.message.onWorldLoad",false),
+	ON_BLOCK_EVENT("wdl.messages.message.blockEvent", true),
+	ON_MAP_SAVED("wdl.messages.message.mapDataSaved", false),
+	ON_CHUNK_NO_LONGER_NEEDED("wdl.messages.message.chunkUnloaded", false), 
+	ON_GUI_CLOSED_INFO("wdl.messages.message.guiClosedInfo", true),
+	ON_GUI_CLOSED_WARNING("wdl.messages.message.guiClosedWarning", true),
+	SAVING("wdl.messages.message.saving", true),
+	REMOVE_ENTITY("wdl.messages.message.removeEntity", false),
+	PLUGIN_CHANNEL_MESSAGE("wdl.messages.message.pluginChannel", false);
 	
 	/**
 	 * Constructor with the default values for a debug message.
 	 */
-	private WDLMessageTypes(String displayText, String description,
+	private WDLMessageTypes(String i18nKey,
 			boolean enabledByDefault) {
-		this(displayText, EnumChatFormatting.DARK_GREEN,
-				EnumChatFormatting.GOLD, description, enabledByDefault,
+		this(i18nKey, EnumChatFormatting.DARK_GREEN,
+				EnumChatFormatting.GOLD, enabledByDefault,
 				MessageTypeCategory.CORE_DEBUG);
 	}
 	/**
 	 * Constructor that allows specification of all values.
 	 */
-	private WDLMessageTypes(String displayText, EnumChatFormatting titleColor,
-			EnumChatFormatting textColor, String description, boolean enabledByDefault,
+	private WDLMessageTypes(String i18nKey, EnumChatFormatting titleColor,
+			EnumChatFormatting textColor, boolean enabledByDefault,
 			MessageTypeCategory category) {
-		this.displayText = displayText;
+		this.displayTextKey = i18nKey + ".text";
 		this.titleColor = titleColor;
 		this.textColor = textColor;
-		this.description = description;
+		this.descriptionKey = i18nKey + ".description";
 		this.enabledByDefault = enabledByDefault;
 		
 		WDLMessages.registerMessage(this.name(), this, category);
 	}
 	
 	/**
-	 * Text to display on a button for this enum value.
+	 * I18n key for the text to display on a button for this enum value.
 	 */
-	private final String displayText;
+	private final String displayTextKey;
 	/**
 	 * Format code for the '[WorldDL]' label.
 	 */
@@ -404,16 +377,16 @@ enum WDLMessageTypes implements IWDLMessageType {
 	 */
 	private final EnumChatFormatting textColor;
 	/**
-	 * Description text.
+	 * I18n key for the description text.
 	 */
-	private final String description;
+	private final String descriptionKey;
 	/**
 	 * Whether this type of message is enabled by default.
 	 */
 	private final boolean enabledByDefault;
 	
 	public String getDisplayName() {
-		return this.displayText;
+		return I18n.format(displayTextKey);
 	}
 
 	@Override
@@ -428,7 +401,7 @@ enum WDLMessageTypes implements IWDLMessageType {
 
 	@Override
 	public String getDescription() {
-		return description;
+		return I18n.format(descriptionKey);
 	}
 	
 	@Override
