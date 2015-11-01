@@ -6,6 +6,7 @@ import java.util.List;
 
 import wdl.WDL;
 import wdl.api.IWDLMod;
+import wdl.api.IWDLModDescripted;
 import wdl.api.WDLApi;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
@@ -72,7 +73,16 @@ public class GuiWDLExtensions extends GuiScreen {
 			
 			public ModEntry(IWDLMod mod) {
 				this.mod = mod;
-				this.modDesc = mod.getName() + " v" + mod.getVersion();
+				String name = mod.getName();
+				if (mod instanceof IWDLModDescripted) {
+					String displayName = ((IWDLModDescripted) mod)
+							.getDisplayName();
+					
+					if (displayName != null && !displayName.isEmpty()) {
+						name = displayName;
+					}
+				}
+				this.modDesc = name + " v" + mod.getVersion();
 			}
 			
 			@Override

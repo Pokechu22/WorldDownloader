@@ -40,6 +40,11 @@ public class HologramHandler implements ISpecialEntityHandler,
 	}
 	
 	@Override
+	public String getDisplayName() {
+		return "Hologram support";
+	}
+	
+	@Override
 	public Multimap<String, String> getSpecialEntities() {
 		Multimap<String, String> returned = HashMultimap.<String, String>create();
 		

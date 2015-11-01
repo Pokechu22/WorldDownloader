@@ -134,11 +134,15 @@ public class WDLApi {
 		if (mod instanceof IWDLModDescripted) {
 			IWDLModDescripted dmod = (IWDLModDescripted)mod;
 			
+			String displayName = dmod.getDisplayName();
 			String mainAuthor = dmod.getMainAuthor();
 			String[] authors = dmod.getAuthors();
 			String url = dmod.getURL();
 			String description = dmod.getDescription();
 			
+			if (displayName != null && !displayName.isEmpty()) {
+				info.append("Display name: ").append(displayName).append('\n');
+			}
 			if (mainAuthor != null && !mainAuthor.isEmpty()) {
 				info.append("Main author: ").append(mainAuthor).append('\n');
 			}

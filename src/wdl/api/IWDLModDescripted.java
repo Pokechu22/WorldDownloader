@@ -5,6 +5,13 @@ package wdl.api;
  */
 public interface IWDLModDescripted extends IWDLMod {
 	/**
+	 * Gets the display name for the mod.  Should be translated if the mod
+	 * supports translation.
+	 * 
+	 * @return The display name for the mod.
+	 */
+	public abstract String getDisplayName();
+	/**
 	 * Get the author of the mod.
 	 * If there is more than 1, return the main author here, and use
 	 * {@link #getAuthors()} to specify the rest.
