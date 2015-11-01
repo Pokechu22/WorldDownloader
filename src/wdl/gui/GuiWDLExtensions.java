@@ -54,7 +54,7 @@ public class GuiWDLExtensions extends GuiScreen {
 	/**
 	 * Information about each mod.
 	 */
-	private List<List<String>> modInfo;
+	private List<List<TextEntry>> modInfo;
 	/**
 	 * The currently selected mod.
 	 */
@@ -122,11 +122,19 @@ public class GuiWDLExtensions extends GuiScreen {
 		}
 		
 		private List<IGuiListEntry> entries = new ArrayList<IGuiListEntry>() {{
-			modInfo = new ArrayList<List<String>>();
+			modInfo = new ArrayList<List<TextEntry>>();
 			
 			for (IWDLMod mod : WDLApi.getWDLMods().values()) {
 				add(new ModEntry(mod));
-				modInfo.add(Utils.wordWrap(WDLApi.getModInfo(mod), getListWidth()));
+				List<String> wrapped = Utils.wordWrap(
+						WDLApi.getModInfo(mod), getListWidth());
+				List<TextEntry> modEntries = new ArrayList<TextEntry>();
+				
+				for (String line : wrapped) {
+					modEntries.add(new TextEntry(line));
+				}
+				
+				modInfo.add(modEntries);
 			}
 		}};
 		
@@ -178,45 +186,6 @@ public class GuiWDLExtensions extends GuiScreen {
 							- BOTTOM_HEIGHT, fontRendererObj.FONT_HEIGHT + 1);
 		}
 		
-		/**
-		 * Single line of text as an {@link IGuiListEntry}.
-		 */
-		private class TextEntry implements IGuiListEntry {
-			private final String text;
-			
-			public TextEntry(String text) {
-				this.text = text;
-			}
-			
-			@Override
-			public void drawEntry(int slotIndex, int x, int y, int listWidth,
-					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
-				if (y < 0) {
-					//Don't draw out of bounds.
-					return;
-				}
-				
-				fontRendererObj.drawString(text, x, y + 1, 0xFFFFFF);
-			}
-
-			@Override
-			public boolean mousePressed(int slotIndex, int x, int y,
-					int mouseEvent, int relativeX, int relativeY) {
-				return false;
-			}
-
-			@Override
-			public void mouseReleased(int slotIndex, int x, int y,
-					int mouseEvent, int relativeX, int relativeY) {
-			}
-
-			@Override
-			public void setSelected(int slotIndex, int p_178011_2_,
-					int p_178011_3_) {
-				
-			}
-		}
-		
 		@Override
 		public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 			GlStateManager.translate(0, bottomLocation, 0);
@@ -237,8 +206,7 @@ public class GuiWDLExtensions extends GuiScreen {
 			if (selectedMod < 0) {
 				return null;
 			}
-			//TODO: Allocating a bunch of these probably is a bad idea.
-			return new TextEntry(modInfo.get(selectedMod).get(index));
+			return modInfo.get(selectedMod).get(index);
 		}
 		
 		@Override
@@ -289,6 +257,45 @@ public class GuiWDLExtensions extends GuiScreen {
 			}
 			
 			mouseY += bottomLocation;
+		}
+	}
+	
+	/**
+	 * Single line of text as an {@link IGuiListEntry}.
+	 */
+	private class TextEntry implements IGuiListEntry {
+		private final String text;
+		
+		public TextEntry(String text) {
+			this.text = text;
+		}
+		
+		@Override
+		public void drawEntry(int slotIndex, int x, int y, int listWidth,
+				int slotHeight, int mouseX, int mouseY, boolean isSelected) {
+			if (y < 0) {
+				//Don't draw out of bounds.
+				return;
+			}
+			
+			fontRendererObj.drawString(text, x, y + 1, 0xFFFFFF);
+		}
+
+		@Override
+		public boolean mousePressed(int slotIndex, int x, int y,
+				int mouseEvent, int relativeX, int relativeY) {
+			return false;
+		}
+
+		@Override
+		public void mouseReleased(int slotIndex, int x, int y,
+				int mouseEvent, int relativeX, int relativeY) {
+		}
+
+		@Override
+		public void setSelected(int slotIndex, int p_178011_2_,
+				int p_178011_3_) {
+			
 		}
 	}
 	
