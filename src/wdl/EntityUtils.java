@@ -189,20 +189,20 @@ public class EntityUtils {
 			extendedEntities.put(s, handler);
 		}
 		for (Map.Entry<String, String> e : handler.getSpecialEntities().entries()) {
-			WDL.defaultProps.setProperty("Entity." + e.getValue() + ".Enabled", 
+			WDL.superDefaultProps.setProperty("Entity." + e.getValue() + ".Enabled", 
 					"true");
 			int trackDistance = handler.getSpecialEntityTrackDistance(e
 					.getValue());
 			if (trackDistance < 0) {
 				trackDistance = getDefaultEntityRange(e.getKey());
 			}
-			WDL.defaultProps.setProperty("Entity." + e.getValue()
+			WDL.superDefaultProps.setProperty("Entity." + e.getValue()
 					+ ".TrackDistance", Integer.toString(trackDistance));
 			
 			String group = handler.getSpecialEntityCategory(e.getValue());
 			entitiesByGroup.put(group, e.getValue());
 			
-			WDL.defaultProps.setProperty("EntityGroup." + group + ".Enabled",
+			WDL.superDefaultProps.setProperty("EntityGroup." + group + ".Enabled",
 					"true");
 		}
 	}
@@ -213,16 +213,16 @@ public class EntityUtils {
 		for (String s : adder.getModEntities()) {
 			addedEntities.put(s, adder);
 			
-			WDL.defaultProps.setProperty("Entity." + s + ".Enabled", 
+			WDL.superDefaultProps.setProperty("Entity." + s + ".Enabled", 
 					"true");
 			int trackDistance = adder.getDefaultEntityTrackDistance(s);
-			WDL.defaultProps.setProperty("Entity." + s
+			WDL.superDefaultProps.setProperty("Entity." + s
 					+ ".TrackDistance", Integer.toString(trackDistance));
 			
 			String group = adder.getEntityCategory(s);
 			entitiesByGroup.put(group, s);
 			
-			WDL.defaultProps.setProperty("EntityGroup." + group + ".Enabled",
+			WDL.superDefaultProps.setProperty("EntityGroup." + group + ".Enabled",
 					"true");
 		}
 	}
