@@ -36,26 +36,26 @@ public class WDLMessages {
 	private static class MessageRegistration {
 		public final String name;
 		public final IWDLMessageType type;
-		public final String owner;
+		public final MessageTypeCategory category;
 		
 		/**
 		 * Creates a MessageRegistration.
 		 * 
 		 * @param name The name to use.
 		 * @param type The type bound to this registration.
-		 * @param owner The name of the mod adding it.  ("Core" for base WDL)
+		 * @param category The category.
 		 */
 		public MessageRegistration(String name, IWDLMessageType type,
-				String owner) {
+				MessageTypeCategory category) {
 			this.name = name;
 			this.type = type;
-			this.owner = owner;
+			this.category = category;
 		}
 		
 		@Override
 		public String toString() {
 			return "MessageRegistration [name=" + name + ", type=" + type
-					+ ", owner=" + owner + "]";
+					+ ", category=" + category + "]";
 		}
 
 		@Override
@@ -63,7 +63,7 @@ public class WDLMessages {
 			final int prime = 31;
 			int result = 1;
 			result = prime * result + ((name == null) ? 0 : name.hashCode());
-			result = prime * result + ((owner == null) ? 0 : owner.hashCode());
+			result = prime * result + ((category == null) ? 0 : category.hashCode());
 			result = prime * result + ((type == null) ? 0 : type.hashCode());
 			return result;
 		}
@@ -87,11 +87,11 @@ public class WDLMessages {
 			} else if (!name.equals(other.name)) {
 				return false;
 			}
-			if (owner == null) {
-				if (other.owner != null) {
+			if (category == null) {
+				if (other.category != null) {
 					return false;
 				}
-			} else if (!owner.equals(other.owner)) {
+			} else if (!category.equals(other.category)) {
 				return false;
 			}
 			if (type == null) {
@@ -150,11 +150,11 @@ public class WDLMessages {
 	 * 
 	 * @param name The programmatic name.
 	 * @param type The type.
-	 * @param owner The owning mod (used as a category).
+	 * @param category The category.
 	 */
 	public static void registerMessage(String name, IWDLMessageType type,
-			String owner) {
-		registrations.add(new MessageRegistration(name, type, owner));
+			MessageTypeCategory category) {
+		registrations.add(new MessageRegistration(name, type, category));
 	}
 	
 	/**
@@ -172,7 +172,7 @@ public class WDLMessages {
 			return false;
 		}
 		
-		if (!isGroupEnabled(r.owner)) {
+		if (!isGroupEnabled(r.category)) {
 			return false;
 		}
 		
@@ -205,32 +205,34 @@ public class WDLMessages {
 	/**
 	 * Gets whether the given group is enabled.
 	 */
-	public static boolean isGroupEnabled(String group) {
+	public static boolean isGroupEnabled(MessageTypeCategory group) {
 		if (!enableAllMessages) {
 			return false;
 		}
 		
-		return WDL.baseProps.getProperty("MessageGroup." + group, "true")
-				.equals("true");
+		return WDL.baseProps.getProperty(
+				"MessageGroup." + group.internalName, "true").equals(
+				"true");
 	}
 	
 	/**
 	 * Toggles whether a group is enabled or not.
 	 */
-	public static void toggleGroupEnabled(String group) {
-		WDL.baseProps.setProperty("MessageGroup." + group,
+	public static void toggleGroupEnabled(MessageTypeCategory group) {
+		WDL.baseProps.setProperty("MessageGroup." + group.internalName,
 				Boolean.toString(!isGroupEnabled(group)));
 	}
 	
 	/**
 	 * Gets all of the MessageTypes 
-	 * @return All the types, ordered by the creating mod.
+	 * @return All the types, ordered by the category.
 	 */
-	public static ListMultimap<String, IWDLMessageType> getTypes() {
-		ListMultimap<String, IWDLMessageType> returned = LinkedListMultimap.create();
+	public static ListMultimap<MessageTypeCategory, IWDLMessageType> getTypes() {
+		ListMultimap<MessageTypeCategory, IWDLMessageType> returned = LinkedListMultimap
+				.create();
 		
 		for (MessageRegistration r : registrations) {
-			returned.put(r.owner, r.type);
+			returned.put(r.category, r.type);
 		}
 		
 		return ImmutableListMultimap.copyOf(returned);
@@ -244,7 +246,8 @@ public class WDLMessages {
 		enableAllMessages = true;
 		
 		for (MessageRegistration r : registrations) {
-			WDL.baseProps.setProperty("MessageGroup." + r.owner, "true");
+			WDL.baseProps.setProperty(
+					"MessageGroup." + r.category.internalName, "true");
 			WDL.baseProps.setProperty("Messages." + r.name,
 					Boolean.toString(r.type.isEnabledByDefault()));
 		}
@@ -324,11 +327,11 @@ enum WDLMessageTypes implements IWDLMessageType {
 			"General messages, such as \"Download started\" and \"Save " + 
 			"complete\".\n\nRecomended as it includes information about " +
 			"when it is safe to stop playing, and generally is very minimal.",
-			true, "Core (Recomended)"),
+			true, MessageTypeCategory.CORE_RECOMMENDED),
 	ERROR("General errors", EnumChatFormatting.DARK_GREEN, EnumChatFormatting.DARK_RED,
 			"General errors, such as \"Failed to save chunk\" and \"Failed " +
 			"to import tile entities\".\n\nRecomended as it is generally " + 
-			"important information.", true, "Core (Recomended)"),
+			"important information.", true, MessageTypeCategory.CORE_RECOMMENDED),
 	LOAD_TILE_ENTITY("Loading TileEntity", 
 			"Occurs when a tile entity is imported from the previously " +
 			"saved version of a chunk.  There may be many tile " + 
@@ -370,21 +373,22 @@ enum WDLMessageTypes implements IWDLMessageType {
 	private WDLMessageTypes(String displayText, String description,
 			boolean enabledByDefault) {
 		this(displayText, EnumChatFormatting.DARK_GREEN,
-				EnumChatFormatting.GOLD, description, enabledByDefault, "Core (Debug)");
+				EnumChatFormatting.GOLD, description, enabledByDefault,
+				MessageTypeCategory.CORE_DEBUG);
 	}
 	/**
 	 * Constructor that allows specification of all values.
 	 */
 	private WDLMessageTypes(String displayText, EnumChatFormatting titleColor,
 			EnumChatFormatting textColor, String description, boolean enabledByDefault,
-			String group) {
+			MessageTypeCategory category) {
 		this.displayText = displayText;
 		this.titleColor = titleColor;
 		this.textColor = textColor;
 		this.description = description;
 		this.enabledByDefault = enabledByDefault;
 		
-		WDLMessages.registerMessage(this.name(), this, group);
+		WDLMessages.registerMessage(this.name(), this, category);
 	}
 	
 	/**

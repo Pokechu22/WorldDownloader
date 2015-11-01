@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 import com.google.common.collect.ImmutableMap;
 
 import wdl.EntityUtils;
+import wdl.MessageTypeCategory;
 import wdl.WDL;
 import wdl.WDLEvents;
 import wdl.WDLHooks;
@@ -88,8 +89,10 @@ public class WDLApi {
 			Map<String, IWDLMessageType> types = 
 					((IMessageTypeAdder) mod).getMessageTypes();
 			
+			ModMessageTypeCategory category = new ModMessageTypeCategory(mod);
+			
 			for (Map.Entry<String, IWDLMessageType> e : types.entrySet()) {
-				WDLMessages.registerMessage(e.getKey(), e.getValue(), modName);
+				WDLMessages.registerMessage(e.getKey(), e.getValue(), category);
 			}
 		}
 	}
@@ -199,6 +202,25 @@ public class WDLApi {
 		StackTraceElement[] elements = Thread.currentThread().getStackTrace();
 		for (StackTraceElement e : elements) {
 			logger.warn(e.toString());
+		}
+	}
+	
+	/**
+	 * Implementation of {@link MessageTypeCategory} for {@link IWDLMod}s.
+	 */
+	private static class ModMessageTypeCategory extends MessageTypeCategory {
+		private IWDLMod mod;
+		
+		public ModMessageTypeCategory(IWDLMod mod) {
+			super(mod.getName());
+		}
+		
+		@Override
+		public String getDisplayName() {
+			if (mod instanceof IWDLModDescripted) {
+				//TODO
+			}
+			return internalName;
 		}
 	}
 }

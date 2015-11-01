@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Collection;
 
+import wdl.MessageTypeCategory;
 import wdl.WDL;
 import wdl.WDLMessages;
 import wdl.api.IWDLMessageType;
@@ -33,9 +34,9 @@ public class GuiWDLMessages extends GuiScreen {
 
 		private class CategoryEntry implements IGuiListEntry {
 			private final GuiButton button;
-			private final String category;
+			private final MessageTypeCategory category;
 			
-			public CategoryEntry(String category) {
+			public CategoryEntry(MessageTypeCategory category) {
 				this.category = category;
 				this.button = new GuiButton(0, 0, 0, 80, 20, "");
 			}
@@ -49,7 +50,7 @@ public class GuiWDLMessages extends GuiScreen {
 			@Override
 			public void drawEntry(int slotIndex, int x, int y, int listWidth,
 					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
-				drawCenteredString(fontRendererObj, category,
+				drawCenteredString(fontRendererObj, category.getDisplayName(),
 						GuiWDLMessages.this.width / 2 - 40, y + slotHeight
 						- mc.fontRendererObj.FONT_HEIGHT - 1, 0xFFFFFF);
 				
@@ -87,12 +88,13 @@ public class GuiWDLMessages extends GuiScreen {
 		private class MessageTypeEntry implements IGuiListEntry {
 			private final GuiButton button;
 			private final IWDLMessageType type;
-			private final String group;
+			private final MessageTypeCategory category;
 			
-			public MessageTypeEntry(IWDLMessageType type, String group) {
+			public MessageTypeEntry(IWDLMessageType type,
+					MessageTypeCategory category) {
 				this.type = type;
 				this.button = new GuiButton(0, 0, 0, type.toString());
-				this.group = group;
+				this.category = category;
 			}
 			
 			@Override
@@ -110,7 +112,7 @@ public class GuiWDLMessages extends GuiScreen {
 				button.displayString = I18n.format("wdl.gui.messages.message."
 						+ WDLMessages.isEnabled(type), type.getDisplayName());
 				button.enabled = WDLMessages.enableAllMessages && 
-						WDLMessages.isGroupEnabled(group);
+						WDLMessages.isGroupEnabled(category);
 				
 				button.drawButton(mc, mouseX, mouseY);
 				
@@ -141,8 +143,10 @@ public class GuiWDLMessages extends GuiScreen {
 		}
 		
 		private List<IGuiListEntry> entries = new ArrayList<IGuiListEntry>() {{
-			Map<String, Collection<IWDLMessageType>> map = WDLMessages.getTypes().asMap();
-			for (Map.Entry<String, Collection<IWDLMessageType>> e : map.entrySet()) {
+				Map<MessageTypeCategory, Collection<IWDLMessageType>> map = 
+						WDLMessages.getTypes().asMap();
+				for (Map.Entry<MessageTypeCategory, Collection<IWDLMessageType>> e : map
+						.entrySet()) {
 				add(new CategoryEntry(e.getKey()));
 				
 				for (IWDLMessageType type : e.getValue()) {

@@ -111,3 +111,6 @@ wdl.gui.about.litemodSrc=View the Litemod source code on GitHub
 wdl.gui.about.extensions=Extensions
 wdl.gui.about.debugInfo=Copy debug info
 wdl.gui.about.debugInfo.copied=Copied!
+
+wdl.messages.category.core_recommended=Core (recommended)
+wdl.messages.category.core_debug=Core (debug)
