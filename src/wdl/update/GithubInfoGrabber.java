@@ -6,11 +6,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -25,7 +28,15 @@ import net.minecraft.client.Minecraft;
 public class GithubInfoGrabber {
 	private static final String USER_AGENT;
 	private static final JsonParser PARSER = new JsonParser();
-	private static final String RELEASE_LOCATION = "https://api.github.com/repos/pokechu22/WorldDownloader/releases";
+	/**
+	 * Location of the entire release list.
+	 */
+	private static final String RELEASE_LIST_LOCATION = "https://api.github.com/repos/pokechu22/WorldDownloader/releases";
+	/**
+	 * Location for a single release.  The tag for the release needs to be
+	 * concatenated to this.
+	 */
+	private static final String RELEASE_SINGLE_LOCATION = "https://api.github.com/repos/pokechu22/WorldDownloader/releases/tags/";
 	
 	static {
 		// Gets the launched version (appears in F3)
@@ -38,16 +49,44 @@ public class GithubInfoGrabber {
 				wdlVersion);
 	}
 	
-	public static JsonArray getReleases() throws Exception {
+	/**
+	 * Attempts to get the release for the current version of WDL.
+	 * 
+	 * The current version is determined via {@link WDL#VERSION}.
+	 */
+	public static Release getCurrentRelease() throws Exception {
+		JsonElement element = queryJSON(RELEASE_SINGLE_LOCATION + WDL.VERSION);
+		return new Release(element.getAsJsonObject());
+	}
+	
+	/**
+	 * Gets a list of all releases.
+	 */
+	public static List<Release> getReleases() throws Exception {
+		JsonArray array = queryJSON(RELEASE_LIST_LOCATION).getAsJsonArray();
+		List<Release> returned = new ArrayList<Release>();
+		for (JsonElement element : array) {
+			returned.add(new Release(element.getAsJsonObject()));
+		}
+		return returned;
+	}
+	
+	/**
+	 * Fetches the given URL, and converts it into a {@link JsonElement}.
+	 * @param path
+	 * @return
+	 * @throws Exception
+	 */
+	public static JsonElement queryJSON(String path) throws Exception {
 		InputStream stream = null;
 		try {
-			stream = query(RELEASE_LOCATION, "application/json");
+			stream = query(path, "application/json");
 			
 			InputStreamReader reader = null;
 			
 			try {
 				reader = new InputStreamReader(stream);
-				return (JsonArray)PARSER.parse(reader);
+				return PARSER.parse(reader);
 			} finally {
 				if (reader != null) {
 					reader.close();
