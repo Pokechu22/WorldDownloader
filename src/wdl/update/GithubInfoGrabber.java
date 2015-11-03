@@ -53,17 +53,21 @@ public class GithubInfoGrabber {
 	 * Attempts to get the release for the current version of WDL.
 	 * 
 	 * The current version is determined via {@link WDL#VERSION}.
+	 * 
+	 * @see https://developer.github.com/v3/repos/releases/#get-a-release-by-tag-name
 	 */
 	public static Release getCurrentRelease() throws Exception {
-		JsonElement element = queryJSON(RELEASE_SINGLE_LOCATION + WDL.VERSION);
+		JsonElement element = query(RELEASE_SINGLE_LOCATION + WDL.VERSION);
 		return new Release(element.getAsJsonObject());
 	}
 	
 	/**
 	 * Gets a list of all releases.
+	 * 
+	 * @see https://developer.github.com/v3/repos/releases/#list-releases-for-a-repository
 	 */
 	public static List<Release> getReleases() throws Exception {
-		JsonArray array = queryJSON(RELEASE_LIST_LOCATION).getAsJsonArray();
+		JsonArray array = query(RELEASE_LIST_LOCATION).getAsJsonArray();
 		List<Release> returned = new ArrayList<Release>();
 		for (JsonElement element : array) {
 			returned.add(new Release(element.getAsJsonObject()));
@@ -77,10 +81,25 @@ public class GithubInfoGrabber {
 	 * @return
 	 * @throws Exception
 	 */
-	public static JsonElement queryJSON(String path) throws Exception {
+	public static JsonElement query(String path) throws Exception {
 		InputStream stream = null;
 		try {
-			stream = query(path, "application/json");
+			HttpsURLConnection connection = (HttpsURLConnection) (new URL(path))
+					.openConnection();
+			
+			connection.setRequestProperty("User-Agent", USER_AGENT);
+			connection.setRequestProperty("Accept",
+					"application/vnd.github.VERSION.raw+json");
+			
+			connection.connect();
+			
+			if (connection.getResponseCode() != 200) {
+				throw new Exception("Unexpected response while getting " + path
+						+ ": " + connection.getResponseCode() + " "
+						+ connection.getResponseMessage());
+			}
+			
+			stream = connection.getInputStream();
 			
 			InputStreamReader reader = null;
 			
@@ -97,32 +116,5 @@ public class GithubInfoGrabber {
 				stream.close();
 			}
 		}
-	}
-	
-	/**
-	 * Gets an InputStream from the given path.
-	 * 
-	 * @param path
-	 *            The URL to request.
-	 * @param type
-	 *            The media type, EG <code>application/json</code> or
-	 *            <code>application/octet-stream</code>.
-	 */
-	public static InputStream query(String path, String type) throws Exception {
-		HttpsURLConnection connection = (HttpsURLConnection) (new URL(path))
-				.openConnection();
-		
-		connection.setRequestProperty("User-Agent", USER_AGENT);
-		connection.setRequestProperty("Accept", type);
-		
-		connection.connect();
-		
-		if (connection.getResponseCode() != 200) {
-			throw new Exception("Unexpected response while getting " + path
-					+ ": " + connection.getResponseCode() + " "
-					+ connection.getResponseMessage());
-		}
-		
-		return connection.getInputStream();
 	}
 }
