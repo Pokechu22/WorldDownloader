@@ -31,7 +31,7 @@ public class GithubInfoGrabber {
 	/**
 	 * Location of the entire release list.
 	 */
-	private static final String RELEASE_LIST_LOCATION = "https://api.github.com/repos/pokechu22/WorldDownloader/releases";
+	private static final String RELEASE_LIST_LOCATION = "https://api.github.com/repos/pokechu22/WorldDownloader/releases?per_page";
 	/**
 	 * Location for a single release.  The tag for the release needs to be
 	 * concatenated to this.
@@ -47,18 +47,6 @@ public class GithubInfoGrabber {
 		USER_AGENT = String.format("WorldDownloader mod by Pokechu22 ("
 				+ "(Minecraft %s/%s; WDL %s) ", launchedVersion, brand,
 				wdlVersion);
-	}
-	
-	/**
-	 * Attempts to get the release for the current version of WDL.
-	 * 
-	 * The current version is determined via {@link WDL#VERSION}.
-	 * 
-	 * @see https://developer.github.com/v3/repos/releases/#get-a-release-by-tag-name
-	 */
-	public static Release getCurrentRelease() throws Exception {
-		JsonElement element = query(RELEASE_SINGLE_LOCATION + WDL.VERSION);
-		return new Release(element.getAsJsonObject());
 	}
 	
 	/**
