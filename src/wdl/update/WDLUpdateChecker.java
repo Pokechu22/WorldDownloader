@@ -67,6 +67,9 @@ public class WDLUpdateChecker extends Thread {
 				WDL.defaultProps.setProperty("TutorialShown", "true");
 				WDL.saveDefaultProps();
 			}
+			
+			sleep(5000);
+			WDLMessages.chatMessage(mainMessageType, GithubInfoGrabber.getReleases().toString());
 		} catch (Exception e) {
 			WDL.chatMessage(debugMessageType, "Failed to perform update check: "
 					+ e.toString());
