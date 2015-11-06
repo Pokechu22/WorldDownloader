@@ -293,7 +293,9 @@ public class WDLHooks {
 			if (!Minecraft.getMinecraft().isCallingFromMinecraftThread()) {
 				return;
 			}
-						
+			if (!packet.getBufferData().isReadable()) {
+				return;
+			}
 			String channel = packet.getChannelName();
 			byte[] payload = packet.getBufferData().array();
 			
