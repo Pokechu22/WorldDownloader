@@ -30,6 +30,7 @@ public class WDLUpdateChecker extends Thread {
 	public final IWDLMessageType debugMessageType;
 	
 	private static final String FORUMS_THREAD_USAGE_LINK = "http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465#Usage";
+	private static final String GITHUB_LINK = "https://github.com/pokechu22/WorldDownloader";
 	
 	private WDLUpdateChecker(IWDLMessageType mainMessageType,
 			IWDLMessageType debugMessageType) {
@@ -57,19 +58,29 @@ public class WDLUpdateChecker extends Thread {
 				ChatComponentText period = new ChatComponentText(".");
 				usageMsg.appendSibling(forumsLink);
 				usageMsg.appendSibling(period);
+				ChatComponentText contributeMsg = new ChatComponentText(
+						"To report a bug, suggest a feature, contribute code, " +
+								"or help translate, check out ");
+				ChatComponentText githubLink = new ChatComponentText(
+						"the GitHub repository");
+				githubLink.getChatStyle().setColor(EnumChatFormatting.BLUE)
+						.setUnderlined(true)
+						.setChatClickEvent(
+								new ClickEvent(ClickEvent.Action.OPEN_URL,
+										GITHUB_LINK));
+				contributeMsg.appendSibling(githubLink);
+				contributeMsg.appendSibling(period);
 				
 				WDLMessages.chatMessage(mainMessageType,
 						"The WorldDownloader mod has been successfully installed!");
 				WDLMessages.chatMessage(mainMessageType, usageMsg);
+				WDLMessages.chatMessage(mainMessageType, contributeMsg);
 				WDLMessages.chatMessage(mainMessageType,
 						"Note: If you downloaded this mod from a location other than the Minecraft Forums or github, you may have been exposed to malware.");
 				
 				WDL.defaultProps.setProperty("TutorialShown", "true");
 				WDL.saveDefaultProps();
 			}
-			
-			sleep(5000);
-			WDLMessages.chatMessage(mainMessageType, GithubInfoGrabber.getReleases().toString());
 		} catch (Exception e) {
 			WDL.chatMessage(debugMessageType, "Failed to perform update check: "
 					+ e.toString());
