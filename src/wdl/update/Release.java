@@ -126,6 +126,53 @@ public class Release {
 			return "HashData [relativeTo=" + relativeTo + ", file=" + file
 					+ ", validHashes=" + Arrays.toString(validHashes) + "]";
 		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + getOuterType().hashCode();
+			result = prime * result + ((file == null) ? 0 : file.hashCode());
+			result = prime * result
+					+ ((relativeTo == null) ? 0 : relativeTo.hashCode());
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj) {
+				return true;
+			}
+			if (obj == null) {
+				return false;
+			}
+			if (!(obj instanceof HashData)) {
+				return false;
+			}
+			HashData other = (HashData) obj;
+			if (!getOuterType().equals(other.getOuterType())) {
+				return false;
+			}
+			if (file == null) {
+				if (other.file != null) {
+					return false;
+				}
+			} else if (!file.equals(other.file)) {
+				return false;
+			}
+			if (relativeTo == null) {
+				if (other.relativeTo != null) {
+					return false;
+				}
+			} else if (!relativeTo.equals(other.relativeTo)) {
+				return false;
+			}
+			return true;
+		}
+
+		private Release getOuterType() {
+			return Release.this;
+		}
 	}
 	
 	public Release(JsonObject object) {
