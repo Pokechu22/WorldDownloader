@@ -489,30 +489,29 @@ public class WDLEvents {
 		if (WDL.downloading && WDLPluginChannels.canSaveEntities()) {
 			if (entity != null) {
 				if (!EntityUtils.isEntityEnabled(entity)) {
-					WDL.chatMessage(WDLMessageTypes.REMOVE_ENTITY,
-							"removeEntityFromWorld: Allowing removal of "
-									+ EntityUtils.getEntityType(entity)
-									+ " (user pref)");
+					WDLMessages.chatMessageTranslated(
+							WDLMessageTypes.REMOVE_ENTITY,
+							"wdl.messages.removeEntity.allowingRemoveUserPref",
+							entity);
 					return;
 				}
 				
 				String unsafeMessage = EntityUtils.isUnsafeToSaveEntity(entity);
 				if (unsafeMessage != null) {
-					WDL.chatMessage(WDLMessageTypes.REMOVE_ENTITY,
-							"removeEntityFromWorld: Allowing removal of "
-									+ EntityUtils.getEntityType(entity)
-									+ " (not safe to save - "
-									+ unsafeMessage + ")");
+					WDLMessages.chatMessageTranslated(
+							WDLMessageTypes.REMOVE_ENTITY,
+							"wdl.messages.removeEntity.allowingRemoveUnsafe",
+							entity, unsafeMessage);
 					return;
 				}
 				
 				int threshold = EntityUtils.getEntityTrackDistance(entity);
 				
 				if (threshold < 0) {
-					WDL.chatMessage(WDLMessageTypes.REMOVE_ENTITY,
-							"removeEntityFromWorld: Allowing removal of "
-									+ EntityUtils.getEntityType(entity)
-									+ " (unrecognized distance)");
+					WDLMessages.chatMessageTranslated(
+							WDLMessageTypes.REMOVE_ENTITY,
+							"wdl.messages.removeEntity.allowingRemoveUnrecognizedDistance",
+							entity);
 					return;
 				}
 
@@ -520,11 +519,10 @@ public class WDLEvents {
 						entity.posY, WDL.thePlayer.posZ);
 
 				if (distance > threshold) {
-					WDL.chatMessage(WDLMessageTypes.REMOVE_ENTITY,
-							"removeEntityFromWorld: Saving "
-									+ EntityUtils.getEntityType(entity)
-									+ " at distance " + distance
-									+ " (> " + threshold + ")");
+					WDLMessages.chatMessageTranslated(
+							WDLMessageTypes.REMOVE_ENTITY,
+							"wdl.messages.removeEntity.savingDistance",
+							entity, distance, threshold);
 					entity.chunkCoordX = MathHelper
 							.floor_double(entity.posX / 16.0D);
 					entity.chunkCoordZ = MathHelper
@@ -534,12 +532,10 @@ public class WDLEvents {
 					return;
 				}
 
-				WDL.chatMessage(
+				WDLMessages.chatMessageTranslated(
 						WDLMessageTypes.REMOVE_ENTITY,
-						"removeEntityFromWorld: Allowing removal of "
-								+ EntityUtils.getEntityType(entity)
-								+ " at distance " + distance
-								+ " (<= " + threshold + ")");
+						"wdl.messages.removeEntity.allowingRemoveDistance",
+						entity, distance, threshold);
 			}
 		}
 	}

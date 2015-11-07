@@ -142,3 +142,11 @@ wdl.messages.message.pluginChannel.description=Information about the serverside 
 wdl.messages.message.updateDebug.description=Debug information from the update checker, including network status information.
 wdl.messages.category.core_recommended=Core (recommended)
 wdl.messages.category.core_debug=Core (debug)
+
+wdl.messages.removeEntity.allowingRemoveUserPref=removeEntityFromWorld: Allowing removal of %s (user pref)
+wdl.messages.removeEntity.allowingRemoveUnsafe=removeEntityFromWorld: Allowing removal of %s (not safe to save - %s)
+wdl.messages.removeEntity.allowingRemoveUnrecognizedDistance=removeEntityFromWorld: Allowing removal of %s (unrecognized distance)
+wdl.messages.removeEntity.allowingRemoveDistance=removeEntityFromWorld: Allowing removal of %s at distance %.2f (<= %d)
+wdl.messages.removeEntity.savingDistance=removeEntityFromWorld: Saving %s at distance %.2f (> %d)
+
+wdl.messages.entityTypeAndCustomName=%s (named %s)
