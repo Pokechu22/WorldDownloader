@@ -45,6 +45,8 @@ import net.minecraft.entity.projectile.EntityFishHook;
 import net.minecraft.entity.projectile.EntityPotion;
 import net.minecraft.entity.projectile.EntitySmallFireball;
 import net.minecraft.entity.projectile.EntitySnowball;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.IChatComponent;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -562,11 +564,12 @@ public class EntityUtils {
 	 * @return <code>null</code> if it is safe to save, or a message explaining
 	 *         why the entity is NOT safe to save if so.
 	 */
-	public static String isUnsafeToSaveEntity(Entity e) {
+	public static IChatComponent isUnsafeToSaveEntity(Entity e) {
 		try {
 			e.getCustomNameTag();
 		} catch (ClassCastException ex) {
-			return "Invalid custom name!  (" + ex + ")";
+			return new ChatComponentTranslation(
+					"wdl.unsafeReasons.badCustomName", ex.toString());
 		}
 		
 		return null;

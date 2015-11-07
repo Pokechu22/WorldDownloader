@@ -54,6 +54,7 @@ import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.tileentity.TileEntityNote;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ClassInheratanceMultiMap;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.util.LongHashMap;
 import net.minecraft.util.ReportedException;
 import net.minecraft.world.MinecraftException;
@@ -873,7 +874,8 @@ public class WDL {
 							
 							map.removeWDL(e);
 						} else {
-							String unsafeReason = EntityUtils.isUnsafeToSaveEntity(e);
+							IChatComponent unsafeReason = EntityUtils
+									.isUnsafeToSaveEntity(e);
 							if (unsafeReason != null) {
 								WDLMessages.chatMessageTranslated(
 										WDLMessageTypes.REMOVE_ENTITY,

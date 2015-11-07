@@ -152,3 +152,5 @@ wdl.messages.removeEntity.notSavingUserPreference=saveChunk: Not saving %s (User
 wdl.messages.removeEntity.notSavingUnsafe=saveChunk: Not saving %s (not safe to save - %s)
 
 wdl.messages.entityTypeAndCustomName=%s (named %s)
+
+wdl.unsafeReasons.badCustomName=Invalid custom name!  (Threw %s)

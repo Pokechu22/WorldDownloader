@@ -36,6 +36,7 @@ import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.tileentity.TileEntityNote;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.village.MerchantRecipeList;
@@ -496,7 +497,7 @@ public class WDLEvents {
 					return;
 				}
 				
-				String unsafeMessage = EntityUtils.isUnsafeToSaveEntity(entity);
+				IChatComponent unsafeMessage = EntityUtils.isUnsafeToSaveEntity(entity);
 				if (unsafeMessage != null) {
 					WDLMessages.chatMessageTranslated(
 							WDLMessageTypes.REMOVE_ENTITY,
