@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
@@ -93,30 +94,79 @@ public class WDLUpdateChecker extends Thread {
 			List<Release> releases = GithubInfoGrabber.getReleases();
 			WDL.chatMessage(debugMessageType, "Found " + releases.size()
 					+ " releases.");
-			Release currentRelease = null;
+			String launchedVersion = Minecraft.getMinecraft().func_175600_c();
 			
-			for (Release release : releases) {
+			//TODO: I might want to save this data.
+			Release newestCompatibleNonPreRelease = null;
+			Release newestCompatibleRelease = null;
+			Release newestNonPreRelease = null;
+			Release newestRelease = releases.get(0);
+			Release activeRelease = null;
+			
+			for (int i = 0; i < releases.size(); i++) {
+				Release release = releases.get(i);
+				
+				if (newestCompatibleRelease == null) {
+					if (release.hiddenInfo != null) {
+						String[] versions = release.hiddenInfo.supportedMinecraftVersions;
+						for (String version : versions) {
+							if (version.equalsIgnoreCase(launchedVersion)) {
+								newestCompatibleRelease = release;
+								if (!release.prerelease) {
+									newestCompatibleNonPreRelease = release;
+								}
+								break;
+							}
+						}
+					}
+				}
+				if (newestCompatibleNonPreRelease == null) {
+					if (!release.prerelease && release.hiddenInfo != null) {
+						String[] versions = release.hiddenInfo.supportedMinecraftVersions;
+						for (String version : versions) {
+							if (version.equalsIgnoreCase(launchedVersion)) {
+								newestCompatibleNonPreRelease = release;
+								break;
+							}
+						}
+					}
+				}
+				if (newestNonPreRelease == null) {
+					if (!release.prerelease) {
+						newestNonPreRelease = release;
+					}
+				}
+				if (newestRelease == null) {
+					newestRelease = release;
+				}
+				
 				if (release.tag.equalsIgnoreCase(WDL.VERSION)) {
-					currentRelease = release;
-					break;
+					activeRelease = release;
 				}
 			}
 			
-			if (currentRelease == null) {
-				WDL.chatMessage(debugMessageType, "Could not find a release " +
-						"for " + WDL.VERSION + ".");
+			if (activeRelease == null) {
+				WDL.chatMessage(debugMessageType, "Could not find a release "
+						+ "for " + WDL.VERSION + ".  You may be running a "
+						+ "version that hasn't been released yet.");
 				return;
 			}
 			
-			if (currentRelease.hiddenInfo == null) {
-				WDL.chatMessage(debugMessageType, "Could not find hidden " +
-						"data for release.  Skipping hashing.");
+			if (newestCompatibleRelease != activeRelease) {
+				WDL.chatMessage(mainMessageType, "Out of date: newest " 
+						+ "version is " + newestRelease.tag + ".  You are "
+						+ "running " + activeRelease.tag);
+			}
+			
+			if (activeRelease.hiddenInfo == null) {
+				WDL.chatMessage(debugMessageType, "Could not find hidden "
+						+ "data for release.  Skipping hashing.");
 				return;
 			}
 			//Check the hashes, and list any failing ones.
 			Map<HashData, Object> failed = new HashMap<HashData, Object>();
 			
-			hashLoop: for (HashData data : currentRelease.hiddenInfo.hashes) {
+			hashLoop: for (HashData data : activeRelease.hiddenInfo.hashes) {
 				try {
 					String hash = ClassHasher.hash(data.relativeTo, data.file);
 					
@@ -151,7 +201,6 @@ public class WDLUpdateChecker extends Thread {
 						"hashes!  Your installation may be corrupt or " +
 						"compromised.  If you are running a custom build, " +
 						"this is normal.");
-				WDL.chatMessage(mainMessageType, "§cFailures: " + failed);
 			}
 		} catch (Exception e) {
 			WDL.chatMessage(debugMessageType, "Failed to perform update check: "
