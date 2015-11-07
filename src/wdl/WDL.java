@@ -866,22 +866,19 @@ public class WDL {
 						}
 						
 						if (!EntityUtils.isEntityEnabled(e)) {
-							WDL.chatMessage(
+							WDLMessages.chatMessageTranslated(
 									WDLMessageTypes.REMOVE_ENTITY,
-									"saveChunk: Not saving "
-											+ EntityUtils.getEntityType(e)
-											+ " (User preference)");
+									"wdl.messages.removeEntity.notSavingUserPreference",
+									e);
 							
 							map.removeWDL(e);
 						} else {
 							String unsafeReason = EntityUtils.isUnsafeToSaveEntity(e);
 							if (unsafeReason != null) {
-								WDL.chatMessage(
+								WDLMessages.chatMessageTranslated(
 										WDLMessageTypes.REMOVE_ENTITY,
-										"saveChunk: Not saving "
-												+ EntityUtils.getEntityType(e)
-												+ " (not safe to save - "
-												+ unsafeReason + ")");
+										"wdl.messages.removeEntity.notSavingUnsafe",
+										e, unsafeReason);
 								
 								map.removeWDL(e);
 							}

@@ -148,5 +148,7 @@ wdl.messages.removeEntity.allowingRemoveUnsafe=removeEntityFromWorld: Allowing r
 wdl.messages.removeEntity.allowingRemoveUnrecognizedDistance=removeEntityFromWorld: Allowing removal of %s (unrecognized distance)
 wdl.messages.removeEntity.allowingRemoveDistance=removeEntityFromWorld: Allowing removal of %s at distance %.2f (<= %d)
 wdl.messages.removeEntity.savingDistance=removeEntityFromWorld: Saving %s at distance %.2f (> %d)
+wdl.messages.removeEntity.notSavingUserPreference=saveChunk: Not saving %s (User preference)
+wdl.messages.removeEntity.notSavingUnsafe=saveChunk: Not saving %s (not safe to save - %s)
 
 wdl.messages.entityTypeAndCustomName=%s (named %s)
