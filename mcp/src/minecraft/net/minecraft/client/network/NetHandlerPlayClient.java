@@ -919,6 +919,10 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 	 */
 	@Override
 	public void handleChat(S02PacketChat packetIn) {
+		/* WDL >>> */
+		wdl.WDLHooks.onNHPCHandleChat(this, packetIn);
+		/* <<< WDL */
+		
 		PacketThreadUtil.func_180031_a(packetIn, this, this.gameController);
 
 		if (packetIn.func_179841_c() == 2) {
@@ -928,10 +932,6 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 			this.gameController.ingameGUI.getChatGUI().printChatMessage(
 				packetIn.func_148915_c());
 		}
-		
-		/* WDL >>> */
-		wdl.WDLHooks.onNHPCHandleChat(this, packetIn);
-		/* <<< WDL */
 	}
 
 	/**
@@ -1409,14 +1409,14 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 	 */
 	@Override
 	public void handleBlockAction(S24PacketBlockAction packetIn) {
+		/* WDL >>> */
+		wdl.WDLHooks.onNHPCHandleBlockAction(this, packetIn);
+		/* <<< WDL */
+		
 		PacketThreadUtil.func_180031_a(packetIn, this, this.gameController);
 		this.gameController.theWorld.addBlockEvent(packetIn.func_179825_a(),
 				packetIn.getBlockType(), packetIn.getData1(),
 				packetIn.getData2());
-		
-		/* WDL >>> */
-		wdl.WDLHooks.onNHPCHandleBlockAction(this, packetIn);
-		/* <<< WDL */
 	}
 
 	/**
@@ -1545,16 +1545,16 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 	 */
 	@Override
 	public void handleMaps(S34PacketMaps packetIn) {
+		/* WDL >>> */
+		wdl.WDLHooks.onNHPCHandleMaps(this, packetIn);
+		/* <<< WDL */
+		
 		PacketThreadUtil.func_180031_a(packetIn, this, this.gameController);
 		MapData var2 = ItemMap.loadMapData(packetIn.getMapId(),
 				this.gameController.theWorld);
 		packetIn.func_179734_a(var2);
 		this.gameController.entityRenderer.getMapItemRenderer().func_148246_a(
 			var2);
-		
-		/* WDL >>> */
-		wdl.WDLHooks.onNHPCHandleMaps(this, packetIn);
-		/* <<< WDL */
 	}
 
 	@Override
@@ -2007,6 +2007,10 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 	 */
 	@Override
 	public void handleCustomPayload(S3FPacketCustomPayload packetIn) {
+		/* WDL >>> */
+		wdl.WDLHooks.onNHPCHandleCustomPayload(this, packetIn);
+		/* <<< WDL */
+		
 		PacketThreadUtil.func_180031_a(packetIn, this, this.gameController);
 
 		if ("MC|TrList".equals(packetIn.getChannelName())) {
@@ -2041,10 +2045,6 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 						this.gameController.thePlayer, var12, false));
 			}
 		}
-		
-		/* WDL >>> */
-		wdl.WDLHooks.onNHPCHandleCustomPayload(this, packetIn);
-		/* <<< WDL */
 	}
 
 	/**
