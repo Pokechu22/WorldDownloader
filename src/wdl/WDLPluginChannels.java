@@ -3,8 +3,10 @@ package wdl;
 import io.netty.buffer.Unpooled;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 import net.minecraft.client.Minecraft;
@@ -106,6 +108,11 @@ public class WDLPluginChannels {
 	 * is displayed.
 	 */
 	private static String requestMessage = "";
+	
+	/**
+	 * Chunk ranges.
+	 */
+	private static List<ChunkRange> chunkRanges = new ArrayList<ChunkRange>();
 	
 	/**
 	 * Checks whether players can use functions unknown to the server.
@@ -407,6 +414,26 @@ public class WDLPluginChannels {
 				//The user will only need this in the perm UI, and
 				//it'll be true all of the time as of the current plugin.
 				break;
+			case 4:
+				if (input.readBoolean()) { //Overwrite old data.
+					// Will always be done in the current plugin.
+					chunkRanges.clear();
+				}
+				int numRanges = input.readInt();
+				for (int i = 0; i < numRanges; i++) {
+					boolean isWhitelist = input.readBoolean();
+					int x1 = input.readInt();
+					int y1 = input.readInt();
+					int x2 = input.readInt();
+					int y2 = input.readInt();
+					chunkRanges.add(new ChunkRange(x1, y1, x2, y2, isWhitelist));
+				}
+				
+				WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
+						"Loaded settings packet #3 from the server!");
+				WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
+						"ChunkRanges: total of " + chunkRanges.size());
+				break;
 			default:
 				StringBuilder messageBuilder = new StringBuilder();
 				for (byte b : bytes) {
@@ -418,6 +445,38 @@ public class WDLPluginChannels {
 								section + ".");
 				logger.info(messageBuilder.toString());
 			}
+		}
+	}
+	
+	/**
+	 * A range of chunks.
+	 */
+	private static class ChunkRange {
+		public ChunkRange(int x1, int y1, int x2, int y2, boolean isWhitelist) {
+			this.x1 = x1;
+			this.y1 = y1;
+			this.x2 = x2;
+			this.y2 = y2;
+			this.isWhitelist = isWhitelist;
+		}
+		
+		/**
+		 * Range of coordinates.  x1 will never be higher than x2, as will y1
+		 * with y2.
+		 */
+		public final int x1, y1, x2, y2;
+		/**
+		 * Whether to allow downloading in the given range of chunks.
+		 * 
+		 * True: All downloading is allowed in that chunk.
+		 * False: No downloading is allowed in that chunk.
+		 */
+		public final boolean isWhitelist;
+		
+		@Override
+		public String toString() {
+			return "ChunkRange [x1=" + x1 + ", y1=" + y1 + ", x2=" + x2
+					+ ", y2=" + y2 + ", isWhitelist=" + isWhitelist + "]";
 		}
 	}
 }
