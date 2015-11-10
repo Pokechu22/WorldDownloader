@@ -35,10 +35,7 @@ public class GuiWDLAbout extends GuiScreen {
 	 * Info text.
 	 */
 	private String info;
-	//WDL.VERSION
-	//
-	///* returns launched version */
-	
+
 	/**
 	 * Locations of the various labels, updated whenever the screen is drawn.
 	 */
