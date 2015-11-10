@@ -95,6 +95,9 @@ public class WDLApi {
 				WDLMessages.registerMessage(e.getKey(), e.getValue(), category);
 			}
 		}
+		if (mod instanceof ISaveListener) {
+			WDL.saveListeners.put(modName, (ISaveListener) mod);
+		}
 	}
 	
 	/**

@@ -67,6 +67,7 @@ import net.minecraft.world.storage.MapData;
 import net.minecraft.world.storage.SaveHandler;
 import net.minecraft.world.storage.ThreadedFileIOBase;
 import wdl.WorldBackup.WorldBackupType;
+import wdl.api.ISaveListener;
 import wdl.api.IWDLMessageType;
 import wdl.api.IWDLMod;
 import wdl.api.WDLApi;
@@ -219,6 +220,12 @@ public class WDL {
 	 * Used for loading purposes.
 	 */
 	private static boolean addedAPIHandlers = false;
+	
+	/**
+	 * All WDLMods that implement {@link ISaveListener}.
+	 */
+	public static Map<String, ISaveListener> saveListeners =
+			new HashMap<String, ISaveListener>();
 	
 	// Initialization:
 	static {
@@ -574,7 +581,8 @@ public class WDL {
 		
 		GuiWDLSaveProgress progressScreen = new GuiWDLSaveProgress(
 				"Saving downloaded world", 
-				(backupType != WorldBackupType.NONE ? 5 : 4));
+				(backupType != WorldBackupType.NONE ? 5 : 4)
+						+ saveListeners.size());
 		minecraft.displayGuiScreen(progressScreen);
 		
 		saveProps();
@@ -592,7 +600,6 @@ public class WDL {
 		NBTTagCompound playerNBT = new NBTTagCompound();
 		thePlayer.writeToNBT(playerNBT);
 		applyOverridesToPlayer(playerNBT);
-		ISaveHandler saveHAndler = worldClient.getSaveHandler();
 		AnvilSaveConverter saveConverter = (AnvilSaveConverter) minecraft
 				.getSaveLoader();
 		worldClient.getWorldInfo()
@@ -606,6 +613,11 @@ public class WDL {
 		saveChunks(progressScreen);
 		
 		saveProps();
+		
+		for (Map.Entry<String, ISaveListener> e : saveListeners.entrySet()) {
+			progressScreen.startMajorTask("Extension: " + e.getKey(), 1);
+			e.getValue().afterChunksSaved(saveHandler.getWorldDirectory());
+		}
 		
 		try {
 			chatMessage(WDLMessageTypes.SAVING, "Waiting for ThreadedFileIOBase to finish...");
