@@ -2,22 +2,19 @@ package wdl.gui;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Collection;
 
-import wdl.MessageTypeCategory;
-import wdl.WDL;
-import wdl.WDLMessages;
-import wdl.api.IWDLMessageType;
-import wdl.WDLPluginChannels;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiYesNo;
-import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraft.client.resources.I18n;
+import wdl.MessageTypeCategory;
+import wdl.WDL;
+import wdl.WDLMessages;
+import wdl.api.IWDLMessageType;
 
 public class GuiWDLMessages extends GuiScreen {
 	/**

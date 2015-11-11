@@ -1,9 +1,9 @@
 package wdl.gui;
 
-import wdl.WDL;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.Entity;
+import wdl.WDL;
 
 /**
  * Base GUI with the player in the background turning slowly to show the 

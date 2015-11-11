@@ -7,7 +7,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
 
 import org.lwjgl.input.Keyboard;
 

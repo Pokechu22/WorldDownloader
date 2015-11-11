@@ -6,15 +6,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import wdl.EntityUtils;
-import wdl.WDL;
-import wdl.WDLPluginChannels;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.MathHelper;
+import wdl.EntityUtils;
+import wdl.WDL;
+import wdl.WDLPluginChannels;
 
 /**
  * GUI that controls what entities are saved.

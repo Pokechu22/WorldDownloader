@@ -5,20 +5,17 @@ import io.netty.buffer.Unpooled;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-import java.util.Iterator;
-
-import wdl.WDL;
-import wdl.WDLMessages;
-import wdl.WDLPluginChannels;
-import wdl.WorldBackup.WorldBackupType;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiListExtended.IGuiListEntry;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.client.C17PacketCustomPayload;
+import wdl.WDL;
+import wdl.WDLPluginChannels;
 
 /**
  * GUI that shows the current permissions for the user.

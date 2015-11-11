@@ -5,7 +5,6 @@ import java.io.IOException;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import wdl.WDL;
-import wdl.WorldBackup;
 import wdl.WorldBackup.WorldBackupType;
 
 /**

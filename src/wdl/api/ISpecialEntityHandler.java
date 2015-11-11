@@ -1,7 +1,7 @@
 package wdl.api;
 
-import wdl.HologramHandler;
 import net.minecraft.entity.Entity;
+import wdl.HologramHandler;
 
 import com.google.common.collect.Multimap;
 

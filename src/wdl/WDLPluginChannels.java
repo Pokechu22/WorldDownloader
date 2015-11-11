@@ -17,10 +17,7 @@ import net.minecraft.world.chunk.Chunk;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import wdl.gui.GuiWDLPermissions;
-
 import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 
 /**

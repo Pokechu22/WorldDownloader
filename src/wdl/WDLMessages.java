@@ -1,13 +1,7 @@
 package wdl;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
@@ -19,13 +13,14 @@ import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 
-import com.google.common.collect.LinkedListMultimap;
-import com.google.common.collect.ListMultimap;
-import com.google.common.collect.ImmutableListMultimap;
-import com.google.common.collect.Multimap;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import wdl.api.IWDLMessageType;
-import wdl.api.IWDLMod;
+
+import com.google.common.collect.ImmutableListMultimap;
+import com.google.common.collect.LinkedListMultimap;
+import com.google.common.collect.ListMultimap;
 
 /**
  * Handles enabling and disabling of all of the messages.

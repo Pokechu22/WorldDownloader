@@ -1,7 +1,5 @@
 package wdl;
 
-import net.minecraft.crash.CrashReport;
-import net.minecraft.util.ReportedException;
 
 public class WDLSaveAsync implements Runnable {
 	@Override

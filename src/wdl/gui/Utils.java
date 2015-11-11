@@ -1,6 +1,9 @@
 package wdl.gui;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_FLAT;
+import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_SMOOTH;
+import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
 
 import java.util.ArrayList;
 import java.util.List;

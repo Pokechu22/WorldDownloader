@@ -5,16 +5,16 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import wdl.WDL;
 import net.minecraft.client.ClientBrandRetriever;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiSlot;
 import net.minecraft.client.resources.I18n;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import wdl.WDL;
 
 /**
  * Contains information about the current installation of WDL.

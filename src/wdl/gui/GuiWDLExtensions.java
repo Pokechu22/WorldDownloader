@@ -4,21 +4,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import wdl.WDL;
+import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiListExtended;
+import net.minecraft.client.gui.GuiListExtended.IGuiListEntry;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.ResourceLocation;
 import wdl.api.IWDLMod;
 import wdl.api.IWDLModDescripted;
 import wdl.api.WDLApi;
-import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiListExtended;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiListExtended.IGuiListEntry;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.util.ResourceLocation;
 
 /**
  * GUI showing the currently enabled mods, and their information.

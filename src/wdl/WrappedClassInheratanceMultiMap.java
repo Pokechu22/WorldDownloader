@@ -4,10 +4,10 @@ import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.google.common.collect.Multimap;
-
 import net.minecraft.util.ClassInheratanceMultiMap;
 import net.minecraft.world.chunk.storage.AnvilChunkLoader;
+
+import com.google.common.collect.Multimap;
 
 /**
  * Wraps a {@link ClassInheratanceMultiMap}, to help avoid

@@ -28,7 +28,6 @@ import wdl.api.IBlockEventListener;
 import wdl.api.IChatMessageListener;
 import wdl.api.IGuiHooksListener;
 import wdl.api.IPluginChannelListener;
-import wdl.api.IWDLMod;
 import wdl.gui.GuiWDL;
 import wdl.gui.GuiWDLPermissions;
 

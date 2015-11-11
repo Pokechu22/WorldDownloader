@@ -10,8 +10,6 @@ import net.minecraft.util.BlockPos;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.google.common.collect.ImmutableMap;
-
 import wdl.EntityUtils;
 import wdl.MessageTypeCategory;
 import wdl.WDL;
@@ -19,6 +17,8 @@ import wdl.WDLEvents;
 import wdl.WDLHooks;
 import wdl.WDLMessages;
 import wdl.WDLPluginChannels;
+
+import com.google.common.collect.ImmutableMap;
 
 /**
  * Tool to allow other mods to interact with WDL.

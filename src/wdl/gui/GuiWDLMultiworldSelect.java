@@ -3,16 +3,12 @@ package wdl.gui;
 import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
-import java.util.Map;
-import java.util.HashMap;
 
-import wdl.WDL;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.Entity;
+import wdl.WDL;
 
 /**
  * A GUI for selecting which world the player is currently in.

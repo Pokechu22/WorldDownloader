@@ -1,8 +1,5 @@
 package wdl.api;
 
-import net.minecraft.block.Block;
-import net.minecraft.client.multiplayer.WorldClient;
-import net.minecraft.util.BlockPos;
 
 /**
  * Represents a mod that listens to WDL's events.

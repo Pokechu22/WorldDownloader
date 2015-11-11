@@ -1,18 +1,15 @@
 package wdl.gui;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiYesNo;
+import net.minecraft.client.gui.GuiYesNoCallback;
 import wdl.EntityUtils;
 import wdl.WDL;
 import wdl.WDLPluginChannels;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiUtilRenderComponents;
-import net.minecraft.client.gui.GuiYesNo;
-import net.minecraft.client.gui.GuiYesNoCallback;
-import net.minecraft.util.ChatComponentText;
 
 /**
  * Provides fast setting for various entity options.

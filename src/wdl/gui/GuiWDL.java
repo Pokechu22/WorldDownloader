@@ -4,14 +4,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import wdl.WDL;
-import wdl.WDLPluginChannels;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.gui.GuiListExtended.IGuiListEntry;
 import net.minecraft.client.resources.I18n;
+import wdl.WDL;
 
 public class GuiWDL extends GuiScreen {
 	/**

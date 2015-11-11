@@ -2,11 +2,10 @@ package wdl.gui;
 
 import java.io.IOException;
 
-import wdl.WDL;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
+import wdl.WDL;
 
 public class GuiWDLWorld extends GuiScreen {
 	private String title;

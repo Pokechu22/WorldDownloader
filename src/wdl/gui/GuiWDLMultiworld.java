@@ -3,9 +3,9 @@ package wdl.gui;
 import java.io.IOException;
 import java.util.List;
 
-import wdl.WDL;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import wdl.WDL;
 
 public class GuiWDLMultiworld extends GuiScreen {
 	private GuiScreen parent;
