@@ -205,15 +205,14 @@ public class WDL {
 	 */
 	public static Properties worldProps;
 	/**
-	 * Default properties used for creating baseProps.  Can be changed
-	 * manually.
+	 * Default properties used for creating baseProps.  Saved and loaded;
+	 * shared between all servers.
+	 */
+	public static Properties globalProps;
+	/**
+	 * Default properties that are used to create the global properites.
 	 */
 	public static Properties defaultProps;
-	/**
-	 * "Super" default properties that are used if defaultProps cannot be
-	 * loaded.
-	 */
-	public static Properties superDefaultProps;
 	
 	/**
 	 * Check to see if the API handlers have been added yet.
@@ -231,69 +230,69 @@ public class WDL {
 	static {
 		minecraft = Minecraft.getMinecraft();
 		// Initialize the Properties template:
-		superDefaultProps = new Properties();
-		superDefaultProps.setProperty("ServerName", "");
-		superDefaultProps.setProperty("WorldName", "");
-		superDefaultProps.setProperty("LinkedWorlds", "");
-		superDefaultProps.setProperty("AutoStart", "false");
-		superDefaultProps.setProperty("Backup", "ZIP");
-		superDefaultProps.setProperty("AllowCheats", "true");
-		superDefaultProps.setProperty("GameType", "keep");
-		superDefaultProps.setProperty("Time", "keep");
-		superDefaultProps.setProperty("Weather", "keep");
-		superDefaultProps.setProperty("MapFeatures", "false");
-		superDefaultProps.setProperty("RandomSeed", "");
-		superDefaultProps.setProperty("GeneratorName", "flat");
-		superDefaultProps.setProperty("GeneratorVersion", "0");
-		superDefaultProps.setProperty("Spawn", "player");
-		superDefaultProps.setProperty("SpawnX", "8");
-		superDefaultProps.setProperty("SpawnY", "127");
-		superDefaultProps.setProperty("SpawnZ", "8");
-		superDefaultProps.setProperty("PlayerPos", "keep");
-		superDefaultProps.setProperty("PlayerX", "8");
-		superDefaultProps.setProperty("PlayerY", "127");
-		superDefaultProps.setProperty("PlayerZ", "8");
-		superDefaultProps.setProperty("PlayerHealth", "20");
-		superDefaultProps.setProperty("PlayerFood", "20");
+		defaultProps = new Properties();
+		defaultProps.setProperty("ServerName", "");
+		defaultProps.setProperty("WorldName", "");
+		defaultProps.setProperty("LinkedWorlds", "");
+		defaultProps.setProperty("AutoStart", "false");
+		defaultProps.setProperty("Backup", "ZIP");
+		defaultProps.setProperty("AllowCheats", "true");
+		defaultProps.setProperty("GameType", "keep");
+		defaultProps.setProperty("Time", "keep");
+		defaultProps.setProperty("Weather", "keep");
+		defaultProps.setProperty("MapFeatures", "false");
+		defaultProps.setProperty("RandomSeed", "");
+		defaultProps.setProperty("GeneratorName", "flat");
+		defaultProps.setProperty("GeneratorVersion", "0");
+		defaultProps.setProperty("Spawn", "player");
+		defaultProps.setProperty("SpawnX", "8");
+		defaultProps.setProperty("SpawnY", "127");
+		defaultProps.setProperty("SpawnZ", "8");
+		defaultProps.setProperty("PlayerPos", "keep");
+		defaultProps.setProperty("PlayerX", "8");
+		defaultProps.setProperty("PlayerY", "127");
+		defaultProps.setProperty("PlayerZ", "8");
+		defaultProps.setProperty("PlayerHealth", "20");
+		defaultProps.setProperty("PlayerFood", "20");
 		
-		superDefaultProps.setProperty("Messages.enableAll", "true");
+		defaultProps.setProperty("Messages.enableAll", "true");
 		
 		//Set up entities.
-		superDefaultProps.setProperty("Entity.TrackDistanceMode", "server");
+		defaultProps.setProperty("Entity.TrackDistanceMode", "server");
 		
 		List<String> entityTypes = EntityUtils.getEntityTypes();
 		for (String entity : entityTypes) {
-			superDefaultProps.setProperty("Entity." + entity + ".Enabled", "true");
-			superDefaultProps.setProperty("Entity." + entity + ".TrackDistance", 
+			defaultProps.setProperty("Entity." + entity + ".Enabled", "true");
+			defaultProps.setProperty("Entity." + entity + ".TrackDistance", 
 					Integer.toString(EntityUtils.getDefaultEntityRange(entity)));
 		}
 		
 		//Don't save these entities by default -- they're problematic.
-		superDefaultProps.setProperty("Entity.FireworksRocketEntity.Enabled", "false");
-		superDefaultProps.setProperty("Entity.EnderDragon.Enabled", "false");
-		superDefaultProps.setProperty("Entity.WitherBoss.Enabled", "false");
-		superDefaultProps.setProperty("Entity.PrimedTnt.Enabled", "false");
-		superDefaultProps.setProperty("Entity.null.Enabled", "false"); // :(
+		defaultProps.setProperty("Entity.FireworksRocketEntity.Enabled", "false");
+		defaultProps.setProperty("Entity.EnderDragon.Enabled", "false");
+		defaultProps.setProperty("Entity.WitherBoss.Enabled", "false");
+		defaultProps.setProperty("Entity.PrimedTnt.Enabled", "false");
+		defaultProps.setProperty("Entity.null.Enabled", "false"); // :(
 		
 		//Groups
-		superDefaultProps.setProperty("EntityGroup.Other.Enabled", "true");
-		superDefaultProps.setProperty("EntityGroup.Hostile.Enabled", "true");
-		superDefaultProps.setProperty("EntityGroup.Passive.Enabled", "true");
+		defaultProps.setProperty("EntityGroup.Other.Enabled", "true");
+		defaultProps.setProperty("EntityGroup.Hostile.Enabled", "true");
+		defaultProps.setProperty("EntityGroup.Passive.Enabled", "true");
 		
 		//Last saved time, so that you can tell if the world was modified.
-		superDefaultProps.setProperty("LastSaved", "-1");
+		defaultProps.setProperty("LastSaved", "-1");
 		
 		// Whether the 1-time tutorial has been shown.
-		superDefaultProps.setProperty("TutorialShown", "false");
+		defaultProps.setProperty("TutorialShown", "false");
 		
-		defaultProps = new Properties(superDefaultProps);
+		globalProps = new Properties(defaultProps);
 		try {
-			defaultProps.load(new FileReader(new File(minecraft.mcDataDir,
+			globalProps.load(new FileReader(new File(minecraft.mcDataDir,
 					"WorldDownloader.txt")));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		baseProps = new Properties(defaultProps);
+		baseProps = new Properties(globalProps);
 		worldProps = new Properties(baseProps);
 	}
 
@@ -950,7 +949,7 @@ public class WDL {
 	/** Loads the server specific set of properties */
 	public static void loadBaseProps() {
 		baseFolderName = getBaseFolderName();
-		baseProps = new Properties(defaultProps);
+		baseProps = new Properties(globalProps);
 
 		try {
 			baseProps.load(new FileReader(new File(minecraft.mcDataDir,
@@ -1028,7 +1027,7 @@ public class WDL {
 	
 	public static void saveDefaultProps() {
 		try {
-			defaultProps.store(new FileWriter(new File(minecraft.mcDataDir,
+			globalProps.store(new FileWriter(new File(minecraft.mcDataDir,
 					"WorldDownloader.txt")), "");
 		} catch (Exception e) {
 			
@@ -1502,9 +1501,9 @@ public class WDL {
 			info.append("null\n");
 		}
 		info.append("\n#### DEFAULT\n\n");
-		if (defaultProps != null) {
-			if (!defaultProps.isEmpty()) {
-				for (Map.Entry<Object, Object> e : defaultProps.entrySet()) {
+		if (globalProps != null) {
+			if (!globalProps.isEmpty()) {
+				for (Map.Entry<Object, Object> e : globalProps.entrySet()) {
 					info.append(e.getKey()).append(": ").append(e.getValue());
 					info.append('\n');
 				}

@@ -50,7 +50,7 @@ public class WDLUpdateChecker extends Thread {
 	@Override
 	public void run() {
 		try {
-			if (!WDL.defaultProps.getProperty("TutorialShown").equals("true")) {
+			if (!WDL.globalProps.getProperty("TutorialShown").equals("true")) {
 				sleep(5000);
 				
 				ChatComponentText usageMsg = new ChatComponentText(
@@ -85,7 +85,7 @@ public class WDLUpdateChecker extends Thread {
 				WDLMessages.chatMessage(mainMessageType,
 						"Note: If you downloaded this mod from a location other than the Minecraft Forums or github, you may have been exposed to malware.");
 				
-				WDL.defaultProps.setProperty("TutorialShown", "true");
+				WDL.globalProps.setProperty("TutorialShown", "true");
 				WDL.saveDefaultProps();
 			}
 			

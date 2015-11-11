@@ -159,9 +159,9 @@ public class WDLMessages {
 			MessageTypeCategory category) {
 		registrations.add(new MessageRegistration(name, type, category));
 		
-		WDL.superDefaultProps.setProperty("Messages." + name, 
+		WDL.defaultProps.setProperty("Messages." + name, 
 					Boolean.toString(type.isEnabledByDefault()));
-		WDL.superDefaultProps.setProperty("MessageGroup." + category.internalName, 
+		WDL.defaultProps.setProperty("MessageGroup." + category.internalName, 
 				"true");
 	}
 	
@@ -251,17 +251,17 @@ public class WDLMessages {
 	 */
 	public static void resetEnabledToDefaults() {
 		WDL.baseProps.setProperty("Messages.enableAll", "true");
-		enableAllMessages = WDL.defaultProps.getProperty("Messages.enableAll",
+		enableAllMessages = WDL.globalProps.getProperty("Messages.enableAll",
 				"true").equals("true");
 		
 		for (MessageRegistration r : registrations) {
 			WDL.baseProps.setProperty(
 					"MessageGroup." + r.category.internalName,
-					WDL.defaultProps.getProperty("MessageGroup."
+					WDL.globalProps.getProperty("MessageGroup."
 							+ r.category.internalName, "true"));
 			WDL.baseProps.setProperty(
 					"Messages." + r.name,
-					WDL.defaultProps.getProperty("Messages." + r.name));
+					WDL.globalProps.getProperty("Messages." + r.name));
 		}
 	}
 	
@@ -276,7 +276,7 @@ public class WDLMessages {
 						WDL.baseProps.remove("Debug.globalDebugEnabled"));
 			} else {
 				WDL.baseProps.setProperty("Messages.enableAll",
-						WDL.defaultProps.getProperty("Messages.enableAll", "true"));
+						WDL.globalProps.getProperty("Messages.enableAll", "true"));
 			}
 		}
 		
