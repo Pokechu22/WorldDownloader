@@ -73,6 +73,7 @@ class Utils {
 		 * <li>Whether to include color codes.</li>
 		 * </ul>
 		 */
+		@SuppressWarnings("unchecked")
 		List<ChatComponentText> texts = GuiUtilRenderComponents.func_178908_a(
 				new ChatComponentText(s), width, mc.fontRendererObj, true, true);
 		

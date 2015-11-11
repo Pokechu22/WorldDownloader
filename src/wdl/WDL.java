@@ -32,6 +32,7 @@ import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.crash.CrashReport;
+import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -913,8 +914,10 @@ public class WDL {
 						e.posX = convertServerPos(e.serverPosX);
 						e.posY = convertServerPos(e.serverPosY);
 						e.posZ = convertServerPos(e.serverPosZ);
-						((WrappedClassInheratanceMultiMap) maps[e.chunkCoordY])
-								.addWDL(e);
+						@SuppressWarnings("unchecked")
+						WrappedClassInheratanceMultiMap<Entity> map = 
+								(WrappedClassInheratanceMultiMap<Entity>) maps[e.chunkCoordY];
+						map.addWDL(e);
 					}
 				}
 			}
@@ -922,7 +925,9 @@ public class WDL {
 			// Force the entity into its serverside location.
 			// Needed for certain things that move clientside,
 			// such as boats (http://imgur.com/3QQchZL)
-			for (Iterable<Entity> entityList : c.getEntityLists()) {
+			@SuppressWarnings("unchecked")
+			Iterable<Entity>[] iterableMaps = c.getEntityLists();
+			for (Iterable<Entity> entityList :  iterableMaps) {
 				for (Entity e : entityList) {
 					e.posX = convertServerPos(e.serverPosX);
 					e.posY = convertServerPos(e.serverPosY);
@@ -1530,14 +1535,16 @@ public class WDL {
 					((ReportedException) t).getCrashReport();
 			
 			report = CrashReport.makeCrashReport(oldReport.getCrashCause(),
-					category + " (" + oldReport.getCauseStackTraceOrString());
+					category + " (" + oldReport.getCauseStackTraceOrString() + ")");
 			
 			try {
 				//Steal crashReportSections, and replace it.
-				List crashReportSectionsOld = ReflectionUtils.stealAndGetField(
-						oldReport, List.class);
-				List crashReportSectionsNew = ReflectionUtils.stealAndGetField(
-						report, List.class);
+				@SuppressWarnings("unchecked")
+				List<CrashReportCategory> crashReportSectionsOld = ReflectionUtils
+						.stealAndGetField(oldReport, List.class);
+				@SuppressWarnings("unchecked")
+				List<CrashReportCategory> crashReportSectionsNew = ReflectionUtils
+						.stealAndGetField(report, List.class);
 				
 				crashReportSectionsNew.addAll(crashReportSectionsOld);
 			} catch (Exception e) {
