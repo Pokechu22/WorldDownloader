@@ -16,7 +16,7 @@ public class ReflectionUtils {
 	 *            The type of the field
 	 * @return An Object of type Field
 	 */
-	public static Field stealField(Class typeOfClass, Class typeOfField) {
+	public static Field stealField(Class<?> typeOfClass, Class<?> typeOfField) {
 		Field[] fields = typeOfClass.getDeclaredFields();
 	
 		for (Field f : fields) {
@@ -50,10 +50,10 @@ public class ReflectionUtils {
 	 * @return The value of the field
 	 */
 	public static <T> T stealAndGetField(Object object, Class<T> typeOfField) {
-		Class typeOfObject;
+		Class<?> typeOfObject;
 	
-		if (object instanceof Class) { // User asked for static field:
-			typeOfObject = (Class) object;
+		if (object instanceof Class<?>) { // User asked for static field:
+			typeOfObject = (Class<?>) object;
 			object = null;
 		} else {
 			typeOfObject = object.getClass();
@@ -61,7 +61,7 @@ public class ReflectionUtils {
 	
 		try {
 			Field f = stealField(typeOfObject, typeOfField);
-			return (T)f.get(object);
+			return typeOfField.cast(f.get(object));
 		} catch (Exception e) {
 			throw new RuntimeException(
 				"WorldDownloader: Couldn't get Field of type \""
@@ -81,12 +81,12 @@ public class ReflectionUtils {
 	 * @param value
 	 *            The value to set the field to.
 	 */
-	public static void stealAndSetField(Object object, Class typeOfField,
+	public static void stealAndSetField(Object object, Class<?> typeOfField,
 			Object value) {
-		Class typeOfObject;
+		Class<?> typeOfObject;
 	
 		if (object instanceof Class) { // User asked for static field:
-			typeOfObject = (Class) object;
+			typeOfObject = (Class<?>) object;
 			object = null;
 		} else {
 			typeOfObject = object.getClass();
@@ -113,11 +113,11 @@ public class ReflectionUtils {
 	 *            The type of the field
 	 * @return The value of the field
 	 */
-	public static <T> T stealAndGetField(Object object, Class typeOfObject,
+	public static <T> T stealAndGetField(Object object, Class<?> typeOfObject,
 			Class<T> typeOfField) {
 		try {
 			Field f = stealField(typeOfObject, typeOfField);
-			return (T)f.get(object);
+			return typeOfField.cast(f.get(object));
 		} catch (Exception e) {
 			throw new RuntimeException(
 				"WorldDownloader: Couldn't get Field of type \""
@@ -139,8 +139,8 @@ public class ReflectionUtils {
 	 * @param value
 	 *            The value to set the field to.
 	 */
-	public static void stealAndSetField(Object object, Class typeOfObject,
-			Class typeOfField, Object value) {
+	public static void stealAndSetField(Object object, Class<?> typeOfObject,
+			Class<?> typeOfField, Object value) {
 		try {
 			Field f = stealField(typeOfObject, typeOfField);
 			f.set(object, value);

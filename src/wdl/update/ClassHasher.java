@@ -41,7 +41,7 @@ public class ClassHasher {
 	 */
 	public static String hash(String relativeTo, String file)
 			throws ClassNotFoundException, FileNotFoundException, Exception {
-		Class clazz = Class.forName(relativeTo);
+		Class<?> clazz = Class.forName(relativeTo);
 		MessageDigest digest = MessageDigest.getInstance("MD5");
 		
 		InputStream stream = null;

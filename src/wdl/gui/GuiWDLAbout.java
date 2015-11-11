@@ -159,7 +159,7 @@ public class GuiWDLAbout extends GuiScreen {
 	 */
 	private static void openLink(String path) {
 		try {
-			Class desktopClass = Class.forName("java.awt.Desktop");
+			Class<?> desktopClass = Class.forName("java.awt.Desktop");
 			Object desktop = desktopClass.getMethod("getDesktop").invoke(
 					null);
 			desktopClass.getMethod("browse", URI.class).invoke(desktop,

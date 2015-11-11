@@ -48,9 +48,6 @@ import net.minecraft.entity.projectile.EntitySnowball;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import wdl.api.IEntityAdder;
 import wdl.api.ISpecialEntityHandler;
 
@@ -61,16 +58,14 @@ import com.google.common.collect.Multimap;
  * Provides utility functions for recognising entities.
  */
 public class EntityUtils {
-	private static Logger logger = LogManager.getLogger();
-	
 	/**
 	 * Reference to the {@link EntityList#stringToClassMapping} field.
 	 */
-	public static final Map<String, Class> stringToClassMapping;
+	public static final Map<String, Class<?>> stringToClassMapping;
 	/**
 	 * Reference to the {@link EntityList#classToStringMapping} field.
 	 */
-	public static final Map<Class, String> classToStringMapping;
+	public static final Map<Class<?>, String> classToStringMapping;
 	
 	/**
 	 * Entities arranged by the grouping used in the entity GUI.
@@ -84,23 +79,29 @@ public class EntityUtils {
 	 */
 	static {
 		try {
-			Map<String, Class> mappingSTC = null;
-			Map<Class, String> mappingCTS = null;
+			Map<String, Class<?>> mappingSTC = null;
+			Map<Class<?>, String> mappingCTS = null;
 			
 			//Attempt to steal the 'stringToClassMapping' field. 
 			for (Field field : EntityList.class.getDeclaredFields()) {
 				if (field.getType().equals(Map.class)) {
 					field.setAccessible(true);
-					Map m = (Map)field.get(null);
+					Map<?, ?> m = (Map<?, ?>)field.get(null);
 					
-					Map.Entry e = (Map.Entry)m.entrySet().toArray()[0];
+					Map.Entry<?, ?> e = (Map.Entry<?, ?>)m.entrySet().toArray()[0];
 					if (e.getKey() instanceof String && 
-							e.getValue() instanceof Class) {
-						mappingSTC = (Map<String, Class>)m;
+							e.getValue() instanceof Class<?>) {
+						//Temp is used here to allow @SuppressWarnings.
+						@SuppressWarnings("unchecked")
+						Map<String, Class<?>> temp = (Map<String, Class<?>>) m; 
+						mappingSTC = temp;
 					}
-					if (e.getKey() instanceof Class &&
+					if (e.getKey() instanceof Class<?> &&
 							e.getValue() instanceof String) {
-						mappingCTS = (Map<Class, String>)m;
+						//Temp is used here to allow @SuppressWarnings.
+						@SuppressWarnings("unchecked")
+						Map<Class<?>, String> temp = (Map<Class<?>, String>)m;
+						mappingCTS = temp;
 					}
 				}
 			}
@@ -120,10 +121,10 @@ public class EntityUtils {
 			List<String> otherEntities = new ArrayList<String>();
 			
 			//Now build an actual list.
-			for (Map.Entry<String, Class> e : 
+			for (Map.Entry<String, Class<?>> e : 
 					EntityUtils.stringToClassMapping.entrySet()) {
 				String entity = e.getKey();
-				Class c = e.getValue();
+				Class<?> c = e.getValue();
 				
 				if (Modifier.isAbstract(c.getModifiers())) {
 					//Don't include abstract classes.
@@ -235,7 +236,7 @@ public class EntityUtils {
 	public static List<String> getEntityTypes() {
 		List<String> returned = new ArrayList<String>();
 		
-		for (Map.Entry<String, Class> e : stringToClassMapping.entrySet()) {
+		for (Map.Entry<String, Class<?>> e : stringToClassMapping.entrySet()) {
 			if (Modifier.isAbstract(e.getValue().getModifiers())) {
 				continue;
 			}
