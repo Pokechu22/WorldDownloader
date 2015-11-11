@@ -27,6 +27,7 @@ public class GuiWDLPlayer extends GuiScreen {
 	/**
 	 * Adds the buttons (and other controls) to the screen in question.
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui() {
 		this.buttonList.clear();

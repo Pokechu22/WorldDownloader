@@ -95,6 +95,7 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase {
 	private static final String TITLE =
 			"The saved copy of the world may have been changed.";
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui() {
 		backingUp = false;

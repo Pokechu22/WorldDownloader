@@ -287,6 +287,7 @@ public class GuiWDLEntities extends GuiScreen {
 		this.parent = parent;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui() {
 		this.buttonList.add(new GuiButton(200, this.width / 2 - 100,

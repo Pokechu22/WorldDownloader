@@ -391,6 +391,7 @@ public class WDLHooks {
 	 * @param gui
 	 * @param buttonList
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void injectWDLButtons(GuiIngameMenu gui, List buttonList) {
 		int insertAtYPos = 0;
 	

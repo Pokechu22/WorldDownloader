@@ -43,6 +43,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		this.parent = parent;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui() {
 		super.initGui();

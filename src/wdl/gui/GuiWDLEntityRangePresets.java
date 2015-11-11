@@ -26,6 +26,7 @@ public class GuiWDLEntityRangePresets extends GuiScreen implements GuiYesNoCallb
 		this.parent = parent;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui() {
 		int y = this.height / 4;

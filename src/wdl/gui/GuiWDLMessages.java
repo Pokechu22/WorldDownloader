@@ -174,6 +174,7 @@ public class GuiWDLMessages extends GuiScreen {
 	private GuiButton enableAllButton;
 	private GuiButton resetButton;
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui() {
 		enableAllButton = new GuiButton(100, (this.width / 2) - 155, 18, 150,
