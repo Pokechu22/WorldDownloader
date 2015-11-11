@@ -120,6 +120,7 @@ public class WDLMessages {
 	 * @param name
 	 * @return The registration or null if none is found.
 	 */
+	@SuppressWarnings("unused")
 	private static MessageRegistration getRegistration(String name) {
 		for (MessageRegistration r : registrations) {
 			if (r.name.equals(name)) {

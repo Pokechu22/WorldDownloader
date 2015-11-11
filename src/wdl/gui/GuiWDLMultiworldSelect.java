@@ -222,7 +222,6 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	private String addMultiworld(String worldName) {
 		String fileSafeWorldname = worldName;
 		char[] unsafeChars = "\\/:*?\"<>|".toCharArray();
-		int var5 = unsafeChars.length;
 		
 		//TODO: ReplaceAll with a regular expression may be cleaner
 		for (char unsafeChar : unsafeChars) {

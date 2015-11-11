@@ -35,11 +35,6 @@ import com.google.common.io.ByteStreams;
 public class WDLPluginChannels {
 	private static Logger logger = LogManager.getLogger();
 	/**
-	 * Number of seconds to wait before opening the permissions GUI.
-	 */
-	private static final int GUI_OPEN_DELAY = 2000;
-	
-	/**
 	 * Packets that have been received.
 	 */
 	private static HashSet<Integer> receivedPackets = new HashSet<Integer>();

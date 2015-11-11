@@ -40,10 +40,6 @@ public class GuiWDLPermissions extends GuiScreen {
 	 * Reload permissions button
 	 */
 	private GuiButton reloadButton;
-	/**
-	 * Reload permissions button
-	 */
-	private GuiButton doneButton;
 	
 	/**
 	 * Ticks (20ths of a second) until this UI needs to refresh.

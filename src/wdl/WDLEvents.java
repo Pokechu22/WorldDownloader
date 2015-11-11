@@ -43,9 +43,6 @@ import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.storage.MapData;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import wdl.api.IWorldLoadListener;
 import wdl.update.WDLUpdateChecker;
 
@@ -59,7 +56,6 @@ import wdl.update.WDLUpdateChecker;
  * should be called directly from the source and does a bit of processing, while
  */
 public class WDLEvents {
-	private static final Logger logger = LogManager.getLogger();
 	private static final Profiler profiler = Minecraft.getMinecraft().mcProfiler;
 
 	/**

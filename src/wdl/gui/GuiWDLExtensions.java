@@ -64,6 +64,7 @@ public class GuiWDLExtensions extends GuiScreen {
 		}
 		
 		private class ModEntry implements IGuiListEntry {
+			@SuppressWarnings("unused")
 			public final IWDLMod mod;
 			private final String modDesc;
 			

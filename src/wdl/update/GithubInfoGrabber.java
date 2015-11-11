@@ -27,11 +27,6 @@ public class GithubInfoGrabber {
 	 * Location of the entire release list.
 	 */
 	private static final String RELEASE_LIST_LOCATION = "https://api.github.com/repos/pokechu22/WorldDownloader/releases?per_page=100";
-	/**
-	 * Location for a single release.  The tag for the release needs to be
-	 * concatenated to this.
-	 */
-	private static final String RELEASE_SINGLE_LOCATION = "https://api.github.com/repos/pokechu22/WorldDownloader/releases/tags/";
 	
 	static {
 		// Gets the launched version (appears in F3)

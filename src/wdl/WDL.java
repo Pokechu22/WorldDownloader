@@ -381,10 +381,6 @@ public class WDL {
 		thread.start();
 	}
 
-	private static void initPluginChannels() {
-		
-	}
-
 	/**
 	 * Called when the world has loaded.
 	 * 
