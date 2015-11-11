@@ -23,6 +23,7 @@ import com.google.common.collect.Multimap;
  * 
  * @see https://github.com/Pokechu22/WorldDownloader/issues/13
  */
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class WrappedClassInheratanceMultiMap extends ClassInheratanceMultiMap {
 	/**
 	 * Creates a copy of a {@link ClassInheratanceMultiMap}.  This is ugly,
