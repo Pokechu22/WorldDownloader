@@ -3,12 +3,15 @@ package wdl.gui;
 import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.Map;
+import java.util.HashMap;
 
 import wdl.WDL;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 
 /**
@@ -28,13 +31,13 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	 */
 	private boolean newWorld = false;
 	/**
-	 * A list of all buttons.
-	 */
-	private GuiButton[] buttons;
-	/**
-	 * A list of all worlds that can be selected.
+	 * A map of all worlds to their buttons.
 	 */
 	private String[] worlds;
+	/**
+	 * A map of all worlds to their buttons.
+	 */
+	private GuiButton[] buttons;
 	/**
 	 * The parent GUI screen.
 	 */
@@ -48,91 +51,83 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	public void initGui() {
 		super.initGui();
 		
-		int var1 = this.width / 2;
-		int var2 = this.height / 4;
-		int var3 = this.width / 150;
+		int buttonsPerRow = this.width / 150;
 
-		if (var3 == 0) {
-			var3 = 1;
+		if (buttonsPerRow == 0) {
+			buttonsPerRow = 1;
 		}
 
-		int var4 = this.width / var3 - 5;
-		this.cancelBtn = new GuiButton(100, var1 - 100, this.height - 30,
-				"Cancel");
+		int var4 = this.width / buttonsPerRow - 5;
+		this.cancelBtn = new GuiButton(-1, this.width / 2 - 100, this.height - 30,
+				I18n.format("gui.cancel"));
 		this.buttonList.add(this.cancelBtn);
-		String var5 = WDL.baseProps.getProperty("LinkedWorlds");
-		String[] var6 = var5.split("|");
-		String[] var7 = new String[var6.length];
+		String[] linkedWorlds = WDL.baseProps.getProperty("LinkedWorlds")
+				.split("|");
+		String[] linkedWorldsDup = new String[linkedWorlds.length];
 		int var8 = 0;
-		int var9;
-
-		for (var9 = 0; var9 < var6.length; ++var9) {
-			if (var6[var9].isEmpty()) {
-				var6[var9] = null;
+		
+		for (int i = 0; i < linkedWorlds.length; i++) {
+			if (linkedWorlds[i].isEmpty()) {
+				linkedWorlds[i] = null;
 			} else {
-				Properties var10 = WDL.loadWorldProps(var6[var9]);
+				Properties prop = WDL.loadWorldProps(linkedWorlds[i]);
 
-				if (var10 == null) {
-					var6[var9] = null;
+				if (prop == null) {
+					linkedWorlds[i] = null;
 				} else {
 					++var8;
-					var7[var9] = var10.getProperty("WorldName");
+					linkedWorldsDup[i] = prop.getProperty("WorldName");
 				}
 			}
 		}
 
-		if (var3 > var8 + 1) {
-			var3 = var8 + 1;
+		if (buttonsPerRow > var8 + 1) {
+			buttonsPerRow = var8 + 1;
 		}
 
-		var9 = (this.width - var3 * var4) / 2;
+		int temp = (this.width - buttonsPerRow * var4) / 2;
 		this.worlds = new String[var8];
 		this.buttons = new GuiButton[var8 + 1];
-		int var12 = 0;
-		int var11;
-
-		for (var11 = 0; var11 < var6.length; ++var11) {
-			if (var6[var11] != null) {
-				this.worlds[var12] = var6[var11];
-				this.buttons[var12] = new GuiButton(var12, var12 % var3 * var4
-						+ var9, this.height - 60 - var12 / var3 * 21, var4, 20,
-						var7[var11]);
-				this.buttonList.add(this.buttons[var12]);
-				++var12;
+		
+		for (int i = 0, usedIndex = 0; i < linkedWorlds.length; ++i) {
+			if (linkedWorlds[i] != null) {
+				this.worlds[usedIndex] = linkedWorlds[i];
+				this.buttons[usedIndex] = new GuiButton(usedIndex, usedIndex % buttonsPerRow * var4
+						+ temp, this.height - 60 - usedIndex / buttonsPerRow * 21, var4, 20,
+						linkedWorldsDup[i]);
+				this.buttonList.add(this.buttons[usedIndex]);
+				
+				usedIndex++;
 			}
 		}
 
-		var11 = this.buttons.length - 1;
+		int lastButtonIndex = this.buttons.length - 1;
 
 		if (!this.newWorld) {
-			this.buttons[var11] = new GuiButton(var11, var11 % var3 * var4
-					+ var9, this.height - 60 - var11 / var3 * 21, var4, 20,
-					"< New Name >");
-			this.buttonList.add(this.buttons[var11]);
+			this.buttons[lastButtonIndex] = new GuiButton(lastButtonIndex, lastButtonIndex  % buttonsPerRow * var4
+					+ temp, this.height - 60 - lastButtonIndex / buttonsPerRow * 21, var4, 20,
+					I18n.format("wdl.gui.multiworld.newName"));
+			this.buttonList.add(this.buttons[lastButtonIndex]);
 		}
 
-		this.newNameField = new GuiTextField(40, this.fontRendererObj, var11
-				% var3 * var4 + var9, this.height - 60 - var11 / var3 * 21 + 1,
+		this.newNameField = new GuiTextField(40, this.fontRendererObj, lastButtonIndex
+				% buttonsPerRow * var4 + temp, this.height - 60 - lastButtonIndex / buttonsPerRow * 21 + 1,
 				var4, 18);
 	}
 
-	/**
-	 * Fired when a control is clicked. This is the equivalent of
-	 * ActionListener.actionPerformed(ActionEvent e).
-	 */
 	@Override
-	protected void actionPerformed(GuiButton var1) {
-		if (var1.enabled) {
+	protected void actionPerformed(GuiButton button) {
+		if (button.enabled) {
 			this.newWorld = false;
 
-			if (var1.id == this.worlds.length) {
+			if (button.id == this.worlds.length) {
 				this.newWorld = true;
 				this.buttonList.remove(this.buttons[this.worlds.length]);
-			} else if (var1.id == 100) {
+			} else if (button.id == -1) {
 				this.mc.displayGuiScreen((GuiScreen) null);
 				this.mc.setIngameFocus();
 			} else {
-				this.worldSelected(this.worlds[var1.id]);
+				this.worldSelected(this.worlds[button.id]);
 			}
 		}
 	}
@@ -184,32 +179,33 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	 * Draws the screen and all the components in it.
 	 */
 	@Override
-	public void drawScreen(int var1, int var2, float var3) {
+	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		drawRect(this.width / 2 - 120, 0, this.width / 2 + 120,
-				this.height / 16 + 25, -1073741824);
+				this.height / 16 + 25, 0xC0000000);
 
 		if (this.parent == null) {
 			this.drawCenteredString(this.fontRendererObj,
-					"World Downloader - Trying To Start Download",
-					this.width / 2, this.height / 16, 16777215);
+					I18n.format("wdl.gui.multiworld.title.startDownload"),
+					this.width / 2, this.height / 16, 0xFFFFFF);
 		} else {
 			this.drawCenteredString(this.fontRendererObj,
-					"World Downloader - Trying To Change Options",
-					this.width / 2, this.height / 16, 16777215);
+					I18n.format("wdl.gui.multiworld.title.changeOptions"),
+					this.width / 2, this.height / 16, 0xFFFFFF);
 		}
 
-		this.drawCenteredString(this.fontRendererObj, "Where are you?",
-				this.width / 2, this.height / 16 + 10, 16711680);
+		this.drawCenteredString(this.fontRendererObj,
+				I18n.format("wdl.gui.multiworld.subtitle"),
+				this.width / 2, this.height / 16 + 10, 0xFF0000);
 		
 		if (this.newWorld) {
 			this.newNameField.drawTextBox();
 		}
 
-		super.drawScreen(var1, var2, var3);
+		super.drawScreen(mouseX, mouseY, partialTicks);
 	}
 
-	private void worldSelected(String var1) {
-		WDL.worldName = var1;
+	private void worldSelected(String worldName) {
+		WDL.worldName = worldName;
 		WDL.isMultiworld = true;
 		WDL.propsFound = true;
 
@@ -218,45 +214,47 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 			this.mc.displayGuiScreen((GuiScreen) null);
 			this.mc.setIngameFocus();
 		} else {
-			WDL.worldProps = WDL.loadWorldProps(var1);
+			WDL.worldProps = WDL.loadWorldProps(worldName);
 			this.mc.displayGuiScreen(new GuiWDL(this.parent));
 		}
 	}
 
-	private String addMultiworld(String var1) {
-		String var2 = var1;
-		String var3 = "\\/:*?\"<>|";
-		char[] var4 = var3.toCharArray();
-		int var5 = var4.length;
-		int var6;
-
-		for (var6 = 0; var6 < var5; ++var6) {
-			char var7 = var4[var6];
-			var2 = var2.replace(var7, '_');
+	/**
+	 * Creates a new multiworld.
+	 */
+	private String addMultiworld(String worldName) {
+		String fileSafeWorldname = worldName;
+		char[] unsafeChars = "\\/:*?\"<>|".toCharArray();
+		int var5 = unsafeChars.length;
+		
+		//TODO: ReplaceAll with a regular expression may be cleaner
+		for (char unsafeChar : unsafeChars) {
+			fileSafeWorldname = fileSafeWorldname.replace(unsafeChar, '_');
 		}
 
 		(new File(this.mc.mcDataDir, "saves/" + WDL.baseFolderName + " - "
-				+ var2)).mkdirs();
-		Properties var11 = new Properties(WDL.baseProps);
-		var11.setProperty("WorldName", var1);
-		String[] var12 = new String[this.worlds.length + 1];
+				+ fileSafeWorldname)).mkdirs();
+		Properties worldProps = new Properties(WDL.baseProps);
+		worldProps.setProperty("WorldName", worldName);
+		
+		//TODO: Stop manually redoing the array here
+		String[] newWorlds = new String[this.worlds.length + 1];
 
-		for (var6 = 0; var6 < this.worlds.length; ++var6) {
-			var12[var6] = this.worlds[var6];
+		for (int i = 0; i < this.worlds.length; ++i) {
+			newWorlds[i] = this.worlds[i];
 		}
 
-		var12[var12.length - 1] = var2;
-		String var13 = "";
-		String[] var14 = var12;
-		int var8 = var12.length;
-
-		for (int var9 = 0; var9 < var8; ++var9) {
-			String var10 = var14[var9];
-			var13 = var13 + var10 + "|";
+		newWorlds[newWorlds.length - 1] = fileSafeWorldname;
+		
+		//TODO: StringBuilder
+		String linkedWorldsProp = "";
+		for (int i = 0; i < newWorlds.length; i++) {
+			linkedWorldsProp += newWorlds[i] + "|";
 		}
 
-		WDL.baseProps.setProperty("LinkedWorlds", var13);
-		WDL.saveProps(var2, var11);
-		return var2;
+		WDL.baseProps.setProperty("LinkedWorlds", linkedWorldsProp);
+		WDL.saveProps(fileSafeWorldname, worldProps);
+		
+		return fileSafeWorldname;
 	}
 }
