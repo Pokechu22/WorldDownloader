@@ -467,16 +467,18 @@ public class WDL {
 	public static void importTileEntities(Chunk chunk) {
 		File chunkSaveLocation = ReflectionUtils.stealAndGetField(chunkLoader,
 				File.class);
-		DataInputStream dis = RegionFileCache.getChunkInputStream(
-				chunkSaveLocation, chunk.xPosition, chunk.zPosition);
-
-		if (dis == null) {
-			// This happens whenever the chunk hasn't been saved before.
-			// It's a normal case.
-			return;
-		}
+		DataInputStream dis = null;
 		
 		try {
+			dis = RegionFileCache.getChunkInputStream(
+					chunkSaveLocation, chunk.xPosition, chunk.zPosition);
+
+			if (dis == null) {
+				// This happens whenever the chunk hasn't been saved before.
+				// It's a normal case.
+				return;
+			}
+			
 			NBTTagCompound chunkNBT = CompressedStreamTools.read(dis);
 			// NBTTagCompound levelNBT = chunkNBT.getCompoundTag( "Level" );
 			NBTTagCompound levelNBT = chunkNBT.getCompoundTag("Level");
@@ -526,6 +528,12 @@ public class WDL {
 			chatError("Failed to import tile entities for chunk at " + 
 					chunk.xPosition + ", " + chunk.zPosition + ": " + e);
 			e.printStackTrace();
+		} finally {
+			try {
+				dis.close();
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
 		}
 	}
 
@@ -657,23 +665,35 @@ public class WDL {
 		chatMessage(WDLMessageTypes.SAVING, "Saving player data...");
 		progressScreen.setMinorTaskProgress("Writing player data", 2);
 		
+		FileOutputStream stream = null;
 		try {
 			File playersDirectory = new File(saveHandler.getWorldDirectory(),
 					"playerdata");
-			File playerFile = new File(playersDirectory, thePlayer
+			File playerFileTmp = new File(playersDirectory, thePlayer
 					.getUniqueID().toString() + ".dat.tmp");
-			File playerFileOld = new File(playersDirectory, thePlayer
+			File playerFile = new File(playersDirectory, thePlayer
 					.getUniqueID().toString() + ".dat");
-			CompressedStreamTools.writeCompressed(playerNBT,
-					new FileOutputStream(playerFile));
+			
+			stream = new FileOutputStream(playerFileTmp);
+			
+			CompressedStreamTools.writeCompressed(playerNBT, stream);
 
-			if (playerFileOld.exists()) {
-				playerFileOld.delete();
+			// Remove the old player file to make space for the new one.
+			if (playerFile.exists()) {
+				playerFile.delete();
 			}
 
-			playerFile.renameTo(playerFileOld);
+			playerFileTmp.renameTo(playerFile);
 		} catch (Exception e) {
 			throw new RuntimeException("Couldn't save the player!", e);
+		} finally {
+			if (stream != null) {
+				try {
+					stream.close();
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+			}
 		}
 
 		chatMessage(WDLMessageTypes.SAVING, "Player data saved.");
@@ -697,12 +717,14 @@ public class WDL {
 		worldProps.setProperty("LastSaved",
 				Long.toString(worldInfoNBT.getLong("LastPlayed")));
 
+		FileOutputStream stream = null;
 		try {
 			File dataFile = new File(saveDirectory, "level.dat_new");
 			File dataFileBackup = new File(saveDirectory, "level.dat_old");
 			File dataFileOld = new File(saveDirectory, "level.dat");
-			CompressedStreamTools.writeCompressed(dataNBT,
-					new FileOutputStream(dataFile));
+			stream = new FileOutputStream(dataFile);
+			
+			CompressedStreamTools.writeCompressed(dataNBT, stream);
 
 			if (dataFileBackup.exists()) {
 				dataFileBackup.delete();
@@ -721,6 +743,14 @@ public class WDL {
 			}
 		} catch (Exception e) {
 			throw new RuntimeException("Couldn't save the world metadata!", e);
+		} finally {
+			if (stream != null) {
+				try {
+					stream.close();
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+			}
 		}
 
 		chatMessage(WDLMessageTypes.SAVING, "World data saved.");
