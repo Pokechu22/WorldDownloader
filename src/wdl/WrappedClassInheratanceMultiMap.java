@@ -23,8 +23,7 @@ import com.google.common.collect.Multimap;
  * 
  * @see https://github.com/Pokechu22/WorldDownloader/issues/13
  */
-@SuppressWarnings({ "rawtypes", "unchecked" })
-public class WrappedClassInheratanceMultiMap extends ClassInheratanceMultiMap {
+public class WrappedClassInheratanceMultiMap<T> extends ClassInheratanceMultiMap {
 	/**
 	 * Creates a copy of a {@link ClassInheratanceMultiMap}.  This is ugly,
 	 * but intended to avoid exceptions thrown durring rendering due to skipped
@@ -33,30 +32,32 @@ public class WrappedClassInheratanceMultiMap extends ClassInheratanceMultiMap {
 	 * @param original
 	 * @return
 	 */
-	public static WrappedClassInheratanceMultiMap copyOf(
+	@SuppressWarnings("unchecked")
+	public static <T> WrappedClassInheratanceMultiMap<T> copyOf(
 			ClassInheratanceMultiMap original) {
-		Multimap map = ReflectionUtils.stealAndGetField(original,
+		Multimap<Class<?>, T> map = ReflectionUtils.stealAndGetField(original,
 				ClassInheratanceMultiMap.class, Multimap.class);
-		Set set = ReflectionUtils.stealAndGetField(original,
+		Set<T> set = ReflectionUtils.stealAndGetField(original,
 				ClassInheratanceMultiMap.class, Set.class);
-		Class clazz = ReflectionUtils.stealAndGetField(original,
+		Class<T> clazz = ReflectionUtils.stealAndGetField(original,
 				ClassInheratanceMultiMap.class, Class.class);
 		
-		return new WrappedClassInheratanceMultiMap(clazz, set, map, original);
+		return new WrappedClassInheratanceMultiMap<T>(clazz, set, map, original);
 	}
 
 	private final ClassInheratanceMultiMap wrapped;
 	
-	private WrappedClassInheratanceMultiMap(Class clazz, Set set, Multimap map,
-			ClassInheratanceMultiMap wrapped) {
+	@SuppressWarnings("unchecked")
+	private WrappedClassInheratanceMultiMap(Class<T> clazz, Set<T> set,
+			Multimap<Class<?>, T> map, ClassInheratanceMultiMap wrapped) {
 		super(clazz);
 		
 		this.wrapped = wrapped;
 		
 		// Update the private fields.
-		Set ownSet = ReflectionUtils.stealAndGetField(this,
+		Set<T> ownSet = ReflectionUtils.stealAndGetField(this,
 				ClassInheratanceMultiMap.class, Set.class);
-		Multimap ownMap = ReflectionUtils.stealAndGetField(this,
+		Multimap<Class<?>, T> ownMap = ReflectionUtils.stealAndGetField(this,
 				ClassInheratanceMultiMap.class, Multimap.class);
 		
 		ownSet.clear();
@@ -113,14 +114,23 @@ public class WrappedClassInheratanceMultiMap extends ClassInheratanceMultiMap {
 	}
 	
 	/**
+	 * Ugly hack to allow iteration over this properly.
+	 */
+	@SuppressWarnings("unchecked")
+	public Iterable<T> asIterable() {
+		return (Iterable<T>) this;
+	}
+	
+	/**
 	 * Returns the iterator for the wrapped map unless the current stack trace
 	 * includes {@link AnvilChunkLoader}, in which case the modified version
 	 * is returned.
 	 * <hr/>
 	 * {@inheritDoc}
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
-	public Iterator iterator() {
+	public Iterator<T> iterator() {
 		for (StackTraceElement e : Thread.currentThread().getStackTrace()) {
 			if (e.getClassName().equals(AnvilChunkLoader.class.getName())) {
 				return super.iterator();
@@ -129,6 +139,11 @@ public class WrappedClassInheratanceMultiMap extends ClassInheratanceMultiMap {
 		return wrapped.iterator();
 	}
 	
+	/**
+	 * I have no idea what this does, but it does it based off of the stack
+	 * trace as described in {@link #iterator()}.
+	 */
+	@SuppressWarnings("rawtypes")
 	@Override
 	public Iterable func_180215_b(Class p_180215_1_) {
 		for (StackTraceElement e : Thread.currentThread().getStackTrace()) {

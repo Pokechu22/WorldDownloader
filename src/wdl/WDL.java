@@ -847,10 +847,11 @@ public class WDL {
 			if (!WDLPluginChannels.canSaveEntities()) {
 				// Temporarily delete entities if saving them is disabled.
 				for (int i = 0; i < maps.length; i++) {
-					WrappedClassInheratanceMultiMap map = WrappedClassInheratanceMultiMap
-							.copyOf(maps[i]);
+					WrappedClassInheratanceMultiMap<Entity> map =
+							WrappedClassInheratanceMultiMap
+							.<Entity> copyOf(maps[i]);
 					maps[i] = map;
-					for (Entity e : (Iterable<Entity>)map) {
+					for (Entity e : map.asIterable()) {
 						if (e instanceof EntityPlayer) {
 							//Skip players, as otherwise bad things happen, 
 							//such as deleting the current player and causing
@@ -864,10 +865,11 @@ public class WDL {
 			} else {
 				// Remove entities of unwanted types.
 				for (int i = 0; i < maps.length; i++) {
-					WrappedClassInheratanceMultiMap map = WrappedClassInheratanceMultiMap
-							.copyOf(maps[i]);
+					WrappedClassInheratanceMultiMap<Entity> map =
+							WrappedClassInheratanceMultiMap
+							.<Entity> copyOf(maps[i]);
 					maps[i] = map;
-					for (Entity e : (Iterable<Entity>)map) {
+					for (Entity e : map.asIterable()) {
 						if (e instanceof EntityPlayer) {
 							//Skip players, as otherwise bad things happen, 
 							//such as deleting the current player and causing
