@@ -107,14 +107,15 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	 * The parent GUI screen.
 	 */
 	private GuiScreen parent;
+	private GuiButton nextButton;
+	private GuiButton prevButton;
 
 	public GuiWDLMultiworldSelect(GuiScreen parent) {
 		this.parent = parent;
 		
 		// Build a list of world names.
 		String[] worldNames = WDL.baseProps.getProperty("LinkedWorlds")
-				.split("|");
-		
+				.split("\\|");
 		linkedWorlds = new ArrayList<MultiworldInfo>();
 		
 		for (String worldName : worldNames) {
@@ -151,13 +152,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 				I18n.format("gui.cancel"));
 		this.buttonList.add(this.cancelBtn);
 		
-		GuiButton prevButton = new GuiButton(-4, this.width / 2 - offset, y, 20, 20, "<");
-		if (index <= 0) {
-			index = 0;
-			prevButton.enabled = false;
-		} else {
-			prevButton.enabled = true;
-		}
+		prevButton = new GuiButton(-4, this.width / 2 - offset, y, 20, 20, "<");
 		this.buttonList.add(prevButton);
 		
 		for (int i = 0; i < numButtons - 1; i++) {
@@ -167,13 +162,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		
 		int rightArrowX = this.width / 2 - offset + 25 + (numButtons - 1) * 155;
 		
-		GuiButton nextButton = new GuiButton(-5, rightArrowX, y, 20, 20, ">");
-		if (index >= linkedWorlds.size() - 1) {
-			index = linkedWorlds.size() - 1;
-			nextButton.enabled = false;
-		} else {
-			nextButton.enabled = true;
-		}
+		nextButton = new GuiButton(-5, rightArrowX, y, 20, 20, ">");
 		this.buttonList.add(nextButton);
 		
 		this.newWorldButton = new GuiButton(-3, rightArrowX + 25, y, 150, 20,
@@ -199,21 +188,8 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 				this.showNewWorldTextBox = true;
 			} else if (button.id == -4) {
 				index--;
-				if (index <= 0) {
-					index = 0;
-					button.enabled = false;
-				} else {
-					button.enabled = true;
-				}
 			} else if (button.id == -5) {
 				index++;
-				
-				if (index >= linkedWorlds.size() - 1) {
-					index = linkedWorlds.size() - 1;
-					button.enabled = false;
-				} else {
-					button.enabled = true;
-				}
 			}
 		}
 	}
@@ -269,6 +245,19 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	 */
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		if (index >= linkedWorlds.size() - 1) {
+			index = linkedWorlds.size() - 1;
+			nextButton.enabled = false;
+		} else {
+			nextButton.enabled = true;
+		}
+		if (index <= 0) {
+			index = 0;
+			prevButton.enabled = false;
+		} else {
+			prevButton.enabled = true;
+		}
+		
 		drawRect(this.width / 2 - 120, 0, this.width / 2 + 120,
 				this.height / 16 + 25, 0xC0000000);
 
@@ -315,7 +304,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	 */
 	private void addMultiworld(String worldName) {
 		String folderName = worldName;
-		char[] unsafeChars = "\\/:*?\"<>|".toCharArray();
+		char[] unsafeChars = "\\/:*?\"<>|.".toCharArray();
 		
 		//TODO: ReplaceAll with a regular expression may be cleaner
 		for (char unsafeChar : unsafeChars) {
