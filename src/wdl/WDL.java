@@ -529,10 +529,12 @@ public class WDL {
 					chunk.xPosition + ", " + chunk.zPosition + ": " + e);
 			e.printStackTrace();
 		} finally {
-			try {
-				dis.close();
-			} catch (Exception e) {
-				throw new RuntimeException(e);
+			if (dis != null) {
+				try {
+					dis.close();
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
 			}
 		}
 	}
