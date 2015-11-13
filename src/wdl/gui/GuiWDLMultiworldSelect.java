@@ -109,6 +109,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	private GuiScreen parent;
 	private GuiButton nextButton;
 	private GuiButton prevButton;
+	private int numWorldButtons;
 
 	public GuiWDLMultiworldSelect(GuiScreen parent) {
 		this.parent = parent;
@@ -145,6 +146,8 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 			numButtons = 2;
 		}
 		
+		numWorldButtons = numButtons - 1;
+		
 		int offset = (numButtons * 155 + 50) / 2;
 		int y = this.height - 60;
 		
@@ -155,12 +158,12 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		prevButton = new GuiButton(-4, this.width / 2 - offset, y, 20, 20, "<");
 		this.buttonList.add(prevButton);
 		
-		for (int i = 0; i < numButtons - 1; i++) {
+		for (int i = 0; i < numWorldButtons; i++) {
 			this.buttonList.add(new WorldGuiButton(i, this.width / 2 - offset
 					+ i * 155 + 25, y, 150, 20));
 		}
 		
-		int rightArrowX = this.width / 2 - offset + 25 + (numButtons - 1) * 155;
+		int rightArrowX = this.width / 2 - offset + 25 + numWorldButtons * 155;
 		
 		nextButton = new GuiButton(-5, rightArrowX, y, 20, 20, ">");
 		this.buttonList.add(nextButton);
@@ -245,8 +248,8 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	 */
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		if (index >= linkedWorlds.size() - 1) {
-			index = linkedWorlds.size() - 1;
+		if (index >= linkedWorlds.size() - numWorldButtons) {
+			index = linkedWorlds.size() - numWorldButtons;
 			nextButton.enabled = false;
 		} else {
 			nextButton.enabled = true;
