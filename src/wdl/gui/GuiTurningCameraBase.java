@@ -19,6 +19,14 @@ public abstract class GuiTurningCameraBase extends GuiScreen {
 	 */
 	private int oldCameraMode;
 	/**
+	 * The previous state as to whether the hud was hidden with F1.
+	 */
+	private boolean oldHideHud;
+	/**
+	 * The previous state as to whether the debug menu was enabled with F#.
+	 */
+	private boolean oldShowDebug;
+	/**
 	 * The player to preview.
 	 */
 	private EntityPlayerSP cam;
@@ -45,7 +53,11 @@ public abstract class GuiTurningCameraBase extends GuiScreen {
 					WDL.thePlayer.rotationYaw, 0.0F);
 			this.yaw = WDL.thePlayer.rotationYaw;
 			this.oldCameraMode = WDL.minecraft.gameSettings.thirdPersonView;
+			this.oldHideHud = WDL.minecraft.gameSettings.hideGUI;
+			this.oldShowDebug = WDL.minecraft.gameSettings.showDebugInfo;
 			WDL.minecraft.gameSettings.thirdPersonView = 0;
+			WDL.minecraft.gameSettings.hideGUI = true;
+			WDL.minecraft.gameSettings.showDebugInfo = false;
 			
 			// Gets the render view entity for minecraft.
 			this.oldRenderViewEntity = WDL.minecraft.func_175606_aa();
@@ -86,6 +98,8 @@ public abstract class GuiTurningCameraBase extends GuiScreen {
 	public void onGuiClosed() {
 		super.onGuiClosed();
 		WDL.minecraft.gameSettings.thirdPersonView = this.oldCameraMode;
+		WDL.minecraft.gameSettings.hideGUI = oldHideHud;
+		WDL.minecraft.gameSettings.showDebugInfo = oldShowDebug;
 		WDL.minecraft.func_175607_a(this.oldRenderViewEntity);
 	}
 }
