@@ -3,6 +3,7 @@ package wdl.gui;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer.EnumChatVisibility;
 import wdl.WDL;
 
 /**
@@ -26,6 +27,10 @@ public abstract class GuiTurningCameraBase extends GuiScreen {
 	 * The previous state as to whether the debug menu was enabled with F#.
 	 */
 	private boolean oldShowDebug;
+	/**
+	 * The previous chat visibility.
+	 */
+	private EnumChatVisibility oldChatVisibility;
 	/**
 	 * The player to preview.
 	 */
@@ -55,10 +60,11 @@ public abstract class GuiTurningCameraBase extends GuiScreen {
 			this.oldCameraMode = WDL.minecraft.gameSettings.thirdPersonView;
 			this.oldHideHud = WDL.minecraft.gameSettings.hideGUI;
 			this.oldShowDebug = WDL.minecraft.gameSettings.showDebugInfo;
+			this.oldChatVisibility = WDL.minecraft.gameSettings.chatVisibility;
 			WDL.minecraft.gameSettings.thirdPersonView = 0;
 			WDL.minecraft.gameSettings.hideGUI = true;
 			WDL.minecraft.gameSettings.showDebugInfo = false;
-			
+			WDL.minecraft.gameSettings.chatVisibility = EnumChatVisibility.HIDDEN;
 			// Gets the render view entity for minecraft.
 			this.oldRenderViewEntity = WDL.minecraft.func_175606_aa();
 			
@@ -100,6 +106,7 @@ public abstract class GuiTurningCameraBase extends GuiScreen {
 		WDL.minecraft.gameSettings.thirdPersonView = this.oldCameraMode;
 		WDL.minecraft.gameSettings.hideGUI = oldHideHud;
 		WDL.minecraft.gameSettings.showDebugInfo = oldShowDebug;
+		WDL.minecraft.gameSettings.chatVisibility = oldChatVisibility;
 		WDL.minecraft.func_175607_a(this.oldRenderViewEntity);
 	}
 }
