@@ -128,9 +128,22 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	 * The parent GUI screen.
 	 */
 	private GuiScreen parent;
+	/**
+	 * The next button (scrolls the list right).
+	 */
 	private GuiButton nextButton;
+	/**
+	 * The previous button (scrolls the list left).
+	 */
 	private GuiButton prevButton;
+	/**
+	 * The number of world buttons there are.
+	 */
 	private int numWorldButtons;
+	/**
+	 * Text currently being searched for.
+	 */
+	private String searchText = "";
 
 	public GuiWDLMultiworldSelect(GuiScreen parent) {
 		this.parent = parent;
@@ -179,7 +192,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		
 		this.acceptBtn = new GuiButton(-2, this.width / 2 + 5, this.height - 25,
 				150, 20, I18n.format("gui.done")); //TODO: Different text.
-		this.acceptBtn.enabled = false;
+		this.acceptBtn.enabled = (selectedMultiWorld != null);
 		this.buttonList.add(this.acceptBtn);
 		
 		prevButton = new GuiButton(-4, this.width / 2 - offset, y, 20, 20, "<");
@@ -203,6 +216,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		
 		this.searchField = new GuiTextField(41, this.fontRendererObj,
 				this.width / 2 + 5, 29, 150, 20);
+		this.searchField.setText(searchText);
 	}
 
 	@Override
@@ -272,6 +286,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 
 		// Return value of this function seems to be whether the text changed.
 		if (this.searchField.textboxKeyTyped(typedChar, keyCode)) {
+			this.searchText = searchField.getText();
 			rebuildFilteredWorlds();
 		}
 	}
@@ -381,7 +396,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	 * has occurred to the search or the {@link #linkedWorlds} list.
 	 */
 	private void rebuildFilteredWorlds() {
-		String searchFilter = searchField.getText().toLowerCase();
+		String searchFilter = searchText.toLowerCase();
 		linkedWorldsFiltered.clear();
 		for (MultiworldInfo info : linkedWorlds) {
 			if (info.displayName.toLowerCase().contains(searchFilter)) {
