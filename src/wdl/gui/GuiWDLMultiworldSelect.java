@@ -43,6 +43,12 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 				displayString = info.displayName;
 				enabled = true;
 			}
+			
+			if (info == selectedMultiWorld) {
+				drawRect(this.xPosition - 2, this.yPosition - 2,
+						this.xPosition + width + 2, this.yPosition + height + 2,
+						0xFF007F00);
+			}
 			super.drawButton(mc, mouseX, mouseY);
 		}
 		
@@ -112,6 +118,10 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	 */
 	private List<MultiworldInfo> linkedWorldsFiltered;
 	/**
+	 * The currently selected multiworld.
+	 */
+	private MultiworldInfo selectedMultiWorld;
+	/**
 	 * Scrolling index.
 	 */
 	private int index = 0;
@@ -170,6 +180,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		
 		this.acceptBtn = new GuiButton(-2, this.width / 2 + 5, this.height - 25,
 				150, 20, I18n.format("gui.done")); //TODO: Different text.
+		this.acceptBtn.enabled = false;
 		this.buttonList.add(this.acceptBtn);
 		
 		prevButton = new GuiButton(-4, this.width / 2 - offset, y, 20, 20, "<");
@@ -199,13 +210,19 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	protected void actionPerformed(GuiButton button) {
 		if (button.enabled) {
 			if (button instanceof WorldGuiButton) {
-				//TODO: I want to outline the selected world, not return it.
-				this.worldSelected(((WorldGuiButton) button).getWorldInfo().folderName);
+				selectedMultiWorld = ((WorldGuiButton) button).getWorldInfo();
+				if (selectedMultiWorld != null) {
+					acceptBtn.enabled = true;
+				} else {
+					acceptBtn.enabled = false;
+				}
 			} else if (button.id == -1) {
 				this.mc.displayGuiScreen((GuiScreen) null);
 				this.mc.setIngameFocus();
 			} else if (button.id == -2) {
-				//TODO: Accept button.
+				if (selectedMultiWorld != null) {
+					this.worldSelected(selectedMultiWorld.folderName);
+				}
 			} else if (button.id == -3) {
 				this.showNewWorldTextBox = true;
 			} else if (button.id == -4) {
