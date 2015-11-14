@@ -144,22 +144,20 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	public void initGui() {
 		super.initGui();
 		
-		int numButtons = (this.width - 50) / 155;
+		numWorldButtons = (this.width - 50) / 155;
 
-		if (numButtons < 2) {
-			numButtons = 2;
+		if (numWorldButtons < 1) {
+			numWorldButtons = 1;
 		}
 		
-		numWorldButtons = numButtons - 1;
+		int offset = (numWorldButtons * 155 + 45) / 2;
+		int y = this.height - 49;
 		
-		int offset = (numButtons * 155 + 50) / 2;
-		int y = this.height - 60;
-		
-		this.cancelBtn = new GuiButton(-1, this.width / 2 - 155, this.height - 29,
+		this.cancelBtn = new GuiButton(-1, this.width / 2 - 155, this.height - 25,
 				150, 20, I18n.format("gui.cancel"));
 		this.buttonList.add(this.cancelBtn);
 		
-		this.acceptBtn = new GuiButton(-2, this.width / 2 + 5, this.height - 29,
+		this.acceptBtn = new GuiButton(-2, this.width / 2 + 5, this.height - 25,
 				150, 20, I18n.format("gui.done")); //TODO: Different text.
 		this.buttonList.add(this.acceptBtn);
 		
@@ -171,17 +169,16 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 					+ i * 155 + 25, y, 150, 20));
 		}
 		
-		int rightArrowX = this.width / 2 - offset + 25 + numWorldButtons * 155;
-		
-		nextButton = new GuiButton(-5, rightArrowX, y, 20, 20, ">");
+		nextButton = new GuiButton(-5, this.width / 2 - offset + 25
+				+ numWorldButtons * 155, y, 20, 20, ">");
 		this.buttonList.add(nextButton);
 		
-		this.newWorldButton = new GuiButton(-3, rightArrowX + 25, y, 150, 20,
+		this.newWorldButton = new GuiButton(-3, this.width / 2 - 155, 29, 150, 20,
 				I18n.format("wdl.gui.multiworld.newName"));
 		this.buttonList.add(newWorldButton);
 
 		this.newNameField = new GuiTextField(40, this.fontRendererObj,
-				rightArrowX + 25, y, 150, 20);
+				this.width / 2 - 155, 29, 150, 20);
 	}
 
 	@Override
@@ -269,7 +266,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 			prevButton.enabled = true;
 		}
 		
-		Utils.drawBorder(32, 32, 0, 0, height, width);
+		Utils.drawBorder(53, 53, 0, 0, height, width);
 		
 		if (this.parent == null) {
 			this.drawCenteredString(this.fontRendererObj,
