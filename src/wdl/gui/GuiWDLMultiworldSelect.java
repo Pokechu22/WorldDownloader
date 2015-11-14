@@ -56,11 +56,11 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 			if (location < 0) {
 				return null;
 			}
-			if (location >= linkedWorlds.size()) {
+			if (location >= linkedWorldsFiltered.size()) {
 				return null;
 			}
 			
-			return linkedWorlds.get(location);
+			return linkedWorldsFiltered.get(location);
 		}
 	}
 	
@@ -92,6 +92,10 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	 */
 	private GuiTextField newNameField;
 	/**
+	 * The "Search" field.  Allows filtering.
+	 */
+	private GuiTextField searchField;
+	/**
 	 * The "New world" button.
 	 */
 	private GuiButton newWorldButton;
@@ -103,6 +107,10 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	 * Worlds linked together for the given server.
 	 */
 	private List<MultiworldInfo> linkedWorlds;
+	/**
+	 * List of worlds to display.
+	 */
+	private List<MultiworldInfo> linkedWorldsFiltered;
 	/**
 	 * Scrolling index.
 	 */
@@ -137,6 +145,9 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 			String displayName = props.getProperty("WorldName", worldName);
 			linkedWorlds.add(new MultiworldInfo(worldName, displayName));
 		}
+		
+		linkedWorldsFiltered = new ArrayList<MultiworldInfo>();
+		linkedWorldsFiltered.addAll(linkedWorlds);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -179,6 +190,9 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 
 		this.newNameField = new GuiTextField(40, this.fontRendererObj,
 				this.width / 2 - 155, 29, 150, 20);
+		
+		this.searchField = new GuiTextField(41, this.fontRendererObj,
+				this.width / 2 + 5, 29, 150, 20);
 	}
 
 	@Override
@@ -213,6 +227,8 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		if (this.showNewWorldTextBox) {
 			this.newNameField.mouseClicked(mouseX, mouseY, mouseButton);
 		}
+		
+		this.searchField.mouseClicked(mouseX, mouseY, mouseButton);
 	}
 
 	/**
@@ -223,7 +239,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	protected void keyTyped(char typedChar, int keyCode) throws IOException {
 		super.keyTyped(typedChar, keyCode);
 
-		if (this.showNewWorldTextBox && this.newNameField.isFocused()) {
+		if (this.showNewWorldTextBox) {
 			this.newNameField.textboxKeyTyped(typedChar, keyCode);
 
 			if (keyCode == Keyboard.KEY_RETURN) {
@@ -237,6 +253,17 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 				}
 			}
 		}
+
+		// Return value of this function seems to be whether the text changed.
+		if (this.searchField.textboxKeyTyped(typedChar, keyCode)) {
+			String text = searchField.getText().toLowerCase();
+			linkedWorldsFiltered.clear();
+			for (MultiworldInfo info : linkedWorlds) {
+				if (info.displayName.toLowerCase().contains(text)) {
+					linkedWorldsFiltered.add(info);
+				}
+			}
+		}
 	}
 
 	/**
@@ -245,6 +272,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	@Override
 	public void updateScreen() {
 		this.newNameField.updateCursorCounter();
+		this.searchField.updateCursorCounter();
 		super.updateScreen();
 	}
 
@@ -284,6 +312,12 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		
 		if (this.showNewWorldTextBox) {
 			this.newNameField.drawTextBox();
+		}
+		this.searchField.drawTextBox();
+		//Hint as to what the text box does
+		if (this.searchField.getText().isEmpty() && !this.searchField.isFocused()) {
+			drawString(fontRendererObj, "Search...", searchField.xPosition + 4,
+					searchField.yPosition + 6, 0x909090);
 		}
 		
 		newWorldButton.visible = !showNewWorldTextBox;
