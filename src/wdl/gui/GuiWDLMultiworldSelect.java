@@ -43,7 +43,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 				enabled = true;
 			}
 			
-			if (info == selectedMultiWorld) {
+			if (info != null && info == selectedMultiWorld) {
 				drawRect(this.xPosition - 2, this.yPosition - 2,
 						this.xPosition + width + 2, this.yPosition + height + 2,
 						0xFF007F00);
@@ -272,13 +272,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 
 		// Return value of this function seems to be whether the text changed.
 		if (this.searchField.textboxKeyTyped(typedChar, keyCode)) {
-			String text = searchField.getText().toLowerCase();
-			linkedWorldsFiltered.clear();
-			for (MultiworldInfo info : linkedWorlds) {
-				if (info.displayName.toLowerCase().contains(text)) {
-					linkedWorldsFiltered.add(info);
-				}
-			}
+			rebuildFilteredWorlds();
 		}
 	}
 
@@ -378,5 +372,22 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		WDL.saveProps(folderName, worldProps);
 		
 		linkedWorlds.add(new MultiworldInfo(folderName, worldName));
+		
+		rebuildFilteredWorlds();
+	}
+	
+	/**
+	 * Rebuilds the {@link #linkedWorldsFiltered} list after a change
+	 * has occurred to the search or the {@link #linkedWorlds} list.
+	 */
+	private void rebuildFilteredWorlds() {
+		String searchFilter = searchField.getText().toLowerCase();
+		linkedWorldsFiltered.clear();
+		for (MultiworldInfo info : linkedWorlds) {
+			if (info.displayName.toLowerCase().contains(searchFilter)) {
+				linkedWorldsFiltered.add(info);
+			}
+		}
+		
 	}
 }
