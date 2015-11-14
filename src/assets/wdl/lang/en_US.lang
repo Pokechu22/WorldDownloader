@@ -2,8 +2,6 @@ wdl.gui.about.translatorCredit=!!!!!!!! Put your name here, in the format of 'Tr
 
 wdl.gui.wdl.title=Options for %s
 wdl.gui.wdl.worldname=Name:
-wdl.gui.wdl.autostart.autostart=Start Download: Automatically
-wdl.gui.wdl.autostart.onlyInMenu=Start Download: Only in menu
 wdl.gui.wdl.worldOverrides.name=World Overrides...
 wdl.gui.wdl.worldOverrides.description=Control specific metadata about the saved world, such as the spawn point and game mode.
 wdl.gui.wdl.generatorOverrides.name=World Generator Overrides...

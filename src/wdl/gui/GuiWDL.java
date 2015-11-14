@@ -120,7 +120,6 @@ public class GuiWDL extends GuiScreen {
 	private GuiScreen parent;
 
 	private GuiTextField worldname;
-	private GuiButton autostartBtn;
 	private GuiWDLButtonList list;
 
 	public GuiWDL(GuiScreen parent) {
@@ -154,10 +153,6 @@ public class GuiWDL extends GuiScreen {
 		this.worldname = new GuiTextField(42, this.fontRendererObj,
 				this.width / 2 - 155, 19, 150, 18);
 		this.worldname.setText(WDL.baseProps.getProperty("ServerName"));
-		
-		this.autostartBtn = new GuiButton(1, this.width / 2 + 5, 18, 150, 20,
-				getAutoStartButtonText());
-		this.buttonList.add(this.autostartBtn);
 
 		this.buttonList.add(new GuiButton(100, this.width / 2 - 100,
 				this.height - 29, I18n.format("gui.done")));
@@ -175,9 +170,7 @@ public class GuiWDL extends GuiScreen {
 			return;
 		}
 
-		if (button.id == 1) { // Auto start
-			this.cycleAutoStart();
-		} else if (button.id == 100) { // Done
+		if (button.id == 100) { // Done
 			this.mc.displayGuiScreen(this.parent);
 		}
 	}
@@ -259,26 +252,5 @@ public class GuiWDL extends GuiScreen {
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		
 		Utils.drawGuiInfoBox(displayedTooltip, width, height, 48);
-	}
-
-	public void cycleAutoStart() {
-		String autostart = WDL.baseProps.getProperty("AutoStart");
-
-		if (autostart.equals("true")) {
-			WDL.baseProps.setProperty("AutoStart", "false");
-		} else {
-			WDL.baseProps.setProperty("AutoStart", "true");
-		}
-		
-		autostartBtn.displayString = getAutoStartButtonText();
-	}
-	
-	public String getAutoStartButtonText() {
-		String autostart = WDL.baseProps.getProperty("AutoStart");
-		
-		String key = "wdl.gui.wdl.autostart."
-				+ (autostart.equals("true") ? "autostart" : "onlyInMenu");
-		
-		return I18n.format(key);
 	}
 }

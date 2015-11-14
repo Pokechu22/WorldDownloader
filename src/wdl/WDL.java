@@ -233,7 +233,6 @@ public class WDL {
 		defaultProps.setProperty("ServerName", "");
 		defaultProps.setProperty("WorldName", "");
 		defaultProps.setProperty("LinkedWorlds", "");
-		defaultProps.setProperty("AutoStart", "false");
 		defaultProps.setProperty("Backup", "ZIP");
 		defaultProps.setProperty("AllowCheats", "true");
 		defaultProps.setProperty("GameType", "keep");
@@ -440,11 +439,7 @@ public class WDL {
 					".  Using " + (isSpigot() ? "Spigot" : "Vanilla") +
 							" track distances.");
 			
-			if (baseProps.getProperty("AutoStart").equals("true")) {
-				start();
-			} else {
-				startOnChange = false;
-			}
+			startOnChange = false;
 			
 			return true;
 		} else {
