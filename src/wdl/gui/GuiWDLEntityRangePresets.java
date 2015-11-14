@@ -48,7 +48,8 @@ public class GuiWDLEntityRangePresets extends GuiScreen implements GuiYesNoCallb
 		
 		y += 28;
 		
-		this.cancelButton = new GuiButton(100, this.width / 2 - 100, y, "Cancel");
+		this.cancelButton = new GuiButton(100, this.width / 2 - 100,
+				this.height - 29, "Cancel");
 		this.buttonList.add(cancelButton);
 	}
 	
@@ -88,11 +89,10 @@ public class GuiWDLEntityRangePresets extends GuiScreen implements GuiYesNoCallb
 	
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		drawBackground(0);
+		Utils.drawListBackground(23, 32, 0, 0, height, width);
 		
 		this.drawCenteredString(this.fontRendererObj, "Range presets",
-				this.width / 2, this.height / 4 - fontRendererObj.FONT_HEIGHT
-						- 2, 0xFFFFFF);
+				this.width / 2, 8, 0xFFFFFF);
 		
 		String infoText = null;
 		
