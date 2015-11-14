@@ -379,6 +379,13 @@ public class WDLPluginChannels {
 						"canSaveTileEntities: " + canSaveTileEntities);
 				WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
 						"canSaveContainers: " + canSaveContainers);
+				
+				//Cancel a download if it is occurring.
+				if (!canDownloadInGeneral) {
+					if (WDL.downloading) {
+						WDL.stop();
+					}
+				}
 				break;
 			case 2:
 				entityRanges.clear();
