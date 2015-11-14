@@ -11,6 +11,7 @@ import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiListExtended.IGuiListEntry;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import wdl.api.IWDLMod;
 import wdl.api.IWDLModDescripted;
@@ -79,7 +80,8 @@ public class GuiWDLExtensions extends GuiScreen {
 						name = displayName;
 					}
 				}
-				this.modDesc = name + " v" + mod.getVersion();
+				this.modDesc = I18n.format("wdl.gui.extensions.modVersion",
+						name, mod.getVersion());
 			}
 			
 			@Override
@@ -192,7 +194,8 @@ public class GuiWDLExtensions extends GuiScreen {
 			
 			super.drawScreen(mouseX, mouseY, partialTicks);
 			
-			drawCenteredString(fontRendererObj, "Details (resizable)",
+			drawCenteredString(fontRendererObj,
+					I18n.format("wdl.gui.extensions.detailsCaption"),
 					GuiWDLExtensions.this.width / 2, 5, 0xFFFFFF);
 			
 			GlStateManager.translate(0, -bottomLocation, 0);
@@ -322,7 +325,8 @@ public class GuiWDLExtensions extends GuiScreen {
 		this.list = new ModList();
 		this.details = new ModDetailList();
 		
-		this.buttonList.add(new GuiButton(0, width / 2 - 100, height - 29, "Done"));
+		this.buttonList.add(new GuiButton(0, width / 2 - 100, height - 29, I18n
+				.format("gui.done")));
 	}
 	
 	@Override
@@ -411,8 +415,9 @@ public class GuiWDLExtensions extends GuiScreen {
 		this.list.drawScreen(mouseX, mouseY, partialTicks);
 		this.details.drawScreen(mouseX, mouseY, partialTicks);
 		
-		this.drawCenteredString(this.fontRendererObj, "WDL extensions",
-				this.width / 2, 8, 0xFFFFFF);
+		this.drawCenteredString(this.fontRendererObj,
+				I18n.format("wdl.gui.extensions.title"), this.width / 2, 8,
+				0xFFFFFF);
 		
 		super.drawScreen(mouseX, mouseY, partialTicks);
 	}

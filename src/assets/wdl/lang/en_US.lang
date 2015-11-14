@@ -112,6 +112,10 @@ wdl.gui.about.extensions=Extensions
 wdl.gui.about.debugInfo=Copy debug info
 wdl.gui.about.debugInfo.copied=Copied!
 
+wdl.gui.extensions.title=WDL extensions
+wdl.gui.extensions.detailsCaption=Details (resizable)
+wdl.gui.extensions.modVersion=%s v%s
+
 wdl.gui.multiworld.title.startDownload=World Downloader - Trying To Start Download
 wdl.gui.multiworld.title.changeOptions=World Downloader - Trying To Change Options
 wdl.gui.multiworld.subtitle=Where are you?
