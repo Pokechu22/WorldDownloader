@@ -116,6 +116,8 @@ wdl.gui.multiworld.title.startDownload=World Downloader - Trying To Start Downlo
 wdl.gui.multiworld.title.changeOptions=World Downloader - Trying To Change Options
 wdl.gui.multiworld.subtitle=Where are you?
 wdl.gui.multiworld.newName=< New Name >
+wdl.gui.multiworld.search=Search...
+wdl.gui.multiworld.done=Use selected world
 
 wdl.messages.message.info.text=General info
 wdl.messages.message.error.text=General errors

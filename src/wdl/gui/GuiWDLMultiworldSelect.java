@@ -191,7 +191,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		this.buttonList.add(this.cancelBtn);
 		
 		this.acceptBtn = new GuiButton(-2, this.width / 2 + 5, this.height - 25,
-				150, 20, I18n.format("gui.done")); //TODO: Different text.
+				150, 20, I18n.format("wdl.gui.multiworld.done"));
 		this.acceptBtn.enabled = (selectedMultiWorld != null);
 		this.buttonList.add(this.acceptBtn);
 		
@@ -341,8 +341,10 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		this.searchField.drawTextBox();
 		//Hint as to what the text box does
 		if (this.searchField.getText().isEmpty() && !this.searchField.isFocused()) {
-			drawString(fontRendererObj, "Search...", searchField.xPosition + 4,
-					searchField.yPosition + 6, 0x909090);
+			drawString(fontRendererObj,
+					I18n.format("wdl.gui.multiworld.search"),
+					searchField.xPosition + 4, searchField.yPosition + 6,
+					0x909090);
 		}
 		
 		newWorldButton.visible = !showNewWorldTextBox;
