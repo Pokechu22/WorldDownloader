@@ -84,6 +84,10 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	 */
 	private GuiButton cancelBtn;
 	/**
+	 * The accept button.
+	 */
+	private GuiButton acceptBtn;
+	/**
 	 * The "New name" field.
 	 */
 	private GuiTextField newNameField;
@@ -151,9 +155,13 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		int offset = (numButtons * 155 + 50) / 2;
 		int y = this.height - 60;
 		
-		this.cancelBtn = new GuiButton(-1, this.width / 2 - 100, this.height - 30,
-				I18n.format("gui.cancel"));
+		this.cancelBtn = new GuiButton(-1, this.width / 2 - 155, this.height - 29,
+				150, 20, I18n.format("gui.cancel"));
 		this.buttonList.add(this.cancelBtn);
+		
+		this.acceptBtn = new GuiButton(-2, this.width / 2 + 5, this.height - 29,
+				150, 20, I18n.format("gui.done")); //TODO: Different text.
+		this.buttonList.add(this.acceptBtn);
 		
 		prevButton = new GuiButton(-4, this.width / 2 - offset, y, 20, 20, "<");
 		this.buttonList.add(prevButton);
@@ -261,22 +269,21 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 			prevButton.enabled = true;
 		}
 		
-		drawRect(this.width / 2 - 120, 0, this.width / 2 + 120,
-				this.height / 16 + 25, 0xC0000000);
-
+		Utils.drawBorder(32, 32, 0, 0, height, width);
+		
 		if (this.parent == null) {
 			this.drawCenteredString(this.fontRendererObj,
 					I18n.format("wdl.gui.multiworld.title.startDownload"),
-					this.width / 2, this.height / 16, 0xFFFFFF);
+					this.width / 2, 8, 0xFFFFFF);
 		} else {
 			this.drawCenteredString(this.fontRendererObj,
 					I18n.format("wdl.gui.multiworld.title.changeOptions"),
-					this.width / 2, this.height / 16, 0xFFFFFF);
+					this.width / 2, 8, 0xFFFFFF);
 		}
 
 		this.drawCenteredString(this.fontRendererObj,
 				I18n.format("wdl.gui.multiworld.subtitle"),
-				this.width / 2, this.height / 16 + 10, 0xFF0000);
+				this.width / 2, 18, 0xFF0000);
 		
 		if (this.showNewWorldTextBox) {
 			this.newNameField.drawTextBox();
