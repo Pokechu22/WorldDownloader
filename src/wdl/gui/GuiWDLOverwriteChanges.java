@@ -221,7 +221,7 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase {
 						"backup or just not download for the moment.";
 			}
 			
-			Utils.drawGuiInfoBox(tooltip, width, height);
+			Utils.drawGuiInfoBox(tooltip, width, height, 48);
 		}
 	}
 }

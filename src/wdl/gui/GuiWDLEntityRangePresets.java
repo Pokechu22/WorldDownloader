@@ -119,7 +119,7 @@ public class GuiWDLEntityRangePresets extends GuiScreen implements GuiYesNoCallb
 		}
 		
 		if (infoText != null) {
-			Utils.drawGuiInfoBox(infoText, width, height);
+			Utils.drawGuiInfoBox(infoText, width, height, 48);
 		}
 		
 		super.drawScreen(mouseX, mouseY, partialTicks);

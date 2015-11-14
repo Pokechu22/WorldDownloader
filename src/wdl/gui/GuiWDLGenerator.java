@@ -127,7 +127,7 @@ public class GuiWDLGenerator extends GuiScreen {
 		} else if (generateStructuresBtn.isMouseOver()) {
 			tooltip = I18n.format("wdl.gui.generator.generateStructures.description");
 		}
-		Utils.drawGuiInfoBox(tooltip, width, height);
+		Utils.drawGuiInfoBox(tooltip, width, height, 48);
 	}
 
 	private void cycleGenerator() {

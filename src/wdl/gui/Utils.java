@@ -25,24 +25,52 @@ class Utils {
 	private static final Minecraft mc = Minecraft.getMinecraft();
 	
 	/**
-	 * Draws a transparent description box.
+	 * Draws a semitransparent description box.
 	 * 
-	 * @param text Text to display.  Takes \n into consideration.
-	 * @param width Width of the GUI.
-	 * @param height Height of the GUI.
+	 * @param text
+	 *            Text to display. Takes \n into consideration.
+	 * @param guiWidth
+	 *            Width of the GUI.
+	 * @param guiHeight
+	 *            Height of the GUI.
+	 * @param bottomPadding
+	 *            The amount of space to put below the bottom of the info box.
 	 */
-	public static void drawGuiInfoBox(String text, int width, int height) {
+	public static void drawGuiInfoBox(String text, int guiWidth, int guiHeight,
+			int bottomPadding) {
+		drawGuiInfoBox(text, 300, 100, guiWidth, guiHeight, bottomPadding);
+	}
+
+	/**
+	 * Draws a semitransparent description box.
+	 * 
+	 * @param text
+	 *            Text to display. Takes \n into consideration.
+	 * @param infoBoxWidth
+	 *            The width of the info box.
+	 * @param infoBoxHeight
+	 *            The height of the info box.
+	 * @param guiWidth
+	 *            Width of the GUI.
+	 * @param guiHeight
+	 *            Height of the GUI.
+	 * @param bottomPadding
+	 *            The amount of space to put below the bottom of the info box.
+	 */
+	public static void drawGuiInfoBox(String text, int infoBoxWidth,
+			int infoBoxHeight, int guiWidth, int guiHeight, int bottomPadding) {
 		if (text == null) {
 			return;
 		}
 		
-		int infoX = width / 2 - 150;
-		int infoY = 2 * height / 3;
+		int infoX = guiWidth / 2 - infoBoxWidth / 2;
+		int infoY = guiHeight - bottomPadding - infoBoxHeight;
 		int y = infoY + 5;
 		
-		GuiScreen.drawRect(infoX, infoY, infoX + 300, infoY + 100, 0x7F000000);
+		GuiScreen.drawRect(infoX, infoY, infoX + infoBoxWidth, infoY
+				+ infoBoxHeight, 0x7F000000);
 		
-		List<String> lines = wordWrap(text, 290);
+		List<String> lines = wordWrap(text, infoBoxWidth - 10);
 		
 		for (String s : lines) {
 			mc.fontRendererObj.drawString(s, infoX + 5, y, 0xFFFFFF);

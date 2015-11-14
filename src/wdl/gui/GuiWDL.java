@@ -258,7 +258,7 @@ public class GuiWDL extends GuiScreen {
 		
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		
-		Utils.drawGuiInfoBox(displayedTooltip, width, height);
+		Utils.drawGuiInfoBox(displayedTooltip, width, height, 48);
 	}
 
 	public void cycleAutoStart() {

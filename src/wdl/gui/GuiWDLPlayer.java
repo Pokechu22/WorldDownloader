@@ -187,7 +187,7 @@ public class GuiWDLPlayer extends GuiScreen {
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		
 		if (tooltip != null) {
-			Utils.drawGuiInfoBox(tooltip, width, height);
+			Utils.drawGuiInfoBox(tooltip, width, height, 48);
 		}
 	}
 

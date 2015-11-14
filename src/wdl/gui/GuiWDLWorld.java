@@ -206,7 +206,7 @@ public class GuiWDLWorld extends GuiScreen {
 			}
 		}
 		
-		Utils.drawGuiInfoBox(tooltip, width, height);
+		Utils.drawGuiInfoBox(tooltip, width, height, 48);
 	}
 
 	private void cycleAllowCheats() {

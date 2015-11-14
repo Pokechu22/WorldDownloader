@@ -270,15 +270,15 @@ public class GuiWDLMessages extends GuiScreen {
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		
 		if (hoveredButtonDescription != null) {
-			Utils.drawGuiInfoBox(hoveredButtonDescription, width, height);
+			Utils.drawGuiInfoBox(hoveredButtonDescription, width, height, 48);
 		} else if (enableAllButton.isMouseOver()) {
 			Utils.drawGuiInfoBox(
 					I18n.format("wdl.gui.messages.all.description"), width,
-					height);
+					height, 48);
 		} else if (resetButton.isMouseOver()) {
 			Utils.drawGuiInfoBox(
 					I18n.format("wdl.gui.messages.reset.description"), width,
-					height);
+					height, 48);
 		}
 	}
 	
