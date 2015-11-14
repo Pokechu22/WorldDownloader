@@ -127,7 +127,22 @@ wdl.gui.backup.title=Backup options
 wdl.gui.backup.backupMode=Backup mode: %s
 wdl.gui.backup.description1=World Downloader backs up the world every time saving finishes.  You can control how this backup occurs using this GUI.
 wdl.gui.backup.description2=§lNo backup§r: No backup is performed after the download finishes.%n§lCopy world folder§r: The entire world folder is copied, meaning that you will always have a playable version of the world in this state, should you chose to download again.%n§lZip a copy of a world§r: A zipped copy of the world is created in your worlds folder, which can later be unzipped if you want to revert.
-wdl.gui.backup.description3=For all backup modes, the created backup is timestamped, so your older backups will not be overwritten.  
+wdl.gui.backup.description3=For all backup modes, the created backup is timestamped, so your older backups will not be overwritten.
+
+wdl.gui.rangePresets.title=Range presets
+wdl.gui.rangePresets.vanilla=Vanilla Minecraft ranges
+wdl.gui.rangePresets.spigot=Default spigot ranges
+wdl.gui.rangePresets.server=Server-configured ranges
+wdl.gui.rangePresets.upperWarning=Are you sure you want to reset your entity ranges?
+wdl.gui.rangePresets.vanilla.warning=§rSetting to vanilla Minecraft ranges - §c§n§lThis cannot be undone.§r
+wdl.gui.rangePresets.spigot.warning=§rSetting to default spigot ranges - §c§n§lThis cannot be undone.§r
+wdl.gui.rangePresets.server.warning=§rSetting to server configured ranges - §c§n§lThis cannot be undone.§r
+wdl.gui.rangePresets.vanilla.description=Set the ranges to those used by an unmodified (vanilla) Minecraft server, and for some Bukkit servers.
+wdl.gui.rangePresets.spigot.description=Set the ranges to the default values for spigot servers.%nSpigot allows these values to be customized, but these are the defaults.
+wdl.gui.rangePresets.server.description=Set the ranges to the values that are actually used on the server.  This option is only available if the server has the WDLCompanion plugin installed.
+wdl.gui.rangePresets.server.installed=§aAs it is installed, this may be used.
+wdl.gui.rangePresets.server.notInstalled=§cAs it is not installed, this cannot be used.
+wdl.gui.rangePresets.cancel.description=Cancel without making changes.
 
 wdl.backup.none=No backup
 wdl.backup.folder=Copy world folder

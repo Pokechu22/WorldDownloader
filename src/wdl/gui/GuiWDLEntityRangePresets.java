@@ -7,6 +7,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.gui.GuiYesNoCallback;
+import net.minecraft.client.resources.I18n;
 import wdl.EntityUtils;
 import wdl.WDL;
 import wdl.WDLPluginChannels;
@@ -32,13 +33,13 @@ public class GuiWDLEntityRangePresets extends GuiScreen implements GuiYesNoCallb
 		int y = this.height / 4;
 		
 		this.vanillaButton = new GuiButton(0, this.width / 2 - 100, y,
-				"Vanilla minecraft ranges");
+				I18n.format("wdl.gui.rangePresets.vanilla"));
 		y += 22;
 		this.spigotButton = new GuiButton(1, this.width / 2 - 100, y,
-				"Default spigot ranges");
+				I18n.format("wdl.gui.rangePresets.spigot"));
 		y += 22;
 		this.serverButton = new GuiButton(2, this.width / 2 - 100, y,
-				"Server-configured ranges");
+				I18n.format("wdl.gui.rangePresets.server"));
 		
 		serverButton.enabled = WDLPluginChannels.hasServerEntityRange();
 		
@@ -49,7 +50,7 @@ public class GuiWDLEntityRangePresets extends GuiScreen implements GuiYesNoCallb
 		y += 28;
 		
 		this.cancelButton = new GuiButton(100, this.width / 2 - 100,
-				this.height - 29, "Cancel");
+				this.height - 29, I18n.format("gui.cancel"));
 		this.buttonList.add(cancelButton);
 	}
 	
@@ -63,17 +64,14 @@ public class GuiWDLEntityRangePresets extends GuiScreen implements GuiYesNoCallb
 			String upper;
 			String lower;
 			
-			upper = "Are you sure you want to reset your entity ranges?";
+			upper = I18n.format("wdl.gui.rangePresets.upperWarning");
 			
 			if (button.id == 0) {
-				lower = "§rSetting to vanilla Minecraft ranges -- " +
-						"§c§n§lThis cannot be undone.§r";
+				lower = I18n.format("wdl.gui.rangePresets.vanilla.warning");
 			} else if (button.id == 1) {
-				lower = "§rSetting to default spigot ranges -- " +
-						"§c§n§lThis cannot be undone.§r";
+				lower = I18n.format("wdl.gui.rangePresets.spigot.warning");
 			} else if (button.id == 2) {
-				lower = "§rSetting to server configured ranges -- " +
-						"§c§n§lThis cannot be undone.§r";
+				lower = I18n.format("wdl.gui.rangePresets.server.warning");
 			} else {
 				//Should not happen.
 				throw new Error("Button.id should never be negative.");
@@ -91,31 +89,26 @@ public class GuiWDLEntityRangePresets extends GuiScreen implements GuiYesNoCallb
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		Utils.drawListBackground(23, 32, 0, 0, height, width);
 		
-		this.drawCenteredString(this.fontRendererObj, "Range presets",
-				this.width / 2, 8, 0xFFFFFF);
+		this.drawCenteredString(this.fontRendererObj,
+				I18n.format("wdl.gui.rangePresets.title"), this.width / 2, 8,
+				0xFFFFFF);
 		
 		String infoText = null;
 		
 		if (vanillaButton.isMouseOver()) {
-			infoText = "Set the ranges to those used by " +
-					"an unmodified (vanilla) Minecraft server, and " +
-					"for some Bukkit servers.";
+			infoText = I18n.format("wdl.gui.rangePresets.vanilla.description");
 		} else if (spigotButton.isMouseOver()) {
-			infoText = "Set the ranges to the default values for spigot " +
-					"servers.\nSpigot allows these values to be " +
-					"customized, but these are the defaults.";
+			infoText = I18n.format("wdl.gui.rangePresets.spigot.description");
 		} else if (serverButton.isMouseOver()) {
-			infoText = "Set the ranges to the values that are actually used " +
-					"on the server.  This option is only available if the " +
-					"server has the WDLCompanion plugin installed.\n\n";
+			infoText = I18n.format("wdl.gui.rangePresets.server.description") + "\n\n";
 			
 			if (serverButton.enabled) {
-				infoText += "§aAs it is installed, this may be used.";
+				infoText += I18n.format("wdl.gui.rangePresets.server.installed");
 			} else {
-				infoText += "§cAs it is not installed, this cannot be used.";
+				infoText += I18n.format("wdl.gui.rangePresets.server.notInstalled");
 			}
 		} else if (cancelButton.isMouseOver()) {
-			infoText = "Cancel without making changes.";
+			infoText = I18n.format("wdl.gui.rangePresets.cancel.description");
 		}
 		
 		if (infoText != null) {
