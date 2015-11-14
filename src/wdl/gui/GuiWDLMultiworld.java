@@ -81,7 +81,7 @@ public class GuiWDLMultiworld extends GuiScreen {
 					if (this.parent != null) {
 						this.mc.displayGuiScreen(new GuiWDL(this.parent));
 					} else {
-						WDL.start();
+						WDL.startDownload();
 						this.mc.displayGuiScreen((GuiScreen) null);
 						this.mc.setIngameFocus();
 					}

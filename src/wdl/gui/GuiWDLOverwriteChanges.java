@@ -63,7 +63,7 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase {
 				WDL.overrideLastModifiedCheck = true;
 				mc.displayGuiScreen(null);
 				
-				WDL.start();
+				WDL.startDownload();
 			}
 		}
 	}
@@ -163,7 +163,7 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase {
 			WDL.overrideLastModifiedCheck = true;
 			mc.displayGuiScreen(null);
 			
-			WDL.start();
+			WDL.startDownload();
 		}
 		if (button.id == 3) {
 			mc.displayGuiScreen(null);

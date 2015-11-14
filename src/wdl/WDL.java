@@ -294,8 +294,10 @@ public class WDL {
 		worldProps = new Properties(baseProps);
 	}
 
-	/** Starts the download */
-	public static void start() {
+	/**
+	 * Starts the download.
+	 */
+	public static void startDownload() {
 		worldClient = minecraft.theWorld;
 
 		if (isMultiworld && worldName.isEmpty()) {
@@ -360,8 +362,10 @@ public class WDL {
 		chatInfo("Download started");
 	}
 
-	/** Stops the download */
-	public static void stop() {
+	/**
+	 * Stops the download, and saves.
+	 */
+	public static void stopDownload() {
 		if (downloading) {
 			// Indicate that downloading has stopped
 			downloading = false;
@@ -394,6 +398,9 @@ public class WDL {
 		WDL.chatInfo("Download canceled.");
 	}
 
+	/**
+	 * Starts the asnchronous save thread.
+	 */
 	static void startSaveThread() {
 		// Indicate that we are saving
 		WDL.chatInfo("Save started.");
@@ -448,13 +455,16 @@ public class WDL {
 					"onWorldLoad: same server!");
 			
 			if (startOnChange) {
-				start();
+				startDownload();
 			}
 			
 			return false;
 		}
 	}
 
+	/**
+	 * Called after saving has finished.
+	 */
 	public static void onSaveComplete() {
 		WDL.minecraft.getSaveLoader().flushCache();
 		WDL.saveHandler.flush();
@@ -481,7 +491,12 @@ public class WDL {
 		WDL.chatInfo("Save complete. Your single player file is ready to play!");
 	}
 
-	/** Load the previously saved TileEntities and add them to the Chunk **/
+	/**
+	 * Load the previous version of the chunk, and copy in any previous tile
+	 * entities.
+	 * 
+	 * Needed so that the old tile entities aren't lost.
+	 */
 	public static void importTileEntities(Chunk chunk) {
 		File chunkSaveLocation = ReflectionUtils.stealAndGetField(chunkLoader,
 				File.class);
@@ -998,7 +1013,10 @@ public class WDL {
 		}
 	}
 
-	/** Loads the server specific set of properties */
+	/**
+	 * Loads the sever-shared properties, which act as a default
+	 * for the properties of each individual world in a multiworld server.
+	 */
 	public static void loadBaseProps() {
 		baseFolderName = getBaseFolderName();
 		baseProps = new Properties(globalProps);
@@ -1020,16 +1038,21 @@ public class WDL {
 		}
 	}
 
-	/** Loads the world specific set of properties */
+	/**
+	 * Loads the properties for the given world, and returns it.
+	 */
 	public static Properties loadWorldProps(String theWorldName) {
 		Properties ret = new Properties(baseProps);
+		
+		File savesDir = new File(minecraft.mcDataDir, "saves");
 
 		if (!theWorldName.isEmpty()) {
 			String folder = getWorldFolderName(theWorldName);
+			File worldFolder = new File(savesDir, folder);
 
 			try {
-				ret.load(new FileReader(new File(minecraft.mcDataDir, "saves/"
-						+ folder + "/WorldDownloader.txt")));
+				ret.load(new FileReader(new File(worldFolder,
+						"WorldDownloader.txt")));
 			} catch (Exception e) {
 				return null;
 			}
@@ -1039,16 +1062,16 @@ public class WDL {
 	}
 
 	/**
-	 * Saves the currently used base and world properties in the corresponding
-	 * folders
+	 * Saves the currently used base and world properties in their corresponding
+	 * folders.
 	 */
 	public static void saveProps() {
 		saveProps(worldName, worldProps);
 	}
 
 	/**
-	 * Saves the specified world properties and the base properties in the
-	 * corresponding folders
+	 * Saves the specified world properties, and the base properties, in their
+	 * corresponding folders.
 	 */
 	public static void saveProps(String theWorldName, Properties theWorldProps) {
 		File savesDir = new File(minecraft.mcDataDir, "saves");
@@ -1076,10 +1099,13 @@ public class WDL {
 		} catch (Exception e) {
 		}
 		
-		saveDefaultProps();
+		saveGlobalProps();
 	}
 	
-	public static void saveDefaultProps() {
+	/**
+	 * Saves the global properties, which are used for all servers.
+	 */
+	public static void saveGlobalProps() {
 		try {
 			globalProps.store(new FileWriter(new File(minecraft.mcDataDir,
 					"WorldDownloader.txt")), "");
@@ -1090,7 +1116,7 @@ public class WDL {
 
 	/**
 	 * Change player specific fields according to the overrides found in the
-	 * properties file
+	 * properties file.
 	 */
 	public static void applyOverridesToPlayer(NBTTagCompound playerNBT) {
 		// Health
@@ -1147,7 +1173,7 @@ public class WDL {
 
 	/**
 	 * Change world and generator specific fields according to the overrides
-	 * found in the properties file
+	 * found in the properties file.
 	 */
 	public static void applyOverridesToWorldInfo(NBTTagCompound worldInfoNBT) {
 		// LevelName
@@ -1264,7 +1290,8 @@ public class WDL {
 	}
 	
 	/**
-	 * Saves existing map data.
+	 * Saves existing map data.  Map data refering to the items
+	 * that contain pictures.
 	 * 
 	 * TODO: Overwrite / create IDCounts.dat.
 	 */
@@ -1307,7 +1334,10 @@ public class WDL {
 		chatMessage(WDLMessageTypes.SAVING, "Map data saved.");
 	}
 
-	/** Get the name of the server the user specified it in the server list */
+	/**
+	 * Gets the name of the server, either from the name in the server list,
+	 * or using the server's IP.
+	 */
 	public static String getServerName() {
 		try {
 			if (minecraft.getCurrentServerData() != null) {
@@ -1326,12 +1356,16 @@ public class WDL {
 		return "Unidentified Server";
 	}
 
-	/** Get the base folder name for the server we are connected to */
+	/**
+	 * Get the base folder name for the server we are connected to.
+	 */
 	public static String getBaseFolderName() {
 		return getServerName().replaceAll("\\W+", "_");
 	}
 
-	/** Get the folder name for the specified world */
+	/**
+	 * Get the folder name for the specified world.
+	 */
 	public static String getWorldFolderName(String theWorldName) {
 		if (theWorldName.isEmpty()) {
 			return baseFolderName;
@@ -1400,6 +1434,13 @@ public class WDL {
 		WDLMessages.chatMessage(WDLMessageTypes.ERROR, msg);
 	}
 
+	/**
+	 * Gets the save version.
+	 * 
+	 * TODO: This seems mostly unnecessary -- this is just the NBT
+	 * version, which is always 19133, yes?  This seems like it
+	 * may be overkill (the number has not changed in years).
+	 */
 	private static int getSaveVersion(AnvilSaveConverter asc) {
 		int saveVersion = 0;
 
@@ -1444,6 +1485,8 @@ public class WDL {
 	
 	/**
 	 * Is the current server running spigot?
+	 * 
+	 * This is detected based off of the server brand.
 	 */
 	public static boolean isSpigot() {
 		//getClientBrand() returns the server brand; blame MCP.
@@ -1572,7 +1615,7 @@ public class WDL {
 	}
 	
 	/**
-	 * Call to properly crash the game when an exception is caught.
+	 * Call to properly crash the game when an exception is caught in WDL code.
 	 * 
 	 * @param category
 	 */

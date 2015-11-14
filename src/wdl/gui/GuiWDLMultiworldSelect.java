@@ -358,7 +358,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		WDL.propsFound = true;
 
 		if (this.parent == null) {
-			WDL.start();
+			WDL.startDownload();
 			this.mc.displayGuiScreen((GuiScreen) null);
 			this.mc.setIngameFocus();
 		} else {

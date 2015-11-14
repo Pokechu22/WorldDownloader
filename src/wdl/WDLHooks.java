@@ -480,9 +480,9 @@ public class WDLHooks {
 				return;
 			}
 			if (WDL.downloading) {
-				WDL.stop();
+				WDL.stopDownload();
 			} else {
-				WDL.start();
+				WDL.startDownload();
 			}
 		} else if (button.id == WDLo) { // "..." (options)
 			if (!WDLPluginChannels.canDownloadInGeneral()) {
@@ -491,7 +491,7 @@ public class WDLHooks {
 			}
 			WDL.minecraft.displayGuiScreen(new GuiWDL(gui));
 		} else if (button.id == 1) { // "Disconnect"
-			WDL.stop();
+			WDL.stopDownload();
 		}
 	}
 }

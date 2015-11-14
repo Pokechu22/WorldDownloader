@@ -86,7 +86,7 @@ public class WDLUpdateChecker extends Thread {
 						"Note: If you downloaded this mod from a location other than the Minecraft Forums or github, you may have been exposed to malware.");
 				
 				WDL.globalProps.setProperty("TutorialShown", "true");
-				WDL.saveDefaultProps();
+				WDL.saveGlobalProps();
 			}
 			
 			sleep(5000);
