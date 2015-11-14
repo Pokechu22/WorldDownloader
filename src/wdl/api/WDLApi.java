@@ -1,6 +1,7 @@
 package wdl.api;
 
 import java.io.File;
+import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -198,6 +199,23 @@ public class WDLApi {
 			info.append(i).append(": ").append(interfaces[i].getName())
 					.append('\n');
 		}
+		info.append("Superclass: ")
+				.append(mod.getClass().getSuperclass().getName()).append('\n');
+		ClassLoader loader = mod.getClass().getClassLoader();
+		info.append("Classloader: ").append(loader);
+		if (loader != null) {
+			info.append(" (").append(loader.getClass().getName()).append(')');
+		}
+		info.append('\n');
+		Annotation[] annotations = mod.getClass().getAnnotations();
+		info.append("Annotations (").append(annotations.length)
+				.append(")\n");
+		for (int i = 0; i < annotations.length; i++) {
+			info.append(i).append(": ").append(annotations[i].toString())
+					.append(" (")
+					.append(annotations[i].annotationType().getName())
+					.append(")\n");
+		}
 		
 		return info.toString();
 	}
@@ -225,7 +243,7 @@ public class WDLApi {
 		@Override
 		public String getDisplayName() {
 			if (mod instanceof IWDLModDescripted) {
-				//TODO
+				return ((IWDLModDescripted) mod).getDisplayName();
 			}
 			return internalName;
 		}
