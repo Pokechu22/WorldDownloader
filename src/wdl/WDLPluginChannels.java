@@ -383,7 +383,8 @@ public class WDLPluginChannels {
 				//Cancel a download if it is occurring.
 				if (!canDownloadInGeneral) {
 					if (WDL.downloading) {
-						WDL.stop();
+						WDL.chatError("The server forbids downloading this world!");
+						WDL.cancelDownload();
 					}
 				}
 				break;

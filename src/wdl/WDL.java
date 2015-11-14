@@ -372,6 +372,29 @@ public class WDL {
 		}
 	}
 
+	/**
+	 * Cancels the download.
+	 */
+	public static void cancelDownload() {
+		minecraft.getSaveLoader().flushCache();
+		saveHandler.flush();
+		worldClient = null;
+		saving = false;
+		downloading = false;
+		worldLoadingDeferred = false;
+		
+		// Force the world to redraw as if the player pressed F3+A.
+		// This fixes the world going invisible issue.
+		minecraft.addScheduledTask(new Runnable() {
+			@Override
+			public void run() {
+				WDL.minecraft.renderGlobal.loadRenderers();	
+			}
+		});
+		
+		WDL.chatInfo("Download canceled.");
+	}
+
 	static void startSaveThread() {
 		// Indicate that we are saving
 		WDL.chatInfo("Save started.");
@@ -578,6 +601,7 @@ public class WDL {
 	public static void saveEverything() throws Exception {
 		if (!WDLPluginChannels.canDownloadInGeneral()) {
 			chatError("The server forbids downloading!");
+			return;
 		}
 		
 		WorldBackupType backupType = 
