@@ -1032,21 +1032,23 @@ public class WDL {
 	 * corresponding folders
 	 */
 	public static void saveProps(String theWorldName, Properties theWorldProps) {
+		File savesDir = new File(minecraft.mcDataDir, "saves");
+		
 		if (theWorldName.length() > 0) {
 			String folder = getWorldFolderName(theWorldName);
 
+			File worldFolder = new File(savesDir, folder);
+			worldFolder.mkdirs();
 			try {
-				theWorldProps.store(new FileWriter(new File(
-						minecraft.mcDataDir, "saves/" + folder
-						+ "/WorldDownloader.txt")), "");
+				theWorldProps.store(new FileWriter(new File(worldFolder,
+						"WorldDownloader.txt")), "");
 			} catch (Exception e) {
 			}
 		} else if (!isMultiworld) {
 			baseProps.putAll(theWorldProps);
 		}
 
-		File baseFolder = new File(minecraft.mcDataDir, "saves/"
-				+ baseFolderName);
+		File baseFolder = new File(savesDir, baseFolderName);
 		baseFolder.mkdirs();
 
 		try {

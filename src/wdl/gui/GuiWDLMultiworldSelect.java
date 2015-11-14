@@ -1,6 +1,5 @@
 package wdl.gui;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -369,9 +368,6 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 			folderName = folderName.replace(unsafeChar, '_');
 		}
 
-		//TODO: Create these folders properly.  This is somewhat redundant.
-		(new File(this.mc.mcDataDir, "saves/" + WDL.baseFolderName + " - "
-				+ folderName)).mkdirs();
 		Properties worldProps = new Properties(WDL.baseProps);
 		worldProps.setProperty("WorldName", worldName);
 		
