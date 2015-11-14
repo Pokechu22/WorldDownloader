@@ -10,19 +10,29 @@ import java.util.Date;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import net.minecraft.client.resources.I18n;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 public class WorldBackup {
 	public static enum WorldBackupType {
-		NONE("No backup"),
-		FOLDER("Copy world folder"),
-		ZIP("Zip a copy of a world");
+		NONE("wdl.backup.none"),
+		FOLDER("wdl.backup.folder"),
+		ZIP("wdl.backup.zip");
 
-		public final String description;
+		public final String descriptionKey;
 
-		private WorldBackupType(String description) {
-			this.description = description;
+		private WorldBackupType(String descriptionKey) {
+			this.descriptionKey = descriptionKey;
+		}
+		
+		/**
+		 * Gets the (translated) description for this backup type.
+		 * @return
+		 */
+		public String getDescription() {
+			return I18n.format(descriptionKey);
 		}
 		
 		public static WorldBackupType match(String name) {

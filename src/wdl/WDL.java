@@ -642,7 +642,7 @@ public class WDL {
 			chatMessage(WDLMessageTypes.SAVING, "Backing up the world...");
 			progressScreen.startMajorTask("Backing up world...", 1);
 			progressScreen.setMinorTaskProgress(
-					backupType.description, 1);
+					backupType.getDescription(), 1);
 			
 			try {
 				WorldBackup.backupWorld(saveHandler.getWorldDirectory(), 

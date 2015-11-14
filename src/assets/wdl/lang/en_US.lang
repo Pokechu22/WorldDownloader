@@ -123,6 +123,16 @@ wdl.gui.multiworld.newName=< New Name >
 wdl.gui.multiworld.search=Search...
 wdl.gui.multiworld.done=Use selected world
 
+wdl.gui.backup.title=Backup options
+wdl.gui.backup.backupMode=Backup mode: %s
+wdl.gui.backup.description1=World Downloader backs up the world every time saving finishes.  You can control how this backup occurs using this GUI.
+wdl.gui.backup.description2=§lNo backup§r: No backup is performed after the download finishes.%n§lCopy world folder§r: The entire world folder is copied, meaning that you will always have a playable version of the world in this state, should you chose to download again.%n§lZip a copy of a world§r: A zipped copy of the world is created in your worlds folder, which can later be unzipped if you want to revert.
+wdl.gui.backup.description3=For all backup modes, the created backup is timestamped, so your older backups will not be overwritten.  
+
+wdl.backup.none=No backup
+wdl.backup.folder=Copy world folder
+wdl.backup.zip=Zip a copy of a world
+
 wdl.messages.message.info.text=General info
 wdl.messages.message.error.text=General errors
 wdl.messages.message.updates.text=New version information
