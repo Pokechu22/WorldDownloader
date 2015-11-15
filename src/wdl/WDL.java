@@ -632,9 +632,11 @@ public class WDL {
 				"WorldDownloader: Couldn't get session lock for saving the world!", e);
 		}
 
-		progressScreen.startMajorTask("Saving player and map info", 3);
+		progressScreen.startMajorTask(
+				I18n.format("wdl.saveProgress.metadata.title"), 3);
 		
-		progressScreen.setMinorTaskProgress("Creating NBTs", 1);
+		progressScreen.setMinorTaskProgress(
+				I18n.format("wdl.saveProgress.metadata.creatingNBTs"), 1);
 		NBTTagCompound playerNBT = new NBTTagCompound();
 		thePlayer.writeToNBT(playerNBT);
 		applyOverridesToPlayer(playerNBT);
@@ -647,22 +649,25 @@ public class WDL {
 		applyOverridesToWorldInfo(worldInfoNBT);
 		savePlayer(playerNBT, progressScreen);
 		saveWorldInfo(worldInfoNBT, progressScreen);
+		
 		saveMapData(progressScreen);
 		saveChunks(progressScreen);
 		
 		saveProps();
 		
 		for (Map.Entry<String, ISaveListener> e : saveListeners.entrySet()) {
-			progressScreen.startMajorTask("Extension: " + e.getKey(), 1);
+			progressScreen.startMajorTask(I18n.format(
+					"wdl.saveProgress.extension.title",	e.getKey()), 1);
 			e.getValue().afterChunksSaved(saveHandler.getWorldDirectory());
 		}
 		
 		try {
 			chatMessage(WDLMessageTypes.SAVING, "Waiting for ThreadedFileIOBase to finish...");
 			
-			progressScreen.startMajorTask("Procrastinating...", 1);
+			progressScreen.startMajorTask(
+					I18n.format("wdl.saveProgress.flushingIO.title"), 1);
 			progressScreen.setMinorTaskProgress(
-					"(waiting for ThreadedFileIOBase to finish)", 1);
+					I18n.format("wdl.saveProgress.flushingIO.subtitle"), 1);
 			
 			// func_178779_a is a getter for the instance.
 			// Look inside of ThreadedFileIOBase.java for
@@ -674,7 +679,11 @@ public class WDL {
 		
 		if (backupType != WorldBackupType.NONE) {
 			chatMessage(WDLMessageTypes.SAVING, "Backing up the world...");
-			progressScreen.startMajorTask("Backing up world...", 1);
+			progressScreen.startMajorTask(
+					I18n.format("wdl.saveProgress.backingUp.title"), 1);
+			// TODO: This will be conjugated differently than the other messages.
+			// It uses the "Create a ..." rather than "creating a" form.  I may
+			// want to change this.
 			progressScreen.setMinorTaskProgress(
 					backupType.getDescription(), 1);
 			
@@ -699,7 +708,8 @@ public class WDL {
 		if (!WDLPluginChannels.canDownloadInGeneral()) { return; }
 		
 		chatMessage(WDLMessageTypes.SAVING, "Saving player data...");
-		progressScreen.setMinorTaskProgress("Writing player data", 2);
+		progressScreen.setMinorTaskProgress(
+				I18n.format("wdl.saveProgress.metadata.writingPlayer"), 2);
 		
 		FileOutputStream stream = null;
 		try {
@@ -744,7 +754,8 @@ public class WDL {
 		if (!WDLPluginChannels.canDownloadInGeneral()) { return; }
 		
 		chatMessage(WDLMessageTypes.SAVING, "Saving world metadata...");
-		progressScreen.setMinorTaskProgress("Writing world data", 3);
+		progressScreen.setMinorTaskProgress(
+				I18n.format("wdl.saveProgress.metadata.writingWorld"), 3);
 		
 		File saveDirectory = saveHandler.getWorldDirectory();
 		NBTTagCompound dataNBT = new NBTTagCompound();
@@ -828,7 +839,7 @@ public class WDL {
 		LongHashMap lhm = ReflectionUtils.stealAndGetField(chunkProvider,
 				LongHashMap.class);
 		
-		progressScreen.startMajorTask("Saving chunks", 
+		progressScreen.startMajorTask(I18n.format("wdl.saveProgress.chunk.title"), 
 				lhm.getNumHashElements());
 		
 		// Get the LongHashMap.Entry[] through the now accessible field using a
@@ -877,9 +888,9 @@ public class WDL {
 							continue;
 						}
 						
-						progressScreen.setMinorTaskProgress(
-								"Saving chunk at " + c.xPosition + ", " +
-										c.zPosition, currentChunk);
+						progressScreen.setMinorTaskProgress(I18n.format(
+								"wdl.saveProgress.chunk.saving", c.xPosition,
+								c.zPosition), currentChunk);
 						
 						saveChunk(c);
 					}
@@ -1302,7 +1313,8 @@ public class WDL {
 				"data");
 		dataDirectory.mkdirs();
 		
-		progressScreen.startMajorTask("Saving map item data", newMapDatas.size());
+		progressScreen.startMajorTask(
+				I18n.format("wdl.saveProgress.map.title"), newMapDatas.size());
 		
 		chatMessage(WDLMessageTypes.SAVING, "Saving map data...");
 		
@@ -1310,7 +1322,8 @@ public class WDL {
 		for (Map.Entry<Integer, MapData> e : newMapDatas.entrySet()) {
 			count++;
 			
-			progressScreen.setMinorTaskProgress("Writing map #" + e.getKey(),
+			progressScreen.setMinorTaskProgress(
+					I18n.format("wdl.saveProgress.map.saving", e.getKey()),
 					count);
 			
 			File mapFile = new File(dataDirectory, "map_" + e.getKey() + ".dat");

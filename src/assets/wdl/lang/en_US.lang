@@ -188,3 +188,16 @@ wdl.messages.removeEntity.notSavingUnsafe=saveChunk: Not saving %s (not safe to 
 wdl.messages.entityTypeAndCustomName=%s (named %s)
 
 wdl.unsafeReasons.badCustomName=Invalid custom name!  (Threw %s)
+
+wdl.saveProgress.chunk.title=Saving chunks
+wdl.saveProgress.chunk.saving=Saving chunk at %d, %d
+wdl.saveProgress.map.title=Saving map item data
+wdl.saveProgress.map.saving=Writing map #%d
+wdl.saveProgress.metadata.title=Saving player and world info
+wdl.saveProgress.metadata.creatingNBTs=Creating NBTs
+wdl.saveProgress.metadata.writingPlayer=Writing player data
+wdl.saveProgress.metadata.writingWorld=Writing world data
+wdl.saveProgress.extension.title=Extension: %s
+wdl.saveProgress.flushingIO.title=Procrastinating...
+wdl.saveProgress.flushingIO.subtitle=(Waiting for ThreadedFileIOBase to finish)
+wdl.saveProgress.backingUp.title=Backing up world...
