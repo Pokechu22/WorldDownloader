@@ -3,10 +3,8 @@ package wdl;
 import io.netty.buffer.Unpooled;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 
 import net.minecraft.client.Minecraft;
@@ -17,6 +15,8 @@ import net.minecraft.world.chunk.Chunk;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 
@@ -102,9 +102,9 @@ public class WDLPluginChannels {
 	private static String requestMessage = "";
 	
 	/**
-	 * Chunk ranges.
+	 * Chunk overrides. Any chunk within a range is allowed to be downloaded in.
 	 */
-	private static List<ChunkRange> chunkRanges = new ArrayList<ChunkRange>();
+	private static Map<String, Multimap<String, ChunkRange>> chunkOverrides = new HashMap<String, Multimap<String, ChunkRange>>();
 	
 	/**
 	 * Checks whether players can use functions unknown to the server.
@@ -415,24 +415,32 @@ public class WDLPluginChannels {
 				//it'll be true all of the time as of the current plugin.
 				break;
 			case 4:
-				if (input.readBoolean()) { //Overwrite old data.
-					// Will always be done in the current plugin.
-					chunkRanges.clear();
-				}
-				int numRanges = input.readInt();
-				for (int i = 0; i < numRanges; i++) {
-					boolean isWhitelist = input.readBoolean();
-					int x1 = input.readInt();
-					int y1 = input.readInt();
-					int x2 = input.readInt();
-					int y2 = input.readInt();
-					chunkRanges.add(new ChunkRange(x1, y1, x2, y2, isWhitelist));
+				chunkOverrides.clear();
+				
+				int numRangeGroups = input.readInt();
+				int totalRanges = 0;
+				for (int i = 0; i < numRangeGroups; i++) {
+					String groupName = input.readUTF();
+					int groupSize = input.readInt();
+					
+					Multimap<String, ChunkRange> ranges = HashMultimap
+							.<String, ChunkRange> create();
+					
+					for (int j = 0; j < groupSize; j++) {
+						ChunkRange range = ChunkRange.readFromInput(input);
+						ranges.put(range.tag, range);
+					}
+					
+					chunkOverrides.put(groupName, ranges);
+					
+					totalRanges += groupSize;
 				}
 				
 				WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
-						"Loaded settings packet #3 from the server!");
+						"Loaded settings packet #4 from the server!");
 				WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
-						"ChunkRanges: total of " + chunkRanges.size());
+						"ChunkRanges: " + numRangeGroups + " groups, "
+								+ totalRanges + " in total");
 				break;
 			default:
 				StringBuilder messageBuilder = new StringBuilder();
@@ -452,31 +460,38 @@ public class WDLPluginChannels {
 	 * A range of chunks.
 	 */
 	private static class ChunkRange {
-		public ChunkRange(int x1, int y1, int x2, int y2, boolean isWhitelist) {
+		public ChunkRange(String tag, int x1, int z1, int x2, int z2) {
+			this.tag = tag;
 			this.x1 = x1;
-			this.y1 = y1;
+			this.z1 = z1;
 			this.x2 = x2;
-			this.y2 = y2;
-			this.isWhitelist = isWhitelist;
+			this.z2 = z2;
 		}
 		
 		/**
-		 * Range of coordinates.  x1 will never be higher than x2, as will y1
-		 * with y2.
+		 * The tag of this chunk range/
 		 */
-		public final int x1, y1, x2, y2;
+		public final String tag;
 		/**
-		 * Whether to allow downloading in the given range of chunks.
-		 * 
-		 * True: All downloading is allowed in that chunk.
-		 * False: No downloading is allowed in that chunk.
+		 * Range of coordinates.  x1 will never be higher than x2, as will z1
+		 * with z2.
 		 */
-		public final boolean isWhitelist;
+		public final int x1, z1, x2, z2;
 		
+		public static ChunkRange readFromInput(ByteArrayDataInput input) {
+			String tag = input.readUTF();
+			int x1 = input.readInt();
+			int z1 = input.readInt();
+			int x2 = input.readInt();
+			int z2 = input.readInt();
+			
+			return new ChunkRange(tag, x1, z1, x2, z2);
+		}
+
 		@Override
 		public String toString() {
-			return "ChunkRange [x1=" + x1 + ", y1=" + y1 + ", x2=" + x2
-					+ ", y2=" + y2 + ", isWhitelist=" + isWhitelist + "]";
+			return "ChunkRange [tag=" + tag + ", x1=" + x1 + ", z1=" + z1
+					+ ", x2=" + x2 + ", z2=" + z2 + "]";
 		}
 	}
 }
