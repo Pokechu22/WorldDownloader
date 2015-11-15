@@ -3,6 +3,7 @@ package wdl;
 import io.netty.buffer.Unpooled;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -441,6 +442,76 @@ public class WDLPluginChannels {
 				WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
 						"ChunkRanges: " + numRangeGroups + " groups, "
 								+ totalRanges + " in total");
+				break;
+			case 5:
+				
+				String groupToEdit = input.readUTF();
+				boolean replaceGroups = input.readBoolean();
+				int numNewGroups = input.readInt();
+				
+				Multimap<String, ChunkRange> newRanges = HashMultimap
+						.<String, ChunkRange> create();
+				if (!replaceGroups) {
+					newRanges.putAll(chunkOverrides.get(groupToEdit));
+				}
+				
+				for (int i = 0; i < numNewGroups; i++) {
+					ChunkRange range = ChunkRange.readFromInput(input);
+					
+					newRanges.put(range.tag, range);
+				}
+				chunkOverrides.put(groupToEdit, newRanges);
+				
+				WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
+						"Loaded settings packet #5 from the server!");
+				WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
+						"Edited ChunkRanges for " + groupToEdit + ": "
+								+ (replaceGroups ? "Now contains " : "Added ")
+								+ " " + numNewGroups + " ranges.");
+				break;
+			case 6:
+				String groupToChangeTagsFor = input.readUTF();
+				int numTags = input.readInt();
+				String[] tags = new String[numTags];
+				
+				for (int i = 0; i < numTags; i++) {
+					tags[i] = input.readUTF();
+				}
+				
+				int oldCount = 0;
+				for (String tag : tags) {
+					oldCount += chunkOverrides.get(groupToChangeTagsFor)
+							.get(tag).size();
+					chunkOverrides.get(groupToChangeTagsFor).removeAll(tag);
+				}
+				
+				WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
+						"Loaded settings packet #6 from the server!");
+				WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
+						"Removed " + oldCount + " ChunkRanges from "
+								+ groupToChangeTagsFor + " with tags of "
+								+ Arrays.toString(tags));
+				break;
+			case 7:
+				String groupToSetTagFor = input.readUTF();
+				String tag = input.readUTF();
+				int numNewRanges = input.readInt();
+				
+				chunkOverrides.get(groupToSetTagFor).removeAll(tag);
+				
+				for (int i = 0; i < numNewRanges; i++) {
+					//TODO: Ensure that the range has the right tag.
+					
+					chunkOverrides.get(groupToSetTagFor).put(tag,
+							ChunkRange.readFromInput(input));
+				}
+				
+				WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
+						"Loaded settings packet #7 from the server!");
+				WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
+						"Replaced ChunkRanges for " + groupToSetTagFor
+								+ " with tag " + tag + " with " + numNewRanges
+								+ " ranges.");
 				break;
 			default:
 				StringBuilder messageBuilder = new StringBuilder();
