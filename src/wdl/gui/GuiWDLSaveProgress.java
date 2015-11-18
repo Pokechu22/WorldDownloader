@@ -11,7 +11,7 @@ import net.minecraft.client.gui.GuiScreen;
  * Based off of vanilla minecraft's 
  * {@link net.minecraft.client.gui.GuiScreenWorking GuiScreenWorking}.
  */
-public class GuiWDLSaveProgress extends GuiScreen {
+public class GuiWDLSaveProgress extends GuiTurningCameraBase {
 	private final String title;
 	private String majorTaskMessage = "";
 	private String minorTaskMessage = "";
@@ -82,7 +82,7 @@ public class GuiWDLSaveProgress extends GuiScreen {
 		if (this.doneWorking) {
 			this.mc.displayGuiScreen((GuiScreen) null);
 		} else {
-			this.drawBackground(0);
+			Utils.drawBorder(32, 32, 0, 0, height, width);
 			
 			String majorProgressInfo = "";
 			if (majorTaskCount > 1) {
@@ -96,7 +96,7 @@ public class GuiWDLSaveProgress extends GuiScreen {
 			}
 			
 			this.drawCenteredString(this.fontRendererObj, this.title,
-					this.width / 2, 70, 0xFFFFFF);
+					this.width / 2, 8, 0xFFFFFF);
 			
 			this.drawCenteredString(this.fontRendererObj, this.majorTaskMessage
 					+ majorProgressInfo, this.width / 2, 100, 0xFFFFFF);
