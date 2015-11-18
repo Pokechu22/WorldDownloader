@@ -302,12 +302,30 @@ public class WDL {
 
 		if (isMultiworld && worldName.isEmpty()) {
 			// Ask the user which world is loaded
-			minecraft.displayGuiScreen(new GuiWDLMultiworldSelect(null));
+			minecraft.displayGuiScreen(new GuiWDLMultiworldSelect(I18n
+					.format("wdl.gui.multiworld.title.startDownload"),
+					new GuiWDLMultiworldSelect.WorldSelectionCallback() {
+						@Override
+						public void onWorldSelected(String selectedWorld) {
+							WDL.worldName = selectedWorld;
+							WDL.isMultiworld = true;
+							WDL.propsFound = true;
+							
+							minecraft.displayGuiScreen(null);
+							startDownload();
+						}
+
+						@Override
+						public void onCancel() {
+							minecraft.displayGuiScreen(null);
+							cancelDownload();
+						}
+					}));
 			return;
 		}
 
 		if (!propsFound) {
-			// Never seen this world before. Ask user about multiworlds:
+			// Never seen this server before. Ask user about multiworlds:
 			minecraft.displayGuiScreen(new GuiWDLMultiworld(null));
 			return;
 		}

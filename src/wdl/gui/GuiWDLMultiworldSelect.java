@@ -7,7 +7,6 @@ import java.util.Properties;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 
@@ -85,6 +84,36 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	}
 	
 	/**
+	 * Interface for a listener when the "cancel" or "use this world" buttons
+	 * are clicked.
+	 * 
+	 * Note that implementations must <i>also</i> handle opening the correct
+	 * next GUI.
+	 */
+	public static interface WorldSelectionCallback {
+		/**
+		 * Called when the cancel button is clicked.
+		 */
+		public abstract void onCancel();
+		
+		/**
+		 * Called when the "Use this world" button is clicked.
+		 * 
+		 * @param selectedWorld
+		 *            The folder name for the given world.
+		 */
+		public abstract void onWorldSelected(String selectedWorld);
+	}
+
+	/**
+	 * The callback for when the done button is clicked.
+	 */
+	private final WorldSelectionCallback callback;
+	/**
+	 * Title of the GUI.
+	 */
+	private final String title;
+	/**
 	 * The cancel button.
 	 */
 	private GuiButton cancelBtn;
@@ -125,10 +154,6 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	 */
 	private int index = 0;
 	/**
-	 * The parent GUI screen.
-	 */
-	private GuiScreen parent;
-	/**
 	 * The next button (scrolls the list right).
 	 */
 	private GuiButton nextButton;
@@ -145,8 +170,9 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	 */
 	private String searchText = "";
 
-	public GuiWDLMultiworldSelect(GuiScreen parent) {
-		this.parent = parent;
+	public GuiWDLMultiworldSelect(String title, WorldSelectionCallback callback) {
+		this.title = title;
+		this.callback = callback;
 		
 		// Build a list of world names.
 		String[] worldNames = WDL.baseProps.getProperty("LinkedWorlds")
@@ -230,12 +256,9 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 					acceptBtn.enabled = false;
 				}
 			} else if (button.id == -1) {
-				this.mc.displayGuiScreen((GuiScreen) null);
-				this.mc.setIngameFocus();
+				callback.onCancel();
 			} else if (button.id == -2) {
-				if (selectedMultiWorld != null) {
-					this.worldSelected(selectedMultiWorld.folderName);
-				}
+				callback.onWorldSelected(selectedMultiWorld.folderName);
 			} else if (button.id == -3) {
 				this.showNewWorldTextBox = true;
 			} else if (button.id == -4) {
@@ -267,6 +290,10 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	 */
 	@Override
 	protected void keyTyped(char typedChar, int keyCode) throws IOException {
+		if (keyCode == Keyboard.KEY_ESCAPE) {
+			callback.onCancel();
+		}
+		
 		super.keyTyped(typedChar, keyCode);
 
 		if (this.showNewWorldTextBox) {
@@ -321,15 +348,8 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		
 		Utils.drawBorder(53, 53, 0, 0, height, width);
 		
-		if (this.parent == null) {
-			this.drawCenteredString(this.fontRendererObj,
-					I18n.format("wdl.gui.multiworld.title.startDownload"),
-					this.width / 2, 8, 0xFFFFFF);
-		} else {
-			this.drawCenteredString(this.fontRendererObj,
-					I18n.format("wdl.gui.multiworld.title.changeOptions"),
-					this.width / 2, 8, 0xFFFFFF);
-		}
+		this.drawCenteredString(this.fontRendererObj, title, this.width / 2, 8,
+				0xFFFFFF);
 
 		this.drawCenteredString(this.fontRendererObj,
 				I18n.format("wdl.gui.multiworld.subtitle"),
@@ -350,21 +370,6 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		newWorldButton.visible = !showNewWorldTextBox;
 
 		super.drawScreen(mouseX, mouseY, partialTicks);
-	}
-
-	private void worldSelected(String worldName) {
-		WDL.worldName = worldName;
-		WDL.isMultiworld = true;
-		WDL.propsFound = true;
-
-		if (this.parent == null) {
-			WDL.startDownload();
-			this.mc.displayGuiScreen((GuiScreen) null);
-			this.mc.setIngameFocus();
-		} else {
-			WDL.worldProps = WDL.loadWorldProps(worldName);
-			this.mc.displayGuiScreen(new GuiWDL(this.parent));
-		}
 	}
 
 	/**

@@ -133,7 +133,24 @@ public class GuiWDL extends GuiScreen {
 	@Override
 	public void initGui() {
 		if (WDL.isMultiworld && WDL.worldName.isEmpty()) {
-			this.mc.displayGuiScreen(new GuiWDLMultiworldSelect(this.parent));
+			this.mc.displayGuiScreen(new GuiWDLMultiworldSelect(I18n
+					.format("wdl.gui.multiworld.title.changeOptions"),
+					new GuiWDLMultiworldSelect.WorldSelectionCallback() {
+						@Override
+						public void onWorldSelected(String selectedWorld) {
+							WDL.worldName = selectedWorld;
+							WDL.isMultiworld = true;
+							WDL.propsFound = true;
+							
+							WDL.worldProps = WDL.loadWorldProps(selectedWorld);
+							mc.displayGuiScreen(GuiWDL.this);
+						}
+						
+						@Override
+						public void onCancel() {
+							mc.displayGuiScreen(null);
+						}
+					}));
 			return;
 		}
 
