@@ -397,6 +397,8 @@ public class WDL {
 	 * Cancels the download.
 	 */
 	public static void cancelDownload() {
+		boolean wasDownloading = downloading;
+		
 		minecraft.getSaveLoader().flushCache();
 		saveHandler.flush();
 		worldClient = null;
@@ -413,7 +415,9 @@ public class WDL {
 			}
 		});
 		
-		WDL.chatInfo("Download canceled.");
+		if (wasDownloading) {
+			WDL.chatInfo("Download canceled.");
+		}
 	}
 
 	/**
