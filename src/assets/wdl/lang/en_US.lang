@@ -127,6 +127,8 @@ wdl.gui.backup.description1=World Downloader backs up the world every time savin
 wdl.gui.backup.description2=§lNo backup§r: No backup is performed after the download finishes.%n§lCopy world folder§r: The entire world folder is copied, meaning that you will always have a playable version of the world in this state, should you chose to download again.%n§lZip a copy of a world§r: A zipped copy of the world is created in your worlds folder, which can later be unzipped if you want to revert.
 wdl.gui.backup.description3=For all backup modes, the created backup is timestamped, so your older backups will not be overwritten.
 
+wdl.gui.saveProgress.progressInfo=%s (%d of %d)
+
 wdl.gui.rangePresets.title=Range presets
 wdl.gui.rangePresets.vanilla=Vanilla Minecraft ranges
 wdl.gui.rangePresets.spigot=Default spigot ranges

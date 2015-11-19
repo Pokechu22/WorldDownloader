@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
 
 /**
  * GUI screen shown while the world is being saved.
@@ -84,34 +85,36 @@ public class GuiWDLSaveProgress extends GuiTurningCameraBase {
 		} else {
 			Utils.drawBorder(32, 32, 0, 0, height, width);
 			
-			String majorProgressInfo = "";
+			String majorTaskInfo = majorTaskMessage;
 			if (majorTaskCount > 1) {
-				majorProgressInfo = " (" + majorTaskNumber + " of " + 
-						majorTaskCount + ")";
+				majorTaskInfo = I18n.format(
+						"wdl.gui.saveProgress.progressInfo", majorTaskMessage,
+						majorTaskNumber, majorTaskCount);
 			}
-			String minorProgressInfo = "";
+			String minorTaskInfo = minorTaskMessage;
 			if (minorTaskMaximum > 1) {
-				minorProgressInfo = " (" + minorTaskProgress + " of " + 
-						minorTaskMaximum + ")";
+				majorTaskInfo = I18n.format(
+						"wdl.gui.saveProgress.progressInfo", minorTaskMessage,
+						minorTaskProgress, minorTaskMaximum);
 			}
 			
 			this.drawCenteredString(this.fontRendererObj, this.title,
 					this.width / 2, 8, 0xFFFFFF);
 			
-			this.drawCenteredString(this.fontRendererObj, this.majorTaskMessage
-					+ majorProgressInfo, this.width / 2, 100, 0xFFFFFF);
+			this.drawCenteredString(this.fontRendererObj,
+					majorTaskInfo, this.width / 2, 100, 0xFFFFFF);
 			
 			if (minorTaskMaximum > 0) {
 				this.drawProgressBar(110, 84, 89, 
 						(majorTaskNumber * minorTaskMaximum) + minorTaskProgress, 
 						(majorTaskCount + 1) * minorTaskMaximum);
 			} else {
-				this.drawProgressBar(110, 84, 89, majorTaskNumber, 
+				this.drawProgressBar(110, 84, 89, majorTaskNumber,
 						majorTaskCount);
 			}
 			
-			this.drawCenteredString(this.fontRendererObj, this.minorTaskMessage
-					+ minorProgressInfo, this.width / 2, 130, 0xFFFFFF);
+			this.drawCenteredString(this.fontRendererObj, minorTaskInfo,
+					this.width / 2, 130, 0xFFFFFF);
 			this.drawProgressBar(140, 64, 69, minorTaskProgress, minorTaskMaximum);
 			
 			super.drawScreen(mouseX, mouseY, partialTicks);
