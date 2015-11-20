@@ -5,24 +5,13 @@ import java.util.List;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import wdl.WDL;
+import net.minecraft.client.resources.I18n;
 
 public class GuiWDLMultiworld extends GuiScreen {
-	private GuiScreen parent;
+	private final MultiworldCallback callback;
 	private GuiButton multiworldEnabledBtn;
-	boolean newMultiworldState = false;
+	private boolean enableMultiworld = false;
 
-	private static final String multiworldMessage = 
-			"Multiworld support is required if at least one of the " +
-			"following conditions are met:\n" +
-			" - \"Multiworld\" is mentioned on the server\'s website\n" +
-			" - The server has more than 3 dimensions (or worlds)\n" +
-			" - The server has other dimensions than the official ones " +
-			"(the overworld, the nether, and the end)\n\n" +
-			"Multiworld support requests which world you are in before " +
-			"the download is started.  If it isn't enabled but the server " +
-			"is a multiworld server, parts of the map may be overwritten.";
-	
 	//TODO: Some of these things can be constants, but for consistancy aren't.
 	//Maybe refactor it?
 	private int infoBoxWidth;
@@ -31,8 +20,13 @@ public class GuiWDLMultiworld extends GuiScreen {
 	private int infoBoxY;
 	private List<String> infoBoxLines;
 	
-	public GuiWDLMultiworld(GuiScreen var1) {
-		this.parent = var1;
+	public static interface MultiworldCallback {
+		public abstract void onCancel();
+		public abstract void onSelect(boolean enableMutliworld);
+	}
+	
+	public GuiWDLMultiworld(MultiworldCallback callback) {
+		this.callback = callback;
 	}
 
 	/**
@@ -43,6 +37,11 @@ public class GuiWDLMultiworld extends GuiScreen {
 	public void initGui() {
 		this.buttonList.clear();
 		
+		String multiworldMessage = I18n
+				.format("wdl.gui.multiworld_.descirption.requiredWhen")
+				+ "\n\n"
+				+ I18n.format("wdl.gui.multiworld_.descirption.whatIs");
+		
 		infoBoxWidth = 320;
 		infoBoxLines = Utils.wordWrap(multiworldMessage, infoBoxWidth - 20);
 		infoBoxHeight = (fontRendererObj.FONT_HEIGHT * (infoBoxLines.size() + 1)) + 40;
@@ -52,12 +51,14 @@ public class GuiWDLMultiworld extends GuiScreen {
 		
 		this.multiworldEnabledBtn = new GuiButton(1, this.width / 2 - 100,
 				infoBoxY + infoBoxHeight - 30, 
-				"Multiworld support: ERROR");
+				this.getMultiworldEnabledText());
 		this.buttonList.add(this.multiworldEnabledBtn);
-		this.updateMultiworldEnabled(false);
 		
-		this.buttonList.add(new GuiButton(100, this.width / 2 - 100,
-				this.height - 29, "OK"));
+		this.buttonList.add(new GuiButton(100, this.width / 2 - 155,
+				this.height - 29, 150, 20, I18n.format("gui.cancel")));
+		
+		this.buttonList.add(new GuiButton(101, this.width / 2 + 5,
+				this.height - 29, 150, 20, I18n.format("gui.done")));
 	}
 
 	/**
@@ -65,29 +66,13 @@ public class GuiWDLMultiworld extends GuiScreen {
 	 * ActionListener.actionPerformed(ActionEvent e).
 	 */
 	@Override
-	protected void actionPerformed(GuiButton var1) {
-		if (var1.enabled) {
-			if (var1.id == 1) {
-				this.updateMultiworldEnabled(true);
-			} else if (var1.id == 100) {
-				if (this.newMultiworldState) {
-					//TODO: Add a callback and do everything here.
-					//this.mc.displayGuiScreen(new GuiWDLMultiworldSelect(
-					//		this.parent));
-				} else {
-					WDL.baseProps.setProperty("LinkedWorlds", "");
-					WDL.saveProps();
-					WDL.propsFound = true;
-
-					if (this.parent != null) {
-						this.mc.displayGuiScreen(new GuiWDL(this.parent));
-					} else {
-						WDL.startDownload();
-						this.mc.displayGuiScreen((GuiScreen) null);
-						this.mc.setIngameFocus();
-					}
-				}
-			}
+	protected void actionPerformed(GuiButton button) {
+		if (button.id == 1) {
+			this.toggleMultiworldEnabled();
+		} else if (button.id == 100) {
+			callback.onCancel();
+		} else if (button.id == 101) {
+			callback.onSelect(this.enableMultiworld);
 		}
 	}
 
@@ -126,7 +111,7 @@ public class GuiWDLMultiworld extends GuiScreen {
 		Utils.drawBorder(32, 32, 0, 0, height, width);
 		
 		this.drawCenteredString(this.fontRendererObj, 
-				"WorldDownloader: §cMultiworld support",
+				I18n.format("wdl.gui.multiworld_.title"),
 				this.width / 2, 8, 0xFFFFFF);
 		
 		drawRect(infoBoxX, infoBoxY, infoBoxX + infoBoxWidth, infoBoxY
@@ -151,19 +136,23 @@ public class GuiWDLMultiworld extends GuiScreen {
 		super.drawScreen(mouseX, mouseY, partialTicks);
 	}
 
-	private void updateMultiworldEnabled(boolean var1) {
-		if (!this.newMultiworldState) {
-			if (var1) {
-				this.newMultiworldState = true;
-				this.updateMultiworldEnabled(false);
-			} else {
-				this.multiworldEnabledBtn.displayString = "Multiworld support: Disabled";
-			}
-		} else if (var1) {
-			this.newMultiworldState = false;
-			this.updateMultiworldEnabled(false);
+	/**
+	 * Toggles whether multiworld support is enabled.
+	 */
+	private void toggleMultiworldEnabled() {
+		if (this.enableMultiworld) {
+			this.enableMultiworld = false;
 		} else {
-			this.multiworldEnabledBtn.displayString = "Multiworld support: Enabled";
+			this.enableMultiworld = true;
 		}
+		
+		this.multiworldEnabledBtn.displayString = getMultiworldEnabledText();
+	}
+	
+	/**
+	 * Gets the text to display on the multiworld enabled button.
+	 */
+	private String getMultiworldEnabledText() {
+		return I18n.format("wdl.gui.multiworld_." + enableMultiworld);
 	}
 }

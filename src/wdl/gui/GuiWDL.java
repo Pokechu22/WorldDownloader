@@ -155,7 +155,47 @@ public class GuiWDL extends GuiScreen {
 		}
 
 		if (!WDL.propsFound) {
-			this.mc.displayGuiScreen(new GuiWDLMultiworld(this.parent));
+			mc.displayGuiScreen(new GuiWDLMultiworld(new GuiWDLMultiworld.MultiworldCallback() {
+				@Override
+				public void onSelect(boolean enableMutliworld) {
+					WDL.isMultiworld = enableMutliworld;
+					
+					if (WDL.isMultiworld) {
+						// Ask the user which world is loaded
+						// TODO: Copy-pasted code from above -- suboptimal.
+						mc.displayGuiScreen(new GuiWDLMultiworldSelect(I18n
+								.format("wdl.gui.multiworld.title.changeOptions"),
+								new GuiWDLMultiworldSelect.WorldSelectionCallback() {
+									@Override
+									public void onWorldSelected(String selectedWorld) {
+										WDL.worldName = selectedWorld;
+										WDL.isMultiworld = true;
+										WDL.propsFound = true;
+										
+										WDL.worldProps = WDL.loadWorldProps(selectedWorld);
+										mc.displayGuiScreen(GuiWDL.this);
+									}
+									
+									@Override
+									public void onCancel() {
+										mc.displayGuiScreen(null);
+									}
+								}));
+					} else {
+						WDL.baseProps.setProperty("LinkedWorlds", "");
+						WDL.saveProps();
+						WDL.propsFound = true;
+
+						mc.displayGuiScreen(null);
+						WDL.startDownload();
+					}
+				}
+				
+				@Override
+				public void onCancel() {
+					mc.displayGuiScreen(null);
+				}
+			}));
 			return;
 		}
 

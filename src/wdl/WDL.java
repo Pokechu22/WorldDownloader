@@ -326,7 +326,49 @@ public class WDL {
 
 		if (!propsFound) {
 			// Never seen this server before. Ask user about multiworlds:
-			minecraft.displayGuiScreen(new GuiWDLMultiworld(null));
+			minecraft.displayGuiScreen(new GuiWDLMultiworld(new GuiWDLMultiworld.MultiworldCallback() {
+				@Override
+				public void onSelect(boolean enableMutliworld) {
+					isMultiworld = enableMutliworld;
+					
+					if (isMultiworld) {
+						// Ask the user which world is loaded
+						// TODO: Copy-pasted code from above -- suboptimal.
+						minecraft.displayGuiScreen(new GuiWDLMultiworldSelect(I18n
+								.format("wdl.gui.multiworld.title.startDownload"),
+								new GuiWDLMultiworldSelect.WorldSelectionCallback() {
+									@Override
+									public void onWorldSelected(String selectedWorld) {
+										WDL.worldName = selectedWorld;
+										WDL.isMultiworld = true;
+										WDL.propsFound = true;
+										
+										minecraft.displayGuiScreen(null);
+										startDownload();
+									}
+	
+									@Override
+									public void onCancel() {
+										minecraft.displayGuiScreen(null);
+										cancelDownload();
+									}
+								}));
+					} else {
+						baseProps.setProperty("LinkedWorlds", "");
+						saveProps();
+						propsFound = true;
+
+						minecraft.displayGuiScreen(null);
+						WDL.startDownload();
+					}
+				}
+				
+				@Override
+				public void onCancel() {
+					minecraft.displayGuiScreen(null);
+					cancelDownload();
+				}
+			}));
 			return;
 		}
 		
@@ -399,23 +441,23 @@ public class WDL {
 	public static void cancelDownload() {
 		boolean wasDownloading = downloading;
 		
-		minecraft.getSaveLoader().flushCache();
-		saveHandler.flush();
-		worldClient = null;
-		saving = false;
-		downloading = false;
-		worldLoadingDeferred = false;
-		
-		// Force the world to redraw as if the player pressed F3+A.
-		// This fixes the world going invisible issue.
-		minecraft.addScheduledTask(new Runnable() {
-			@Override
-			public void run() {
-				WDL.minecraft.renderGlobal.loadRenderers();	
-			}
-		});
-		
 		if (wasDownloading) {
+			minecraft.getSaveLoader().flushCache();
+			saveHandler.flush();
+			worldClient = null;
+			saving = false;
+			downloading = false;
+			worldLoadingDeferred = false;
+			
+			// Force the world to redraw as if the player pressed F3+A.
+			// This fixes the world going invisible issue.
+			minecraft.addScheduledTask(new Runnable() {
+				@Override
+				public void run() {
+					WDL.minecraft.renderGlobal.loadRenderers();	
+				}
+			});
+		
 			WDL.chatInfo("Download canceled.");
 		}
 	}
