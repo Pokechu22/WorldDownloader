@@ -2,6 +2,7 @@ package wdl.gui;
 
 import java.io.IOException;
 
+import wdl.WorldBackup.IBackupProgressMonitor;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
@@ -12,7 +13,8 @@ import net.minecraft.client.resources.I18n;
  * Based off of vanilla minecraft's 
  * {@link net.minecraft.client.gui.GuiScreenWorking GuiScreenWorking}.
  */
-public class GuiWDLSaveProgress extends GuiTurningCameraBase {
+public class GuiWDLSaveProgress extends GuiTurningCameraBase implements
+		IBackupProgressMonitor {
 	private final String title;
 	private String majorTaskMessage = "";
 	private String minorTaskMessage = "";
@@ -162,5 +164,17 @@ public class GuiWDLSaveProgress extends GuiTurningCameraBase {
 	protected void keyTyped(char typedChar, int keyCode) throws IOException {
 		//Don't call the super method, as that causes the UI to close if escape
 		//is pressed.
+	}
+
+	// IBackupProgressMonitor
+	@Override
+	public void setNumberOfFiles(int num) {
+		minorTaskMaximum = num;
+	}
+
+	@Override
+	public void onNextFile(String name) {
+		minorTaskProgress++;
+		minorTaskMessage = I18n.format("wdl.saveProgress.backingUpFile", name);
 	}
 }

@@ -12,11 +12,13 @@ import org.lwjgl.input.Keyboard;
 
 import wdl.WDL;
 import wdl.WorldBackup;
+import wdl.WorldBackup.IBackupProgressMonitor;
 
 /**
  * GUI shown before possibly overwriting data in the world.
  */
-public class GuiWDLOverwriteChanges extends GuiTurningCameraBase {
+public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements
+		IBackupProgressMonitor {
 	private static final DateFormat displayDateFormat = 
 			new SimpleDateFormat();
 	
@@ -50,9 +52,11 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase {
 				}
 				
 				if (zip) {
-					WorldBackup.zipDirectory(fromFolder, backupFile);
+					WorldBackup.zipDirectory(fromFolder, backupFile,
+							GuiWDLOverwriteChanges.this);
 				} else {
-					WorldBackup.copyDirectory(fromFolder, backupFile);
+					WorldBackup.copyDirectory(fromFolder, backupFile,
+							GuiWDLOverwriteChanges.this);
 				}
 			} catch (Exception e) {
 				WDL.chatError("Exception while backing up world: " + e);
@@ -81,6 +85,18 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase {
 	 * Data about the current backup process.
 	 */
 	private volatile String backupData = "";
+	/**
+	 * Number of files to backup.
+	 */
+	private volatile int backupCount;
+	/**
+	 * Current file being backed up.
+	 */
+	private volatile int backupCurrent;
+	/**
+	 * Name of the current file being backed up.
+	 */
+	private volatile String backupFile = "";
 	
 	private String savedText = "";
 	private String playedText = "";
@@ -178,7 +194,13 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase {
 			drawCenteredString(fontRendererObj, "Backing up the world...",
 					width / 2, height / 4 - 40, 0xFFFFFF);
 			drawCenteredString(fontRendererObj, backupData,
-					width / 2, height / 4 - 10, 0xFFFFFF); 
+					width / 2, height / 4 - 10, 0xFFFFFF);
+			if (backupFile != null) {
+				String text = backupCurrent + " / " + backupCount + " ("
+						+ backupFile + ")";
+				drawCenteredString(fontRendererObj, text, width / 2,
+						height / 4 + 10, 0xFFFFFF);
+			}
 		} else {
 			drawDefaultBackground();
 			Utils.drawBorder(32, 22, 0, 0, height, width);
@@ -223,5 +245,17 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase {
 			
 			Utils.drawGuiInfoBox(tooltip, width, height, 48);
 		}
+	}
+
+	@Override
+	public void setNumberOfFiles(int num) {
+		backupCount = num;
+		backupCurrent = 0;
+	}
+
+	@Override
+	public void onNextFile(String name) {
+		backupCurrent++;
+		backupFile = name;
 	}
 }

@@ -753,7 +753,7 @@ public class WDL {
 			
 			try {
 				WorldBackup.backupWorld(saveHandler.getWorldDirectory(), 
-						getWorldFolderName(worldName), backupType);
+						getWorldFolderName(worldName), backupType, progressScreen);
 			} catch (IOException e) {
 				chatError("Error while backing up world: " + e);
 				e.printStackTrace();

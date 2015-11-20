@@ -47,6 +47,21 @@ public class WorldBackup {
 	}
 
 	/**
+	 * Something that listens to backup progress.
+	 */
+	public static interface IBackupProgressMonitor {
+		/**
+		 * Sets the initial number of files.
+		 */
+		public abstract void setNumberOfFiles(int num);
+		/**
+		 * Called on the next file.
+		 * @param name Name of the new file.
+		 */
+		public abstract void onNextFile(String name);
+	}
+	
+	/**
 	 * The format that is used for world date saving.
 	 * 
 	 * TODO: Allow modification ingame? 
@@ -60,11 +75,12 @@ public class WorldBackup {
 	 * @param worldFolder The folder that contains the world to backup.
 	 * @param worldName The name of the world.
 	 * @param type The type to backup with.
+	 * @param monitor A monitor.
 	 * 
 	 * @throws IOException
 	 */
 	public static void backupWorld(File worldFolder, String worldName,
-			WorldBackupType type) throws IOException {
+			WorldBackupType type, IBackupProgressMonitor monitor) throws IOException {
 		String newWorldName = worldName + "_" + DATE_FORMAT.format(new Date());
 		
 		switch (type) {
@@ -80,7 +96,7 @@ public class WorldBackup {
 						") already exists!");
 			}
 			
-			copyDirectory(worldFolder, destination);
+			copyDirectory(worldFolder, destination, monitor);
 			return;
 		}
 		case ZIP: {
@@ -92,7 +108,7 @@ public class WorldBackup {
 						") already exists!");
 			}
 			
-			zipDirectory(worldFolder, destination);
+			zipDirectory(worldFolder, destination, monitor);
 			return;
 		}
 		}
@@ -101,23 +117,27 @@ public class WorldBackup {
 	/**
 	 * Copies a directory.
 	 */
-	public static void copyDirectory(File src, File destination)
-			throws IOException {
-		FileUtils.copyDirectory(src, destination);
+	public static void copyDirectory(File src, File destination,
+			IBackupProgressMonitor monitor) throws IOException {
+		monitor.setNumberOfFiles(countFilesInFolder(src));
+		
+		copy(src, destination, src.getPath().length() + 1, monitor);
 	}
 	
 	/**
 	 * Zips a directory.
 	 */
-	public static void zipDirectory(File src, File destination)
-			throws IOException {
+	public static void zipDirectory(File src, File destination,
+			IBackupProgressMonitor monitor) throws IOException {
+		monitor.setNumberOfFiles(countFilesInFolder(src));
+		
 		FileOutputStream outStream = null;
 		ZipOutputStream stream = null;
 		try {
 			outStream = new FileOutputStream(destination);
 			try {
 				stream = new ZipOutputStream(outStream);
-				zipFolder(src, stream, src.getPath().length() + 1);
+				zipFolder(src, stream, src.getPath().length() + 1, monitor);
 			} finally {
 				stream.close();
 			}
@@ -132,15 +152,17 @@ public class WorldBackup {
 	 * @param folder The folder to zip.
 	 * @param stream The stream to write to.
 	 * @param pathStartIndex The start of the file path.
+	 * @param monitor A monitor.
 	 * 
 	 * @throws IOException
 	 */
 	private static void zipFolder(File folder, ZipOutputStream stream,
-			int pathStartIndex) throws IOException {
+			int pathStartIndex, IBackupProgressMonitor monitor) throws IOException {
 		for (File file : folder.listFiles()) {
 			if (file.isFile()) {
-				ZipEntry zipEntry = new ZipEntry(file.getPath().substring(
-						pathStartIndex));
+				String name = file.getPath().substring(pathStartIndex);
+				monitor.onNextFile(name);
+				ZipEntry zipEntry = new ZipEntry(name);
 				stream.putNextEntry(zipEntry);
 				FileInputStream inputStream = new FileInputStream(file);
 				try {
@@ -150,9 +172,61 @@ public class WorldBackup {
 				}
 				stream.closeEntry();
 			} else if (file.isDirectory()) {
-				zipFolder(file, stream, pathStartIndex);
+				zipFolder(file, stream, pathStartIndex, monitor);
 			}
 		}
+	}
+	
+	/**
+	 * Copies a series of files from one folder to another.
+	 * 
+	 * @param from The file to copy.
+	 * @param to The new location for the file.
+	 * @param pathStartIndex The start of the file path.
+	 * @param monitor A monitor.
+	 * @throws IOException 
+	 */
+	private static void copy(File from, File to, int pathStartIndex,
+			IBackupProgressMonitor monitor) throws IOException {
+		if (from.isDirectory()) {
+            if (!to.exists()) {
+                to.mkdir();
+            }
+
+            for (String fileName : from.list()) {
+            	copy(new File(from, fileName),
+                        new File(to, fileName), pathStartIndex, monitor);
+            }
+        } else {
+        	monitor.onNextFile(to.getPath().substring(pathStartIndex));
+        	//Yes, FileUtils#copyDirectory exists, but we can't monitor the
+        	//progress using it.
+        	FileUtils.copyFile(from, to, true);
+        }
+	}
+	
+	/**
+	 * Recursively counts the number of files in the given folder.
+	 * Directories are not included in this count, but the files
+	 * contained within are.
+	 * 
+	 * @param folder
+	 */
+	private static int countFilesInFolder(File folder) {
+		if (!folder.isDirectory()) {
+			return 0;
+		}
+		
+		int count = 0;
+		for (File file : folder.listFiles()) {
+			if (file.isDirectory()) {
+				count += countFilesInFolder(file);
+			} else {
+				count++;
+			}
+		}
+		
+		return count;
 	}
 	
 	private WorldBackup() { }
