@@ -114,18 +114,18 @@ wdl.gui.extensions.title=WDL extensions
 wdl.gui.extensions.detailsCaption=Details (resizable)
 wdl.gui.extensions.modVersion=%s v%s
 
-wdl.gui.multiworld.title.startDownload=World Downloader - Trying To Start Download
-wdl.gui.multiworld.title.changeOptions=World Downloader - Trying To Change Options
-wdl.gui.multiworld.subtitle=Where are you?
-wdl.gui.multiworld.newName=< New Name >
-wdl.gui.multiworld.search=Search...
-wdl.gui.multiworld.done=Use selected world
+wdl.gui.multiworldSelect.title.startDownload=World Downloader - Trying To Start Download
+wdl.gui.multiworldSelect.title.changeOptions=World Downloader - Trying To Change Options
+wdl.gui.multiworldSelect.subtitle=Where are you?
+wdl.gui.multiworldSelect.newName=< New Name >
+wdl.gui.multiworldSelect.search=Search...
+wdl.gui.multiworldSelect.done=Use selected world
 
-wdl.gui.multiworld_.title=World Downloader: §cMultiworld support
-wdl.gui.multiworld_.descirption.requiredWhen=Multiworld support is required if at least one of the following conditions are met:%n - "Multiworld" is mentioned on the server's website%n - The server has more than 3 dimensions (or worlds)%n - The server has other dimensions than the official ones (the overworld, the nether, and the end)
-wdl.gui.multiworld_.descirption.whatIs=Multiworld support prompts you for which world you are in before the download is started.  If it isn't enabled but the server is a multiworld server, parts of the map may be overwritten.
-wdl.gui.multiworld_.true=Multiworld support: Enabled
-wdl.gui.multiworld_.false=Multiworld support: Disabled
+wdl.gui.multiworld.title=World Downloader: §cMultiworld support
+wdl.gui.multiworld.descirption.requiredWhen=Multiworld support is required if at least one of the following conditions are met:%n - "Multiworld" is mentioned on the server's website%n - The server has more than 3 dimensions (or worlds)%n - The server has other dimensions than the official ones (the overworld, the nether, and the end)
+wdl.gui.multiworld.descirption.whatIs=Multiworld support prompts you for which world you are in before the download is started.  If it isn't enabled but the server is a multiworld server, parts of the map may be overwritten.
+wdl.gui.multiworld.true=Multiworld support: Enabled
+wdl.gui.multiworld.false=Multiworld support: Disabled
 
 wdl.gui.backup.title=Backup options
 wdl.gui.backup.backupMode=Backup mode: %s

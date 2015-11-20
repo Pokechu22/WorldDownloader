@@ -134,7 +134,7 @@ public class GuiWDL extends GuiScreen {
 	public void initGui() {
 		if (WDL.isMultiworld && WDL.worldName.isEmpty()) {
 			this.mc.displayGuiScreen(new GuiWDLMultiworldSelect(I18n
-					.format("wdl.gui.multiworld.title.changeOptions"),
+					.format("wdl.gui.multiworldSelect.title.changeOptions"),
 					new GuiWDLMultiworldSelect.WorldSelectionCallback() {
 						@Override
 						public void onWorldSelected(String selectedWorld) {

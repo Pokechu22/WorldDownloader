@@ -217,7 +217,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		this.buttonList.add(this.cancelBtn);
 		
 		this.acceptBtn = new GuiButton(-2, this.width / 2 + 5, this.height - 25,
-				150, 20, I18n.format("wdl.gui.multiworld.done"));
+				150, 20, I18n.format("wdl.gui.multiworldSelect.done"));
 		this.acceptBtn.enabled = (selectedMultiWorld != null);
 		this.buttonList.add(this.acceptBtn);
 		
@@ -234,7 +234,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		this.buttonList.add(nextButton);
 		
 		this.newWorldButton = new GuiButton(-3, this.width / 2 - 155, 29, 150, 20,
-				I18n.format("wdl.gui.multiworld.newName"));
+				I18n.format("wdl.gui.multiworldSelect.newName"));
 		this.buttonList.add(newWorldButton);
 
 		this.newNameField = new GuiTextField(40, this.fontRendererObj,
@@ -352,7 +352,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 				0xFFFFFF);
 
 		this.drawCenteredString(this.fontRendererObj,
-				I18n.format("wdl.gui.multiworld.subtitle"),
+				I18n.format("wdl.gui.multiworldSelect.subtitle"),
 				this.width / 2, 18, 0xFF0000);
 		
 		if (this.showNewWorldTextBox) {
@@ -362,7 +362,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		//Hint as to what the text box does
 		if (this.searchField.getText().isEmpty() && !this.searchField.isFocused()) {
 			drawString(fontRendererObj,
-					I18n.format("wdl.gui.multiworld.search"),
+					I18n.format("wdl.gui.multiworldSelect.search"),
 					searchField.xPosition + 4, searchField.yPosition + 6,
 					0x909090);
 		}

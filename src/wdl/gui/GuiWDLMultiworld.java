@@ -38,9 +38,9 @@ public class GuiWDLMultiworld extends GuiScreen {
 		this.buttonList.clear();
 		
 		String multiworldMessage = I18n
-				.format("wdl.gui.multiworld_.descirption.requiredWhen")
+				.format("wdl.gui.multiworld.descirption.requiredWhen")
 				+ "\n\n"
-				+ I18n.format("wdl.gui.multiworld_.descirption.whatIs");
+				+ I18n.format("wdl.gui.multiworld.descirption.whatIs");
 		
 		infoBoxWidth = 320;
 		infoBoxLines = Utils.wordWrap(multiworldMessage, infoBoxWidth - 20);
@@ -111,7 +111,7 @@ public class GuiWDLMultiworld extends GuiScreen {
 		Utils.drawBorder(32, 32, 0, 0, height, width);
 		
 		this.drawCenteredString(this.fontRendererObj, 
-				I18n.format("wdl.gui.multiworld_.title"),
+				I18n.format("wdl.gui.multiworld.title"),
 				this.width / 2, 8, 0xFFFFFF);
 		
 		drawRect(infoBoxX, infoBoxY, infoBoxX + infoBoxWidth, infoBoxY
@@ -153,6 +153,6 @@ public class GuiWDLMultiworld extends GuiScreen {
 	 * Gets the text to display on the multiworld enabled button.
 	 */
 	private String getMultiworldEnabledText() {
-		return I18n.format("wdl.gui.multiworld_." + enableMultiworld);
+		return I18n.format("wdl.gui.multiworld." + enableMultiworld);
 	}
 }
