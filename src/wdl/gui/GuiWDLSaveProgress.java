@@ -175,6 +175,6 @@ public class GuiWDLSaveProgress extends GuiTurningCameraBase implements
 	@Override
 	public void onNextFile(String name) {
 		minorTaskProgress++;
-		minorTaskMessage = I18n.format("wdl.saveProgress.backingUpFile", name);
+		minorTaskMessage = I18n.format("wdl.saveProgress.backingUp.file", name);
 	}
 }

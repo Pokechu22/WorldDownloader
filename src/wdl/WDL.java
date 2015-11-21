@@ -744,12 +744,9 @@ public class WDL {
 		if (backupType != WorldBackupType.NONE) {
 			chatMessage(WDLMessageTypes.SAVING, "Backing up the world...");
 			progressScreen.startMajorTask(
-					I18n.format("wdl.saveProgress.backingUp.title"), 1);
-			// TODO: This will be conjugated differently than the other messages.
-			// It uses the "Create a ..." rather than "creating a" form.  I may
-			// want to change this.
+					backupType.getTitle(), 1);
 			progressScreen.setMinorTaskProgress(
-					backupType.getDescription(), 1);
+					I18n.format("wdl.saveProgress.backingUp.preparing"), 1);
 			
 			try {
 				WorldBackup.backupWorld(saveHandler.getWorldDirectory(), 

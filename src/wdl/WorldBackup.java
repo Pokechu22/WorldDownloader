@@ -17,14 +17,22 @@ import org.apache.commons.io.IOUtils;
 
 public class WorldBackup {
 	public static enum WorldBackupType {
-		NONE("wdl.backup.none"),
-		FOLDER("wdl.backup.folder"),
-		ZIP("wdl.backup.zip");
+		NONE("wdl.backup.none", ""),
+		FOLDER("wdl.backup.folder", "wdl.saveProgress.backingUp.title.folder"),
+		ZIP("wdl.backup.zip", "wdl.saveProgress.backingUp.title.zip");
 
+		/**
+		 * I18n key for the description (used on buttons).
+		 */
 		public final String descriptionKey;
+		/**
+		 * I18n key for the backup screen title.
+		 */
+		public final String titleKey;
 
-		private WorldBackupType(String descriptionKey) {
+		private WorldBackupType(String descriptionKey, String titleKey) {
 			this.descriptionKey = descriptionKey;
+			this.titleKey = titleKey;
 		}
 		
 		/**
@@ -33,6 +41,14 @@ public class WorldBackup {
 		 */
 		public String getDescription() {
 			return I18n.format(descriptionKey);
+		}
+		
+		/**
+		 * Gets the (translated) title for this backup type.
+		 * @return
+		 */
+		public String getTitle() {
+			return I18n.format(titleKey);
 		}
 		
 		public static WorldBackupType match(String name) {
