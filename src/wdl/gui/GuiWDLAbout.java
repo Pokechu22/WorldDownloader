@@ -56,9 +56,9 @@ public class GuiWDLAbout extends GuiScreen {
 		
 		String currentLanguage = WDL.minecraft.getLanguageManager()
 				.getCurrentLanguage().toString();
-		String translatorCredit = I18n.format("wdl.gui.about.translatorCredit",
+		String translatorCredit = I18n.format("wdl.translatorCredit",
 				currentLanguage);
-		if (translatorCredit != null && !translatorCredit.startsWith("!!!!!!!!")) {
+		if (translatorCredit != null && !translatorCredit.isEmpty()) {
 			info += "\n\n" + translatorCredit;
 		}
 		

@@ -1,5 +1,9 @@
-wdl.gui.about.translatorCredit=!!!!!!!! Put your name here, in the format of 'Translated to %s by Pokechu22' (language is automatically inserted).  Will not be displayed if this message starts with '!!!!!!!!'.
+# Translator name, preferably in the form of 'Translated to %s by <your name>'.
+# '%s' will be replaced with the language name automatically.
+# If left blank, it will not be displayed.
+wdl.translatorCredit=
 
+# Remaining values.
 wdl.gui.wdl.title=Options for %s
 wdl.gui.wdl.worldname=Name:
 wdl.gui.wdl.worldOverrides.name=World Overrides...
