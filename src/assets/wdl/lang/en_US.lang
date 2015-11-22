@@ -234,6 +234,10 @@ wdl.saveProgress.backingUp.title.folder=Backing up the world (copying folder)
 wdl.saveProgress.backingUp.preparing=Preparing...
 wdl.saveProgress.backingUp.file=Copying %s
 
+wdl.props.global.title=These are the default settings used across all servers when the individual server has not yet had a setting set.  You can manually modify them, if you want.
+wdl.props.base.title=These settings are shared across an entire server.  If multiworld is enabled, they act as the default values for the individual world properties; otherwise, they are used directly.
+wdl.props.world.title=These settings are used for a single world in a multiworld server.
+
 #Some of these messages are using format substitutions, so that special coloring can be added.
 wdl.intro.success=The WorldDownloader mod has been successfully installed!
 wdl.intro.usage=For information on how to use this mod, please see the %s.

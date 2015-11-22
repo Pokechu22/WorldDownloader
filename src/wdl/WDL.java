@@ -1155,7 +1155,7 @@ public class WDL {
 			worldFolder.mkdirs();
 			try {
 				theWorldProps.store(new FileWriter(new File(worldFolder,
-						"WorldDownloader.txt")), "");
+						"WorldDownloader.txt")), I18n.format("wdl.props.world.title"));
 			} catch (Exception e) {
 			}
 		} else if (!isMultiworld) {
@@ -1167,7 +1167,7 @@ public class WDL {
 
 		try {
 			baseProps.store(new FileWriter(new File(baseFolder,
-					"WorldDownloader.txt")), "");
+					"WorldDownloader.txt")), I18n.format("wdl.props.base.title"));
 		} catch (Exception e) {
 		}
 		
@@ -1180,7 +1180,7 @@ public class WDL {
 	public static void saveGlobalProps() {
 		try {
 			globalProps.store(new FileWriter(new File(minecraft.mcDataDir,
-					"WorldDownloader.txt")), "");
+					"WorldDownloader.txt")), I18n.format("wdl.props.global.title"));
 		} catch (Exception e) {
 			
 		}
