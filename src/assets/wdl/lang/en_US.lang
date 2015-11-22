@@ -154,6 +154,23 @@ wdl.gui.rangePresets.server.installed=§aAs it is installed, this may be used.
 wdl.gui.rangePresets.server.notInstalled=§cAs it is not installed, this cannot be used.
 wdl.gui.rangePresets.cancel.description=Cancel without making changes.
 
+wdl.gui.overwriteChanges.title=World Downloader: Overwrite changes?
+wdl.gui.overwriteChanges.footer=Last downloaded on %tc, last played on %tc
+wdl.gui.overwriteChanges.captionTitle=The local copy of the world may have been changed.
+wdl.gui.overwriteChanges.captionSubtitle=Changes may be lost if not backed up.
+wdl.gui.overwriteChanges.asZip.name=Backup as zip (then start download)
+wdl.gui.overwriteChanges.asZip.description=Creates a .zip folder in the saves folder.%n%nThis backup can't be played in game unless extracted, but is useful if you just want to archive the changes.
+wdl.gui.overwriteChanges.asFolder.name=Backup folder (then start download)
+wdl.gui.overwriteChanges.asFolder.description=Creates a copy of the existing world folder.%n%nThis backup can be loaded in-game and will appear in the world list.
+wdl.gui.overwriteChanges.startNow.name=Allow overwriting (start download now)
+wdl.gui.overwriteChanges.startNow.description=Don't create any backup at all.%n%n§cAny changes made to the world will be overwritten.§r%nIf you haven't made any changes you want to keep, this is the right option.
+wdl.gui.overwriteChanges.cancel.name=Cancel (don't start download)
+wdl.gui.overwriteChanges.cancel.description=Don't start any download.%n%nReturn to the sever.  You can manually make a backup or just not download for the moment.
+wdl.gui.overwriteChanges.backingUp.title=Backing up the world...
+wdl.gui.overwriteChanges.backingUp.progress=%d / %d (%s)
+wdl.gui.overwriteChanges.backingUp.zip=Creating zip folder %s.
+wdl.gui.overwriteChanges.backingUp.folder=Copying world folder to %s.
+
 wdl.backup.none=No backup
 wdl.backup.folder=Copy world folder
 wdl.backup.zip=Zip a copy of a world

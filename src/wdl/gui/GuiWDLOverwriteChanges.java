@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.resources.I18n;
 
 import org.lwjgl.input.Keyboard;
 
@@ -19,9 +20,6 @@ import wdl.WorldBackup.IBackupProgressMonitor;
  */
 public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements
 		IBackupProgressMonitor {
-	private static final DateFormat displayDateFormat = 
-			new SimpleDateFormat();
-	
 	private class BackupThread extends Thread {
 		private final DateFormat folderDateFormat = 
 				new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
@@ -39,8 +37,13 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements
 						+ folderDateFormat.format(new Date())
 						+ "_user" + (zip ? ".zip" : "");
 				
-				backupData = "Backing up to " + (zip ? "zip " : " ")
-						+ "folder " + backupName + ".";
+				if (zip) {
+					backupData = I18n
+							.format("wdl.gui.overwriteChanges.backingUp.zip", backupName);
+				} else {
+					backupData = I18n
+							.format("wdl.gui.overwriteChanges.backingUp.folder", backupName);
+				}
 				
 				File fromFolder = WDL.saveHandler.getWorldDirectory();
 				File backupFile = new File(fromFolder.getParentFile(),
@@ -73,8 +76,8 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements
 	}
 	
 	public GuiWDLOverwriteChanges(long lastSaved, long lastPlayed) {
-		savedText = displayDateFormat.format(new Date(lastSaved));
-		playedText = displayDateFormat.format(new Date(lastPlayed));
+		this.lastSaved = lastSaved;
+		this.lastPlayed = lastPlayed;
 	}
 	
 	/**
@@ -98,9 +101,6 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements
 	 */
 	private volatile String backupFile = "";
 	
-	private String savedText = "";
-	private String playedText = "";
-	
 	private int infoBoxX, infoBoxY;
 	private int infoBoxWidth, infoBoxHeight;
 	private GuiButton backupAsZipButton;
@@ -108,19 +108,36 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements
 	private GuiButton downloadNowButton;
 	private GuiButton cancelButton;
 	
-	private static final String TITLE =
-			"The saved copy of the world may have been changed.";
+	/**
+	 * Time when the world was last saved / last played.
+	 */
+	private final long lastSaved, lastPlayed;
+	
+	private String title;
+	private String footer;
+	private String captionTitle;
+	private String captionSubtitle;
+	
+	private String backingUpTitle;
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui() {
 		backingUp = false;
 		
-		infoBoxWidth = fontRendererObj.getStringWidth(TITLE);
+		title = I18n.format("wdl.gui.overwriteChanges.title");
+		footer = I18n.format("wdl.gui.overwriteChanges.footer", lastSaved, lastPlayed);
+		captionTitle = I18n.format("wdl.gui.overwriteChanges.captionTitle");
+		captionSubtitle = I18n.format("wdl.gui.overwriteChanges.captionSubtitle");
+		
+		backingUpTitle = I18n.format("wdl.gui.overwriteChanges.backingUp.title");
+		
+		infoBoxWidth = fontRendererObj.getStringWidth(captionTitle);
 		infoBoxHeight = 22 * 5;
 		
-		// Future compatibility -- TITLE may be far shorter
-		// if i18n is ever setup.
+		// Ensure that the infobox is wide enough for the buttons.
+		// While the default caption title is short enough, a translation may
+		// make it too short (Chinese, for example).
 		if (infoBoxWidth < 200) {
 			infoBoxWidth = 200;
 		}
@@ -132,19 +149,19 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements
 		int y = infoBoxY + 22;
 		
 		backupAsZipButton = new GuiButton(0, x, y,
-				"Backup as zip (then start download)");
+				I18n.format("wdl.gui.overwriteChanges.asZip.name"));
 		this.buttonList.add(backupAsZipButton);
 		y += 22;
 		backupAsFolderButton = new GuiButton(1, x, y,
-				"Backup folder (then start download)");
+				I18n.format("wdl.gui.overwriteChanges.asFolder.name"));
 		this.buttonList.add(backupAsFolderButton);
 		y += 22;
 		downloadNowButton = new GuiButton(2, x, y,
-				"Allow overwriting (start download now)");
+				I18n.format("wdl.gui.overwriteChanges.startNow.name"));
 		this.buttonList.add(downloadNowButton);
 		y += 22;
 		cancelButton = new GuiButton(3, x, y,
-				"Cancel (don't start download)");
+				I18n.format("wdl.gui.overwriteChanges.cancel.name"));
 		this.buttonList.add(cancelButton);
 		
 		super.initGui();
@@ -191,13 +208,14 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements
 		if (this.backingUp) {
 			drawBackground(0);
 			
-			drawCenteredString(fontRendererObj, "Backing up the world...",
+			drawCenteredString(fontRendererObj, backingUpTitle,
 					width / 2, height / 4 - 40, 0xFFFFFF);
 			drawCenteredString(fontRendererObj, backupData,
 					width / 2, height / 4 - 10, 0xFFFFFF);
 			if (backupFile != null) {
-				String text = backupCurrent + " / " + backupCount + " ("
-						+ backupFile + ")";
+				String text = I18n.format(
+						"wdl.gui.overwriteChanges.backingUp.progress",
+						backupCurrent, backupCount, backupFile);
 				drawCenteredString(fontRendererObj, text, width / 2,
 						height / 4 + 10, 0xFFFFFF);
 			}
@@ -205,42 +223,29 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements
 			drawDefaultBackground();
 			Utils.drawBorder(32, 22, 0, 0, height, width);
 			
-			drawCenteredString(fontRendererObj,
-					"WorldDownloader: Overwrite changes?", width / 2, 8,
-					0xFFFFFF);
-			drawCenteredString(fontRendererObj, "Last downloaded at " + savedText
-					+ ", last played at " + playedText,
-					width / 2, height - 8 - fontRendererObj.FONT_HEIGHT, 0xFFFFFF);
+			drawCenteredString(fontRendererObj, title, width / 2, 8, 0xFFFFFF);
+			drawCenteredString(fontRendererObj, footer, width / 2, height - 8
+					- fontRendererObj.FONT_HEIGHT, 0xFFFFFF);
 			
 			drawRect(infoBoxX - 5, infoBoxY - 5, infoBoxX + infoBoxWidth + 5,
 					infoBoxY + infoBoxHeight + 5, 0xB0000000);
 			
-			drawCenteredString(fontRendererObj, TITLE, width / 2, infoBoxY,
-					0xFFFFFF);
-			drawCenteredString(fontRendererObj,
-					"Changes may be lost if not backed up.", width / 2,
+			drawCenteredString(fontRendererObj, captionTitle, width / 2,
+					infoBoxY, 0xFFFFFF);
+			drawCenteredString(fontRendererObj, captionSubtitle, width / 2,
 					infoBoxY + fontRendererObj.FONT_HEIGHT, 0xFFFFFF);
 			
 			super.drawScreen(mouseX, mouseY, partialTicks);
 			
 			String tooltip = null;
 			if (backupAsZipButton.isMouseOver()) {
-				tooltip = "Creates a .zip folder in the saves folder.\n\n" +
-						"This backup can't be played in game unless extracted, " +
-						"but is useful if you just want to archive the changes.";
+				tooltip = I18n.format("wdl.gui.overwriteChanges.asZip.description");
 			} else if (backupAsFolderButton.isMouseOver()) {
-				tooltip = "Creates a copy of the existing world folder.\n\n" +
-						"This backup can be loaded in-game and will appear " +
-						"in the world list.";
+				tooltip = I18n.format("wdl.gui.overwriteChanges.asFolder.description");
 			} else if (downloadNowButton.isMouseOver()) {
-				tooltip = "Don't create any backup at all.\n\n" +
-						"§cAny changes made to the world will be overwritten.§r\n" +
-						"If you haven't made any changes you want to keep, " +
-						"this is the right option.";
+				tooltip = I18n.format("wdl.gui.overwriteChanges.startNow.description");
 			} else if (cancelButton.isMouseOver()) {
-				tooltip = "Don't start any download.\n\n" +
-						"Return to the sever.  You can manually make a " +
-						"backup or just not download for the moment.";
+				tooltip = I18n.format("wdl.gui.overwriteChanges.cancel.description");
 			}
 			
 			Utils.drawGuiInfoBox(tooltip, width, height, 48);
