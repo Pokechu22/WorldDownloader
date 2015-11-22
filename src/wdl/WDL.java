@@ -67,6 +67,7 @@ import net.minecraft.world.storage.SaveHandler;
 import net.minecraft.world.storage.ThreadedFileIOBase;
 import wdl.WorldBackup.WorldBackupType;
 import wdl.api.ISaveListener;
+import wdl.api.ITileEntityEditor;
 import wdl.api.IWDLMessageType;
 import wdl.api.IWDLMod;
 import wdl.api.WDLApi;
@@ -220,10 +221,15 @@ public class WDL {
 	private static boolean addedAPIHandlers = false;
 	
 	/**
-	 * All WDLMods that implement {@link ISaveListener}.
+	 * All IWDLMods that implement {@link ISaveListener}.
 	 */
 	public static Map<String, ISaveListener> saveListeners =
 			new HashMap<String, ISaveListener>();
+	/**
+	 * All IWDLMods that implement {@link ITileEntityEditor}.
+	 */
+	public static Map<String, ITileEntityEditor> tileEntityEditors =
+			new HashMap<String, ITileEntityEditor>();
 	
 	// Initialization:
 	static {
@@ -667,6 +673,42 @@ public class WDL {
 			return false;
 		}
 	}
+	
+	/**
+	 * Applies all registered {@link ITileEntityEditor}s to the given chunk.
+	 * 
+	 * Note: {@link #importTileEntities(Chunk)} must be called before this method.
+	 */
+	public static void editTileEntities(Chunk chunk) {
+		for (Map.Entry<String, ITileEntityEditor> editor : tileEntityEditors
+				.entrySet()) {
+			try {
+				@SuppressWarnings("unchecked")
+				Map<BlockPos, TileEntity> tileEntityMap = (Map<BlockPos, TileEntity>) chunk
+						.getTileEntityMap();
+				
+				for (Map.Entry<BlockPos, TileEntity> entry : tileEntityMap
+						.entrySet()) {
+					boolean imported = !newTileEntities.containsKey(entry.getKey());
+					if (editor.getValue().shouldEdit(entry.getValue(), imported)) {
+						TileEntity newTE = editor.getValue().editTileEntity(
+								entry.getValue(), imported);
+						entry.setValue(newTE);
+					}
+				}
+			} catch (Exception ex) {
+				String chunkInfo;
+				if (chunk == null) {
+					chunkInfo = "null";
+				} else {
+					chunkInfo = "at " + chunk.xPosition + ", " + chunk.zPosition;
+				}
+				throw new RuntimeException("Failed to update tile entities "
+						+ "for chunk " + chunkInfo + " with extension "
+						+ editor.getKey(), ex);
+			}
+		}
+	}
 
 	/**
 	 * Saves all remaining chunks, world info and player info. Usually called
@@ -968,11 +1010,16 @@ public class WDL {
 	public static void saveChunk(Chunk c) {
 		if (!WDLPluginChannels.canDownloadInGeneral()) { return; }
 		
-		if (!WDLPluginChannels.canDownloadInGeneral()) {
+		if (!WDLPluginChannels.canSaveTileEntities()) {
 			c.getTileEntityMap().clear();
 		}
 		
 		importTileEntities(c);
+		
+		if (WDLPluginChannels.canSaveTileEntities()) {
+			editTileEntities(c);
+		}
+		
 		c.setTerrainPopulated(true);
 
 		try {
