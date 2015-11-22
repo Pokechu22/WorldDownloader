@@ -7,7 +7,8 @@ import java.util.Map;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.event.ClickEvent;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.event.ClickEvent.Action;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import wdl.WDL;
 import wdl.WDLMessages;
@@ -54,68 +55,48 @@ public class WDLUpdateChecker extends Thread {
 			if (!WDL.globalProps.getProperty("TutorialShown").equals("true")) {
 				sleep(5000);
 				
-				ChatComponentText usageMsg = new ChatComponentText(
-						"For information on how to use this mod, please see the ");
-				ChatComponentText forumsLink = new ChatComponentText(
-						"Official MinecraftForums thread");
-				forumsLink.getChatStyle().setColor(EnumChatFormatting.BLUE)
-						.setUnderlined(true)
-						.setChatClickEvent(
-								new ClickEvent(ClickEvent.Action.OPEN_URL,
-										FORUMS_THREAD_USAGE_LINK));
-				ChatComponentText period = new ChatComponentText(".");
-				usageMsg.appendSibling(forumsLink);
-				usageMsg.appendSibling(period);
-				ChatComponentText contributeMsg = new ChatComponentText(
-						"To report a bug, suggest a feature, contribute code, " +
-								"or help translate, check out ");
-				ChatComponentText githubLink = new ChatComponentText(
-						"the GitHub repository");
-				githubLink.getChatStyle().setColor(EnumChatFormatting.BLUE)
-						.setUnderlined(true)
-						.setChatClickEvent(
-								new ClickEvent(ClickEvent.Action.OPEN_URL,
-										GITHUB_LINK));
-				contributeMsg.appendSibling(githubLink);
-				contributeMsg.appendSibling(period);
-				
-				ChatComponentText stolenContentMsg = new ChatComponentText("");
-				ChatComponentText stolenContentWarning = new ChatComponentText(
-						"WARNING");
-				stolenContentWarning.getChatStyle()
-						.setColor(EnumChatFormatting.DARK_RED).setBold(true);
-				ChatComponentText stolenContentBody = new ChatComponentText( 
-						": If you downloaded this mod from a " +
-						"location other than the Minecraft Forums or github, " +
-						"you may have used a site that is ");
-				ChatComponentText stolenContentIllegally = new ChatComponentText(
-						"ILLEGALLY");
-				stolenContentIllegally.getChatStyle()
-						.setColor(EnumChatFormatting.DARK_RED).setBold(true);
-				ChatComponentText stolenContentRedistributing = new ChatComponentText(
-						" redistributing this mod.");
-				ChatComponentText stolenContentInfo = new ChatComponentText(
-						"Beware of such sites, " +
-						"as they can include malware.  ");
-				ChatComponentText stolenContentLink = new ChatComponentText(
-						"More information here");
-				stolenContentLink.getChatStyle().setColor(EnumChatFormatting.BLUE)
+				ChatComponentTranslation success = new ChatComponentTranslation(
+						"wdl.intro.success");
+				ChatComponentTranslation mcfThread = new ChatComponentTranslation(
+						"wdl.intro.forumsLink");
+				mcfThread.getChatStyle().setColor(EnumChatFormatting.BLUE)
 						.setUnderlined(true).setChatClickEvent(
-								new ClickEvent(ClickEvent.Action.OPEN_URL,
+								new ClickEvent(Action.OPEN_URL,
+										FORUMS_THREAD_USAGE_LINK));
+				ChatComponentTranslation usage = new ChatComponentTranslation(
+						"wdl.intro.usage", mcfThread);
+				ChatComponentTranslation githubRepo = new ChatComponentTranslation(
+						"wdl.intro.githubRepo");
+				githubRepo.getChatStyle().setColor(EnumChatFormatting.BLUE)
+						.setUnderlined(true).setChatClickEvent(
+								new ClickEvent(Action.OPEN_URL,
+										GITHUB_LINK));
+				ChatComponentTranslation contribute = new ChatComponentTranslation(
+						"wdl.intro.contribute", githubRepo);
+				ChatComponentTranslation warning = new ChatComponentTranslation(
+						"wdl.intro.warning");
+				warning.getChatStyle().setColor(EnumChatFormatting.DARK_RED)
+						.setBold(true);
+				ChatComponentTranslation illegally = new ChatComponentTranslation(
+						"wdl.intro.illegally");
+				illegally.getChatStyle().setColor(EnumChatFormatting.DARK_RED)
+						.setBold(true);
+				ChatComponentTranslation stolen = new ChatComponentTranslation(
+						"wdl.intro.stolen", warning, illegally);
+				ChatComponentTranslation smr = new ChatComponentTranslation(
+						"wdl.intro.stopModReposts");
+				smr.getChatStyle().setColor(EnumChatFormatting.BLUE)
+						.setUnderlined(true).setChatClickEvent(
+								new ClickEvent(Action.OPEN_URL,
 										SMR_LINK));
-				stolenContentMsg.appendSibling(stolenContentWarning);
-				stolenContentMsg.appendSibling(stolenContentBody);
-				stolenContentMsg.appendSibling(stolenContentIllegally);
-				stolenContentMsg.appendSibling(stolenContentRedistributing);
-				stolenContentInfo.appendSibling(stolenContentLink);
-				stolenContentInfo.appendSibling(period);
+				ChatComponentTranslation stolenBeware = new ChatComponentTranslation(
+						"wdl.intro.stolenBeware", smr);
 				
-				WDLMessages.chatMessage(mainMessageType,
-						"The WorldDownloader mod has been successfully installed!");
-				WDLMessages.chatMessage(mainMessageType, usageMsg);
-				WDLMessages.chatMessage(mainMessageType, contributeMsg);
-				WDLMessages.chatMessage(mainMessageType, stolenContentMsg);
-				WDLMessages.chatMessage(mainMessageType, stolenContentInfo);
+				WDLMessages.chatMessage(mainMessageType, success);
+				WDLMessages.chatMessage(mainMessageType, usage);
+				WDLMessages.chatMessage(mainMessageType, contribute);
+				WDLMessages.chatMessage(mainMessageType, stolen);
+				WDLMessages.chatMessage(mainMessageType, stolenBeware);
 				
 				WDL.globalProps.setProperty("TutorialShown", "true");
 				WDL.saveGlobalProps();

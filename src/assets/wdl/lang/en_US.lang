@@ -233,3 +233,15 @@ wdl.saveProgress.backingUp.title.zip=Backing up the world (creating zip)
 wdl.saveProgress.backingUp.title.folder=Backing up the world (copying folder)
 wdl.saveProgress.backingUp.preparing=Preparing...
 wdl.saveProgress.backingUp.file=Copying %s
+
+#Some of these messages are using format substitutions, so that special coloring can be added.
+wdl.intro.success=The WorldDownloader mod has been successfully installed!
+wdl.intro.usage=For information on how to use this mod, please see the %s.
+wdl.intro.forumsLink=Official MinecraftForums thread
+wdl.intro.contribute=To report a bug, suggest a feature, contribute code, or help translate, check out %s.
+wdl.intro.githubRepo=GitHub repository
+wdl.intro.stolen=%s: If you downloaded this mod from a location other than the Minecraft Forums or GitHub, you may have used a site that is %s redistributing this mod.
+wdl.intro.warning=WARNING
+wdl.intro.illegally=ILLEGALLY
+wdl.intro.stolenBeware=Beware of such sites, as they can include malware.  %s
+wdl.intro.stopModReposts=More information: StopModReposts!
