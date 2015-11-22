@@ -36,7 +36,8 @@ public class WDLApi {
 	 * @param te The TileEntity to save.
 	 */
 	public static void saveTileEntity(BlockPos pos, TileEntity te) {
-		if (!WDLPluginChannels.canSaveTileEntities()) {
+		if (!WDLPluginChannels.canSaveTileEntities(pos.getX() << 16,
+				pos.getZ() << 16)) {
 			logger.warn("API attempted to call saveTileEntity when " +
 					"saving TileEntities is not allowed!  Pos: " + pos +
 					", te: " + te + ".  StackTrace: ");

@@ -979,7 +979,7 @@ public class WDL {
 			ClassInheratanceMultiMap[] oldMaps = c.getEntityLists().clone();
 			ClassInheratanceMultiMap[] maps = c.getEntityLists();
 			
-			if (!WDLPluginChannels.canSaveEntities()) {
+			if (!WDLPluginChannels.canSaveEntities(c)) {
 				// Temporarily delete entities if saving them is disabled.
 				for (int i = 0; i < maps.length; i++) {
 					WrappedClassInheratanceMultiMap<Entity> map =

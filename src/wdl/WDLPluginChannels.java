@@ -128,11 +128,16 @@ public class WDLPluginChannels {
 			return canUseFunctionsUnknownToServer();
 		}
 	}
+	
 	/**
 	 * Checks if a chunk is within the saveRadius 
 	 * (and chunk caching is disabled).
 	 */
 	public static boolean canSaveChunk(Chunk chunk) {
+		if (isChunkOverridden(chunk)) {
+			return true;
+		}
+		
 		if (!canDownloadInGeneral()) {
 			return false;
 		}
@@ -153,6 +158,7 @@ public class WDLPluginChannels {
 			return canUseFunctionsUnknownToServer();
 		}
 	}
+	
 	/**
 	 * Checks whether entities are allowed to be saved.
 	 */
@@ -167,6 +173,29 @@ public class WDLPluginChannels {
 			return canUseFunctionsUnknownToServer();
 		}
 	}
+	
+	/**
+	 * Checks whether entities are allowed to be saved in the given chunk.
+	 */
+	public static boolean canSaveEntities(Chunk chunk) {
+		if (isChunkOverridden(chunk)) {
+			return true;
+		}
+		
+		return canSaveEntities();
+	}
+	
+	/**
+	 * Checks whether entities are allowed to be saved in the given chunk.
+	 */
+	public static boolean canSaveEntities(int chunkX, int chunkZ) {
+		if (isChunkOverridden(chunkX, chunkZ)) {
+			return true;
+		}
+		
+		return canSaveEntities();
+	}
+	
 	/**
 	 * Checks whether a player can save tile entities.
 	 */
@@ -181,6 +210,29 @@ public class WDLPluginChannels {
 			return canUseFunctionsUnknownToServer();
 		}
 	}
+	
+	/**
+	 * Checks whether a player can save tile entities in the given chunk.
+	 */
+	public static boolean canSaveTileEntities(Chunk chunk) {
+		if (isChunkOverridden(chunk)) {
+			return true;
+		}
+		
+		return canSaveTileEntities();
+	}
+	
+	/**
+	 * Checks whether a player can save tile entities in the given chunk.
+	 */
+	public static boolean canSaveTileEntities(int chunkX, int chunkZ) {
+		if (isChunkOverridden(chunkX, chunkZ)) {
+			return true;
+		}
+		
+		return canSaveTileEntities();
+	}
+	
 	/**
 	 * Checks whether containers (such as chests) can be saved.
 	 */
@@ -197,6 +249,29 @@ public class WDLPluginChannels {
 			return canUseFunctionsUnknownToServer();
 		}
 	}
+	
+	/**
+	 * Checks whether containers (such as chests) can be saved.
+	 */
+	public static boolean canSaveContainers(Chunk chunk) {
+		if (isChunkOverridden(chunk)) {
+			return true;
+		}
+		
+		return canSaveContainers();
+	}
+	
+	/**
+	 * Checks whether containers (such as chests) can be saved.
+	 */
+	public static boolean canSaveContainers(int chunkX, int chunkZ) {
+		if (isChunkOverridden(chunkX, chunkZ)) {
+			return true;
+		}
+		
+		return canSaveContainers();
+	}
+	
 	/**
 	 * Checks whether maps (the map item, not the world itself) can be saved.
 	 */
@@ -219,7 +294,7 @@ public class WDLPluginChannels {
 	 * @return The entity's range, or -1 if no data was recieved.
 	 */
 	public static int getEntityRange(String entity) {
-		if (!canSaveEntities()) {
+		if (!canSaveEntities(null)) {
 			return -1;
 		}
 		if (receivedPackets.contains(2)) {
@@ -294,6 +369,34 @@ public class WDLPluginChannels {
 		}
 	}
 	
+	/**
+	 * Is the given chunk part of a chunk override?
+	 */
+	public static boolean isChunkOverridden(Chunk chunk) {
+		if (chunk == null) {
+			return false;
+		}
+		
+		return isChunkOverridden(chunk.xPosition, chunk.zPosition);
+	}
+	/**
+	 * Is the given chunk location part of a chunk override?
+	 */
+	public static boolean isChunkOverridden(int x, int z) {
+		for (Multimap<String, ChunkRange> map : chunkOverrides.values()) {
+			for (ChunkRange range : map.values()) {
+				if (x >= range.x1 &&
+						x <= range.x2 &&
+						z >= range.z1 &&
+						z <= range.z2) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+
 	/**
 	 * Event that is called when the world is loaded.
 	 * Sets the default values, and then asks the server to give the

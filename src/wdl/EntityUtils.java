@@ -400,10 +400,6 @@ public class EntityUtils {
 	 * @return
 	 */
 	public static boolean isEntityEnabled(String type) {
-		if (!WDLPluginChannels.canSaveEntities()) {
-			return false; //Shouldn't get here, but an extra check.
-		}
-		
 		boolean groupEnabled = WDL.worldProps.getProperty("EntityGroup." +
 				getEntityGroup(type) + ".Enabled", "true").equals("true");
 		boolean singleEnabled = WDL.worldProps.getProperty("Entity." +

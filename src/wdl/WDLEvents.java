@@ -169,7 +169,11 @@ public class WDLEvents {
 
 				//Intentional reference equals
 				if (horseInContainer == WDL.thePlayer.ridingEntity) {
-					if (!WDLPluginChannels.canSaveEntities()) {
+					if (!WDLPluginChannels.canSaveEntities(
+							horseInContainer.chunkCoordX,
+							horseInContainer.chunkCoordZ)) {
+						//I'm not 100% sure the chunkCoord stuff will have been
+						//set up at this point.  Might cause bugs.
 						WDL.chatMessage(WDLMessageTypes.ON_GUI_CLOSED_INFO,
 								"Server configuration forbids saving of Entities!");
 						return true;
@@ -204,7 +208,8 @@ public class WDLEvents {
 
 		// If the last thing clicked was an ENTITY
 		if (WDL.lastEntity != null) {
-			if (!WDLPluginChannels.canSaveEntities()) {
+			if (!WDLPluginChannels.canSaveEntities(WDL.lastEntity.chunkCoordX,
+					WDL.lastEntity.chunkCoordZ)) {
 				WDL.chatMessage(WDLMessageTypes.ON_GUI_CLOSED_INFO,
 						"Server configuration forbids saving of Entities!");
 				return true;
@@ -268,19 +273,22 @@ public class WDLEvents {
 		}
 
 		// Else, the last thing clicked was a TILE ENTITY
-		if (!WDLPluginChannels.canSaveContainers()) {
-			WDL.chatMessage(WDLMessageTypes.ON_GUI_CLOSED_INFO,
-					"Server configuration forbids saving of TileEntities!");
-			return true;
-		}
-
+		
 		// Get the tile entity which we are going to update the inventory for
 		TileEntity te = WDL.worldClient.getTileEntity(WDL.lastClickedBlock);
-
+		
 		if (te == null) {
 			//TODO: Is this a good way to stop?  Is the event truely handled here?
 			WDL.chatMessage(WDLMessageTypes.ON_GUI_CLOSED_WARNING,
 					"onItemGuiClosed could not get TE at " + WDL.lastClickedBlock);
+			return true;
+		}
+		
+		//Permissions check.
+		if (!WDLPluginChannels.canSaveContainers(te.getPos().getX() << 4, te
+				.getPos().getZ() << 4)) {
+			WDL.chatMessage(WDLMessageTypes.ON_GUI_CLOSED_INFO,
+					"Server configuration forbids saving of TileEntities!");
 			return true;
 		}
 
@@ -433,7 +441,8 @@ public class WDLEvents {
 			int param) {
 		if (!WDL.downloading) { return; }
 		
-		if (!WDLPluginChannels.canSaveTileEntities()) {
+		if (!WDLPluginChannels.canSaveTileEntities(pos.getX() << 4,
+				pos.getZ() << 4)) {
 			return;
 		}
 		if (block == Blocks.noteblock) {
@@ -483,7 +492,9 @@ public class WDLEvents {
 		// Proper tracking ranges can be found in EntityTracker#trackEntity
 		// (the one that takes an Entity as a paremeter) -- it's the 2nd arg
 		// given to addEntityToTracker.
-		if (WDL.downloading && WDLPluginChannels.canSaveEntities()) {
+		if (WDL.downloading
+				&& WDLPluginChannels.canSaveEntities(entity.chunkCoordX,
+						entity.chunkCoordZ)) {
 			if (entity != null) {
 				if (!EntityUtils.isEntityEnabled(entity)) {
 					WDLMessages.chatMessageTranslated(
