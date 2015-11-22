@@ -38,6 +38,7 @@ public class WDLUpdateChecker extends Thread {
 	
 	private static final String FORUMS_THREAD_USAGE_LINK = "http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465#Usage";
 	private static final String GITHUB_LINK = "https://github.com/pokechu22/WorldDownloader";
+	private static final String SMR_LINK = "http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/mods-discussion/2314237";
 	
 	private WDLUpdateChecker(IWDLMessageType mainMessageType,
 			IWDLMessageType debugMessageType) {
@@ -78,12 +79,43 @@ public class WDLUpdateChecker extends Thread {
 				contributeMsg.appendSibling(githubLink);
 				contributeMsg.appendSibling(period);
 				
+				ChatComponentText stolenContentMsg = new ChatComponentText("");
+				ChatComponentText stolenContentWarning = new ChatComponentText(
+						"WARNING");
+				stolenContentWarning.getChatStyle()
+						.setColor(EnumChatFormatting.DARK_RED).setBold(true);
+				ChatComponentText stolenContentBody = new ChatComponentText( 
+						": If you downloaded this mod from a " +
+						"location other than the Minecraft Forums or github, " +
+						"you may have used a site that is ");
+				ChatComponentText stolenContentIllegally = new ChatComponentText(
+						"ILLEGALLY");
+				stolenContentIllegally.getChatStyle()
+						.setColor(EnumChatFormatting.DARK_RED).setBold(true);
+				ChatComponentText stolenContentRedistributing = new ChatComponentText(
+						" redistributing this mod.");
+				ChatComponentText stolenContentInfo = new ChatComponentText(
+						"Beware of such sites, " +
+						"as they can include malware.  ");
+				ChatComponentText stolenContentLink = new ChatComponentText(
+						"More information here");
+				stolenContentLink.getChatStyle().setColor(EnumChatFormatting.BLUE)
+						.setUnderlined(true).setChatClickEvent(
+								new ClickEvent(ClickEvent.Action.OPEN_URL,
+										SMR_LINK));
+				stolenContentMsg.appendSibling(stolenContentWarning);
+				stolenContentMsg.appendSibling(stolenContentBody);
+				stolenContentMsg.appendSibling(stolenContentIllegally);
+				stolenContentMsg.appendSibling(stolenContentRedistributing);
+				stolenContentInfo.appendSibling(stolenContentLink);
+				stolenContentInfo.appendSibling(period);
+				
 				WDLMessages.chatMessage(mainMessageType,
 						"The WorldDownloader mod has been successfully installed!");
 				WDLMessages.chatMessage(mainMessageType, usageMsg);
 				WDLMessages.chatMessage(mainMessageType, contributeMsg);
-				WDLMessages.chatMessage(mainMessageType,
-						"Note: If you downloaded this mod from a location other than the Minecraft Forums or github, you may have been exposed to malware.");
+				WDLMessages.chatMessage(mainMessageType, stolenContentMsg);
+				WDLMessages.chatMessage(mainMessageType, stolenContentInfo);
 				
 				WDL.globalProps.setProperty("TutorialShown", "true");
 				WDL.saveGlobalProps();
