@@ -66,6 +66,7 @@ import net.minecraft.world.storage.MapData;
 import net.minecraft.world.storage.SaveHandler;
 import net.minecraft.world.storage.ThreadedFileIOBase;
 import wdl.WorldBackup.WorldBackupType;
+import wdl.api.IEntityEditor;
 import wdl.api.ISaveListener;
 import wdl.api.ITileEntityEditor;
 import wdl.api.IWDLMessageType;
@@ -230,6 +231,11 @@ public class WDL {
 	 */
 	public static Map<String, ITileEntityEditor> tileEntityEditors =
 			new HashMap<String, ITileEntityEditor>();
+	/**
+	 * All IWDLMods that implement {@link IEntityEditor}.
+	 */
+	public static Map<String, IEntityEditor> entityEditors =
+			new HashMap<String, IEntityEditor>();
 	
 	// Initialization:
 	static {
@@ -1113,6 +1119,25 @@ public class WDL {
 					e.posX = convertServerPos(e.serverPosX);
 					e.posY = convertServerPos(e.serverPosY);
 					e.posZ = convertServerPos(e.serverPosZ);
+					
+					for (Map.Entry<String, IEntityEditor> editor : entityEditors
+							.entrySet()) {
+						try {
+							if (editor.getValue().shouldEdit(e)) {
+								editor.getValue().editEntity(e);
+							}
+						} catch (Exception ex) {
+							String chunkInfo;
+							if (c == null) {
+								chunkInfo = "null";
+							} else {
+								chunkInfo = "at " + c.xPosition + ", " + c.zPosition;
+							}
+							throw new RuntimeException("Failed to edit entity " + e
+									+ " for chunk " + chunkInfo + " with extension "
+									+ editor.getKey(), ex);
+						}
+					}
 				}
 			}
 			

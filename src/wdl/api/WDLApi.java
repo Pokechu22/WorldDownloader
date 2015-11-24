@@ -100,6 +100,9 @@ public class WDLApi {
 		if (mod instanceof ITileEntityEditor) {
 			WDL.tileEntityEditors.put(modName, (ITileEntityEditor) mod);
 		}
+		if (mod instanceof IEntityEditor) {
+			WDL.entityEditors.put(modName, (IEntityEditor) mod);
+		}
 		if (mod instanceof ISaveListener) {
 			WDL.saveListeners.put(modName, (ISaveListener) mod);
 		}
