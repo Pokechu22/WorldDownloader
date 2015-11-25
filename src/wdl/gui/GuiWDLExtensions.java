@@ -15,6 +15,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import wdl.api.IWDLMod;
 import wdl.api.IWDLModDescripted;
+import wdl.api.IWDLModWithGui;
 import wdl.api.WDLApi;
 
 /**
@@ -60,14 +61,14 @@ public class GuiWDLExtensions extends GuiScreen {
 	private class ModList extends GuiListExtended {
 		public ModList() {
 			super(GuiWDLExtensions.this.mc, GuiWDLExtensions.this.width,
-					bottomLocation, TOP_HEIGHT, bottomLocation, 20);
+					bottomLocation, TOP_HEIGHT, bottomLocation, 22);
 			this.showSelectionBox = true;
 		}
 		
 		private class ModEntry implements IGuiListEntry {
-			@SuppressWarnings("unused")
 			public final IWDLMod mod;
 			private final String modDesc;
+			private GuiButton button;
 			
 			public ModEntry(IWDLMod mod) {
 				this.mod = mod;
@@ -82,11 +83,23 @@ public class GuiWDLExtensions extends GuiScreen {
 				}
 				this.modDesc = I18n.format("wdl.gui.extensions.modVersion",
 						name, mod.getVersion());
+				
+				if (mod instanceof IWDLModWithGui) {
+					button = new GuiButton(0, 0, 0, 80, 20,
+							((IWDLModWithGui) mod).getButtonName());
+				}
 			}
 			
 			@Override
 			public void drawEntry(int slotIndex, int x, int y, int listWidth,
 					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
+				if (button != null) {
+					button.xPosition = GuiWDLExtensions.this.width - 92;
+					button.yPosition = y - 1;
+					
+					button.drawButton(mc, mouseX, mouseY);
+				}
+				
 				int centerY = y + slotHeight / 2
 						- fontRendererObj.FONT_HEIGHT / 2;
 				fontRendererObj.drawString(modDesc, x, centerY, 0xFFFFFF);
@@ -95,6 +108,16 @@ public class GuiWDLExtensions extends GuiScreen {
 			@Override
 			public boolean mousePressed(int slotIndex, int x, int y,
 					int mouseEvent, int relativeX, int relativeY) {
+				if (button != null) {
+					if (button.mousePressed(mc, x, y)) {
+						if (mod instanceof IWDLModWithGui) {
+							((IWDLModWithGui) mod).openGui(GuiWDLExtensions.this);
+						}
+						
+						button.playPressSound(mc.getSoundHandler());
+					}
+				}
+				
 				if (selectedMod != slotIndex) {
 					selectedMod = slotIndex;
 					
@@ -111,6 +134,7 @@ public class GuiWDLExtensions extends GuiScreen {
 			@Override
 			public void mouseReleased(int slotIndex, int x, int y,
 					int mouseEvent, int relativeX, int relativeY) {
+				button.mouseReleased(x, y);
 			}
 
 			@Override
