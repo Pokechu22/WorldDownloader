@@ -238,6 +238,7 @@ public class GuiWDLPermissions extends GuiScreen {
 			
 			this.parent = parent;
 			
+			//TODO: This should be an I18n key.
 			this.slider = new GuiSlider(0, 0, 0, 120, 20, "Save radius", 0, 32);
 			slider.visible = requestMode;
 			

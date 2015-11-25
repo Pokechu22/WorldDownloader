@@ -10,6 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
 import wdl.EntityUtils;
 import wdl.WDL;
 import wdl.WDLPluginChannels;
@@ -83,7 +84,7 @@ public class GuiWDLEntities extends GuiScreen {
 						+ group + ".Enabled", "true").equals("true");
 				
 				this.enableGroupButton = new GuiButton(0, 0, 0, 90, 18, 
-						groupEnabled ? "§aEnabled" : "§cAll disabled");
+						getButtonText());
 			}
 
 			@Override
@@ -95,8 +96,7 @@ public class GuiWDLEntities extends GuiScreen {
 				
 				this.enableGroupButton.xPosition = x + 110;
 				this.enableGroupButton.yPosition = y;
-				this.enableGroupButton.displayString = groupEnabled ? "§aEnabled"
-						: "§cAll disabled";
+				this.enableGroupButton.displayString = getButtonText();
 				
 				this.enableGroupButton.drawButton(mc, mouseX, mouseY);
 			}
@@ -109,8 +109,7 @@ public class GuiWDLEntities extends GuiScreen {
 					
 					enableGroupButton.playPressSound(mc.getSoundHandler());
 					
-					this.enableGroupButton.displayString = 
-							groupEnabled ? "§aEnabled" : "§cAll disabled";
+					this.enableGroupButton.displayString = getButtonText();
 					
 					WDL.worldProps.setProperty("EntityGroup." + group
 							+ ".Enabled", Boolean.toString(groupEnabled));
@@ -131,6 +130,17 @@ public class GuiWDLEntities extends GuiScreen {
 			
 			boolean isGroupEnabled() {
 				return groupEnabled;
+			}
+			
+			/**
+			 * Gets the text for the on/off button.
+			 */
+			private String getButtonText() {
+				if (groupEnabled) {
+					return I18n.format("wdl.gui.entities.group.enabled");
+				} else {
+					return I18n.format("wdl.gui.entities.group.disabled");
+				}
 			}
 		}
 		
@@ -160,12 +170,12 @@ public class GuiWDLEntities extends GuiScreen {
 						".Enabled", "true").equals("true");
 				range = EntityUtils.getEntityTrackDistance(entity);
 				
-				this.onOffButton = new GuiButton(0, 0, 0, 75, 18, 
-						entityEnabled ? "§aIncluded" : "§cIgnored");
+				this.onOffButton = new GuiButton(0, 0, 0, 75, 18,
+						getButtonText());
 				this.onOffButton.enabled = category.isGroupEnabled();
 				
 				this.rangeSlider = new GuiSlider(1, 0, 0, 150, 18,
-						"Track Distance", range, 256);
+						"wdl.gui.entities.trackDistance", range, 256);
 				
 				this.cachedMode = mode;
 				
@@ -186,9 +196,7 @@ public class GuiWDLEntities extends GuiScreen {
 				this.onOffButton.xPosition = center;
 				this.onOffButton.yPosition = y;
 				this.onOffButton.enabled = category.isGroupEnabled();
-				this.onOffButton.displayString = 
-						onOffButton.enabled && entityEnabled ? 
-								"§aIncluded" : "§cIgnored";
+				this.onOffButton.displayString = getButtonText();
 				
 				this.rangeSlider.xPosition = center + 85;
 				this.rangeSlider.yPosition = y;
@@ -212,9 +220,7 @@ public class GuiWDLEntities extends GuiScreen {
 					entityEnabled ^= true;
 					
 					onOffButton.playPressSound(mc.getSoundHandler());
-					
-					this.onOffButton.displayString = 
-							entityEnabled ? "§aIncluded" : "§cIgnored";
+					onOffButton.displayString = getButtonText();
 					
 					WDL.worldProps.setProperty("Entity." + entity + 
 							".Enabled", Boolean.toString(entityEnabled));
@@ -250,6 +256,17 @@ public class GuiWDLEntities extends GuiScreen {
 			@Override
 			public void setSelected(int p_178011_1_, int p_178011_2_,
 					int p_178011_3_) {
+			}
+			
+			/**
+			 * Gets the text for the on/off button.
+			 */
+			private String getButtonText() {
+				if (category.isGroupEnabled() && entityEnabled) {
+					return I18n.format("wdl.gui.entities.entity.included");
+				} else {
+					return I18n.format("wdl.gui.entities.entity.ignored");
+				}
 			}
 		}
 		
@@ -294,28 +311,13 @@ public class GuiWDLEntities extends GuiScreen {
 				this.height - 29, "OK"));
 		
 		rangeModeButton = new GuiButton(100, this.width / 2 - 155, 18, 150,
-				20, "Track distance: Error");
+				20, getRangeModeText());
 		presetsButton = new GuiButton(101, this.width / 2 + 5, 18, 150, 20, 
-				"Range presets...");
+				I18n.format("wdl.gui.entities.rangePresets"));
 		
 		this.mode = WDL.worldProps.getProperty("Entity.TrackDistanceMode");
-		if (mode.equals("default")) {
-			rangeModeButton.displayString = "Track distance: Default";
-			
-			presetsButton.enabled = false;
-		} else if (mode.equals("server")) {
-			if (WDLPluginChannels.hasServerEntityRange()) {
-				rangeModeButton.displayString = "Track distance: Server";
-			} else {
-				rangeModeButton.displayString = "Track distance: Default";
-			}
-			
-			presetsButton.enabled = false;
-		} else {
-			rangeModeButton.displayString = "Track distance: User";
-			
-			presetsButton.enabled = true;
-		}
+		
+		presetsButton.enabled = shouldEnablePresetsButton();
 		
 		this.buttonList.add(rangeModeButton);
 		this.buttonList.add(presetsButton);
@@ -335,37 +337,7 @@ public class GuiWDLEntities extends GuiScreen {
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if (button.id == 100) {
-			if (mode.equals("default")) {
-				if (WDLPluginChannels.hasServerEntityRange()) {
-					mode = "server";
-				} else {
-					mode = "user";
-				}
-			} else if (mode.equals("server")) {
-				mode = "user";
-			} else {
-				mode = "default";
-			}
-			
-			if (mode.equals("default")) {
-				rangeModeButton.displayString = "Track distance: Default";
-				
-				presetsButton.enabled = false;
-			} else if (mode.equals("server")) {
-				if (WDLPluginChannels.hasServerEntityRange()) {
-					rangeModeButton.displayString = "Track distance: Server";
-				} else {
-					rangeModeButton.displayString = "Track distance: Default";
-				}
-				
-				presetsButton.enabled = false;
-			} else {
-				rangeModeButton.displayString = "Track distance: User";
-				
-				presetsButton.enabled = true;
-			}
-			
-			WDL.worldProps.setProperty("Entity.TrackDistanceMode", mode);
+			cycleRangeMode();
 		}
 		if (button.id == 101 && button.enabled) {
 			mc.displayGuiScreen(new GuiWDLEntityRangePresets(this));
@@ -402,9 +374,48 @@ public class GuiWDLEntities extends GuiScreen {
 		this.drawDefaultBackground();
 		this.entityList.drawScreen(mouseX, mouseY, partialTicks);
 		
-		this.drawCenteredString(this.fontRendererObj, "Entity configuration",
-				this.width / 2, 8, 0xFFFFFF);
+		this.drawCenteredString(this.fontRendererObj,
+				I18n.format("wdl.gui.entities.title"), this.width / 2, 8,
+				0xFFFFFF);
 		
 		super.drawScreen(mouseX, mouseY, partialTicks);
+	}
+
+	/**
+	 * Cycles the range mode value.
+	 */
+	private void cycleRangeMode() {
+		if (mode.equals("default")) {
+			if (WDLPluginChannels.hasServerEntityRange()) {
+				mode = "server";
+			} else {
+				mode = "user";
+			}
+		} else if (mode.equals("server")) {
+			mode = "user";
+		} else {
+			mode = "default";
+		}
+		
+		WDL.worldProps.setProperty("Entity.TrackDistanceMode", mode);
+		
+		rangeModeButton.displayString = getRangeModeText();
+		presetsButton.enabled = shouldEnablePresetsButton();
+	}
+	
+	/**
+	 * Gets the text for the range mode button.
+	 */
+	private String getRangeModeText() {
+		String mode = WDL.worldProps.getProperty("Entity.TrackDistanceMode");
+		
+		return I18n.format("wdl.gui.entities.trackDistanceMode." + mode);
+	}
+	
+	/**
+	 * Is the current mode a mode where the presets button should be enabled?
+	 */
+	private boolean shouldEnablePresetsButton() {
+		return mode.equals("user");
 	}
 }

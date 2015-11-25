@@ -171,6 +171,17 @@ wdl.gui.overwriteChanges.backingUp.progress=%d / %d (%s)
 wdl.gui.overwriteChanges.backingUp.zip=Creating zip folder %s.
 wdl.gui.overwriteChanges.backingUp.folder=Copying world folder to %s.
 
+wdl.gui.entities.title=Entity configuration
+wdl.gui.entities.trackDistanceMode.default=Track Distance: Default
+wdl.gui.entities.trackDistanceMode.server=Track Distance: Server
+wdl.gui.entities.trackDistanceMode.user=Track Distance: User
+wdl.gui.entities.rangePresets=Range presets...
+wdl.gui.entities.entity.included=§aIncluded
+wdl.gui.entities.entity.ignored=§cIgnored
+wdl.gui.entities.group.enabled=§aEnabled
+wdl.gui.entities.group.disabled=§cAll disabled
+wdl.gui.entities.trackDistance=Track Distance: %d
+
 wdl.backup.none=No backup
 wdl.backup.folder=Copy world folder
 wdl.backup.zip=Zip a copy of a world

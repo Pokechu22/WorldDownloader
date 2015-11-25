@@ -18,6 +18,7 @@ import net.minecraft.client.gui.GuiUtilRenderComponents;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MathHelper;
 
@@ -279,9 +280,9 @@ class GuiSlider extends GuiButton {
 	private float sliderValue;
 	private boolean dragging;
 	/**
-	 * Text put before to the progress.
+	 * I18n key for this slider.
 	 */
-	private final String prepend;
+	private final String text;
 	/**
 	 * Maximum value for the slider.
 	 */
@@ -291,7 +292,7 @@ class GuiSlider extends GuiButton {
 			String text, int value, int max) {
 		super(id, x, y, width, height, text);
 		
-		this.prepend = text;
+		this.text = text;
 		this.max = max;
 		
 		setValue(value);
@@ -320,7 +321,7 @@ class GuiSlider extends GuiButton {
 						1.0F);
 				this.dragging = true;
 				
-				this.displayString = prepend + ": " + getValue();
+				this.displayString = I18n.format(text, getValue());
 			}
 
 			mc.getTextureManager().bindTexture(buttonTextures);
@@ -355,7 +356,7 @@ class GuiSlider extends GuiButton {
 					/ (float)(this.width - 8);
 			this.sliderValue = MathHelper.clamp_float(this.sliderValue, 0.0F,
 					1.0F);
-			this.displayString = prepend + ": " + getValue();
+			this.displayString = I18n.format(text, getValue());
 			
 			this.dragging = true;
 			return true;
@@ -379,7 +380,7 @@ class GuiSlider extends GuiButton {
 	public void setValue(int value) {
 		this.sliderValue = value / (float)max;
 		
-		this.displayString = prepend + ": " + getValue();
+		this.displayString = I18n.format(text, getValue());
 	}
 	
 	/**
