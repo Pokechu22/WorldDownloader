@@ -227,7 +227,8 @@ wdl.messages.removeEntity.notSavingUnsafe=saveChunk: Not saving %s (not safe to 
 
 wdl.messages.tileEntity.usingOld=Using old TE from saved file: %s at %s
 wdl.messages.tileEntity.usingNew=Using new TE: %s at %s
-wdl.messages.tileEntity.notImporting=Old TE does not need importing: %s at %s
+wdl.messages.tileEntity.notImporting=Old TE does not need importing: %s at %s 
+wdl.messages.tileEntity.edited=Edited TE at %s using %s
 
 wdl.messages.entityTypeAndCustomName=%s (named %s)
 

@@ -228,6 +228,22 @@ public class WDLApi {
 	}
 	
 	/**
+	 * Gets the name of the mod, using the display name if possible.
+	 */
+	public static String getModName(IWDLMod mod) {
+		String modName = mod.getName();
+		
+		if (mod instanceof IWDLModDescripted) {
+			String dname = ((IWDLModDescripted) mod).getDisplayName();
+			if (dname != null && !dname.isEmpty()) {
+				return dname;
+			}
+		}
+		
+		return modName;
+	}
+	
+	/**
 	 * Writes out the current stacktrace to the logger in warn mode.
 	 */
 	private static void logStackTrace() {

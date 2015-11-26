@@ -702,6 +702,11 @@ public class WDL {
 						TileEntity newTE = editor.getValue().editTileEntity(
 								entry.getValue(), imported);
 						entry.setValue(newTE);
+						
+						WDLMessages.chatMessageTranslated(
+								WDLMessageTypes.LOAD_TILE_ENTITY,
+								"wdl.messages.tileEntity.edited", 
+								entry.getKey(), WDLApi.getModName(editor.getValue()));
 					}
 				}
 			} catch (Exception ex) {
