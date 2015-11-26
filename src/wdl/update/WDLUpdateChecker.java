@@ -39,6 +39,7 @@ public class WDLUpdateChecker extends Thread {
 	
 	private static final String FORUMS_THREAD_USAGE_LINK = "http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465#Usage";
 	private static final String GITHUB_LINK = "https://github.com/pokechu22/WorldDownloader";
+	private static final String REDISTRIBUTION_LINK = "http://pokechu22.github.io/WorldDownloader/redistribution";
 	private static final String SMR_LINK = "http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/mods-discussion/2314237";
 	
 	private WDLUpdateChecker(IWDLMessageType mainMessageType,
@@ -73,6 +74,12 @@ public class WDLUpdateChecker extends Thread {
 										GITHUB_LINK));
 				ChatComponentTranslation contribute = new ChatComponentTranslation(
 						"wdl.intro.contribute", githubRepo);
+				ChatComponentTranslation redistributionList = new ChatComponentTranslation(
+						"wdl.intro.redistributionList");
+				redistributionList.getChatStyle().setColor(EnumChatFormatting.BLUE)
+						.setUnderlined(true).setChatClickEvent(
+								new ClickEvent(Action.OPEN_URL,
+										REDISTRIBUTION_LINK));
 				ChatComponentTranslation warning = new ChatComponentTranslation(
 						"wdl.intro.warning");
 				warning.getChatStyle().setColor(EnumChatFormatting.DARK_RED)
@@ -82,7 +89,7 @@ public class WDLUpdateChecker extends Thread {
 				illegally.getChatStyle().setColor(EnumChatFormatting.DARK_RED)
 						.setBold(true);
 				ChatComponentTranslation stolen = new ChatComponentTranslation(
-						"wdl.intro.stolen", warning, illegally);
+						"wdl.intro.stolen", warning, redistributionList, illegally);
 				ChatComponentTranslation smr = new ChatComponentTranslation(
 						"wdl.intro.stopModReposts");
 				smr.getChatStyle().setColor(EnumChatFormatting.BLUE)
