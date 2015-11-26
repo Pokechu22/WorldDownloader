@@ -225,6 +225,10 @@ wdl.messages.removeEntity.savingDistance=removeEntityFromWorld: Saving %s at dis
 wdl.messages.removeEntity.notSavingUserPreference=saveChunk: Not saving %s (User preference)
 wdl.messages.removeEntity.notSavingUnsafe=saveChunk: Not saving %s (not safe to save - %s)
 
+wdl.messages.tileEntity.usingOld=Using old TE from saved file: %s at %s
+wdl.messages.tileEntity.usingNew=Using new TE: %s at %s
+wdl.messages.tileEntity.notImporting=Old TE does not need importing: %s at %s
+
 wdl.messages.entityTypeAndCustomName=%s (named %s)
 
 wdl.unsafeReasons.badCustomName=Invalid custom name!  (Threw %s)

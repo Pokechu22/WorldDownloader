@@ -615,21 +615,23 @@ public class WDL {
 							//Note that this doesn't mean that the old one's
 							//a valid one; it could be empty.
 							worldClient.setTileEntity(te.getPos(), te);
-							chatMessage(
+							WDLMessages.chatMessageTranslated(
 									WDLMessageTypes.LOAD_TILE_ENTITY,
-									"Using old TE from saved file: " +
-											entityType + " at " + te.getPos());
+									"wdl.messages.tileEntity.usingOld", 
+									entityType, te.getPos());
 						} else {
 							worldClient.setTileEntity(te.getPos(), 
 									newTileEntities.get(te.getPos()));
-							chatMessage(WDLMessageTypes.LOAD_TILE_ENTITY,
-									"Using new TE: " + entityType + " at "
-											+ te.getPos());
+							WDLMessages.chatMessageTranslated(
+									WDLMessageTypes.LOAD_TILE_ENTITY,
+									"wdl.messages.tileEntity.usingNew", 
+									entityType, te.getPos());
 						}
 					} else {
-						chatMessage(WDLMessageTypes.LOAD_TILE_ENTITY,
-								"Old TE does not need importing: "
-										+ entityType + " at " + te.getPos());
+						WDLMessages.chatMessageTranslated(
+								WDLMessageTypes.LOAD_TILE_ENTITY,
+								"wdl.messages.tileEntity.notImporting", 
+								entityType, te.getPos());
 					}
 				}
 			}
