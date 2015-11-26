@@ -4,7 +4,7 @@
 wdl.translatorCredit=
 
 # Remaining values.
-wdl.gui.wdl.title=Options for %s
+wdl.gui.wdl.title=World Downloader mod: Options for %s
 wdl.gui.wdl.worldname=Name:
 wdl.gui.wdl.worldOverrides.name=World Overrides...
 wdl.gui.wdl.worldOverrides.description=Control specific metadata about the saved world, such as the spawn point and game mode.
@@ -23,7 +23,7 @@ wdl.gui.wdl.permissionsInfo.description=Information about permissions setup on t
 wdl.gui.wdl.about.name=About World Downloader...
 wdl.gui.wdl.about.description=Information about your current installation of WDL, and any extensions.
 
-wdl.gui.world.title=World Options for %s
+wdl.gui.world.title=World Downloader mod: World Options for %s
 wdl.gui.world.allowCheats.true=Allow cheats: Yes
 wdl.gui.world.allowCheats.false=Allow cheats: No
 wdl.gui.world.gamemode.keep=Game Mode: Don't change
@@ -54,7 +54,7 @@ wdl.gui.world.spawn.description=Controls the spawn point in the downloaded world
 wdl.gui.world.setSpawnToCurrentPosition.description=Set the spawn position to your current position.
 wdl.gui.world.spawnPos.description=Use these text boxes to specify the exact spawn position.%n%nThis text box specifies the %s coordinate.
 
-wdl.gui.player.title=Player Options for %s
+wdl.gui.player.title=World Downloader mod: Player Options for %s
 wdl.gui.player.health.keep=Health: Don't change
 wdl.gui.player.health.20=Health: Full
 wdl.gui.player.health.custom=Health: Other (%s)
@@ -70,7 +70,7 @@ wdl.gui.player.position.description=This option allows choosing where you want t
 wdl.gui.player.setPositionToCurrentPosition.description=Set the position to your current position.
 wdl.gui.player.positionTextBox.description=Use these text boxes to specify the exact player position.%n%nThis text box specifies the %s coordinate.
 
-wdl.gui.generator.title=World Generator Options for %s
+wdl.gui.generator.title=World Downloader mod: World Generator Options for %s
 wdl.gui.generator.seed=Seed:
 wdl.gui.generator.generator.default=World Generator: Default
 wdl.gui.generator.generator.flat=World Generator: Flat
@@ -91,7 +91,7 @@ wdl.gui.ingameMenu.downloadStatus.stop=Stop download
 wdl.gui.ingameMenu.downloadStatus.start=Download this world
 wdl.gui.ingameMenu.settings=...
 
-wdl.gui.messages.message.title=Message options
+wdl.gui.messages.message.title=World Downloader mod: Message options
 wdl.gui.messages.message.true=%s: On
 wdl.gui.messages.message.false=%s: Off
 wdl.gui.messages.group.true=Group enabled
@@ -104,7 +104,7 @@ wdl.gui.messages.reset.confirm.subtitle=Your old settings will be lost forever! 
 wdl.gui.messages.all.description=Enable / disable all WDL messages.%n%nDisabling all is §lNOT§r recommended, as you may miss important errors.
 wdl.gui.messages.reset.description=Reset whether each message is enabled to its default value.
 
-wdl.gui.about.title=About WorldDownloader
+wdl.gui.about.title=About World Downloader
 wdl.gui.about.blurb=WorldDownloader is a mod developed by nariol, cubic72, and pokechu22 (litemod version by julialy), with help from others (including soccerguy3, UltiNaruto, Net32, and El_garoo) that allows downloading a copy of a multiplayer world for singleplayer use.  Source code is publicly available.
 wdl.gui.about.version=You are running %s on Minecraft version %s/%s.
 wdl.gui.about.forumThread=View the MinecraftForum thread
@@ -114,7 +114,7 @@ wdl.gui.about.extensions=Extensions
 wdl.gui.about.debugInfo=Copy debug info
 wdl.gui.about.debugInfo.copied=Copied!
 
-wdl.gui.extensions.title=WDL extensions
+wdl.gui.extensions.title=World Downloader mod: Extensions
 wdl.gui.extensions.detailsCaption=Details (resizable)
 wdl.gui.extensions.modVersion=%s v%s
 
@@ -131,7 +131,7 @@ wdl.gui.multiworld.descirption.whatIs=Multiworld support prompts you for which w
 wdl.gui.multiworld.true=Multiworld support: Enabled
 wdl.gui.multiworld.false=Multiworld support: Disabled
 
-wdl.gui.backup.title=Backup options
+wdl.gui.backup.title=World Downloader mod: Backup options
 wdl.gui.backup.backupMode=Backup mode: %s
 wdl.gui.backup.description1=World Downloader backs up the world every time saving finishes.  You can control how this backup occurs using this GUI.
 wdl.gui.backup.description2=§lNo backup§r: No backup is performed after the download finishes.%n§lCopy world folder§r: The entire world folder is copied, meaning that you will always have a playable version of the world in this state, should you chose to download again.%n§lZip a copy of a world§r: A zipped copy of the world is created in your worlds folder, which can later be unzipped if you want to revert.
@@ -139,7 +139,7 @@ wdl.gui.backup.description3=For all backup modes, the created backup is timestam
 
 wdl.gui.saveProgress.progressInfo=%s (%d of %d)
 
-wdl.gui.rangePresets.title=Range presets
+wdl.gui.rangePresets.title=World Downloader mod: Range presets
 wdl.gui.rangePresets.vanilla=Vanilla Minecraft ranges
 wdl.gui.rangePresets.spigot=Default spigot ranges
 wdl.gui.rangePresets.server=Server-configured ranges
@@ -171,7 +171,7 @@ wdl.gui.overwriteChanges.backingUp.progress=%d / %d (%s)
 wdl.gui.overwriteChanges.backingUp.zip=Creating zip folder %s.
 wdl.gui.overwriteChanges.backingUp.folder=Copying world folder to %s.
 
-wdl.gui.entities.title=Entity configuration
+wdl.gui.entities.title=World Downloader mod: Entity configuration
 wdl.gui.entities.trackDistanceMode.default=Track Distance: Default
 wdl.gui.entities.trackDistanceMode.server=Track Distance: Server
 wdl.gui.entities.trackDistanceMode.user=Track Distance: User
