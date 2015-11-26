@@ -2,7 +2,7 @@ package wdl.api;
 
 import net.minecraft.client.multiplayer.WorldClient;
 
-public interface IWorldLoadListener {
+public interface IWorldLoadListener extends IWDLMod {
 	/**
 	 * Called when a world loads. (Occurs after the previous world has saved).
 	 * 

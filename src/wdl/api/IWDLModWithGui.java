@@ -5,7 +5,7 @@ import net.minecraft.client.gui.GuiScreen;;
 /**
  * {@link IWDLMod} that has an associated GUI that should be opened.
  */
-public interface IWDLModWithGui {
+public interface IWDLModWithGui extends IWDLMod {
 	/**
 	 * Gets the text to use on a button to open the given GUI.
 	 * 

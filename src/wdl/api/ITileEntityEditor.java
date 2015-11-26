@@ -5,7 +5,7 @@ import net.minecraft.tileentity.TileEntity;
 /**
  * Something that can edit tile entities as they are being saved.
  */
-public interface ITileEntityEditor {
+public interface ITileEntityEditor extends IWDLMod {
 	/**
 	 * Should the given tile entity be edited by this {@link ITileEntityEditor}?
 	 * 

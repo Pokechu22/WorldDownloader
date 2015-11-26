@@ -5,7 +5,7 @@ import net.minecraft.entity.Entity;
 /**
  * Something that can edit entities as they are being saved.
  */
-public interface IEntityEditor {
+public interface IEntityEditor extends IWDLMod {
 	/**
 	 * Should the given entity be edited by this {@link IEntityEditor}?
 	 * 

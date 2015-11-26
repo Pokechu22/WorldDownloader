@@ -10,7 +10,7 @@ import net.minecraft.world.storage.SaveHandler;
  * 
  * A new progress bar step is created for each implementation.
  */
-public interface ISaveListener {
+public interface ISaveListener extends IWDLMod {
 	/**
 	 * Called after all of the chunks in the world have been saved.
 	 * 
