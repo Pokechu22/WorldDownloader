@@ -246,6 +246,7 @@ wdl.messages.entityTypeAndCustomName=%s (named %s)
 
 wdl.unsafeReasons.badCustomName=Invalid custom name!  (Threw %s)
 
+wdl.saveProgress.title=Saving downloaded world
 wdl.saveProgress.chunk.title=Saving chunks
 wdl.saveProgress.chunk.saving=Saving chunk at %d, %d
 wdl.saveProgress.map.title=Saving map item data

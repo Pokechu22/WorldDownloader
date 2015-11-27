@@ -736,7 +736,7 @@ public class WDL {
 				WorldBackupType.match(baseProps.getProperty("Backup", "ZIP"));
 		
 		GuiWDLSaveProgress progressScreen = new GuiWDLSaveProgress(
-				"Saving downloaded world", 
+				I18n.format("wdl.saveProgress.title"), 
 				(backupType != WorldBackupType.NONE ? 5 : 4)
 						+ saveListeners.size());
 		minecraft.displayGuiScreen(progressScreen);
