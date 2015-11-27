@@ -697,11 +697,10 @@ public class WDL {
 				
 				for (Map.Entry<BlockPos, TileEntity> entry : tileEntityMap
 						.entrySet()) {
-					boolean imported = !newTileEntities.containsKey(entry.getKey());
-					if (editor.getValue().shouldEdit(entry.getValue(), imported)) {
-						TileEntity newTE = editor.getValue().editTileEntity(
-								entry.getValue(), imported);
-						entry.setValue(newTE);
+					boolean wasImported = !newTileEntities.containsKey(entry.getKey());
+					if (editor.getValue().shouldEdit(entry.getValue(), wasImported)) {
+						editor.getValue().editTileEntity(entry.getValue(),
+								wasImported);
 						
 						WDLMessages.chatMessageTranslated(
 								WDLMessageTypes.LOAD_TILE_ENTITY,

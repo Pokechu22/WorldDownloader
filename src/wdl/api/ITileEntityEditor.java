@@ -29,12 +29,11 @@ public interface ITileEntityEditor extends IWDLMod {
 	 * {@link #shouldEdit(TileEntity, boolean)} returned true.
 	 * 
 	 * @param te
-	 *            The tile entity to check.
+	 *            The tile entity to edit.
 	 * @param wasImported
 	 *            Whether the tile entity was saved during this downloading (
 	 *            <code>false</code>) or was imported from the previously saved
 	 *            copy of the chunks (<code>true</code>).
-	 * @return The modified tile entity.
 	 */
-	public abstract TileEntity editTileEntity(TileEntity te, boolean wasImported);
+	public abstract void editTileEntity(TileEntity te, boolean wasImported);
 }
