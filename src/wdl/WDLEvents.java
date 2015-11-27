@@ -450,9 +450,8 @@ public class WDLEvents {
 			newTE.note = (byte)(param % 25);
 			WDL.worldClient.setTileEntity(pos, newTE);
 			WDL.newTileEntities.put(pos, newTE);
-			WDL.chatMessage(WDLMessageTypes.ON_BLOCK_EVENT,
-					"onBlockEvent: Note Block: " + pos + " pitch: " + param
-					+ " - " + newTE);
+			WDLMessages.chatMessageTranslated(WDLMessageTypes.ON_BLOCK_EVENT,
+					"wdl.messages.onBlockEvent.noteblock", pos, param, newTE);
 		}
 	}
 
