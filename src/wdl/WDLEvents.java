@@ -468,8 +468,8 @@ public class WDLEvents {
 
 		WDL.newMapDatas.put(mapID, mapData);
 
-		WDL.chatMessage(WDLMessageTypes.ON_MAP_SAVED,
-				"onMapDataLoaded: Saved map " + mapID + ".");
+		WDLMessages.chatMessageTranslated(WDLMessageTypes.ON_MAP_SAVED,
+				"wdl.messages.onMapSaved", mapID);
 	}
 
 	/**

@@ -249,6 +249,7 @@ wdl.messages.onWorldLoad.spigot=Server brand = %s.  Using spigot track distances
 wdl.messages.onWorldLoad.vanilla=Server brand = %s.  Using vanilla track distances.
 
 wdl.messages.onBlockEvent.noteblock=onBlockEvent: Note Block: %s pitch: %d - %s
+wdl.messages.onMapSaved=onMapDataLoaded: Saved map %d.
 
 wdl.unsafeReasons.badCustomName=Invalid custom name!  (Threw %s)
 
