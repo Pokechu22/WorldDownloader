@@ -780,7 +780,8 @@ public class WDL {
 		}
 		
 		try {
-			chatMessage(WDLMessageTypes.SAVING, "Waiting for ThreadedFileIOBase to finish...");
+			WDLMessages.chatMessageTranslated(WDLMessageTypes.SAVING,
+					"wdl.messages.saving.flushingIO");
 			
 			progressScreen.startMajorTask(
 					I18n.format("wdl.saveProgress.flushingIO.title"), 1);
@@ -796,7 +797,8 @@ public class WDL {
 		}
 		
 		if (backupType != WorldBackupType.NONE) {
-			chatMessage(WDLMessageTypes.SAVING, "Backing up the world...");
+			WDLMessages.chatMessageTranslated(WDLMessageTypes.SAVING,
+					"wdl.messages.saving.backingUp");
 			progressScreen.startMajorTask(
 					backupType.getTitle(), 1);
 			progressScreen.setMinorTaskProgress(
@@ -822,7 +824,8 @@ public class WDL {
 			GuiWDLSaveProgress progressScreen) {
 		if (!WDLPluginChannels.canDownloadInGeneral()) { return; }
 		
-		chatMessage(WDLMessageTypes.SAVING, "Saving player data...");
+		WDLMessages.chatMessageTranslated(WDLMessageTypes.SAVING,
+				"wdl.messages.saving.savingPlayer");
 		progressScreen.setMinorTaskProgress(
 				I18n.format("wdl.saveProgress.metadata.writingPlayer"), 2);
 		
@@ -857,7 +860,8 @@ public class WDL {
 			}
 		}
 
-		chatMessage(WDLMessageTypes.SAVING, "Player data saved.");
+		WDLMessages.chatMessageTranslated(WDLMessageTypes.SAVING,
+				"wdl.messages.saving.playerSaved");
 	}
 
 	/**
@@ -868,7 +872,8 @@ public class WDL {
 			GuiWDLSaveProgress progressScreen) {
 		if (!WDLPluginChannels.canDownloadInGeneral()) { return; }
 		
-		chatMessage(WDLMessageTypes.SAVING, "Saving world metadata...");
+		WDLMessages.chatMessageTranslated(WDLMessageTypes.SAVING,
+				"wdl.messages.saving.savingWorld");
 		progressScreen.setMinorTaskProgress(
 				I18n.format("wdl.saveProgress.metadata.writingWorld"), 3);
 		
@@ -915,7 +920,8 @@ public class WDL {
 			}
 		}
 
-		chatMessage(WDLMessageTypes.SAVING, "World data saved.");
+		WDLMessages.chatMessageTranslated(WDLMessageTypes.SAVING,
+				"wdl.messages.saving.worldSaved");
 	}
 
 	/**
@@ -928,7 +934,8 @@ public class WDL {
 			throws IllegalArgumentException, IllegalAccessException {
 		if (!WDLPluginChannels.canDownloadInGeneral()) { return; }
 		
-		chatMessage(WDLMessageTypes.SAVING, "Saving chunks...");
+		WDLMessages.chatMessageTranslated(WDLMessageTypes.SAVING,
+				"wdl.messages.saving.savingChunks");
 		
 		// Get the ChunkProviderClient from WorldClient
 		ChunkProviderClient chunkProvider = (ChunkProviderClient) worldClient
@@ -1012,7 +1019,8 @@ public class WDL {
 				}
 			}
 
-			chatMessage(WDLMessageTypes.SAVING, "Chunk data saved.");
+			WDLMessages.chatMessageTranslated(WDLMessageTypes.SAVING,
+					"wdl.messages.saving.chunksSaved");
 		}
 	}
 
@@ -1455,7 +1463,8 @@ public class WDL {
 		progressScreen.startMajorTask(
 				I18n.format("wdl.saveProgress.map.title"), newMapDatas.size());
 		
-		chatMessage(WDLMessageTypes.SAVING, "Saving map data...");
+		WDLMessages.chatMessageTranslated(WDLMessageTypes.SAVING,
+				"wdl.messages.saving.savingMapItemData");
 		
 		int count = 0;
 		for (Map.Entry<Integer, MapData> e : newMapDatas.entrySet()) {
@@ -1483,7 +1492,8 @@ public class WDL {
 			}
 		}
 		
-		chatMessage(WDLMessageTypes.SAVING, "Map data saved.");
+		WDLMessages.chatMessageTranslated(WDLMessageTypes.SAVING,
+				"wdl.messages.saving.mapItemDataSaved");
 	}
 
 	/**
