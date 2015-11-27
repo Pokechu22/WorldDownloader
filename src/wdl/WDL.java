@@ -512,23 +512,42 @@ public class WDL {
 			WDLMessages.onNewServer();
 			
 			// Different server, different world!
-			chatMessage(WDLMessageTypes.ON_WORLD_LOAD,
-					"onWorldLoad: different server!");
+			WDLMessages.chatMessageTranslated(WDLMessageTypes.ON_WORLD_LOAD,
+					"wdl.messages.onWorldLoad.differentServer");
 			
 			networkManager = newNM;
 			
-			chatMessage(WDLMessageTypes.ON_WORLD_LOAD,
-					"Server brand=" + thePlayer.getClientBrand() +
-					".  Using " + (isSpigot() ? "Spigot" : "Vanilla") +
-							" track distances.");
+			if (isSpigot()) {
+				WDLMessages.chatMessageTranslated(
+						WDLMessageTypes.ON_WORLD_LOAD,
+						"wdl.messages.onWorldLoad.spigot",
+						thePlayer.getClientBrand());
+			} else {
+				WDLMessages.chatMessageTranslated(
+						WDLMessageTypes.ON_WORLD_LOAD,
+						"wdl.messages.onWorldLoad.vanilla",
+						thePlayer.getClientBrand());
+			}
 			
 			startOnChange = false;
 			
 			return true;
 		} else {
 			// Same server, different world!
-			chatMessage(WDLMessageTypes.ON_WORLD_LOAD,
-					"onWorldLoad: same server!");
+			WDLMessages.chatMessageTranslated(WDLMessageTypes.ON_WORLD_LOAD,
+					"wdl.messages.onWorldLoad.sameServer");
+			
+			if (isSpigot()) {
+				WDLMessages.chatMessageTranslated(
+						WDLMessageTypes.ON_WORLD_LOAD,
+						"wdl.messages.onWorldLoad.spigot",
+						thePlayer.getClientBrand());
+			} else {
+				WDLMessages.chatMessageTranslated(
+						WDLMessageTypes.ON_WORLD_LOAD,
+						"wdl.messages.onWorldLoad.vanilla",
+						thePlayer.getClientBrand());
+			}
 			
 			if (startOnChange) {
 				startDownload();

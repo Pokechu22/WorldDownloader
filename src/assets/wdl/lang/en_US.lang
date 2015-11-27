@@ -230,6 +230,8 @@ wdl.messages.tileEntity.usingNew=Using new TE: %s at %s
 wdl.messages.tileEntity.notImporting=Old TE does not need importing: %s at %s 
 wdl.messages.tileEntity.edited=Edited TE at %s using %s
 
+wdl.messages.entityTypeAndCustomName=%s (named %s)
+
 wdl.messages.saving.savingChunks=Saving chunks...
 wdl.messages.saving.chunksSaved=Chunk data saved.
 wdl.messages.saving.flushingIO=Waiting for ThreadedFileIOBase to finish...
@@ -241,8 +243,10 @@ wdl.messages.saving.worldSaved=World metadata saved.
 wdl.messages.saving.savingMapItemData=Saving map data...
 wdl.messages.saving.mapItemDataSaved=Map data saved.
 
-
-wdl.messages.entityTypeAndCustomName=%s (named %s)
+wdl.messages.onWorldLoad.sameServer=onWorldLoad: same server!
+wdl.messages.onWorldLoad.differentServer=onWorldLoad: different server!
+wdl.messages.onWorldLoad.spigot=Server brand = %s.  Using spigot track distances.
+wdl.messages.onWorldLoad.vanilla=Server brand = %s.  Using vanilla track distances.
 
 wdl.unsafeReasons.badCustomName=Invalid custom name!  (Threw %s)
 
