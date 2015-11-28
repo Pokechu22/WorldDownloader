@@ -105,11 +105,10 @@ public class WDLHooks {
 								}
 								
 								if (!handled) {
-									WDL.chatMessage(WDLMessageTypes.
-											ON_GUI_CLOSED_WARNING,
-											"onItemGuiClosed: Unrecognised " +
-											"entity could not be saved: " + 
-											EntityUtils.getEntityType(entity));
+									WDLMessages.chatMessageTranslated(
+											WDLMessageTypes.ON_GUI_CLOSED_WARNING,
+											"wdl.messages.onGuiClosedInfo.unhandledEntity",
+											entity);
 								}
 							} else {
 								BlockPos pos = WDL.lastClickedBlock;
@@ -126,10 +125,10 @@ public class WDLHooks {
 								}
 								
 								if (!handled) {
-									WDL.chatMessage(WDLMessageTypes.
-											ON_GUI_CLOSED_WARNING,
-											"onItemGuiClosed: unhandled TE @" + 
-											pos + ": " + sender.getTileEntity(pos));
+									WDLMessages.chatMessageTranslated(
+											WDLMessageTypes.ON_GUI_CLOSED_WARNING,
+											"wdl.messages.onGuiClosedInfo.unhandledTileEntity",
+											pos, sender.getTileEntity(pos));
 								}
 							}
 							

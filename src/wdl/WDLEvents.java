@@ -175,8 +175,8 @@ public class WDLEvents {
 							horseInContainer.chunkCoordZ)) {
 						//I'm not 100% sure the chunkCoord stuff will have been
 						//set up at this point.  Might cause bugs.
-						WDL.chatMessage(WDLMessageTypes.ON_GUI_CLOSED_INFO,
-								"Server configuration forbids saving of Entities!");
+						WDLMessages.chatMessageTranslated(WDLMessageTypes.ON_GUI_CLOSED_INFO,
+								"wdl.messages.onGuiClosedInfo.cannotSaveEntities");
 						return true;
 					}
 
@@ -200,8 +200,8 @@ public class WDLEvents {
 					horseChest.func_110134_a(entityHorse);
 					//Save the actual data value to the other horse.
 					ReflectionUtils.stealAndSetField(entityHorse, AnimalChest.class, horseChest);
-					WDL.chatMessage(WDLMessageTypes.ON_GUI_CLOSED_INFO,
-							"Saved ridden horse inventory.");
+					WDLMessages.chatMessageTranslated(WDLMessageTypes.ON_GUI_CLOSED_INFO,
+							"wdl.messages.onGuiClosedInfo.savedRiddenHorse");
 					return true;
 				}
 			}
@@ -211,8 +211,8 @@ public class WDLEvents {
 		if (WDL.lastEntity != null) {
 			if (!WDLPluginChannels.canSaveEntities(WDL.lastEntity.chunkCoordX,
 					WDL.lastEntity.chunkCoordZ)) {
-				WDL.chatMessage(WDLMessageTypes.ON_GUI_CLOSED_INFO,
-						"Server configuration forbids saving of Entities!");
+				WDLMessages.chatMessageTranslated(WDLMessageTypes.ON_GUI_CLOSED_INFO,
+						"wdl.messages.onGuiClosedInfo.cannotSaveEntities");
 				return true;
 			}
 
@@ -223,8 +223,9 @@ public class WDLEvents {
 				for (int i = 0; i < emcc.getSizeInventory(); i++) {
 					emcc.setInventorySlotContents(i, WDL.windowContainer
 							.getSlot(i).getStack());
-					saveName = "Storage Minecart contents";
 				}
+				
+				saveName = "storageMinecart";
 			} else if (WDL.lastEntity instanceof EntityMinecartHopper
 					&& WDL.windowContainer instanceof ContainerHopper) {
 				EntityMinecartHopper emch = (EntityMinecartHopper) WDL.lastEntity;
@@ -232,8 +233,9 @@ public class WDLEvents {
 				for (int i = 0; i < emch.getSizeInventory(); i++) {
 					emch.setInventorySlotContents(i, WDL.windowContainer
 							.getSlot(i).getStack());
-					saveName = "Hopper Minecart contents";
 				}
+				
+				saveName = "hopperMinecart";
 			} else if (WDL.lastEntity instanceof EntityVillager
 					&& WDL.windowContainer instanceof ContainerMerchant) {
 				EntityVillager ev = (EntityVillager) WDL.lastEntity;
@@ -241,7 +243,8 @@ public class WDLEvents {
 						WDL.windowContainer, IMerchant.class)).getRecipes(
 								WDL.thePlayer);
 				ReflectionUtils.stealAndSetField(ev, MerchantRecipeList.class, list);
-				saveName = "Villager offers";
+				
+				saveName = "villager";
 			} else if (WDL.lastEntity instanceof EntityHorse
 					&& WDL.windowContainer instanceof ContainerHorseInventory) {
 				EntityHorse entityHorse = (EntityHorse)WDL.lastEntity;
@@ -263,13 +266,14 @@ public class WDLEvents {
 				horseChest.func_110134_a(entityHorse);
 				//Save the actual data value to the other horse.
 				ReflectionUtils.stealAndSetField(entityHorse, AnimalChest.class, horseChest);
-				saveName = "Horse Chest";
+				
+				saveName = "horse";
 			} else {
 				return false;
 			}
 
-			WDL.chatMessage(WDLMessageTypes.ON_GUI_CLOSED_INFO, "Saved "
-					+ saveName + ".");
+			WDLMessages.chatMessageTranslated(WDLMessageTypes.ON_GUI_CLOSED_INFO,
+					"wdl.messages.onGuiClosedInfo.savedEntity." + saveName);
 			return true;
 		}
 
@@ -280,16 +284,18 @@ public class WDLEvents {
 		
 		if (te == null) {
 			//TODO: Is this a good way to stop?  Is the event truely handled here?
-			WDL.chatMessage(WDLMessageTypes.ON_GUI_CLOSED_WARNING,
-					"onItemGuiClosed could not get TE at " + WDL.lastClickedBlock);
+			WDLMessages.chatMessageTranslated(
+					WDLMessageTypes.ON_GUI_CLOSED_WARNING,
+					"wdl.messages.onGuiClosedInfo.couldNotGetTE",
+					WDL.lastClickedBlock);
 			return true;
 		}
 		
 		//Permissions check.
 		if (!WDLPluginChannels.canSaveContainers(te.getPos().getX() << 4, te
 				.getPos().getZ() << 4)) {
-			WDL.chatMessage(WDLMessageTypes.ON_GUI_CLOSED_INFO,
-					"Server configuration forbids saving of TileEntities!");
+			WDLMessages.chatMessageTranslated(WDLMessageTypes.ON_GUI_CLOSED_INFO,
+					"wdl.messages.onGuiClosedInfo.cannotSaveTileEntities");
 			return true;
 		}
 
@@ -373,13 +379,13 @@ public class WDLEvents {
 				WDL.newTileEntities.put(chestPos1, chest1);
 				WDL.newTileEntities.put(chestPos2, chest2);
 				
-				saveName = "Double Chest contents";
+				saveName = "doubleChest";
 			}
 			// basic chest
 			else {
 				WDL.saveContainerItems(WDL.windowContainer, (TileEntityChest) te, 0);
 				WDL.newTileEntities.put(WDL.lastClickedBlock, te);
-				saveName = "Chest contents";
+				saveName = "singleChest";
 			}
 		} else if (WDL.windowContainer instanceof ContainerChest
 				&& te instanceof TileEntityEnderChest) {
@@ -393,29 +399,29 @@ public class WDLEvents {
 						.getSlot(i).getStack());
 			}
 
-			saveName = "Ender Chest contents";
+			saveName = "enderChest";
 		} else if (WDL.windowContainer instanceof ContainerBrewingStand) {
 			IInventory brewingInventory = ReflectionUtils.stealAndGetField(
 					WDL.windowContainer, IInventory.class);
 			WDL.saveContainerItems(WDL.windowContainer, (TileEntityBrewingStand) te, 0);
 			WDL.saveInventoryFields(brewingInventory, (TileEntityBrewingStand) te);
 			WDL.newTileEntities.put(WDL.lastClickedBlock, te);
-			saveName = "Brewing Stand contents";
+			saveName = "brewingStand";
 		} else if (WDL.windowContainer instanceof ContainerDispenser) {
 			WDL.saveContainerItems(WDL.windowContainer, (TileEntityDispenser) te, 0);
 			WDL.newTileEntities.put(WDL.lastClickedBlock, te);
-			saveName = "Dispenser contents";
+			saveName = "dispenser";
 		} else if (WDL.windowContainer instanceof ContainerFurnace) {
 			IInventory furnaceInventory = ReflectionUtils.stealAndGetField(
 					WDL.windowContainer, IInventory.class);
 			WDL.saveContainerItems(WDL.windowContainer, (TileEntityFurnace) te, 0);
 			WDL.saveInventoryFields(furnaceInventory, (TileEntityFurnace) te);
 			WDL.newTileEntities.put(WDL.lastClickedBlock, te);
-			saveName = "Furnace contents";
+			saveName = "furnace";
 		} else if (WDL.windowContainer instanceof ContainerHopper) {
 			WDL.saveContainerItems(WDL.windowContainer, (TileEntityHopper) te, 0);
 			WDL.newTileEntities.put(WDL.lastClickedBlock, te);
-			saveName = "Hopper contents";
+			saveName = "hopper";
 		} else if (WDL.windowContainer instanceof ContainerBeacon) {
 			//func_180611_e returns the beacon's IInventory tileBeacon.
 			IInventory beaconInventory =
@@ -424,13 +430,13 @@ public class WDLEvents {
 			WDL.saveContainerItems(WDL.windowContainer, savedBeacon, 0);
 			WDL.saveInventoryFields(beaconInventory, savedBeacon);
 			WDL.newTileEntities.put(WDL.lastClickedBlock, te);
-			saveName = "Beacon effects";
+			saveName = "beacon";
 		} else {
 			return false;
 		}
 
-		WDL.chatMessage(WDLMessageTypes.ON_GUI_CLOSED_INFO, "Saved "
-				+ saveName + ".");
+		WDLMessages.chatMessageTranslated(WDLMessageTypes.ON_GUI_CLOSED_INFO,
+				"wdl.messages.onGuiClosedInfo.savedTileEntity." + saveName);
 		return true;
 	}
 

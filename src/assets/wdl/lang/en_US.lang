@@ -254,6 +254,26 @@ wdl.messages.onMapSaved=onMapDataLoaded: Saved map %d.
 wdl.messages.onChunkNoLongerNeeded.saved=onChunkNoLongerNeeded: Saved chunk at %d, %d
 wdl.messages.onChunkNoLongerNeeded.didNotSave=onChunkNoLongerNeeded: Could not save chunk at %d, %d due to server restrictions!
 
+wdl.messages.onGuiClosedInfo.cannotSaveEntities=Server configuration forbids saving of Entities!
+wdl.messages.onGuiClosedInfo.cannotSaveTileEntities=Server configuration forbids saving of TileEntities!
+wdl.messages.onGuiClosedInfo.savedRiddenHorse=Saved ridden horse inventory.
+wdl.messages.onGuiClosedInfo.savedEntity.storageMinecart=Saved storage minecart contents.
+wdl.messages.onGuiClosedInfo.savedEntity.hopperMinecart=Saved hopper minecart contents.
+wdl.messages.onGuiClosedInfo.savedEntity.villager=Saved villager trades.
+wdl.messages.onGuiClosedInfo.savedEntity.horse=Saved horse inventory.
+wdl.messages.onGuiClosedInfo.savedTileEntity.singleChest=Saved chest contents.
+wdl.messages.onGuiClosedInfo.savedTileEntity.doubleChest=Saved double chest contents.
+wdl.messages.onGuiClosedInfo.savedTileEntity.enderChest=Saved ender chest contents.
+wdl.messages.onGuiClosedInfo.savedTileEntity.brewingStand=Saved brewing stand contents.
+wdl.messages.onGuiClosedInfo.savedTileEntity.dispenser=Saved dispenser contents.
+wdl.messages.onGuiClosedInfo.savedTileEntity.furnace=Saved furnace contents.
+wdl.messages.onGuiClosedInfo.savedTileEntity.hopper=Saved hopper contents.
+wdl.messages.onGuiClosedInfo.savedTileEntity.beacon=Saved beacon effects.
+
+wdl.messages.onGuiClosedInfo.couldNotGetTE=onItemGuiClosed could not get TE at %s.
+wdl.messages.onGuiClosedInfo.unhandledEntity=onItemGuiClosed: Unrecognised entity could not be saved: %s
+wdl.messages.onGuiClosedInfo.unhandledTileEntity=onItemGuiClosed: Unhandled Tile Entity at %s: %s
+
 wdl.unsafeReasons.badCustomName=Invalid custom name!  (Threw %s)
 
 wdl.saveProgress.title=Saving downloaded world
