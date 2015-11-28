@@ -113,15 +113,16 @@ public class WDLEvents {
 		}
 
 		if (WDLPluginChannels.canSaveChunk(unneededChunk)) {
-			WDL.chatMessage(WDLMessageTypes.ON_CHUNK_NO_LONGER_NEEDED,
-					"onChunkNoLongerNeeded: " + unneededChunk.xPosition + ", "
-							+ unneededChunk.zPosition);
+			WDLMessages.chatMessageTranslated(
+					WDLMessageTypes.ON_CHUNK_NO_LONGER_NEEDED,
+					"wdl.messages.onChunkNoLongerNeeded.saved",
+					unneededChunk.xPosition, unneededChunk.zPosition);
 			WDL.saveChunk(unneededChunk);
 		} else {
-			WDL.chatMessage(WDLMessageTypes.ON_CHUNK_NO_LONGER_NEEDED,
-					"onChunkNoLongerNeeded cannot save chunk at " +
-							unneededChunk.xPosition + ", " + unneededChunk.zPosition
-							+ " due to server restrictions!");
+			WDLMessages.chatMessageTranslated(
+					WDLMessageTypes.ON_CHUNK_NO_LONGER_NEEDED,
+					"wdl.messages.onChunkNoLongerNeeded.didNotSave",
+					unneededChunk.xPosition, unneededChunk.zPosition);
 		}
 	}
 

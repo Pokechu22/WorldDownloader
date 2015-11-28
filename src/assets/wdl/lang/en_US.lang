@@ -251,6 +251,9 @@ wdl.messages.onWorldLoad.vanilla=Server brand = %s.  Using vanilla track distanc
 wdl.messages.onBlockEvent.noteblock=onBlockEvent: Note Block: %s pitch: %d - %s
 wdl.messages.onMapSaved=onMapDataLoaded: Saved map %d.
 
+wdl.messages.onChunkNoLongerNeeded.saved=onChunkNoLongerNeeded: Saved chunk at %d, %d
+wdl.messages.onChunkNoLongerNeeded.didNotSave=onChunkNoLongerNeeded: Could not save chunk at %d, %d due to server restrictions!
+
 wdl.unsafeReasons.badCustomName=Invalid custom name!  (Threw %s)
 
 wdl.saveProgress.title=Saving downloaded world
