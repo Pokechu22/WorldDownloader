@@ -6,6 +6,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 import net.minecraft.client.Minecraft;
@@ -108,6 +109,23 @@ public class WDLPluginChannels {
 	 * Chunk overrides. Any chunk within a range is allowed to be downloaded in.
 	 */
 	private static Map<String, Multimap<String, ChunkRange>> chunkOverrides = new HashMap<String, Multimap<String, ChunkRange>>();
+	
+	/**
+	 * Active permission requests.
+	 */
+	private static Map<String, String> requests = new HashMap<String, String>();
+	
+	/**
+	 * Permission request fields that take boolean parameters.
+	 */
+	public static final List<String> BOOLEAN_REQUEST_FIELDS = Arrays.asList(
+			"downloadInGeneral", "cacheChunks", "saveEntities",
+			"saveTileEntities", "saveContainers", "getEntityRanges");
+	/**
+	 * Permission request fields that take integer parameters.
+	 */
+	public static final List<String> INTEGER_REQUEST_FIELDS = Arrays.asList(
+			"saveRadius");
 	
 	/**
 	 * Checks whether players can use functions unknown to the server.
@@ -453,6 +471,53 @@ public class WDLPluginChannels {
 	}
 	
 	/**
+	 * Create a new permission request.
+	 * @param key The key for the request.
+	 * @param value The wanted value.
+	 */
+	public static void addRequest(String key, String value) {
+		if (!isValidRequest(key, value)) {
+			return;
+		}
+		
+		requests.put(key, value);
+	}
+	
+	/**
+	 * Gets an immutable copy of the current requests.
+	 */
+	public static Map<String, String> getRequests() {
+		return ImmutableMap.copyOf(requests);
+	}
+	
+	/**
+	 * Is the given set of values valid for the given request?
+	 * 
+	 * Handles checking if the key exists and if the value is valid.
+	 * 
+	 * @param key The key for the request.
+	 * @param value The wanted value.
+	 */
+	public static boolean isValidRequest(String key, String value) {
+		if (key == null || value == null) {
+			return false;
+		}
+		
+		if (BOOLEAN_REQUEST_FIELDS.contains(key)) {
+			return value.equals("true") || value.equals("false");
+		} else if (INTEGER_REQUEST_FIELDS.contains(key)) {
+			try {
+				Integer.parseInt(value);
+				return true;
+			} catch (NumberFormatException e) {
+				return false;
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * Event that is called when the world is loaded.
 	 * Sets the default values, and then asks the server to give the
 	 * correct ones.
@@ -461,6 +526,7 @@ public class WDLPluginChannels {
 		Minecraft minecraft = Minecraft.getMinecraft();
 		
 		receivedPackets = new HashSet<Integer>();
+		requests = new HashMap<String, String>();
 		
 		canUseFunctionsUnknownToServer = true;
 		

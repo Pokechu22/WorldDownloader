@@ -2,11 +2,12 @@ package wdl.gui;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.lwjgl.input.Keyboard;
 
+import wdl.WDLPluginChannels;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiTextField;
@@ -35,7 +36,7 @@ public class GuiWDLPermissionRequest extends GuiScreen {
 			}
 		}
 		
-		public final List<TextEntry> entries;
+		private final List<TextEntry> entries;
 		
 		@Override
 		public IGuiListEntry getListEntry(int index) {
@@ -55,6 +56,10 @@ public class GuiWDLPermissionRequest extends GuiScreen {
 		@Override
 		public int getListWidth() {
 			return GuiWDLPermissionRequest.this.width - 18;
+		}
+		
+		public void addRequest(String key, String value) {
+			entries.add(new TextEntry("Requesting '" + key + "' to be '" + value + "'."));
 		}
 	}
 	
@@ -107,23 +112,22 @@ public class GuiWDLPermissionRequest extends GuiScreen {
 		this.parent = parent;
 	}
 	
-	/**
-	 * TEMPORARY options.  Obviously, more things WOULD be allowed, but right
-	 * now they aren't.
-	 */
-	private static final List<String> OPTIONS = Arrays.asList(
-			"downloadInGeneral=true", "cacheChunks=true", "saveRadius=10",
-			"saveRadius=1", "saveEntities=true", "saveTileEntities=true",
-			"saveContainers=true", "getEntityRanges=true");
-	
 	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui() {
 		String text = "§c§lThis is a work in progress.§r\nYou can request " +
 				"permissions in this GUI, although it currently requires " +
-				"manually specifying the names.  Valid values: \n" +
-				OPTIONS + "\n\n";
+				"manually specifying the names.\n" +
+				"Boolean fields: " + WDLPluginChannels.BOOLEAN_REQUEST_FIELDS + "\n" +
+				"Integer fields: " + WDLPluginChannels.INTEGER_REQUEST_FIELDS + "\n\n";
+		
 		this.list = new PermissionsList(text);
+		
+		//Get the existing requests.
+		for (Map.Entry<String, String> request : WDLPluginChannels
+				.getRequests().entrySet()) {
+			list.addRequest(request.getKey(), request.getValue());
+		}
 		
 		this.requestField = new GuiTextField(0, fontRendererObj,
 				width / 2 - 155, 18, 150, 20);
@@ -178,25 +182,30 @@ public class GuiWDLPermissionRequest extends GuiScreen {
 		super.keyTyped(typedChar, keyCode);
 		requestField.textboxKeyTyped(typedChar, keyCode);
 		
-		if (keyCode == Keyboard.KEY_RETURN) {
+		if (requestField.isFocused()) {
 			String request = requestField.getText();
-			if (OPTIONS.contains(request)) {
-				requestField.setText("");
-				//Convert the request.
-				String[] requestData = request.split("=");
-				String key = requestData[0];
-				String value = requestData[1];
-				
-				list.entries.add(new TextEntry("Requesting '" + key
-						+ "' to be '" + value + "'."));
-				
-				//WDLPluginChannels.doSomething()
+			
+			boolean isValid = false;
+			
+			if (request.contains("=")) {
+				String[] requestData = request.split("=", 2);
+				if (requestData.length == 2) {
+					String key = requestData[0];
+					String value = requestData[1];
+					
+					isValid = WDLPluginChannels.isValidRequest(key, value);
+					
+					if (isValid && keyCode == Keyboard.KEY_RETURN) {
+						requestField.setText("");
+						isValid = false;
+						
+						WDLPluginChannels.addRequest(key, value);
+						list.addRequest(key, value);
+					}
+				}
 			}
-		}
-		if (OPTIONS.contains(requestField.getText())) {
-			requestField.setTextColor(0x40E040);
-		} else {
-			requestField.setTextColor(0xE04040);
+			
+			requestField.setTextColor(isValid ? 0x40E040 : 0xE04040);
 		}
 	}
 	
