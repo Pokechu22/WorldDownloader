@@ -347,7 +347,7 @@ public class WDL {
 						// Ask the user which world is loaded
 						// TODO: Copy-pasted code from above -- suboptimal.
 						minecraft.displayGuiScreen(new GuiWDLMultiworldSelect(I18n
-								.format("wdl.gui.multiworld.title.startDownload"),
+								.format("wdl.gui.multiworldSelect.title.startDownload"),
 								new GuiWDLMultiworldSelect.WorldSelectionCallback() {
 									@Override
 									public void onWorldSelected(String selectedWorld) {

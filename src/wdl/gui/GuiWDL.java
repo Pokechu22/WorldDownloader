@@ -164,7 +164,7 @@ public class GuiWDL extends GuiScreen {
 						// Ask the user which world is loaded
 						// TODO: Copy-pasted code from above -- suboptimal.
 						mc.displayGuiScreen(new GuiWDLMultiworldSelect(I18n
-								.format("wdl.gui.multiworld.title.changeOptions"),
+								.format("wdl.gui.multiworldSelect.title.changeOptions"),
 								new GuiWDLMultiworldSelect.WorldSelectionCallback() {
 									@Override
 									public void onWorldSelected(String selectedWorld) {
