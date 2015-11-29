@@ -13,6 +13,8 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import wdl.EntityUtils;
 import wdl.WDL;
+import wdl.WDLMessageTypes;
+import wdl.WDLMessages;
 import wdl.WDLPluginChannels;
 
 /**
@@ -55,8 +57,8 @@ public class GuiWDLEntities extends GuiScreen {
 				largestWidth = largestWidthSoFar;
 				totalWidth = largestWidth + 255;
 			} catch (Exception e) {
-				WDL.chatError("Error setting up Entity List UI: " + e);
-				e.printStackTrace();
+				WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR,
+						"wdl.messages.generalError.failedToBackUp");
 				
 				Minecraft.getMinecraft().displayGuiScreen(null);
 			}

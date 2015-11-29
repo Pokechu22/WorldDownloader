@@ -12,6 +12,8 @@ import net.minecraft.client.resources.I18n;
 import org.lwjgl.input.Keyboard;
 
 import wdl.WDL;
+import wdl.WDLMessageTypes;
+import wdl.WDLMessages;
 import wdl.WorldBackup;
 import wdl.WorldBackup.IBackupProgressMonitor;
 
@@ -62,8 +64,8 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements
 							GuiWDLOverwriteChanges.this);
 				}
 			} catch (Exception e) {
-				WDL.chatError("Exception while backing up world: " + e);
-				e.printStackTrace();
+				WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR,
+						"wdl.messages.generalError.failedToSetUpEntityUI");
 			} finally {
 				backingUp = false;
 				

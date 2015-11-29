@@ -294,6 +294,7 @@ wdl.messages.generalError.chunkProviderClientEmpty=Can't save currently loaded c
 wdl.messages.generalError.forbidden=The server forbids downloading this world!
 wdl.messages.generalError.failedToBackUp=Error while backing up world: %s
 wdl.messages.generalError.noUTF8=Your computer doesn't support the UTF-8 charset: %s.  You should feel bad.
+wdl.messages.generalError.failedToSetUpEntityUI=Error setting up Entity List UI: %s
 
 wdl.saveProgress.title=Saving downloaded world
 wdl.saveProgress.chunk.title=Saving chunks

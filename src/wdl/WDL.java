@@ -1609,13 +1609,6 @@ public class WDL {
 	}
 
 	/**
-	 * Prints a message to the chat, with a type of {@link WDLMessageTypes#ERROR}.
-	 */
-	public static void chatError(String msg) {
-		WDLMessages.chatMessage(WDLMessageTypes.ERROR, msg);
-	}
-
-	/**
 	 * Gets the save version.
 	 * 
 	 * TODO: This seems mostly unnecessary -- this is just the NBT

@@ -15,6 +15,8 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.client.C17PacketCustomPayload;
 import wdl.WDL;
+import wdl.WDLMessageTypes;
+import wdl.WDLMessages;
 import wdl.WDLPluginChannels;
 
 /**
@@ -578,9 +580,8 @@ public class GuiWDLPermissions extends GuiScreen {
 						new PacketBuffer(Unpooled.copiedBuffer(WDL.VERSION
 								.getBytes("UTF-8"))));
 			} catch (UnsupportedEncodingException e) {
-				WDL.chatError("Your computer doesn't support the UTF-8 charset."
-						+ "You should feel bad.  " + (e.toString()));
-				e.printStackTrace();
+				WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR,
+						"wdl.messages.generalError.noUTF8");
 
 				initPacket = new C17PacketCustomPayload("WDL|INIT",
 						new PacketBuffer(Unpooled.buffer()));
