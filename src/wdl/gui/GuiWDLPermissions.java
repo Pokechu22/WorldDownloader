@@ -506,9 +506,20 @@ public class GuiWDLPermissions extends GuiScreen {
 		this.buttonList.add(new GuiButton(100, width / 2 - 100, height - 29,
 				"Done"));
 		
+		this.buttonList.add(new GuiButton(200, this.width / 2 - 155, 39, 100, 20,
+				"Current perms"));
+		this.buttonList.add(new GuiButton(201, this.width / 2 - 50, 39, 100, 20,
+				"Request perms"));
+		this.buttonList.add(new GuiButton(202, this.width / 2 + 55, 39, 100, 20,
+				"Chunk Overrides"));
+		
+		//TODO: Not going to use requestButton in the future.
 		requestButton = new GuiButton(0, (this.width / 2) - 155, 18, 150, 20,
 				requestMode ? "Cancel request" : "Switch to request mode");
 		this.buttonList.add(requestButton);
+		requestButton.enabled = false;
+		requestButton.visible = false;
+		
 		reloadButton = new GuiButton(1, (this.width / 2) + 5, 18, 150, 20,
 				"Reload permissions");
 		this.buttonList.add(reloadButton);
@@ -595,6 +606,15 @@ public class GuiWDLPermissions extends GuiScreen {
 		}
 		if (button.id == 100) {
 			this.mc.displayGuiScreen(this.parent);
+		}
+		if (button.id == 200) {
+			// Would open this GUI; do nothing.
+		}
+		if (button.id == 201) {
+			// TODO: we have no request GUI yet.
+		}
+		if (button.id == 202) {
+			this.mc.displayGuiScreen(new GuiWDLRanges(this.parent));
 		}
 	}
 	

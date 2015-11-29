@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import wdl.WDLPluginChannels;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiListExtended.IGuiListEntry;
@@ -93,11 +94,16 @@ public class GuiWDLRanges extends GuiScreen {
 	}
 	
 	private RangesList list;
+	/**
+	 * Parent GUI screen; displayed when this GUI is closed.
+	 */
+	private final GuiScreen parent;
 	
 	public GuiWDLRanges(GuiScreen parent) {
-		// TODO
+		this.parent = parent;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui() {
 		String text = "§c§lThis is a work in progress.§r\nYou can download " +
@@ -107,6 +113,33 @@ public class GuiWDLRanges extends GuiScreen {
 				"Maybe also there will be a minimap mod integration.\n\n";
 		text += WDLPluginChannels.getChunkOverrides().toString();
 		this.list = new RangesList(text);
+		
+		this.buttonList.add(new GuiButton(100, width / 2 - 100, height - 29,
+				"Done"));
+		
+		this.buttonList.add(new GuiButton(200, this.width / 2 - 155, 39, 100, 20,
+				"Current perms"));
+		this.buttonList.add(new GuiButton(201, this.width / 2 - 50, 39, 100, 20,
+				"Request perms"));
+		this.buttonList.add(new GuiButton(202, this.width / 2 + 55, 39, 100, 20,
+				"Chunk Overrides"));
+	}
+	
+	@Override
+	protected void actionPerformed(GuiButton button) throws IOException {
+		if (button.id == 100) {
+			this.mc.displayGuiScreen(this.parent);
+		}
+		
+		if (button.id == 200) {
+			this.mc.displayGuiScreen(new GuiWDLPermissions(this.parent));
+		}
+		if (button.id == 201) {
+			// TODO: we have no request GUI yet.
+		}
+		if (button.id == 202) {
+			// Would open this GUI; do nothing.
+		}
 	}
 	
 	/**
@@ -143,6 +176,9 @@ public class GuiWDLRanges extends GuiScreen {
 		}
 		
 		this.list.drawScreen(mouseX, mouseY, partialTicks);
+		
+		this.drawCenteredString(this.fontRendererObj, "Ranges info",
+				this.width / 2, 8, 0xFFFFFF);
 		
 		super.drawScreen(mouseX, mouseY, partialTicks);
 	}
