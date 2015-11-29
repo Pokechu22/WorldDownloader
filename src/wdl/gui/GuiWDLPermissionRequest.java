@@ -2,28 +2,28 @@ package wdl.gui;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import wdl.WDLPluginChannels;
+import org.lwjgl.input.Keyboard;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.GuiListExtended.IGuiListEntry;
+import net.minecraft.client.gui.GuiScreen;
 
 /**
- * A GUI that Lists... well, will list, the current ChunkRanges.  Currently
- * a work in progress.
- * 
- * Also, expect a possible minimap integration in the future.
+ * GUI for requesting permissions.  Again, this is a work in progress.
  */
-public class GuiWDLRanges extends GuiScreen {
+public class GuiWDLPermissionRequest extends GuiScreen {
 	private static final int TOP_MARGIN = 61, BOTTOM_MARGIN = 32;
 	
-	private class RangesList extends GuiListExtended {
-		public RangesList(String text) {
-			super(GuiWDLRanges.this.mc, GuiWDLRanges.this.width,
-					GuiWDLRanges.this.height, TOP_MARGIN,
-					GuiWDLRanges.this.height - BOTTOM_MARGIN, 
+	private class PermissionsList extends GuiListExtended {
+		public PermissionsList(String text) {
+			super(GuiWDLPermissionRequest.this.mc, GuiWDLPermissionRequest.this.width,
+					GuiWDLPermissionRequest.this.height, TOP_MARGIN,
+					GuiWDLPermissionRequest.this.height - BOTTOM_MARGIN, 
 					fontRendererObj.FONT_HEIGHT + 1);
 			
 			this.entries = new ArrayList<TextEntry>();
@@ -35,7 +35,7 @@ public class GuiWDLRanges extends GuiScreen {
 			}
 		}
 		
-		private final List<TextEntry> entries;
+		public final List<TextEntry> entries;
 		
 		@Override
 		public IGuiListEntry getListEntry(int index) {
@@ -49,12 +49,12 @@ public class GuiWDLRanges extends GuiScreen {
 		
 		@Override
 		protected int getScrollBarX() {
-			return GuiWDLRanges.this.width - 10;
+			return GuiWDLPermissionRequest.this.width - 10;
 		}
 		
 		@Override
 		public int getListWidth() {
-			return GuiWDLRanges.this.width - 18;
+			return GuiWDLPermissionRequest.this.width - 18;
 		}
 	}
 	
@@ -93,26 +93,40 @@ public class GuiWDLRanges extends GuiScreen {
 		}
 	}
 	
-	private RangesList list;
+	private PermissionsList list;
 	/**
 	 * Parent GUI screen; displayed when this GUI is closed.
 	 */
 	private final GuiScreen parent;
+	/**
+	 * Field in which the wanted request is entered.
+	 */
+	private GuiTextField requestField;
 	
-	public GuiWDLRanges(GuiScreen parent) {
+	public GuiWDLPermissionRequest(GuiScreen parent) {
 		this.parent = parent;
 	}
+	
+	/**
+	 * TEMPORARY options.  Obviously, more things WOULD be allowed, but right
+	 * now they aren't.
+	 */
+	private static final List<String> OPTIONS = Arrays.asList(
+			"downloadInGeneral=true", "cacheChunks=true", "saveRadius=10",
+			"saveRadius=1", "saveEntities=true", "saveTileEntities=true",
+			"saveContainers=true", "getEntityRanges=true");
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui() {
-		String text = "§c§lThis is a work in progress.§r\nYou can download " +
-				"in overriden chunks even if you are not allowed to download " +
-				"elsewhere on the server.\nHere is a list of the current " +
-				"chunk overrides; in the future, a map will appear here.  " +
-				"Maybe also there will be a minimap mod integration.\n\n";
-		text += WDLPluginChannels.getChunkOverrides().toString();
-		this.list = new RangesList(text);
+		String text = "§c§lThis is a work in progress.§r\nYou can request " +
+				"permissions in this GUI, although it currently requires " +
+				"manually specifying the names.  Valid values: \n" +
+				OPTIONS + "\n\n";
+		this.list = new PermissionsList(text);
+		
+		this.requestField = new GuiTextField(0, fontRendererObj,
+				width / 2 - 155, 18, 150, 20);
 		
 		this.buttonList.add(new GuiButton(100, width / 2 - 100, height - 29,
 				"Done"));
@@ -135,11 +149,17 @@ public class GuiWDLRanges extends GuiScreen {
 			this.mc.displayGuiScreen(new GuiWDLPermissions(this.parent));
 		}
 		if (button.id == 201) {
-			this.mc.displayGuiScreen(new GuiWDLPermissionRequest(this.parent));
+			// Do nothing; on that GUI.
 		}
 		if (button.id == 202) {
-			// Would open this GUI; do nothing.
+			this.mc.displayGuiScreen(new GuiWDLRanges(this.parent));
 		}
+	}
+	
+	@Override
+	public void updateScreen() {
+		requestField.updateCursorCounter();
+		super.updateScreen();
 	}
 	
 	/**
@@ -148,8 +168,36 @@ public class GuiWDLRanges extends GuiScreen {
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
 	throws IOException {
+		requestField.mouseClicked(mouseX, mouseY, mouseButton);
 		list.func_148179_a(mouseX, mouseY, mouseButton);
 		super.mouseClicked(mouseX, mouseY, mouseButton);
+	}
+	
+	@Override
+	protected void keyTyped(char typedChar, int keyCode) throws IOException {
+		super.keyTyped(typedChar, keyCode);
+		requestField.textboxKeyTyped(typedChar, keyCode);
+		
+		if (keyCode == Keyboard.KEY_RETURN) {
+			String request = requestField.getText();
+			if (OPTIONS.contains(request)) {
+				requestField.setText("");
+				//Convert the request.
+				String[] requestData = request.split("=");
+				String key = requestData[0];
+				String value = requestData[1];
+				
+				list.entries.add(new TextEntry("Requesting '" + key
+						+ "' to be '" + value + "'."));
+				
+				//WDLPluginChannels.doSomething()
+			}
+		}
+		if (OPTIONS.contains(requestField.getText())) {
+			requestField.setTextColor(0x40E040);
+		} else {
+			requestField.setTextColor(0xE04040);
+		}
 	}
 	
 	/**
@@ -177,7 +225,9 @@ public class GuiWDLRanges extends GuiScreen {
 		
 		this.list.drawScreen(mouseX, mouseY, partialTicks);
 		
-		this.drawCenteredString(this.fontRendererObj, "Ranges info",
+		requestField.drawTextBox();
+		
+		this.drawCenteredString(this.fontRendererObj, "Permission request",
 				this.width / 2, 8, 0xFFFFFF);
 		
 		super.drawScreen(mouseX, mouseY, partialTicks);

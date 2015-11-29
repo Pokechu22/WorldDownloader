@@ -611,7 +611,7 @@ public class GuiWDLPermissions extends GuiScreen {
 			// Would open this GUI; do nothing.
 		}
 		if (button.id == 201) {
-			// TODO: we have no request GUI yet.
+			this.mc.displayGuiScreen(new GuiWDLPermissionRequest(this.parent));
 		}
 		if (button.id == 202) {
 			this.mc.displayGuiScreen(new GuiWDLRanges(this.parent));
