@@ -485,8 +485,18 @@ public class WDL {
 		WDLMessages.chatMessageTranslated(WDLMessageTypes.INFO,
 				"wdl.messages.generalInfo.saveStarted");
 		WDL.saving = true;
-		WDLSaveAsync saver = new WDLSaveAsync();
-		Thread thread = new Thread(saver, "WDL Save Thread");
+		Thread thread = new Thread("WDL Save Thread") {
+			@Override
+			public void run() {
+				try {
+					WDL.saveEverything();
+					WDL.saving = false;
+					WDL.onSaveComplete();
+				} catch (Throwable e) {
+					WDL.crashed(e, "World Downloader Mod: Saving world");
+				}
+			}
+		};
 		thread.start();
 	}
 
