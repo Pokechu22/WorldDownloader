@@ -139,7 +139,9 @@ public class GuiWDLExtensions extends GuiScreen {
 			@Override
 			public void mouseReleased(int slotIndex, int x, int y,
 					int mouseEvent, int relativeX, int relativeY) {
-				button.mouseReleased(x, y);
+				if (button != null) {
+					button.mouseReleased(x, y);
+				}
 			}
 
 			@Override
