@@ -11,8 +11,8 @@ import net.minecraft.event.ClickEvent.Action;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import wdl.WDL;
+import wdl.WDLMessageTypes;
 import wdl.WDLMessages;
-import wdl.api.IWDLMessageType;
 import wdl.update.Release.HashData;
 
 /**
@@ -25,29 +25,21 @@ public class WDLUpdateChecker extends Thread {
 	 * Call once the world has loaded.  Will check and start a new update checker
 	 * if needed.
 	 */
-	public static void startIfNeeded(IWDLMessageType mainMessageType,
-			IWDLMessageType debugMessageType) {
+	public static void startIfNeeded() {
 		if (!shown) {
 			shown = true;
 			
-			new WDLUpdateChecker(mainMessageType, debugMessageType).start();
+			new WDLUpdateChecker().start();
 		}
 	}
-	
-	public final IWDLMessageType mainMessageType;
-	public final IWDLMessageType debugMessageType;
 	
 	private static final String FORUMS_THREAD_USAGE_LINK = "http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465#Usage";
 	private static final String GITHUB_LINK = "https://github.com/pokechu22/WorldDownloader";
 	private static final String REDISTRIBUTION_LINK = "http://pokechu22.github.io/WorldDownloader/redistribution";
 	private static final String SMR_LINK = "http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/mods-discussion/2314237";
 	
-	private WDLUpdateChecker(IWDLMessageType mainMessageType,
-			IWDLMessageType debugMessageType) {
+	private WDLUpdateChecker() {
 		super("WorldDownloader update check thread");
-		
-		this.mainMessageType = mainMessageType;
-		this.debugMessageType = debugMessageType;
 	}
 	
 	@Override
@@ -99,11 +91,11 @@ public class WDLUpdateChecker extends Thread {
 				ChatComponentTranslation stolenBeware = new ChatComponentTranslation(
 						"wdl.intro.stolenBeware", smr);
 				
-				WDLMessages.chatMessage(mainMessageType, success);
-				WDLMessages.chatMessage(mainMessageType, usage);
-				WDLMessages.chatMessage(mainMessageType, contribute);
-				WDLMessages.chatMessage(mainMessageType, stolen);
-				WDLMessages.chatMessage(mainMessageType, stolenBeware);
+				WDLMessages.chatMessage(WDLMessageTypes.UPDATES, success);
+				WDLMessages.chatMessage(WDLMessageTypes.UPDATES, usage);
+				WDLMessages.chatMessage(WDLMessageTypes.UPDATES, contribute);
+				WDLMessages.chatMessage(WDLMessageTypes.UPDATES, stolen);
+				WDLMessages.chatMessage(WDLMessageTypes.UPDATES, stolenBeware);
 				
 				WDL.globalProps.setProperty("TutorialShown", "true");
 				WDL.saveGlobalProps();
@@ -112,7 +104,7 @@ public class WDLUpdateChecker extends Thread {
 			sleep(5000);
 			
 			List<Release> releases = GithubInfoGrabber.getReleases();
-			WDL.chatMessage(debugMessageType, "Found " + releases.size()
+			WDL.chatMessage(WDLMessageTypes.UPDATE_DEBUG, "Found " + releases.size()
 					+ " releases.");
 			String launchedVersion = Minecraft.getMinecraft().func_175600_c();
 			
@@ -166,20 +158,20 @@ public class WDLUpdateChecker extends Thread {
 			}
 			
 			if (activeRelease == null) {
-				WDL.chatMessage(debugMessageType, "Could not find a release "
+				WDL.chatMessage(WDLMessageTypes.UPDATE_DEBUG, "Could not find a release "
 						+ "for " + WDL.VERSION + ".  You may be running a "
 						+ "version that hasn't been released yet.");
 				return;
 			}
 			
 			if (newestCompatibleRelease != activeRelease) {
-				WDL.chatMessage(mainMessageType, "Out of date: newest " 
+				WDL.chatMessage(WDLMessageTypes.UPDATES, "Out of date: newest " 
 						+ "version is " + newestRelease.tag + ".  You are "
 						+ "running " + activeRelease.tag);
 			}
 			
 			if (activeRelease.hiddenInfo == null) {
-				WDL.chatMessage(debugMessageType, "Could not find hidden "
+				WDL.chatMessage(WDLMessageTypes.UPDATE_DEBUG, "Could not find hidden "
 						+ "data for release.  Skipping hashing.");
 				return;
 			}
@@ -199,7 +191,7 @@ public class WDLUpdateChecker extends Thread {
 					}
 					
 					WDL.chatMessage(
-							debugMessageType,
+							WDLMessageTypes.UPDATE_DEBUG,
 							"Bad hash for " + data.file + " (relative to "
 									+ data.relativeTo + "): Expected "
 									+ Arrays.toString(data.validHashes)
@@ -208,7 +200,7 @@ public class WDLUpdateChecker extends Thread {
 					failed.put(data,  hash);
 					continue;
 				} catch (Exception e) {
-					WDL.chatMessage(debugMessageType, "Bad hash for "
+					WDL.chatMessage(WDLMessageTypes.UPDATE_DEBUG, "Bad hash for "
 							+ data.file + " (relative to " + data.relativeTo
 							+ "): Exception: " + e);
 					
@@ -217,13 +209,13 @@ public class WDLUpdateChecker extends Thread {
 			}
 			
 			if (failed.size() > 0) {
-				WDL.chatMessage(mainMessageType, "§cSome files have invalid " +
+				WDL.chatMessage(WDLMessageTypes.UPDATES, "§cSome files have invalid " +
 						"hashes!  Your installation may be corrupt or " +
 						"compromised.  If you are running a custom build, " +
 						"this is normal.");
 			}
 		} catch (Exception e) {
-			WDL.chatMessage(debugMessageType, "Failed to perform update check: "
+			WDL.chatMessage(WDLMessageTypes.UPDATE_DEBUG, "Failed to perform update check: "
 					+ e.toString());
 			e.printStackTrace();
 		}

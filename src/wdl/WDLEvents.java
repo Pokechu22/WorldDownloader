@@ -74,8 +74,7 @@ public class WDLEvents {
 			return;
 		}
 		
-		WDLUpdateChecker.startIfNeeded(WDLMessageTypes.UPDATES,
-				WDLMessageTypes.UPDATE_DEBUG);
+		WDLUpdateChecker.startIfNeeded();
 
 		// If already downloading
 		if (WDL.downloading) {
