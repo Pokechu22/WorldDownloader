@@ -1,5 +1,7 @@
 package wdl;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -303,6 +305,8 @@ public class WDLMessages {
 	 */
 	public static void chatMessageTranslated(IWDLMessageType type,
 			String translationKey, Object... args) {
+		List<Throwable> exceptionsToPrint = new ArrayList<Throwable>();
+		
 		for (int i = 0; i < args.length; i++) {
 			if (args[i] instanceof Entity) {
 				Entity e = (Entity)args[i];
@@ -333,10 +337,38 @@ public class WDLMessages {
 						.setChatHoverEvent(event));
 				
 				args[i] = component;
+			} else if (args[i] instanceof Throwable) {
+				Throwable t = (Throwable)args[i];
+				IChatComponent component = new ChatComponentText(t.toString());
+				
+				// http://stackoverflow.com/a/1149721/3991344
+				StringWriter sw = new StringWriter();
+				t.printStackTrace(new PrintWriter(sw));
+				String exceptionAsString = sw.toString();
+				
+				exceptionAsString = exceptionAsString.replace("\r", "")
+						.replace("\t", "    ");
+				
+				HoverEvent event = new HoverEvent(Action.SHOW_TEXT,
+						new ChatComponentText(exceptionAsString));
+				
+				component.setChatStyle(component.getChatStyle()
+						.setChatHoverEvent(event));
+				
+				// Also, log the stacktrace for future use.
+				logger.warn(t);
+				
+				args[i] = component;
+				
+				exceptionsToPrint.add(t);
 			}
 		}
 		
 		chatMessage(type, new ChatComponentTranslation(translationKey, args));
+		
+		for (int i = 0; i < exceptionsToPrint.size(); i++) {
+			logger.warn("Exception #" + (i + 1) + ": ", exceptionsToPrint.get(i));
+		}
 	}
 	
 	/**
