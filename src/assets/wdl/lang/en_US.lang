@@ -117,6 +117,9 @@ wdl.gui.about.debugInfo.copied=Copied!
 wdl.gui.extensions.title=World Downloader mod: Extensions
 wdl.gui.extensions.detailsCaption=Details (resizable)
 wdl.gui.extensions.modVersion=%s v%s
+#The following line is used as a fallback for extensions that have their own
+#GUI but don't give a name for the button to use.
+wdl.gui.extensions.defaultSettingsButtonText=Settings...
 
 wdl.gui.multiworldSelect.title.startDownload=World Downloader - Trying To Start Download
 wdl.gui.multiworldSelect.title.changeOptions=World Downloader - Trying To Change Options

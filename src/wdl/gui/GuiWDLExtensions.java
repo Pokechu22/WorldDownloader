@@ -85,6 +85,11 @@ public class GuiWDLExtensions extends GuiScreen {
 						name, mod.getVersion());
 				
 				if (mod instanceof IWDLModWithGui) {
+					String buttonName = ((IWDLModWithGui) mod).getButtonName();
+					if (buttonName == null || buttonName.isEmpty()) {
+						buttonName = I18n.format("wdl.gui.extensions.defaultSettingsButtonText");
+					}
+					
 					button = new GuiButton(0, 0, 0, 80, 20,
 							((IWDLModWithGui) mod).getButtonName());
 				}
