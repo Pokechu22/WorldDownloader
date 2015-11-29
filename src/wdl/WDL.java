@@ -431,7 +431,8 @@ public class WDL {
 
 		startOnChange = true;
 		downloading = true;
-		chatInfo("Download started");
+		WDLMessages.chatMessageTranslated(WDLMessageTypes.INFO,
+				"wdl.messages.generalInfo.downloadStarted");
 	}
 
 	/**
@@ -442,7 +443,8 @@ public class WDL {
 			// Indicate that downloading has stopped
 			downloading = false;
 			startOnChange = false;
-			chatInfo("Download stopped");
+			WDLMessages.chatMessageTranslated(WDLMessageTypes.INFO,
+					"wdl.messages.generalInfo.downloadStopped");
 			startSaveThread();
 		}
 	}
@@ -470,7 +472,8 @@ public class WDL {
 				}
 			});
 		
-			WDL.chatInfo("Download canceled.");
+			WDLMessages.chatMessageTranslated(WDLMessageTypes.INFO,
+					"wdl.messages.generalInfo.downloadCanceled");
 		}
 	}
 
@@ -479,7 +482,8 @@ public class WDL {
 	 */
 	static void startSaveThread() {
 		// Indicate that we are saving
-		WDL.chatInfo("Save started.");
+		WDLMessages.chatMessageTranslated(WDLMessageTypes.INFO,
+				"wdl.messages.generalInfo.saveStarted");
 		WDL.saving = true;
 		WDLSaveAsync saver = new WDLSaveAsync();
 		Thread thread = new Thread(saver, "WDL Save Thread");
@@ -578,12 +582,14 @@ public class WDL {
 
 		// If still downloading, load the current world and keep on downloading
 		if (downloading) {
-			WDL.chatInfo("Save complete. Starting download again.");
+			WDLMessages.chatMessageTranslated(WDLMessageTypes.INFO,
+					"wdl.messages.generalInfo.saveComplete.startingAgain");
 			WDL.loadWorld();
 			return;
 		}
 
-		WDL.chatInfo("Save complete. Your single player file is ready to play!");
+		WDLMessages.chatMessageTranslated(WDLMessageTypes.INFO,
+				"wdl.messages.generalInfo.saveComplete.done");
 	}
 
 	/**
@@ -971,7 +977,7 @@ public class WDL {
 		}
 
 		if (hashArrayField == null) {
-			chatInfo("Could not save chunks. Reflection error.");
+			chatError("Could not save chunks. Reflection error.");
 			return;
 		}
 
@@ -1599,13 +1605,6 @@ public class WDL {
 	 */
 	public static void chatMessage(IWDLMessageType type, String msg) {
 		WDLMessages.chatMessage(type, msg);
-	}
-	
-	/**
-	 * Prints a message to the chat, with a type of {@link WDLMessageTypes#INFO}.
-	 */
-	public static void chatInfo(String msg) {
-		WDLMessages.chatMessage(WDLMessageTypes.INFO, msg);
 	}
 
 	/**

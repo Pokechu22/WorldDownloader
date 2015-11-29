@@ -276,6 +276,15 @@ wdl.messages.onGuiClosedInfo.unhandledTileEntity=onItemGuiClosed: Unhandled Tile
 
 wdl.unsafeReasons.badCustomName=Invalid custom name!  (Threw %s)
 
+wdl.messages.generalInfo.downloadStarted=Download started
+wdl.messages.generalInfo.downloadStopped=Download stopped.
+wdl.messages.generalInfo.saveStarted=Save started.
+wdl.messages.generalInfo.saveComplete.startingAgain=Save complete. Starting download again.
+wdl.messages.generalInfo.saveComplete.done=Save complete. Your single player file is ready to play!
+wdl.messages.generalInfo.worldChanged=World change detected. Download will start once current save completes.
+wdl.messages.generalInfo.downloadCanceled=Download canceled.
+wdl.messages.generalInfo.seedSet=Setting single-player world seed to %s.
+
 wdl.saveProgress.title=Saving downloaded world
 wdl.saveProgress.chunk.title=Saving chunks
 wdl.saveProgress.chunk.saving=Saving chunk at %d, %d

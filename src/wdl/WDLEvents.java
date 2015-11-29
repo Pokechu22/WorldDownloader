@@ -42,7 +42,6 @@ import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.storage.MapData;
-
 import wdl.api.IWorldLoadListener;
 import wdl.update.WDLUpdateChecker;
 
@@ -83,7 +82,8 @@ public class WDLEvents {
 			// If not currently saving, stop the current download and start
 			// saving now
 			if (!WDL.saving) {
-				WDL.chatInfo("World change detected. Download will start once current save completes.");
+				WDLMessages.chatMessageTranslated(WDLMessageTypes.INFO,
+						"wdl.messages.generalInfo.worldChanged");
 				WDL.worldLoadingDeferred = true;
 				WDL.startSaveThread();
 			}
@@ -561,7 +561,8 @@ public class WDLEvents {
 		if (WDL.downloading && msg.startsWith("Seed: ")) {
 			String seed = msg.substring(6);
 			WDL.worldProps.setProperty("RandomSeed", seed);
-			WDL.chatInfo("Setting single-player world seed to " + seed);
+			WDLMessages.chatMessageTranslated(WDLMessageTypes.INFO,
+					"wdl.messages.generalInfo.seedSet", seed);
 		}
 	}
 }
