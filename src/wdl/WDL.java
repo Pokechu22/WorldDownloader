@@ -762,7 +762,7 @@ public class WDL {
 	 * when stopping.
 	 */
 	public static void saveEverything() throws Exception {
-		if (!WDLPluginChannels.canDownloadInGeneral()) {
+		if (!WDLPluginChannels.canDownloadAtAll()) {
 			WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR,
 					"wdl.messages.generalError.forbidden");
 			return;
@@ -858,7 +858,7 @@ public class WDL {
 	 */
 	public static void savePlayer(NBTTagCompound playerNBT, 
 			GuiWDLSaveProgress progressScreen) {
-		if (!WDLPluginChannels.canDownloadInGeneral()) { return; }
+		if (!WDLPluginChannels.canDownloadAtAll()) { return; }
 		
 		WDLMessages.chatMessageTranslated(WDLMessageTypes.SAVING,
 				"wdl.messages.saving.savingPlayer");
@@ -906,7 +906,7 @@ public class WDL {
 	 */
 	public static void saveWorldInfo(NBTTagCompound worldInfoNBT,
 			GuiWDLSaveProgress progressScreen) {
-		if (!WDLPluginChannels.canDownloadInGeneral()) { return; }
+		if (!WDLPluginChannels.canDownloadAtAll()) { return; }
 		
 		WDLMessages.chatMessageTranslated(WDLMessageTypes.SAVING,
 				"wdl.messages.saving.savingWorld");
@@ -968,7 +968,7 @@ public class WDL {
 	 */
 	public static void saveChunks(GuiWDLSaveProgress progressScreen)
 			throws IllegalArgumentException, IllegalAccessException {
-		if (!WDLPluginChannels.canDownloadInGeneral()) { return; }
+		if (!WDLPluginChannels.canDownloadAtAll()) { return; }
 		
 		WDLMessages.chatMessageTranslated(WDLMessageTypes.SAVING,
 				"wdl.messages.saving.savingChunks");
@@ -1066,7 +1066,9 @@ public class WDL {
 	 * Import all non-overwritten TileEntities, then save the chunk
 	 */
 	public static void saveChunk(Chunk c) {
-		if (!WDLPluginChannels.canDownloadInGeneral()) { return; }
+		if (!WDLPluginChannels.canDownloadAtAll()) { return; }
+		
+		if (!WDLPluginChannels.canSaveChunk(c)) { return; }
 		
 		if (!WDLPluginChannels.canSaveTileEntities()) {
 			c.getTileEntityMap().clear();

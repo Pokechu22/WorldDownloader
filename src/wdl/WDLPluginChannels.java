@@ -119,7 +119,21 @@ public class WDLPluginChannels {
 	}
 	
 	/**
-	 * Checks whether players are allowed to download in general.
+	 * Checks whether the player should be able to start download at all: Either
+	 * {@link #canDownloadInGeneral()} is true, or the player has some chunks
+	 * overridden.
+	 */
+	public static boolean canDownloadAtAll() {
+		if (receivedPackets.contains(4) && !chunkOverrides.isEmpty()) {
+			return true;
+		} else {
+			return canDownloadInGeneral();
+		}
+	}
+	
+	/**
+	 * Checks whether players are allowed to download in general (outside of
+	 * overridden chunks).
 	 */
 	public static boolean canDownloadInGeneral() {
 		if (receivedPackets.contains(1)) {

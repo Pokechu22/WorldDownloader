@@ -425,7 +425,7 @@ public class WDLHooks {
 					.format("wdl.gui.ingameMenu.downloadStatus.singlePlayer");
 			wdlDownload.enabled = false;
 			wdlOptions.enabled = false;
-		} else if (!WDLPluginChannels.canDownloadInGeneral()) {
+		} else if (!WDLPluginChannels.canDownloadAtAll()) {
 			if (WDLPluginChannels.canRequestPermissions()) {
 				// Allow requesting permissions.
 				wdlDownload.displayString = I18n
@@ -469,7 +469,10 @@ public class WDLHooks {
 		}
 	
 		if (button.id == WDLs) { // "Start/Stop Download"
-			if (!WDLPluginChannels.canDownloadInGeneral()) {
+			if (!WDLPluginChannels.canDownloadAtAll()) {
+				// TODO: A bit more complex logic - if they can't download in
+				// most terrain, but they DO have chunk overrides, do we want
+				// to open a GUI?
 				if (WDLPluginChannels.canRequestPermissions()) {
 					WDL.minecraft.displayGuiScreen(new GuiWDLPermissions(gui));
 				} else {
@@ -484,7 +487,7 @@ public class WDLHooks {
 				WDL.startDownload();
 			}
 		} else if (button.id == WDLo) { // "..." (options)
-			if (!WDLPluginChannels.canDownloadInGeneral()) {
+			if (!WDLPluginChannels.canDownloadAtAll()) {
 				button.enabled = false;
 				return;
 			}

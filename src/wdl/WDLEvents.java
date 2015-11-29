@@ -101,12 +101,12 @@ public class WDLEvents {
 		}
 	}
 
-	/** Must be called when a chunk is no longer needed and should be removed */
+	/**
+	 * Must be called when a chunk is no longer needed and is about to be removed.
+	 */
 	public static void onChunkNoLongerNeeded(Chunk unneededChunk) {
 		if (!WDL.downloading) { return; }
 		
-		if (!WDLPluginChannels.canDownloadInGeneral()) { return; }
-
 		if (unneededChunk == null) {
 			return;
 		}
@@ -127,7 +127,7 @@ public class WDLEvents {
 
 	/**
 	 * Must be called when a GUI that receives item stacks from the server is
-	 * shown
+	 * shown.
 	 */
 	public static void onItemGuiOpened() {
 		if (!WDL.downloading) { return; }
@@ -148,13 +148,11 @@ public class WDLEvents {
 
 	/**
 	 * Must be called when a GUI that triggered an onItemGuiOpened is no longer
-	 * shown
+	 * shown.
 	 */
 	public static boolean onItemGuiClosed() {
 		if (!WDL.downloading) { return true; }
 		
-		if (!WDLPluginChannels.canDownloadInGeneral()) { return true; }
-
 		String saveName = "";
 
 		if (WDL.thePlayer.ridingEntity != null &&
