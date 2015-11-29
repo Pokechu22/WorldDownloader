@@ -124,7 +124,7 @@ public class WDLPluginChannels {
 	 * overridden.
 	 */
 	public static boolean canDownloadAtAll() {
-		if (receivedPackets.contains(4) && !chunkOverrides.isEmpty()) {
+		if (hasChunkOverrides()) {
 			return true;
 		} else {
 			return canDownloadInGeneral();
@@ -411,6 +411,28 @@ public class WDLPluginChannels {
 		return false;
 	}
 
+	/**
+	 * Are there any chunk overrides present?
+	 */
+	public static boolean hasChunkOverrides() {
+		if (!receivedPackets.contains(4)) {
+			// XXX It's possible that some implementations may not send
+			// packet 4, but still send ranges. If so, that may lead to issues.
+			// But right now, I'm not checking that.
+			return false;
+		}
+		if (chunkOverrides == null || chunkOverrides.isEmpty()) {
+			return false;
+		}
+		for (Multimap<String, ChunkRange> m : chunkOverrides.values()) {
+			if (!m.isEmpty()) {
+				System.out.println(m);
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	/**
 	 * Event that is called when the world is loaded.
 	 * Sets the default values, and then asks the server to give the
