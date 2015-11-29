@@ -428,7 +428,6 @@ public class WDLPluginChannels {
 		}
 		for (Multimap<String, ChunkRange> m : chunkOverrides.values()) {
 			if (!m.isEmpty()) {
-				System.out.println(m);
 				return true;
 			}
 		}
