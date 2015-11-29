@@ -432,7 +432,6 @@ public class WDLPluginChannels {
 		} catch (UnsupportedEncodingException e) {
 			WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR,
 					"wdl.messages.generalError.noUTF8", e);
-			e.printStackTrace();
 
 			initPacket = new C17PacketCustomPayload("WDL|INIT",
 					new PacketBuffer(Unpooled.buffer()));
