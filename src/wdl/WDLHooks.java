@@ -107,7 +107,7 @@ public class WDLHooks {
 								if (!handled) {
 									WDLMessages.chatMessageTranslated(
 											WDLMessageTypes.ON_GUI_CLOSED_WARNING,
-											"wdl.messages.onGuiClosedInfo.unhandledEntity",
+											"wdl.messages.onGuiClosedWarning.unhandledEntity",
 											entity);
 								}
 							} else {
@@ -127,7 +127,7 @@ public class WDLHooks {
 								if (!handled) {
 									WDLMessages.chatMessageTranslated(
 											WDLMessageTypes.ON_GUI_CLOSED_WARNING,
-											"wdl.messages.onGuiClosedInfo.unhandledTileEntity",
+											"wdl.messages.onGuiClosedWarning.unhandledTileEntity",
 											pos, sender.getTileEntity(pos));
 								}
 							}

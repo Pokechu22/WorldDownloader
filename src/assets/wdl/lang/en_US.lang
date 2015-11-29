@@ -270,9 +270,9 @@ wdl.messages.onGuiClosedInfo.savedTileEntity.furnace=Saved furnace contents.
 wdl.messages.onGuiClosedInfo.savedTileEntity.hopper=Saved hopper contents.
 wdl.messages.onGuiClosedInfo.savedTileEntity.beacon=Saved beacon effects.
 
-wdl.messages.onGuiClosedInfo.couldNotGetTE=onItemGuiClosed could not get TE at %s.
-wdl.messages.onGuiClosedInfo.unhandledEntity=onItemGuiClosed: Unrecognised entity could not be saved: %s
-wdl.messages.onGuiClosedInfo.unhandledTileEntity=onItemGuiClosed: Unhandled Tile Entity at %s: %s
+wdl.messages.onGuiClosedWarning.couldNotGetTE=onItemGuiClosed could not get TE at %s.
+wdl.messages.onGuiClosedWarning.unhandledEntity=onItemGuiClosed: Unrecognised entity could not be saved: %s
+wdl.messages.onGuiClosedWarning.unhandledTileEntity=onItemGuiClosed: Unhandled Tile Entity at %s: %s
 wdl.messages.onGuiClosedWarning.failedToFindDoubleChest=Could not save this double chest!  Failed to find all neighboring chest blocks.
 
 wdl.unsafeReasons.badCustomName=Invalid custom name!  (Threw %s)

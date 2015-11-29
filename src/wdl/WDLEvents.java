@@ -285,7 +285,7 @@ public class WDLEvents {
 			//TODO: Is this a good way to stop?  Is the event truely handled here?
 			WDLMessages.chatMessageTranslated(
 					WDLMessageTypes.ON_GUI_CLOSED_WARNING,
-					"wdl.messages.onGuiClosedInfo.couldNotGetTE",
+					"wdl.messages.onGuiClosedWarning.couldNotGetTE",
 					WDL.lastClickedBlock);
 			return true;
 		}
