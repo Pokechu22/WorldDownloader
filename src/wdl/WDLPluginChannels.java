@@ -17,6 +17,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
@@ -434,6 +436,24 @@ public class WDLPluginChannels {
 	}
 	
 	/**
+	 * Gets an immutable copy of the {@link #chunkOverrides} map.
+	 */
+	public static Map<String, Multimap<String, ChunkRange>> getChunkOverrides() {
+		Map<String, Multimap<String, ChunkRange>> returned = new
+				HashMap<String, Multimap<String,ChunkRange>>();
+		
+		for (Map.Entry<String, Multimap<String, ChunkRange>> e : chunkOverrides
+				.entrySet()) {
+			// Create a copy of the given map.
+			Multimap<String, ChunkRange> map = ImmutableMultimap.copyOf(e.getValue());
+			
+			returned.put(e.getKey(), map);
+		}
+		
+		return ImmutableMap.copyOf(returned);
+	}
+	
+	/**
 	 * Event that is called when the world is loaded.
 	 * Sets the default values, and then asks the server to give the
 	 * correct ones.
@@ -670,7 +690,7 @@ public class WDLPluginChannels {
 	/**
 	 * A range of chunks.
 	 */
-	private static class ChunkRange {
+	public static class ChunkRange {
 		public ChunkRange(String tag, int x1, int z1, int x2, int z2) {
 			this.tag = tag;
 			this.x1 = x1;
