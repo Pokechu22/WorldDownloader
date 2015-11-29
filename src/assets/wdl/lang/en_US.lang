@@ -273,6 +273,7 @@ wdl.messages.onGuiClosedInfo.savedTileEntity.beacon=Saved beacon effects.
 wdl.messages.onGuiClosedInfo.couldNotGetTE=onItemGuiClosed could not get TE at %s.
 wdl.messages.onGuiClosedInfo.unhandledEntity=onItemGuiClosed: Unrecognised entity could not be saved: %s
 wdl.messages.onGuiClosedInfo.unhandledTileEntity=onItemGuiClosed: Unhandled Tile Entity at %s: %s
+wdl.messages.onGuiClosedWarning.failedToFindDoubleChest=Could not save this double chest!  Failed to find all neighboring chest blocks.
 
 wdl.unsafeReasons.badCustomName=Invalid custom name!  (Threw %s)
 
@@ -284,6 +285,15 @@ wdl.messages.generalInfo.saveComplete.done=Save complete. Your single player fil
 wdl.messages.generalInfo.worldChanged=World change detected. Download will start once current save completes.
 wdl.messages.generalInfo.downloadCanceled=Download canceled.
 wdl.messages.generalInfo.seedSet=Setting single-player world seed to %s.
+
+wdl.messages.generalError.failedToImportTE=Failed to import tile entities for chunk at %d, %d: %s
+wdl.messages.generalError.failedToSaveChunk=Chunk at position %d, %d cannot be saved!  (%s)
+wdl.messages.generalError.failedToFindHashArrayField=Couldn't save chunks: Failed to find hash array field.
+wdl.messages.generalError.couldNotGetLHMEntry=Couldn't save chunks: Failed to get class for LongHashMap.Entry.
+wdl.messages.generalError.chunkProviderClientEmpty=Can't save currently loaded chunks: ChunkProviderClient has no data!  (If you changed dimensions just now, this is normal and the chunks were still saved)
+wdl.messages.generalError.forbidden=The server forbids downloading this world!
+wdl.messages.generalError.failedToBackUp=Error while backing up world: %s
+wdl.messages.generalError.noUTF8=Your computer doesn't support the UTF-8 charset: %s.  You should feel bad.
 
 wdl.saveProgress.title=Saving downloaded world
 wdl.saveProgress.chunk.title=Saving chunks

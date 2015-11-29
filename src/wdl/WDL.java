@@ -661,9 +661,9 @@ public class WDL {
 				}
 			}
 		} catch (Exception e) {
-			chatError("Failed to import tile entities for chunk at " + 
-					chunk.xPosition + ", " + chunk.zPosition + ": " + e);
-			e.printStackTrace();
+			WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR,
+					"wdl.messages.generalError.failedToImportTE",
+					chunk.xPosition, chunk.zPosition, e);
 		} finally {
 			if (dis != null) {
 				try {
@@ -753,7 +753,8 @@ public class WDL {
 	 */
 	public static void saveEverything() throws Exception {
 		if (!WDLPluginChannels.canDownloadInGeneral()) {
-			chatError("The server forbids downloading!");
+			WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR,
+					"wdl.messages.generalError.forbidden");
 			return;
 		}
 		
@@ -833,8 +834,8 @@ public class WDL {
 				WorldBackup.backupWorld(saveHandler.getWorldDirectory(), 
 						getWorldFolderName(worldName), backupType, progressScreen);
 			} catch (IOException e) {
-				chatError("Error while backing up world: " + e);
-				e.printStackTrace();
+				WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR,
+						"wdl.messages.generalError.failedToBackUp");
 			}
 		}
 		
@@ -977,7 +978,8 @@ public class WDL {
 		}
 
 		if (hashArrayField == null) {
-			chatError("Could not save chunks. Reflection error.");
+			WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR,
+					"wdl.messages.generalError.failedToFindHashArrayField");
 			return;
 		}
 
@@ -994,8 +996,8 @@ public class WDL {
 		Object[] hashArray = (Object[]) hashArrayField.get(lhm);
 
 		if (lhm.getNumHashElements() == 0 || hashArray.length == 0) {
-			chatError("ChunkProviderClient has no chunk data!");
-			chatError("(If you changed dimensions just now, this is normal)");
+			WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR,
+					"wdl.messages.generalError.chunkProviderClientEmpty");
 			return;
 		} else {
 			// Get the actual class for LongHashMap.Entry
@@ -1009,7 +1011,8 @@ public class WDL {
 			}
 
 			if (Entry == null) {
-				chatError("Could not get class for LongHashMap.Entry.");
+				WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR,
+						"wdl.messages.generalError.couldNotGetLHMEntry");
 				return;
 			}
 
@@ -1188,11 +1191,9 @@ public class WDL {
 			}
 		} catch (Exception e) {
 			// Better tell the player that something didn't work:
-			chatError("Chunk at chunk position " + c.xPosition + ","
-					+ c.zPosition + " can't be saved!");
-			chatError(e.toString());
-			
-			e.printStackTrace();
+			WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR,
+					"wdl.messages.generalError.failedToSaveChunk",
+					c.xPosition, c.zPosition, e);
 		}
 	}
 

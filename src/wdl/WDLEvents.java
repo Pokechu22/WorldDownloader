@@ -369,8 +369,8 @@ public class WDLEvents {
 				
 				if (chest1 == null || chest2 == null || 
 						chestPos1 == null || chestPos2 == null) {
-					WDL.chatError("Could not save this double chest!");
-					WDL.chatError("Not all chest blocks were found!");
+					WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR,
+							"wdl.messages.onGuiClosedWarning.failedToFindDoubleChest");
 					return true;
 				}
 

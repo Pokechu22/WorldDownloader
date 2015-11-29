@@ -430,8 +430,8 @@ public class WDLPluginChannels {
 					new PacketBuffer(Unpooled.copiedBuffer(WDL.VERSION
 							.getBytes("UTF-8"))));
 		} catch (UnsupportedEncodingException e) {
-			WDL.chatError("Your computer doesn't support the UTF-8 charset."
-					+ "You should feel bad.  " + (e.toString()));
+			WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR,
+					"wdl.messages.generalError.noUTF8", e);
 			e.printStackTrace();
 
 			initPacket = new C17PacketCustomPayload("WDL|INIT",
@@ -487,7 +487,9 @@ public class WDLPluginChannels {
 				//Cancel a download if it is occurring.
 				if (!canDownloadInGeneral) {
 					if (WDL.downloading) {
-						WDL.chatError("The server forbids downloading this world!");
+						WDLMessages.chatMessageTranslated(
+								WDLMessageTypes.ERROR,
+								"wdl.messages.generalError.forbidden");
 						WDL.cancelDownload();
 					}
 				}
