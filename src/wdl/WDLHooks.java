@@ -1,5 +1,7 @@
 package wdl;
 
+import java.util.concurrent.Callable;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.network.NetHandlerPlayClient;
@@ -216,5 +218,20 @@ public class WDLHooks {
 			WDL.minecraft.crashed(CrashReport.makeCrashReport(e,
 					"WDL mod: exception in onNHPCHandleBlockAction event"));
 		}
+	}
+	
+	/**
+	 * Injects WDL information into a crash report.
+	 * 
+	 * Called at the end of {@link CrashReport#populateEnvironment()}.
+	 * @param report
+	 */
+	public static void onCrashReportPopulateEnvironment(CrashReport report) {
+		report.makeCategory("World Downloader Mod").addCrashSectionCallable("Info",
+			new Callable<String>() {
+				public String call() {
+					return WDL.getDebugInfo();
+				}
+			});
 	}
 }
