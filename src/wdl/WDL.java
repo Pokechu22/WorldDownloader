@@ -802,7 +802,6 @@ public class WDL {
 				}
 			} else {
 				// Remove entities of unwanted types.
-				//TODO: Handle holograms
 				for (Iterable<Entity> entityList : c.getEntityLists()) {
 					for (Entity e : entityList) {
 						if (e instanceof EntityPlayer) {
@@ -814,6 +813,10 @@ public class WDL {
 						
 						if (!EntityUtils.isEntityEnabled(e)) {
 							removedEntities.add(e);
+						}
+						String unsafeReason = EntityUtils.isUnsafeToSaveEntity(e);
+						if (unsafeReason != null) {
+							chatDebug(WDLDebugMessageCause.REMOVE_ENTITY, "Skipping unsafe entity " + e + ": " + unsafeReason);
 						}
 					}
 				}

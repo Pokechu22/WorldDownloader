@@ -472,6 +472,15 @@ public class WDLEvents {
 					return;
 				}
 				
+				String unsafeReason = EntityUtils.isUnsafeToSaveEntity(entity);
+				if (unsafeReason != null) {
+					WDL.chatDebug(WDLDebugMessageCause.REMOVE_ENTITY,
+							"removeEntityFromWorld: Allowing removal of "
+									+ EntityUtils.getEntityType(entity)
+									+ " (not save to save - " + unsafeReason + ")");
+					return;
+				}
+				
 				int threshold = EntityUtils.getEntityTrackDistance(entity);
 				
 				if (threshold < 0) {
