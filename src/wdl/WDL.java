@@ -49,6 +49,8 @@ import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.item.EntityFireworkRocket;
 import net.minecraft.entity.item.EntityPainting;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.event.HoverEvent;
+import net.minecraft.event.HoverEvent.Action;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemMap;
@@ -72,6 +74,7 @@ import net.minecraft.tileentity.TileEntityNote;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ClassInheritanceMultiMap;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.LongHashMap;
 import net.minecraft.village.MerchantRecipe;
@@ -1229,6 +1232,25 @@ public class WDL {
 	public static void chatMsg(String msg) {
 		minecraft.ingameGUI.getChatGUI().printChatMessage(
 			new ChatComponentText("\u00A7c[WorldDL]\u00A76 " + msg));
+	}
+	
+	public static void chatMessage(IChatComponent message) {
+		IChatComponent text = new ChatComponentText("");
+		
+		IChatComponent header = new ChatComponentText("[WorldDL]");
+		header.getChatStyle().setColor(EnumChatFormatting.RED);
+
+		// If the message has its own style, it'll use that instead.
+		// TODO: Better way?
+		ChatComponentText messageFormat = new ChatComponentText(" ");
+		messageFormat.getChatStyle().setColor(EnumChatFormatting.GOLD);
+
+		messageFormat.appendSibling(message);
+		text.appendSibling(header);
+		text.appendSibling(messageFormat);
+		
+		Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(
+				text);
 	}
 
 	/** Adds a chat message with a World Downloader prefix */

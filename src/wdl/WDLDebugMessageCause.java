@@ -17,7 +17,8 @@ public enum WDLDebugMessageCause {
 	ON_GUI_CLOSED_WARNING("GUI Closed -- Warning", true),
 	SAVING("Saving data", true),
 	REMOVE_ENTITY("Removing entity", false),
-	PLUGIN_CHANNEL_MESSAGE("Plugin channel message", true);
+	PLUGIN_CHANNEL_MESSAGE("Plugin channel message", true),
+	UPDATE_DEBUG("Update debug info", false);
 	
 	private WDLDebugMessageCause(String displayText, boolean enabledByDefault) {
 		this.displayText = displayText;

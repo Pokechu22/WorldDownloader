@@ -40,6 +40,8 @@ import net.minecraft.world.storage.MapData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import wdl.update.WDLUpdateChecker;
+
 /**
  * Handles all of the events for WDL.
  * 
@@ -64,6 +66,8 @@ public class WDLEvents {
 		if (WDL.worldLoadingDeferred) {
 			return;
 		}
+		
+		WDLUpdateChecker.startIfNeeded();
 
 		// If already downloading
 		if (WDL.downloading) {
