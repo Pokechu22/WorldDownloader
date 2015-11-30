@@ -10,6 +10,7 @@ import net.minecraft.client.gui.GuiUtilRenderComponents;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
 
 /**
  * Provides fast setting for various entity options.
@@ -263,11 +264,11 @@ public class GuiWDLEntityPresets extends GuiScreen implements GuiYesNoCallback {
 		 * <li>Whether to include color codes.</li>
 		 * </ul>
 		 */
-		List<ChatComponentText> texts = GuiUtilRenderComponents.func_178908_a(
+		List<IChatComponent> texts = GuiUtilRenderComponents.func_178908_a(
 				new ChatComponentText(s), width, fontRendererObj, true, true);
 		
 		List<String> returned = new ArrayList<String>();
-		for (ChatComponentText component : texts) {
+		for (IChatComponent component : texts) {
 			returned.add(component.getFormattedText());
 		}
 		

@@ -128,7 +128,7 @@ public class WDLHooks {
 			
 			profiler.startSection("wdl.onChatMessage");
 			
-			WDLEvents.onChatMessage(packet.func_148915_c().toString());
+			WDLEvents.onChatMessage(packet.getChatComponent().getUnformattedText());
 			
 			profiler.endSection();
 		} catch (Throwable e) {
@@ -208,7 +208,7 @@ public class WDLHooks {
 			
 			profiler.startSection("wdl.onBlockEvent");
 			
-			WDLEvents.onBlockEvent(packet.func_179825_a(), packet.getBlockType(),
+			WDLEvents.onBlockEvent(packet.getBlockPosition(), packet.getBlockType(),
 					packet.getData1(), packet.getData2());
 			
 			profiler.endSection();

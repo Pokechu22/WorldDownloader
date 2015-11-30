@@ -71,7 +71,7 @@ import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.tileentity.TileEntityNote;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ClassInheratanceMultiMap;
+import net.minecraft.util.ClassInheritanceMultiMap;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.LongHashMap;
 import net.minecraft.village.MerchantRecipe;
@@ -557,10 +557,7 @@ public class WDL {
 			progressScreen.setMinorTaskProgress(
 					"(waiting for ThreadedFileIOBase to finish)", 1);
 			
-			// func_178779_a is a getter for the instance.
-			// Look inside of ThreadedFileIOBase.java for
-			// such a getter.
-			ThreadedFileIOBase.func_178779_a().waitForFinish();
+			ThreadedFileIOBase.getThreadedIOInstance().waitForFinish();
 		} catch (Exception e) {
 			throw new RuntimeException("Threw exception waiting for asynchronous IO to finish. Hmmm.", e);
 		}

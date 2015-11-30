@@ -39,14 +39,8 @@ public class GuiWDLMultiworldSelect extends GuiScreen {
 		this.yaw = tempPlayer.rotationYaw;
 		this.thirdPersonViewSave = WDL.minecraft.gameSettings.thirdPersonView;
 		WDL.minecraft.gameSettings.thirdPersonView = 0;
-		//Sets the render view entity for minecraft.
-		//When obfuscation changes, look in EntityRenderer.java for code that
-		//looks something like this in updateRenderer.java: 
-        //if (this.mc.renderViewEntity == null) {
-        //    this.mc.renderViewEntity = this.mc.thePlayer;
-        //}
-		this.oldRenderViewEntity = WDL.minecraft.func_175606_aa();
-		WDL.minecraft.func_175607_a(this.cam);
+		this.oldRenderViewEntity = WDL.minecraft.getRenderViewEntity();
+		WDL.minecraft.setRenderViewEntity(this.cam);
 	}
 
 	/**
@@ -235,7 +229,7 @@ public class GuiWDLMultiworldSelect extends GuiScreen {
 	public void onGuiClosed() {
 		super.onGuiClosed();
 		WDL.minecraft.gameSettings.thirdPersonView = this.thirdPersonViewSave;
-		WDL.minecraft.func_175607_a(this.oldRenderViewEntity);
+		WDL.minecraft.setRenderViewEntity(this.oldRenderViewEntity);
 	}
 
 	private void worldSelected(String var1) {

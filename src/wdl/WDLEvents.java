@@ -119,9 +119,7 @@ public class WDLEvents {
 			WDL.lastEntity = WDL.minecraft.objectMouseOver.entityHit;
 		} else {
 			WDL.lastEntity = null;
-			// func_178782_a returns a BlockPos; find another one
-			// if it is reobfuscated.
-			WDL.lastClickedBlock = WDL.minecraft.objectMouseOver.func_178782_a();
+			WDL.lastClickedBlock = WDL.minecraft.objectMouseOver.getBlockPos();
 		}
 	}
 
@@ -164,10 +162,7 @@ public class WDLEvents {
 							(entityHorse.isChested() &&
 									(entityHorse.getHorseType() == 1 ||
 									entityHorse.getHorseType() == 2)) ? 17 : 2);
-					//func_110133_a sets the custom name -- if changed look
-					//for one that sets hasCustomName to true and gives
-					//inventoryTitle the value of the parameter.
-					horseChest.func_110133_a(entityHorse.getName());
+					horseChest.setCustomName(entityHorse.getName());
 					WDL.saveContainerItems(WDL.windowContainer, horseChest, 0);
 					//I don't even know what this does, but it's part of the
 					//other method...
@@ -226,10 +221,7 @@ public class WDLEvents {
 						(entityHorse.isChested() &&
 								(entityHorse.getHorseType() == 1 ||
 								entityHorse.getHorseType() == 2)) ? 17 : 2);
-				//func_110133_a sets the custom name -- if changed look
-				//for one that sets hasCustomName to true and gives
-				//inventoryTitle the value of the parameter.
-				horseChest.func_110133_a(entityHorse.getName());
+				horseChest.setCustomName(entityHorse.getName());
 				WDL.saveContainerItems(WDL.windowContainer, horseChest, 0);
 				//I don't even know what this does, but it's part of the
 				//other method...
