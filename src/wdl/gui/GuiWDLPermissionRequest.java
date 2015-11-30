@@ -107,6 +107,10 @@ public class GuiWDLPermissionRequest extends GuiScreen {
 	 * Field in which the wanted request is entered.
 	 */
 	private GuiTextField requestField;
+	/**
+	 * GUIButton for submitting the request.
+	 */
+	private GuiButton submitButton;
 	
 	public GuiWDLPermissionRequest(GuiScreen parent) {
 		this.parent = parent;
@@ -132,6 +136,11 @@ public class GuiWDLPermissionRequest extends GuiScreen {
 		this.requestField = new GuiTextField(0, fontRendererObj,
 				width / 2 - 155, 18, 150, 20);
 		
+		this.submitButton = new GuiButton(1, width / 2 + 5, 18, 150,
+				20, "Submit request");
+		this.submitButton.enabled = !(WDLPluginChannels.getRequests().isEmpty());
+		this.buttonList.add(this.submitButton);
+		
 		this.buttonList.add(new GuiButton(100, width / 2 - 100, height - 29,
 				"Done"));
 		
@@ -145,6 +154,11 @@ public class GuiWDLPermissionRequest extends GuiScreen {
 	
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
+		if (button.id == 1) {
+			WDLPluginChannels.sendRequests();
+			button.displayString = "Submitted!";
+		}
+		
 		if (button.id == 100) {
 			this.mc.displayGuiScreen(this.parent);
 		}
@@ -201,6 +215,7 @@ public class GuiWDLPermissionRequest extends GuiScreen {
 						
 						WDLPluginChannels.addRequest(key, value);
 						list.addRequest(key, value);
+						submitButton.enabled = true;
 					}
 				}
 			}

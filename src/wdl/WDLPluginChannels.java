@@ -22,6 +22,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.io.ByteArrayDataInput;
+import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 
 /**
@@ -518,6 +519,30 @@ public class WDLPluginChannels {
 	}
 	
 	/**
+	 * Sends the current requests to the server.
+	 */
+	public static void sendRequests() {
+		if (requests.isEmpty()) {
+			return;
+		}
+		
+		ByteArrayDataOutput output = ByteStreams.newDataOutput();
+		
+		output.writeUTF("REQUEST REASON WILL GO HERE"); //TODO
+		output.writeInt(requests.size());
+		for (Map.Entry<String, String> request : requests.entrySet()) {
+			output.writeUTF(request.getKey());
+			output.writeUTF(request.getValue());
+		}
+		
+		PacketBuffer requestBuffer = new PacketBuffer(Unpooled.buffer());
+		requestBuffer.writeBytes(output.toByteArray());
+		C17PacketCustomPayload requestPacket = new C17PacketCustomPayload(
+				"WDL|REQUEST", requestBuffer);
+		Minecraft.getMinecraft().getNetHandler().addToSendQueue(requestPacket);
+	}
+	
+	/**
 	 * Event that is called when the world is loaded.
 	 * Sets the default values, and then asks the server to give the
 	 * correct ones.
@@ -539,7 +564,8 @@ public class WDLPluginChannels {
 		// null-terminated strings.
 		registerPacketBuffer.writeBytes(new byte[] {
 				'W', 'D', 'L', '|', 'I', 'N', 'I', 'T', '\0',
-				'W', 'D', 'L', '|', 'C', 'O', 'N', 'T', 'R', 'O', 'L', '\0' });
+				'W', 'D', 'L', '|', 'C', 'O', 'N', 'T', 'R', 'O', 'L', '\0',
+				'W', 'D', 'L', '|', 'R', 'E', 'Q', 'U', 'E', 'S', 'T', '\0' });
 		C17PacketCustomPayload registerPacket = new C17PacketCustomPayload(
 				"REGISTER", registerPacketBuffer);
 		minecraft.getNetHandler().addToSendQueue(registerPacket);
