@@ -9,7 +9,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.event.ClickEvent.Action;
 import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import wdl.WDL;
@@ -54,7 +53,7 @@ public class WDLUpdateChecker extends Thread {
 				IChatComponent mcfThread = new ChatComponentText(
 						"Official MinecraftForums thread");
 				mcfThread.getChatStyle().setColor(EnumChatFormatting.BLUE)
-						.setUnderlined(true).setChatClickEvent(
+						.setChatClickEvent(
 								new ClickEvent(Action.OPEN_URL,
 										FORUMS_THREAD_USAGE_LINK));
 				IChatComponent usage = new ChatComponentText(
@@ -63,7 +62,7 @@ public class WDLUpdateChecker extends Thread {
 				ChatComponentText githubRepo = new ChatComponentText(
 						"GitHub repository");
 				githubRepo.getChatStyle().setColor(EnumChatFormatting.BLUE)
-						.setUnderlined(true).setChatClickEvent(
+						.setChatClickEvent(
 								new ClickEvent(Action.OPEN_URL,
 										GITHUB_LINK));
 				IChatComponent contribute = new ChatComponentText(
@@ -72,7 +71,7 @@ public class WDLUpdateChecker extends Thread {
 				IChatComponent redistributionList = new ChatComponentText(
 						"the redistribution list");
 				redistributionList.getChatStyle().setColor(EnumChatFormatting.BLUE)
-						.setUnderlined(true).setChatClickEvent(
+						.setChatClickEvent(
 								new ClickEvent(Action.OPEN_URL,
 										REDISTRIBUTION_LINK));
 				IChatComponent warning = new ChatComponentText(
@@ -94,7 +93,7 @@ public class WDLUpdateChecker extends Thread {
 				IChatComponent smr = new ChatComponentText(
 						"More information: StopModReposts!");
 				smr.getChatStyle().setColor(EnumChatFormatting.BLUE)
-						.setUnderlined(true).setChatClickEvent(
+						.setChatClickEvent(
 								new ClickEvent(Action.OPEN_URL,
 										SMR_LINK));
 				IChatComponent stolenBeware = new ChatComponentText(
