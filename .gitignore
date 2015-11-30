@@ -1,10 +1,13 @@
-/bin/
-/mcp/
-
 !/mcp/conf/astyle.cfg
 !/mcp/conf/fields.csv
 !/mcp/conf/methods.csv
 
-!/net/minecraft/client/gui/GuiIngameMenu.java
-!/net/minecraft/client/multiplayer/WorldClient.java
-!/net/minecraft/client/network/NetHandlerPlayClient.java
+!/mcp/src/minecraft/net/minecraft/crash/CrashReport.java
+!/mcp/src/minecraft/net/minecraft/client/ClientBrandRetreiver.java
+!/mcp/src/minecraft/net/minecraft/client/gui/GuiIngameMenu.java
+!/mcp/src/minecraft/net/minecraft/client/multiplayer/WorldClient.java
+!/mcp/src/minecraft/net/minecraft/client/network/NetHandlerPlayClient.java
+!/mcp/src/minecraft/net/minecraft/client/resources/DefaultResourcePack.java
+
+/bin/
+/mcp/
