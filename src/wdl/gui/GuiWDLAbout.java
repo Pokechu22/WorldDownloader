@@ -1,19 +1,12 @@
 package wdl.gui;
 
 import java.io.IOException;
-import java.net.URI;
-import java.util.Arrays;
-import java.util.List;
 
 import net.minecraft.client.ClientBrandRetriever;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import wdl.WDL;
 
 /**
@@ -29,38 +22,15 @@ public class GuiWDLAbout extends GuiScreen {
 	private static final String COREMOD_GITHUB = "https://github.com/Pokechu22/WorldDownloader";
 	private static final String LITEMOD_GITHUB = "https://github.com/uyjulian/LiteModWDL/";
 	
-	private static final Logger logger = LogManager.getLogger();
-	
-	/**
-	 * Info text.
-	 */
-	private String info;
-
-	/**
-	 * Locations of the various labels, updated whenever the screen is drawn.
-	 */
-	private int forumLinkY, coremodLinkY, litemodLinkY;
+	private TextList list;
 	
 	/**
 	 * Creates a GUI with the specified parent.
 	 */
 	public GuiWDLAbout(GuiScreen parent) {
-		String wdlVersion = WDL.VERSION;
-		// Gets the launched version (appears in F3)
-		String launchedVersion = Minecraft.getMinecraft().func_175600_c();
-		String brand = ClientBrandRetriever.getClientModName();
 		
-		info = I18n.format("wdl.gui.about.blurb") + "\n\n" +
-				I18n.format("wdl.gui.about.version", wdlVersion,
-						launchedVersion, brand);
 		
-		String currentLanguage = WDL.minecraft.getLanguageManager()
-				.getCurrentLanguage().toString();
-		String translatorCredit = I18n.format("wdl.translatorCredit",
-				currentLanguage);
-		if (translatorCredit != null && !translatorCredit.isEmpty()) {
-			info += "\n\n" + translatorCredit;
-		}
+		
 		
 		this.parent = parent;
 	}
@@ -74,6 +44,33 @@ public class GuiWDLAbout extends GuiScreen {
 				I18n.format("wdl.gui.about.debugInfo")));
 		buttonList.add(new GuiButton(2, (this.width / 2) - 100,
 				this.height - 29, I18n.format("gui.done")));
+		
+		String wdlVersion = WDL.VERSION;
+		// Gets the launched version (appears in F3)
+		String launchedVersion = Minecraft.getMinecraft().func_175600_c();
+		String brand = ClientBrandRetriever.getClientModName();
+		
+		list = new TextList(mc, width, height, 39, 32);
+		list.addLine(I18n.format("wdl.gui.about.blurb"));
+		list.addBlankLine();
+		list.addLine(I18n.format("wdl.gui.about.version", wdlVersion,
+				launchedVersion, brand));
+		list.addBlankLine();
+		
+		String currentLanguage = WDL.minecraft.getLanguageManager()
+				.getCurrentLanguage().toString();
+		String translatorCredit = I18n.format("wdl.translatorCredit",
+				currentLanguage);
+		if (translatorCredit != null && !translatorCredit.isEmpty()) {
+			list.addLine(translatorCredit);
+			list.addBlankLine();
+		}
+		
+		list.addLinkLine(I18n.format("wdl.gui.about.forumThread"), FORUMS_THREAD);
+		list.addBlankLine();
+		list.addLinkLine(I18n.format("wdl.gui.about.coremodSrc"), COREMOD_GITHUB);
+		list.addBlankLine();
+		list.addLinkLine(I18n.format("wdl.gui.about.litemodSrc"), LITEMOD_GITHUB);
 	}
 	
 	@Override
@@ -93,79 +90,44 @@ public class GuiWDLAbout extends GuiScreen {
 		}
 	}
 	
+	/**
+	 * Called when the mouse is clicked.
+	 */
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
-			throws IOException {
+	throws IOException {
+		list.func_148179_a(mouseX, mouseY, mouseButton);
 		super.mouseClicked(mouseX, mouseY, mouseButton);
-		
-		if (mouseY > forumLinkY
-				&& mouseY < forumLinkY + fontRendererObj.FONT_HEIGHT) {
-			openLink(FORUMS_THREAD);
-		} else if (mouseY > coremodLinkY
-				&& mouseY < coremodLinkY + fontRendererObj.FONT_HEIGHT) {
-			openLink(COREMOD_GITHUB);
-		} else if (mouseY > litemodLinkY
-				&& mouseY < litemodLinkY + fontRendererObj.FONT_HEIGHT) {
-			openLink(LITEMOD_GITHUB);
+	}
+	
+	/**
+	 * Handles mouse input.
+	 */
+	@Override
+	public void handleMouseInput() throws IOException {
+		super.handleMouseInput();
+		this.list.func_178039_p();
+	}
+	
+	@Override
+	protected void mouseReleased(int mouseX, int mouseY, int state) {
+		if (list.func_148181_b(mouseX, mouseY, state)) {
+			return;
 		}
+		super.mouseReleased(mouseX, mouseY, state);
 	}
 	
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		Utils.drawListBackground(39, 32, 0, 0, height, width);
+		if (this.list == null) {
+			return;
+		}
+		
+		this.list.drawScreen(mouseX, mouseY, partialTicks);
 		
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		
 		drawCenteredString(fontRendererObj, I18n.format("wdl.gui.about.title"),
 				width / 2, 2, 0xFFFFFF);
-		
-		List<String> lines = Utils.wordWrap(info, width - 10);
-		
-		int y = 43;
-		for (String s : lines) {
-			drawString(fontRendererObj, s, 5, y, 0xFFFFFF);
-			y += fontRendererObj.FONT_HEIGHT;
-		}
-		y += fontRendererObj.FONT_HEIGHT;
-		forumLinkY = y;
-		drawString(fontRendererObj, "§9§n" + I18n.format("wdl.gui.about.forumThread"), 
-				5, y, 0xFFFFFF);
-		y += fontRendererObj.FONT_HEIGHT;
-		y += fontRendererObj.FONT_HEIGHT;
-		coremodLinkY = y;
-		drawString(fontRendererObj, "§9§n" + I18n.format("wdl.gui.about.coremodSrc"), 
-				5, y, 0xFFFFFF);
-		y += fontRendererObj.FONT_HEIGHT;
-		y += fontRendererObj.FONT_HEIGHT;
-		litemodLinkY = y;
-		drawString(fontRendererObj, "§9§n" + I18n.format("wdl.gui.about.litemodSrc"), 
-				5, y, 0xFFFFFF);
-		
-		if (mouseY > forumLinkY
-				&& mouseY < forumLinkY + fontRendererObj.FONT_HEIGHT) {
-			drawHoveringText(Arrays.asList(FORUMS_THREAD), mouseX, mouseY);
-		} else if (mouseY > coremodLinkY
-				&& mouseY < coremodLinkY + fontRendererObj.FONT_HEIGHT) {
-			drawHoveringText(Arrays.asList(COREMOD_GITHUB), mouseX, mouseY);
-		} else if (mouseY > litemodLinkY
-				&& mouseY < litemodLinkY + fontRendererObj.FONT_HEIGHT) {
-			drawHoveringText(Arrays.asList(LITEMOD_GITHUB), mouseX, mouseY);
-		}
-	}
-	
-	/**
-	 * Attempts to open a link.
-	 * @param path
-	 */
-	private static void openLink(String path) {
-		try {
-			Class<?> desktopClass = Class.forName("java.awt.Desktop");
-			Object desktop = desktopClass.getMethod("getDesktop").invoke(
-					null);
-			desktopClass.getMethod("browse", URI.class).invoke(desktop,
-					new URI(path));
-		} catch (Throwable e) {
-			logger.error("Couldn\'t open link", e);
-		}
 	}
 }
