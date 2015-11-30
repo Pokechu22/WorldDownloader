@@ -1,4 +1,4 @@
-#WorldDownloader 1.8.8a for Minecraft 1.8.8 using [MCP 9.18-beta](https://twitter.com/SeargeDP/status/671124338192556032)
+#WorldDownloader 1.8.8a (beta) for Minecraft 1.8.8 using [MCP 9.18-beta](https://twitter.com/SeargeDP/status/671124338192556032)
 
 A minecraft mod that downloads a copy of a world on a multiplayer server for personal singleplayer use.  This is a fork of [@dslake's original version](https://github.com/dslake/WorldDownloader), updated to 1.8.8.
 
