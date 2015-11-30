@@ -5,13 +5,18 @@ import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.GL_SMOOTH;
 import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.GuiUtilRenderComponents;
@@ -24,6 +29,7 @@ import net.minecraft.util.MathHelper;
 
 class Utils {
 	private static final Minecraft mc = Minecraft.getMinecraft();
+	private static final Logger logger = LogManager.getLogger();
 	
 	/**
 	 * Draws a semitransparent description box.
@@ -269,6 +275,22 @@ class Utils {
 		return scaledX >= 0 && scaledX < textBox.getWidth() && scaledY >= 0
 				&& scaledY < height;
 	}
+	
+	/**
+	 * Attempts to open a link.
+	 * @param path the URL to open.
+	 */
+	public static void openLink(String path) {
+		try {
+			Class<?> desktopClass = Class.forName("java.awt.Desktop");
+			Object desktop = desktopClass.getMethod("getDesktop").invoke(
+					null);
+			desktopClass.getMethod("browse", URI.class).invoke(desktop,
+					new URI(path));
+		} catch (Throwable e) {
+			logger.error("Couldn\'t open link", e);
+		}
+	}
 }
 
 /**
@@ -472,5 +494,155 @@ class GuiNumericTextField extends GuiTextField {
 		
 		super.setText(value);
 		lastSafeText = value;
+	}
+}
+
+/**
+ * {@link GuiListExtended} that provides scrollable lines of text, and support
+ * for embedding links in it.
+ */
+class TextList extends GuiListExtended {
+	public final int topMargin;
+	public final int bottomMargin;
+	
+	/**
+	 * Creates a new TextList with no text.
+	 */
+	public TextList(Minecraft mc, int width, int height, int topMargin,
+			int bottomMargin) {
+		super(mc, width, height, topMargin, height - bottomMargin,
+				mc.fontRendererObj.FONT_HEIGHT + 1);
+		
+		this.topMargin = topMargin;
+		this.bottomMargin = bottomMargin;
+		
+		this.entries = new ArrayList<IGuiListEntry>();
+	}
+
+	private List<IGuiListEntry> entries;
+	
+	@Override
+	public IGuiListEntry getListEntry(int index) {
+		return entries.get(index);
+	}
+	
+	@Override
+	protected int getSize() {
+		return entries.size();
+	}
+	
+	@Override
+	protected int getScrollBarX() {
+		return width - 10;
+	}
+	
+	@Override
+	public int getListWidth() {
+		return width - 18;
+	}
+	
+	public void addLine(String text) {
+		List<String> lines = Utils.wordWrap(text, width);
+		for (String line : lines) {
+			entries.add(new TextEntry(line, 0xFFFFFF));
+		}
+	}
+	
+	public void addBlankLine() {
+		entries.add(new TextEntry("", 0xFFFFFF));
+	}
+	
+	public void addLinkLine(String text, String URL) {
+		List<String> lines = Utils.wordWrap(text, width);
+		for (String line : lines) {
+			entries.add(new LinkEntry(line, URL));
+		}
+	}
+	
+	public void clearLines() {
+		entries.clear();
+	}
+	
+	private void drawString(String s, int x, int y, int color) {
+		//func_175063_a is drawString, but adds a shadow.
+		mc.fontRendererObj.func_175063_a(s, x, y, color);
+	}
+	
+	private class TextEntry implements IGuiListEntry {
+		private final String text;
+		private final int color;
+		
+		public TextEntry(String text, int color) {
+			this.text = text;
+			this.color = color;
+		}
+		
+		@Override
+		public void drawEntry(int slotIndex, int x, int y, int listWidth,
+				int slotHeight, int mouseX, int mouseY, boolean isSelected) {
+			drawString(text, x, y + 1, color);
+		}
+		
+		@Override
+		public boolean mousePressed(int slotIndex, int x, int y, int mouseEvent,
+				int relativeX, int relativeY) {
+			return false;
+		}
+		
+		@Override
+		public void mouseReleased(int slotIndex, int x, int y, int mouseEvent,
+				int relativeX, int relativeY) {
+			
+		}
+		
+		@Override
+		public void setSelected(int slotIndex, int p_178011_2_, int p_178011_3_) {
+			
+		}
+	}
+	
+	private class LinkEntry extends TextEntry {
+		private final String link;
+		private final int textWidth;
+		private final int linkWidth;
+		
+		public LinkEntry(String text, String link) {
+			super(text, 0x5555FF);
+			
+			this.link = link;
+			this.textWidth = mc.fontRendererObj.getStringWidth(text);
+			this.linkWidth = mc.fontRendererObj.getStringWidth(link);
+		}
+		
+		@Override
+		public void drawEntry(int slotIndex, int x, int y, int listWidth,
+				int slotHeight, int mouseX, int mouseY, boolean isSelected) {
+			super.drawEntry(slotIndex, x, y, listWidth, slotHeight, mouseX,
+					mouseY, isSelected);
+			
+			int relativeX = mouseX - x;
+			int relativeY = mouseY - y;
+			if (relativeX >= 0 && relativeX <= textWidth &&
+					relativeY >= 0 && relativeY <= slotHeight) {
+				int drawX = mouseX - 2;
+				if (drawX + linkWidth + 4 > width) {
+					drawX = width - (4 + linkWidth);
+				}
+				Gui.drawRect(drawX, mouseY - 2, drawX + linkWidth + 4,
+						mouseY + mc.fontRendererObj.FONT_HEIGHT + 2, 0x80000000);
+				
+				drawString(link, drawX + 2, mouseY, 0xFFFFFF);
+			}
+		}
+		
+		@Override
+		public boolean mousePressed(int slotIndex, int x, int y, int mouseEvent,
+				int relativeX, int relativeY) {
+			if (relativeX >= 0 && relativeX <= textWidth) {
+				Utils.openLink(link);
+				return true;
+			}
+			return false;
+		}
 	}
 }
