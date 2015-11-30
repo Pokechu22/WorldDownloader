@@ -683,6 +683,19 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 	 * Closes the network channel
 	 */
 	public void handleDisconnect(S40PacketDisconnect packetIn) {
+		/* WDL >>> */
+		if (wdl.WDL.downloading) {
+			wdl.WDL.stop();
+
+			try {
+				Thread.sleep(2000L);
+			} catch (Exception var3) {
+				;
+			}
+		}
+
+		/* <<< WDL */
+		
 		this.netManager.closeChannel(packetIn.getReason());
 	}
 
@@ -690,6 +703,19 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 	 * Invoked when disconnecting, the parameter is a ChatComponent describing the reason for termination
 	 */
 	public void onDisconnect(IChatComponent reason) {
+		/* WDL >>> */
+		if (wdl.WDL.downloading) {
+			wdl.WDL.stop();
+
+			try {
+				Thread.sleep(2000L);
+			} catch (Exception var3) {
+				;
+			}
+		}
+
+		/* <<< WDL */
+		
 		this.gameController.loadWorld((WorldClient)null);
 
 		if (this.guiScreenServer != null) {
@@ -739,6 +765,10 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 		} else {
 			this.gameController.ingameGUI.getChatGUI().printChatMessage(packetIn.getChatComponent());
 		}
+		
+		/* WDL >>> */
+		wdl.WDLHooks.onNHPCHandleChat(this, packetIn);
+		/* <<< WDL */
 	}
 
 	/**
@@ -1118,6 +1148,10 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 	public void handleBlockAction(S24PacketBlockAction packetIn) {
 		PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.gameController);
 		this.gameController.theWorld.addBlockEvent(packetIn.getBlockPosition(), packetIn.getBlockType(), packetIn.getData1(), packetIn.getData2());
+		
+		/* WDL >>> */
+		wdl.WDLHooks.onNHPCHandleBlockAction(this, packetIn);
+		/* <<< WDL */
 	}
 
 	/**
@@ -1200,6 +1234,10 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 		MapData mapdata = ItemMap.loadMapData(packetIn.getMapId(), this.gameController.theWorld);
 		packetIn.setMapdataTo(mapdata);
 		this.gameController.entityRenderer.getMapItemRenderer().updateMapTexture(mapdata);
+		
+		/* WDL >>> */
+		wdl.WDLHooks.onNHPCHandleMaps(this, packetIn);
+		/* <<< WDL */
 	}
 
 	public void handleEffect(S28PacketEffect packetIn) {
@@ -1538,6 +1576,10 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 				this.gameController.displayGuiScreen(new GuiScreenBook(this.gameController.thePlayer, itemstack, false));
 			}
 		}
+		
+		/* WDL >>> */
+		wdl.WDLHooks.onNHPCHandleCustomPayload(this, packetIn);
+		/* <<< WDL */
 	}
 
 	/**

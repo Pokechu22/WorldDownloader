@@ -86,6 +86,10 @@ public class WorldClient extends World {
 		this.theProfiler.endStartSection("blocks");
 		this.updateBlocks();
 		this.theProfiler.endSection();
+		
+		/* WDL >>> */
+		wdl.WDLHooks.onWorldClientTick(this);
+		/* <<< WDL */
 	}
 
 	/**
@@ -132,6 +136,10 @@ public class WorldClient extends World {
 	}
 
 	public void doPreChunk(int p_73025_1_, int p_73025_2_, boolean p_73025_3_) {
+		/* WDL >>> */
+		wdl.WDLHooks.onWorldClientDoPreChunk(this, p_73025_1_, p_73025_2_, p_73025_3_);
+		/* <<< WDL */
+		
 		if (p_73025_3_) {
 			this.clientChunkProvider.loadChunk(p_73025_1_, p_73025_2_);
 		} else {
@@ -217,6 +225,10 @@ public class WorldClient extends World {
 	}
 
 	public Entity removeEntityFromWorld(int p_73028_1_) {
+		/* WDL >>> */
+		wdl.WDLHooks.onWorldClientRemoveEntityFromWorld(this, p_73028_1_);
+		/* <<< WDL */
+		
 		Entity entity = (Entity)this.entitiesById.removeObject(p_73028_1_);
 
 		if (entity != null) {
