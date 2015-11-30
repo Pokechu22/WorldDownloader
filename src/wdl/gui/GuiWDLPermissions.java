@@ -614,7 +614,7 @@ public class GuiWDLPermissions extends GuiScreen {
 			this.mc.displayGuiScreen(new GuiWDLPermissionRequest(this.parent));
 		}
 		if (button.id == 202) {
-			this.mc.displayGuiScreen(new GuiWDLRanges(this.parent));
+			this.mc.displayGuiScreen(new GuiWDLChunkOverrides(this.parent));
 		}
 	}
 	

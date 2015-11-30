@@ -170,7 +170,7 @@ public class GuiWDLPermissionRequest extends GuiScreen {
 			// Do nothing; on that GUI.
 		}
 		if (button.id == 202) {
-			this.mc.displayGuiScreen(new GuiWDLRanges(this.parent));
+			this.mc.displayGuiScreen(new GuiWDLChunkOverrides(this.parent));
 		}
 	}
 	

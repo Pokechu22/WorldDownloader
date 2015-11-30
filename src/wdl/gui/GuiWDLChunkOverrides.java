@@ -11,19 +11,19 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiListExtended.IGuiListEntry;
 
 /**
- * A GUI that Lists... well, will list, the current ChunkRanges.  Currently
+ * A GUI that Lists... well, will list, the current chunk overrides.  Currently
  * a work in progress.
  * 
  * Also, expect a possible minimap integration in the future.
  */
-public class GuiWDLRanges extends GuiScreen {
+public class GuiWDLChunkOverrides extends GuiScreen {
 	private static final int TOP_MARGIN = 61, BOTTOM_MARGIN = 32;
 	
-	private class RangesList extends GuiListExtended {
-		public RangesList(String text) {
-			super(GuiWDLRanges.this.mc, GuiWDLRanges.this.width,
-					GuiWDLRanges.this.height, TOP_MARGIN,
-					GuiWDLRanges.this.height - BOTTOM_MARGIN, 
+	private class OverridesList extends GuiListExtended {
+		public OverridesList(String text) {
+			super(GuiWDLChunkOverrides.this.mc, GuiWDLChunkOverrides.this.width,
+					GuiWDLChunkOverrides.this.height, TOP_MARGIN,
+					GuiWDLChunkOverrides.this.height - BOTTOM_MARGIN, 
 					fontRendererObj.FONT_HEIGHT + 1);
 			
 			this.entries = new ArrayList<TextEntry>();
@@ -49,12 +49,12 @@ public class GuiWDLRanges extends GuiScreen {
 		
 		@Override
 		protected int getScrollBarX() {
-			return GuiWDLRanges.this.width - 10;
+			return GuiWDLChunkOverrides.this.width - 10;
 		}
 		
 		@Override
 		public int getListWidth() {
-			return GuiWDLRanges.this.width - 18;
+			return GuiWDLChunkOverrides.this.width - 18;
 		}
 	}
 	
@@ -93,13 +93,13 @@ public class GuiWDLRanges extends GuiScreen {
 		}
 	}
 	
-	private RangesList list;
+	private OverridesList list;
 	/**
 	 * Parent GUI screen; displayed when this GUI is closed.
 	 */
 	private final GuiScreen parent;
 	
-	public GuiWDLRanges(GuiScreen parent) {
+	public GuiWDLChunkOverrides(GuiScreen parent) {
 		this.parent = parent;
 	}
 	
@@ -112,7 +112,7 @@ public class GuiWDLRanges extends GuiScreen {
 				"chunk overrides; in the future, a map will appear here.  " +
 				"Maybe also there will be a minimap mod integration.\n\n";
 		text += WDLPluginChannels.getChunkOverrides().toString();
-		this.list = new RangesList(text);
+		this.list = new OverridesList(text);
 		
 		this.buttonList.add(new GuiButton(100, width / 2 - 100, height - 29,
 				"Done"));
@@ -177,7 +177,7 @@ public class GuiWDLRanges extends GuiScreen {
 		
 		this.list.drawScreen(mouseX, mouseY, partialTicks);
 		
-		this.drawCenteredString(this.fontRendererObj, "Ranges info",
+		this.drawCenteredString(this.fontRendererObj, "Chunk overrides",
 				this.width / 2, 8, 0xFFFFFF);
 		
 		super.drawScreen(mouseX, mouseY, partialTicks);
