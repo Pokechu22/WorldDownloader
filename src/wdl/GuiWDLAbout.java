@@ -112,17 +112,17 @@ ClientBrandRetriever.getClientModName() + ".";
 		}
 		y += fontRendererObj.FONT_HEIGHT;
 		forumLinkY = y;
-		drawString(fontRendererObj, "§9§nView the minecraft forum thread", 
+		drawString(fontRendererObj, "\u00A79\u00A7\u00A7nView the minecraft forum thread", 
 				5, y, 0xFFFFFF);
 		y += fontRendererObj.FONT_HEIGHT;
 		y += fontRendererObj.FONT_HEIGHT;
 		coremodLinkY = y;
-		drawString(fontRendererObj, "§9§nCoremod source code on github", 
+		drawString(fontRendererObj, "\u00A79\u00A7nCoremod source code on github", 
 				5, y, 0xFFFFFF);
 		y += fontRendererObj.FONT_HEIGHT;
 		y += fontRendererObj.FONT_HEIGHT;
 		litemodLinkY = y;
-		drawString(fontRendererObj, "§9§nLitemod source code on github", 
+		drawString(fontRendererObj, "\u00A79\u00A7nLitemod source code on github", 
 				5, y, 0xFFFFFF);
 		
 		if (mouseY > forumLinkY
