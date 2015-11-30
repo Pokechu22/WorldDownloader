@@ -13,6 +13,7 @@ public class GuiWDL extends GuiScreen {
 
 	private GuiTextField worldName;
 	private GuiButton autoStartBtn;
+	private GuiButton aboutButton;
 	private GuiButton worldOverrides;
 	private GuiButton generatorOverrides;
 	private GuiButton playerOverrides;
@@ -58,6 +59,10 @@ public class GuiWDL extends GuiScreen {
 		this.buttonList.add(this.autoStartBtn);
 		this.updateAutoStart(false);
 		hi += 28;
+		this.aboutButton = new GuiButton(10, w - 100, hi,
+				"About world downloader");
+		this.buttonList.add(this.aboutButton);
+		hi += 28;
 		this.worldOverrides = new GuiButton(4, w - 100, hi,
 				"World Overrides...");
 		this.buttonList.add(this.worldOverrides);
@@ -75,9 +80,9 @@ public class GuiWDL extends GuiScreen {
 		this.entityOptions.enabled = WDLPluginChannels.canSaveEntities();
 		this.buttonList.add(this.entityOptions);
 		hi += 22;
-		this.playerOverrides = new GuiButton(8, w - 100, hi,
+		this.backupOptions = new GuiButton(8, w - 100, hi,
 				"Backup options...");
-		this.buttonList.add(this.playerOverrides);
+		this.buttonList.add(this.backupOptions);
 		hi += 28;
 		this.debugOptions = new GuiButton(9, w - 100, hi,
 				"Debug options...");
@@ -112,6 +117,8 @@ public class GuiWDL extends GuiScreen {
 			this.mc.displayGuiScreen(new GuiWDLBackup(this));
 		} else if (guibutton.id == 9) { // Debug options
 			this.mc.displayGuiScreen(new GuiWDLDebug(this));
+		} else if (guibutton.id == 10) { // About
+			this.mc.displayGuiScreen(new GuiWDLAbout(this));
 		} else if (guibutton.id == 100) { // Done
 			WDL.saveProps();
 			this.mc.displayGuiScreen(this.parent);
