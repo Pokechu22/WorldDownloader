@@ -29,13 +29,14 @@ public class GithubInfoGrabber {
 	private static final String RELEASE_LIST_LOCATION = "https://api.github.com/repos/pokechu22/WorldDownloader/releases?per_page=100";
 	
 	static {
+		String realVersion = WDL.getMinecraftVersion();
 		// Gets the launched version (appears in F3)
 		String launchedVersion = Minecraft.getMinecraft().getVersion();
 		String brand = ClientBrandRetriever.getClientModName();
 		String wdlVersion = WDL.VERSION;
 		
 		USER_AGENT = String.format("WorldDownloader mod by Pokechu22 ("
-				+ "(Minecraft %s/%s; WDL %s) ", launchedVersion, brand,
+				+ "(Minecraft %s (%s/%s); WDL %s) ", realVersion, launchedVersion, brand,
 				wdlVersion);
 	}
 	

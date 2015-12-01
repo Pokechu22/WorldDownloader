@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.event.ClickEvent.Action;
 import net.minecraft.util.ChatComponentText;
@@ -115,7 +114,7 @@ public class WDLUpdateChecker extends Thread {
 			List<Release> releases = GithubInfoGrabber.getReleases();
 			WDL.chatDebug(WDLDebugMessageCause.UPDATE_DEBUG, "Found " + releases.size()
 					+ " releases.");
-			String launchedVersion = Minecraft.getMinecraft().getVersion();
+			String mcVersion = WDL.getMinecraftVersion();
 			
 			//TODO: I might want to save this data.
 			Release newestCompatibleRelease = null;
@@ -127,7 +126,7 @@ public class WDLUpdateChecker extends Thread {
 				if (newestCompatibleRelease == null) {
 					if (release.hiddenInfo != null) {
 						if (release.hiddenInfo.mainMinecraftVersion
-								.equals(launchedVersion)) {
+								.equals(mcVersion)) {
 							newestCompatibleRelease = release;
 						}
 					}

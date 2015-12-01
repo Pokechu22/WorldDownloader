@@ -1488,4 +1488,16 @@ public class WDL {
 		
 		return info.toString();
 	}
+	
+	/**
+	 * Gets the actual minecraft version, not the launched version.
+	 */
+	public static String getMinecraftVersion() {
+		String version = Minecraft.getSessionInfo().get("X-Minecraft-Version");
+		if (version != null) {
+			return version;
+		} else {
+			return "1.8.8";
+		}
+	}
 }

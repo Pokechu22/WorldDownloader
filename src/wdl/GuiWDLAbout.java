@@ -38,9 +38,9 @@ public class GuiWDLAbout extends GuiScreen {
 "litemod version by julialy), with help from others (including soccerguy3, " +
 "UltiNaruto, Net32, and El_garoo) that allows downloading a copy of a " +
 "multiplayer world for singleplayer use.  Source code is publicly available.\n\n" +
-"You are running version " + WDL.VERSION + " on Minecraft version " + 
+"You are running version " + WDL.VERSION + " on Minecraft version " + WDL.getMinecraftVersion() + " (" + 
 Minecraft.getMinecraft().getVersion() /* returns launched version */ + "/" + 
-ClientBrandRetriever.getClientModName() + ".";
+ClientBrandRetriever.getClientModName() + ").";
 	
 	/**
 	 * Locations of the various labels, updated whenever the screen is drawn.
