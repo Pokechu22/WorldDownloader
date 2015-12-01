@@ -199,7 +199,7 @@ public class WDLUpdateChecker extends Thread {
 			}
 			
 			if (failed.size() > 0) {
-				WDL.chatMsg("§cSome files have invalid " +
+				WDL.chatMsg("\u00A7cSome files have invalid " +
 						"hashes!  Your installation may be corrupt or " +
 						"compromised.  If you are running a custom build, " +
 						"this is normal.");
