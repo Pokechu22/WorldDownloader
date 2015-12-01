@@ -99,7 +99,7 @@ import net.minecraft.world.storage.ThreadedFileIOBase;
 public class WDL {
 	private static Logger logger = LogManager.getLogger();
 	
-	public static final String VERSION = "1.8.8a-beta1";
+	public static final String VERSION = "1.8.8a-beta2";
 	
 	// TODO: This class needs to be split into smaller classes. There is way too
 	// much different stuff in here.
