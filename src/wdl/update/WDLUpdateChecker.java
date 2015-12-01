@@ -145,7 +145,8 @@ public class WDLUpdateChecker extends Thread {
 				return;
 			}
 			
-			if (newestCompatibleRelease != activeRelease) {
+			if (newestCompatibleRelease != null
+					&& newestCompatibleRelease != activeRelease) {
 				WDL.chatMsg("You're not running the latest version!  The most recent " 
 						+ "version is " + newestCompatibleRelease.tag + "; You are "
 						+ "running " + activeRelease.tag + ".");
