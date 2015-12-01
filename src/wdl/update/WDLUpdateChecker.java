@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.event.ClickEvent.Action;
 import net.minecraft.util.ChatComponentTranslation;
@@ -106,7 +105,7 @@ public class WDLUpdateChecker extends Thread {
 			List<Release> releases = GithubInfoGrabber.getReleases();
 			WDL.chatMessage(WDLMessageTypes.UPDATE_DEBUG, "Found " + releases.size()
 					+ " releases.");
-			String launchedVersion = Minecraft.getMinecraft().func_175600_c();
+			String mcVersion = WDL.getMinecraftVersion();
 			
 			//TODO: I might want to save this data.
 			Release newestCompatibleNonPreRelease = null;
@@ -122,7 +121,7 @@ public class WDLUpdateChecker extends Thread {
 					if (release.hiddenInfo != null) {
 						String[] versions = release.hiddenInfo.supportedMinecraftVersions;
 						for (String version : versions) {
-							if (version.equalsIgnoreCase(launchedVersion)) {
+							if (version.equalsIgnoreCase(mcVersion)) {
 								newestCompatibleRelease = release;
 								if (!release.prerelease) {
 									newestCompatibleNonPreRelease = release;
@@ -136,7 +135,7 @@ public class WDLUpdateChecker extends Thread {
 					if (!release.prerelease && release.hiddenInfo != null) {
 						String[] versions = release.hiddenInfo.supportedMinecraftVersions;
 						for (String version : versions) {
-							if (version.equalsIgnoreCase(launchedVersion)) {
+							if (version.equalsIgnoreCase(mcVersion)) {
 								newestCompatibleNonPreRelease = release;
 								break;
 							}
@@ -164,7 +163,7 @@ public class WDLUpdateChecker extends Thread {
 				return;
 			}
 			
-			if (newestCompatibleRelease != activeRelease) {
+			if (newestCompatibleRelease != null && newestCompatibleRelease != activeRelease) {
 				WDL.chatMessage(WDLMessageTypes.UPDATES, "Out of date: newest " 
 						+ "version is " + newestRelease.tag + ".  You are "
 						+ "running " + activeRelease.tag);

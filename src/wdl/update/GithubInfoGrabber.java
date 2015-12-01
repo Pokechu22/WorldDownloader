@@ -8,8 +8,6 @@ import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import net.minecraft.client.ClientBrandRetriever;
-import net.minecraft.client.Minecraft;
 import wdl.WDL;
 
 import com.google.gson.JsonArray;
@@ -29,14 +27,11 @@ public class GithubInfoGrabber {
 	private static final String RELEASE_LIST_LOCATION = "https://api.github.com/repos/pokechu22/WorldDownloader/releases?per_page=100";
 	
 	static {
-		// Gets the launched version (appears in F3)
-		String launchedVersion = Minecraft.getMinecraft().func_175600_c();
-		String brand = ClientBrandRetriever.getClientModName();
+		String mcVersion = WDL.getMinecraftVersionInfo();
 		String wdlVersion = WDL.VERSION;
 		
 		USER_AGENT = String.format("WorldDownloader mod by Pokechu22 ("
-				+ "(Minecraft %s/%s; WDL %s) ", launchedVersion, brand,
-				wdlVersion);
+				+ "(Minecraft %s; WDL %s) ", mcVersion, wdlVersion);
 	}
 	
 	/**

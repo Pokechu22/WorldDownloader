@@ -2,8 +2,6 @@ package wdl.gui;
 
 import java.io.IOException;
 
-import net.minecraft.client.ClientBrandRetriever;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
@@ -46,15 +44,14 @@ public class GuiWDLAbout extends GuiScreen {
 				this.height - 29, I18n.format("gui.done")));
 		
 		String wdlVersion = WDL.VERSION;
-		// Gets the launched version (appears in F3)
-		String launchedVersion = Minecraft.getMinecraft().func_175600_c();
-		String brand = ClientBrandRetriever.getClientModName();
+		
+		String mcVersion = WDL.getMinecraftVersionInfo();
 		
 		list = new TextList(mc, width, height, 39, 32);
 		list.addLine(I18n.format("wdl.gui.about.blurb"));
 		list.addBlankLine();
 		list.addLine(I18n.format("wdl.gui.about.version", wdlVersion,
-				launchedVersion, brand));
+				mcVersion));
 		list.addBlankLine();
 		
 		String currentLanguage = WDL.minecraft.getLanguageManager()

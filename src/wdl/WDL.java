@@ -1838,4 +1838,32 @@ public class WDL {
 		}
 		minecraft.crashed(report);
 	}
+	
+	/**
+	 * Gets the current minecraft version. This is different from the launched
+	 * version; it is constant between profile names.
+	 */
+	public static String getMinecraftVersion() {
+		//Returns some session info used when making a HTTP request for resource packs.
+		//Only matters because X-Minecraft-Version is included.
+		Map<?, ?> map = Minecraft.func_175596_ai();
+		if (map.containsKey("X-Minecraft-Version")) {
+			return (String) map.get("X-Minecraft-Version");
+		} else {
+			return "1.8";
+		}
+	}
+
+	/**
+	 * Gets version info similar to the info that appears at the top of F3.
+	 */
+	public static String getMinecraftVersionInfo() {
+		String version = getMinecraftVersion();
+		// Gets the launched version (appears in F3)
+		String launchedVersion = Minecraft.getMinecraft().func_175600_c();
+		String brand = ClientBrandRetriever.getClientModName();
+		
+		return String.format("Minecraft %s (%s/%s)", version,
+				launchedVersion, brand);
+	}
 }
