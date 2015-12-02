@@ -10,6 +10,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 import wdl.WDL;
+import wdl.WDLPluginChannels;
 
 public class GuiWDL extends GuiScreen {
 	/**
@@ -32,13 +33,22 @@ public class GuiWDL extends GuiScreen {
 			/**
 			 * Constructor.
 			 * 
-			 * @param key The I18n key, which will have the base for this GUI prepended.
-			 * @param toOpen The gui screen to open when the button is clicked.
+			 * @param key
+			 *            The I18n key, which will have the base for this GUI
+			 *            prepended.
+			 * @param toOpen
+			 *            The gui screen to open when the button is clicked.
+			 * @param needsPerms
+			 *            Whether the player needs download permission to use
+			 *            this button.
 			 */
-			public ButtonEntry(String key, GuiScreen toOpen) {
+			public ButtonEntry(String key, GuiScreen toOpen, boolean needsPerms) {
 				this.button = new GuiButton(0, 0, 0, I18n.format("wdl.gui.wdl."
 						+ key + ".name"));
 				this.toOpen = toOpen;
+				if (needsPerms) {
+					button.enabled = WDLPluginChannels.canDownloadAtAll();
+				}
 				
 				this.tooltip = I18n.format("wdl.gui.wdl." + key + ".description");
 			}
@@ -87,21 +97,21 @@ public class GuiWDL extends GuiScreen {
 			// TODO: This might be a performance bottleneck, as a bunch of
 			// GUI instances are created.  Although they aren't displayed.
 			
-				add(new ButtonEntry("worldOverrides", new GuiWDLWorld(
-						GuiWDL.this)));
-				add(new ButtonEntry("generatorOverrides", new GuiWDLGenerator(
-						GuiWDL.this)));
-				add(new ButtonEntry("playerOverrides", new GuiWDLPlayer(
-						GuiWDL.this)));
-				add(new ButtonEntry("entityOptions", new GuiWDLEntities(
-						GuiWDL.this)));
-				add(new ButtonEntry("backupOptions", new GuiWDLBackup(
-						GuiWDL.this)));
-				add(new ButtonEntry("messageOptions", new GuiWDLMessages(
-						GuiWDL.this)));
-				add(new ButtonEntry("permissionsInfo", new GuiWDLPermissions(
-						GuiWDL.this)));
-				add(new ButtonEntry("about", new GuiWDLAbout(GuiWDL.this)));
+			add(new ButtonEntry("worldOverrides", new GuiWDLWorld(
+					GuiWDL.this), true));
+			add(new ButtonEntry("generatorOverrides", new GuiWDLGenerator(
+					GuiWDL.this), true));
+			add(new ButtonEntry("playerOverrides", new GuiWDLPlayer(
+					GuiWDL.this), true));
+			add(new ButtonEntry("entityOptions", new GuiWDLEntities(
+					GuiWDL.this), true));
+			add(new ButtonEntry("backupOptions", new GuiWDLBackup(
+					GuiWDL.this), true));
+			add(new ButtonEntry("messageOptions", new GuiWDLMessages(
+					GuiWDL.this), false));
+			add(new ButtonEntry("permissionsInfo", new GuiWDLPermissions(
+					GuiWDL.this), false));
+			add(new ButtonEntry("about", new GuiWDLAbout(GuiWDL.this), false));
 		}};
 		
 		@Override

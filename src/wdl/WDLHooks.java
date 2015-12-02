@@ -430,13 +430,11 @@ public class WDLHooks {
 				// Allow requesting permissions.
 				wdlDownload.displayString = I18n
 						.format("wdl.gui.ingameMenu.downloadStatus.request");
-				wdlOptions.enabled = false;
 			} else {
 				// Out of date plugin :/
 				wdlDownload.displayString = I18n
 						.format("wdl.gui.ingameMenu.downloadStatus.disabled");
 				wdlDownload.enabled = false;
-				wdlOptions.enabled = false;
 			}
 		} else if (WDL.saving) {
 			wdlDownload.displayString = I18n
@@ -487,10 +485,6 @@ public class WDLHooks {
 				WDL.startDownload();
 			}
 		} else if (button.id == WDLo) { // "..." (options)
-			if (!WDLPluginChannels.canDownloadAtAll()) {
-				button.enabled = false;
-				return;
-			}
 			WDL.minecraft.displayGuiScreen(new GuiWDL(gui));
 		} else if (button.id == 1) { // "Disconnect"
 			WDL.stopDownload();
