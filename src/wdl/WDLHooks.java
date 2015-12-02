@@ -29,6 +29,7 @@ import wdl.api.IChatMessageListener;
 import wdl.api.IGuiHooksListener;
 import wdl.api.IPluginChannelListener;
 import wdl.gui.GuiWDL;
+import wdl.gui.GuiWDLAbout;
 import wdl.gui.GuiWDLPermissions;
 
 /**
@@ -424,7 +425,6 @@ public class WDLHooks {
 			wdlDownload.displayString = I18n
 					.format("wdl.gui.ingameMenu.downloadStatus.singlePlayer");
 			wdlDownload.enabled = false;
-			wdlOptions.enabled = false;
 		} else if (!WDLPluginChannels.canDownloadAtAll()) {
 			if (WDLPluginChannels.canRequestPermissions()) {
 				// Allow requesting permissions.
@@ -459,14 +459,15 @@ public class WDLHooks {
 	 * @param button
 	 */
 	public static void handleWDLButtonClick(GuiIngameMenu gui, GuiButton button) {
-		if (WDL.minecraft.isIntegratedServerRunning()) {
-			return; // WDL not available if in singleplayer or LAN server mode
-		}
 		if (!button.enabled) {
 			return;
 		}
 	
 		if (button.id == WDLs) { // "Start/Stop Download"
+			if (WDL.minecraft.isIntegratedServerRunning()) {
+				return; // WDL not available if in singleplayer or LAN server mode
+			}
+			
 			if (!WDLPluginChannels.canDownloadAtAll()) {
 				// TODO: A bit more complex logic - if they can't download in
 				// most terrain, but they DO have chunk overrides, do we want
@@ -485,7 +486,11 @@ public class WDLHooks {
 				WDL.startDownload();
 			}
 		} else if (button.id == WDLo) { // "..." (options)
-			WDL.minecraft.displayGuiScreen(new GuiWDL(gui));
+			if (WDL.minecraft.isIntegratedServerRunning()) {
+				WDL.minecraft.displayGuiScreen(new GuiWDLAbout(gui));
+			} else {
+				WDL.minecraft.displayGuiScreen(new GuiWDL(gui));
+			}
 		} else if (button.id == 1) { // "Disconnect"
 			WDL.stopDownload();
 		}
