@@ -12,6 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import wdl.EntityUtils;
+import wdl.HologramHandler;
 import wdl.MessageTypeCategory;
 import wdl.WDL;
 import wdl.WDLEvents;
@@ -270,5 +271,9 @@ public class WDLApi {
 			}
 			return internalName;
 		}
+	}
+	
+	static {
+		addWDLMod(new HologramHandler());
 	}
 }

@@ -216,12 +216,6 @@ public class WDL {
 	public static Properties defaultProps;
 	
 	/**
-	 * Check to see if the API handlers have been added yet.
-	 * Used for loading purposes.
-	 */
-	private static boolean addedAPIHandlers = false;
-	
-	/**
 	 * All IWDLMods that implement {@link ISaveListener}.
 	 */
 	public static Map<String, ISaveListener> saveListeners =
@@ -506,11 +500,6 @@ public class WDL {
 	 * @return Whether on the same server.
 	 */
 	public static boolean loadWorld() {
-		if (!addedAPIHandlers) {
-			WDLApi.addWDLMod(new HologramHandler());
-			addedAPIHandlers = true;
-		}
-		
 		WDLPluginChannels.onWorldLoad();
 		
 		worldName = ""; // The new (multi-)world name is unknown at the moment
@@ -1745,7 +1734,6 @@ public class WDL {
 				.append('\n');
 		info.append("worldName: ").append(worldName).append('\n');
 		info.append("baseFolderName: ").append(baseFolderName).append('\n');
-		info.append("addedAPIHandlers: ").append(addedAPIHandlers).append('\n');
 		
 		info.append("### CONNECTED SERVER\n\n");
 		ServerData data = Minecraft.getMinecraft().getCurrentServerData();
