@@ -246,6 +246,7 @@ public class WDL {
 		defaultProps.setProperty("Weather", "keep");
 		defaultProps.setProperty("MapFeatures", "false");
 		defaultProps.setProperty("RandomSeed", "");
+		defaultProps.setProperty("MapGenerator", "flat");
 		defaultProps.setProperty("GeneratorName", "flat");
 		defaultProps.setProperty("GeneratorVersion", "0");
 		defaultProps.setProperty("Spawn", "player");
