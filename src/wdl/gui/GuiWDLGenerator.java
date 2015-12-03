@@ -132,27 +132,38 @@ public class GuiWDLGenerator extends GuiScreen {
 
 	private void cycleGenerator() {
 		String prop = WDL.worldProps.getProperty("MapGenerator");
-		if (prop.equals("flat")) {
+		if (prop.equals("void")) {
 			WDL.worldProps.setProperty("MapGenerator", "default");
 			WDL.worldProps.setProperty("GeneratorName", "default");
 			WDL.worldProps.setProperty("GeneratorVersion", "1");
+			WDL.worldProps.setProperty("GeneratorOptions", "");
 		} else if (prop.equals("default")) {
+			WDL.worldProps.setProperty("MapGenerator", "flat");
+			WDL.worldProps.setProperty("GeneratorName", "flat");
+			WDL.worldProps.setProperty("GeneratorVersion", "0");
+			//Empty options for superflat gives the default superflat.
+			WDL.worldProps.setProperty("GeneratorOptions", "");
+		} else if (prop.equals("flat")) {
 			WDL.worldProps.setProperty("MapGenerator", "largeBiomes");
 			WDL.worldProps.setProperty("GeneratorName", "largeBiomes");
 			WDL.worldProps.setProperty("GeneratorVersion", "0");
+			WDL.worldProps.setProperty("GeneratorOptions", "");
 		} else if (prop.equals("largeBiomes")) {
 			WDL.worldProps.setProperty("MapGenerator", "amplified");
 			WDL.worldProps.setProperty("GeneratorName", "amplified");
 			WDL.worldProps.setProperty("GeneratorVersion", "0");
+			WDL.worldProps.setProperty("GeneratorOptions", "");
 		} else if (prop.equals("amplified")) {
 			// Legacy (1.1) world generator
 			WDL.worldProps.setProperty("MapGenerator", "legacy");
 			WDL.worldProps.setProperty("GeneratorName", "default_1_1");
 			WDL.worldProps.setProperty("GeneratorVersion", "0");
+			WDL.worldProps.setProperty("GeneratorOptions", "");
 		} else {
-			WDL.worldProps.setProperty("MapGenerator", "flat");
+			WDL.worldProps.setProperty("MapGenerator", "void");
 			WDL.worldProps.setProperty("GeneratorName", "flat");
 			WDL.worldProps.setProperty("GeneratorVersion", "0");
+			WDL.worldProps.setProperty("GeneratorOptions", ";0"); //Single layer of air
 		}
 		
 		this.generatorBtn.displayString = getGeneratorText();

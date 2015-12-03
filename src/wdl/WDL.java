@@ -246,9 +246,10 @@ public class WDL {
 		defaultProps.setProperty("Weather", "keep");
 		defaultProps.setProperty("MapFeatures", "false");
 		defaultProps.setProperty("RandomSeed", "");
-		defaultProps.setProperty("MapGenerator", "flat");
+		defaultProps.setProperty("MapGenerator", "void");
 		defaultProps.setProperty("GeneratorName", "flat");
 		defaultProps.setProperty("GeneratorVersion", "0");
+		defaultProps.setProperty("GeneratorOptions", ";0");
 		defaultProps.setProperty("Spawn", "player");
 		defaultProps.setProperty("SpawnX", "8");
 		defaultProps.setProperty("SpawnY", "127");
@@ -1425,6 +1426,9 @@ public class WDL {
 		// generatorName
 		String generatorName = worldProps.getProperty("GeneratorName");
 		worldInfoNBT.setString("generatorName", generatorName);
+		// generatorOptions
+		String generatorOptions = worldProps.getProperty("GeneratorOptions");
+		worldInfoNBT.setString("generatorOptions", generatorOptions);
 		// generatorVersion
 		int generatorVersion = Integer.parseInt(worldProps
 				.getProperty("GeneratorVersion"));
