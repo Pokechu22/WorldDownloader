@@ -558,8 +558,20 @@ public class WDLEvents {
 		if (WDL.downloading && msg.startsWith("Seed: ")) {
 			String seed = msg.substring(6);
 			WDL.worldProps.setProperty("RandomSeed", seed);
-			WDLMessages.chatMessageTranslated(WDLMessageTypes.INFO,
-					"wdl.messages.generalInfo.seedSet", seed);
+			
+			if (WDL.worldProps.getProperty("MapGenerator", "void").equals("void")) {
+				
+				WDL.worldProps.setProperty("MapGenerator", "default");
+				WDL.worldProps.setProperty("GeneratorName", "default");
+				WDL.worldProps.setProperty("GeneratorVersion", "1");
+				WDL.worldProps.setProperty("GeneratorOptions", "");
+				
+				WDLMessages.chatMessageTranslated(WDLMessageTypes.INFO,
+						"wdl.messages.generalInfo.seedAndGenSet", seed);
+			} else {
+				WDLMessages.chatMessageTranslated(WDLMessageTypes.INFO,
+						"wdl.messages.generalInfo.seedSet", seed);
+			}
 		}
 	}
 }

@@ -289,6 +289,7 @@ wdl.messages.generalInfo.saveComplete.done=Save complete. Your single player fil
 wdl.messages.generalInfo.worldChanged=World change detected. Download will start once current save completes.
 wdl.messages.generalInfo.downloadCanceled=Download canceled.
 wdl.messages.generalInfo.seedSet=Setting single-player world seed to %s.
+wdl.messages.generalInfo.seedAndGenSet=Setting single-player world seed to %s and using the default terrain generator (you can change the generator in the generator options)
 
 wdl.messages.generalError.failedToImportTE=Failed to import tile entities for chunk at %d, %d: %s
 wdl.messages.generalError.failedToSaveChunk=Chunk at position %d, %d cannot be saved!  (%s)
