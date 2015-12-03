@@ -229,7 +229,7 @@ public class WDLHooks {
 			profiler.startSection("wdl.onChatMessage");
 			
 			//func_148915_c returns the IChatComponent.
-			String chatMessage = packet.func_148915_c().getFormattedText();
+			String chatMessage = packet.func_148915_c().getUnformattedText();
 			
 			profiler.startSection("Core");
 			WDLEvents.onChatMessage(chatMessage);
