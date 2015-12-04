@@ -83,6 +83,7 @@ wdl.gui.generator.generateStructures.false=Generate Structures: OFF
 wdl.gui.generator.seed.description=Set the seed used for generating new chunks in the downloaded world.
 wdl.gui.generator.generator.description=The world generator used when generating new chunks.
 wdl.gui.generator.generateStructures.description=Whether structures (villages, strongholds, etc) should be generated in new chunks.
+wdl.gui.generator.flatSettings=Superflat options...
 
 wdl.gui.ingameMenu.downloadStatus.singlePlayer=Can't download in single player
 wdl.gui.ingameMenu.downloadStatus.disabled=Download disabled by server
