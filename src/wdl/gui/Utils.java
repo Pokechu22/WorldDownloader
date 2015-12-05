@@ -602,6 +602,9 @@ class TextEntry implements IGuiListEntry {
 	@Override
 	public void drawEntry(int slotIndex, int x, int y, int listWidth,
 			int slotHeight, int mouseX, int mouseY, boolean isSelected) {
+		if (y < 0) {
+			return;
+		}
 		Utils.drawStringWithShadow(text, x, y + 1, color);
 	}
 	
@@ -642,6 +645,10 @@ class LinkEntry extends TextEntry {
 	@Override
 	public void drawEntry(int slotIndex, int x, int y, int listWidth,
 			int slotHeight, int mouseX, int mouseY, boolean isSelected) {
+		if (y < 0) {
+			return;
+		}
+		
 		super.drawEntry(slotIndex, x, y, listWidth, slotHeight, mouseX,
 				mouseY, isSelected);
 		
