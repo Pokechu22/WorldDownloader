@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiCreateFlatWorld;
+import net.minecraft.client.gui.GuiCreateWorld;
+import net.minecraft.client.gui.GuiCustomizeWorldScreen;
 import net.minecraft.client.gui.GuiFlatPresets;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
@@ -16,7 +18,7 @@ public class GuiWDLGenerator extends GuiScreen {
 	private GuiTextField seedField;
 	private GuiButton generatorBtn;
 	private GuiButton generateStructuresBtn;
-	private GuiButton flatSettingsBtn;
+	private GuiButton settingsPageBtn;
 
 	private String seedText;
 	
@@ -49,10 +51,10 @@ public class GuiWDLGenerator extends GuiScreen {
 				getGenerateStructuresText());
 		this.buttonList.add(this.generateStructuresBtn);
 		y += 22;
-		this.flatSettingsBtn = new GuiButton(3, this.width / 2 - 100, y,
-				I18n.format("wdl.gui.generator.flatSettings"));
-		this.flatSettingsBtn.visible = shouldShowFlatSettingsBtn();
-		this.buttonList.add(this.flatSettingsBtn);
+		this.settingsPageBtn = new GuiButton(3, this.width / 2 - 100, y,
+				"");
+		updateSettingsButtonVisibility();
+		this.buttonList.add(this.settingsPageBtn);
 		
 		this.buttonList.add(new GuiButton(100, this.width / 2 - 100, height - 29, 
 				I18n.format("gui.done")));
@@ -70,7 +72,16 @@ public class GuiWDLGenerator extends GuiScreen {
 			} else if (button.id == 2) {
 				this.cycleGenerateStructures();
 			} else if (button.id == 3) {
-				this.mc.displayGuiScreen(new GuiFlatPresets(new GuiCreateFlatWorldProxy()));
+				if (WDL.worldProps.getProperty("MapGenerator", "").equals(
+						"flat")) {
+					this.mc.displayGuiScreen(new GuiFlatPresets(
+							new GuiCreateFlatWorldProxy()));
+				} else if (WDL.worldProps.getProperty("MapGenerator", "")
+						.equals("custom")) {
+					this.mc.displayGuiScreen(new GuiCustomizeWorldScreen(
+							new GuiCreateWorldProxy(), WDL.worldProps
+									.getProperty("GeneratorOptions", "")));
+				}
 			} else if (button.id == 100) {
 				this.mc.displayGuiScreen(this.parent);
 			}
@@ -164,6 +175,11 @@ public class GuiWDLGenerator extends GuiScreen {
 			WDL.worldProps.setProperty("GeneratorVersion", "0");
 			WDL.worldProps.setProperty("GeneratorOptions", "");
 		} else if (prop.equals("amplified")) {
+			WDL.worldProps.setProperty("MapGenerator", "custom");
+			WDL.worldProps.setProperty("GeneratorName", "custom");
+			WDL.worldProps.setProperty("GeneratorVersion", "0");
+			WDL.worldProps.setProperty("GeneratorOptions", "");
+		} else if (prop.equals("custom")) {
 			// Legacy (1.1) world generator
 			WDL.worldProps.setProperty("MapGenerator", "legacy");
 			WDL.worldProps.setProperty("GeneratorName", "default_1_1");
@@ -177,7 +193,7 @@ public class GuiWDLGenerator extends GuiScreen {
 		}
 		
 		this.generatorBtn.displayString = getGeneratorText();
-		this.flatSettingsBtn.visible = shouldShowFlatSettingsBtn();
+		updateSettingsButtonVisibility();
 	}
 
 	private void cycleGenerateStructures() {
@@ -190,8 +206,20 @@ public class GuiWDLGenerator extends GuiScreen {
 		this.generateStructuresBtn.displayString = getGenerateStructuresText();
 	}
 	
-	private boolean shouldShowFlatSettingsBtn() {
-		return WDL.worldProps.getProperty("MapGenerator", "").equals("flat"); 
+	/**
+	 * Updates whether the {@link #settingsPageBtn} is shown or hidden, and 
+	 * the text on it.
+	 */
+	private void updateSettingsButtonVisibility() {
+		if (WDL.worldProps.getProperty("MapGenerator", "").equals("flat")) {
+			settingsPageBtn.visible = true;
+			settingsPageBtn.displayString = I18n.format("wdl.gui.generator.flatSettings");
+		} else if (WDL.worldProps.getProperty("MapGenerator", "").equals("custom")) {
+			settingsPageBtn.visible = true;
+			settingsPageBtn.displayString = I18n.format("wdl.gui.generator.customSettings");
+		} else {
+			settingsPageBtn.visible = false;
+		}
 	}
 	
 	private String getGeneratorText() {
@@ -225,6 +253,11 @@ public class GuiWDLGenerator extends GuiScreen {
 			// Do nothing
 		}
 		
+		@Override
+		public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+			// Do nothing
+		}
+		
 		/**
 		 * Gets the current flat preset.
 		 */
@@ -242,6 +275,37 @@ public class GuiWDLGenerator extends GuiScreen {
 				preset = "";
 			}
 			WDL.worldProps.setProperty("GeneratorOptions", preset);
+		}
+	}
+	
+	/**
+	 * Fake implementation of {@link GuiCreateWorld} that allows use of
+	 * {@link GuiCustomizeWorldScreen}.  Doesn't actually do anything; just passed in
+	 * to the constructor to forward the information we need and to switch
+	 * back to the main GUI afterwards.
+	 */
+	private class GuiCreateWorldProxy extends GuiCreateWorld {
+		public GuiCreateWorldProxy() {
+			super(GuiWDLGenerator.this);
+			
+			//field_146334_a = generator options
+			this.field_146334_a = WDL.worldProps.getProperty("GeneratorOptions", "");
+		}
+
+		@Override
+		public void initGui() {
+			mc.displayGuiScreen(GuiWDLGenerator.this);
+			WDL.worldProps.setProperty("GeneratorOptions", this.field_146334_a);
+		}
+		
+		@Override
+		protected void actionPerformed(GuiButton button) throws IOException {
+			// Do nothing
+		}
+		
+		@Override
+		public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+			// Do nothing
 		}
 	}
 }

@@ -77,6 +77,7 @@ wdl.gui.generator.generator.default=World Generator: Default
 wdl.gui.generator.generator.flat=World Generator: Flat
 wdl.gui.generator.generator.largeBiomes=World Generator: Large Biomes
 wdl.gui.generator.generator.amplified=World Generator: AMPLIFIED
+wdl.gui.generator.generator.custom=World Generator: Custom
 wdl.gui.generator.generator.legacy=World Generator: Legacy (1.1)
 wdl.gui.generator.generateStructures.true=Generate Structures: ON
 wdl.gui.generator.generateStructures.false=Generate Structures: OFF
@@ -84,6 +85,7 @@ wdl.gui.generator.seed.description=Set the seed used for generating new chunks i
 wdl.gui.generator.generator.description=The world generator used when generating new chunks.
 wdl.gui.generator.generateStructures.description=Whether structures (villages, strongholds, etc) should be generated in new chunks.
 wdl.gui.generator.flatSettings=Superflat options...
+wdl.gui.generator.customSettings=Customized options...
 
 wdl.gui.ingameMenu.downloadStatus.singlePlayer=Can't download in single player
 wdl.gui.ingameMenu.downloadStatus.disabled=Download disabled by server
