@@ -1,18 +1,15 @@
 package wdl.gui;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
+
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiTextField;
 
 import org.lwjgl.input.Keyboard;
 
 import wdl.WDLPluginChannels;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiListExtended;
-import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.gui.GuiListExtended.IGuiListEntry;
-import net.minecraft.client.gui.GuiScreen;
 
 /**
  * GUI for requesting permissions.  Again, this is a work in progress.
@@ -20,85 +17,7 @@ import net.minecraft.client.gui.GuiScreen;
 public class GuiWDLPermissionRequest extends GuiScreen {
 	private static final int TOP_MARGIN = 61, BOTTOM_MARGIN = 32;
 	
-	private class PermissionsList extends GuiListExtended {
-		public PermissionsList(String text) {
-			super(GuiWDLPermissionRequest.this.mc, GuiWDLPermissionRequest.this.width,
-					GuiWDLPermissionRequest.this.height, TOP_MARGIN,
-					GuiWDLPermissionRequest.this.height - BOTTOM_MARGIN, 
-					fontRendererObj.FONT_HEIGHT + 1);
-			
-			this.entries = new ArrayList<TextEntry>();
-			
-			List<String> lines = Utils.wordWrap(text, getListWidth());
-			
-			for (String s : lines) {
-				entries.add(new TextEntry(s));
-			}
-		}
-		
-		private final List<TextEntry> entries;
-		
-		@Override
-		public IGuiListEntry getListEntry(int index) {
-			return entries.get(index);
-		}
-		
-		@Override
-		protected int getSize() {
-			return entries.size();
-		}
-		
-		@Override
-		protected int getScrollBarX() {
-			return GuiWDLPermissionRequest.this.width - 10;
-		}
-		
-		@Override
-		public int getListWidth() {
-			return GuiWDLPermissionRequest.this.width - 18;
-		}
-		
-		public void addRequest(String key, String value) {
-			entries.add(new TextEntry("Requesting '" + key + "' to be '" + value + "'."));
-		}
-	}
-	
-	private class TextEntry implements IGuiListEntry {
-		private final String line;
-		
-		/**
-		 * Creates a TextEntry.
-		 */
-		public TextEntry(String line) {
-			this.line = line;
-		}
-		
-		@Override
-		public void drawEntry(int slotIndex, int x, int y, int listWidth,
-				int slotHeight, int mouseX, int mouseY, boolean isSelected) {
-			fontRendererObj.drawString(line, x, y + 1, 0xFFFFFF);
-		}
-
-		@Override
-		public boolean mousePressed(int slotIndex, int x, int y,
-				int mouseEvent, int relativeX, int relativeY) {
-			return false;
-		}
-
-		@Override
-		public void mouseReleased(int slotIndex, int x, int y,
-				int mouseEvent, int relativeX, int relativeY) {
-			
-		}
-
-		@Override
-		public void setSelected(int slotIndex, int p_178011_2_,
-				int p_178011_3_) {
-			
-		}
-	}
-	
-	private PermissionsList list;
+	private TextList list;
 	/**
 	 * Parent GUI screen; displayed when this GUI is closed.
 	 */
@@ -119,18 +38,22 @@ public class GuiWDLPermissionRequest extends GuiScreen {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui() {
-		String text = "§c§lThis is a work in progress.§r\nYou can request " +
-				"permissions in this GUI, although it currently requires " +
-				"manually specifying the names.\n" +
-				"Boolean fields: " + WDLPluginChannels.BOOLEAN_REQUEST_FIELDS + "\n" +
-				"Integer fields: " + WDLPluginChannels.INTEGER_REQUEST_FIELDS + "\n\n";
+		this.list = new TextList(mc, width, height, TOP_MARGIN, BOTTOM_MARGIN);
 		
-		this.list = new PermissionsList(text);
+		list.addLine("§c§lThis is a work in progress.");
+		list.addLine("You can request permissions in this GUI, although " +
+				"it currently requires manually specifying the names.");
+		list.addBlankLine();
+		list.addLine("Boolean fields: " + WDLPluginChannels.BOOLEAN_REQUEST_FIELDS);
+		list.addLine("Integer fields: " + WDLPluginChannels.INTEGER_REQUEST_FIELDS);
+		list.addBlankLine();
+		
 		
 		//Get the existing requests.
 		for (Map.Entry<String, String> request : WDLPluginChannels
 				.getRequests().entrySet()) {
-			list.addRequest(request.getKey(), request.getValue());
+			list.addLine("Requesting '" + request.getKey() + "' to be '"
+					+ request.getValue() + "'.");
 		}
 		
 		this.requestField = new GuiTextField(0, fontRendererObj,
@@ -214,7 +137,8 @@ public class GuiWDLPermissionRequest extends GuiScreen {
 						isValid = false;
 						
 						WDLPluginChannels.addRequest(key, value);
-						list.addRequest(key, value);
+						list.addLine("Requesting '" + key + "' to be '"
+								+ value + "'.");
 						submitButton.enabled = true;
 					}
 				}
