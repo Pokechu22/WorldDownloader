@@ -67,10 +67,12 @@ import net.minecraft.world.storage.SaveHandler;
 import net.minecraft.world.storage.ThreadedFileIOBase;
 import wdl.WorldBackup.WorldBackupType;
 import wdl.api.IEntityEditor;
+import wdl.api.IPlayerInfoEditor;
 import wdl.api.ISaveListener;
 import wdl.api.ITileEntityEditor;
 import wdl.api.IWDLMessageType;
 import wdl.api.IWDLMod;
+import wdl.api.IWorldInfoEditor;
 import wdl.api.WDLApi;
 import wdl.gui.GuiWDLMultiworld;
 import wdl.gui.GuiWDLMultiworldSelect;
@@ -230,6 +232,16 @@ public class WDL {
 	 */
 	public static Map<String, IEntityEditor> entityEditors =
 			new HashMap<String, IEntityEditor>();
+	/**
+	 * All IWDLMods that implement {@link IWorldInfoEditor}.
+	 */
+	public static Map<String, IWorldInfoEditor> worldInfoEditors =
+			new HashMap<String, IWorldInfoEditor>();
+	/**
+	 * All IWDLMods that implement {@link IPlayerInfoEditor}.
+	 */
+	public static Map<String, IPlayerInfoEditor> playerInfoEditors =
+			new HashMap<String, IPlayerInfoEditor>();
 	
 	// Initialization:
 	static {
@@ -764,7 +776,7 @@ public class WDL {
 		
 		GuiWDLSaveProgress progressScreen = new GuiWDLSaveProgress(
 				I18n.format("wdl.saveProgress.title"), 
-				(backupType != WorldBackupType.NONE ? 5 : 4)
+				(backupType != WorldBackupType.NONE ? 6 : 5)
 						+ saveListeners.size());
 		minecraft.displayGuiScreen(progressScreen);
 		
@@ -777,23 +789,8 @@ public class WDL {
 				"WorldDownloader: Couldn't get session lock for saving the world!", e);
 		}
 
-		progressScreen.startMajorTask(
-				I18n.format("wdl.saveProgress.metadata.title"), 3);
-		
-		progressScreen.setMinorTaskProgress(
-				I18n.format("wdl.saveProgress.metadata.creatingNBTs"), 1);
-		NBTTagCompound playerNBT = new NBTTagCompound();
-		thePlayer.writeToNBT(playerNBT);
-		applyOverridesToPlayer(playerNBT);
-		AnvilSaveConverter saveConverter = (AnvilSaveConverter) minecraft
-				.getSaveLoader();
-		worldClient.getWorldInfo()
-		.setSaveVersion(getSaveVersion(saveConverter));
-		NBTTagCompound worldInfoNBT = worldClient.getWorldInfo()
-				.cloneNBTCompound(playerNBT);
-		applyOverridesToWorldInfo(worldInfoNBT);
-		savePlayer(playerNBT, progressScreen);
-		saveWorldInfo(worldInfoNBT, progressScreen);
+		savePlayer(progressScreen);
+		saveWorldInfo(progressScreen);
 		
 		saveMapData(progressScreen);
 		saveChunks(progressScreen);
@@ -845,16 +842,40 @@ public class WDL {
 
 	/**
 	 * Save the player (position, health, inventory, ...) into its own file in
-	 * the players directory
+	 * the players directory, and applies needed overrides to the player info.
 	 */
-	public static void savePlayer(NBTTagCompound playerNBT, 
-			GuiWDLSaveProgress progressScreen) {
+	public static void savePlayer(GuiWDLSaveProgress progressScreen) {
 		if (!WDLPluginChannels.canDownloadAtAll()) { return; }
 		
+		progressScreen.startMajorTask(
+				I18n.format("wdl.saveProgress.playerData.title"),
+				3 + playerInfoEditors.size());
 		WDLMessages.chatMessageTranslated(WDLMessageTypes.SAVING,
 				"wdl.messages.saving.savingPlayer");
+		
 		progressScreen.setMinorTaskProgress(
-				I18n.format("wdl.saveProgress.metadata.writingPlayer"), 2);
+				I18n.format("wdl.saveProgress.playerData.creatingNBT"), 1);
+		
+		NBTTagCompound playerNBT = new NBTTagCompound();
+		thePlayer.writeToNBT(playerNBT);
+		
+		progressScreen.setMinorTaskProgress(
+				I18n.format("wdl.saveProgress.playerData.editingNBT"), 2);
+		applyOverridesToPlayer(playerNBT);
+		
+		int taskNum = 3;
+		for (IPlayerInfoEditor editor : playerInfoEditors.values()) {
+			progressScreen.setMinorTaskProgress(
+					I18n.format("wdl.saveProgress.playerData.extension",
+							WDLApi.getModName(editor)), taskNum);
+			
+			editor.editPlayerInfo(thePlayer, saveHandler, playerNBT);
+			
+			taskNum++;
+		}
+		
+		progressScreen.setMinorTaskProgress(
+				I18n.format("wdl.saveProgress.playerData.writingNBT"), taskNum);
 		
 		FileOutputStream stream = null;
 		try {
@@ -895,15 +916,47 @@ public class WDL {
 	 * Save the world metadata (time, gamemode, seed, ...) into the level.dat
 	 * file
 	 */
-	public static void saveWorldInfo(NBTTagCompound worldInfoNBT,
-			GuiWDLSaveProgress progressScreen) {
+	public static void saveWorldInfo(GuiWDLSaveProgress progressScreen) {
 		if (!WDLPluginChannels.canDownloadAtAll()) { return; }
 		
+		progressScreen.startMajorTask(
+				I18n.format("wdl.saveProgress.worldMetadata.title"),
+				3 + worldInfoEditors.size());
 		WDLMessages.chatMessageTranslated(WDLMessageTypes.SAVING,
 				"wdl.messages.saving.savingWorld");
-		progressScreen.setMinorTaskProgress(
-				I18n.format("wdl.saveProgress.metadata.writingWorld"), 3);
 		
+		progressScreen.setMinorTaskProgress(
+				I18n.format("wdl.saveProgress.worldMetadata.creatingNBT"), 1);
+		
+		NBTTagCompound worldInfoNBT = new NBTTagCompound();
+		
+		// TODO: It would be nice to have save version setup as a separate section,
+		// but it needs to be set before the NBT tag can be created.
+		AnvilSaveConverter saveConverter = (AnvilSaveConverter) minecraft
+				.getSaveLoader();
+		worldClient.getWorldInfo()
+				.setSaveVersion(getSaveVersion(saveConverter));
+		worldInfoNBT = worldClient.getWorldInfo()
+				.cloneNBTCompound(worldInfoNBT);
+		
+		progressScreen.setMinorTaskProgress(
+				I18n.format("wdl.saveProgress.worldMetadata.editingNBT"), 2);
+		applyOverridesToWorldInfo(worldInfoNBT);
+		
+		int taskNum = 3;
+		for (IWorldInfoEditor editor : worldInfoEditors.values()) {
+			progressScreen.setMinorTaskProgress(
+					I18n.format("wdl.saveProgress.worldMetadata.extension",
+							WDLApi.getModName(editor)), taskNum);
+			
+			editor.editWorldInfo(worldClient, worldClient.getWorldInfo(),
+					saveHandler, worldInfoNBT);
+			
+			taskNum++;
+		}
+		
+		progressScreen.setMinorTaskProgress(
+				I18n.format("wdl.saveProgress.worldMetadata.writingNBT"), taskNum);
 		File saveDirectory = saveHandler.getWorldDirectory();
 		NBTTagCompound dataNBT = new NBTTagCompound();
 		dataNBT.setTag("Data", worldInfoNBT);

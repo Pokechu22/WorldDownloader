@@ -107,6 +107,12 @@ public class WDLApi {
 		if (mod instanceof ISaveListener) {
 			WDL.saveListeners.put(modName, (ISaveListener) mod);
 		}
+		if (mod instanceof IWorldInfoEditor) {
+			WDL.worldInfoEditors.put(modName, (IWorldInfoEditor) mod);
+		}
+		if (mod instanceof IPlayerInfoEditor) {
+			WDL.playerInfoEditors.put(modName, (IPlayerInfoEditor) mod);
+		}
 	}
 	
 	/**
