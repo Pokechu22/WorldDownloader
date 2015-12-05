@@ -8,7 +8,6 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
-import net.minecraft.client.gui.GuiListExtended.IGuiListEntry;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
@@ -48,15 +47,11 @@ public class GuiWDLExtensions extends GuiScreen {
 	 * Height of the top area.
 	 */
 	private static final int BOTTOM_HEIGHT = 32;
-
-	/**
-	 * Information about each mod.
-	 */
-	private List<List<TextEntry>> modInfo;
+	
 	/**
 	 * The currently selected mod.
 	 */
-	private int selectedMod = -1;
+	private int selectedModIndex = -1;
 	
 	private class ModList extends GuiListExtended {
 		public ModList() {
@@ -123,13 +118,16 @@ public class GuiWDLExtensions extends GuiScreen {
 					}
 				}
 				
-				if (selectedMod != slotIndex) {
-					selectedMod = slotIndex;
+				if (selectedModIndex != slotIndex) {
+					selectedModIndex = slotIndex;
 					
 					mc.getSoundHandler().playSound(
 							PositionedSoundRecord.createPositionedSoundRecord(
 									new ResourceLocation("gui.button.press"),
 									1.0F));
+					
+					updateDetailsList(mod);
+					
 					return true;
 				}
 				
@@ -152,19 +150,8 @@ public class GuiWDLExtensions extends GuiScreen {
 		}
 		
 		private List<IGuiListEntry> entries = new ArrayList<IGuiListEntry>() {{
-			modInfo = new ArrayList<List<TextEntry>>();
-			
 			for (IWDLMod mod : WDLApi.getWDLMods().values()) {
 				add(new ModEntry(mod));
-				List<String> wrapped = Utils.wordWrap(
-						WDLApi.getModInfo(mod), getListWidth());
-				List<TextEntry> modEntries = new ArrayList<TextEntry>();
-				
-				for (String line : wrapped) {
-					modEntries.add(new TextEntry(line));
-				}
-				
-				modInfo.add(modEntries);
 			}
 		}};
 		
@@ -187,7 +174,7 @@ public class GuiWDLExtensions extends GuiScreen {
 		
 		@Override
 		protected boolean isSelected(int slotIndex) {
-			return slotIndex == selectedMod;
+			return slotIndex == selectedModIndex;
 		}
 		
 		@Override
@@ -208,12 +195,11 @@ public class GuiWDLExtensions extends GuiScreen {
 		}
 	}
 	
-	private class ModDetailList extends GuiListExtended {
+	private class ModDetailList extends TextList {
 		public ModDetailList() {
 			super(GuiWDLExtensions.this.mc, GuiWDLExtensions.this.width,
 					GuiWDLExtensions.this.height - bottomLocation,
-					MIDDLE_HEIGHT, GuiWDLExtensions.this.height - bottomLocation
-							- BOTTOM_HEIGHT, fontRendererObj.FONT_HEIGHT + 1);
+					MIDDLE_HEIGHT, BOTTOM_HEIGHT);
 		}
 		
 		@Override
@@ -230,22 +216,6 @@ public class GuiWDLExtensions extends GuiScreen {
 					GuiWDLExtensions.this.width / 2, 5, 0xFFFFFF);
 			
 			GlStateManager.translate(0, -bottomLocation, 0);
-		}
-		
-		@Override
-		public IGuiListEntry getListEntry(int index) {
-			if (selectedMod < 0) {
-				return null;
-			}
-			return modInfo.get(selectedMod).get(index);
-		}
-		
-		@Override
-		protected int getSize() {
-			if (selectedMod < 0) {
-				return 0;
-			}
-			return modInfo.get(selectedMod).size();
 		}
 		
 		/**
@@ -270,16 +240,6 @@ public class GuiWDLExtensions extends GuiScreen {
 		}
 		
 		@Override
-		public int getListWidth() {
-			return GuiWDLExtensions.this.width - 20;
-		}
-		
-		@Override
-		protected int getScrollBarX() {
-			return GuiWDLExtensions.this.width - 10;
-		}
-		
-		@Override
 		public void func_178039_p() {
 			mouseY -= bottomLocation;
 			
@@ -291,42 +251,13 @@ public class GuiWDLExtensions extends GuiScreen {
 		}
 	}
 	
-	/**
-	 * Single line of text as an {@link IGuiListEntry}.
-	 */
-	private class TextEntry implements IGuiListEntry {
-		private final String text;
+	private void updateDetailsList(IWDLMod selectedMod) {
+		detailsList.clearLines();
 		
-		public TextEntry(String text) {
-			this.text = text;
-		}
-		
-		@Override
-		public void drawEntry(int slotIndex, int x, int y, int listWidth,
-				int slotHeight, int mouseX, int mouseY, boolean isSelected) {
-			if (y < 0) {
-				//Don't draw out of bounds.
-				return;
-			}
+		if (selectedMod != null) {
+			String info = WDLApi.getModInfo(selectedMod);
 			
-			fontRendererObj.drawString(text, x, y + 1, 0xFFFFFF);
-		}
-
-		@Override
-		public boolean mousePressed(int slotIndex, int x, int y,
-				int mouseEvent, int relativeX, int relativeY) {
-			return false;
-		}
-
-		@Override
-		public void mouseReleased(int slotIndex, int x, int y,
-				int mouseEvent, int relativeX, int relativeY) {
-		}
-
-		@Override
-		public void setSelected(int slotIndex, int p_178011_2_,
-				int p_178011_3_) {
-			
+			detailsList.addLine(info);
 		}
 	}
 	
@@ -341,7 +272,7 @@ public class GuiWDLExtensions extends GuiScreen {
 	/**
 	 * Details on the selected mod.
 	 */
-	private ModDetailList details;
+	private ModDetailList detailsList;
 	
 	public GuiWDLExtensions(GuiScreen parent) {
 		this.parent = parent;
@@ -354,7 +285,7 @@ public class GuiWDLExtensions extends GuiScreen {
 		dragging = false;
 		
 		this.list = new ModList();
-		this.details = new ModDetailList();
+		this.detailsList = new ModDetailList();
 		
 		this.buttonList.add(new GuiButton(0, width / 2 - 100, height - 29, I18n
 				.format("gui.done")));
@@ -380,7 +311,7 @@ public class GuiWDLExtensions extends GuiScreen {
 	public void handleMouseInput() throws IOException {
 		super.handleMouseInput();
 		this.list.func_178039_p();
-		this.details.func_178039_p();
+		this.detailsList.func_178039_p();
 	}
 	
 	@Override
@@ -396,7 +327,7 @@ public class GuiWDLExtensions extends GuiScreen {
 		if (list.func_148179_a(mouseX, mouseY, mouseButton)) {
 			return;
 		}
-		if (details.func_148179_a(mouseX, mouseY, mouseButton)) {
+		if (detailsList.func_148179_a(mouseX, mouseY, mouseButton)) {
 			return;
 		}
 		super.mouseClicked(mouseX, mouseY, mouseButton);
@@ -409,7 +340,7 @@ public class GuiWDLExtensions extends GuiScreen {
 		if (list.func_148181_b(mouseX, mouseY, state)) {
 			return;
 		}
-		if (details.func_148181_b(mouseX, mouseY, state)) {
+		if (detailsList.func_148181_b(mouseX, mouseY, state)) {
 			return;
 		}
 		super.mouseReleased(mouseX, mouseY, state);
@@ -444,7 +375,7 @@ public class GuiWDLExtensions extends GuiScreen {
 		}
 		
 		this.list.drawScreen(mouseX, mouseY, partialTicks);
-		this.details.drawScreen(mouseX, mouseY, partialTicks);
+		this.detailsList.drawScreen(mouseX, mouseY, partialTicks);
 		
 		this.drawCenteredString(this.fontRendererObj,
 				I18n.format("wdl.gui.extensions.title"), this.width / 2, 8,
