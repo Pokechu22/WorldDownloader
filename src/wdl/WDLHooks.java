@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
+import com.google.common.collect.ImmutableList;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -14,6 +16,7 @@ import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemMap;
 import net.minecraft.network.play.server.S02PacketChat;
@@ -68,6 +71,9 @@ public class WDLHooks {
 	public static void onWorldClientTick(WorldClient sender) {
 		try {
 			profiler.startSection("wdl");
+			
+			@SuppressWarnings("unchecked")
+			List<EntityPlayer> players = ImmutableList.copyOf(sender.playerEntities);
 			
 			if (sender != WDL.worldClient) {
 				profiler.startSection("onWorldLoad");
@@ -148,6 +154,8 @@ public class WDLHooks {
 				profiler.endSection();
 			}
 			
+			profiler.endStartSection("capes");
+			CapeHandler.onWorldTick(players);
 			profiler.endSection();
 		} catch (Throwable e) {
 			WDL.crashed(e, "WDL mod: exception in onWorldClientTick event");
