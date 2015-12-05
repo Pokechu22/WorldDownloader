@@ -17,6 +17,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
+import net.minecraft.client.gui.GuiListExtended.IGuiListEntry;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.GuiUtilRenderComponents;
@@ -291,6 +292,16 @@ class Utils {
 			logger.error("Couldn\'t open link", e);
 		}
 	}
+	
+	/**
+	 * Draws a string with a shadow.
+	 * 
+	 * Needed because of obfuscation.
+	 */
+	public static void drawStringWithShadow(String s, int x, int y, int color) {
+		//func_175063_a is drawString, but adds a shadow.
+		mc.fontRendererObj.func_175063_a(s, x, y, color);
+	}
 }
 
 /**
@@ -544,105 +555,118 @@ class TextList extends GuiListExtended {
 	public void addLine(String text) {
 		List<String> lines = Utils.wordWrap(text, width);
 		for (String line : lines) {
-			entries.add(new TextEntry(line, 0xFFFFFF));
+			entries.add(new TextEntry(mc, line, 0xFFFFFF));
 		}
 	}
 	
 	public void addBlankLine() {
-		entries.add(new TextEntry("", 0xFFFFFF));
+		entries.add(new TextEntry(mc, "", 0xFFFFFF));
 	}
 	
 	public void addLinkLine(String text, String URL) {
 		List<String> lines = Utils.wordWrap(text, width);
 		for (String line : lines) {
-			entries.add(new LinkEntry(line, URL));
+			entries.add(new LinkEntry(mc, line, URL));
 		}
 	}
 	
 	public void clearLines() {
 		entries.clear();
 	}
+}
+
+/**
+ * {@link IGuiListEntry} that displays a single line of text.
+ */
+class TextEntry implements IGuiListEntry {
+	private final String text;
+	private final int color;
+	protected final Minecraft mc;
 	
-	private void drawString(String s, int x, int y, int color) {
-		//func_175063_a is drawString, but adds a shadow.
-		mc.fontRendererObj.func_175063_a(s, x, y, color);
+	/**
+	 * Creates a new TextEntry with the default color.
+	 */
+	public TextEntry(Minecraft mc, String text) {
+		this(mc, text, 0xFFFFF);
 	}
 	
-	private class TextEntry implements IGuiListEntry {
-		private final String text;
-		private final int color;
+	/**
+	 * Creates a new TextEntry.
+	 */
+	public TextEntry(Minecraft mc, String text, int color) {
+		this.mc = mc;
+		this.text = text;
+		this.color = color;
+	}
+	
+	@Override
+	public void drawEntry(int slotIndex, int x, int y, int listWidth,
+			int slotHeight, int mouseX, int mouseY, boolean isSelected) {
+		Utils.drawStringWithShadow(text, x, y + 1, color);
+	}
+	
+	@Override
+	public boolean mousePressed(int slotIndex, int x, int y, int mouseEvent,
+			int relativeX, int relativeY) {
+		return false;
+	}
+	
+	@Override
+	public void mouseReleased(int slotIndex, int x, int y, int mouseEvent,
+			int relativeX, int relativeY) {
 		
-		public TextEntry(String text, int color) {
-			this.text = text;
-			this.color = color;
-		}
+	}
+	
+	@Override
+	public void setSelected(int slotIndex, int p_178011_2_, int p_178011_3_) {
 		
-		@Override
-		public void drawEntry(int slotIndex, int x, int y, int listWidth,
-				int slotHeight, int mouseX, int mouseY, boolean isSelected) {
-			drawString(text, x, y + 1, color);
-		}
+	}
+}
+
+/**
+ * {@link IGuiListEntry} that displays a single clickable link.
+ */
+class LinkEntry extends TextEntry {
+	private final String link;
+	private final int textWidth;
+	private final int linkWidth;
+	
+	public LinkEntry(Minecraft mc, String text, String link) {
+		super(mc, text, 0x5555FF);
 		
-		@Override
-		public boolean mousePressed(int slotIndex, int x, int y, int mouseEvent,
-				int relativeX, int relativeY) {
-			return false;
-		}
+		this.link = link;
+		this.textWidth = mc.fontRendererObj.getStringWidth(text);
+		this.linkWidth = mc.fontRendererObj.getStringWidth(link);
+	}
+	
+	@Override
+	public void drawEntry(int slotIndex, int x, int y, int listWidth,
+			int slotHeight, int mouseX, int mouseY, boolean isSelected) {
+		super.drawEntry(slotIndex, x, y, listWidth, slotHeight, mouseX,
+				mouseY, isSelected);
 		
-		@Override
-		public void mouseReleased(int slotIndex, int x, int y, int mouseEvent,
-				int relativeX, int relativeY) {
+		int relativeX = mouseX - x;
+		int relativeY = mouseY - y;
+		if (relativeX >= 0 && relativeX <= textWidth &&
+				relativeY >= 0 && relativeY <= slotHeight) {
+			int drawX = mouseX - 2;
+			if (drawX + linkWidth + 4 > listWidth + x) {
+				drawX = listWidth + x - (4 + linkWidth);
+			}
+			Gui.drawRect(drawX, mouseY - 2, drawX + linkWidth + 4,
+					mouseY + mc.fontRendererObj.FONT_HEIGHT + 2, 0x80000000);
 			
-		}
-		
-		@Override
-		public void setSelected(int slotIndex, int p_178011_2_, int p_178011_3_) {
-			
+			Utils.drawStringWithShadow(link, drawX + 2, mouseY, 0xFFFFFF);
 		}
 	}
 	
-	private class LinkEntry extends TextEntry {
-		private final String link;
-		private final int textWidth;
-		private final int linkWidth;
-		
-		public LinkEntry(String text, String link) {
-			super(text, 0x5555FF);
-			
-			this.link = link;
-			this.textWidth = mc.fontRendererObj.getStringWidth(text);
-			this.linkWidth = mc.fontRendererObj.getStringWidth(link);
+	@Override
+	public boolean mousePressed(int slotIndex, int x, int y, int mouseEvent,
+			int relativeX, int relativeY) {
+		if (relativeX >= 0 && relativeX <= textWidth) {
+			Utils.openLink(link);
+			return true;
 		}
-		
-		@Override
-		public void drawEntry(int slotIndex, int x, int y, int listWidth,
-				int slotHeight, int mouseX, int mouseY, boolean isSelected) {
-			super.drawEntry(slotIndex, x, y, listWidth, slotHeight, mouseX,
-					mouseY, isSelected);
-			
-			int relativeX = mouseX - x;
-			int relativeY = mouseY - y;
-			if (relativeX >= 0 && relativeX <= textWidth &&
-					relativeY >= 0 && relativeY <= slotHeight) {
-				int drawX = mouseX - 2;
-				if (drawX + linkWidth + 4 > width) {
-					drawX = width - (4 + linkWidth);
-				}
-				Gui.drawRect(drawX, mouseY - 2, drawX + linkWidth + 4,
-						mouseY + mc.fontRendererObj.FONT_HEIGHT + 2, 0x80000000);
-				
-				drawString(link, drawX + 2, mouseY, 0xFFFFFF);
-			}
-		}
-		
-		@Override
-		public boolean mousePressed(int slotIndex, int x, int y, int mouseEvent,
-				int relativeX, int relativeY) {
-			if (relativeX >= 0 && relativeX <= textWidth) {
-				Utils.openLink(link);
-				return true;
-			}
-			return false;
-		}
+		return false;
 	}
 }
