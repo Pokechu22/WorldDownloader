@@ -797,10 +797,10 @@ public class WDL {
 		
 		saveProps();
 		
-		for (Map.Entry<String, ISaveListener> e : saveListeners.entrySet()) {
+		for (ISaveListener listener : saveListeners.values()) {
 			progressScreen.startMajorTask(I18n.format(
-					"wdl.saveProgress.extension.title",	e.getKey()), 1);
-			e.getValue().afterChunksSaved(saveHandler.getWorldDirectory());
+					"wdl.saveProgress.extension.title",	WDLApi.getModName(listener)), 1);
+			listener.afterChunksSaved(saveHandler.getWorldDirectory());
 		}
 		
 		try {
