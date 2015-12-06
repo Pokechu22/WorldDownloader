@@ -21,6 +21,19 @@ public class WDLUpdateChecker extends Thread {
 	private static volatile boolean shown = false;
 	
 	/**
+	 * List of releases.  May be null if the checker has not finished.
+	 */
+	private static volatile List<Release> releases;
+	
+	/**
+	 * Gets the current list of releases. May be null if the checker has not
+	 * finished.
+	 */
+	public static List<Release> getReleases() {
+		return releases;
+	}
+	
+	/**
 	 * Call once the world has loaded.  Will check and start a new update checker
 	 * if needed.
 	 */
@@ -102,7 +115,7 @@ public class WDLUpdateChecker extends Thread {
 			
 			sleep(5000);
 			
-			List<Release> releases = GithubInfoGrabber.getReleases();
+			releases = GithubInfoGrabber.getReleases();
 			WDL.chatMessage(WDLMessageTypes.UPDATE_DEBUG, "Found " + releases.size()
 					+ " releases.");
 			String mcVersion = WDL.getMinecraftVersion();

@@ -112,6 +112,7 @@ public class GuiWDL extends GuiScreen {
 			add(new ButtonEntry("permissionsInfo", new GuiWDLPermissions(
 					GuiWDL.this), false));
 			add(new ButtonEntry("about", new GuiWDLAbout(GuiWDL.this), false));
+			add(new ButtonEntry("updates", new GuiWDLUpdates(GuiWDL.this), false));
 		}};
 		
 		@Override
