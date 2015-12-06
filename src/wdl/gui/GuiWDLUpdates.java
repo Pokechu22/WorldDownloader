@@ -78,11 +78,21 @@ public class GuiWDLUpdates extends GuiScreen {
 				fontRendererObj.drawString(body2, x, y + fontHeight * 3, 0xFFFFFF);
 				fontRendererObj.drawString(body3, x, y + fontHeight * 4, 0xFFFFFF);
 				fontRendererObj.drawString(time, x, y + fontHeight * 5, 0x808080);
+				
+				if (mouseX > x && mouseX < x + listWidth && mouseY > y
+						&& mouseY < y + slotHeight) {
+					drawRect(x - 2, y - 2, x + listWidth - 3, y + slotHeight + 2,
+							0x1FFFFFFF);
+				}
 			}
 			
 			@Override
 			public boolean mousePressed(int slotIndex, int x, int y,
 					int mouseEvent, int relativeX, int relativeY) {
+				if (mouseX > x && mouseX < x + getListWidth() && mouseY > y
+						&& mouseY < y + slotHeight) {
+					//TODO
+				}
 				return false;
 			}
 			
@@ -138,7 +148,7 @@ public class GuiWDLUpdates extends GuiScreen {
 		
 		@Override
 		public int getListWidth() {
-			return width - 20;
+			return width - 30;
 		}
 		
 		@Override
