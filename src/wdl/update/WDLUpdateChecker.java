@@ -56,6 +56,9 @@ public class WDLUpdateChecker extends Thread {
 		if (releases == null) {
 			return null;
 		}
+		if (runningRelease == null) {
+			return null;
+		}
 		
 		String mcVersion = WDL.getMinecraftVersion();
 		
@@ -90,6 +93,11 @@ public class WDLUpdateChecker extends Thread {
 					if (!foundCompatible) {
 						continue;
 					}
+				}
+				
+				if (releases.indexOf(release) > releases.indexOf(runningRelease)) {
+					//Too old
+					continue;
 				}
 				
 				return release;

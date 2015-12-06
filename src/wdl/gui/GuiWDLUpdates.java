@@ -148,7 +148,11 @@ public class GuiWDLUpdates extends GuiScreen {
 		private void regenerateVersionList() {
 			displayedVersions = new ArrayList<VersionEntry>();
 			
-			recomendedRelease = WDLUpdateChecker.getRecomendedRelease();
+			if (WDLUpdateChecker.hasNewVersion()) {
+				recomendedRelease = WDLUpdateChecker.getRecomendedRelease();
+			} else {
+				recomendedRelease = null;
+			}
 			
 			List<Release> releases = WDLUpdateChecker.getReleases();
 			
@@ -175,8 +179,7 @@ public class GuiWDLUpdates extends GuiScreen {
 		protected boolean isSelected(int slotIndex) {
 			VersionEntry entry = getListEntry(slotIndex);
 			
-			//return WDL.VERSION.equals(entry.release.tag);
-			return "1.8.8a-beta1".equals(entry.release.tag);
+			return WDL.VERSION.equals(entry.release.tag);
 		}
 		
 		@Override
