@@ -191,6 +191,14 @@ wdl.gui.entities.group.enabled=§aEnabled
 wdl.gui.entities.group.disabled=§cAll disabled
 wdl.gui.entities.trackDistance=Track Distance: %d
 
+wdl.gui.updates.updateMinecraftVersion.client=Installed on %s client
+wdl.gui.updates.updateMinecraftVersion.server=Connects to %s servers
+wdl.gui.updates.updateMinecraftVersion.any=Any Minecraft version
+wdl.gui.updates.updateMinecraftVersion.description=What criteria to use when determining the next version that should be used.%n%n§lInstalled on %1$s client§r: The mod must be installed on the given version of Minecraft.%n§lCan connect to %1$s servers§r: Can be installed on any client version so long as it can connect to a server running %1$s.%n§lAny Minecraft version§r: Any Minecraft version is allowed.
+wdl.gui.updates.updateAllowBetas.true=Use beta versions: Yes
+wdl.gui.updates.updateAllowBetas.false=Use beta versions: No
+wdl.gui.updates.updateAllowBetas.description=Should beta versions be included in determining the next version?%n%nBeta versions may be unstable.
+
 wdl.backup.none=No backup
 wdl.backup.folder=Copy world folder
 wdl.backup.zip=Zip a copy of a world

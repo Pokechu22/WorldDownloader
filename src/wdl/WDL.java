@@ -303,6 +303,11 @@ public class WDL {
 		// Whether the 1-time tutorial has been shown.
 		defaultProps.setProperty("TutorialShown", "false");
 		
+		// Updates
+		defaultProps.setProperty("UpdateMinecraftVersion", "client");
+		//XXX change this based off of whether the current build is beta or not
+		defaultProps.setProperty("UpdateAllowBetas", "true");
+		
 		globalProps = new Properties(defaultProps);
 		try {
 			globalProps.load(new FileReader(new File(minecraft.mcDataDir,
