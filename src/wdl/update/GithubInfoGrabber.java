@@ -62,7 +62,7 @@ public class GithubInfoGrabber {
 			
 			connection.setRequestProperty("User-Agent", USER_AGENT);
 			connection.setRequestProperty("Accept",
-					"application/vnd.github.VERSION.raw+json");
+					"application/vnd.github.v3.full+json");
 			
 			connection.connect();
 			
