@@ -11,6 +11,7 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 import wdl.WDL;
 import wdl.WDLPluginChannels;
+import wdl.update.WDLUpdateChecker;
 
 public class GuiWDL extends GuiScreen {
 	/**
@@ -112,7 +113,13 @@ public class GuiWDL extends GuiScreen {
 			add(new ButtonEntry("permissionsInfo", new GuiWDLPermissions(
 					GuiWDL.this), false));
 			add(new ButtonEntry("about", new GuiWDLAbout(GuiWDL.this), false));
-			add(new ButtonEntry("updates", new GuiWDLUpdates(GuiWDL.this), false));
+			if (WDLUpdateChecker.hasNewVersion()) {
+				add(0, new ButtonEntry("updates.hasNew", new GuiWDLUpdates(
+						GuiWDL.this), false));
+			} else {
+				add(new ButtonEntry("updates", new GuiWDLUpdates(
+						GuiWDL.this), false));
+			}
 		}};
 		
 		@Override

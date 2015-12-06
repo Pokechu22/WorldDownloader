@@ -23,7 +23,9 @@ wdl.gui.wdl.permissionsInfo.description=Information about permissions setup on t
 wdl.gui.wdl.about.name=About World Downloader...
 wdl.gui.wdl.about.description=Information about your current installation of WDL, and any extensions.
 wdl.gui.wdl.updates.name=Updates...
-wdl.gui.wdl.updates.description=View the version list and what version you are running.
+wdl.gui.wdl.updates.description=View the version list and what version you are running, and configure the criteria for determining the next update.
+wdl.gui.wdl.updates.hasNew.name=Updates... (§6New update available!§r)
+wdl.gui.wdl.updates.hasNew.description=View the version list and what version you are running, configure the criteria for determining the next update, and download the newest update.
 
 wdl.gui.world.title=World Downloader mod: World Options for %s
 wdl.gui.world.allowCheats.true=Allow cheats: Yes

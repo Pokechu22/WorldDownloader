@@ -86,6 +86,9 @@ public class GuiWDLUpdates extends GuiScreen {
 				if (isSelected(slotIndex)) {
 					title += EnumChatFormatting.GOLD
 							+ " (you are currently running this version)";
+				} else if (this.release == recomendedRelease) {
+					title += EnumChatFormatting.GOLD
+							+ " (you should run this version)";
 				}
 				
 				fontRendererObj.drawString(title, x, y + fontHeight * 0, 0xFFFFFF);
@@ -131,12 +134,21 @@ public class GuiWDLUpdates extends GuiScreen {
 		}
 		
 		private List<VersionEntry> displayedVersions;
+		/**
+		 * Release that should be used.
+		 */
+		private Release recomendedRelease;
 		
 		/**
 		 * Regenerates the {@linkplain #displayedVersions version list}.
+		 * 
+		 * TODO: This is probably a bit laggy; cache this data?  Right now it's
+		 * being called each frame.
 		 */
 		private void regenerateVersionList() {
 			displayedVersions = new ArrayList<VersionEntry>();
+			
+			recomendedRelease = WDLUpdateChecker.getRecomendedRelease();
 			
 			List<Release> releases = WDLUpdateChecker.getReleases();
 			
