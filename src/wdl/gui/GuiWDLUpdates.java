@@ -6,18 +6,23 @@ import java.util.List;
 
 import wdl.update.Release;
 import wdl.update.WDLUpdateChecker;
+import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.ResourceLocation;
 
+/**
+ * Gui that lists updates fetched via {@link wdl.update.GithubInfoGrabber}.
+ */
 public class GuiWDLUpdates extends GuiScreen {
 	private final GuiScreen parent;
 	
 	/**
 	 * Margins for the top and the bottom of the list.
 	 */
-	private static final int TOP_MARGIN = 61, BOTTOM_MARGIN = 32;
+	private static final int TOP_MARGIN = 39, BOTTOM_MARGIN = 32;
 	
 	private class UpdateList extends GuiListExtended {
 		public UpdateList() {
@@ -45,20 +50,22 @@ public class GuiWDLUpdates extends GuiScreen {
 				this.fontHeight = fontRendererObj.FONT_HEIGHT + 1;
 				
 				this.title = release.title;
-				this.caption = release.hiddenInfo.loader + " version for "
-						+ release.hiddenInfo.mainMinecraftVersion + " (supporting ";
-				String[] versions = release.hiddenInfo.supportedMinecraftVersions;
-				for (int i = 0; i < versions.length; i++) {
-					caption += versions[i];
-					
-					if (i != versions.length - 1) {
-						caption += ", ";
+				if (release.hiddenInfo != null) {
+					this.caption = release.hiddenInfo.loader + " version for "
+							+ release.hiddenInfo.mainMinecraftVersion + " (supporting ";
+					String[] versions = release.hiddenInfo.supportedMinecraftVersions;
+					for (int i = 0; i < versions.length; i++) {
+						caption += versions[i];
+						
+						if (i != versions.length - 1) {
+							caption += ", ";
+						}
+						if (i == versions.length - 2) {
+							caption += "and ";
+						}
 					}
-					if (i == versions.length - 2) {
-						caption += "and ";
-					}
+					caption += ")";
 				}
-				caption += ")";
 				
 				List<String> body = Utils.wordWrap(release.textOnlyBody, getListWidth());
 				
@@ -89,9 +96,14 @@ public class GuiWDLUpdates extends GuiScreen {
 			@Override
 			public boolean mousePressed(int slotIndex, int x, int y,
 					int mouseEvent, int relativeX, int relativeY) {
-				if (mouseX > x && mouseX < x + getListWidth() && mouseY > y
-						&& mouseY < y + slotHeight) {
-					//TODO
+				if (relativeY > 0 && relativeY < slotHeight) {
+					mc.displayGuiScreen(new GuiWDLSingleUpdate(GuiWDLUpdates.this,
+							this.release));
+					
+					mc.getSoundHandler().playSound(PositionedSoundRecord
+							.createPositionedSoundRecord(new ResourceLocation(
+									"gui.button.press"), 1.0F));
+					return true;
 				}
 				return false;
 			}
@@ -216,5 +228,114 @@ public class GuiWDLUpdates extends GuiScreen {
 		this.list.drawScreen(mouseX, mouseY, partialTicks);
 		
 		super.drawScreen(mouseX, mouseY, partialTicks);
+	}
+	
+	/**
+	 * Gui that shows a single update.
+	 */
+	private class GuiWDLSingleUpdate extends GuiScreen {
+		private final GuiWDLUpdates parent;
+		private final Release release;
+		
+		private TextList list;
+		
+		public GuiWDLSingleUpdate(GuiWDLUpdates parent, Release releaseToShow) {
+			this.parent = parent;
+			this.release = releaseToShow;
+		}
+		
+		@SuppressWarnings("unchecked")
+		@Override
+		public void initGui() {
+			this.buttonList.add(new GuiButton(0, this.width / 2 - 155, 
+					18, 150, 20, "View online (+ downloads)"));
+			if (release.hiddenInfo != null) {
+				this.buttonList.add(new GuiButton(1, this.width / 2 + 5, 
+						18, 150, 20, "Forum post"));
+			}
+			this.buttonList.add(new GuiButton(100, this.width / 2 - 100, 
+					this.height - 29, I18n.format("gui.done")));
+			
+			this.list = new TextList(mc, width, height, TOP_MARGIN, BOTTOM_MARGIN);
+			
+			list.addLine((release.prerelease ? "Prerelease " : "Release ")
+					+ release.title);
+			list.addLine("Released " + release.date);
+			if (release.hiddenInfo != null) {
+				String versionLine = release.hiddenInfo.loader + " version for " + 
+						release.hiddenInfo.mainMinecraftVersion + " (supports ";
+				
+				String[] versions = release.hiddenInfo.supportedMinecraftVersions;
+				for (int i = 0; i < versions.length; i++) {
+					versionLine += versions[i];
+					
+					if (i != versions.length - 1) {
+						versionLine += ", ";
+					}
+					if (i == versions.length - 2) {
+						versionLine += "and ";
+					}
+				}
+				versionLine += ")";
+				
+				list.addLine(versionLine);
+			}
+			list.addBlankLine();
+			list.addLine(release.textOnlyBody);
+		}
+		
+		@Override
+		protected void actionPerformed(GuiButton button) throws IOException {
+			if (button.id == 0) {
+				Utils.openLink(release.URL);
+			}
+			if (button.id == 1) {
+				Utils.openLink(release.hiddenInfo.post);
+			}
+			if (button.id == 100) {
+				mc.displayGuiScreen(parent);
+			}
+		}
+		
+		/**
+		 * Called when the mouse is clicked.
+		 */
+		@Override
+		protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
+		throws IOException {
+			list.func_148179_a(mouseX, mouseY, mouseButton);
+			super.mouseClicked(mouseX, mouseY, mouseButton);
+		}
+		
+		/**
+		 * Handles mouse input.
+		 */
+		@Override
+		public void handleMouseInput() throws IOException {
+			super.handleMouseInput();
+			this.list.func_178039_p();
+		}
+		
+		@Override
+		protected void mouseReleased(int mouseX, int mouseY, int state) {
+			if (list.func_148181_b(mouseX, mouseY, state)) {
+				return;
+			}
+			super.mouseReleased(mouseX, mouseY, state);
+		}
+		
+		@Override
+		public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+			if (this.list == null) {
+				return;
+			}
+			
+			this.list.drawScreen(mouseX, mouseY, partialTicks);
+			
+			this.drawCenteredString(this.fontRendererObj, release.title,
+					this.width / 2, 8, 0xFFFFFF);
+			
+			super.drawScreen(mouseX, mouseY, partialTicks);
+		}
 	}
 }
