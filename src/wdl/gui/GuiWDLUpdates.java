@@ -60,7 +60,7 @@ public class GuiWDLUpdates extends GuiScreen {
 				}
 				caption += ")";
 				
-				List<String> body = Utils.wordWrap(release.body, getListWidth());
+				List<String> body = Utils.wordWrap(release.textOnlyBody, getListWidth());
 				
 				body1 = (body.size() >= 1 ? body.get(0) : "");
 				body2 = (body.size() >= 2 ? body.get(1) : "");
