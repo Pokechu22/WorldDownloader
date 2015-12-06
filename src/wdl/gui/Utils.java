@@ -20,12 +20,10 @@ import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiListExtended.IGuiListEntry;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.gui.GuiUtilRenderComponents;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MathHelper;
 
 class Utils {
@@ -97,28 +95,10 @@ class Utils {
 	public static List<String> wordWrap(String s, int width) {
 		s = s.replace("\r", ""); // If we got a \r\n in the text somehow, remove it.
 		
-		/**
-		 * It's a method that formats and paginates text.
-		 * 
-		 * Args: 
-		 * <ul>
-		 * <li>The text to format.</li>
-		 * <li>The width</li>
-		 * <li>The font renderer.</li>
-		 * <li>IDK</li>
-		 * <li>Whether to include color codes.</li>
-		 * </ul>
-		 */
 		@SuppressWarnings("unchecked")
-		List<ChatComponentText> texts = GuiUtilRenderComponents.func_178908_a(
-				new ChatComponentText(s), width, mc.fontRendererObj, true, true);
+		List<String> lines = mc.fontRendererObj.listFormattedStringToWidth(s, width);
 		
-		List<String> returned = new ArrayList<String>();
-		for (ChatComponentText component : texts) {
-			returned.add(component.getFormattedText());
-		}
-		
-		return returned;
+		return lines;
 	}
 	
 	/**
