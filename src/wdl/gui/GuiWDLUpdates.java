@@ -11,6 +11,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -79,6 +80,13 @@ public class GuiWDLUpdates extends GuiScreen {
 			@Override
 			public void drawEntry(int slotIndex, int x, int y, int listWidth,
 					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
+				String title = this.title;
+				//The 'isSelected' parameter is actually 'isMouseOver'
+				if (isSelected(slotIndex)) {
+					title += EnumChatFormatting.GOLD
+							+ " (you are currently running this version)";
+				}
+				
 				fontRendererObj.drawString(title, x, y + fontHeight * 0, 0xFFFFFF);
 				fontRendererObj.drawString(caption, x, y + fontHeight * 1, 0x808080);
 				fontRendererObj.drawString(body1, x, y + fontHeight * 2, 0xFFFFFF);
