@@ -26,11 +26,97 @@ public class WDLUpdateChecker extends Thread {
 	private static volatile List<Release> releases;
 	
 	/**
+	 * The release that is currently running.
+	 * 
+	 * May be null.
+	 */
+	private static volatile Release runningRelease;
+	/**
 	 * Gets the current list of releases. May be null if the checker has not
 	 * finished.
 	 */
 	public static List<Release> getReleases() {
 		return releases;
+	}
+	
+	/**
+	 * Gets the current release.  May be null if the checker has not finished
+	 * or if the current version isn't released.
+	 */
+	public static Release getRunningRelease() {
+		return runningRelease;
+	}
+	
+	/**
+	 * Calculates the release that should be used based off of the user's options.
+	 * 
+	 * May be null if the checker has not finished.
+	 */
+	public static Release getRecomendedRelease() {
+		if (releases == null) {
+			return null;
+		}
+		
+		String mcVersion = WDL.getMinecraftVersion();
+		
+		boolean usePrereleases = WDL.globalProps.getProperty(
+				"UpdateAllowBetas").equals("true");
+		boolean versionMustBeExact = WDL.globalProps.getProperty(
+				"UpdateMinecraftVersion").equals("client");
+		boolean versionMustBeCompatible = WDL.globalProps.getProperty(
+				"UpdateMinecraftVersion").equals("server");
+		
+		for (Release release : releases) {
+			if (release.hiddenInfo != null) {
+				if (release.prerelease && !usePrereleases) {
+					continue;
+				}
+				
+				if (versionMustBeExact) {
+					if (!release.hiddenInfo.mainMinecraftVersion
+							.equals(mcVersion)) {
+						continue;
+					}
+				} else if (versionMustBeCompatible) {
+					boolean foundCompatible = false;
+					for (String version : release.
+							hiddenInfo.supportedMinecraftVersions) {
+						if (version.equals(mcVersion)) {
+							foundCompatible = true;
+							break;
+						}
+					}
+					
+					if (!foundCompatible) {
+						continue;
+					}
+				}
+				
+				return release;
+			}
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Is there a new version that should be used?
+	 * 
+	 * True if the running release is not null and if the recommended
+	 * release is not the running release.
+	 * 
+	 * The return value of this method may change as the update checker
+	 * runs.
+	 */
+	public static boolean hasNewVersion() {
+		if (runningRelease == null) {
+			return false;
+		}
+		Release recomendedRelease = getRecomendedRelease();
+		if (recomendedRelease == null) {
+			return false;
+		}
+		return runningRelease != recomendedRelease;
 	}
 	
 	/**
@@ -118,71 +204,31 @@ public class WDLUpdateChecker extends Thread {
 			releases = GithubInfoGrabber.getReleases();
 			WDL.chatMessage(WDLMessageTypes.UPDATE_DEBUG, "Found " + releases.size()
 					+ " releases.");
-			String mcVersion = WDL.getMinecraftVersion();
-			
-			//TODO: I might want to save this data.
-			Release newestCompatibleNonPreRelease = null;
-			Release newestCompatibleRelease = null;
-			Release newestNonPreRelease = null;
-			Release newestRelease = releases.get(0);
-			Release activeRelease = null;
-			
 			for (int i = 0; i < releases.size(); i++) {
 				Release release = releases.get(i);
 				
-				if (newestCompatibleRelease == null) {
-					if (release.hiddenInfo != null) {
-						String[] versions = release.hiddenInfo.supportedMinecraftVersions;
-						for (String version : versions) {
-							if (version.equalsIgnoreCase(mcVersion)) {
-								newestCompatibleRelease = release;
-								if (!release.prerelease) {
-									newestCompatibleNonPreRelease = release;
-								}
-								break;
-							}
-						}
-					}
-				}
-				if (newestCompatibleNonPreRelease == null) {
-					if (!release.prerelease && release.hiddenInfo != null) {
-						String[] versions = release.hiddenInfo.supportedMinecraftVersions;
-						for (String version : versions) {
-							if (version.equalsIgnoreCase(mcVersion)) {
-								newestCompatibleNonPreRelease = release;
-								break;
-							}
-						}
-					}
-				}
-				if (newestNonPreRelease == null) {
-					if (!release.prerelease) {
-						newestNonPreRelease = release;
-					}
-				}
-				if (newestRelease == null) {
-					newestRelease = release;
-				}
-				
 				if (release.tag.equalsIgnoreCase(WDL.VERSION)) {
-					activeRelease = release;
+					runningRelease = release;
 				}
 			}
 			
-			if (activeRelease == null) {
+			if (runningRelease == null) {
 				WDL.chatMessage(WDLMessageTypes.UPDATE_DEBUG, "Could not find a release "
 						+ "for " + WDL.VERSION + ".  You may be running a "
 						+ "version that hasn't been released yet.");
 				return;
 			}
 			
-			if (newestCompatibleRelease != null && newestCompatibleRelease != activeRelease) {
-				WDL.chatMessage(WDLMessageTypes.UPDATES, "Out of date: newest " 
-						+ "version is " + newestRelease.tag + ".  You are "
-						+ "running " + activeRelease.tag);
+			if (hasNewVersion()) {
+				Release recomendedRelease = getRecomendedRelease();
+				
+				WDL.chatMessage(WDLMessageTypes.UPDATES, "New version avaiable!  Newest " 
+						+ "version is " + recomendedRelease.tag + ".  You are "
+						+ "running " + runningRelease.tag + ".");
+				//TODO: add a download link.
 			}
 			
-			if (activeRelease.hiddenInfo == null) {
+			if (runningRelease.hiddenInfo == null) {
 				WDL.chatMessage(WDLMessageTypes.UPDATE_DEBUG, "Could not find hidden "
 						+ "data for release.  Skipping hashing.");
 				return;
@@ -190,7 +236,7 @@ public class WDLUpdateChecker extends Thread {
 			//Check the hashes, and list any failing ones.
 			Map<HashData, Object> failed = new HashMap<HashData, Object>();
 			
-			hashLoop: for (HashData data : activeRelease.hiddenInfo.hashes) {
+			hashLoop: for (HashData data : runningRelease.hiddenInfo.hashes) {
 				try {
 					String hash = ClassHasher.hash(data.relativeTo, data.file);
 					
