@@ -82,22 +82,12 @@
 				
 				var currentEntryNum = 0;
 				
-				var entry = entries[currentEntryNum];
-				var dt = document.createElement("dt");
-				dt.textContent = entry.filename;
-				var dd = document.createElement("dd");
-				
-				fileList.appendChild(dt);
-				fileList.appendChild(dd);
-				
-				dd.textContent = "";
-				
 				var nextEntry = function() {
 					if (currentEntryNum >= entries.length) {
 						return;
 					}
 					
-					entry = entries[currentEntryNum];
+					var entry = entries[currentEntryNum];
 					currentEntryNum++;
 					
 					var dt = document.createElement("dt");
