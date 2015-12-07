@@ -1,0 +1,6 @@
+[submodule "lib/zip.js"]
+	path = lib/zip.js
+	url = git://github.com/gildas-lormeau/zip.js
+[submodule "lib/SparkMD5"]
+	path = lib/SparkMD5
+	url = https://github.com/satazor/SparkMD5
