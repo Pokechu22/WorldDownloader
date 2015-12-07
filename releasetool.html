@@ -3,7 +3,7 @@
 <head>
 <title>Release tool</title>
 <script type="text/javascript" src="lib/zip.js/WebContent/zip.js"></script>
-<script>zip.workerScriptsPath = "/lib/zip.js/WebContent/zip.js";</script>
+<script>zip.workerScriptsPath = "http://pokechu22.github.io/WorldDownloader/lib/zip.js/WebContent/";</script>
 <script type="text/javascript" src="lib/SparkMD5/spark-md5.js"></script>
 </head>
 
@@ -24,8 +24,6 @@
 	}
 
 	var model = (function() {
-		var URL = obj.webkitURL || obj.mozURL || obj.URL;
-
 		return {
 			getEntries : function(file, onend) {
 				zip.createReader(new zip.BlobReader(file), function(zipReader) {
@@ -44,25 +42,83 @@
 
 	(function() {
 		var fileInput = document.getElementById("file-input");
-		var unzipProgress = document.createElement("progress");
 		var fileList = document.getElementById("file-list");
-
+		
+		function addHash(entry, dd, callback) {
+			var unzipProgress = document.createElement("progress");
+			
+			model.getEntryBlob(entry, function(blobURL) {
+				unzipProgress.value = 0;
+				unzipProgress.max = 0;
+				
+				fileReader = new FileReader();
+				
+				fileReader.onerror = function () {
+					console.warn('oops, something went wrong.');
+				};
+				
+				fileReader.onloadend = function (e) {
+					if (fileReader.result == null) {
+						console.log("Skipping " + entry.filename)
+						return;
+					}
+					console.log("Hashing " + entry.filename);
+					var hash = SparkMD5.hashBinary(fileReader.result, false);
+					console.log(hash);
+					console.log(dd);
+					console.log(dd.textContent);
+					dd.textContent = hash;
+					console.log(dd.textContent);
+					
+					callback();
+				}
+				
+				fileReader.readAsBinaryString(blobURL);
+			}, function(current, total) {
+				unzipProgress.value = current;
+				unzipProgress.max = total;
+				dd.appendChild(unzipProgress);
+			});
+		}
+		
 		fileInput.addEventListener('change', function() {
 			fileInput.disabled = true;
 			model.getEntries(fileInput.files[0], function(entries) {
 				fileList.innerHTML = "";
-				entries.forEach(function(entry) {
-					console.log(entry);
+				
+				var currentEntryNum = 0;
+				
+				var entry = entries[currentEntryNum];
+				var dt = document.createElement("dt");
+				dt.textContent = entry.filename;
+				var dd = document.createElement("dd");
+				
+				fileList.appendChild(dt);
+				fileList.appendChild(dd);
+				
+				dd.textContent = "";
+				
+				var nextEntry = function() {
+					if (currentEntryNum >= entries.length) {
+						return;
+					}
+					
+					entry = entries[currentEntryNum];
+					currentEntryNum++;
 					
 					var dt = document.createElement("dt");
 					dt.textContent = entry.filename;
 					var dd = document.createElement("dd");
-					dd.textContent = SparkMD5.hash(entry); //Create MD5?
-					
 					
 					fileList.appendChild(dt);
 					fileList.appendChild(dd);
-				});
+					
+					dd.textContent = "";
+					
+					addHash(entry, dd, nextEntry);
+				}
+				
+				nextEntry();
 			});
 		}, false);
 	})();
