@@ -63,7 +63,7 @@
 					if (fileReader.result == null) {
 						return;
 					}
-					var hash = SparkMD5.hash(fileReader.result, false);
+					var hash = SparkMD5.hashBinary(fileReader.result, false);
 					dd.textContent = hash;
 					
 					callback();
