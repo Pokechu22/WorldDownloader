@@ -69,7 +69,7 @@
 					callback();
 				}
 				
-				fileReader.readAsText(blobURL);
+				fileReader.readAsBinaryString(blobURL);
 			}, function(current, total) {
 				unzipProgress.value = current;
 				unzipProgress.max = total;
