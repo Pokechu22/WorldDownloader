@@ -63,13 +63,13 @@
 					if (fileReader.result == null) {
 						return;
 					}
-					var hash = SparkMD5.hashBinary(fileReader.result, false) + SparkMD5.hash(fileReader.result, false);
+					var hash = SparkMD5.hashBinary(fileReader.result, false) + " " + SparkMD5.hash(fileReader.result, false);
 					dd.textContent = hash;
 					
 					callback();
 				}
 				
-				fileReader.readAsText(blobURL);
+				fileReader.readAsArrayBuffer(blobURL);
 			}, function(current, total) {
 				unzipProgress.value = current;
 				unzipProgress.max = total;
