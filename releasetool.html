@@ -1,0 +1,74 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Release tool</title>
+<script type="text/javascript" src="lib/zip.js/WebContent/zip.js"></script>
+<script>zip.workerScriptsPath = "lib/zip.js/WebContent/zip.js";</script>
+<script type="text/javascript" src="lib/SparkMD5/spark-md5.js"></script>
+</head>
+
+<body>
+<header>Internal tool to simplify release hidden JSON creation</header>
+<p><label><span class="form-label">choose a zip file</span><input type="file" accept="application/zip" id="file-input"></label></p>
+<p><span class="form-label">zip hashes</span>
+<dl id="file-list"></dl>
+</p>
+
+<script>
+//Adapted from https://raw.githubusercontent.com/gildas-lormeau/zip.js/gh-pages/demos/demo2.js
+(function(obj) {
+
+	function onerror(message) {
+		alert(message);
+		console.log(message);
+	}
+
+	var model = (function() {
+		var URL = obj.webkitURL || obj.mozURL || obj.URL;
+
+		return {
+			getEntries : function(file, onend) {
+				zip.createReader(new zip.BlobReader(file), function(zipReader) {
+					zipReader.getEntries(onend);
+				}, onerror);
+			},
+			getEntryBlob : function(entry, onend, onprogress) {
+				var writer = new zip.BlobWriter();
+				
+				entry.getData(writer, function(blob) {
+					onend(blob);
+				}, onprogress);
+			}
+		};
+	})();
+
+	(function() {
+		var fileInput = document.getElementById("file-input");
+		var unzipProgress = document.createElement("progress");
+		var fileList = document.getElementById("file-list");
+
+		fileInput.addEventListener('change', function() {
+			fileInput.disabled = true;
+			model.getEntries(fileInput.files[0], function(entries) {
+				fileList.innerHTML = "";
+				entries.forEach(function(entry) {
+					console.log(entry);
+					
+					var dt = document.createElement("dt");
+					dt.textContent = entry.filename;
+					var dd = document.createElement("dd");
+					dd.textContent = SparkMD5.hash(entry); //Create MD5?
+					
+					
+					fileList.appendChild(dt);
+					fileList.appendChild(dd);
+				});
+			});
+		}, false);
+	})();
+
+})(this);
+</script>
+
+</body>
+</html>
