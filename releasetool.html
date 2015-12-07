@@ -59,16 +59,10 @@
 				
 				fileReader.onloadend = function (e) {
 					if (fileReader.result == null) {
-						console.log("Skipping " + entry.filename)
 						return;
 					}
-					console.log("Hashing " + entry.filename);
 					var hash = SparkMD5.hashBinary(fileReader.result, false);
-					console.log(hash);
-					console.log(dd);
-					console.log(dd.textContent);
 					dd.textContent = hash;
-					console.log(dd.textContent);
 					
 					callback();
 				}
