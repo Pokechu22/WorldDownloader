@@ -69,7 +69,10 @@
 					var hash = SparkMD5.ArrayBuffer.hash(fileReader.result, false);
 					dd.textContent = hash;
 					
-					if (entry.filename.indexOf("wdl") == 0) { //Only include files starting with WDL.
+					if (entry.filename.indexOf("wdl") === 0 && entry.filename.indexOf(".") !== -1) {
+						// Only include files starting with WDL
+						// and that have a file extension.
+					
 						var hashInfo = {};
 						
 						var path = entry.filename;
