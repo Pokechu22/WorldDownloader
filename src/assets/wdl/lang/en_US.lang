@@ -335,6 +335,16 @@ wdl.messages.generalError.failedToBackUp=Error while backing up world: %s
 wdl.messages.generalError.noUTF8=Your computer doesn't support the UTF-8 charset: %s.  You should feel bad.
 wdl.messages.generalError.failedToSetUpEntityUI=Error setting up Entity List UI: %s
 
+wdl.messages.updates.releaseCount=Found %d releases.
+wdl.messages.updates.failedToFindMatchingRelease=Could not find a release matching %s.  You may be running a version that hasn't been released yet.
+wdl.messages.updates.failedToFindMetadata=Could not find metadata for release %s.  Skipping hashing.
+wdl.messages.updates.newRelease=New version available!  You are running %s; the newest version is %s.  %s.
+wdl.messages.updates.newRelease.updateLink=Update here
+wdl.messages.updates.incorrectHash=Bad hash for %s (relative to %s): Expected MD5 in %s, got MD5 of %s.
+wdl.messages.updates.hashException=Bad hash for %s (relative to %s): Expected MD5 in %s, instead a %s was thrown.
+wdl.messages.updates.badHashesFound=Some files have invalid hashes!  Your installation may be corrupt or compromised.  Please use caution, and consider redownloading from the %s.
+wdl.messages.updates.updateCheckError=Failed to perform update check: %s.
+
 wdl.saveProgress.title=Saving downloaded world
 wdl.saveProgress.chunk.title=Saving chunks
 wdl.saveProgress.chunk.saving=Saving chunk at %d, %d

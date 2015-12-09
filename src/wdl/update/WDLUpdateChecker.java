@@ -210,8 +210,8 @@ public class WDLUpdateChecker extends Thread {
 			sleep(5000);
 			
 			releases = GithubInfoGrabber.getReleases();
-			WDL.chatMessage(WDLMessageTypes.UPDATE_DEBUG, "Found " + releases.size()
-					+ " releases.");
+			WDLMessages.chatMessageTranslated(WDLMessageTypes.UPDATE_DEBUG,
+					"wdl.messages.updates.releaseCount", releases.size());
 			for (int i = 0; i < releases.size(); i++) {
 				Release release = releases.get(i);
 				
@@ -221,24 +221,32 @@ public class WDLUpdateChecker extends Thread {
 			}
 			
 			if (runningRelease == null) {
-				WDL.chatMessage(WDLMessageTypes.UPDATE_DEBUG, "Could not find a release "
-						+ "for " + WDL.VERSION + ".  You may be running a "
-						+ "version that hasn't been released yet.");
+				WDLMessages.chatMessageTranslated(WDLMessageTypes.UPDATE_DEBUG,
+						"wdl.messages.updates.failedToFindMatchingRelease",
+						WDL.VERSION);
 				return;
 			}
 			
 			if (hasNewVersion()) {
 				Release recomendedRelease = getRecomendedRelease();
 				
-				WDL.chatMessage(WDLMessageTypes.UPDATES, "New version avaiable!  Newest " 
-						+ "version is " + recomendedRelease.tag + ".  You are "
-						+ "running " + runningRelease.tag + ".");
-				//TODO: add a download link.
+				ChatComponentTranslation updateLink = new ChatComponentTranslation(
+						"wdl.messages.updates.newRelease.updateLink");
+				updateLink.getChatStyle().setColor(EnumChatFormatting.BLUE)
+						.setUnderlined(true).setChatClickEvent(
+								new ClickEvent(Action.OPEN_URL,
+										recomendedRelease.URL));
+				
+				// Show the new version available message, and give a link.
+				WDLMessages.chatMessageTranslated(WDLMessageTypes.UPDATES,
+						"wdl.messages.updates.newRelease", runningRelease.tag,
+						recomendedRelease.tag, updateLink);
 			}
 			
 			if (runningRelease.hiddenInfo == null) {
-				WDL.chatMessage(WDLMessageTypes.UPDATE_DEBUG, "Could not find hidden "
-						+ "data for release.  Skipping hashing.");
+				WDLMessages.chatMessageTranslated(WDLMessageTypes.UPDATE_DEBUG,
+						"wdl.messages.updates.failedToFindMetadata",
+						WDL.VERSION);
 				return;
 			}
 			//Check the hashes, and list any failing ones.
@@ -256,33 +264,38 @@ public class WDLUpdateChecker extends Thread {
 						}
 					}
 					
-					WDL.chatMessage(
+					WDLMessages.chatMessageTranslated(
 							WDLMessageTypes.UPDATE_DEBUG,
-							"Bad hash for " + data.file + " (relative to "
-									+ data.relativeTo + "): Expected "
-									+ Arrays.toString(data.validHashes)
-									+ ", got " + hash);
+							"wdl.messages.updates.incorrectHash", data.file,
+							data.relativeTo, Arrays.toString(data.validHashes),
+							hash);
 					
-					failed.put(data,  hash);
+					failed.put(data, hash);
 					continue;
 				} catch (Exception e) {
-					WDL.chatMessage(WDLMessageTypes.UPDATE_DEBUG, "Bad hash for "
-							+ data.file + " (relative to " + data.relativeTo
-							+ "): Exception: " + e);
+					WDLMessages.chatMessageTranslated(
+							WDLMessageTypes.UPDATE_DEBUG,
+							"wdl.messages.updates.hashException", data.file,
+							data.relativeTo, Arrays.toString(data.validHashes),
+							e);
 					
-					failed.put(data,  e);
+					failed.put(data, e);
 				}
 			}
 			
 			if (failed.size() > 0) {
-				WDL.chatMessage(WDLMessageTypes.UPDATES, "§cSome files have invalid " +
-						"hashes!  Your installation may be corrupt or " +
-						"compromised.  If you are running a custom build, " +
-						"this is normal.");
+				ChatComponentTranslation mcfThread = new ChatComponentTranslation(
+						"wdl.intro.forumsLink");
+				mcfThread.getChatStyle().setColor(EnumChatFormatting.BLUE)
+						.setUnderlined(true).setChatClickEvent(
+								new ClickEvent(Action.OPEN_URL,
+										FORUMS_THREAD_USAGE_LINK));
+				WDLMessages.chatMessageTranslated(WDLMessageTypes.UPDATES,
+						"wdl.messages.updates.badHashesFound", mcfThread);
 			}
 		} catch (Exception e) {
-			WDL.chatMessage(WDLMessageTypes.UPDATE_DEBUG, "Failed to perform update check: "
-					+ e.toString());
+			WDLMessages.chatMessageTranslated(WDLMessageTypes.UPDATE_DEBUG,
+					"wdl.messages.updates.updateCheckError", releases.size());
 			e.printStackTrace();
 		}
 	}
