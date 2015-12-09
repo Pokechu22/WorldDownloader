@@ -533,7 +533,7 @@ class TextList extends GuiListExtended {
 	}
 	
 	public void addLine(String text) {
-		List<String> lines = Utils.wordWrap(text, width);
+		List<String> lines = Utils.wordWrap(text, getListWidth());
 		for (String line : lines) {
 			entries.add(new TextEntry(mc, line, 0xFFFFFF));
 		}
@@ -544,7 +544,7 @@ class TextList extends GuiListExtended {
 	}
 	
 	public void addLinkLine(String text, String URL) {
-		List<String> lines = Utils.wordWrap(text, width);
+		List<String> lines = Utils.wordWrap(text, getListWidth());
 		for (String line : lines) {
 			entries.add(new LinkEntry(mc, line, URL));
 		}
