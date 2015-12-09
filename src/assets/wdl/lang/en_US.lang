@@ -193,6 +193,7 @@ wdl.gui.entities.group.enabled=§aEnabled
 wdl.gui.entities.group.disabled=§cAll disabled
 wdl.gui.entities.trackDistance=Track Distance: %d
 
+wdl.gui.updates.title=World Downloader mod: Updates
 wdl.gui.updates.updateMinecraftVersion.client=Installed on %s client
 wdl.gui.updates.updateMinecraftVersion.server=Connects to %s servers
 wdl.gui.updates.updateMinecraftVersion.any=Any Minecraft version
@@ -200,6 +201,19 @@ wdl.gui.updates.updateMinecraftVersion.description=What criteria to use when det
 wdl.gui.updates.updateAllowBetas.true=Use beta versions: Yes
 wdl.gui.updates.updateAllowBetas.false=Use beta versions: No
 wdl.gui.updates.updateAllowBetas.description=Should beta versions be included in determining the next version?%n%nBeta versions may be unstable.
+wdl.gui.updates.update.title.release=Release World Downloader %s for Minecraft %s
+wdl.gui.updates.update.title.prerelease=Prerelease World Downloader %s for Minecraft %s
+wdl.gui.updates.update.version=%s version for Minecraft %s (supports %s)
+# Version list, inserted after 'supports' in the above key.
+# Note that listStart and listMiddle have spaces at the end.
+wdl.gui.updates.update.version.listSingle=%s
+wdl.gui.updates.update.version.listDouble=%s and %s
+wdl.gui.updates.update.version.listStart=%s, 
+wdl.gui.updates.update.version.listMiddle=%s, 
+wdl.gui.updates.update.version.listEnd=and %s
+
+#Used in various places when update info can't be found
+wdl.gui.updates.update.unknown=Unknown
 
 wdl.backup.none=No backup
 wdl.backup.folder=Copy world folder

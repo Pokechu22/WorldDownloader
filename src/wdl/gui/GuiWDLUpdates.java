@@ -51,23 +51,8 @@ public class GuiWDLUpdates extends GuiScreen {
 				this.release = release;
 				this.fontHeight = fontRendererObj.FONT_HEIGHT + 1;
 				
-				this.title = release.title;
-				if (release.hiddenInfo != null) {
-					this.caption = release.hiddenInfo.loader + " version for "
-							+ release.hiddenInfo.mainMinecraftVersion + " (supporting ";
-					String[] versions = release.hiddenInfo.supportedMinecraftVersions;
-					for (int i = 0; i < versions.length; i++) {
-						caption += versions[i];
-						
-						if (i != versions.length - 1) {
-							caption += ", ";
-						}
-						if (i == versions.length - 2) {
-							caption += "and ";
-						}
-					}
-					caption += ")";
-				}
+				this.title = buildReleaseTitle(release);
+				this.caption = buildVersionInfo(release);
 				
 				List<String> body = Utils.wordWrap(release.textOnlyBody, getListWidth());
 				
@@ -307,7 +292,7 @@ public class GuiWDLUpdates extends GuiScreen {
 		this.list.regenerateVersionList();
 		this.list.drawScreen(mouseX, mouseY, partialTicks);
 		
-		drawCenteredString(fontRendererObj, "World Downloader mod: Updates",
+		drawCenteredString(fontRendererObj, I18n.format("wdl.gui.updates.title"),
 				width / 2, 8, 0xFFFFFF);
 		
 		super.drawScreen(mouseX, mouseY, partialTicks);
@@ -321,6 +306,70 @@ public class GuiWDLUpdates extends GuiScreen {
 			Utils.drawGuiInfoBox(
 					I18n.format("wdl.gui.updates.updateAllowBetas.description"),
 					width, height, BOTTOM_MARGIN);
+		}
+	}
+	
+	/**
+	 * Gets the translated version info for the given release.
+	 */
+	private String buildVersionInfo(Release release) {
+		String type = "?", mainVersion = "?", supportedVersions = "?";
+		
+		if (release.hiddenInfo != null) {
+			type = release.hiddenInfo.loader;
+			mainVersion = release.hiddenInfo.mainMinecraftVersion;
+			
+			String[] versions = release.hiddenInfo.supportedMinecraftVersions;
+			if (versions.length == 1) {
+				supportedVersions = I18n.format(
+						"wdl.gui.updates.update.version.listSingle",
+						versions[0]);
+			} else if (versions.length == 2) {
+				supportedVersions = I18n.format(
+						"wdl.gui.updates.update.version.listDouble",
+						versions[0], versions[1]);
+			} else {
+				StringBuilder builder = new StringBuilder();
+				
+				for (int i = 0; i < versions.length; i++) {
+					if (i == 0) {
+						builder.append(I18n.format(
+								"wdl.gui.updates.update.version.listStart",
+								versions[i]));
+					} else if (i == versions.length - 1) {
+						builder.append(I18n.format(
+								"wdl.gui.updates.update.version.listEnd",
+								versions[i]));
+					} else {
+						builder.append(I18n.format(
+								"wdl.gui.updates.update.version.listMiddle",
+								versions[i]));
+					}
+				}
+				
+				supportedVersions = builder.toString();
+			}
+		}
+		
+		return I18n.format("wdl.gui.updates.update.version", type, mainVersion,
+				supportedVersions);
+	}
+	
+	/**
+	 * Gets the translated title for the given release.
+	 */
+	private String buildReleaseTitle(Release release) {
+		String version = release.tag;
+		String mcVersion = "?";
+		
+		if (release.hiddenInfo != null) {
+			mcVersion = release.hiddenInfo.mainMinecraftVersion;
+		}
+		
+		if (release.prerelease) {
+			return I18n.format("wdl.gui.updates.update.title.prerelease", version, mcVersion);
+		} else {
+			return I18n.format("wdl.gui.updates.update.title.release", version, mcVersion);
 		}
 	}
 	
@@ -352,28 +401,9 @@ public class GuiWDLUpdates extends GuiScreen {
 			
 			this.list = new TextList(mc, width, height, TOP_MARGIN, BOTTOM_MARGIN);
 			
-			list.addLine((release.prerelease ? "Prerelease " : "Release ")
-					+ release.title);
+			list.addLine(buildReleaseTitle(release));
 			list.addLine("Released " + release.date);
-			if (release.hiddenInfo != null) {
-				String versionLine = release.hiddenInfo.loader + " version for " + 
-						release.hiddenInfo.mainMinecraftVersion + " (supports ";
-				
-				String[] versions = release.hiddenInfo.supportedMinecraftVersions;
-				for (int i = 0; i < versions.length; i++) {
-					versionLine += versions[i];
-					
-					if (i != versions.length - 1) {
-						versionLine += ", ";
-					}
-					if (i == versions.length - 2) {
-						versionLine += "and ";
-					}
-				}
-				versionLine += ")";
-				
-				list.addLine(versionLine);
-			}
+			list.addLine(buildVersionInfo(release));
 			list.addBlankLine();
 			list.addLine(release.textOnlyBody);
 		}
@@ -426,7 +456,7 @@ public class GuiWDLUpdates extends GuiScreen {
 			
 			this.list.drawScreen(mouseX, mouseY, partialTicks);
 			
-			this.drawCenteredString(this.fontRendererObj, release.title,
+			this.drawCenteredString(this.fontRendererObj, buildReleaseTitle(release),
 					this.width / 2, 8, 0xFFFFFF);
 			
 			super.drawScreen(mouseX, mouseY, partialTicks);
