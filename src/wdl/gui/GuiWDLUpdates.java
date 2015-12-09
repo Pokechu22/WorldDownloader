@@ -12,7 +12,6 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -60,20 +59,22 @@ public class GuiWDLUpdates extends GuiScreen {
 				body2 = (body.size() >= 2 ? body.get(1) : "");
 				body3 = (body.size() >= 3 ? body.get(2) : "");
 				
-				time = "Released on " + release.date;
+				time = I18n.format("wdl.gui.updates.update.releaseDate", release.date);
 			}
 			
 			@Override
 			public void drawEntry(int slotIndex, int x, int y, int listWidth,
 					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
-				String title = this.title;
+				String title;
 				//The 'isSelected' parameter is actually 'isMouseOver'
 				if (isSelected(slotIndex)) {
-					title += EnumChatFormatting.GOLD
-							+ " (you are currently running this version)";
+					title = I18n.format("wdl.gui.updates.currentVersion",
+							this.title);
 				} else if (this.release == recomendedRelease) {
-					title += EnumChatFormatting.GOLD
-							+ " (you should run this version)";
+					title = I18n.format("wdl.gui.updates.recomendedVersion",
+							this.title);
+				} else {
+					title = this.title;
 				}
 				
 				fontRendererObj.drawString(title, x, y + fontHeight * 0, 0xFFFFFF);
@@ -391,10 +392,10 @@ public class GuiWDLUpdates extends GuiScreen {
 		@Override
 		public void initGui() {
 			this.buttonList.add(new GuiButton(0, this.width / 2 - 155, 
-					18, 150, 20, "View online (+ downloads)"));
+					18, 150, 20, I18n.format("wdl.gui.updates.update.viewOnline")));
 			if (release.hiddenInfo != null) {
 				this.buttonList.add(new GuiButton(1, this.width / 2 + 5, 
-						18, 150, 20, "Forum post"));
+						18, 150, 20, I18n.format("wdl.gui.updates.update.viewForumPost")));
 			}
 			this.buttonList.add(new GuiButton(100, this.width / 2 - 100, 
 					this.height - 29, I18n.format("gui.done")));
@@ -402,7 +403,7 @@ public class GuiWDLUpdates extends GuiScreen {
 			this.list = new TextList(mc, width, height, TOP_MARGIN, BOTTOM_MARGIN);
 			
 			list.addLine(buildReleaseTitle(release));
-			list.addLine("Released " + release.date);
+			list.addLine(I18n.format("wdl.gui.updates.update.releaseDate", release.date));
 			list.addLine(buildVersionInfo(release));
 			list.addBlankLine();
 			list.addLine(release.textOnlyBody);

@@ -201,6 +201,8 @@ wdl.gui.updates.updateMinecraftVersion.description=What criteria to use when det
 wdl.gui.updates.updateAllowBetas.true=Use beta versions: Yes
 wdl.gui.updates.updateAllowBetas.false=Use beta versions: No
 wdl.gui.updates.updateAllowBetas.description=Should beta versions be included in determining the next version?%n%nBeta versions may be unstable.
+wdl.gui.updates.currentVersion=%s §6(you are currently running this version)
+wdl.gui.updates.recomendedVersion=%s §6(you should run this version)
 wdl.gui.updates.update.title.release=Release World Downloader %s for Minecraft %s
 wdl.gui.updates.update.title.prerelease=Prerelease World Downloader %s for Minecraft %s
 wdl.gui.updates.update.version=%s version for Minecraft %s (supports %s)
@@ -211,6 +213,9 @@ wdl.gui.updates.update.version.listDouble=%s and %s
 wdl.gui.updates.update.version.listStart=%s, 
 wdl.gui.updates.update.version.listMiddle=%s, 
 wdl.gui.updates.update.version.listEnd=and %s
+wdl.gui.updates.update.releaseDate=Released %s
+wdl.gui.updates.update.viewOnline=View online (+ downloads)
+wdl.gui.updates.update.viewForumPost=View forum post
 
 #Used in various places when update info can't be found
 wdl.gui.updates.update.unknown=Unknown
