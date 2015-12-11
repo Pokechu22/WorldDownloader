@@ -13,7 +13,7 @@ import net.minecraft.client.resources.I18n;
  * Based off of vanilla minecraft's 
  * {@link net.minecraft.client.gui.GuiScreenWorking GuiScreenWorking}.
  */
-public class GuiWDLSaveProgress extends GuiTurningCameraBase implements
+public class GuiWDLSaveProgress extends GuiScreen implements
 		IBackupProgressMonitor {
 	private final String title;
 	private String majorTaskMessage = "";
@@ -35,6 +35,15 @@ public class GuiWDLSaveProgress extends GuiTurningCameraBase implements
 		this.title = title;
 		this.majorTaskCount = taskCount;
 		this.majorTaskNumber = 0;
+		this.allowUserInput = true; //Allows using normal gameplay input while saving.
+	}
+	
+	@Override
+	public void initGui() {
+		//Allow using the mouse while saving.
+		//We would call mc#setIngameFocus(), but that also closes the GUI.
+		mc.inGameHasFocus = true;
+		mc.mouseHelper.grabMouseCursor();
 	}
 	
 	/**
@@ -160,12 +169,23 @@ public class GuiWDLSaveProgress extends GuiTurningCameraBase implements
 		drawTexturedModalRect(x, y, u, filledV, currentWidth, height);
 	}
 	
+	/**
+	 * Don't use the main {@link GuiScreen#handleInput()} method.  It eats
+	 * all of the keyboard and mouse events before the main game can tick them.
+	 * 
+	 * Even still, the events are passed back to the GUI elsewhere, but the game
+	 * also gets them.
+	 */
+	@Override
+	public void handleInput() throws IOException {
+		// Do nothing.
+	}
+	
 	@Override
 	protected void keyTyped(char typedChar, int keyCode) throws IOException {
-		//Don't call the super method, as that causes the UI to close if escape
-		//is pressed.
+		// Do nothing - we don't want escape to close it.
 	}
-
+	
 	// IBackupProgressMonitor
 	@Override
 	public void setNumberOfFiles(int num) {
