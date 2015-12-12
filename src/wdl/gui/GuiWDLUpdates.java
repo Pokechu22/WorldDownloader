@@ -293,6 +293,20 @@ public class GuiWDLUpdates extends GuiScreen {
 		this.list.regenerateVersionList();
 		this.list.drawScreen(mouseX, mouseY, partialTicks);
 		
+		if (!WDLUpdateChecker.hasFinishedUpdateCheck()) {
+			drawCenteredString(fontRendererObj,
+					I18n.format("wdl.gui.updates.pleaseWait"), width / 2,
+					height / 2, 0xFFFFFF);
+		} else if (WDLUpdateChecker.hasUpdateCheckFailed()) {
+			String reason = WDLUpdateChecker.getUpdateCheckFailReason();
+			
+			drawCenteredString(fontRendererObj,
+					I18n.format("wdl.gui.updates.checkFailed"), width / 2,
+					height / 2 - fontRendererObj.FONT_HEIGHT / 2, 0xFF5555);
+			drawCenteredString(fontRendererObj, I18n.format(reason), width / 2,
+					height / 2 + fontRendererObj.FONT_HEIGHT / 2, 0xFF5555);
+		}
+		
 		drawCenteredString(fontRendererObj, I18n.format("wdl.gui.updates.title"),
 				width / 2, 8, 0xFFFFFF);
 		

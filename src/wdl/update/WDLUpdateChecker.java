@@ -18,7 +18,22 @@ import wdl.update.Release.HashData;
  * Performs the update checking.
  */
 public class WDLUpdateChecker extends Thread {
-	private static volatile boolean shown = false;
+	/**
+	 * Has the update check started?
+	 */
+	private static volatile boolean started = false;
+	/**
+	 * Has the update check finished?
+	 */
+	private static volatile boolean finished = false;
+	/**
+	 * Did something go wrong with the update check?
+	 */
+	private static volatile boolean failed = false;
+	/**
+	 * If something went wrong with the update check, what was it?
+	 */
+	private static volatile String failReason = null;
 	
 	/**
 	 * List of releases.  May be null if the checker has not finished.
@@ -31,6 +46,7 @@ public class WDLUpdateChecker extends Thread {
 	 * May be null.
 	 */
 	private static volatile Release runningRelease;
+	
 	/**
 	 * Gets the current list of releases. May be null if the checker has not
 	 * finished.
@@ -132,11 +148,31 @@ public class WDLUpdateChecker extends Thread {
 	 * if needed.
 	 */
 	public static void startIfNeeded() {
-		if (!shown) {
-			shown = true;
+		if (!started) {
+			started = true;
 			
 			new WDLUpdateChecker().start();
 		}
+	}
+	
+	/**
+	 * Has the update check finished?
+	 */
+	public static boolean hasFinishedUpdateCheck() {
+		return finished;
+	}
+	
+	/**
+	 * Did something go wrong with the update check?
+	 */
+	public static boolean hasUpdateCheckFailed() {
+		return failed;
+	}
+	/**
+	 * If the update check failed, why?
+	 */
+	public static String getUpdateCheckFailReason() {
+		return failReason;
 	}
 	
 	private static final String FORUMS_THREAD_USAGE_LINK = "http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465#Usage";
@@ -212,6 +248,13 @@ public class WDLUpdateChecker extends Thread {
 			releases = GithubInfoGrabber.getReleases();
 			WDLMessages.chatMessageTranslated(WDLMessageTypes.UPDATE_DEBUG,
 					"wdl.messages.updates.releaseCount", releases.size());
+			
+			if (releases.isEmpty()) {
+				failed = true;
+				failReason = "No releases found.";
+				return;
+			}
+			
 			for (int i = 0; i < releases.size(); i++) {
 				Release release = releases.get(i);
 				
@@ -295,8 +338,12 @@ public class WDLUpdateChecker extends Thread {
 			}
 		} catch (Exception e) {
 			WDLMessages.chatMessageTranslated(WDLMessageTypes.UPDATE_DEBUG,
-					"wdl.messages.updates.updateCheckError", releases.size());
-			e.printStackTrace();
+					"wdl.messages.updates.updateCheckError", e);
+			
+			failed = true;
+			failReason = e.toString();
+		} finally {
+			finished = true;
 		}
 	}
 }
