@@ -16,14 +16,14 @@ import net.minecraft.client.resources.I18n;
 public class GuiWDLSaveProgress extends GuiTurningCameraBase implements
 		IBackupProgressMonitor {
 	private final String title;
-	private String majorTaskMessage = "";
-	private String minorTaskMessage = "";
-	private int majorTaskNumber;
+	private volatile String majorTaskMessage = "";
+	private volatile String minorTaskMessage = "";
+	private volatile int majorTaskNumber;
 	private final int majorTaskCount;
-	private int minorTaskProgress;
-	private int minorTaskMaximum;
+	private volatile int minorTaskProgress;
+	private volatile int minorTaskMaximum;
 	
-	private boolean doneWorking = false;
+	private volatile boolean doneWorking = false;
 	
 	/**
 	 * Creates a new GuiWDLSaveProgress.
