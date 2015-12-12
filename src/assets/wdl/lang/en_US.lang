@@ -346,6 +346,8 @@ wdl.messages.updates.incorrectHash=Bad hash for %s (relative to %s): Expected MD
 wdl.messages.updates.hashException=Bad hash for %s (relative to %s): Expected MD5 in %s, instead a %s was thrown.
 wdl.messages.updates.badHashesFound=Some files have invalid hashes!  Your installation may be corrupt or compromised.  Please use caution, and consider redownloading from the %s.
 wdl.messages.updates.updateCheckError=Failed to perform update check: %s.
+wdl.messages.updates.usingCachedUpdates=Using cached version list.
+wdl.messages.updates.grabingUpdatesFromGithub=Loading verison list from GitHub releases.
 
 wdl.saveProgress.title=Saving downloaded world
 wdl.saveProgress.chunk.title=Saving chunks

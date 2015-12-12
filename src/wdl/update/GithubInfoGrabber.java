@@ -1,14 +1,20 @@
 package wdl.update;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import net.minecraft.client.Minecraft;
 import wdl.WDL;
+import wdl.WDLMessageTypes;
+import wdl.WDLMessages;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -25,6 +31,12 @@ public class GithubInfoGrabber {
 	 * Location of the entire release list.
 	 */
 	private static final String RELEASE_LIST_LOCATION = "https://api.github.com/repos/pokechu22/WorldDownloader/releases?per_page=100";
+	/**
+	 * File for the release cache.
+	 */
+	private static final File CACHED_RELEASES_FILE = new File(
+			Minecraft.getMinecraft().mcDataDir,
+			"WorldDownloader_Update_Cache.json");
 	
 	static {
 		String mcVersion = WDL.getMinecraftVersionInfo();
@@ -63,22 +75,70 @@ public class GithubInfoGrabber {
 			connection.setRequestProperty("User-Agent", USER_AGENT);
 			connection.setRequestProperty("Accept",
 					"application/vnd.github.v3.full+json");
+			// ETag - allows checking if the value was modified (and helps
+			// avoid getting rate-limited, as if it is unchanged it no
+			// longer counts).
+			// See https://developer.github.com/v3/#conditional-requests
+			if (WDL.globalProps.getProperty("UpdateETag") != null) {
+				String etag = WDL.globalProps.getProperty("UpdateETag");
+				if (!etag.isEmpty()) {
+					connection.setRequestProperty("If-None-Match", etag);
+				}
+			}
 			
 			connection.connect();
 			
-			if (connection.getResponseCode() != 200) {
+			if (connection.getResponseCode() == HttpsURLConnection.HTTP_NOT_MODIFIED) {
+				// 304 not modified; use the cached version.
+				WDLMessages.chatMessageTranslated(WDLMessageTypes.UPDATE_DEBUG,
+						"wdl.messages.updates.usingCachedUpdates");
+				
+				stream = new FileInputStream(CACHED_RELEASES_FILE);
+			} else if (connection.getResponseCode() == HttpsURLConnection.HTTP_OK) {
+				// 200 OK
+				WDLMessages.chatMessageTranslated(WDLMessageTypes.UPDATE_DEBUG,
+						"wdl.messages.updates.grabingUpdatesFromGithub");
+				
+				stream = connection.getInputStream();
+			} else {
 				throw new Exception("Unexpected response while getting " + path
 						+ ": " + connection.getResponseCode() + " "
 						+ connection.getResponseMessage());
 			}
 			
-			stream = connection.getInputStream();
-			
 			InputStreamReader reader = null;
 			
 			try {
 				reader = new InputStreamReader(stream);
-				return PARSER.parse(reader);
+				JsonElement element = PARSER.parse(reader);
+				
+				// Write that cached version to disk, and save the ETAG.
+				PrintStream output = null;
+				String etag = null;
+				try {
+					output = new PrintStream(CACHED_RELEASES_FILE);
+					output.println(element.toString());
+					
+					etag = connection.getHeaderField("ETag");
+				} catch (Exception e) {
+					// We don't want to cache an old version if didn't save.
+					etag = null;
+					throw e;
+				} finally {
+					if (output != null) {
+						output.close();
+					}
+					
+					if (etag != null) {
+						WDL.globalProps.setProperty("UpdateETag", etag);
+					} else {
+						WDL.globalProps.remove("UpdateETag");
+					}
+					
+					WDL.saveGlobalProps();
+				}
+				
+				return element;
 			} finally {
 				if (reader != null) {
 					reader.close();
