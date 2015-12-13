@@ -61,10 +61,12 @@ public class GuiWDLPermissions extends GuiScreen {
 		
 		this.buttonList.add(new GuiButton(200, this.width / 2 - 155, 39, 100, 20,
 				"Current perms"));
-		this.buttonList.add(new GuiButton(201, this.width / 2 - 50, 39, 100, 20,
-				"Request perms"));
-		this.buttonList.add(new GuiButton(202, this.width / 2 + 55, 39, 100, 20,
-				"Chunk Overrides"));
+		if (WDLPluginChannels.canRequestPermissions()) {
+			this.buttonList.add(new GuiButton(201, this.width / 2 - 50, 39, 100, 20,
+					"Request perms"));
+			this.buttonList.add(new GuiButton(202, this.width / 2 + 55, 39, 100, 20,
+					"Chunk Overrides"));
+		}
 		
 		reloadButton = new GuiButton(1, (this.width / 2) + 5, 18, 150, 20,
 				"Reload permissions");
@@ -79,6 +81,13 @@ public class GuiWDLPermissions extends GuiScreen {
 		}
 		
 		list.addBlankLine();
+		if (!WDLPluginChannels.canRequestPermissions()) {
+			list.addLine("§cThe serverside permission plugin is out of date " +
+					"and does support permission requests.  Please go ask a " +
+					"server administrator to update the plugin.");
+			list.addBlankLine();
+		}
+		
 		if (WDLPluginChannels.getRequestMessage() != null) {
 			list.addLine("Note from the server moderators: ");
 			list.addLine(WDLPluginChannels.getRequestMessage());
