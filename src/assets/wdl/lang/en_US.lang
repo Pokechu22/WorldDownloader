@@ -1,9 +1,22 @@
+# WorldDownloader translation file
+# All of the text on the left side of the = is the key, while the right side is the value.
+# '%s', '%d', and similar are formatting tokens, as described on the formatter
+# docs: http://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html
+# '%s' is a string, '%d' is a decimal integer, and '%f' is a float.
+# '%%' is an escaped percent, and '%n' is a newline.  You can reference an argument
+# at a specific index with %i$s, where 'i' is the number (and 's' may be changed
+# with one of the other format types).
+# Precision can be specified like %.2f, giving 2 decimal points of accuracy.
+# Everything after a '#' is a comment.
+#  
+# Note that in all of the things put into chat (under wdl.messages) you can
+# ONLY use '%s', '%d', and '%f'.
+
 # Translator name, preferably in the form of 'Translated to %s by <your name>'.
 # '%s' will be replaced with the language name automatically.
 # If left blank, it will not be displayed.
 wdl.translatorCredit=
 
-# Remaining values.
 wdl.gui.wdl.title=World Downloader mod: Options for %s
 wdl.gui.wdl.worldname=Name:
 wdl.gui.wdl.worldOverrides.name=World Overrides...
