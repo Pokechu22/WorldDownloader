@@ -70,7 +70,6 @@ import wdl.api.IEntityEditor;
 import wdl.api.IPlayerInfoEditor;
 import wdl.api.ISaveListener;
 import wdl.api.ITileEntityEditor;
-import wdl.api.IWDLMessageType;
 import wdl.api.IWDLMod;
 import wdl.api.IWorldInfoEditor;
 import wdl.api.WDLApi;
@@ -1664,14 +1663,7 @@ public class WDL {
 			tileEntity.setField(i, inventory.getField(i));
 		}
 	}
-
-	/**
-	 * Prints a message to the chat, with the given type. 
-	 */
-	public static void chatMessage(IWDLMessageType type, String msg) {
-		WDLMessages.chatMessage(type, msg);
-	}
-
+	
 	/**
 	 * Gets the save version.
 	 * 

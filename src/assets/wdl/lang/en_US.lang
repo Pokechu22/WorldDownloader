@@ -350,6 +350,18 @@ wdl.messages.updates.updateCheckError=Failed to perform update check: %s.
 wdl.messages.updates.usingCachedUpdates=Using cached version list.
 wdl.messages.updates.grabingUpdatesFromGithub=Loading verison list from GitHub releases.
 
+wdl.messages.permissions.init=Sending plugin channel registration.
+wdl.messages.permissions.packet0=Received settings packet #0: [canUseFunctionsUnknownToServer=%b]
+wdl.messages.permissions.packet1=Received settings packet #1: [canDownloadInGeneral=%b, canCacheChunks=%b, saveRadius=%d, canSaveEntities=%b, canSaveTileEntities=%b, canSaveContainers=%b]
+wdl.messages.permissions.packet2=Received settings packet #2: [entityRanges=(total of %d)]
+wdl.messages.permissions.packet3=Received settings packet #3: [canRequestPermissions=%b, requestMessage=(%d long, HashCode of %x)]
+wdl.messages.permissions.packet4=Received settings packet #4: [chunkOverrides=(%d groups, %d total ranges)]
+wdl.messages.permissions.packet5.added=Received settings packet #5: Added %d ChunkRanges to %s.
+wdl.messages.permissions.packet5.set=Received settings packet #5: Changed list of ChunkRanges to %d total in %s.
+wdl.messages.permissions.packet6=Received settings packet #6: Removed %d ChunkRanges from %s with tags matching %s.
+wdl.messages.permissions.packet7=Received settings packet #7: Replaced %d ChunkRanges in %s that had a tag of %s with %d new ranges.
+wdl.messages.permissions.unknownPacket=Received unknown settings packet #%d.  See log for binary contents.  
+
 wdl.saveProgress.title=Saving downloaded world
 wdl.saveProgress.chunk.title=Saving chunks
 wdl.saveProgress.chunk.saving=Saving chunk at %d, %d

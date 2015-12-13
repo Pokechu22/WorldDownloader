@@ -5,6 +5,7 @@ import io.netty.buffer.Unpooled;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -581,8 +582,9 @@ public class WDLPluginChannels {
 		
 		canUseFunctionsUnknownToServer = true;
 		
-		WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
-				"Sending plugin channels registration to the server.");
+		WDLMessages.chatMessageTranslated(
+				WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
+				"wdl.messages.permissions.init");
 		
 		// Register the WDL messages.
 		PacketBuffer registerPacketBuffer = new PacketBuffer(Unpooled.buffer());
@@ -624,11 +626,9 @@ public class WDLPluginChannels {
 			case 0:
 				canUseFunctionsUnknownToServer = input.readBoolean();
 				
-				WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
-						"Loaded settings packet #0 from the server!");
-				
-				WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
-						"canUseFunctionsUnknownToServer: " +
+				WDLMessages.chatMessageTranslated(
+						WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
+						"wdl.messages.permissions.packet0",
 								canUseFunctionsUnknownToServer);
 				
 				break;
@@ -640,21 +640,12 @@ public class WDLPluginChannels {
 				canSaveTileEntities = input.readBoolean();
 				canSaveContainers = input.readBoolean();
 
-				WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
-						"Loaded settings packet #1 from the server!");
-
-				WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
-						"canDownloadInGeneral: " + canDownloadInGeneral);
-				WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
-						"saveRadius: " + saveRadius);
-				WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
-						"canCacheChunks: " + canCacheChunks);
-				WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
-						"canSaveEntities: " + canSaveEntities);
-				WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
-						"canSaveTileEntities: " + canSaveTileEntities);
-				WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
-						"canSaveContainers: " + canSaveContainers);
+				WDLMessages.chatMessageTranslated(
+								WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
+								"wdl.messages.permissions.packet1",
+								canDownloadInGeneral, saveRadius,
+								canCacheChunks, canSaveEntities,
+								canSaveTileEntities, canSaveContainers);
 				
 				//Cancel a download if it is occurring.
 				if (!canDownloadInGeneral) {
@@ -676,21 +667,22 @@ public class WDLPluginChannels {
 					
 					entityRanges.put(name, range);
 				}
-				WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
-						"Loaded settings packet #2 from the server!");
 				
-				WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
-						"entityRanges: total of " + entityRanges.size());
+				WDLMessages.chatMessageTranslated(
+						WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
+						"wdl.messages.permissions.packet2",
+						entityRanges.size());
 				break;
 			case 3: 
 				canRequestPermissions = input.readBoolean();
 				requestMessage = input.readUTF();
 				
-				WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
-						"Loaded settings packet #3 from the server!");
-				//Don't bother printing out any exact info.
-				//The user will only need this in the perm UI, and
-				//it'll be true all of the time as of the current plugin.
+				WDLMessages.chatMessageTranslated(
+						WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
+						"wdl.messages.permissions.packet3",
+						canRequestPermissions, requestMessage.length(),
+						requestMessage.hashCode());
+				// Don't include the exact message because it's too long and would be spammy.
 				break;
 			case 4:
 				chunkOverrides.clear();
@@ -714,11 +706,10 @@ public class WDLPluginChannels {
 					totalRanges += groupSize;
 				}
 				
-				WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
-						"Loaded settings packet #4 from the server!");
-				WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
-						"ChunkRanges: " + numRangeGroups + " groups, "
-								+ totalRanges + " in total");
+				WDLMessages.chatMessageTranslated(
+						WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
+						"wdl.messages.permissions.packet4",
+						numRangeGroups, totalRanges);
 				break;
 			case 5:
 				
@@ -739,12 +730,17 @@ public class WDLPluginChannels {
 				}
 				chunkOverrides.put(groupToEdit, newRanges);
 				
-				WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
-						"Loaded settings packet #5 from the server!");
-				WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
-						"Edited ChunkRanges for " + groupToEdit + ": "
-								+ (replaceGroups ? "Now contains " : "Added ")
-								+ " " + numNewGroups + " ranges.");
+				if (replaceGroups) {
+					WDLMessages.chatMessageTranslated(
+							WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
+							"wdl.messages.permissions.packet5.added",
+							numNewGroups, groupToEdit);
+				} else {
+					WDLMessages.chatMessageTranslated(
+							WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
+							"wdl.messages.permissions.packet5.set",
+							numNewGroups, groupToEdit);
+				}
 				break;
 			case 6:
 				String groupToChangeTagsFor = input.readUTF();
@@ -762,19 +758,19 @@ public class WDLPluginChannels {
 					chunkOverrides.get(groupToChangeTagsFor).removeAll(tag);
 				}
 				
-				WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
-						"Loaded settings packet #6 from the server!");
-				WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
-						"Removed " + oldCount + " ChunkRanges from "
-								+ groupToChangeTagsFor + " with tags of "
-								+ Arrays.toString(tags));
+				WDLMessages.chatMessageTranslated(
+						WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
+						"wdl.messages.permissions.packet6",
+						oldCount, groupToChangeTagsFor, Arrays.toString(tags));
 				break;
 			case 7:
 				String groupToSetTagFor = input.readUTF();
 				String tag = input.readUTF();
 				int numNewRanges = input.readInt();
 				
-				chunkOverrides.get(groupToSetTagFor).removeAll(tag);
+				Collection<ChunkRange> oldRanges = chunkOverrides.get(
+						groupToSetTagFor).removeAll(tag);
+				int numRangesRemoved = oldRanges.size();
 				
 				for (int i = 0; i < numNewRanges; i++) {
 					//TODO: Ensure that the range has the right tag.
@@ -783,22 +779,21 @@ public class WDLPluginChannels {
 							ChunkRange.readFromInput(input));
 				}
 				
-				WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, 
-						"Loaded settings packet #7 from the server!");
-				WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
-						"Replaced ChunkRanges for " + groupToSetTagFor
-								+ " with tag " + tag + " with " + numNewRanges
-								+ " ranges.");
+				WDLMessages.chatMessageTranslated(
+						WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
+						"wdl.messages.permissions.packet7",
+						numRangesRemoved, groupToSetTagFor, tag, numNewRanges);
 				break;
 			default:
+				WDLMessages.chatMessageTranslated(
+						WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
+						"wdl.messages.permissions.unknownPacket", section);
+				
 				StringBuilder messageBuilder = new StringBuilder();
 				for (byte b : bytes) {
 					messageBuilder.append(b).append(' ');
 				}
 
-				WDL.chatMessage(WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
-						"Received unkown plugin channel message #" + 
-								section + ".");
 				logger.info(messageBuilder.toString());
 			}
 		}
