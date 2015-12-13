@@ -3,6 +3,7 @@ package wdl;
 import io.netty.buffer.Unpooled;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -18,6 +19,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
@@ -127,6 +129,11 @@ public class WDLPluginChannels {
 	 */
 	public static final List<String> INTEGER_REQUEST_FIELDS = Arrays.asList(
 			"saveRadius");
+	
+	/**
+	 * List of new chunk override requests.
+	 */
+	private static List<ChunkRange> chunkOverrideRequests = new ArrayList<ChunkRange>();
 	
 	/**
 	 * Checks whether players can use functions unknown to the server.
@@ -519,10 +526,23 @@ public class WDLPluginChannels {
 	}
 	
 	/**
+	 * Gets the current list of chunk override requests.
+	 */
+	public static List<ChunkRange> getChunkOverrideRequests() {
+		return ImmutableList.copyOf(chunkOverrideRequests);
+	}
+	/**
+	 * Adds a new chunk override request for the given range.
+	 */
+	public static void addChunkOverrideRequest(ChunkRange range) {
+		chunkOverrideRequests.add(range);
+	}
+	
+	/**
 	 * Sends the current requests to the server.
 	 */
 	public static void sendRequests() {
-		if (requests.isEmpty()) {
+		if (requests.isEmpty() && chunkOverrideRequests.isEmpty()) {
 			return;
 		}
 		
@@ -533,6 +553,11 @@ public class WDLPluginChannels {
 		for (Map.Entry<String, String> request : requests.entrySet()) {
 			output.writeUTF(request.getKey());
 			output.writeUTF(request.getValue());
+		}
+		
+		output.writeInt(chunkOverrideRequests.size());
+		for (ChunkRange range : chunkOverrideRequests) {
+			range.writeToOutput(output);
 		}
 		
 		PacketBuffer requestBuffer = new PacketBuffer(Unpooled.buffer());
@@ -552,6 +577,7 @@ public class WDLPluginChannels {
 		
 		receivedPackets = new HashSet<Integer>();
 		requests = new HashMap<String, String>();
+		chunkOverrideRequests = new ArrayList<ChunkRange>();
 		
 		canUseFunctionsUnknownToServer = true;
 		
@@ -800,6 +826,10 @@ public class WDLPluginChannels {
 		 */
 		public final int x1, z1, x2, z2;
 		
+		/**
+		 * Reads and creates a new ChunkRange from the given
+		 * {@link ByteArrayDataInput}.
+		 */
 		public static ChunkRange readFromInput(ByteArrayDataInput input) {
 			String tag = input.readUTF();
 			int x1 = input.readInt();
@@ -808,6 +838,22 @@ public class WDLPluginChannels {
 			int z2 = input.readInt();
 			
 			return new ChunkRange(tag, x1, z1, x2, z2);
+		}
+		
+		/**
+		 * Writes this ChunkRange to the given {@link ByteArrayDataOutput}.
+		 * 
+		 * Note that I expect most serverside implementations will ignore the
+		 * tag, but it still is included for clarity.  The value in it can be
+		 * anything so long as it is not null - an empty string will do.
+		 */
+		public void writeToOutput(ByteArrayDataOutput output) {
+			output.writeUTF(this.tag);
+			
+			output.writeInt(this.x1);
+			output.writeInt(this.z1);
+			output.writeInt(this.x2);
+			output.writeInt(this.z2);
 		}
 
 		@Override
