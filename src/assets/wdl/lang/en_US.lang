@@ -351,10 +351,10 @@ wdl.messages.updates.usingCachedUpdates=Using cached version list.
 wdl.messages.updates.grabingUpdatesFromGithub=Loading verison list from GitHub releases.
 
 wdl.messages.permissions.init=Sending plugin channel registration.
-wdl.messages.permissions.packet0=Received settings packet #0: [canUseFunctionsUnknownToServer=%b]
-wdl.messages.permissions.packet1=Received settings packet #1: [canDownloadInGeneral=%b, canCacheChunks=%b, saveRadius=%d, canSaveEntities=%b, canSaveTileEntities=%b, canSaveContainers=%b]
+wdl.messages.permissions.packet0=Received settings packet #0: [canUseFunctionsUnknownToServer=%s]
+wdl.messages.permissions.packet1=Received settings packet #1: [canDownloadInGeneral=%s, canCacheChunks=%s, saveRadius=%d, canSaveEntities=%s, canSaveTileEntities=%s, canSaveContainers=%s]
 wdl.messages.permissions.packet2=Received settings packet #2: [entityRanges=(total of %d)]
-wdl.messages.permissions.packet3=Received settings packet #3: [canRequestPermissions=%b, requestMessage=(%d long, HashCode of %x)]
+wdl.messages.permissions.packet3=Received settings packet #3: [canRequestPermissions=%s, requestMessage=(%d long, HashCode of %s)]
 wdl.messages.permissions.packet4=Received settings packet #4: [chunkOverrides=(%d groups, %d total ranges)]
 wdl.messages.permissions.packet5.added=Received settings packet #5: Added %d ChunkRanges to %s.
 wdl.messages.permissions.packet5.set=Received settings packet #5: Changed list of ChunkRanges to %d total in %s.

@@ -681,7 +681,7 @@ public class WDLPluginChannels {
 						WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
 						"wdl.messages.permissions.packet3",
 						canRequestPermissions, requestMessage.length(),
-						requestMessage.hashCode());
+						Integer.toHexString(requestMessage.hashCode()));
 				// Don't include the exact message because it's too long and would be spammy.
 				break;
 			case 4:
