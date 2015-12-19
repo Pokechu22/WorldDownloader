@@ -11,6 +11,9 @@
 #  
 # Note that in all of the things put into chat (under wdl.messages) you can
 # ONLY use '%s', '%d', and '%f'.
+# 
+# Additionally, Minecraft's §-based color codes may be used.  See
+# http://minecraft.gamepedia.com/Formatting_codes for more info.
 
 # Translator name, preferably in the form of 'Translated to %s by <your name>'.
 # '%s' will be replaced with the language name automatically.
