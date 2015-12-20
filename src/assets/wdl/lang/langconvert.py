@@ -23,10 +23,10 @@ def _translate(browser, langname, lines):
     for line in lines:
         newline = line
         print(line)
-        if isinstance(line, dict):
-            totranslate = list(line.values())[0]
-            print(totranslate)
+        if isinstance(line, list):
+            totranslate = line[1]
             if '%' not in totranslate and totranslate != '':
+                print("Translating {0}".format(totranslate)
                 type_here.click()
                 type_here.send_keys(totranslate)
                 WebDriverWait(browser, 10).until(
@@ -35,7 +35,7 @@ def _translate(browser, langname, lines):
                     )
                 )
                 translated = result.text
-                newline = {list(line.keys())[0]: translated}
+                newline = [line[0], translated]
                 clear.click()
         newlines.append(newline)
     return newlines
@@ -48,8 +48,9 @@ def _configureifylines(lines):
             line = line[:-1]
         if not line.startswith('#') and line != '':
             liner = line.split('=', 1)
-            dummy = liner[1] if len(liner) == 2 else ''
-            line = {liner[0]: liner[1]}
+            if len(liner) == 1:
+                liner.append('')
+            line = liner
         else:
             line = line
         newlines.append(line)
@@ -60,8 +61,8 @@ def _unconfigureifylines(lines):
     newlines = []
     for line in lines:
         newline = line
-        if isinstance(line, dict):
-            newline = "{0}={1}".format(list(line.keys())[0], list(line.values())[0])
+        if isinstance(line, list):
+            newline = "=".join(line)
         newlines.append(newline)
     return newlines
 
