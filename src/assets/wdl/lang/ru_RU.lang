@@ -18,7 +18,7 @@
 # Translator name, preferably in the form of 'Translated to %s by <your name>'.
 # '%s' will be replaced with the language name automatically.
 # If left blank, it will not be displayed.
-wdl.translatorCredit=Automatically Translated By Google Translate
+wdl.translatorCredit=Automatically Translated to %s by Google Translate
 
 wdl.gui.wdl.title=World Downloader mod: Options for %s
 wdl.gui.wdl.worldname=Имя:
@@ -40,7 +40,7 @@ wdl.gui.wdl.about.name=О мировой Downloader ...
 wdl.gui.wdl.about.description=Информация о текущей установки МЦБ, и каких-либо расширений.
 wdl.gui.wdl.updates.name=Обновления ...
 wdl.gui.wdl.updates.description=Просмотр списка версии и какую версию вы работаете, и настроить критерии для определения следующего обновления.
-wdl.gui.wdl.updates.hasNew.name=Обновления ... (обновление §6New доступны! §r)
+wdl.gui.wdl.updates.hasNew.name=Updates... (§6New update available!§r)
 wdl.gui.wdl.updates.hasNew.description=Просмотр списка версии и какую версию вы работаете, настроить критерии для определения следующего обновления, и скачать новую обновление.
 
 wdl.gui.world.title=World Downloader mod: World Options for %s
@@ -152,7 +152,7 @@ wdl.gui.multiworldSelect.newName=<Новое имя>
 wdl.gui.multiworldSelect.search=Поиск...
 wdl.gui.multiworldSelect.done=Используйте выбранный мир
 
-wdl.gui.multiworld.title=Мир загрузок: §cMultiworld поддержка
+wdl.gui.multiworld.title=World Downloader: §cMultiworld support
 wdl.gui.multiworld.descirption.requiredWhen=Multiworld support is required if at least one of the following conditions are met:%n - "Multiworld" is mentioned on the server's website%n - The server has more than 3 dimensions (or worlds)%n - The server has other dimensions than the official ones (the overworld, the nether, and the end)
 wdl.gui.multiworld.descirption.whatIs=Поддержка атемпорализации запрашивает какой мир вы находитесь, прежде чем загрузка началась. Если она не включена, но это сервер атемпорализации, части карты могут быть перезаписаны.
 wdl.gui.multiworld.true=Поддержка атемпорализации: Включено
@@ -171,14 +171,14 @@ wdl.gui.rangePresets.vanilla=Диапазоны Ваниль Minecraft
 wdl.gui.rangePresets.spigot=Диапазоны умолчанию центрирование
 wdl.gui.rangePresets.server=Сервер настроен диапазоны
 wdl.gui.rangePresets.upperWarning=Вы уверены, что хотите сбросить диапазоны сущностей?
-wdl.gui.rangePresets.vanilla.warning=§rSetting ванили Minecraft диапазонов - §c§n§lThis не может быть undone.§r
-wdl.gui.rangePresets.spigot.warning=§rSetting по умолчанию кран диапазонов - §c§n§lThis не может быть undone.§r
-wdl.gui.rangePresets.server.warning=§rSetting для серверных настроен диапазонов - §c§n§lThis не может быть undone.§r
+wdl.gui.rangePresets.vanilla.warning=§rSetting to vanilla Minecraft ranges - §c§n§lThis cannot be undone.§r
+wdl.gui.rangePresets.spigot.warning=§rSetting to default spigot ranges - §c§n§lThis cannot be undone.§r
+wdl.gui.rangePresets.server.warning=§rSetting to server configured ranges - §c§n§lThis cannot be undone.§r
 wdl.gui.rangePresets.vanilla.description=Установите диапазоны тем, которые используются неизмененном сервере (ваниль) Minecraft, а для некоторых серверов Bukkit.
 wdl.gui.rangePresets.spigot.description=Set the ranges to the default values for spigot servers.%nSpigot allows these values to be customized, but these are the defaults.
 wdl.gui.rangePresets.server.description=Установите диапазоны ценностям, которые фактически используются на сервере. Эта опция доступна, только если сервер имеет плагин WDLCompanion установлен.
-wdl.gui.rangePresets.server.installed=§aAs он установлен, это может быть использовано.
-wdl.gui.rangePresets.server.notInstalled=§cAs он не установлен, то это не может быть использован.
+wdl.gui.rangePresets.server.installed=§aAs it is installed, this may be used.
+wdl.gui.rangePresets.server.notInstalled=§cAs it is not installed, this cannot be used.
 wdl.gui.rangePresets.cancel.description=Отменить без изменений.
 
 wdl.gui.overwriteChanges.title=Мир загрузок: Переписать изменения?
@@ -205,8 +205,8 @@ wdl.gui.entities.trackDistanceMode.user=Трек Расстояние: Поль�
 wdl.gui.entities.rangePresets=Диапазон пресетов ...
 wdl.gui.entities.entity.included=§aIncluded
 wdl.gui.entities.entity.ignored=§cIgnored
-wdl.gui.entities.group.enabled=§Enabled
-wdl.gui.entities.group.disabled=§cAll инвалидов
+wdl.gui.entities.group.enabled=§aEnabled
+wdl.gui.entities.group.disabled=§cAll disabled
 wdl.gui.entities.trackDistance=Track Distance: %d
 
 wdl.gui.updates.title=Мир Downloader мод: Обновления

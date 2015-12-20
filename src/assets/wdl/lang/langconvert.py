@@ -8,7 +8,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-browser = getattr(webdriver, browserclass)()
 
 def _translate(browser, langname, lines):
     browser.get(
@@ -22,21 +21,25 @@ def _translate(browser, langname, lines):
     newlines = []
     for line in lines:
         newline = line
-        print(line)
         if isinstance(line, list):
             totranslate = line[1]
-            if '%' not in totranslate and totranslate != '':
-                print("Translating {0}".format(totranslate)
+            if ('%' not in totranslate and
+                '§' not in totranslate and
+                (totranslate != '' or line[0] == "wdl.translatorCredit")):
+                print("Translating {0}".format(line[0]))
                 type_here.click()
                 type_here.send_keys(totranslate)
-                WebDriverWait(browser, 10).until(
-                    EC.presence_of_element_located(
-                        (By.XPATH, '//*[@id="result_box"]/span')
+                if "wdl.translatorCredit" in line[0]:
+                    translated = "Automatically Translated to %s by Google Translate"
+                else:
+                    WebDriverWait(browser, 10).until(
+                        EC.presence_of_element_located(
+                            (By.XPATH, '//*[@id="result_box"]/span')
+                        )
                     )
-                )
-                translated = result.text
+                    translated = result.text
+                    clear.click()
                 newline = [line[0], translated]
-                clear.click()
         newlines.append(newline)
     return newlines
 
@@ -79,5 +82,15 @@ def translate(lang, newlang):
     translated = _translate(browser, newlang, newlines)
     write_lines = _unconfigureifylines(translated)
     f = open(newfilename, 'w')
-    f.write('\n'.join(write_lines))
+    f.write("{0}\n".format('\n'.join(write_lines)))
     f.close()
+
+def main():
+    global browser
+    browser = getattr(webdriver, browserclass)()
+    i = input("Please type in the language you want to translate to:\n")
+    translate('en_US', i)
+    browser.quit()
+
+if __name__ == '__main__':
+    main()
