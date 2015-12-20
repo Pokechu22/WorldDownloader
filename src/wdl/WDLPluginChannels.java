@@ -733,12 +733,12 @@ public class WDLPluginChannels {
 				if (replaceGroups) {
 					WDLMessages.chatMessageTranslated(
 							WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
-							"wdl.messages.permissions.packet5.added",
+							"wdl.messages.permissions.packet5.set",
 							numNewGroups, groupToEdit);
 				} else {
 					WDLMessages.chatMessageTranslated(
 							WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
-							"wdl.messages.permissions.packet5.set",
+							"wdl.messages.permissions.packet5.added",
 							numNewGroups, groupToEdit);
 				}
 				break;
