@@ -1420,6 +1420,12 @@ public class WDL {
 			rotation.appendTag(new NBTTagFloat(0.0f));
 			playerNBT.setTag("Rotation", rotation);
 		}
+		
+		// If the player is able to fly, spawn them flying.
+		// Helps ensure they don't fall out of the world.
+		if (thePlayer.capabilities.allowFlying) {
+			playerNBT.getCompoundTag("abilities").setBoolean("flying", true);
+		}
 	}
 
 	/**
