@@ -793,8 +793,9 @@ public class WDL {
 				"WorldDownloader: Couldn't get session lock for saving the world!", e);
 		}
 
-		savePlayer(progressScreen);
-		saveWorldInfo(progressScreen);
+		// Player NBT is stored both in a separate file and level.dat.
+		NBTTagCompound playerNBT = savePlayer(progressScreen);
+		saveWorldInfo(progressScreen, playerNBT);
 		
 		saveMapData(progressScreen);
 		saveChunks(progressScreen);
@@ -847,9 +848,11 @@ public class WDL {
 	/**
 	 * Save the player (position, health, inventory, ...) into its own file in
 	 * the players directory, and applies needed overrides to the player info.
+	 * 
+	 * @return The player NBT tag.  Needed for later use in the world info.
 	 */
-	public static void savePlayer(GuiWDLSaveProgress progressScreen) {
-		if (!WDLPluginChannels.canDownloadAtAll()) { return; }
+	public static NBTTagCompound savePlayer(GuiWDLSaveProgress progressScreen) {
+		if (!WDLPluginChannels.canDownloadAtAll()) { return new NBTTagCompound(); }
 		
 		progressScreen.startMajorTask(
 				I18n.format("wdl.saveProgress.playerData.title"),
@@ -914,13 +917,16 @@ public class WDL {
 
 		WDLMessages.chatMessageTranslated(WDLMessageTypes.SAVING,
 				"wdl.messages.saving.playerSaved");
+		
+		return playerNBT;
 	}
 
 	/**
 	 * Save the world metadata (time, gamemode, seed, ...) into the level.dat
-	 * file
+	 * file.
 	 */
-	public static void saveWorldInfo(GuiWDLSaveProgress progressScreen) {
+	public static void saveWorldInfo(GuiWDLSaveProgress progressScreen,
+			NBTTagCompound playerInfoNBT) {
 		if (!WDLPluginChannels.canDownloadAtAll()) { return; }
 		
 		progressScreen.startMajorTask(
@@ -932,16 +938,17 @@ public class WDL {
 		progressScreen.setMinorTaskProgress(
 				I18n.format("wdl.saveProgress.worldMetadata.creatingNBT"), 1);
 		
-		NBTTagCompound worldInfoNBT = new NBTTagCompound();
-		
 		// TODO: It would be nice to have save version setup as a separate section,
 		// but it needs to be set before the NBT tag can be created.
 		AnvilSaveConverter saveConverter = (AnvilSaveConverter) minecraft
 				.getSaveLoader();
 		worldClient.getWorldInfo()
 				.setSaveVersion(getSaveVersion(saveConverter));
-		worldInfoNBT = worldClient.getWorldInfo()
-				.cloneNBTCompound(worldInfoNBT);
+		// cloneNBTCompound takes the PLAYER's nbt file, and puts it in the
+		// right place.
+		// This is needed because single player uses that data.
+		NBTTagCompound worldInfoNBT = worldClient.getWorldInfo()
+				.cloneNBTCompound(playerInfoNBT);
 		
 		progressScreen.setMinorTaskProgress(
 				I18n.format("wdl.saveProgress.worldMetadata.editingNBT"), 2);
