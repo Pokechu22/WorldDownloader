@@ -1207,9 +1207,6 @@ public class WDL {
 						// it actually means "Delete this entity next tick",
 						// not "this entitiy was killed by a player".
 						e.isDead = false;
-						e.posX = convertServerPos(e.serverPosX);
-						e.posY = convertServerPos(e.serverPosY);
-						e.posZ = convertServerPos(e.serverPosZ);
 						@SuppressWarnings("unchecked")
 						WrappedClassInheratanceMultiMap<Entity> map = 
 								(WrappedClassInheratanceMultiMap<Entity>) maps[e.chunkCoordY];
@@ -1218,16 +1215,34 @@ public class WDL {
 				}
 			}
 			
-			// Force the entity into its serverside location.
-			// Needed for certain things that move clientside,
-			// such as boats (http://imgur.com/3QQchZL)
 			@SuppressWarnings("unchecked")
 			Iterable<Entity>[] iterableMaps = c.getEntityLists();
 			for (Iterable<Entity> entityList :  iterableMaps) {
 				for (Entity e : entityList) {
-					e.posX = convertServerPos(e.serverPosX);
-					e.posY = convertServerPos(e.serverPosY);
-					e.posZ = convertServerPos(e.serverPosZ);
+					if (e instanceof EntityPlayer) {
+						// Again, skip players as moving or modifying them can
+						// cause bad things to happen.
+						continue;
+					}
+					
+					if (e.serverPosX != 0 || e.serverPosY != 0 || e.serverPosZ != 0) {
+						// Force the entity into its serverside location.
+						// Needed for certain things that move clientside,
+						// such as boats (http://imgur.com/3QQchZL)
+						//
+						// We make sure that at least one of serverPosX, y, and
+						// z is not 0 because an entity with a server pos of 0,
+						// 0, 0 probably has a different way of setting up its
+						// position (paintings).
+						// No sane entity will be at 0, 0, 0.  And moving them
+						// to it can effectively delete entities - see
+						// https://github.com/uyjulian/LiteModWDL/issues/4.
+						// (I also think this is the cause for the "world going
+						// invisible" issue).
+						e.posX = convertServerPos(e.serverPosX);
+						e.posY = convertServerPos(e.serverPosY);
+						e.posZ = convertServerPos(e.serverPosZ);
+					}
 					
 					for (Map.Entry<String, IEntityEditor> editor : entityEditors
 							.entrySet()) {
