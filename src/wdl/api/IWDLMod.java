@@ -26,4 +26,11 @@ public interface IWDLMod {
 	 * @return the version of the mod.
 	 */
 	public abstract String getVersion();
+	
+	/**
+	 * Gets the verison of WDL that this mod is targeted at.
+	 * 
+	 * @return the version of WDL that this mod must be used with.
+	 */
+	public abstract String getTargetedWDLVersion();
 }

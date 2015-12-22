@@ -37,6 +37,11 @@ public class HologramHandler implements ISpecialEntityHandler,
 	}
 	
 	@Override
+	public String getTargetedWDLVersion() {
+		return WDL.VERSION;
+	}
+	
+	@Override
 	public String getDisplayName() {
 		return "Hologram support";
 	}
