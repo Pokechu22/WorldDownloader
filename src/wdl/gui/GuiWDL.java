@@ -204,8 +204,7 @@ public class GuiWDL extends GuiScreen {
 						WDL.saveProps();
 						WDL.propsFound = true;
 
-						mc.displayGuiScreen(null);
-						WDL.startDownload();
+						mc.displayGuiScreen(GuiWDL.this);
 					}
 				}
 				
