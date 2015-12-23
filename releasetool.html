@@ -2,11 +2,13 @@
 <html>
 <head>
 <title>Release tool</title>
+
 <script type="text/javascript" src="lib/zip.js/WebContent/zip.js"></script>
 <script>zip.useWebWorkers = false;</script>
 <script type="text/javascript" src="lib/zip.js/WebContent/inflate.js"></script>
 <script type="text/javascript" src="lib/zip.js/WebContent/deflate.js"></script>
 <script type="text/javascript" src="lib/SparkMD5/spark-md5.js"></script>
+<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
 </head>
 
 <body>
@@ -15,11 +17,15 @@
 <p><span class="form-label">zip hashes</span>
 <dl id="file-list"></dl>
 </p>
+<p><textarea readonly="readonly" id="release-description" placeholder="description will go after this text (edit this later)" style="width:100%; height:10em;"></textarea></p>
 
 <script>
 //Adapted from https://raw.githubusercontent.com/gildas-lormeau/zip.js/gh-pages/demos/demo2.js
 (function(obj) {
-
+	var postInfoJson = {}
+	
+	var 
+	
 	function onerror(message) {
 		alert(message);
 		console.log(message);
@@ -123,17 +129,17 @@
 				
 				var currentEntryNum = 0;
 				
-				var data = {};
-				
 				var nextEntry = function() {
 					if (currentEntryNum >= entries.length) {
-						data["Hashes"] = hashes;
+						versionInfoJson["Hashes"] = hashes;
 						
-						var jsonStr = JSON.stringify(data);
+						var jsonStr = JSON.stringify(versionInfoJson);
 						
 						console.log(jsonStr);
-						console.log(JSON.stringify(data, null, ' '))
+						console.log(JSON.stringify(versionInfoJson, null, ' '))
 						
+						fileInput.disabled = false;
+						updateTextBox();
 						return;
 					}
 					
@@ -156,7 +162,10 @@
 			});
 		}, false);
 	})();
-
+	
+	function updateTextBox() {
+		$("#release-description").val("[](# '" + JSON.stringify(versionInfoJson) + ')Type your description here...")
+	}
 })(this);
 </script>
 
