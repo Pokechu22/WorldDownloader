@@ -22,7 +22,9 @@
 <script>
 //Adapted from https://raw.githubusercontent.com/gildas-lormeau/zip.js/gh-pages/demos/demo2.js
 (function(obj) {
-	var postInfoJson = {}
+	"use strict";
+	
+	var versionInfoJson = {}
 	
 	function onerror(message) {
 		alert(message);
@@ -59,7 +61,7 @@
 				unzipProgress.value = 0;
 				unzipProgress.max = 0;
 				
-				fileReader = new FileReader();
+				var fileReader = new FileReader();
 				
 				fileReader.onerror = function () {
 					console.warn('oops, something went wrong.');
@@ -130,11 +132,6 @@
 				var nextEntry = function() {
 					if (currentEntryNum >= entries.length) {
 						versionInfoJson["Hashes"] = hashes;
-						
-						var jsonStr = JSON.stringify(versionInfoJson);
-						
-						console.log(jsonStr);
-						console.log(JSON.stringify(versionInfoJson, null, ' '))
 						
 						fileInput.disabled = false;
 						updateTextBox();
