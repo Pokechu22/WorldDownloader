@@ -2,8 +2,6 @@ package wdl.gui;
 
 import java.io.IOException;
 
-import com.google.common.collect.Multimap;
-
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
@@ -174,25 +172,6 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 		this.drawString(fontRendererObj, "Z1:", z1Field.xPosition - 16, 24, 0xFFFFFF);
 		this.drawString(fontRendererObj, "X2:", x2Field.xPosition - 16, 24, 0xFFFFFF);
 		this.drawString(fontRendererObj, "Z2:", z2Field.xPosition - 16, 24, 0xFFFFFF);
-		
-		//Pah
-		for (Multimap<String, ChunkRange> c : WDLPluginChannels.getChunkOverrides().values()) {
-			for (ChunkRange range : c.values()) {
-				int color = range.tag.hashCode() & 0x00FFFFFF;
-				
-				int x1 = range.x1 * 8 + this.width / 2;
-				int z1 = range.z1 * 8 + this.height / 2;
-				int x2 = range.x2 * 8 + this.width / 2 + 7;
-				int z2 = range.z2 * 8 + this.height / 2 + 7;
-				
-				drawRect(x1, z1, x2, z2, color + 0x80000000);
-				
-				drawVerticalLine(x1, z1, z2, color + 0xFF000000);
-				drawVerticalLine(x2, z1, z2, color + 0xFF000000);
-				drawHorizontalLine(x1, x2, z1, color + 0xFF000000);
-				drawHorizontalLine(x1, x2, z2, color + 0xFF000000);
-			}
-		}
 		
 		super.drawScreen(mouseX, mouseY, partialTicks);
 	}
