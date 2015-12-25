@@ -495,59 +495,57 @@ public class WDLEvents {
 		// Proper tracking ranges can be found in EntityTracker#trackEntity
 		// (the one that takes an Entity as a paremeter) -- it's the 2nd arg
 		// given to addEntityToTracker.
-		if (WDL.downloading
+		if (WDL.downloading && entity != null
 				&& WDLPluginChannels.canSaveEntities(entity.chunkCoordX,
 						entity.chunkCoordZ)) {
-			if (entity != null) {
-				if (!EntityUtils.isEntityEnabled(entity)) {
-					WDLMessages.chatMessageTranslated(
-							WDLMessageTypes.REMOVE_ENTITY,
-							"wdl.messages.removeEntity.allowingRemoveUserPref",
-							entity);
-					return;
-				}
-				
-				IChatComponent unsafeMessage = EntityUtils.isUnsafeToSaveEntity(entity);
-				if (unsafeMessage != null) {
-					WDLMessages.chatMessageTranslated(
-							WDLMessageTypes.REMOVE_ENTITY,
-							"wdl.messages.removeEntity.allowingRemoveUnsafe",
-							entity, unsafeMessage);
-					return;
-				}
-				
-				int threshold = EntityUtils.getEntityTrackDistance(entity);
-				
-				if (threshold < 0) {
-					WDLMessages.chatMessageTranslated(
-							WDLMessageTypes.REMOVE_ENTITY,
-							"wdl.messages.removeEntity.allowingRemoveUnrecognizedDistance",
-							entity);
-					return;
-				}
-
-				double distance = entity.getDistance(WDL.thePlayer.posX,
-						entity.posY, WDL.thePlayer.posZ);
-
-				if (distance > threshold) {
-					WDLMessages.chatMessageTranslated(
-							WDLMessageTypes.REMOVE_ENTITY,
-							"wdl.messages.removeEntity.savingDistance",
-							entity, distance, threshold);
-					entity.chunkCoordX = MathHelper
-							.floor_double(entity.posX / 16.0D);
-					entity.chunkCoordZ = MathHelper
-							.floor_double(entity.posZ / 16.0D);
-
-					WDL.newEntities.put(entity.getEntityId(), entity);
-					return;
-				}
-
+			if (!EntityUtils.isEntityEnabled(entity)) {
 				WDLMessages.chatMessageTranslated(
 						WDLMessageTypes.REMOVE_ENTITY,
-						"wdl.messages.removeEntity.allowingRemoveDistance",
-						entity, distance, threshold);
+						"wdl.messages.removeEntity.allowingRemoveUserPref",
+						entity);
+				return;
 			}
+			
+			IChatComponent unsafeMessage = EntityUtils.isUnsafeToSaveEntity(entity);
+			if (unsafeMessage != null) {
+				WDLMessages.chatMessageTranslated(
+						WDLMessageTypes.REMOVE_ENTITY,
+						"wdl.messages.removeEntity.allowingRemoveUnsafe",
+						entity, unsafeMessage);
+				return;
+			}
+			
+			int threshold = EntityUtils.getEntityTrackDistance(entity);
+			
+			if (threshold < 0) {
+				WDLMessages.chatMessageTranslated(
+						WDLMessageTypes.REMOVE_ENTITY,
+						"wdl.messages.removeEntity.allowingRemoveUnrecognizedDistance",
+						entity);
+				return;
+			}
+
+			double distance = entity.getDistance(WDL.thePlayer.posX,
+					entity.posY, WDL.thePlayer.posZ);
+
+			if (distance > threshold) {
+				WDLMessages.chatMessageTranslated(
+						WDLMessageTypes.REMOVE_ENTITY,
+						"wdl.messages.removeEntity.savingDistance",
+						entity, distance, threshold);
+				entity.chunkCoordX = MathHelper
+						.floor_double(entity.posX / 16.0D);
+				entity.chunkCoordZ = MathHelper
+						.floor_double(entity.posZ / 16.0D);
+
+				WDL.newEntities.put(entity.getEntityId(), entity);
+				return;
+			}
+
+			WDLMessages.chatMessageTranslated(
+					WDLMessageTypes.REMOVE_ENTITY,
+					"wdl.messages.removeEntity.allowingRemoveDistance",
+					entity, distance, threshold);
 		}
 	}
 
