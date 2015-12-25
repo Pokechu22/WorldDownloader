@@ -131,7 +131,7 @@ wdl.gui.messages.reset.description=Reset whether each message is enabled to its 
 wdl.gui.about.title=About World Downloader
 wdl.gui.about.blurb=WorldDownloader is a mod developed by nariol, cubic72, and pokechu22 (litemod version by julialy), with help from others (including soccerguy3, UltiNaruto, Net32, and El_garoo) that allows downloading a copy of a multiplayer world for singleplayer use.  Source code is publicly available.
 wdl.gui.about.version=You are running %s on Minecraft version %s.
-wdl.gui.about.forumThread=View the MinecraftForum thread
+wdl.gui.about.forumThread=View the Minecraft Forums thread
 wdl.gui.about.coremodSrc=View the Coremod source code on GitHub
 wdl.gui.about.litemodSrc=View the Litemod source code on GitHub
 wdl.gui.about.extensions=Extensions
@@ -406,9 +406,9 @@ wdl.props.base.title=These settings are shared across an entire server.  If mult
 wdl.props.world.title=These settings are used for a single world in a multiworld server.
 
 #Some of these messages are using format substitutions, so that special coloring can be added.
-wdl.intro.success=The WorldDownloader mod has been successfully installed!
+wdl.intro.success=The World Downloader mod has been successfully installed!
 wdl.intro.usage=For information on how to use this mod, please see the %s.
-wdl.intro.forumsLink=Official MinecraftForums thread
+wdl.intro.forumsLink=Official Minecraft Forums thread
 wdl.intro.contribute=To report a bug, suggest a feature, contribute code, or help translate, check out %s.
 wdl.intro.githubRepo=GitHub repository
 wdl.intro.stolen=%s: If you downloaded this mod from a location other than the Minecraft Forums or GitHub (or another site on %s), you may have used a site that is %s redistributing this mod.
