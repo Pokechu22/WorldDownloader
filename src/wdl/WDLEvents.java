@@ -74,8 +74,6 @@ public class WDLEvents {
 			return;
 		}
 		
-		WDLUpdateChecker.startIfNeeded();
-
 		// If already downloading
 		if (WDL.downloading) {
 			// If not currently saving, stop the current download and start
@@ -92,6 +90,9 @@ public class WDLEvents {
 		}
 
 		boolean sameServer = WDL.loadWorld();
+		
+		WDLUpdateChecker.startIfNeeded();
+		
 		profiler.endSection();
 		
 		for (Map.Entry<String, IWorldLoadListener> e : worldLoadListeners.entrySet()) {

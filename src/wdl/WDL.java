@@ -518,20 +518,25 @@ public class WDL {
 	 * @return Whether on the same server.
 	 */
 	public static boolean loadWorld() {
-		WDLPluginChannels.onWorldLoad();
-		
 		worldName = ""; // The new (multi-)world name is unknown at the moment
 		worldClient = minecraft.theWorld;
 		thePlayer = minecraft.thePlayer;
 		windowContainer = thePlayer.openContainer;
 		overrideLastModifiedCheck = false;
-		// Is this a different server?
+		
 		NetworkManager newNM = thePlayer.sendQueue.getNetworkManager();
-
+		
+		// Handle checking if the server changes here so that
+		// messages are loaded FIRST.
 		if (networkManager != newNM) {
 			loadBaseProps();
 			WDLMessages.onNewServer();
-			
+		}
+		
+		WDLPluginChannels.onWorldLoad();
+		
+		// Is this a different server?
+		if (networkManager != newNM) {
 			// Different server, different world!
 			WDLMessages.chatMessageTranslated(WDLMessageTypes.ON_WORLD_LOAD,
 					"wdl.messages.onWorldLoad.differentServer");
