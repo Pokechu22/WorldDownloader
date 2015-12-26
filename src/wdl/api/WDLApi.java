@@ -59,6 +59,12 @@ public class WDLApi {
 		}
 		
 		String modName = mod.getName();
+		
+		if (!WDL.VERSION.equals(mod.getTargetedWDLVersion())) {
+			throw new IllegalArgumentException("mod " + modName
+					+ " targets WDL " + mod.getTargetedWDLVersion()
+					+ ", but you are running " + WDL.VERSION + "!");
+		}
 		if (wdlMods.containsKey(modName)) {
 			throw new IllegalArgumentException("A mod by the name of '"
 					+ modName + "' is already registered by "
