@@ -178,30 +178,22 @@ public class Release {
 	public Release(JsonObject object) {
 		this.object = object;
 		
-		String body = object.get("body").getAsString();
-		Matcher hiddenJSONMatcher = HIDDEN_JSON_REGEX.matcher(body);
+		this.markdownBody = object.get("body").getAsString();
+		Matcher hiddenJSONMatcher = HIDDEN_JSON_REGEX.matcher(markdownBody);
 		if (hiddenJSONMatcher.find()) {
-			// Before the hidden JSON
-			// (will be empty on most of the normal WDL releases)
-			String before = body.substring(0, hiddenJSONMatcher.start());
-			// After the hidden JSON
-			String after = body.substring(hiddenJSONMatcher.end());
-			
-			this.body = before + after;
-			
 			// Grab capture group #1 (inside the single quotes)
-			String hiddenJSONStr = body.substring(hiddenJSONMatcher.start(1),
+			String hiddenJSONStr = markdownBody.substring(hiddenJSONMatcher.start(1),
 					hiddenJSONMatcher.end(1));
 			JsonObject hiddenJSON = PARSER.parse(hiddenJSONStr)
 					.getAsJsonObject();
 			this.hiddenInfo = new HiddenInfo(hiddenJSON);
 		} else {
 			// No hidden information.
-			this.body = body;
 			this.hiddenInfo = null;
 		}
 		
 		this.URL = object.get("html_url").getAsString();
+		this.textOnlyBody = object.get("body_text").getAsString();
 		this.tag = object.get("tag_name").getAsString();
 		this.title = object.get("name").getAsString();
 		this.date = object.get("published_at").getAsString();
@@ -235,7 +227,11 @@ public class Release {
 	/**
 	 * Markdown body of the release.
 	 */
-	public final String body;
+	public final String markdownBody;
+	/**
+	 * Text-only body.
+	 */
+	public final String textOnlyBody;
 	/**
 	 * Further information.  May be <code>null</code>.
 	 */
@@ -243,7 +239,8 @@ public class Release {
 	@Override
 	public String toString() {
 		return "Release [URL=" + URL + ", tag=" + tag + ", title=" + title
-				+ ", date=" + date + ", prerelease=" + prerelease + ", body="
-				+ body + ", hiddenInfo=" + hiddenInfo + "]";
+				+ ", date=" + date + ", prerelease=" + prerelease
+				+ ", markdownBody=" + markdownBody + ", textOnlyBody="
+				+ textOnlyBody + ", hiddenInfo=" + hiddenInfo + "]";
 	}
 }

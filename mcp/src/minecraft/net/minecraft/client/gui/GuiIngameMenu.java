@@ -35,7 +35,7 @@ public class GuiIngameMenu extends GuiScreen {
 		guibutton.enabled = this.mc.isSingleplayer() && !this.mc.getIntegratedServer().getPublic();
 		
 		/* WDL >>> */
-		wdl.WDL.injectWDLButtons(this, buttonList);
+		wdl.WDLHooks.injectWDLButtons(this, buttonList);
 		/* <<< WDL */
 	}
 
@@ -44,7 +44,7 @@ public class GuiIngameMenu extends GuiScreen {
 	 */
 	protected void actionPerformed(GuiButton button) throws IOException {
 		/* WDL >>> */
-		wdl.WDL.handleWDLButtonClick(this, button);
+		wdl.WDLHooks.handleWDLButtonClick(this, button);
 		/* <<< WDL */
 		
 		switch (button.id) {

@@ -7,29 +7,172 @@ import java.util.Map;
 
 import net.minecraft.event.ClickEvent;
 import net.minecraft.event.ClickEvent.Action;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IChatComponent;
 import wdl.WDL;
-import wdl.WDLDebugMessageCause;
+import wdl.WDLMessageTypes;
+import wdl.WDLMessages;
 import wdl.update.Release.HashData;
 
 /**
  * Performs the update checking.
  */
 public class WDLUpdateChecker extends Thread {
-	private static volatile boolean shown = false;
+	/**
+	 * Has the update check started?
+	 */
+	private static volatile boolean started = false;
+	/**
+	 * Has the update check finished?
+	 */
+	private static volatile boolean finished = false;
+	/**
+	 * Did something go wrong with the update check?
+	 */
+	private static volatile boolean failed = false;
+	/**
+	 * If something went wrong with the update check, what was it?
+	 */
+	private static volatile String failReason = null;
+	
+	/**
+	 * List of releases.  May be null if the checker has not finished.
+	 */
+	private static volatile List<Release> releases;
+	
+	/**
+	 * The release that is currently running.
+	 * 
+	 * May be null.
+	 */
+	private static volatile Release runningRelease;
+	
+	/**
+	 * Gets the current list of releases. May be null if the checker has not
+	 * finished.
+	 */
+	public static List<Release> getReleases() {
+		return releases;
+	}
+	
+	/**
+	 * Gets the current release.  May be null if the checker has not finished
+	 * or if the current version isn't released.
+	 */
+	public static Release getRunningRelease() {
+		return runningRelease;
+	}
+	
+	/**
+	 * Calculates the release that should be used based off of the user's options.
+	 * 
+	 * May be null if the checker has not finished.
+	 */
+	public static Release getRecomendedRelease() {
+		if (releases == null) {
+			return null;
+		}
+		if (runningRelease == null) {
+			return null;
+		}
+		
+		String mcVersion = WDL.getMinecraftVersion();
+		
+		boolean usePrereleases = WDL.globalProps.getProperty(
+				"UpdateAllowBetas").equals("true");
+		boolean versionMustBeExact = WDL.globalProps.getProperty(
+				"UpdateMinecraftVersion").equals("client");
+		boolean versionMustBeCompatible = WDL.globalProps.getProperty(
+				"UpdateMinecraftVersion").equals("server");
+		
+		for (Release release : releases) {
+			if (release.hiddenInfo != null) {
+				if (release.prerelease && !usePrereleases) {
+					continue;
+				}
+				
+				if (versionMustBeExact) {
+					if (!release.hiddenInfo.mainMinecraftVersion
+							.equals(mcVersion)) {
+						continue;
+					}
+				} else if (versionMustBeCompatible) {
+					boolean foundCompatible = false;
+					for (String version : release.
+							hiddenInfo.supportedMinecraftVersions) {
+						if (version.equals(mcVersion)) {
+							foundCompatible = true;
+							break;
+						}
+					}
+					
+					if (!foundCompatible) {
+						continue;
+					}
+				}
+				
+				if (releases.indexOf(release) > releases.indexOf(runningRelease)) {
+					//Too old
+					continue;
+				}
+				
+				return release;
+			}
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Is there a new version that should be used?
+	 * 
+	 * True if the running release is not null and if the recommended
+	 * release is not the running release.
+	 * 
+	 * The return value of this method may change as the update checker
+	 * runs.
+	 */
+	public static boolean hasNewVersion() {
+		if (runningRelease == null) {
+			return false;
+		}
+		Release recomendedRelease = getRecomendedRelease();
+		if (recomendedRelease == null) {
+			return false;
+		}
+		return runningRelease != recomendedRelease;
+	}
 	
 	/**
 	 * Call once the world has loaded.  Will check and start a new update checker
 	 * if needed.
 	 */
 	public static void startIfNeeded() {
-		if (!shown) {
-			shown = true;
+		if (!started) {
+			started = true;
 			
 			new WDLUpdateChecker().start();
 		}
+	}
+	
+	/**
+	 * Has the update check finished?
+	 */
+	public static boolean hasFinishedUpdateCheck() {
+		return finished;
+	}
+	
+	/**
+	 * Did something go wrong with the update check?
+	 */
+	public static boolean hasUpdateCheckFailed() {
+		return failed;
+	}
+	/**
+	 * If the update check failed, why?
+	 */
+	public static String getUpdateCheckFailReason() {
+		return failReason;
 	}
 	
 	private static final String FORUMS_THREAD_USAGE_LINK = "http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465#Usage";
@@ -44,132 +187,115 @@ public class WDLUpdateChecker extends Thread {
 	@Override
 	public void run() {
 		try {
-			if (!WDL.baseProps.getProperty("TutorialShown", "false").equals("true")) {
+			if (!WDL.globalProps.getProperty("TutorialShown").equals("true")) {
 				sleep(5000);
 				
-				IChatComponent success = new ChatComponentText(
-						"The WorldDownloader mod has been successfully installed!");
-				IChatComponent mcfThread = new ChatComponentText(
-						"Official MinecraftForums thread");
+				ChatComponentTranslation success = new ChatComponentTranslation(
+						"wdl.intro.success");
+				ChatComponentTranslation mcfThread = new ChatComponentTranslation(
+						"wdl.intro.forumsLink");
 				mcfThread.getChatStyle().setColor(EnumChatFormatting.BLUE)
-						.setChatClickEvent(
+						.setUnderlined(true).setChatClickEvent(
 								new ClickEvent(Action.OPEN_URL,
 										FORUMS_THREAD_USAGE_LINK));
-				IChatComponent usage = new ChatComponentText(
-						"For information on how to use this mod, please see the ")
-						.appendSibling(mcfThread).appendText(".");
-				ChatComponentText githubRepo = new ChatComponentText(
-						"GitHub repository");
+				ChatComponentTranslation usage = new ChatComponentTranslation(
+						"wdl.intro.usage", mcfThread);
+				ChatComponentTranslation githubRepo = new ChatComponentTranslation(
+						"wdl.intro.githubRepo");
 				githubRepo.getChatStyle().setColor(EnumChatFormatting.BLUE)
-						.setChatClickEvent(
+						.setUnderlined(true).setChatClickEvent(
 								new ClickEvent(Action.OPEN_URL,
 										GITHUB_LINK));
-				IChatComponent contribute = new ChatComponentText(
-						"To report a bug, suggest a feature, contribute code, or help translate, check out the ")
-						.appendSibling(githubRepo);
-				IChatComponent redistributionList = new ChatComponentText(
-						"the redistribution list");
+				ChatComponentTranslation contribute = new ChatComponentTranslation(
+						"wdl.intro.contribute", githubRepo);
+				ChatComponentTranslation redistributionList = new ChatComponentTranslation(
+						"wdl.intro.redistributionList");
 				redistributionList.getChatStyle().setColor(EnumChatFormatting.BLUE)
-						.setChatClickEvent(
+						.setUnderlined(true).setChatClickEvent(
 								new ClickEvent(Action.OPEN_URL,
 										REDISTRIBUTION_LINK));
-				IChatComponent warning = new ChatComponentText(
-						"WARNING");
+				ChatComponentTranslation warning = new ChatComponentTranslation(
+						"wdl.intro.warning");
 				warning.getChatStyle().setColor(EnumChatFormatting.DARK_RED)
 						.setBold(true);
-				IChatComponent illegally = new ChatComponentText(
-						"ILLEGALLY");
+				ChatComponentTranslation illegally = new ChatComponentTranslation(
+						"wdl.intro.illegally");
 				illegally.getChatStyle().setColor(EnumChatFormatting.DARK_RED)
 						.setBold(true);
-				IChatComponent stolen = new ChatComponentText("")
-						.appendSibling(warning)
-						.appendText(
-								": If you downloaded this mod from a location other than the Minecraft Forums or GitHub (or another site on ")
-						.appendSibling(redistributionList)
-						.appendText("), you may have used a site that is ")
-						.appendSibling(illegally)
-						.appendText(" redistributing this mod.");
-				IChatComponent smr = new ChatComponentText(
-						"More information: StopModReposts!");
+				ChatComponentTranslation stolen = new ChatComponentTranslation(
+						"wdl.intro.stolen", warning, redistributionList, illegally);
+				ChatComponentTranslation smr = new ChatComponentTranslation(
+						"wdl.intro.stopModReposts");
 				smr.getChatStyle().setColor(EnumChatFormatting.BLUE)
-						.setChatClickEvent(
+						.setUnderlined(true).setChatClickEvent(
 								new ClickEvent(Action.OPEN_URL,
 										SMR_LINK));
-				IChatComponent stolenBeware = new ChatComponentText(
-						"Beware of such sites, as they can include malware.  ")
-						.appendSibling(smr);
+				ChatComponentTranslation stolenBeware = new ChatComponentTranslation(
+						"wdl.intro.stolenBeware", smr);
 				
-				WDL.chatMessage(success);
-				WDL.chatMessage(usage);
-				WDL.chatMessage(contribute);
-				WDL.chatMessage(stolen);
-				WDL.chatMessage(stolenBeware);
+				WDLMessages.chatMessage(WDLMessageTypes.UPDATES, success);
+				WDLMessages.chatMessage(WDLMessageTypes.UPDATES, usage);
+				WDLMessages.chatMessage(WDLMessageTypes.UPDATES, contribute);
+				WDLMessages.chatMessage(WDLMessageTypes.UPDATES, stolen);
+				WDLMessages.chatMessage(WDLMessageTypes.UPDATES, stolenBeware);
 				
-				WDL.baseProps.setProperty("TutorialShown", "true");
-				WDL.saveProps();
+				WDL.globalProps.setProperty("TutorialShown", "true");
+				WDL.saveGlobalProps();
 			}
 			
 			sleep(5000);
 			
-			List<Release> releases = GithubInfoGrabber.getReleases();
-			WDL.chatDebug(WDLDebugMessageCause.UPDATE_DEBUG, "Found " + releases.size()
-					+ " releases.");
-			String mcVersion = WDL.getMinecraftVersion();
+			releases = GithubInfoGrabber.getReleases();
+			WDLMessages.chatMessageTranslated(WDLMessageTypes.UPDATE_DEBUG,
+					"wdl.messages.updates.releaseCount", releases.size());
 			
-			//TODO: I might want to save this data.
-			Release newestCompatibleRelease = null;
-			Release activeRelease = null;
+			if (releases.isEmpty()) {
+				failed = true;
+				failReason = "No releases found.";
+				return;
+			}
 			
 			for (int i = 0; i < releases.size(); i++) {
 				Release release = releases.get(i);
 				
-				if (newestCompatibleRelease == null) {
-					if (release.hiddenInfo != null) {
-						if (release.hiddenInfo.mainMinecraftVersion
-								.equals(mcVersion)) {
-							newestCompatibleRelease = release;
-						}
-					}
-				}
-				
 				if (release.tag.equalsIgnoreCase(WDL.VERSION)) {
-					activeRelease = release;
+					runningRelease = release;
 				}
 			}
 			
-			if (activeRelease == null) {
-				WDL.chatDebug(WDLDebugMessageCause.UPDATE_DEBUG, "Could not find a release "
-						+ "for " + WDL.VERSION + ".  You may be running a "
-						+ "version that hasn't been released yet.");
+			if (runningRelease == null) {
+				WDLMessages.chatMessageTranslated(WDLMessageTypes.UPDATE_DEBUG,
+						"wdl.messages.updates.failedToFindMatchingRelease",
+						WDL.VERSION);
 				return;
 			}
 			
-			if (newestCompatibleRelease != null
-					&& newestCompatibleRelease != activeRelease) {
-				WDL.chatMsg("You're not running the latest version!  The most recent " 
-						+ "version is " + newestCompatibleRelease.tag + "; You are "
-						+ "running " + activeRelease.tag + ".");
+			if (hasNewVersion()) {
+				Release recomendedRelease = getRecomendedRelease();
 				
-				ChatComponentText linkText = new ChatComponentText(
-						"Download the newest release ");
-				ChatComponentText link = new ChatComponentText("here");
-				link.setChatStyle(link.getChatStyle().setChatClickEvent(
-						new ClickEvent(Action.OPEN_URL,
-								newestCompatibleRelease.URL)));
-				linkText.appendSibling(link);
+				ChatComponentTranslation updateLink = new ChatComponentTranslation(
+						"wdl.messages.updates.newRelease.updateLink");
+				updateLink.getChatStyle().setColor(EnumChatFormatting.BLUE)
+						.setUnderlined(true).setChatClickEvent(
+								new ClickEvent(Action.OPEN_URL,
+										recomendedRelease.URL));
 				
-				WDL.chatMessage(linkText);
+				// Show the new version available message, and give a link.
+				WDLMessages.chatMessageTranslated(WDLMessageTypes.UPDATES,
+						"wdl.messages.updates.newRelease", runningRelease.tag,
+						recomendedRelease.tag, updateLink);
 			}
 			
-			if (activeRelease.hiddenInfo == null) {
-				WDL.chatDebug(WDLDebugMessageCause.UPDATE_DEBUG, "Could not find hidden "
-						+ "data for release.  Skipping hashing.");
+			if (runningRelease.hiddenInfo == null) {
+				WDLMessages.chatMessageTranslated(WDLMessageTypes.UPDATE_DEBUG,
+						"wdl.messages.updates.failedToFindMetadata",
+						WDL.VERSION);
 				return;
 			}
 			//Check the hashes, and list any failing ones.
 			Map<HashData, Object> failed = new HashMap<HashData, Object>();
 			
-			hashLoop: for (HashData data : activeRelease.hiddenInfo.hashes) {
+			hashLoop: for (HashData data : runningRelease.hiddenInfo.hashes) {
 				try {
 					String hash = ClassHasher.hash(data.relativeTo, data.file);
 					
@@ -181,33 +307,43 @@ public class WDLUpdateChecker extends Thread {
 						}
 					}
 					
-					WDL.chatDebug(WDLDebugMessageCause.UPDATE_DEBUG, 
-							"Bad hash for " + data.file + " (relative to "
-									+ data.relativeTo + "): Expected "
-									+ Arrays.toString(data.validHashes)
-									+ ", got " + hash);
+					WDLMessages.chatMessageTranslated(
+							WDLMessageTypes.UPDATE_DEBUG,
+							"wdl.messages.updates.incorrectHash", data.file,
+							data.relativeTo, Arrays.toString(data.validHashes),
+							hash);
 					
-					failed.put(data,  hash);
+					failed.put(data, hash);
 					continue;
 				} catch (Exception e) {
-					WDL.chatDebug(WDLDebugMessageCause.UPDATE_DEBUG, "Bad hash for "
-							+ data.file + " (relative to " + data.relativeTo
-							+ "): Exception: " + e);
+					WDLMessages.chatMessageTranslated(
+							WDLMessageTypes.UPDATE_DEBUG,
+							"wdl.messages.updates.hashException", data.file,
+							data.relativeTo, Arrays.toString(data.validHashes),
+							e);
 					
-					failed.put(data,  e);
+					failed.put(data, e);
 				}
 			}
 			
 			if (failed.size() > 0) {
-				WDL.chatMsg("\u00A7cSome files have invalid " +
-						"hashes!  Your installation may be corrupt or " +
-						"compromised.  If you are running a custom build, " +
-						"this is normal.");
+				ChatComponentTranslation mcfThread = new ChatComponentTranslation(
+						"wdl.intro.forumsLink");
+				mcfThread.getChatStyle().setColor(EnumChatFormatting.BLUE)
+						.setUnderlined(true).setChatClickEvent(
+								new ClickEvent(Action.OPEN_URL,
+										FORUMS_THREAD_USAGE_LINK));
+				WDLMessages.chatMessageTranslated(WDLMessageTypes.UPDATES,
+						"wdl.messages.updates.badHashesFound", mcfThread);
 			}
 		} catch (Exception e) {
-			WDL.chatDebug(WDLDebugMessageCause.UPDATE_DEBUG, "Failed to perform update check: "
-					+ e.toString());
-			e.printStackTrace();
+			WDLMessages.chatMessageTranslated(WDLMessageTypes.UPDATE_DEBUG,
+					"wdl.messages.updates.updateCheckError", e);
+			
+			failed = true;
+			failReason = e.toString();
+		} finally {
+			finished = true;
 		}
 	}
 }

@@ -685,7 +685,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 	public void handleDisconnect(S40PacketDisconnect packetIn) {
 		/* WDL >>> */
 		if (wdl.WDL.downloading) {
-			wdl.WDL.stop();
+			wdl.WDL.stopDownload();
 
 			try {
 				Thread.sleep(2000L);
@@ -705,7 +705,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 	public void onDisconnect(IChatComponent reason) {
 		/* WDL >>> */
 		if (wdl.WDL.downloading) {
-			wdl.WDL.stop();
+			wdl.WDL.stopDownload();
 
 			try {
 				Thread.sleep(2000L);
