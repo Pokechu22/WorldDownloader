@@ -8,10 +8,7 @@ import org.lwjgl.opengl.GL11;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiSlot;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import wdl.api.IWDLMod;
@@ -94,7 +91,7 @@ public class GuiWDLExtensions extends GuiScreen {
 			
 			@Override
 			public void drawEntry(int slotIndex, int x, int y, int listWidth,
-					int slotHeight, Tessellator tess, int mouseX, int mouseY,
+					int slotHeight, int mouseX, int mouseY,
 					boolean isSelected) {
 				if (button != null) {
 					button.xPosition = GuiWDLExtensions.this.width - 92;
@@ -154,21 +151,7 @@ public class GuiWDLExtensions extends GuiScreen {
 		
 		@Override
 		public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-			this.bottom = bottomLocation;
-			//Set height, the third field.
-			GuiSlot.class.getDeclaredFields()[2].setAccessible(true);
-			try {
-				GuiSlot.class.getDeclaredFields()[2].setInt(this, bottomLocation);
-			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SecurityException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			this.height = this.bottom = bottomLocation;
 			
 			super.drawScreen(mouseX, mouseY, partialTicks);
 		}
@@ -210,24 +193,8 @@ public class GuiWDLExtensions extends GuiScreen {
 		public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 			GL11.glTranslatef(0, bottomLocation, 0);
 			
-			int height = GuiWDLExtensions.this.height - bottomLocation;
-			this.bottom = height - 32;
-			
-			//Set height, the third field.
-			GuiSlot.class.getDeclaredFields()[2].setAccessible(true);
-			try {
-				GuiSlot.class.getDeclaredFields()[2].setInt(this, height);
-			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SecurityException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
+			this.height = GuiWDLExtensions.this.height - bottomLocation;
+			this.bottom = this.height - 32;
 			
 			super.drawScreen(mouseX, mouseY, partialTicks);
 			
@@ -243,21 +210,21 @@ public class GuiWDLExtensions extends GuiScreen {
 		 * 
 		 * (Don't move the bottom with the size of the screen).
 		 */
-		/*@Override
+		@Override
 		protected void overlayBackground(int y1, int y2,
 				int alpha1, int alpha2) {
 			if (y1 == 0) {
 				super.overlayBackground(y1, y2, alpha1, alpha2);
 				return;
 			} else {
-				GlStateManager.translate(0, -bottomLocation, 0);
+				GL11.glTranslatef(0, -bottomLocation, 0);
 				
 				super.overlayBackground(y1 + bottomLocation, y2
 						+ bottomLocation, alpha1, alpha2);
 				
-				GlStateManager.translate(0, bottomLocation, 0);
+				GL11.glTranslatef(0, bottomLocation, 0);
 			}
-		}*/
+		}
 	}
 	
 	private void updateDetailsList(IWDLMod selectedMod) {
@@ -312,6 +279,16 @@ public class GuiWDLExtensions extends GuiScreen {
 	 */
 	private boolean dragging = false;
 	private int dragOffset;
+	
+	/**
+	 * Handles mouse input.
+	 */
+	@Override
+	public void handleMouseInput() {
+		super.handleMouseInput();
+		this.list.handleMouseInput();
+		this.detailsList.handleMouseInput();
+	}
 	
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {

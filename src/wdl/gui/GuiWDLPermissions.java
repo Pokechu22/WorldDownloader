@@ -130,6 +130,15 @@ public class GuiWDLPermissions extends GuiScreen {
 	}
 	
 	/**
+	 * Handles mouse input.
+	 */
+	@Override
+	public void handleMouseInput() {
+		super.handleMouseInput();
+		this.list.handleMouseInput();
+	}
+	
+	/**
 	 * Called when the mouse is clicked.
 	 */
 	@Override

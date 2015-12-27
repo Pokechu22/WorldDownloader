@@ -4,10 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.I18n;
 import wdl.WDL;
 import wdl.WDLPluginChannels;
@@ -56,7 +54,7 @@ public class GuiWDL extends GuiScreen {
 
 			@Override
 			public void drawEntry(int slotIndex, int x, int y, int listWidth,
-					int slotHeight, Tessellator tess, int mouseX, int mouseY,
+					int slotHeight, int mouseX, int mouseY,
 					boolean isSelected) {
 				button.xPosition = GuiWDL.this.width / 2 - 100;
 				button.yPosition = y;
@@ -251,6 +249,12 @@ public class GuiWDL extends GuiScreen {
 		
 			WDL.saveProps();
 		}
+	}
+	
+	@Override
+	public void handleMouseInput() {
+		super.handleMouseInput();
+		list.handleMouseInput();
 	}
 
 	/**

@@ -8,9 +8,7 @@ import wdl.update.Release;
 import wdl.update.WDLUpdateChecker;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 
@@ -64,7 +62,7 @@ public class GuiWDLUpdates extends GuiScreen {
 			
 			@Override
 			public void drawEntry(int slotIndex, int x, int y, int listWidth,
-					int slotHeight, Tessellator tess, int mouseX, int mouseY,
+					int slotHeight, int mouseX, int mouseY,
 					boolean isSelected) {
 				String title;
 				//The 'isSelected' parameter is actually 'isMouseOver'
@@ -252,6 +250,15 @@ public class GuiWDLUpdates extends GuiScreen {
 				+ WDL.globalProps.getProperty("UpdateAllowBetas"));
 	}
 	
+	/**
+	 * Handles mouse input.
+	 */
+	@Override
+	public void handleMouseInput() {
+		super.handleMouseInput();
+		this.list.handleMouseInput();
+	}
+
 	/**
 	 * Called when the mouse is clicked.
 	 */
@@ -450,6 +457,15 @@ public class GuiWDLUpdates extends GuiScreen {
 					this.width / 2, 8, 0xFFFFFF);
 			
 			super.drawScreen(mouseX, mouseY, partialTicks);
+		}
+		
+		/**
+		 * Handles mouse input.
+		 */
+		@Override
+		public void handleMouseInput() {
+			super.handleMouseInput();
+			this.list.handleMouseInput();
 		}
 	}
 }

@@ -7,9 +7,7 @@ import java.util.Map;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.I18n;
 import wdl.EntityUtils;
 import wdl.WDL;
@@ -70,7 +68,7 @@ public class GuiWDLEntities extends GuiScreen {
 		 * Based off of 
 		 * {@link net.minecraft.client.gui.GuiKeyBindingList.CategoryEntry}.
 		 */
-		private class CategoryEntry implements GuiListExtended.IGuiListEntry {
+		private class CategoryEntry implements IGuiListEntry {
 			private final String group;
 			private final int labelWidth;
 			
@@ -91,7 +89,7 @@ public class GuiWDLEntities extends GuiScreen {
 
 			@Override
 			public void drawEntry(int slotIndex, int x, int y, int listWidth,
-					int slotHeight, Tessellator tess, int mouseX, int mouseY,
+					int slotHeight, int mouseX, int mouseY,
 					boolean isSelected) {
 				mc.fontRendererObj.drawString(this.group, (x + 110 / 2)
 						- (this.labelWidth / 2), y + slotHeight
@@ -148,7 +146,7 @@ public class GuiWDLEntities extends GuiScreen {
 		 * Based off of 
 		 * {@link net.minecraft.client.gui.GuiKeyBindingList.KeyEntry}.
 		 */
-		private class EntityEntry implements GuiListExtended.IGuiListEntry {
+		private class EntityEntry implements IGuiListEntry {
 			private final CategoryEntry category;
 			private final String entity;
 			
@@ -182,7 +180,7 @@ public class GuiWDLEntities extends GuiScreen {
 
 			@Override
 			public void drawEntry(int slotIndex, int x, int y, int listWidth,
-					int slotHeight, Tessellator tess, int mouseX, int mouseY,
+					int slotHeight, int mouseX, int mouseY,
 					boolean isSelected) {
 				//Center for everything but the labels.
 				int center = (GuiWDLEntities.this.width / 2) - (totalWidth / 2)
@@ -335,6 +333,15 @@ public class GuiWDLEntities extends GuiScreen {
 	@Override
 	public void onGuiClosed() {
 		WDL.saveProps();
+	}
+	
+	/**
+	 * Handles mouse input.
+	 */
+	@Override
+	public void handleMouseInput() {
+		super.handleMouseInput();
+		this.entityList.handleMouseInput();
 	}
 	
 	@Override

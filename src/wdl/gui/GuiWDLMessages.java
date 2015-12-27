@@ -6,11 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.gui.GuiYesNoCallback;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.I18n;
 import wdl.MessageTypeCategory;
 import wdl.WDL;
@@ -41,7 +39,7 @@ public class GuiWDLMessages extends GuiScreen implements GuiYesNoCallback {
 
 			@Override
 			public void drawEntry(int slotIndex, int x, int y, int listWidth,
-					int slotHeight, Tessellator tess, int mouseX, int mouseY,
+					int slotHeight, int mouseX, int mouseY,
 					boolean isSelected) {
 				drawCenteredString(fontRendererObj, category.getDisplayName(),
 						GuiWDLMessages.this.width / 2 - 40, y + slotHeight
@@ -92,7 +90,7 @@ public class GuiWDLMessages extends GuiScreen implements GuiYesNoCallback {
 			
 			@Override
 			public void drawEntry(int slotIndex, int x, int y, int listWidth,
-					int slotHeight, Tessellator tess, int mouseX, int mouseY,
+					int slotHeight, int mouseX, int mouseY,
 					boolean isSelected) {
 				button.xPosition = GuiWDLMessages.this.width / 2 - 100;
 				button.yPosition = y;
@@ -219,6 +217,15 @@ public class GuiWDLMessages extends GuiScreen implements GuiYesNoCallback {
 	@Override
 	public void onGuiClosed() {
 		WDL.saveProps();
+	}
+	
+	/**
+	 * Handles mouse input.
+	 */
+	@Override
+	public void handleMouseInput() {
+		super.handleMouseInput();
+		this.list.handleMouseInput();
 	}
 	
 	/**

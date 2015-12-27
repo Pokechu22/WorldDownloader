@@ -102,6 +102,15 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 	}
 	
 	/**
+	 * Handles mouse input.
+	 */
+	@Override
+	public void handleMouseInput() {
+		super.handleMouseInput();
+		this.list.handleMouseInput();
+	}
+	
+	/**
 	 * Called when the mouse is clicked.
 	 */
 	@Override
@@ -112,14 +121,6 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 		z2Field.mouseClicked(mouseX, mouseY, mouseButton);
 		list.func_148179_a(mouseX, mouseY, mouseButton);
 		super.mouseClicked(mouseX, mouseY, mouseButton);
-	}
-	
-	/**
-	 * Handles mouse input.
-	 */
-	@Override
-	public void handleMouseInput() {
-		super.handleMouseInput();
 	}
 	
 	@Override
