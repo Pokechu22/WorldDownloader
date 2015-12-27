@@ -234,7 +234,7 @@ wdl.backup.folder=Copiar la carpeta del mundo
 wdl.backup.zip=Crear un archivo zip del mundo
 
 # Is this the right place to use the imperative? (abra...)
-wdl.messages.tooltip=Este mensaje es del mod World Downloader.%nSi quiere inhabilitar este mensaje, abra las opciones de %smensajes y inhabilitar §l%s §r.
+wdl.messages.tooltip=Este mensaje es del mod World Downloader.%nSi quiere inhabilitar este mensaje, abra las opciones de %nmensajes y inhabilitar §l%s§r.
 wdl.messages.message.info.text=Información general
 wdl.messages.message.error.text=Errores general
 wdl.messages.message.updates.text=Información de versiones nuevos
