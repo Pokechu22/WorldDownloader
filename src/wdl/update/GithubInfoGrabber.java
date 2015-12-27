@@ -30,7 +30,7 @@ public class GithubInfoGrabber {
 	/**
 	 * Location of the entire release list.
 	 */
-	private static final String RELEASE_LIST_LOCATION = "https://api.github.com/repos/pokechu22/WorldDownloader/releases?per_page=100";
+	private static final String RELEASE_LIST_LOCATION = "https://api.github.com/repos/" + WDL.GITHUB_REPO + "/releases?per_page=100";
 	/**
 	 * File for the release cache.
 	 */

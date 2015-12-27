@@ -77,12 +77,35 @@ import wdl.gui.GuiWDLMultiworld;
 import wdl.gui.GuiWDLMultiworldSelect;
 import wdl.gui.GuiWDLOverwriteChanges;
 import wdl.gui.GuiWDLSaveProgress;
+import wdl.update.GithubInfoGrabber;
 
 /**
  * This is the main class that does most of the work.
  */
 public class WDL {
+	// VERSION INFO - IF YOU ARE MAKING A CUSTOM VERSION, **PLEASE** CHANGE THIS
+	/**
+	 * Current version.  This should match the git tag for the current release.
+	 */
 	public static final String VERSION = "1.8d";
+	/**
+	 * The version of minecraft that this mod is installed on.
+	 */
+	public static final String EXPECTED_MINECRAFT_VERSION = "1.8";
+	/**
+	 * Owning username for the github repository to check for updates against.
+	 * 
+	 * For <code>https://github.com/Pokechu22/WorldDownloader</code>, this would
+	 * be <code>Pokechu22/WorldDownloader</code>.
+	 * 
+	 * Note that WDL is licensed under the MMPLv2, which requires modified
+	 * versions to be open source if they are released (plus requires permission
+	 * for that - <a href="http://www.minecraftforum.net/private-messages/send?recipient=Pokechu22">
+	 * send Pokechu22 a message on the Minecraft Forums to get it</a>).
+	 * 
+	 * @see GithubInfoGrabber
+	 */
+	public static final String GITHUB_REPO = "Pokechu22/WorldDownloader";
 	
 	// TODO: This class needs to be split into smaller classes. There is way too
 	// much different stuff in here.
@@ -1926,7 +1949,7 @@ public class WDL {
 		if (map.containsKey("X-Minecraft-Version")) {
 			return (String) map.get("X-Minecraft-Version");
 		} else {
-			return "1.8";
+			return EXPECTED_MINECRAFT_VERSION;
 		}
 	}
 
