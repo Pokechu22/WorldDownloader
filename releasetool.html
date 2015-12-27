@@ -190,7 +190,9 @@
 					currentEntryNum++;
 					
 					//Don't hash non-wdl code or otherwise volatile code.
-					if (entry.filename.indexOf("wdl") == -1 || entry.filename.indexOf("WDLPluginChannels") != -1) {
+					if (entry.filename.indexOf("wdl") == -1 ||
+							entry.filename.indexOf("WDLPluginChannels") != -1
+							entry.filename.indexOf("assets") != -1) {
 						nextEntry();
 						return;
 					}
