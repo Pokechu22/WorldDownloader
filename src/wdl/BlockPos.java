@@ -10,8 +10,11 @@ import net.minecraft.util.Vec3;
 import com.google.common.collect.AbstractIterator;
 
 /**
- * Replacement wrapper for wdl.BlockPos
+ * Replacement wrapper for net.minecraft.util.BlockPos
+ * 
+ * Simplifies porting to 1.7.10.
  */
+@SuppressWarnings({ "rawtypes", "unused" })
 public class BlockPos extends Vec3i {
 	/** The BlockPos with all coordinates 0 */
 	public static final BlockPos ORIGIN = new BlockPos(0, 0, 0);

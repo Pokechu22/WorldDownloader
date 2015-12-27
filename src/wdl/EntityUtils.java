@@ -5,13 +5,17 @@ import java.lang.reflect.Modifier;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.crash.CrashReport;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityHanging;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.boss.EntityWither;
 import net.minecraft.entity.item.EntityBoat;
@@ -31,9 +35,7 @@ import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.EntityAmbientCreature;
-import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityBat;
-import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.passive.EntitySquid;
 import net.minecraft.entity.passive.IAnimals;
 import net.minecraft.entity.projectile.EntityArrow;
@@ -43,58 +45,62 @@ import net.minecraft.entity.projectile.EntityFishHook;
 import net.minecraft.entity.projectile.EntityPotion;
 import net.minecraft.entity.projectile.EntitySmallFireball;
 import net.minecraft.entity.projectile.EntitySnowball;
-import net.minecraft.entity.projectile.EntityWitherSkull;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.IChatComponent;
+import wdl.api.IEntityAdder;
+import wdl.api.ISpecialEntityHandler;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 
 /**
  * Provides utility functions for recognising entities.
  */
 public class EntityUtils {
-	private static Logger logger = LogManager.getLogger();
-	
 	/**
 	 * Reference to the {@link EntityList#stringToClassMapping} field.
 	 */
-	public static final Map<String, Class> stringToClassMapping;
+	public static final Map<String, Class<?>> stringToClassMapping;
 	/**
 	 * Reference to the {@link EntityList#classToStringMapping} field.
 	 */
-	public static final Map<Class, String> classToStringMapping;
+	public static final Map<Class<?>, String> classToStringMapping;
 	
 	/**
-	 * Names of all passive entities.
+	 * Entities arranged by the grouping used in the entity GUI.
 	 */
-	public static final List<String> passiveEntityList;
-	/**
-	 * Names of all hostile entities.
-	 */
-	public static final List<String> hostileEntityList;
-	/**
-	 * Names of all other entities.  Includes hologram. 
-	 */
-	public static final List<String> otherEntityList;
+	public static final Multimap<String, String> entitiesByGroup = 
+			HashMultimap.<String, String>create();
 	
+	/*
+	 * Add the vanilla entities to entitiesByGroup and steal the 
+	 * classToStringMapping and stringToClassMapping fields.
+	 */
 	static {
 		try {
-			Map<String, Class> mappingSTC = null;
-			Map<Class, String> mappingCTS = null;
+			Map<String, Class<?>> mappingSTC = null;
+			Map<Class<?>, String> mappingCTS = null;
 			
 			//Attempt to steal the 'stringToClassMapping' field. 
 			for (Field field : EntityList.class.getDeclaredFields()) {
 				if (field.getType().equals(Map.class)) {
 					field.setAccessible(true);
-					Map m = (Map)field.get(null);
+					Map<?, ?> m = (Map<?, ?>)field.get(null);
 					
-					Map.Entry e = (Map.Entry)m.entrySet().toArray()[0];
+					Map.Entry<?, ?> e = (Map.Entry<?, ?>)m.entrySet().toArray()[0];
 					if (e.getKey() instanceof String && 
-							e.getValue() instanceof Class) {
-						mappingSTC = (Map<String, Class>)m;
+							e.getValue() instanceof Class<?>) {
+						//Temp is used here to allow @SuppressWarnings.
+						@SuppressWarnings("unchecked")
+						Map<String, Class<?>> temp = (Map<String, Class<?>>) m; 
+						mappingSTC = temp;
 					}
-					if (e.getKey() instanceof Class &&
+					if (e.getKey() instanceof Class<?> &&
 							e.getValue() instanceof String) {
-						mappingCTS = (Map<Class, String>)m;
+						//Temp is used here to allow @SuppressWarnings.
+						@SuppressWarnings("unchecked")
+						Map<Class<?>, String> temp = (Map<Class<?>, String>)m;
+						mappingCTS = temp;
 					}
 				}
 			}
@@ -114,10 +120,10 @@ public class EntityUtils {
 			List<String> otherEntities = new ArrayList<String>();
 			
 			//Now build an actual list.
-			for (Map.Entry<String, Class> e : 
+			for (Map.Entry<String, Class<?>> e : 
 					EntityUtils.stringToClassMapping.entrySet()) {
 				String entity = e.getKey();
-				Class c = e.getValue();
+				Class<?> c = e.getValue();
 				
 				if (Modifier.isAbstract(c.getModifiers())) {
 					//Don't include abstract classes.
@@ -139,11 +145,87 @@ public class EntityUtils {
 			Collections.sort(passiveEntities, Collator.getInstance());
 			Collections.sort(otherEntities, Collator.getInstance());
 			
-			passiveEntityList = passiveEntities;
-			hostileEntityList = hostileEntities;
-			otherEntityList = otherEntities;
+			entitiesByGroup.putAll("Hostile", hostileEntities);
+			entitiesByGroup.putAll("Passive", passiveEntities);
+			entitiesByGroup.putAll("Other", otherEntities);
 		} catch (Exception e) {
-			throw new Error("WDL: Failed to setup entity mappings!");
+			Minecraft.getMinecraft().crashed(
+					new CrashReport("WDL Mod: failed to set up entity ranges!",
+							e));
+			//Will never happen.
+			throw new Error("WDL Mod: failed to set up entity ranges!");
+		}
+	}
+	
+	/**
+	 * Custom entity handlers.
+	 * 
+	 * @see ISpecialEntityHandler
+	 */
+	private static final List<ISpecialEntityHandler> specialEntityHandlers =
+			new ArrayList<ISpecialEntityHandler>();
+	/**
+	 * List of all entities that have special variants and the mods that handle
+	 * said special variants.
+	 */
+	private static final Multimap<String, ISpecialEntityHandler> extendedEntities =
+			HashMultimap.<String, ISpecialEntityHandler>create();
+	
+	/**
+	 * New entity adders.
+	 * 
+	 * @see IEntityAdder
+	 */
+	private static final List<IEntityAdder> entityAdders =
+			new ArrayList<IEntityAdder>();
+	/**
+	 * New entities and the mods that handle them.
+	 */
+	private static final Map<String, IEntityAdder> addedEntities = 
+			new HashMap<String, IEntityAdder>();
+	
+	public static void addSpecialEntityHandler(ISpecialEntityHandler handler) {
+		specialEntityHandlers.add(handler);
+		
+		for (String s : handler.getSpecialEntities().keySet()) {
+			extendedEntities.put(s, handler);
+		}
+		for (Map.Entry<String, String> e : handler.getSpecialEntities().entries()) {
+			WDL.defaultProps.setProperty("Entity." + e.getValue() + ".Enabled", 
+					"true");
+			int trackDistance = handler.getSpecialEntityTrackDistance(e
+					.getValue());
+			if (trackDistance < 0) {
+				trackDistance = getDefaultEntityRange(e.getKey());
+			}
+			WDL.defaultProps.setProperty("Entity." + e.getValue()
+					+ ".TrackDistance", Integer.toString(trackDistance));
+			
+			String group = handler.getSpecialEntityCategory(e.getValue());
+			entitiesByGroup.put(group, e.getValue());
+			
+			WDL.defaultProps.setProperty("EntityGroup." + group + ".Enabled",
+					"true");
+		}
+	}
+	
+	public static void addEntityAdder(IEntityAdder adder) {
+		entityAdders.add(adder);
+		
+		for (String s : adder.getModEntities()) {
+			addedEntities.put(s, adder);
+			
+			WDL.defaultProps.setProperty("Entity." + s + ".Enabled", 
+					"true");
+			int trackDistance = adder.getDefaultEntityTrackDistance(s);
+			WDL.defaultProps.setProperty("Entity." + s
+					+ ".TrackDistance", Integer.toString(trackDistance));
+			
+			String group = adder.getEntityCategory(s);
+			entitiesByGroup.put(group, s);
+			
+			WDL.defaultProps.setProperty("EntityGroup." + group + ".Enabled",
+					"true");
 		}
 	}
 	
@@ -153,7 +235,7 @@ public class EntityUtils {
 	public static List<String> getEntityTypes() {
 		List<String> returned = new ArrayList<String>();
 		
-		for (Map.Entry<String, Class> e : stringToClassMapping.entrySet()) {
+		for (Map.Entry<String, Class<?>> e : stringToClassMapping.entrySet()) {
 			if (Modifier.isAbstract(e.getValue().getModifiers())) {
 				continue;
 			}
@@ -161,23 +243,11 @@ public class EntityUtils {
 			returned.add(e.getKey());
 		}
 		
-		returned.add("Hologram");
+		for (ISpecialEntityHandler adder : specialEntityHandlers) {
+			returned.addAll(adder.getSpecialEntities().values());
+		}
 		
 		return returned;
-	}
-	
-	/**
-	 * Gets the entity tracking range used by vanilla minecraft.
-	 * <br/>
-	 * Proper tracking ranges can be found in EntityTracker#trackEntity
-	 * (the one that takes an Entity as a paremeter) -- it's the 2nd arg
-	 * given to addEntityToTracker.
-	 * 
-	 * @param e
-	 * @return 
-	 */
-	public static int getVanillaEntityRange(Entity e) {
-		return getVanillaEntityRange(e.getClass());
 	}
 	
 	/**
@@ -190,14 +260,214 @@ public class EntityUtils {
 	 * @param type The vanilla minecraft entity string.
 	 * @return 
 	 */
-	public static int getVanillaEntityRange(String type) {
+	public static int getDefaultEntityRange(String type) {
 		if (type == null) {
 			return -1;
 		}
-		if (type.equals("Hologram")) {
-			return getVanillaEntityRange(EntityWitherSkull.class);
+		if (addedEntities.get(type) != null) {
+			return addedEntities.get(type).getDefaultEntityTrackDistance(type);
 		}
+		for (ISpecialEntityHandler handler : specialEntityHandlers) {
+			for (Map.Entry<String, String> e : handler.getSpecialEntities()
+					.entries()) {
+				if (e.getValue().equals(type)) {
+					int trackDistance = handler.getSpecialEntityTrackDistance(e
+							.getValue());
+					if (trackDistance < 0) {
+						trackDistance = getDefaultEntityRange(e.getKey());
+					}
+					return trackDistance;
+				}
+			}
+		}
+		
 		return getVanillaEntityRange(stringToClassMapping.get(type));
+	}
+	
+	/**
+	 * Gets the track distance for the given entity in the current mode.
+	 * 
+	 * @param e
+	 * @return
+	 */
+	public static int getEntityTrackDistance(Entity e) {
+		return getEntityTrackDistance(
+				WDL.worldProps.getProperty("Entity.TrackDistanceMode"), e);
+	}
+	
+	/**
+	 * Gets the track distance for the given entity in the given mode.
+	 * 
+	 * @param type
+	 * @return
+	 */
+	public static int getEntityTrackDistance(String mode, Entity e) {
+		if ("default".equals(mode)) {
+			return getMostLikelyEntityTrackDistance(e);
+		} else if ("server".equals(mode)) {
+			int serverDistance = WDLPluginChannels
+					.getEntityRange(getEntityType(e));
+			
+			if (serverDistance < 0) {
+				return getMostLikelyEntityTrackDistance(e);
+			}
+			
+			return serverDistance;
+		} else if ("user".equals(mode)) {
+			String prop = WDL.worldProps.getProperty("Entity." +
+					getEntityType(e) + ".TrackDistance", "-1");
+			
+			return Integer.valueOf(prop);
+		} else {
+			throw new IllegalArgumentException("Mode is not a valid mode: " + mode);
+		}
+	}
+	
+	/**
+	 * Gets the track distance for the given entity in the current mode.
+	 * 
+	 * @param type
+	 * @return
+	 */
+	public static int getEntityTrackDistance(String type) {
+		return getEntityTrackDistance(
+				WDL.worldProps.getProperty("Entity.TrackDistanceMode"), type);
+	}
+	
+	/**
+	 * Gets the track distance for the given entity in the specified mode.
+	 * 
+	 * @param mode
+	 * @param type
+	 * @return
+	 */
+	public static int getEntityTrackDistance(String mode, String type) {
+		if ("default".equals(mode)) {
+			return getMostLikelyEntityTrackDistance(type);
+		} else if ("server".equals(mode)) {
+			int serverDistance = WDLPluginChannels
+					.getEntityRange(mode);
+			
+			if (serverDistance < 0) {
+				return getMostLikelyEntityTrackDistance(type);
+			}
+			
+			return serverDistance;
+		} else if ("user".equals(mode)) {
+			String prop = WDL.worldProps.getProperty("Entity." +
+					type + ".TrackDistance", "-1");
+			
+			return Integer.valueOf(prop);
+		} else {
+			throw new IllegalArgumentException("Mode is not a valid mode: " + mode);
+		}
+	}
+	
+	/**
+	 * Gets the group for the given entity type.
+	 * 
+	 * @param type
+	 * @return The group, or <code>null</code> if none is found.
+	 */
+	public static String getEntityGroup(String type) {
+		if (type == null) {
+			return null;
+		}
+		for (Map.Entry<String, String> e : entitiesByGroup.entries()) {
+			if (type.equals(e.getValue())) {
+				return e.getKey();
+			}
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Checks if an entity is enabled.
+	 * 
+	 * @param e The entity to check.
+	 * @return
+	 */
+	public static boolean isEntityEnabled(Entity e) {
+		return isEntityEnabled(getEntityType(e));
+	}
+	
+	/**
+	 * Checks if an entity is enabled.
+	 * 
+	 * @param type The type of the entity (from {@link #getEntityType(Entity)})
+	 * @return
+	 */
+	public static boolean isEntityEnabled(String type) {
+		boolean groupEnabled = WDL.worldProps.getProperty("EntityGroup." +
+				getEntityGroup(type) + ".Enabled", "true").equals("true");
+		boolean singleEnabled = WDL.worldProps.getProperty("Entity." +
+				type + ".Enabled", "true").equals("true");
+		
+		return groupEnabled && singleEnabled;
+	}
+	
+	/**
+	 * Gets the type string for an entity.
+	 * 
+	 * @param e
+	 * @return
+	 */
+	public static String getEntityType(Entity e) {
+		String vanillaName = EntityList.getEntityString(e);
+		
+		for (ISpecialEntityHandler handler : extendedEntities.get(vanillaName)) {
+			String specialName = handler.getSpecialEntityName(e);
+			if (specialName != null) {
+				return specialName;
+			}
+		}
+		
+		return vanillaName;
+	}
+	
+	/**
+	 * Gets the track distance for the given entity, making a guess about
+	 * whether to use spigot track distances based off of the server brand.
+	 */
+	public static int getMostLikelyEntityTrackDistance(Entity e) {
+		if (WDL.isSpigot()) {
+			return getDefaultSpigotEntityRange(e.getClass());
+		} else {
+			return getDefaultEntityRange(getEntityType(e));
+		}
+	}
+	
+	/**
+	 * Gets the track distance for the given entity, making a guess about
+	 * whether to use spigot track distances based off of the server brand.
+	 */
+	public static int getMostLikelyEntityTrackDistance(String type) {
+		if (WDL.isSpigot()) {
+			Class<?> c = stringToClassMapping.get(type);
+			
+			if (c != null) {
+				return getDefaultSpigotEntityRange(c);
+			} else {
+				return getDefaultEntityRange(type);
+			}
+		} else {
+			return getDefaultEntityRange(type);
+		}
+	}
+	
+	/**
+	 * Gets the entity tracking range used by vanilla minecraft.
+	 * <br/>
+	 * Proper tracking ranges can be found in EntityTracker#trackEntity
+	 * (the one that takes an Entity as a paremeter) -- it's the 2nd arg
+	 * given to addEntityToTracker.
+	 * 
+	 * @param type The name of the entity.
+	 * @return
+	 */
+	public static int getVanillaEntityRange(String type) {
+		return getVanillaEntityRange(classToStringMapping.get(type)); 
 	}
 	
 	/**
@@ -246,167 +516,7 @@ public class EntityUtils {
 			return -1;
 		}
 	}
-	
-	/**
-	 * Gets the track distance for the given entity in the current mode.
-	 * 
-	 * @param type
-	 * @return
-	 */
-	public static int getEntityTrackDistance(String type) {
-		return getEntityTrackDistance(
-				WDL.worldProps.getProperty("Entity.TrackDistanceMode"), type);
-	}
-	
-	/**
-	 * Gets the track distance for the given entity in the current mode.
-	 * 
-	 * @param e
-	 * @return
-	 */
-	public static int getEntityTrackDistance(Entity e) {
-		return getEntityTrackDistance(
-				WDL.worldProps.getProperty("Entity.TrackDistanceMode"), e);
-	}
-	
-	/**
-	 * Gets the track distance for the given entity in the current mode.
-	 * 
-	 * @param c
-	 * @return
-	 */
-	public static int getEntityTrackDistance(Class<?> c) {
-		return getEntityTrackDistance(
-				WDL.worldProps.getProperty("Entity.TrackDistanceMode"), c);
-	}
-	
-	/**
-	 * Gets the track distance for the given entity in the given mode.
-	 * 
-	 * @param type
-	 * @return
-	 */
-	public static int getEntityTrackDistance(String mode, String type) {
-		if ("default".equals(mode)) {
-			return getMostLikelyEntityTrackDistance(type);
-		} else if ("server".equals(mode)) {
-			int serverDistance = WDLPluginChannels.getEntityRange(type);
-			
-			if (serverDistance < 0) {
-				return getMostLikelyEntityTrackDistance(type);
-			}
-			
-			return serverDistance;
-		} else if ("user".equals(mode)) {
-			String prop = WDL.worldProps.getProperty("Entity." +
-					type + ".TrackDistance");
-			
-			if (prop == null) {
-				logger.warn("Entity range property is null for " + type + "!");
-				logger.warn("(Tried key 'Entity." + type + ".TrackDistance'.)");
-				return -1;
-			}
-			
-			return Integer.valueOf(prop);
-		} else {
-			throw new IllegalArgumentException("Mode is not a valid mode: " + mode);
-		}
-	}
-	
-	/**
-	 * Gets the track distance for the given entity in the given mode.
-	 * 
-	 * @param e
-	 * @return
-	 */
-	public static int getEntityTrackDistance(String mode, Entity e) {
-		return getEntityTrackDistance(mode, e.getClass());
-	}
-	
-	/**
-	 * Gets the track distance for the given entity in the given mode.
-	 * 
-	 * @param c
-	 * @return
-	 */
-	public static int getEntityTrackDistance(String mode, Class<?> c) {
-		return getEntityTrackDistance(mode, classToStringMapping.get(c));
-	}
-	
-	/**
-	 * Checks if an entity is enabled.
-	 * 
-	 * @param e The entity to check.
-	 * @return
-	 */
-	public static boolean isEntityEnabled(Entity e) {
-		return isEntityEnabled(getEntityType(e));
-	}
-	
-	/**
-	 * Checks if an entity is enabled.
-	 * 
-	 * @param type The type of the entity (from {@link #getEntityType(Entity)})
-	 * @return
-	 */
-	public static boolean isEntityEnabled(String type) {
-		if (!WDLPluginChannels.canSaveEntities()) {
-			return false; //Shouldn't get here, but an extra check.
-		}
-		
-		String prop = WDL.worldProps.getProperty("Entity." +
-				type + ".Enabled");
-		
-		if (prop == null) {
-			logger.warn("Entity enabled property is null for " + type + "!");
-			logger.warn("(Tried key 'Entity." + type + ".Enabled'.)");
-			return false;
-		}
-		
-		return prop.equals("true");
-	}
-	
-	/**
-	 * Gets the type string for an entity.
-	 * 
-	 * @param e
-	 * @return
-	 */
-	public static String getEntityType(Entity e) {
-		if (isHologram(e)) {
-			return "Hologram";
-		}
-		
-		return EntityList.getEntityString(e);
-	}
-	
-	/**
-	 * Checks if an entity is a hologram.
-	 * 
-	 * Currently defined as an invisible horse.  TODO: Is this right?
-	 * 
-	 * @param e
-	 * @return
-	 */
-	public static boolean isHologram(Entity e) {
-		return (e instanceof EntityHorse &&
-				e.isInvisible() &&
-				((EntityHorse)e).hasCustomNameTag());
-	}
-	
-	/**
-	 * Gets the track distance for the given entity, making a guess about
-	 * whether to use spigot track distances based off of the server brand.
-	 */
-	public static int getMostLikelyEntityTrackDistance(String entity) {
-		// getClientBrand() returns the server's brand.  Blame MCP.
-		if (WDL.thePlayer.getClientBrand().toLowerCase().contains("spigot")) {
-			return getSpigotEntityRange(entity);
-		} else {
-			return getVanillaEntityRange(entity);
-		}
-	}
-	
+
 	/**
 	 * Gets the entity range used by Spigot by default.
 	 * Mostly a utility method for presets.
@@ -414,12 +524,7 @@ public class EntityUtils {
 	 * @param entity
 	 * @return
 	 */
-	public static int getSpigotEntityRange(String entity) {
-		if (entity.equals("Hologram")) {
-			entity = "EntityHorse";
-		}
-		Class c = stringToClassMapping.get(entity);
-		
+	public static int getDefaultSpigotEntityRange(Class<?> c) {
 		final int monsterRange = 48;
 		final int animalRange = 48;
 		final int miscRange = 32;
@@ -440,5 +545,30 @@ public class EntityUtils {
 		} else {
 			return otherRange;
 		}
+	}
+	
+	/**
+	 * Is the given entity not safe to save?
+	 * 
+	 * If it isn't safe, it may cause a crash or another issue when attempting
+	 * to save it.
+	 * 
+	 * TODO: This is basically a bandaid for a base issue with broken entities.
+	 * Solve that if possible.
+	 * 
+	 * @return <code>null</code> if it is safe to save, or a message explaining
+	 *         why the entity is NOT safe to save if so.
+	 */
+	public static IChatComponent isUnsafeToSaveEntity(Entity e) {
+		try {
+			if (e instanceof EntityLiving) {
+				((EntityLiving) e).getCustomNameTag();
+			}
+		} catch (ClassCastException ex) {
+			return new ChatComponentTranslation(
+					"wdl.unsafeReasons.badCustomName", ex.toString());
+		}
+		
+		return null;
 	}
 }

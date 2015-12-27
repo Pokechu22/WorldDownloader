@@ -32,13 +32,13 @@ public class GuiIngameMenu extends GuiScreen {
 		this.buttonList.add(new GuiButton(6, this.width / 2 + 2, this.height / 4 + 48 + var1, 98, 20, I18n.format("gui.stats", new Object[0])));
 		var3.enabled = this.mc.isSingleplayer() && !this.mc.getIntegratedServer().getPublic();
 		/* WDL >>> */
-		wdl.WDL.injectWDLButtons(this, buttonList);
+		wdl.WDLHooks.injectWDLButtons(this, buttonList);
 		/* <<< WDL */
 	}
 
 	protected void actionPerformed(GuiButton button) {
 		/* WDL >>> */
-		wdl.WDL.handleWDLButtonClick(this, button);
+		wdl.WDLHooks.handleWDLButtonClick(this, button);
 		/* <<< WDL */
 		
 		switch (button.id) {

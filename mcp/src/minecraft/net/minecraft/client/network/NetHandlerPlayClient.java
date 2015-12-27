@@ -651,7 +651,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 	public void handleDisconnect(S40PacketDisconnect packetIn) {
 		/* WDL >>> */
 		if (wdl.WDL.downloading) {
-			wdl.WDL.stop();
+			wdl.WDL.stopDownload();
 			
 			try {
 				Thread.sleep(2000);
@@ -670,7 +670,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 	public void onDisconnect(IChatComponent reason) {
 		/* WDL >>> */
 		if (wdl.WDL.downloading) {
-			wdl.WDL.stop();
+			wdl.WDL.stopDownload();
 			
 			try {
 				Thread.sleep(2000);
@@ -721,11 +721,11 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 	 * Prints a chatmessage in the chat GUI
 	 */
 	public void handleChat(S02PacketChat packetIn) {
-		this.gameController.ingameGUI.getChatGUI().printChatMessage(packetIn.func_148915_c());
-		
 		/* WDL >>> */
 		wdl.WDLHooks.onNHPCHandleChat(this, packetIn);
 		/* <<< WDL */
+		
+		this.gameController.ingameGUI.getChatGUI().printChatMessage(packetIn.func_148915_c());
 	}
 
 	/**
@@ -1172,11 +1172,11 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 	 * a (Ender)Chest
 	 */
 	public void handleBlockAction(S24PacketBlockAction packetIn) {
-		this.gameController.theWorld.addBlockEvent(packetIn.getX(), packetIn.getY(), packetIn.getZ(), packetIn.getBlockType(), packetIn.getData1(), packetIn.getData2());
-		
 		/* WDL >>> */
 		wdl.WDLHooks.onNHPCHandleBlockAction(this, packetIn);
 		/* <<< WDL */
+		
+		this.gameController.theWorld.addBlockEvent(packetIn.getX(), packetIn.getY(), packetIn.getZ(), packetIn.getBlockType(), packetIn.getData1(), packetIn.getData2());
 	}
 
 	/**
@@ -1248,13 +1248,13 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 	 * MapItemRenderer for it
 	 */
 	public void handleMaps(S34PacketMaps packetIn) {
-		MapData var2 = ItemMap.loadMapData(packetIn.getMapId(), this.gameController.theWorld);
-		var2.updateMPMapData(packetIn.getData());
-		this.gameController.entityRenderer.getMapItemRenderer().func_148246_a(var2);
-		
 		/* WDL >>> */
 		wdl.WDLHooks.onNHPCHandleMaps(this, packetIn);
 		/* <<< WDL */
+		
+		MapData var2 = ItemMap.loadMapData(packetIn.getMapId(), this.gameController.theWorld);
+		var2.updateMPMapData(packetIn.getData());
+		this.gameController.entityRenderer.getMapItemRenderer().func_148246_a(var2);
 	}
 
 	public void handleEffect(S28PacketEffect packetIn) {
@@ -1387,6 +1387,10 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 	 * the client to load.
 	 */
 	public void handleCustomPayload(S3FPacketCustomPayload packetIn) {
+		/* WDL >>> */
+		wdl.WDLHooks.onNHPCHandleCustomPayload(this, packetIn);
+		/* <<< WDL */
+		
 		if ("MC|TrList".equals(packetIn.func_149169_c())) {
 			ByteBuf var2 = Unpooled.wrappedBuffer(packetIn.func_149168_d());
 
@@ -1431,10 +1435,6 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 				}, I18n.format("multiplayer.texturePrompt.line1", new Object[0]), I18n.format("multiplayer.texturePrompt.line2", new Object[0]), 0));
 			}
 		}
-		
-		/* WDL >>> */
-		wdl.WDLHooks.onNHPCHandleCustomPayload(this, packetIn);
-		/* <<< WDL */
 	}
 
 	/**

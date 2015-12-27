@@ -1,10 +1,9 @@
-package wdl;
+package wdl.gui;
 
-import java.io.IOException;
-
+import wdl.WorldBackup.IBackupProgressMonitor;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.util.IProgressUpdate;
+import net.minecraft.client.resources.I18n;
 
 /**
  * GUI screen shown while the world is being saved.
@@ -12,16 +11,17 @@ import net.minecraft.util.IProgressUpdate;
  * Based off of vanilla minecraft's 
  * {@link net.minecraft.client.gui.GuiScreenWorking GuiScreenWorking}.
  */
-public class GuiWDLSaveProgress extends GuiScreen {
+public class GuiWDLSaveProgress extends GuiTurningCameraBase implements
+		IBackupProgressMonitor {
 	private final String title;
-	private String majorTaskMessage = "";
-	private String minorTaskMessage = "";
-	private int majorTaskNumber;
+	private volatile String majorTaskMessage = "";
+	private volatile String minorTaskMessage = "";
+	private volatile int majorTaskNumber;
 	private final int majorTaskCount;
-	private int minorTaskProgress;
-	private int minorTaskMaximum;
+	private volatile int minorTaskProgress;
+	private volatile int minorTaskMaximum;
 	
-	private boolean doneWorking = false;
+	private volatile boolean doneWorking = false;
 	
 	/**
 	 * Creates a new GuiWDLSaveProgress.
@@ -83,36 +83,38 @@ public class GuiWDLSaveProgress extends GuiScreen {
 		if (this.doneWorking) {
 			this.mc.displayGuiScreen((GuiScreen) null);
 		} else {
-			this.drawBackground(0);
+			Utils.drawBorder(32, 32, 0, 0, height, width);
 			
-			String majorProgressInfo = "";
+			String majorTaskInfo = majorTaskMessage;
 			if (majorTaskCount > 1) {
-				majorProgressInfo = " (" + majorTaskNumber + " of " + 
-						majorTaskCount + ")";
+				majorTaskInfo = I18n.format(
+						"wdl.gui.saveProgress.progressInfo", majorTaskMessage,
+						majorTaskNumber, majorTaskCount);
 			}
-			String minorProgressInfo = "";
+			String minorTaskInfo = minorTaskMessage;
 			if (minorTaskMaximum > 1) {
-				minorProgressInfo = " (" + minorTaskProgress + " of " + 
-						minorTaskMaximum + ")";
+				majorTaskInfo = I18n.format(
+						"wdl.gui.saveProgress.progressInfo", minorTaskMessage,
+						minorTaskProgress, minorTaskMaximum);
 			}
 			
 			this.drawCenteredString(this.fontRendererObj, this.title,
-					this.width / 2, 70, 0xFFFFFF);
+					this.width / 2, 8, 0xFFFFFF);
 			
-			this.drawCenteredString(this.fontRendererObj, this.majorTaskMessage
-					+ majorProgressInfo, this.width / 2, 100, 0xFFFFFF);
+			this.drawCenteredString(this.fontRendererObj,
+					majorTaskInfo, this.width / 2, 100, 0xFFFFFF);
 			
 			if (minorTaskMaximum > 0) {
 				this.drawProgressBar(110, 84, 89, 
 						(majorTaskNumber * minorTaskMaximum) + minorTaskProgress, 
 						(majorTaskCount + 1) * minorTaskMaximum);
 			} else {
-				this.drawProgressBar(110, 84, 89, majorTaskNumber, 
+				this.drawProgressBar(110, 84, 89, majorTaskNumber,
 						majorTaskCount);
 			}
 			
-			this.drawCenteredString(this.fontRendererObj, this.minorTaskMessage
-					+ minorProgressInfo, this.width / 2, 130, 0xFFFFFF);
+			this.drawCenteredString(this.fontRendererObj, minorTaskInfo,
+					this.width / 2, 130, 0xFFFFFF);
 			this.drawProgressBar(140, 64, 69, minorTaskProgress, minorTaskMaximum);
 			
 			super.drawScreen(mouseX, mouseY, partialTicks);
@@ -160,5 +162,17 @@ public class GuiWDLSaveProgress extends GuiScreen {
 	protected void keyTyped(char typedChar, int keyCode) {
 		//Don't call the super method, as that causes the UI to close if escape
 		//is pressed.
+	}
+
+	// IBackupProgressMonitor
+	@Override
+	public void setNumberOfFiles(int num) {
+		minorTaskMaximum = num;
+	}
+
+	@Override
+	public void onNextFile(String name) {
+		minorTaskProgress++;
+		minorTaskMessage = I18n.format("wdl.saveProgress.backingUp.file", name);
 	}
 }

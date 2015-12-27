@@ -7,6 +7,7 @@ import com.google.common.base.Objects;
 /**
  * Another wrapper.
  */
+@SuppressWarnings({ "rawtypes", "unused" })
 public class Vec3i implements Comparable {
 	/** The Null vector constant (0, 0, 0) */
 	public static final Vec3i NULL_VECTOR = new Vec3i(0, 0, 0);
