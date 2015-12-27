@@ -2,6 +2,7 @@ package wdl.gui;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import java.lang.reflect.Field;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -158,7 +159,7 @@ class Utils {
 	public static void drawBorder(int topMargin, int bottomMargin, int top, int left, int bottom, int right) {
 		glDisable(GL_LIGHTING);
 		glDisable(GL_FOG);
-		glDisable(GL_DEPTH);
+		glDisable(GL_DEPTH_TEST);
 		byte padding = 4;
 		
 		mc.getTextureManager().bindTexture(Gui.optionsBackground);
@@ -205,7 +206,7 @@ class Utils {
 		glEnable(GL_BLEND);
 		OpenGlHelper.glBlendFunc(GL_SRC_ALPHA,
 				GL_ONE_MINUS_SRC_ALPHA, 0, 1);
-		glDisable(GL_ALPHA);
+		glDisable(GL_ALPHA_TEST);
 		GL11.glShadeModel(GL_SMOOTH);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		t.startDrawingQuads();
@@ -241,12 +242,14 @@ class Utils {
 	public static boolean isMouseOverTextBox(int mouseX, int mouseY,
 			GuiTextField textBox) {
 		// :(
-		GuiTextField.class.getDeclaredFields()[1].setAccessible(true);
-		GuiTextField.class.getDeclaredFields()[2].setAccessible(true);
+		Field xPosField = GuiTextField.class.getDeclaredFields()[1];
+		Field yPosField = GuiTextField.class.getDeclaredFields()[2];
 		int xPosition, yPosition;
 		try {
-			xPosition = GuiTextField.class.getDeclaredFields()[1].getInt(textBox);
-			yPosition = GuiTextField.class.getDeclaredFields()[2].getInt(textBox);
+			xPosField.setAccessible(true);
+			xPosition = xPosField.getInt(textBox);
+			yPosField.setAccessible(true);
+			yPosition = yPosField.getInt(textBox);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
@@ -968,14 +971,14 @@ abstract class GuiListExtended {
 			}
 
 			this.drawSelectionBox(var9, var10, p_148128_1_, p_148128_2_);
-			glDisable(GL_DEPTH);
+			glDisable(GL_DEPTH_TEST);
 			byte var11 = 4;
 			this.overlayBackground(0, this.top, 255, 255);
 			this.overlayBackground(this.bottom, this.height, 255, 255);
 			glEnable(GL_BLEND);
 			OpenGlHelper.glBlendFunc(GL_SRC_ALPHA,
 					GL_ONE_MINUS_SRC_ALPHA, 0, 1);
-			glDisable(GL_ALPHA);
+			glDisable(GL_ALPHA_TEST);
 			GL11.glShadeModel(GL_SMOOTH);
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			tess.startDrawingQuads();
