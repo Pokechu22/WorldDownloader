@@ -275,7 +275,7 @@ public class WorldClient extends World {
 			int k = p_73029_1_ + this.rand.nextInt(i) - this.rand.nextInt(i);
 			int l = p_73029_2_ + this.rand.nextInt(i) - this.rand.nextInt(i);
 			int i1 = p_73029_3_ + this.rand.nextInt(i) - this.rand.nextInt(i);
-			blockpos$mutableblockpos.func_181079_c(k, l, i1);
+			blockpos$mutableblockpos.set(k, l, i1);
 			IBlockState iblockstate = this.getBlockState(blockpos$mutableblockpos);
 			iblockstate.getBlock().randomDisplayTick(this, blockpos$mutableblockpos, iblockstate, random);
 

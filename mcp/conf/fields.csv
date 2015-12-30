@@ -830,6 +830,8 @@ field_147167_m,categoryId,0,
 field_147168_j,NAME_CATEGORY_MAP,0,
 field_147169_k,ID_CATEGORY_MAP,0,
 field_147175_a,logger,2,
+field_147206_b,profileStartTime,2,The time (in milliseconds) that profiling was started
+field_147207_c,profileStartTick,2,The tick number that profiling was started on
 field_147208_a,logger,2,
 field_147228_b,logger,0,
 field_147229_c,pingDestinations,0,A list of NetworkManagers that have pending pings
@@ -3294,6 +3296,7 @@ field_178169_a,renderGlobal,0,
 field_178179_a,vertexBuffer,0,
 field_178182_b,vboUploader,0,
 field_178183_a,worldRenderer,0,
+field_178199_k,VALUES,0,
 field_178206_b,vertexColorMultiplier,0,
 field_178207_c,vertexBrightness,0,
 field_178213_b,tintIndex,0,
@@ -3312,6 +3315,7 @@ field_178245_c,tintIndex,0,
 field_178246_a,FACING_DEFAULT,0,
 field_178271_b,atlasSpritesWater,0,
 field_178272_a,atlasSpritesLava,0,
+field_178282_n,VALUES,0,
 field_178313_f,LOGGER,0,
 field_178314_g,elements,0,
 field_178315_d,parent,0,
@@ -3489,6 +3493,9 @@ field_178812_b,MODELVIEW,0,The current GL modelview matrix
 field_178813_c,PROJECTION,0,The current GL projection matrix
 field_178814_a,VIEWPORT,0,The current GL viewport
 field_178817_f,locked,2,
+field_178818_g,forceUpdate,2,
+field_178827_f,id,2,
+field_178830_e,internalName,2,
 field_178862_f,locationCape,0,
 field_178863_g,skinType,0,
 field_178864_d,playerTexturesLoaded,0,
@@ -3889,8 +3896,24 @@ field_180411_ar,jungle_door,2,
 field_180412_aq,birch_door,2,
 field_180413_ao,oak_door,2,
 field_180414_ap,spruce_door,2,
+field_181024_n,setTileEntities,0,
+field_181056_j,setTileEntities,0,
+field_181059_a,x,0,The X coordinate
+field_181060_b,y,0,The Y coordinate
+field_181061_c,z,0,The Z coordinate
+field_181062_Q,vboSupportedAti,0,
+field_181063_b,ati,0,
+field_181149_aW,CLOUDS_TYPES,0,
+field_181150_U,useNativeTransport,0,
+field_181151_V,entityShadows,0,
+field_181546_a,seaLevel,2,
+field_181657_aC,showLagometer,0,
+field_181676_c,rawShortBuffer,0,
+field_181677_f,vertexFormatElement,0,
+field_181678_g,vertexFormatIndex,0,
 field_181699_o,ground,0,
 field_181700_p,fixed,0,
+field_181702_p,mapEnumFacing,0,
 field_181703_c,OLDMODEL_POSITION_TEX_NORMAL,0,
 field_181704_d,PARTICLE_POSITION_TEX_COLOR_LMAP,0,
 field_181705_e,POSITION,0,
@@ -3907,6 +3930,9 @@ field_181715_o,TEX_2F,0,
 field_181716_p,TEX_2S,0,
 field_181717_q,NORMAL_3B,0,
 field_181718_r,PADDING_1B,0,
+field_181757_a,CACHE,0,
+field_183018_l,incompatibleResourcePacks,0,
+field_183030_aa,cpu,0,
 field_70009_b,buffer,2,RCon string buffer for log.
 field_70010_a,instance,2,Single instance of RConConsoleSource
 field_70116_cv,serverPosZ,0,
@@ -6056,7 +6082,7 @@ field_78900_b,moveForward,0,The speed at which the player is moving forward. Neg
 field_78901_c,jump,0,
 field_78902_a,moveStrafe,0,The speed at which the player is strafing. Postive numbers to the left and negative to the right.
 field_78903_e,gameSettings,0,
-field_78939_q,needsUpdate,0,Boolean for whether this renderer needs to be updated or not
+field_78939_q,noColor,0,None
 field_80001_f,closestPlayer,2,The closest EntityPlayer to this orb.
 field_80002_g,xpTargetColor,2,Threshold color for tracking players
 field_80004_Q,updateEntityTick,2,

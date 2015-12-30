@@ -2,6 +2,6 @@ package net.minecraft.client;
 
 public class ClientBrandRetriever {
 	public static String getClientModName() {
-		return "worlddownloader1.8.8a-beta3-coremod";
+		return "WorldDownloader-1.8.9a-beta1-coremod";
 	}
 }

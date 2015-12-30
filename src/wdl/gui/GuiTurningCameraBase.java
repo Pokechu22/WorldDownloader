@@ -57,13 +57,22 @@ public abstract class GuiTurningCameraBase extends GuiScreen {
 					- WDL.thePlayer.getYOffset(), WDL.thePlayer.posZ,
 					WDL.thePlayer.rotationYaw, 0.0F);
 			this.yaw = WDL.thePlayer.rotationYaw;
-			this.oldCameraMode = WDL.minecraft.gameSettings.thirdPersonView;
-			this.oldHideHud = WDL.minecraft.gameSettings.hideGUI;
-			this.oldShowDebug = WDL.minecraft.gameSettings.showDebugInfo;
+			// XXX MCP mappings here are messed up pretty badly - no SRG
+			// mappings for 1.8.9 yet.
+			// SRG mappings basically convert the obfuscated names that are
+			// single letters into things like func_82837_s.  Since it's
+			// 1.8.8 SRG mappings, things aren't _quite_ right, but 1.8.9 has
+			// so few changes that only one or two classes get messed up.
+			// However, the messed up classes happen to include GameSettings.
+			// So these names may seem odd, but they are right.  Look down one
+			// in the options.
+			this.oldCameraMode = WDL.minecraft.gameSettings.showDebugInfo;
+			this.oldHideHud = WDL.minecraft.gameSettings.thirdPersonView;
+			this.oldShowDebug = WDL.minecraft.gameSettings.showDebugProfilerChart;
 			this.oldChatVisibility = WDL.minecraft.gameSettings.chatVisibility;
-			WDL.minecraft.gameSettings.thirdPersonView = 0;
-			WDL.minecraft.gameSettings.hideGUI = true;
-			WDL.minecraft.gameSettings.showDebugInfo = false;
+			WDL.minecraft.gameSettings.showDebugInfo = 0;
+			WDL.minecraft.gameSettings.thirdPersonView = true;
+			WDL.minecraft.gameSettings.showDebugProfilerChart = false;
 			WDL.minecraft.gameSettings.chatVisibility = EnumChatVisibility.HIDDEN;
 			// Gets the render view entity for minecraft.
 			this.oldRenderViewEntity = WDL.minecraft.getRenderViewEntity();
@@ -103,9 +112,10 @@ public abstract class GuiTurningCameraBase extends GuiScreen {
 	@Override
 	public void onGuiClosed() {
 		super.onGuiClosed();
-		WDL.minecraft.gameSettings.thirdPersonView = this.oldCameraMode;
-		WDL.minecraft.gameSettings.hideGUI = oldHideHud;
-		WDL.minecraft.gameSettings.showDebugInfo = oldShowDebug;
+		// Again, this looks wrong, but is correct in 1.8.9 WITH INCORRECT MAPPINGS.
+		WDL.minecraft.gameSettings.showDebugInfo = this.oldCameraMode;
+		WDL.minecraft.gameSettings.thirdPersonView = oldHideHud;
+		WDL.minecraft.gameSettings.showDebugProfilerChart = oldShowDebug;
 		WDL.minecraft.gameSettings.chatVisibility = oldChatVisibility;
 		WDL.minecraft.setRenderViewEntity(this.oldRenderViewEntity);
 	}

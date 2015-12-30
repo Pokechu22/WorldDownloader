@@ -706,6 +706,9 @@ func_147197_m,setPlayer,2,
 func_147198_k,setObjectiveDisplay,2,
 func_147199_i,leaveTeam,2,
 func_147200_e,setTeamOption,2,
+func_147203_d,getWittyComment,2,Get a random witty comment
+func_147204_b,getProfileResults,2,Get the profiling results from the last profile
+func_147205_a,saveProfileResults,2,Save the profiling results from the last profile
 func_147223_a,pingPendingNetworks,0,
 func_147224_a,ping,0,
 func_147225_b,tryCompatibilityPing,0,
@@ -1023,6 +1026,7 @@ func_148329_a,scrollTo,0,Updates the gui slots ItemStack's based on scroll posit
 func_148334_a,generateNewRandomName,0,Randomly generates a new name built up of 3 or 4 randomly selected words.
 func_148335_a,reseedRandomGenerator,0,Resets the underlying random number generator using a given seed.
 func_148527_a,setRepositories,0,
+func_148529_f,clearResourcePack,0,
 func_148530_e,getResourcePackInstance,0,Getter for the IResourcePack instance associated with this ResourcePackRepository
 func_148535_c,getListMipmaps,0,
 func_148537_a,sendPacketToAllPlayersInDimension,2,
@@ -1819,6 +1823,7 @@ func_152641_a,onSerialization,2,
 func_152644_a,getPermissionLevel,2,"Gets the permission level of the user, as defined in the ""level"" attribute of the ops.json file"
 func_152646_b,gameProfileFromJsonObject,2,
 func_152647_b,getIPFromJson,2,
+func_152648_b,toGameProfile,2,Convert a {@linkplain com.google.gson.JsonObject JsonObject} into a {@linkplain com.mojang.authlib.GameProfile}. The json object must have {@code uuid} and {@code name} attributes or {@code null} will be returned.
 func_152649_a,addEntry,2,Add an entry to this cache
 func_152650_a,getGameProfile,2,"Get a GameProfile given the MinecraftServer and the player's username. \n\n The UUID of the GameProfile will <b>not</b> be null. If the server is offline, a UUID based on the hash of the username will be used."
 func_152651_a,addEntry,2,Add an entry to this cache
@@ -1850,6 +1855,7 @@ func_152700_a,getGameProfileFromName,2,Gets the GameProfile of based on the prov
 func_152702_a,isBanned,2,
 func_152703_a,isUsernameBanned,2,
 func_152705_a,isWhitelisted,1,Returns true if the profile is in the whitelist.
+func_152706_a,getBannedProfile,2,"Gets the GameProfile for the UserListBanEntry with the specified username, if present"
 func_152707_c,addressToString,2,
 func_152708_a,isBanned,2,
 func_152709_b,getBanEntry,2,
@@ -1957,9 +1963,13 @@ func_154317_g,getRealmsButton,0,
 func_154331_x,getLastActiveTime,2,
 func_154333_a,getName,0,Returns the name of the save format.
 func_154336_c,getSizeOnDisk,0,
+func_154337_m,getMouseX,0,
+func_154338_k,getWidth,0,
+func_154339_l,getMouseY,0,
 func_154346_a,hasAcceptedEULA,1,
 func_154347_a,loadEULAFile,1,
 func_154348_b,createEULAFile,1,
+func_154354_b,roundUp,2,
 func_174791_d,getPositionVector,2,"Get the position vector. <b>{@code null} is not allowed!</b> If you are not an entity in the world, return 0.0D, 0.0D, 0.0D"
 func_174792_t_,sendCommandFeedback,2,Returns true if the command sender should be sent feedback about executed commands
 func_174793_f,getCommandSenderEntity,2,Returns the entity associated with the command sender. MAY BE NULL!
@@ -2174,6 +2184,7 @@ func_175160_A,isCurrentViewEntity,0,
 func_175161_p,onUpdateWalkingPlayer,0,called every tick when the player is on foot. Performs all the things that normally happen during movement.
 func_175162_d,isOpenBlockSpace,0,Returns true if the block at the given BlockPos and the block above it are NOT full cubes.
 func_175163_u,sendHorseInventory,0,
+func_175173_a,sendAllWindowProperties,2,
 func_175174_a,drawTexturedModalRect,0,Draws a textured rectangle using the texture currently bound to the TextureManager
 func_175175_a,drawTexturedModalRect,0,Draws a texture rectangle using the texture currently bound to the TextureManager
 func_175176_b,renderExpBar,0,
@@ -2192,6 +2203,7 @@ func_175206_d,getId,0,
 func_175211_a,setWidth,0,
 func_175213_c,buildDisplayString,0,Builds the localized display string for this GuiListButton
 func_175221_e,getDisplayString,0,
+func_175232_g,getHeight,0,
 func_175236_d,isReducedDebug,0,
 func_175237_a,renderDebugInfo,0,
 func_175238_c,getDebugInfoRight,0,
@@ -3234,6 +3246,8 @@ func_178209_a,getVertexData,0,
 func_178210_d,getFace,0,
 func_178211_c,getTintIndex,0,
 func_178212_b,hasTintIndex,0,
+func_178216_a,remapVert,0,
+func_178217_e,remapQuad,0,
 func_178235_a,setDefaultUvs,0,
 func_178236_a,getFaceUvs,0,
 func_178247_d,parsePositionTo,0,
@@ -3525,6 +3539,7 @@ func_179101_C,disableRescaleNormal,0,
 func_179102_b,setFogStart,0,
 func_179103_j,shadeModel,0,
 func_179104_a,colorMaterial,0,
+func_179105_a,texGen,0,
 func_179106_n,disableFog,0,
 func_179107_e,cullFace,0,
 func_179108_z,enableNormalize,0,
@@ -3910,6 +3925,7 @@ func_180470_cg,getBedLocation,2,
 func_180471_a,getToolDigEfficiency,2,Block hardness will be further counted in net/minecraft/block/Block.getPlayerRelativeBlockHardness
 func_180472_a,displayVillagerTradeGui,2,
 func_180473_a,setSpawnPoint,2,
+func_180474_b,renderPortal,0,
 func_180475_a,renderScoreboard,0,
 func_180476_e,renderPumpkinOverlay,0,
 func_180477_d,renderPlayerStats,0,
@@ -4091,21 +4107,54 @@ func_180791_a,drawSlot,0,
 func_180793_a,affectEntity,2,
 func_180798_a,renderDebugInfoLeft,0,
 func_180799_ab,isInLava,2,
+func_181015_d,setPortal,2,"Marks the entity as being inside a portal, activating teleportation logic in onEntityUpdate() in the following tick(s)."
+func_181022_b,stopUseShader,0,
+func_181023_a,updateTileEntities,0,
+func_181034_q,shouldBroadcastRconToOps,2,Get if RCON command events should be broadcast to ops
+func_181035_ah,shouldUseNativeTransport,2,Get if native transport should be used. Native transport means linux server performance improvements and optimized packet sending/receiving on linux
+func_181057_v,getPlayerList,2,
+func_181079_c,set,2,Set the values
+func_181159_b,atan2,2,
+func_181168_c,getPotionLocations,2,
+func_181537_a,setConnectedToRealms,0,Set if the player is connected to a realms server
+func_181544_b,setSeaLevel,2,Warning this value may not be respected in all cases as it is still hardcoded in many places.
+func_181545_F,getSeaLevel,2,
+func_181551_a,renderSelectedItem,0,
+func_181554_e,renderLagometer,0,
+func_181560_a,updateCameraAndRender,0,
+func_181561_a,drawSelectionBoundingBox,0,
+func_181562_a,getRenderChunkOffset,0,"Returns RenderChunk offset from given RenderChunk in given direction, or null if it can't be seen by player at given BlockPos."
+func_181563_a,drawOutlinedBoundingBox,0,
+func_181564_a,renderItem,0,
+func_181617_a,runTask,2,"Run a task and return the result, catching any execution exceptions and logging them to the specified logger"
 func_181662_b,pos,0,
 func_181663_c,normal,0,
+func_181664_j,getBufferSize,0,
 func_181666_a,color,0,
+func_181667_k,nextVertexFormatIndex,0,
 func_181668_a,begin,0,
 func_181669_b,color,0,
+func_181670_b,growBuffer,0,
 func_181671_a,lightmap,0,
+func_181672_a,getVertexState,0,
 func_181673_a,tex,0,
+func_181674_a,sortVertexData,0,
 func_181675_d,endVertex,0,
+func_181679_a,draw,0,
 func_181688_b,getTransform,0,
 func_181689_a,applyTransform,0,
+func_181701_a,getBlockPosOffset16,0,
+func_181721_a,addElement,0,
+func_181722_a,bufferData,0,
+func_181756_a,getInteger,0,"Get an Integer from the cache if it exists, otherwise return {@code Integer.valueOf()}"
+func_181758_c,hsvToRGB,0,
+func_183002_r,shouldBroadcastConsoleToOps,2,Get if console command events should be broadcast to ops
+func_183029_j,getCpu,0,
 func_70000_a,addServerStatsToSnooper,2,
 func_70001_b,addServerTypeToSnooper,2,
 func_70002_Q,isSnooperEnabled,2,Returns whether snooping is enabled or not.
 func_70003_b,canCommandSenderUseCommand,2,"Returns {@code true} if the CommandSender is allowed to execute the command, {@code false} if not"
-func_70005_c_,getName,2,"Gets the name of this command sender (usually username, but possibly ""Rcon"")"
+func_70005_c_,getName,2,Get the name of this object. For players this returns their username
 func_70007_b,resetLog,1,Clears the RCon log
 func_70008_c,getLogContents,1,Gets the contents of the RCon log
 func_70011_f,getDistance,2,"Gets the distance to the position. Args: x, y, z"
@@ -4640,7 +4689,7 @@ func_71504_g,populateEnvironment,2,Populates this crash report with initial info
 func_71505_b,getCrashCause,2,Returns the Throwable object that is the cause for the crash and Crash Report.
 func_71506_a,getSectionsInStringBuilder,2,Gets the various sections of the crash report into the given StringBuilder
 func_71507_a,addCrashSection,2,Adds a Crashreport section with the given name with the given value (convered .toString())
-func_71514_a,getCommandAliases,2,Gets a list of aliases for this command
+func_71514_a,getCommandAliases,2,Get a list of aliases for this command. <b>Never return null!</b>
 func_71515_b,processCommand,2,Callback when the command is invoked
 func_71517_b,getCommandName,2,Gets the name of the command
 func_71518_a,getCommandUsage,2,Gets the usage string for the command.
@@ -6055,6 +6104,7 @@ func_78853_a,loadServerList,0,"Loads a list of servers from servers.dat, by runn
 func_78855_b,saveServerList,0,"Runs getNBTCompound on each ServerData instance, puts everything into a ""servers"" NBT list and writes it to servers.dat."
 func_78856_c,countServers,0,Counts the number of ServerData instances in the list.
 func_78857_a,swapServers,0,"Takes two list indexes, and swaps their order around."
+func_78860_a,fromString,0,
 func_78861_a,getIP,0,
 func_78862_a,parseIntWithDefault,0,
 func_78863_b,getServerAddress,0,"Returns a server's address and port for the specified hostname, looking up the SRV record if possible"
@@ -6075,7 +6125,7 @@ func_78887_a,getNewBoundingBox,2,returns a new StructureBoundingBox with MAX val
 func_78888_b,expandTo,2,Expands a bounding box's dimensions to include the supplied bounding box.
 func_78898_a,updatePlayerMoveState,0,
 func_78909_a,getColorIndex,0,Takes in the pass the call list is being requested for. Args: renderPass
-func_78914_f,markDirty,0,Marks the current renderer data as dirty and needing to be updated.
+func_78914_f,noColor,0,Disabels color processing.
 func_80003_ah,getPlayerUsageSnooper,0,
 func_80006_f,getUniqueID,0,
 func_80007_l,getDimensionName,2,"Returns the dimension's name, e.g. ""The End"", ""Nether"", or ""Overworld""."
@@ -6454,12 +6504,15 @@ func_96528_e,getScores,2,
 func_96529_a,getValueFromObjective,2,Returns the value of the given objective for the given entity name
 func_96530_a,setObjectiveInDisplaySlot,2,"0 is tab menu, 1 is sidebar, 2 is below name"
 func_96531_f,getTeamNames,2,Retrieve all registered ScorePlayerTeam names
+func_96532_b,onObjectiveDisplayNameChanged,2,
+func_96533_c,onScoreObjectiveRemoved,2,
 func_96534_i,getSortedScores,2,"Returns an array of Score objects, sorting by Score.getScorePoints()"
 func_96535_a,addScoreObjective,2,Create and returns the score objective for the given name and ScoreCriteria
 func_96537_j,getObjectiveDisplaySlotNumber,2,"Returns 0 for (case-insensitive) 'list', 1 for 'sidebar', 2 for 'belowName', otherwise -1."
 func_96538_b,sendTeamUpdate,2,This packet will notify the players that this team is updated
 func_96539_a,getObjectiveInDisplaySlot,2,"0 is tab menu, 1 is sidebar, 2 is below name"
-func_96546_g,getPlayerIterator,2,
+func_96546_g,sendDisplaySlotRemovalPackets,2,
+func_96551_b,markSaveDataDirty,2,
 func_96559_d,getFrontOffsetY,2,
 func_96631_a,attemptDamageItem,2,"Attempts to damage the ItemStack with par1 amount of damage, If the ItemStack has the Unbreaking enchantment there is a chance for each point of damage to be negated. Returns true if it takes more damage than getMaxDamage(). Returns false otherwise or if the ItemStack can't be damaged or if all points of damage are negated."
 func_96636_a,getName,2,

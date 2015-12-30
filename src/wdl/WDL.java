@@ -87,11 +87,11 @@ public class WDL {
 	/**
 	 * Current version.  This should match the git tag for the current release.
 	 */
-	public static final String VERSION = "1.8.8-beta3";
+	public static final String VERSION = "1.8.9a-beta1";
 	/**
 	 * The version of minecraft that this mod is installed on.
 	 */
-	public static final String EXPECTED_MINECRAFT_VERSION = "1.8.8";
+	public static final String EXPECTED_MINECRAFT_VERSION = "1.8.9";
 	/**
 	 * Owning username for the github repository to check for updates against.
 	 * 
