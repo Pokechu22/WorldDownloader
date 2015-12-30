@@ -87,7 +87,7 @@ public class WDL {
 	/**
 	 * Current version.  This should match the git tag for the current release.
 	 */
-	public static final String VERSION = "1.8.8-beta3";
+	public static final String VERSION = "1.8.8a-beta3";
 	/**
 	 * The version of minecraft that this mod is installed on.
 	 */
