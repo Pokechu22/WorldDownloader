@@ -40,7 +40,7 @@ public class GuiWDLPermissionRequest extends GuiScreen {
 	public void initGui() {
 		this.list = new TextList(mc, width, height, TOP_MARGIN, BOTTOM_MARGIN);
 		
-		list.addLine("§c§lThis is a work in progress.");
+		list.addLine("\u00A7c\u00A7lThis is a work in progress.");
 		list.addLine("You can request permissions in this GUI, although " +
 				"it currently requires manually specifying the names.");
 		list.addBlankLine();

@@ -74,7 +74,7 @@ public class GuiWDLPermissions extends GuiScreen {
 		
 		this.list = new TextList(mc, width, height, TOP_MARGIN, BOTTOM_MARGIN);
 		
-		list.addLine("§c§lThis is a work in progress.");
+		list.addLine("\u00A7c\u00A7lThis is a work in progress.");
 		
 		if (!WDLPluginChannels.hasPermissions()) {
 			return;
@@ -82,7 +82,7 @@ public class GuiWDLPermissions extends GuiScreen {
 		
 		list.addBlankLine();
 		if (!WDLPluginChannels.canRequestPermissions()) {
-			list.addLine("§cThe serverside permission plugin is out of date " +
+			list.addLine("\u00A7cThe serverside permission plugin is out of date " +
 					"and does support permission requests.  Please go ask a " +
 					"server administrator to update the plugin.");
 			list.addBlankLine();

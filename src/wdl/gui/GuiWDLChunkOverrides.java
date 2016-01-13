@@ -36,7 +36,7 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 	@Override
 	public void initGui() {
 		this.list = new TextList(mc, width, height, TOP_MARGIN, BOTTOM_MARGIN);
-		list.addLine("§c§lThis is a work in progress.");
+		list.addLine("\u00A7c\u00A7lThis is a work in progress.");
 		list.addLine("You can download in overriden chunks even if you are " +
 				"not allowed to download elsewhere on the server.");
 		list.addLine("Here is a list of the current chunk overrides; in the " +
