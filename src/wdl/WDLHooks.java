@@ -33,6 +33,7 @@ import wdl.api.IGuiHooksListener;
 import wdl.api.IPluginChannelListener;
 import wdl.gui.GuiWDL;
 import wdl.gui.GuiWDLAbout;
+import wdl.gui.GuiWDLChunkOverrides;
 import wdl.gui.GuiWDLPermissions;
 
 /**
@@ -476,22 +477,27 @@ public class WDLHooks {
 				return; // WDL not available if in singleplayer or LAN server mode
 			}
 			
-			if (!WDLPluginChannels.canDownloadAtAll()) {
-				// TODO: A bit more complex logic - if they can't download in
-				// most terrain, but they DO have chunk overrides, do we want
-				// to open a GUI?
-				if (WDLPluginChannels.canRequestPermissions()) {
-					WDL.minecraft.displayGuiScreen(new GuiWDLPermissions(gui));
-				} else {
-					button.enabled = false;
-				}
-				
-				return;
-			}
 			if (WDL.downloading) {
 				WDL.stopDownload();
 			} else {
-				WDL.startDownload();
+				if (!WDLPluginChannels.canDownloadAtAll()) {
+					// If they don't have any permissions, let the player
+					// request some.
+					if (WDLPluginChannels.canRequestPermissions()) {
+						WDL.minecraft.displayGuiScreen(new GuiWDLPermissions(gui));
+					} else {
+						button.enabled = false;
+					}
+					
+					return;
+				} else if (WDLPluginChannels.hasChunkOverrides()
+						&& !WDLPluginChannels.canDownloadInGeneral()) {
+					// Handle the "only has chunk overrides" state - notify
+					// the player of limited areas.
+					WDL.minecraft.displayGuiScreen(new GuiWDLChunkOverrides(gui));
+				} else {
+					WDL.startDownload();
+				}
 			}
 		} else if (button.id == WDLo) { // "..." (options)
 			if (WDL.minecraft.isIntegratedServerRunning()) {
