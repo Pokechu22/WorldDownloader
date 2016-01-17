@@ -5,6 +5,7 @@ import java.io.IOException;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+import wdl.WDL;
 import wdl.WDLPluginChannels;
 import wdl.WDLPluginChannels.ChunkRange;
 
@@ -27,6 +28,8 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 	 * Text fields for creating a new range.
 	 */
 	private GuiNumericTextField x1Field, z1Field, x2Field, z2Field;
+
+	private GuiButton startDownloadButton;
 	
 	public GuiWDLChunkOverrides(GuiScreen parent) {
 		this.parent = parent;
@@ -60,8 +63,12 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 		this.z2Field = new GuiNumericTextField(3, fontRendererObj,
 				this.width / 2 + 15, 18, 33, 20);
 		
-		this.buttonList.add(new GuiButton(5, width / 2 + 55, 18, 100, 20,
+		this.buttonList.add(new GuiButton(5, width / 2 - 155, 18, 150, 20,
 				"Add range request"));
+		startDownloadButton = new GuiButton(6, width / 2 + 5, 18, 150, 20,
+				"Start download in these ranges");
+		startDownloadButton.enabled = WDLPluginChannels.canDownloadAtAll();
+		this.buttonList.add(startDownloadButton);
 		
 		this.buttonList.add(new GuiButton(100, width / 2 - 100, height - 29,
 				I18n.format("gui.done")));
@@ -86,6 +93,13 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 			z1Field.setText("");
 			x2Field.setText("");
 			z2Field.setText("");
+		}
+		if (button.id == 6) {
+			if (!WDLPluginChannels.canDownloadAtAll()) {
+				button.enabled = false;
+				return;
+			}
+			WDL.startDownload();
 		}
 		
 		if (button.id == 100) {
