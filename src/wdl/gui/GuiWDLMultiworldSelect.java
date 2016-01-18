@@ -1,5 +1,6 @@
 package wdl.gui;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,6 +82,44 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		
 		public final String folderName;
 		public final String displayName;
+		
+		private List<String> description;
+		
+		/**
+		 * Gets some information about this info.
+		 */
+		public List<String> getDescription() {
+			if (description == null) {
+				description = new ArrayList<String>();
+				
+				// TODO: More info than just dimensions - EG if the
+				// chunk the player is in is added, etc.
+				description.add("Defined dimensions:");
+				File savesFolder = new File(WDL.minecraft.mcDataDir, "saves");
+				File world = new File(savesFolder, WDL.getWorldFolderName(folderName));
+				File[] subfolders = world.listFiles();
+				
+				if (subfolders != null) {
+					for (File subfolder : subfolders) {
+						if (subfolder.listFiles() == null) {
+							// Not a folder
+							continue;
+						}
+						if (subfolder.listFiles().length == 0) {
+							// Empty folder - we don't count these.
+							continue;
+						}
+						if (subfolder.getName().equals("region")) {
+							description.add(" * Overworld (#0)");
+						} else if (subfolder.getName().startsWith("DIM")) {
+							description.add(" * " + subfolder.getName().substring(3));
+						}
+					}
+				}
+			}
+
+			return description;
+		}
 	}
 	
 	/**
@@ -370,6 +409,8 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		newWorldButton.visible = !showNewWorldTextBox;
 
 		super.drawScreen(mouseX, mouseY, partialTicks);
+		
+		drawMultiworldDescription();
 	}
 
 	/**
@@ -411,5 +452,23 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 			}
 		}
 		
+	}
+	
+	/**
+	 * Draws info about the selected world.
+	 */
+	private void drawMultiworldDescription() {
+		if (selectedMultiWorld == null) {
+			return;
+		}
+		
+		drawString(fontRendererObj, "Info about "
+				+ selectedMultiWorld.displayName, 5, 64, 0xFFFFFF);
+		
+		int y = 64 + fontRendererObj.FONT_HEIGHT;
+		for (String s : selectedMultiWorld.getDescription()) {
+			drawString(fontRendererObj, s, 5, y, 0xFFFFFF);
+			y += fontRendererObj.FONT_HEIGHT;
+		}
 	}
 }
