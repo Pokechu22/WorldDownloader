@@ -2,6 +2,8 @@ package wdl.gui;
 
 import java.io.IOException;
 
+import com.google.common.collect.Multimap;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
@@ -84,15 +86,7 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if (button.id == 5) {
-			ChunkRange range = new ChunkRange("",
-					x1Field.getValue(), z1Field.getValue(), 
-					x2Field.getValue(), z2Field.getValue());
-			WDLPluginChannels.addChunkOverrideRequest(range);
-			list.addLine(range.toString());
-			x1Field.setText("");
-			z1Field.setText("");
-			x2Field.setText("");
-			z2Field.setText("");
+			//TODO
 		}
 		if (button.id == 6) {
 			if (!WDLPluginChannels.canDownloadAtAll()) {
@@ -188,5 +182,57 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 		this.drawString(fontRendererObj, "Z2:", z2Field.xPosition - 16, 24, 0xFFFFFF);
 		
 		super.drawScreen(mouseX, mouseY, partialTicks);
+		
+		for (Multimap<String, ChunkRange> group : WDLPluginChannels.getChunkOverrides().values()) {
+			for (ChunkRange range : group.values()) {
+				drawRange(range, 0xFF);
+			}
+		}
+	}
+	
+	/**
+	 * "seed" for the color RNG.  What actually is happening is that this
+	 * changes the value of the hashcode, to make it hopefully look better
+	 * (eg an empty string is no longer black)
+	 */
+	private static final String RNG_SEED = "A seed for better color RNG!";
+	
+	/**
+	 * Draws the given range at the proper position on screen.
+	 * 
+	 * @param range The range to draw.
+	 * @param alpha The transparency.  0xFF: Fully solid, 0x00: Fully transparent
+	 */
+	private void drawRange(ChunkRange range, int alpha) {
+		int color = (range.tag + RNG_SEED).hashCode() & 0x00FFFFFF;
+		
+		int x1 = range.x1 * 8 + this.width / 2;
+		int z1 = range.z1 * 8 + this.height / 2;
+		int x2 = range.x2 * 8 + this.width / 2 + 7;
+		int z2 = range.z2 * 8 + this.height / 2 + 7;
+		
+		drawRect(x1, z1, x2, z2, color + (alpha << 24));
+		
+		int colorDark = darken(color);
+		
+		drawVerticalLine(x1, z1, z2, colorDark + (alpha << 24));
+		drawVerticalLine(x2, z1, z2, colorDark + (alpha << 24));
+		drawHorizontalLine(x1, x2, z1, colorDark + (alpha << 24));
+		drawHorizontalLine(x1, x2, z2, colorDark + (alpha << 24));
+	}
+	
+	/**
+	 * Halves the brightness of the given color.
+	 */
+	private int darken(int color) {
+		int r = (color >> 16) & 0xFF;
+		int g = (color >> 8) & 0xFF;
+		int b = color & 0xFF;
+
+		r /= 2;
+		g /= 2;
+		b /= 2;
+
+		return (r << 16) + (g << 8) + b;
 	}
 }
