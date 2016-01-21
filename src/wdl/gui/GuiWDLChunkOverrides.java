@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import com.google.common.collect.Multimap;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
@@ -86,7 +87,15 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if (button.id == 5) {
-			//TODO
+			ChunkRange range = new ChunkRange("",
+					x1Field.getValue(), z1Field.getValue(), 
+					x2Field.getValue(), z2Field.getValue());
+			WDLPluginChannels.addChunkOverrideRequest(range);
+			list.addLine(range.toString());
+			x1Field.setText("");
+			z1Field.setText("");
+			x2Field.setText("");
+			z2Field.setText("");
 		}
 		if (button.id == 6) {
 			if (!WDLPluginChannels.canDownloadAtAll()) {
@@ -185,26 +194,33 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 		
 		for (Multimap<String, ChunkRange> group : WDLPluginChannels.getChunkOverrides().values()) {
 			for (ChunkRange range : group.values()) {
-				drawRange(range, 0xFF);
+				drawRange(range, RNG_SEED, 0xFF);
 			}
+		}
+		for (ChunkRange range : WDLPluginChannels.getChunkOverrideRequests()) {
+			// Fancy sin alpha changing by time.
+			int alpha = 127 + (int)(Math.sin(Minecraft.getSystemTime() * Math.PI / 5000) * 64);
+			drawRange(range, 0x808080, alpha);
 		}
 	}
 	
 	/**
-	 * "seed" for the color RNG.  What actually is happening is that this
-	 * changes the value of the hashcode, to make it hopefully look better
-	 * (eg an empty string is no longer black)
+	 * Default color for a chunk range with tag. Xor'd with the hashcode. <br/>
+	 * Preview: <span style=
+	 * "width: 100px; height: 50px; background-color: #0BBDFC; color: #0BBDFC;"
+	 * >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 	 */
-	private static final String RNG_SEED = "A seed for better color RNG!";
+	private static final int RNG_SEED = 0xBBDFC;
 	
 	/**
 	 * Draws the given range at the proper position on screen.
 	 * 
 	 * @param range The range to draw.
+	 * @param seed The default color for a tagless range. (See {@link #RNG_SEED})
 	 * @param alpha The transparency.  0xFF: Fully solid, 0x00: Fully transparent
 	 */
-	private void drawRange(ChunkRange range, int alpha) {
-		int color = (range.tag + RNG_SEED).hashCode() & 0x00FFFFFF;
+	private void drawRange(ChunkRange range, int seed, int alpha) {
+		int color = (range.tag.hashCode() ^ seed) & 0x00FFFFFF;
 		
 		int x1 = range.x1 * 8 + this.width / 2;
 		int z1 = range.z1 * 8 + this.height / 2;
