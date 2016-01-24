@@ -34,8 +34,22 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 
 	private GuiButton startDownloadButton;
 	
+	/**
+	 * The current position.
+	 */
+	private int scrollX, scrollZ;
+	/**
+	 * How large each chunk is on-screen.
+	 */
+	private static final int SCALE = 8;
+	
 	public GuiWDLChunkOverrides(GuiScreen parent) {
 		this.parent = parent;
+		
+		if (WDL.thePlayer != null) {
+			this.scrollX = WDL.thePlayer.chunkCoordX;
+			this.scrollZ = WDL.thePlayer.chunkCoordZ;
+		}
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -222,10 +236,10 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 	private void drawRange(ChunkRange range, int seed, int alpha) {
 		int color = (range.tag.hashCode() ^ seed) & 0x00FFFFFF;
 		
-		int x1 = range.x1 * 8 + this.width / 2;
-		int z1 = range.z1 * 8 + this.height / 2;
-		int x2 = range.x2 * 8 + this.width / 2 + 7;
-		int z2 = range.z2 * 8 + this.height / 2 + 7;
+		int x1 = chunkXToDisplayX(range.x1);
+		int z1 = chunkZToDisplayZ(range.z1);
+		int x2 = chunkXToDisplayX(range.x2) + SCALE - 1;
+		int z2 = chunkZToDisplayZ(range.z2) + SCALE - 1;
 		
 		drawRect(x1, z1, x2, z2, color + (alpha << 24));
 		
@@ -235,6 +249,27 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 		drawVerticalLine(x2, z1, z2, colorDark + (alpha << 24));
 		drawHorizontalLine(x1, x2, z1, colorDark + (alpha << 24));
 		drawHorizontalLine(x1, x2, z2, colorDark + (alpha << 24));
+	}
+	
+	/**
+	 * Converts a chunk x coordinate to a display x coordinate, taking
+	 * into account the value of {@link scrollX}. 
+	 * 
+	 * @param chunkX The chunk's x coordinate. 
+	 * @return The display position.
+	 */
+	private int chunkXToDisplayX(int chunkX) {
+		return (chunkX - scrollX) * SCALE + (width / 2);
+	}
+	/**
+	 * Converts a chunk z coordinate to a display z coordinate, taking
+	 * into account the value of {@link scrollZ}. 
+	 * 
+	 * @param chunkZ The chunk's z coordinate. 
+	 * @return The display position.
+	 */
+	private int chunkZToDisplayZ(int chunkZ) {
+		return (chunkZ - scrollZ) * SCALE + (height / 2);
 	}
 	
 	/**
