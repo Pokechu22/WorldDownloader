@@ -2,8 +2,6 @@ package wdl.gui;
 
 import java.io.IOException;
 
-import com.google.common.collect.Multimap;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -11,6 +9,8 @@ import net.minecraft.client.resources.I18n;
 import wdl.WDL;
 import wdl.WDLPluginChannels;
 import wdl.WDLPluginChannels.ChunkRange;
+
+import com.google.common.collect.Multimap;
 
 /**
  * A GUI that Lists... well, will list, the current chunk overrides.  Currently
@@ -42,6 +42,15 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 	 * How large each chunk is on-screen.
 	 */
 	private static final int SCALE = 8;
+	
+	/**
+	 * Is the background being dragged?
+	 */
+	private boolean dragging;
+	/**
+	 * The position of the mouse on the last tick, for dragging.
+	 */
+	private int lastTickX, lastTickY;
 	
 	public GuiWDLChunkOverrides(GuiScreen parent) {
 		this.parent = parent;
@@ -146,6 +155,12 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 		z2Field.mouseClicked(mouseX, mouseY, mouseButton);
 		list.func_148179_a(mouseX, mouseY, mouseButton);
 		super.mouseClicked(mouseX, mouseY, mouseButton);
+		
+		if (mouseY > TOP_MARGIN && mouseY < height - BOTTOM_MARGIN && mouseButton == 0) {
+			dragging = true;
+			lastTickX = mouseX;
+			lastTickY = mouseY;
+		}
 	}
 	
 	/**
@@ -163,6 +178,24 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 			return;
 		}
 		super.mouseReleased(mouseX, mouseY, state);
+		if (state == 0) {
+			dragging = false;
+		}
+	}
+	
+	@Override
+	protected void mouseClickMove(int mouseX, int mouseY,
+			int clickedMouseButton, long timeSinceLastClick) {
+		if (dragging) {
+			int deltaX = lastTickX - mouseX;
+			int deltaY = lastTickY - mouseY;
+			
+			lastTickX = mouseX;
+			lastTickY = mouseY;
+			
+			scrollX += deltaX / (float)SCALE;
+			scrollZ += deltaY / (float)SCALE;
+		}
 	}
 	
 	@Override
