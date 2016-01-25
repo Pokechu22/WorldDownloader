@@ -37,7 +37,7 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 	/**
 	 * The current position.
 	 */
-	private int scrollX, scrollZ;
+	private float scrollX, scrollZ;
 	/**
 	 * How large each chunk is on-screen.
 	 */
@@ -216,6 +216,14 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 			int alpha = 127 + (int)(Math.sin(Minecraft.getSystemTime() * Math.PI / 5000) * 64);
 			drawRange(range, 0x808080, alpha);
 		}
+		
+		// Player position.
+		int playerPosX = (int)(((WDL.thePlayer.posX / 16) - scrollX) * SCALE + (width / 2));
+		int playerPosZ = (int)(((WDL.thePlayer.posZ / 16) - scrollZ) * SCALE + (height / 2));
+		
+		drawHorizontalLine(playerPosX - 3, playerPosX + 3, playerPosZ, 0xFFFFFFFF);
+		// Vertical is 1px taller because it seems to be needed to make it proportional
+		drawVerticalLine(playerPosX, playerPosZ - 4, playerPosZ + 4, 0xFFFFFFFF);
 	}
 	
 	/**
@@ -259,7 +267,7 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 	 * @return The display position.
 	 */
 	private int chunkXToDisplayX(int chunkX) {
-		return (chunkX - scrollX) * SCALE + (width / 2);
+		return (int)((chunkX - scrollX) * SCALE + (width / 2));
 	}
 	/**
 	 * Converts a chunk z coordinate to a display z coordinate, taking
@@ -269,7 +277,7 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 	 * @return The display position.
 	 */
 	private int chunkZToDisplayZ(int chunkZ) {
-		return (chunkZ - scrollZ) * SCALE + (height / 2);
+		return (int)((chunkZ - scrollZ) * SCALE + (height / 2));
 	}
 	
 	/**
