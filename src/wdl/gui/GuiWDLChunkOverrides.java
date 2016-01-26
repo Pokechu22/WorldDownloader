@@ -222,22 +222,10 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 			return;
 		}
 		
-		this.list.drawScreen(mouseX, mouseY, partialTicks);
+		//TODO: remove list
+		//this.list.drawScreen(mouseX, mouseY, partialTicks);
 		
-		this.drawCenteredString(this.fontRendererObj, "Chunk overrides",
-				this.width / 2, 8, 0xFFFFFF);
-		
-		x1Field.drawTextBox();
-		z1Field.drawTextBox();
-		x2Field.drawTextBox();
-		z2Field.drawTextBox();
-		
-		this.drawString(fontRendererObj, "X1:", x1Field.xPosition - 16, 24, 0xFFFFFF);
-		this.drawString(fontRendererObj, "Z1:", z1Field.xPosition - 16, 24, 0xFFFFFF);
-		this.drawString(fontRendererObj, "X2:", x2Field.xPosition - 16, 24, 0xFFFFFF);
-		this.drawString(fontRendererObj, "Z2:", z2Field.xPosition - 16, 24, 0xFFFFFF);
-		
-		super.drawScreen(mouseX, mouseY, partialTicks);
+		Utils.drawListBackground(TOP_MARGIN, BOTTOM_MARGIN, 0, 0, height, width);
 		
 		for (Multimap<String, ChunkRange> group : WDLPluginChannels.getChunkOverrides().values()) {
 			for (ChunkRange range : group.values()) {
@@ -257,6 +245,24 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 		drawHorizontalLine(playerPosX - 3, playerPosX + 3, playerPosZ, 0xFFFFFFFF);
 		// Vertical is 1px taller because it seems to be needed to make it proportional
 		drawVerticalLine(playerPosX, playerPosZ - 4, playerPosZ + 4, 0xFFFFFFFF);
+		
+		//TODO: Drawing twice for clipping reasons - it may be suboptimal.
+		Utils.drawBorder(TOP_MARGIN, BOTTOM_MARGIN, 0, 0, height, width);
+		
+		this.drawCenteredString(this.fontRendererObj, "Chunk overrides",
+				this.width / 2, 8, 0xFFFFFF);
+		
+		x1Field.drawTextBox();
+		z1Field.drawTextBox();
+		x2Field.drawTextBox();
+		z2Field.drawTextBox();
+		
+		this.drawString(fontRendererObj, "X1:", x1Field.xPosition - 16, 24, 0xFFFFFF);
+		this.drawString(fontRendererObj, "Z1:", z1Field.xPosition - 16, 24, 0xFFFFFF);
+		this.drawString(fontRendererObj, "X2:", x2Field.xPosition - 16, 24, 0xFFFFFF);
+		this.drawString(fontRendererObj, "Z2:", z2Field.xPosition - 16, 24, 0xFFFFFF);
+		
+		super.drawScreen(mouseX, mouseY, partialTicks);
 	}
 	
 	/**
