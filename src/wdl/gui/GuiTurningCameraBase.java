@@ -84,18 +84,20 @@ public abstract class GuiTurningCameraBase extends GuiScreen {
 	
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		this.cam.prevRotationPitch = this.cam.rotationPitch = 0.0F;
-		this.cam.prevRotationYaw = this.cam.rotationYaw = this.yaw;
-		float motionSpeed = 0.475F;
-		this.cam.lastTickPosY = this.cam.prevPosY = this.cam.posY = WDL.thePlayer.posY;
-		this.cam.lastTickPosX = this.cam.prevPosX = this.cam.posX = WDL.thePlayer.posX
-				- motionSpeed * Math.sin(this.yaw / 180.0D * Math.PI);
-		this.cam.lastTickPosZ = this.cam.prevPosZ = this.cam.posZ = WDL.thePlayer.posZ
-				+ motionSpeed * Math.cos(this.yaw / 180.0D * Math.PI);
-		float rotationSpeed = 1.0F;
-		this.yaw = (float)(this.yaw + rotationSpeed
-				* (1.0D + 0.699999988079071D * Math.cos((this.yaw + 45.0F)
-						/ 45.0D * Math.PI)));
+		if (this.cam != null) {
+			this.cam.prevRotationPitch = this.cam.rotationPitch = 0.0F;
+			this.cam.prevRotationYaw = this.cam.rotationYaw = this.yaw;
+			float motionSpeed = 0.475F;
+			this.cam.lastTickPosY = this.cam.prevPosY = this.cam.posY = WDL.thePlayer.posY;
+			this.cam.lastTickPosX = this.cam.prevPosX = this.cam.posX = WDL.thePlayer.posX
+					- motionSpeed * Math.sin(this.yaw / 180.0D * Math.PI);
+			this.cam.lastTickPosZ = this.cam.prevPosZ = this.cam.posZ = WDL.thePlayer.posZ
+					+ motionSpeed * Math.cos(this.yaw / 180.0D * Math.PI);
+			float rotationSpeed = 1.0F;
+			this.yaw = (float)(this.yaw + rotationSpeed
+					* (1.0D + 0.699999988079071D * Math.cos((this.yaw + 45.0F)
+							/ 45.0D * Math.PI)));
+		}
 		
 		super.drawScreen(mouseX, mouseY, partialTicks);
 	}
