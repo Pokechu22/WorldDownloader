@@ -4,6 +4,8 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer.EnumChatVisibility;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
 import wdl.WDL;
 
 /**
@@ -82,17 +84,65 @@ public abstract class GuiTurningCameraBase extends GuiScreen {
 		WDL.minecraft.func_175607_a(this.cam);
 	}
 	
+	/**
+	 * Truncates the distance so that the camera does not clip into blocks.
+	 * Based off of {@link net.minecraft.client.renderer.EntityRenderer#orientCamera(float)}.
+	 * @param camX X-position of the camera.
+	 * @param camZ Z-position of the camera.
+	 * @param currentDistance Current distance from the camera.
+	 * @return A new distance, equal to or less than <code>currentDistance</code>.
+	 */
+	private double truncateDistanceIfBlockInWay(double camX, double camZ, double currentDistance) {
+		Vec3 playerPos = WDL.thePlayer.getPositionVector().addVector(0, WDL.thePlayer.getEyeHeight(), 0);
+		Vec3 offsetPos = new Vec3(WDL.thePlayer.posX - currentDistance * camX, WDL.thePlayer.posY + WDL.thePlayer.getEyeHeight(), WDL.thePlayer.posZ + camZ);
+		
+		// NOTE: Vec3.addVector and Vec3.add return new vectors and leave the
+		// current vector unmodified.
+		for (int i = 0; i < 9; i++) {
+			// Check offset slightly in all directions.
+			float offsetX = ((i & 0x01) != 0) ? -.1f : .1f;
+			float offsetY = ((i & 0x02) != 0) ? -.1f : .1f;
+			float offsetZ = ((i & 0x04) != 0) ? -.1f : .1f;
+			
+			if (i == 8) {
+				offsetX = 0;
+				offsetY = 0;
+				offsetZ = 0;
+			}
+			
+			Vec3 from = playerPos.addVector(offsetX, offsetY, offsetZ);
+			Vec3 to = offsetPos.addVector(offsetX, offsetY, offsetZ);
+			
+			MovingObjectPosition pos = mc.theWorld
+					.rayTraceBlocks(from, to);
+	
+			if (pos != null) {
+				double distance = pos.hitVec.distanceTo(playerPos);
+				if (distance < currentDistance && distance > 0) {
+					currentDistance = distance;
+				}
+			}
+		}
+		
+		return currentDistance - .25;
+	}
+	
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		if (this.cam != null) {
 			this.cam.prevRotationPitch = this.cam.rotationPitch = 0.0F;
 			this.cam.prevRotationYaw = this.cam.rotationYaw = this.yaw;
-			float motionSpeed = 0.475F;
+			
+			double x = Math.sin(this.yaw / 180.0D * Math.PI);
+			double z = Math.cos(this.yaw / 180.0D * Math.PI);
+			
+			double distance = truncateDistanceIfBlockInWay(x, z, .5);
 			this.cam.lastTickPosY = this.cam.prevPosY = this.cam.posY = WDL.thePlayer.posY;
 			this.cam.lastTickPosX = this.cam.prevPosX = this.cam.posX = WDL.thePlayer.posX
-					- motionSpeed * Math.sin(this.yaw / 180.0D * Math.PI);
+					- distance * x;
 			this.cam.lastTickPosZ = this.cam.prevPosZ = this.cam.posZ = WDL.thePlayer.posZ
-					+ motionSpeed * Math.cos(this.yaw / 180.0D * Math.PI);
+					+ distance * z;
+			
 			float rotationSpeed = 1.0F;
 			this.yaw = (float)(this.yaw + rotationSpeed
 					* (1.0D + 0.699999988079071D * Math.cos((this.yaw + 45.0F)
