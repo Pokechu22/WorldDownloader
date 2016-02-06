@@ -18,6 +18,11 @@ public abstract class GuiTurningCameraBase extends GuiScreen {
 	 */
 	private float yaw;
 	/**
+	 * The yaw for the next tick.  Lineraly interpolated between
+	 * this and {@link #yaw}.
+	 */
+	private float yawNextTick;
+	/**
 	 * The previous mode for the camera (First person, 3rd person, ect)
 	 */
 	private int oldCameraMode;
@@ -58,7 +63,7 @@ public abstract class GuiTurningCameraBase extends GuiScreen {
 			this.cam.setLocationAndAngles(WDL.thePlayer.posX, WDL.thePlayer.posY
 					- WDL.thePlayer.getYOffset(), WDL.thePlayer.posZ,
 					WDL.thePlayer.rotationYaw, 0.0F);
-			this.yaw = WDL.thePlayer.rotationYaw;
+			this.yaw = this.yawNextTick = WDL.thePlayer.rotationYaw;
 			this.oldCameraMode = WDL.minecraft.gameSettings.thirdPersonView;
 			this.oldHideHud = WDL.minecraft.gameSettings.hideGUI;
 			this.oldShowDebug = WDL.minecraft.gameSettings.showDebugInfo;
@@ -82,6 +87,40 @@ public abstract class GuiTurningCameraBase extends GuiScreen {
 		//     this.mc.renderViewEntity = this.mc.thePlayer;
         // }
 		WDL.minecraft.func_175607_a(this.cam);
+	}
+	
+	/**
+	 * Speed for a rotation, as a rough scale, in degrees per frame.
+	 */
+	private static final float ROTATION_SPEED = 1.0f;
+	/**
+	 * Change between the slowest speed and the average speed.
+	 */
+	private static final float ROTATION_VARIANCE = .7f;
+	
+	/**
+	 * Increment yaw to the yaw for the next tick.
+	 */
+	@Override
+	public void updateScreen() {
+		this.yaw = this.yawNextTick;
+		
+		// TODO: Rewrite this function as a function of time, rather than
+		// an incremental function, if it's possible to do so.
+		// Due to the fact that it refers to itself, I have no idea how to
+		// approach the problem - it's some kind of integration that would be
+		// needed, but it's really complex.
+		
+		// Yaw is in degrees, but Math.cos is in radians. The
+		// "(this.yaw + 45) / 45.0 * Math.PI)" portion basically makes cosine
+		// give the lowest values in each cardinal direction and the highest
+		// while looking diagonally.  These are then multiplied by .7 and added
+		// to 1, which creates a speed varying from .3 to 1.7.  This causes it
+		// to speed through diagonals and go slow in cardinal directions, which
+		// is the behavior we want.
+		this.yawNextTick = (this.yaw + ROTATION_SPEED
+				* (float) (1 + ROTATION_VARIANCE
+						* Math.cos((this.yaw + 45) / 45.0 * Math.PI)));
 	}
 	
 	/**
@@ -130,11 +169,13 @@ public abstract class GuiTurningCameraBase extends GuiScreen {
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		if (this.cam != null) {
-			this.cam.prevRotationPitch = this.cam.rotationPitch = 0.0F;
-			this.cam.prevRotationYaw = this.cam.rotationYaw = this.yaw;
+			float yaw = this.yaw + (this.yawNextTick - this.yaw) * partialTicks;
 			
-			double x = Math.sin(this.yaw / 180.0D * Math.PI);
-			double z = Math.cos(this.yaw / 180.0D * Math.PI);
+			this.cam.prevRotationPitch = this.cam.rotationPitch = 0.0F;
+			this.cam.prevRotationYaw = this.cam.rotationYaw = yaw;
+			
+			double x = Math.cos(yaw / 180.0D * Math.PI);
+			double z = Math.sin((yaw - 90) / 180.0D * Math.PI);
 			
 			double distance = truncateDistanceIfBlockInWay(x, z, .5);
 			this.cam.lastTickPosY = this.cam.prevPosY = this.cam.posY = WDL.thePlayer.posY;
@@ -142,11 +183,6 @@ public abstract class GuiTurningCameraBase extends GuiScreen {
 					- distance * x;
 			this.cam.lastTickPosZ = this.cam.prevPosZ = this.cam.posZ = WDL.thePlayer.posZ
 					+ distance * z;
-			
-			float rotationSpeed = 1.0F;
-			this.yaw = (float)(this.yaw + rotationSpeed
-					* (1.0D + 0.699999988079071D * Math.cos((this.yaw + 45.0F)
-							/ 45.0D * Math.PI)));
 		}
 		
 		super.drawScreen(mouseX, mouseY, partialTicks);
