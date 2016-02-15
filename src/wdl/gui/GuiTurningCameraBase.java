@@ -85,7 +85,7 @@ public abstract class GuiTurningCameraBase extends GuiScreen {
 		//
 		// if (this.mc.renderViewEntity == null) {
 		//     this.mc.renderViewEntity = this.mc.thePlayer;
-        // }
+		// }
 		WDL.minecraft.func_175607_a(this.cam);
 	}
 	
