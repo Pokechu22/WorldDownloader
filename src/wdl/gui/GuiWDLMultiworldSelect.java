@@ -462,11 +462,24 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 			return;
 		}
 		
-		drawString(fontRendererObj, "Info about "
-				+ selectedMultiWorld.displayName, 5, 64, 0xFFFFFF);
+		String title = "Info about "
+				+ selectedMultiWorld.displayName;
+		List<String> description = selectedMultiWorld.getDescription();
+		
+		int maxWidth = fontRendererObj.getStringWidth(title);
+		for (String line : description) {
+			int width = fontRendererObj.getStringWidth(line);
+			if (width > maxWidth) {
+				maxWidth = width;
+			}
+		}
+		
+		drawRect(2, 61, 5 + maxWidth + 3, height - 61, 0x80000000);
+		
+		drawString(fontRendererObj, title, 5, 64, 0xFFFFFF);
 		
 		int y = 64 + fontRendererObj.FONT_HEIGHT;
-		for (String s : selectedMultiWorld.getDescription()) {
+		for (String s : description) {
 			drawString(fontRendererObj, s, 5, y, 0xFFFFFF);
 			y += fontRendererObj.FONT_HEIGHT;
 		}
