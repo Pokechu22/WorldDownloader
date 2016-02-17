@@ -806,11 +806,17 @@ public class WDL {
 		WorldBackupType backupType = 
 				WorldBackupType.match(baseProps.getProperty("Backup", "ZIP"));
 		
-		GuiWDLSaveProgress progressScreen = new GuiWDLSaveProgress(
+		final GuiWDLSaveProgress progressScreen = new GuiWDLSaveProgress(
 				I18n.format("wdl.saveProgress.title"), 
 				(backupType != WorldBackupType.NONE ? 6 : 5)
 						+ saveListeners.size());
-		minecraft.displayGuiScreen(progressScreen);
+		
+		minecraft.addScheduledTask(new Runnable() {
+			@Override
+			public void run() {
+				minecraft.displayGuiScreen(progressScreen);
+			}
+		});
 		
 		saveProps();
 
