@@ -112,7 +112,14 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 						if (subfolder.getName().equals("region")) {
 							description.add(" * Overworld (#0)");
 						} else if (subfolder.getName().startsWith("DIM")) {
-							description.add(" * " + subfolder.getName().substring(3));
+							String dimension = subfolder.getName().substring(3);
+							if (dimension.equals("-1")) {
+								description.add(" * Nether (#-1)");
+							} else if (dimension.equals("1")) {
+								description.add(" * The End (#1)");
+							} else {
+								description.add(" * #" + dimension);
+							}
 						}
 					}
 				}
