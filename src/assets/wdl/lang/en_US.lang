@@ -183,6 +183,7 @@ wdl.gui.rangePresets.cancel.description=Cancel without making changes.
 
 wdl.gui.overwriteChanges.title=World Downloader: Overwrite changes?
 wdl.gui.overwriteChanges.footer=Last downloaded on %tc, last played on %tc
+wdl.gui.overwriteChanges.footerNeverSaved=Never downloaded (different world with the same name as the server?) - last played on %tc
 wdl.gui.overwriteChanges.captionTitle=The local copy of the world may have been changed.
 wdl.gui.overwriteChanges.captionSubtitle=Changes may be lost if not backed up.
 wdl.gui.overwriteChanges.asZip.name=Backup as zip (then start download)

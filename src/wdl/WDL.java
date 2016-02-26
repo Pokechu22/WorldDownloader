@@ -15,6 +15,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBeacon;
 import net.minecraft.block.BlockBrewingStand;
@@ -265,6 +268,8 @@ public class WDL {
 	public static Map<String, IPlayerInfoEditor> playerInfoEditors =
 			new HashMap<String, IPlayerInfoEditor>();
 	
+	private static Logger logger = LogManager.getLogger();
+	
 	// Initialization:
 	static {
 		minecraft = Minecraft.getMinecraft();
@@ -425,15 +430,15 @@ public class WDL {
 		
 		FileInputStream worldDat = null;
 		try {
-			long lastSaved = Long.parseLong(worldProps.getProperty("LastSaved"));
+			long lastSaved = Long.parseLong(worldProps.getProperty("LastSaved",
+					"-1"));
 			//Can't directly use worldClient.getWorldInfo, as that doesn't use
 			//the saved version.
 			worldDat = new FileInputStream(new File(
 					saveHandler.getWorldDirectory(), "level.dat"));
 			long lastPlayed = CompressedStreamTools.readCompressed(worldDat)
 					.getCompoundTag("Data").getLong("LastPlayed");
-			if (!overrideLastModifiedCheck && lastSaved != -1 &&
-					lastPlayed > lastSaved) {
+			if (!overrideLastModifiedCheck && lastPlayed > lastSaved) {
 				// The world was played later than it was saved; confirm that the
 				// user is willing for possible changes they made to be overwritten.
 				minecraft.displayGuiScreen(new GuiWDLOverwriteChanges(
@@ -441,9 +446,9 @@ public class WDL {
 				return;
 			}
 		} catch (Exception e) {
-			//TODO: handle this in a useful way -- will always happen
-			//on new worlds.
-			e.printStackTrace();
+			logger.warn("Error while checking if the map has been played and" +
+					"needs to be backed up (this is normal if this world " +
+					"has not been saved before): ", e);
 		} finally {
 			if (worldDat != null) {
 				try {

@@ -128,7 +128,11 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements
 		backingUp = false;
 		
 		title = I18n.format("wdl.gui.overwriteChanges.title");
-		footer = I18n.format("wdl.gui.overwriteChanges.footer", lastSaved, lastPlayed);
+		if (lastSaved != -1) {
+			footer = I18n.format("wdl.gui.overwriteChanges.footer", lastSaved, lastPlayed);
+		} else {
+			footer = I18n.format("wdl.gui.overwriteChanges.footerNeverSaved", lastPlayed);
+		}
 		captionTitle = I18n.format("wdl.gui.overwriteChanges.captionTitle");
 		captionSubtitle = I18n.format("wdl.gui.overwriteChanges.captionSubtitle");
 		
