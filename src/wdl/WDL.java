@@ -8,15 +8,11 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBeacon;
@@ -58,7 +54,6 @@ import net.minecraft.tileentity.TileEntityNote;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ClassInheratanceMultiMap;
 import net.minecraft.util.IChatComponent;
-import net.minecraft.util.LongHashMap;
 import net.minecraft.util.ReportedException;
 import net.minecraft.world.MinecraftException;
 import net.minecraft.world.chunk.Chunk;
@@ -68,6 +63,10 @@ import net.minecraft.world.chunk.storage.RegionFileCache;
 import net.minecraft.world.storage.MapData;
 import net.minecraft.world.storage.SaveHandler;
 import net.minecraft.world.storage.ThreadedFileIOBase;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import wdl.WorldBackup.WorldBackupType;
 import wdl.api.IEntityEditor;
 import wdl.api.IPlayerInfoEditor;
@@ -1070,90 +1069,30 @@ public class WDL {
 		// Get the ChunkProviderClient from WorldClient
 		ChunkProviderClient chunkProvider = (ChunkProviderClient) worldClient
 				.getChunkProvider();
-		// Get the hashArray field and set it accessible
-		Field hashArrayField = null;
-		Field[] lhmFields = LongHashMap.class.getDeclaredFields();
-
-		for (Field f : lhmFields) {
-			if (f.getType().isArray()) {
-				hashArrayField = f;
-				break;
-			}
-		}
-
-		if (hashArrayField == null) {
-			WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR,
-					"wdl.messages.generalError.failedToFindHashArrayField");
-			return;
-		}
-
-		hashArrayField.setAccessible(true);
-		// Steal the instance of LongHashMap from our chunk provider
-		LongHashMap lhm = ReflectionUtils.stealAndGetField(chunkProvider,
-				LongHashMap.class);
+		// Get the list of loaded chunks
+		List<?> chunks = ReflectionUtils.stealAndGetField(chunkProvider,
+				List.class);
 		
 		progressScreen.startMajorTask(I18n.format("wdl.saveProgress.chunk.title"), 
-				lhm.getNumHashElements());
+				chunks.size());
 		
-		// Get the LongHashMap.Entry[] through the now accessible field using a
-		// LongHashMap we steal from our chunkProvider.
-		Object[] hashArray = (Object[]) hashArrayField.get(lhm);
-
-		if (lhm.getNumHashElements() == 0 || hashArray.length == 0) {
-			WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR,
-					"wdl.messages.generalError.chunkProviderClientEmpty");
-			return;
-		} else {
-			// Get the actual class for LongHashMap.Entry
-			Class<?> Entry = null;
-
-			for (Object o : hashArray) {
-				if (o != null) {
-					Entry = o.getClass();
-					break;
+		for (int currentChunk = 0; currentChunk < chunks.size(); currentChunk++) {
+			Chunk c = (Chunk) chunks.get(currentChunk);
+			if (c != null) {
+				//Serverside restrictions check
+				if (!WDLPluginChannels.canSaveChunk(c)) {
+					continue;
 				}
+				
+				progressScreen.setMinorTaskProgress(I18n.format(
+						"wdl.saveProgress.chunk.saving", c.xPosition,
+						c.zPosition), currentChunk);
+				
+				saveChunk(c);
 			}
-
-			if (Entry == null) {
-				WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR,
-						"wdl.messages.generalError.couldNotGetLHMEntry");
-				return;
-			}
-
-			// Find the private fields for 'value' and 'nextEntry' in
-			// LongHashMap.Entry and make them accessible
-			Field valueField = Entry.getDeclaredFields()[1]; // value
-			valueField.setAccessible(true);
-			Field nextEntryField = Entry.getDeclaredFields()[2]; // nextEntry
-			nextEntryField.setAccessible(true);
-			
-			int currentChunk = 0;
-			
-			for (int i = 0; i < hashArray.length; ++i) {
-				for (Object lhme = hashArray[i]; lhme != null; 
-						lhme = nextEntryField.get(lhme)) {
-					Chunk c = (Chunk) valueField.get(lhme);
-
-					if (c != null) {
-						currentChunk++;
-						
-						//Serverside restrictions check
-						if (!WDLPluginChannels.canSaveChunk(c)) {
-							continue;
-						}
-						
-						progressScreen.setMinorTaskProgress(I18n.format(
-								"wdl.saveProgress.chunk.saving", c.xPosition,
-								c.zPosition), currentChunk);
-						
-						saveChunk(c);
-					}
-				}
-			}
-
-			WDLMessages.chatMessageTranslated(WDLMessageTypes.SAVING,
-					"wdl.messages.saving.chunksSaved");
 		}
+		WDLMessages.chatMessageTranslated(WDLMessageTypes.SAVING,
+				"wdl.messages.saving.chunksSaved");
 	}
 
 	/**
