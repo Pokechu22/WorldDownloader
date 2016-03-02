@@ -349,9 +349,6 @@ wdl.messages.generalInfo.seedAndGenSet=Setting single-player world seed to %s an
 
 wdl.messages.generalError.failedToImportTE=Failed to import tile entities for chunk at %d, %d: %s
 wdl.messages.generalError.failedToSaveChunk=Chunk at position %d, %d cannot be saved!  (%s)
-wdl.messages.generalError.failedToFindHashArrayField=Couldn't save chunks: Failed to find hash array field.
-wdl.messages.generalError.couldNotGetLHMEntry=Couldn't save chunks: Failed to get class for LongHashMap.Entry.
-wdl.messages.generalError.chunkProviderClientEmpty=Can't save currently loaded chunks: ChunkProviderClient has no data!  (If you changed dimensions just now, this is normal and the chunks were still saved)
 wdl.messages.generalError.forbidden=The server forbids downloading this world!
 wdl.messages.generalError.failedToBackUp=Error while backing up world: %s
 wdl.messages.generalError.noUTF8=Your computer doesn't support the UTF-8 charset: %s.  You should feel bad.
