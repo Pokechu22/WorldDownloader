@@ -3,7 +3,6 @@ package wdl;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -335,11 +334,21 @@ public class WDL {
 		defaultProps.setProperty("UpdateAllowBetas", "true");
 		
 		globalProps = new Properties(defaultProps);
+		FileReader reader = null;
 		try {
-			globalProps.load(new FileReader(new File(minecraft.mcDataDir,
-					"WorldDownloader.txt")));
+			reader = new FileReader(new File(minecraft.mcDataDir,
+					"WorldDownloader.txt"));
+			globalProps.load(reader);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.debug("Failed to load global properties", e);
+		} finally {
+			if (reader != null) {
+				try {
+					reader.close();
+				} catch (Exception e) {
+					logger.warn("Failed to close global properties reader", e);
+				}
+			}
 		}
 		baseProps = new Properties(globalProps);
 		worldProps = new Properties(baseProps);
@@ -1265,15 +1274,25 @@ public class WDL {
 		baseFolderName = getBaseFolderName();
 		baseProps = new Properties(globalProps);
 
+		FileReader reader = null;
 		try {
 			File savesFolder = new File(minecraft.mcDataDir, "saves");
 			File baseFolder = new File(savesFolder, baseFolderName);
-			baseProps.load(new FileReader(new File(baseFolder,
-					"WorldDownloader.txt")));
+			reader = new FileReader(new File(baseFolder,
+					"WorldDownloader.txt"));
+			baseProps.load(reader);
 			propsFound = true;
-		} catch (FileNotFoundException e) {
-			propsFound = false;
 		} catch (Exception e) {
+			propsFound = false;
+			logger.debug("Failed to load base properties", e);
+		} finally {
+			if (reader != null) {
+				try {
+					reader.close();
+				} catch (Exception e) {
+					logger.warn("Failed to close base properties reader", e);
+				}
+			}
 		}
 
 		if (baseProps.getProperty("LinkedWorlds").isEmpty()) {
@@ -1286,25 +1305,40 @@ public class WDL {
 
 	/**
 	 * Loads the properties for the given world, and returns it.
+	 * 
+	 * Returns null if there is no properties for that world.
 	 */
 	public static Properties loadWorldProps(String theWorldName) {
+		if (theWorldName.isEmpty()) {
+			return null;
+		}
+		
 		Properties ret = new Properties(baseProps);
 		
 		File savesDir = new File(minecraft.mcDataDir, "saves");
+		
+		String folder = getWorldFolderName(theWorldName);
+		File worldFolder = new File(savesDir, folder);
 
-		if (!theWorldName.isEmpty()) {
-			String folder = getWorldFolderName(theWorldName);
-			File worldFolder = new File(savesDir, folder);
-
-			try {
-				ret.load(new FileReader(new File(worldFolder,
-						"WorldDownloader.txt")));
-			} catch (Exception e) {
-				return null;
+		FileReader reader = null;
+		try {
+			ret.load(new FileReader(new File(worldFolder,
+					"WorldDownloader.txt")));
+			
+			return ret;
+		} catch (Exception e) {
+			logger.debug("Failed to load world props for " + worldName, e);
+			return null;
+		} finally {
+			if (reader != null) {
+				try {
+					reader.close();
+				} catch (Exception e) {
+					logger.warn("Failed to close world props reader for "
+							+ worldName, e);						
+				}
 			}
 		}
-
-		return ret;
 	}
 
 	/**
