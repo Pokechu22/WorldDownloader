@@ -1266,8 +1266,10 @@ public class WDL {
 		baseProps = new Properties(globalProps);
 
 		try {
-			baseProps.load(new FileReader(new File(minecraft.mcDataDir,
-					"saves/" + baseFolderName + "/WorldDownloader.txt")));
+			File savesFolder = new File(minecraft.mcDataDir, "saves");
+			File baseFolder = new File(savesFolder, baseFolderName);
+			baseProps.load(new FileReader(new File(baseFolder,
+					"WorldDownloader.txt")));
 			propsFound = true;
 		} catch (FileNotFoundException e) {
 			propsFound = false;
