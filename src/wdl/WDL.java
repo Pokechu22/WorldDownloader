@@ -1670,24 +1670,25 @@ public class WDL {
 	/**
 	 * Saves the items of a container to the given TileEntity.
 	 *
-	 * @param contaioner The container to save from -- usually
-	 *                   {@link #windowContainer}.
-	 * @param tileEntity The TileEntity to save to.
-	 * @param startInContainerAt The position to start at in the
-	 *                           container, for saving.
+	 * @param container
+	 *            The container to save from, usually {@link #windowContainer} .
+	 * @param tileEntity
+	 *            The TileEntity to save to.
+	 * @param containerStartIndex
+	 *            The index in the container to start copying items from.
 	 */
-	public static void saveContainerItems(Container contaioner,
-			IInventory tileEntity, int startInContainerAt) {
-		int containerSize = contaioner.inventorySlots.size();
+	public static void saveContainerItems(Container container,
+			IInventory tileEntity, int containerStartIndex) {
+		int containerSize = container.inventorySlots.size();
 		int inventorySize = tileEntity.getSizeInventory();
-		int nc = startInContainerAt;
-		int ni = 0;
+		int containerIndex = containerStartIndex;
+		int inventoryIndex = 0;
 
-		while ((nc < containerSize) && (ni < inventorySize)) {
-			ItemStack is = contaioner.getSlot(nc).getStack();
-			tileEntity.setInventorySlotContents(ni, is);
-			ni++;
-			nc++;
+		while ((containerIndex < containerSize) && (inventoryIndex < inventorySize)) {
+			ItemStack item = container.getSlot(containerIndex).getStack();
+			tileEntity.setInventorySlotContents(inventoryIndex, item);
+			inventoryIndex++;
+			containerIndex++;
 		}
 	}
 
