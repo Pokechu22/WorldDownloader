@@ -122,7 +122,6 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements
 	
 	private String backingUpTitle;
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui() {
 		backingUp = false;

@@ -35,7 +35,6 @@ public class GuiWDLPermissionRequest extends GuiScreen {
 		this.parent = parent;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui() {
 		this.list = new TextList(mc, width, height, TOP_MARGIN, BOTTOM_MARGIN);

@@ -12,7 +12,6 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.util.ResourceLocation;
 import wdl.api.IWDLMod;
 import wdl.api.IWDLModDescripted;
 import wdl.api.IWDLModWithGui;
@@ -279,7 +278,6 @@ public class GuiWDLExtensions extends GuiScreen {
 		this.parent = parent;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui() {
 		bottomLocation = height - 100;

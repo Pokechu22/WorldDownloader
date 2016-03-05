@@ -10,7 +10,6 @@ import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.util.ResourceLocation;
 import wdl.WDL;
 import wdl.update.Release;
 import wdl.update.WDLUpdateChecker;
@@ -188,7 +187,6 @@ public class GuiWDLUpdates extends GuiScreen {
 		this.parent = parent;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui() {
 		this.list = new UpdateList();
@@ -403,7 +401,6 @@ public class GuiWDLUpdates extends GuiScreen {
 			this.release = releaseToShow;
 		}
 		
-		@SuppressWarnings("unchecked")
 		@Override
 		public void initGui() {
 			this.buttonList.add(new GuiButton(0, this.width / 2 - 155, 

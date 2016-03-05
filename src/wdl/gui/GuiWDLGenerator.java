@@ -29,7 +29,6 @@ public class GuiWDLGenerator extends GuiScreen {
 	/**
 	 * Adds the buttons (and other controls) to the screen in question.
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui() {
 		this.seedText = I18n.format("wdl.gui.generator.seed");

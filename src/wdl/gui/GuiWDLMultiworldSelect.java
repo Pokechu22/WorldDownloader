@@ -198,7 +198,6 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		linkedWorldsFiltered.addAll(linkedWorlds);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui() {
 		super.initGui();

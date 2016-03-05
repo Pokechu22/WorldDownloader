@@ -51,7 +51,6 @@ public class GuiWDLPermissions extends GuiScreen {
 		this.parent = parent;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui() {
 		this.buttonList.clear();

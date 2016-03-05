@@ -26,7 +26,6 @@ public class GuiWDLBackup extends GuiScreen {
 				+ I18n.format("wdl.gui.backup.description3");
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui() {
 		backupType = WorldBackupType.match(

@@ -33,7 +33,6 @@ public class GuiWDLAbout extends GuiScreen {
 		this.parent = parent;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui() {
 		buttonList.add(new GuiButton(0, (this.width / 2) - 155, 18, 150, 20,
