@@ -9,9 +9,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
@@ -22,9 +19,13 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 class Utils {
 	private static final Minecraft mc = Minecraft.getMinecraft();
@@ -95,7 +96,6 @@ class Utils {
 	public static List<String> wordWrap(String s, int width) {
 		s = s.replace("\r", ""); // If we got a \r\n in the text somehow, remove it.
 		
-		@SuppressWarnings("unchecked")
 		List<String> lines = mc.fontRendererObj.listFormattedStringToWidth(s, width);
 		
 		return lines;
@@ -120,24 +120,21 @@ class Utils {
 		GlStateManager.disableLighting();
 		GlStateManager.disableFog();
 		Tessellator t = Tessellator.getInstance();
-		WorldRenderer wr = t.getWorldRenderer();
-		//wr.func_178991_c sets the color.
-		//wr.func_178974_a sets the color and the alpha.
+		VertexBuffer b = t.getBuffer();
 		
 		mc.getTextureManager().bindTexture(Gui.optionsBackground);
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		
 		float textureSize = 32.0F;
-		wr.startDrawingQuads();
-		wr.func_178991_c(0x202020);
-		wr.addVertexWithUV(0, bottom, 0, 0 / textureSize, 
-				bottom / textureSize);
-		wr.addVertexWithUV(right, bottom, 0, right / textureSize, 
-				bottom / textureSize);
-		wr.addVertexWithUV(right, top, 0, right / textureSize, 
-				top / textureSize);
-		wr.addVertexWithUV(left, top, 0, left / textureSize, 
-				top / textureSize);
+		b.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
+		b.pos(0, bottom, 0).tex(0 / textureSize, 
+				bottom / textureSize).color(32, 32, 32, 255).endVertex();
+		b.pos(right, bottom, 0).tex(right / textureSize, 
+				bottom / textureSize).color(32, 32, 32, 255).endVertex();
+		b.pos(right, top, 0).tex(right / textureSize, 
+				top / textureSize).color(32, 32, 32, 255).endVertex();
+		b.pos(left, top, 0).tex(left / textureSize, 
+				top / textureSize).color(32, 32, 32, 255).endVertex();
 		t.draw();
 		
 		drawBorder(topMargin, bottomMargin, top, left, bottom, right);
@@ -172,39 +169,38 @@ class Utils {
 		float textureSize = 32.0F;
 		
 		Tessellator t = Tessellator.getInstance();
-		WorldRenderer wr = t.getWorldRenderer();
+		VertexBuffer b = t.getBuffer();
 		
 		//Box code is GuiSlot.overlayBackground
 		//Upper box
 		int upperBoxEnd = top + topMargin;
 
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-		wr.startDrawingQuads();
-		wr.func_178974_a(0x404040, 255);
-		wr.addVertexWithUV(left, upperBoxEnd, 0.0D, 0.0D, upperBoxEnd
-				/ textureSize);
-		wr.addVertexWithUV(right, upperBoxEnd, 0.0D, right / textureSize,
-				upperBoxEnd / textureSize);
-		wr.func_178974_a(0x404040, 255);
-		wr.addVertexWithUV(right, top, 0.0D, right / textureSize, top
-				/ textureSize);
-		wr.addVertexWithUV(left, top, 0.0D, 0.0D, top / textureSize);
+		b.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
+		b.pos(left, upperBoxEnd, 0.0D).tex(0.0D, upperBoxEnd
+				/ textureSize).color(64, 64, 64, 255).endVertex();
+		b.pos(right, upperBoxEnd, 0.0D).tex(right / textureSize,
+				upperBoxEnd / textureSize).color(64, 64, 64, 255).endVertex();
+		b.pos(right, top, 0.0D).tex(right / textureSize, top / textureSize)
+				.color(64, 64, 64, 255).endVertex();
+		b.pos(left, top, 0.0D).tex(0.0D, top / textureSize)
+				.color(64, 64, 64, 255).endVertex();
 		t.draw();
 
 		// Lower box
 		int lowerBoxStart = bottom - bottomMargin;
 
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-		wr.startDrawingQuads();
-		wr.func_178974_a(0x404040, 255);
-		wr.addVertexWithUV(left, bottom, 0.0D, 0.0D, bottom / textureSize);
-		wr.addVertexWithUV(right, bottom, 0.0D, right / textureSize, bottom
-				/ textureSize);
-		wr.func_178974_a(0x404040, 255);
-		wr.addVertexWithUV(right, lowerBoxStart, 0.0D, right / textureSize,
-				lowerBoxStart / textureSize);
-		wr.addVertexWithUV(left, lowerBoxStart, 0.0D, 0.0D, lowerBoxStart
-				/ textureSize);
+		b.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
+		b.pos(left, bottom, 0.0D).tex(0.0D, bottom / textureSize)
+				.color(64, 64, 64, 255).endVertex();
+		b.pos(right, bottom, 0.0D).tex(right / textureSize, bottom
+				/ textureSize).color(64, 64, 64, 255).endVertex();
+		b.pos(right, lowerBoxStart, 0.0D)
+				.tex(right / textureSize, lowerBoxStart / textureSize)
+				.color(64, 64, 64, 255).endVertex();
+		b.pos(left, lowerBoxStart, 0.0D).tex(0.0D, lowerBoxStart
+				/ textureSize).color(64, 64, 64, 255).endVertex();
 		t.draw();
 		
 		//Gradients
@@ -213,25 +209,29 @@ class Utils {
 				GL_ONE_MINUS_SRC_ALPHA, 0, 1);
 		GlStateManager.disableAlpha();
 		GlStateManager.shadeModel(GL_SMOOTH);
-		GlStateManager.func_179090_x();
-		wr.startDrawingQuads();
-		wr.func_178974_a(0, 0);
-		wr.addVertexWithUV(left, upperBoxEnd + padding, 0.0D, 0.0D, 1.0D);
-		wr.addVertexWithUV(right, upperBoxEnd + padding, 0.0D, 1.0D, 1.0D);
-		wr.func_178974_a(0, 255);
-		wr.addVertexWithUV(right, upperBoxEnd, 0.0D, 1.0D, 0.0D);
-		wr.addVertexWithUV(left, upperBoxEnd, 0.0D, 0.0D, 0.0D);
+		GlStateManager.disableTexture2D();
+		b.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
+		b.pos(left, upperBoxEnd + padding, 0.0D).tex(0.0D, 1.0D)
+				.color(0, 0, 0, 0).endVertex();
+		b.pos(right, upperBoxEnd + padding, 0.0D).tex(1.0D, 1.0D)
+				.color(0, 0, 0, 0).endVertex();
+		b.pos(right, upperBoxEnd, 0.0D).tex(1.0D, 0.0D).color(0, 0, 0, 255)
+				.endVertex();
+		b.pos(left, upperBoxEnd, 0.0D).tex(0.0D, 0.0D).color(0, 0, 0, 255)
+				.endVertex();
 		t.draw();
-		wr.startDrawingQuads();
-		wr.func_178974_a(0, 255);
-		wr.addVertexWithUV(left, lowerBoxStart, 0.0D, 0.0D, 1.0D);
-		wr.addVertexWithUV(right, lowerBoxStart, 0.0D, 1.0D, 1.0D);
-		wr.func_178974_a(0, 0);
-		wr.addVertexWithUV(right, lowerBoxStart - padding, 0.0D, 1.0D, 0.0D);
-		wr.addVertexWithUV(left, lowerBoxStart - padding, 0.0D, 0.0D, 0.0D);
+		b.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
+		b.pos(left, lowerBoxStart, 0.0D).tex(0.0D, 1.0D).color(0, 0, 0, 255)
+				.endVertex();
+		b.pos(right, lowerBoxStart, 0.0D).tex(1.0D, 1.0D).color(0, 0, 0, 255)
+				.endVertex();
+		b.pos(right, lowerBoxStart - padding, 0.0D).tex(1.0D, 0.0D)
+				.color(0, 0, 0, 0).endVertex();
+		b.pos(left, lowerBoxStart - padding, 0.0D).tex(0.0D, 0.0D)
+				.color(0, 0, 0, 0).endVertex();
 		t.draw();
 		
-		GlStateManager.func_179098_w();
+		GlStateManager.enableTexture2D();
 		GlStateManager.shadeModel(GL_FLAT);
 		GlStateManager.enableAlpha();
 		GlStateManager.disableBlend();
@@ -279,8 +279,8 @@ class Utils {
 	 * Needed because of obfuscation.
 	 */
 	public static void drawStringWithShadow(String s, int x, int y, int color) {
-		//func_175063_a is drawString, but adds a shadow.
-		mc.fontRendererObj.func_175063_a(s, x, y, color);
+		//TODO: No longer obfuscated; should I care enough to inline this?
+		mc.fontRendererObj.drawStringWithShadow(s, x, y, color);
 	}
 }
 

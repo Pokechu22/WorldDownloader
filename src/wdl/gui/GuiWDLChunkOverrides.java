@@ -113,7 +113,7 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 		z1Field.mouseClicked(mouseX, mouseY, mouseButton);
 		x2Field.mouseClicked(mouseX, mouseY, mouseButton);
 		z2Field.mouseClicked(mouseX, mouseY, mouseButton);
-		list.func_148179_a(mouseX, mouseY, mouseButton);
+		list.mouseClicked(mouseX, mouseY, mouseButton);
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 	}
 	
@@ -123,12 +123,12 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 	@Override
 	public void handleMouseInput() throws IOException {
 		super.handleMouseInput();
-		this.list.func_178039_p();
+		this.list.handleMouseInput();
 	}
 	
 	@Override
 	protected void mouseReleased(int mouseX, int mouseY, int state) {
-		if (list.func_148181_b(mouseX, mouseY, state)) {
+		if (list.mouseReleased(mouseX, mouseY, state)) {
 			return;
 		}
 		super.mouseReleased(mouseX, mouseY, state);

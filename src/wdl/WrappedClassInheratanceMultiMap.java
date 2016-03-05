@@ -2,15 +2,15 @@ package wdl;
 
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
-import net.minecraft.util.ClassInheratanceMultiMap;
+import net.minecraft.util.ClassInheritanceMultiMap;
 import net.minecraft.world.chunk.storage.AnvilChunkLoader;
 
-import com.google.common.collect.Multimap;
-
 /**
- * Wraps a {@link ClassInheratanceMultiMap}, to help avoid
+ * Wraps a {@link ClassInheritanceMultiMap}, to help avoid
  * {@link ConcurrentModificationException}s.
  * 
  * The {@link #iterator()} and {@link #func_180215_b(Class)} methods will return
@@ -23,9 +23,9 @@ import com.google.common.collect.Multimap;
  * 
  * @see https://github.com/Pokechu22/WorldDownloader/issues/13
  */
-public class WrappedClassInheratanceMultiMap<T> extends ClassInheratanceMultiMap {
+public class WrappedClassInheratanceMultiMap<T> extends ClassInheritanceMultiMap<T> {
 	/**
-	 * Creates a copy of a {@link ClassInheratanceMultiMap}.  This is ugly,
+	 * Creates a copy of a {@link ClassInheritanceMultiMap}.  This is ugly,
 	 * but intended to avoid exceptions thrown durring rendering due to skipped
 	 * entities.
 	 * 
@@ -34,31 +34,31 @@ public class WrappedClassInheratanceMultiMap<T> extends ClassInheratanceMultiMap
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> WrappedClassInheratanceMultiMap<T> copyOf(
-			ClassInheratanceMultiMap original) {
-		Multimap<Class<?>, T> map = ReflectionUtils.stealAndGetField(original,
-				ClassInheratanceMultiMap.class, Multimap.class);
+			ClassInheritanceMultiMap<T> original) {
+		Map<Class<?>, List<T>> map = ReflectionUtils.stealAndGetField(original,
+				ClassInheritanceMultiMap.class, Map.class);
 		Set<T> set = ReflectionUtils.stealAndGetField(original,
-				ClassInheratanceMultiMap.class, Set.class);
+				ClassInheritanceMultiMap.class, Set.class);
 		Class<T> clazz = ReflectionUtils.stealAndGetField(original,
-				ClassInheratanceMultiMap.class, Class.class);
+				ClassInheritanceMultiMap.class, Class.class);
 		
 		return new WrappedClassInheratanceMultiMap<T>(clazz, set, map, original);
 	}
 
-	private final ClassInheratanceMultiMap wrapped;
+	private final ClassInheritanceMultiMap<T> wrapped;
 	
 	@SuppressWarnings("unchecked")
 	private WrappedClassInheratanceMultiMap(Class<T> clazz, Set<T> set,
-			Multimap<Class<?>, T> map, ClassInheratanceMultiMap wrapped) {
+			Map<Class<?>, List<T>> map, ClassInheritanceMultiMap<T> wrapped) {
 		super(clazz);
 		
 		this.wrapped = wrapped;
 		
 		// Update the private fields.
 		Set<T> ownSet = ReflectionUtils.stealAndGetField(this,
-				ClassInheratanceMultiMap.class, Set.class);
-		Multimap<Class<?>, T> ownMap = ReflectionUtils.stealAndGetField(this,
-				ClassInheratanceMultiMap.class, Multimap.class);
+				ClassInheritanceMultiMap.class, Set.class);
+		Map<Class<?>, List<T>> ownMap = ReflectionUtils.stealAndGetField(this,
+				ClassInheritanceMultiMap.class, Map.class);
 		
 		ownSet.clear();
 		ownSet.addAll(set);
@@ -74,7 +74,7 @@ public class WrappedClassInheratanceMultiMap<T> extends ClassInheratanceMultiMap
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean add(Object obj) {
+	public boolean add(T obj) {
 		super.add(obj);
 		return wrapped.add(obj);
 	}
@@ -109,16 +109,8 @@ public class WrappedClassInheratanceMultiMap<T> extends ClassInheratanceMultiMap
 	 * @param obj
 	 * @return
 	 */
-	public boolean addWDL(Object obj) {
+	public boolean addWDL(T obj) {
 		return super.add(obj);
-	}
-	
-	/**
-	 * Ugly hack to allow iteration over this properly.
-	 */
-	@SuppressWarnings("unchecked")
-	public Iterable<T> asIterable() {
-		return (Iterable<T>) this;
 	}
 	
 	/**
@@ -128,7 +120,6 @@ public class WrappedClassInheratanceMultiMap<T> extends ClassInheratanceMultiMap
 	 * <hr/>
 	 * {@inheritDoc}
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public Iterator<T> iterator() {
 		for (StackTraceElement e : Thread.currentThread().getStackTrace()) {
@@ -143,14 +134,13 @@ public class WrappedClassInheratanceMultiMap<T> extends ClassInheratanceMultiMap
 	 * I have no idea what this does, but it does it based off of the stack
 	 * trace as described in {@link #iterator()}.
 	 */
-	@SuppressWarnings("rawtypes")
 	@Override
-	public Iterable func_180215_b(Class p_180215_1_) {
+	public <S> Iterable<S> getByClass(Class<S> p_180215_1_) {
 		for (StackTraceElement e : Thread.currentThread().getStackTrace()) {
 			if (e.getClassName().equals(AnvilChunkLoader.class.getName())) {
-				return super.func_180215_b(p_180215_1_);
+				return super.getByClass(p_180215_1_);
 			}
 		}
-		return wrapped.func_180215_b(p_180215_1_);
+		return wrapped.getByClass(p_180215_1_);
 	}
 }

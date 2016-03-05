@@ -5,10 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.event.ClickEvent;
-import net.minecraft.event.ClickEvent.Action;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.ClickEvent.Action;
 import wdl.WDL;
 import wdl.WDLMessageTypes;
 import wdl.WDLMessages;
@@ -190,47 +190,47 @@ public class WDLUpdateChecker extends Thread {
 			if (!WDL.globalProps.getProperty("TutorialShown").equals("true")) {
 				sleep(5000);
 				
-				ChatComponentTranslation success = new ChatComponentTranslation(
+				TextComponentTranslation success = new TextComponentTranslation(
 						"wdl.intro.success");
-				ChatComponentTranslation mcfThread = new ChatComponentTranslation(
+				TextComponentTranslation mcfThread = new TextComponentTranslation(
 						"wdl.intro.forumsLink");
-				mcfThread.getChatStyle().setColor(EnumChatFormatting.BLUE)
+				mcfThread.getChatStyle().setColor(TextFormatting.BLUE)
 						.setUnderlined(true).setChatClickEvent(
 								new ClickEvent(Action.OPEN_URL,
 										FORUMS_THREAD_USAGE_LINK));
-				ChatComponentTranslation usage = new ChatComponentTranslation(
+				TextComponentTranslation usage = new TextComponentTranslation(
 						"wdl.intro.usage", mcfThread);
-				ChatComponentTranslation githubRepo = new ChatComponentTranslation(
+				TextComponentTranslation githubRepo = new TextComponentTranslation(
 						"wdl.intro.githubRepo");
-				githubRepo.getChatStyle().setColor(EnumChatFormatting.BLUE)
+				githubRepo.getChatStyle().setColor(TextFormatting.BLUE)
 						.setUnderlined(true).setChatClickEvent(
 								new ClickEvent(Action.OPEN_URL,
 										GITHUB_LINK));
-				ChatComponentTranslation contribute = new ChatComponentTranslation(
+				TextComponentTranslation contribute = new TextComponentTranslation(
 						"wdl.intro.contribute", githubRepo);
-				ChatComponentTranslation redistributionList = new ChatComponentTranslation(
+				TextComponentTranslation redistributionList = new TextComponentTranslation(
 						"wdl.intro.redistributionList");
-				redistributionList.getChatStyle().setColor(EnumChatFormatting.BLUE)
+				redistributionList.getChatStyle().setColor(TextFormatting.BLUE)
 						.setUnderlined(true).setChatClickEvent(
 								new ClickEvent(Action.OPEN_URL,
 										REDISTRIBUTION_LINK));
-				ChatComponentTranslation warning = new ChatComponentTranslation(
+				TextComponentTranslation warning = new TextComponentTranslation(
 						"wdl.intro.warning");
-				warning.getChatStyle().setColor(EnumChatFormatting.DARK_RED)
+				warning.getChatStyle().setColor(TextFormatting.DARK_RED)
 						.setBold(true);
-				ChatComponentTranslation illegally = new ChatComponentTranslation(
+				TextComponentTranslation illegally = new TextComponentTranslation(
 						"wdl.intro.illegally");
-				illegally.getChatStyle().setColor(EnumChatFormatting.DARK_RED)
+				illegally.getChatStyle().setColor(TextFormatting.DARK_RED)
 						.setBold(true);
-				ChatComponentTranslation stolen = new ChatComponentTranslation(
+				TextComponentTranslation stolen = new TextComponentTranslation(
 						"wdl.intro.stolen", warning, redistributionList, illegally);
-				ChatComponentTranslation smr = new ChatComponentTranslation(
+				TextComponentTranslation smr = new TextComponentTranslation(
 						"wdl.intro.stopModReposts");
-				smr.getChatStyle().setColor(EnumChatFormatting.BLUE)
+				smr.getChatStyle().setColor(TextFormatting.BLUE)
 						.setUnderlined(true).setChatClickEvent(
 								new ClickEvent(Action.OPEN_URL,
 										SMR_LINK));
-				ChatComponentTranslation stolenBeware = new ChatComponentTranslation(
+				TextComponentTranslation stolenBeware = new TextComponentTranslation(
 						"wdl.intro.stolenBeware", smr);
 				
 				WDLMessages.chatMessage(WDLMessageTypes.UPDATES, success);
@@ -273,9 +273,9 @@ public class WDLUpdateChecker extends Thread {
 			if (hasNewVersion()) {
 				Release recomendedRelease = getRecomendedRelease();
 				
-				ChatComponentTranslation updateLink = new ChatComponentTranslation(
+				TextComponentTranslation updateLink = new TextComponentTranslation(
 						"wdl.messages.updates.newRelease.updateLink");
-				updateLink.getChatStyle().setColor(EnumChatFormatting.BLUE)
+				updateLink.getChatStyle().setColor(TextFormatting.BLUE)
 						.setUnderlined(true).setChatClickEvent(
 								new ClickEvent(Action.OPEN_URL,
 										recomendedRelease.URL));
@@ -327,9 +327,9 @@ public class WDLUpdateChecker extends Thread {
 			}
 			
 			if (failed.size() > 0) {
-				ChatComponentTranslation mcfThread = new ChatComponentTranslation(
+				TextComponentTranslation mcfThread = new TextComponentTranslation(
 						"wdl.intro.forumsLink");
-				mcfThread.getChatStyle().setColor(EnumChatFormatting.BLUE)
+				mcfThread.getChatStyle().setColor(TextFormatting.BLUE)
 						.setUnderlined(true).setChatClickEvent(
 								new ClickEvent(Action.OPEN_URL,
 										FORUMS_THREAD_USAGE_LINK));

@@ -4,15 +4,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import wdl.WDL;
-import wdl.update.Release;
-import wdl.update.WDLUpdateChecker;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
+import wdl.WDL;
+import wdl.update.Release;
+import wdl.update.WDLUpdateChecker;
 
 /**
  * Gui that lists updates fetched via {@link wdl.update.GithubInfoGrabber}.
@@ -98,9 +99,9 @@ public class GuiWDLUpdates extends GuiScreen {
 					mc.displayGuiScreen(new GuiWDLSingleUpdate(GuiWDLUpdates.this,
 							this.release));
 					
-					mc.getSoundHandler().playSound(PositionedSoundRecord
-							.createPositionedSoundRecord(new ResourceLocation(
-									"gui.button.press"), 1.0F));
+					mc.getSoundHandler().playSound(
+							PositionedSoundRecord.func_184371_a(
+									SoundEvents.ui_button_click, 1.0f));
 					return true;
 				}
 				return false;
@@ -263,7 +264,7 @@ public class GuiWDLUpdates extends GuiScreen {
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
 	throws IOException {
-		list.func_148179_a(mouseX, mouseY, mouseButton);
+		list.mouseClicked(mouseX, mouseY, mouseButton);
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 	}
 	
@@ -273,12 +274,12 @@ public class GuiWDLUpdates extends GuiScreen {
 	@Override
 	public void handleMouseInput() throws IOException {
 		super.handleMouseInput();
-		this.list.func_178039_p();
+		this.list.handleMouseInput();
 	}
 	
 	@Override
 	protected void mouseReleased(int mouseX, int mouseY, int state) {
-		if (list.func_148181_b(mouseX, mouseY, state)) {
+		if (list.mouseReleased(mouseX, mouseY, state)) {
 			return;
 		}
 		super.mouseReleased(mouseX, mouseY, state);
@@ -442,7 +443,7 @@ public class GuiWDLUpdates extends GuiScreen {
 		@Override
 		protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
 		throws IOException {
-			list.func_148179_a(mouseX, mouseY, mouseButton);
+			list.mouseClicked(mouseX, mouseY, mouseButton);
 			super.mouseClicked(mouseX, mouseY, mouseButton);
 		}
 		
@@ -452,12 +453,12 @@ public class GuiWDLUpdates extends GuiScreen {
 		@Override
 		public void handleMouseInput() throws IOException {
 			super.handleMouseInput();
-			this.list.func_178039_p();
+			this.list.handleMouseInput();
 		}
 		
 		@Override
 		protected void mouseReleased(int mouseX, int mouseY, int state) {
-			if (list.func_148181_b(mouseX, mouseY, state)) {
+			if (list.mouseReleased(mouseX, mouseY, state)) {
 				return;
 			}
 			super.mouseReleased(mouseX, mouseY, state);

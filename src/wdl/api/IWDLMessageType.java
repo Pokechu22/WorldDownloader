@@ -1,6 +1,7 @@
 package wdl.api;
 
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
+
 
 /**
  * Represents a message type capable of being used in WDL logging.
@@ -15,14 +16,14 @@ public interface IWDLMessageType {
 	 * 
 	 * @return The format code.
 	 */
-	public abstract EnumChatFormatting getTitleColor();
+	public abstract TextFormatting getTitleColor();
 	/**
 	 * Gets the <a href="http://minecraft.gamepedia.com/Formatting_codes">color
 	 * code</a> used for the main message.
 	 * 
 	 * @return The format code.
 	 */
-	public abstract EnumChatFormatting getTextColor();
+	public abstract TextFormatting getTextColor();
 	/**
 	 * Gets the name to use on buttons and such.
 	 */

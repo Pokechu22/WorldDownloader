@@ -12,6 +12,7 @@ import net.minecraft.entity.item.EntityMinecartChest;
 import net.minecraft.entity.item.EntityMinecartHopper;
 import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.passive.EntityVillager;
+import net.minecraft.entity.passive.HorseArmorType;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.AnimalChest;
 import net.minecraft.inventory.ContainerBeacon;
@@ -24,7 +25,6 @@ import net.minecraft.inventory.ContainerHorseInventory;
 import net.minecraft.inventory.ContainerMerchant;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryEnderChest;
-import net.minecraft.network.play.server.S3FPacketCustomPayload;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityBeacon;
@@ -35,10 +35,10 @@ import net.minecraft.tileentity.TileEntityEnderChest;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.tileentity.TileEntityNote;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.IChatComponent;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition.MovingObjectType;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.storage.MapData;
@@ -137,13 +137,11 @@ public class WDLEvents {
 			return;
 		}
 
-		if (WDL.minecraft.objectMouseOver.typeOfHit == MovingObjectType.ENTITY) {
+		if (WDL.minecraft.objectMouseOver.typeOfHit == RayTraceResult.Type.ENTITY) {
 			WDL.lastEntity = WDL.minecraft.objectMouseOver.entityHit;
 		} else {
 			WDL.lastEntity = null;
-			// func_178782_a returns a BlockPos; find another one
-			// if it is reobfuscated.
-			WDL.lastClickedBlock = WDL.minecraft.objectMouseOver.func_178782_a();
+			WDL.lastClickedBlock = WDL.minecraft.objectMouseOver.getBlockPos();
 		}
 	}
 
@@ -156,8 +154,8 @@ public class WDLEvents {
 		
 		String saveName = "";
 
-		if (WDL.thePlayer.ridingEntity != null &&
-				WDL.thePlayer.ridingEntity instanceof EntityHorse) {
+		if (WDL.thePlayer.getRidingEntity() != null &&
+				WDL.thePlayer.getRidingEntity() instanceof EntityHorse) {
 			//If the player is on a horse, check if they are opening the
 			//inventory of the horse they are on.  If so, use that,
 			//rather than the entity being looked at.
@@ -167,7 +165,7 @@ public class WDLEvents {
 								EntityHorse.class);
 
 				//Intentional reference equals
-				if (horseInContainer == WDL.thePlayer.ridingEntity) {
+				if (horseInContainer == WDL.thePlayer.getRidingEntity()) {
 					if (!WDLPluginChannels.canSaveEntities(
 							horseInContainer.chunkCoordX,
 							horseInContainer.chunkCoordZ)) {
@@ -179,23 +177,18 @@ public class WDLEvents {
 					}
 
 					EntityHorse entityHorse = (EntityHorse)
-							WDL.thePlayer.ridingEntity;
+							WDL.thePlayer.getRidingEntity();
 					//Resize the horse's chest.  Needed because... reasons.
 					//Apparently the saved horse has the wrong size by
 					//default.
-					//Based off of EntityHorse.func_110226_cD (in 1.8).
+					//Based off of EntityHorse.initHorseChest
+					HorseArmorType horseType = entityHorse.getType();
 					AnimalChest horseChest = new AnimalChest("HorseChest",
-							(entityHorse.isChested() &&
-									(entityHorse.getHorseType() == 1 ||
-									entityHorse.getHorseType() == 2)) ? 17 : 2);
-					//func_110133_a sets the custom name -- if changed look
-					//for one that sets hasCustomName to true and gives
-					//inventoryTitle the value of the parameter.
-					horseChest.func_110133_a(entityHorse.getName());
+							(entityHorse.isChested() && horseType.func_188600_f()) ? 17 : 2);
+					horseChest.setCustomName(entityHorse.getName());
 					WDL.saveContainerItems(WDL.windowContainer, horseChest, 0);
-					//I don't even know what this does, but it's part of the
-					//other method...
-					horseChest.func_110134_a(entityHorse);
+					//I don't know if it's a good idea to copy this, but I am...
+					horseChest.addInventoryChangeListener(entityHorse);
 					//Save the actual data value to the other horse.
 					ReflectionUtils.stealAndSetField(entityHorse, AnimalChest.class, horseChest);
 					WDLMessages.chatMessageTranslated(WDLMessageTypes.ON_GUI_CLOSED_INFO,
@@ -249,19 +242,14 @@ public class WDLEvents {
 				//Resize the horse's chest.  Needed because... reasons.
 				//Apparently the saved horse has the wrong size by
 				//default.
-				//Based off of EntityHorse.func_110226_cD (in 1.8).
+				//Based off of EntityHorse.initHorseChest
+				HorseArmorType horseType = entityHorse.getType();
 				AnimalChest horseChest = new AnimalChest("HorseChest",
-						(entityHorse.isChested() &&
-								(entityHorse.getHorseType() == 1 ||
-								entityHorse.getHorseType() == 2)) ? 17 : 2);
-				//func_110133_a sets the custom name -- if changed look
-				//for one that sets hasCustomName to true and gives
-				//inventoryTitle the value of the parameter.
-				horseChest.func_110133_a(entityHorse.getName());
+						(entityHorse.isChested() && horseType.func_188600_f()) ? 17 : 2);
+				horseChest.setCustomName(entityHorse.getName());
 				WDL.saveContainerItems(WDL.windowContainer, horseChest, 0);
-				//I don't even know what this does, but it's part of the
-				//other method...
-				horseChest.func_110134_a(entityHorse);
+				//I don't know if it's a good idea to copy this, but I am...
+				horseChest.addInventoryChangeListener(entityHorse);
 				//Save the actual data value to the other horse.
 				ReflectionUtils.stealAndSetField(entityHorse, AnimalChest.class, horseChest);
 				
@@ -507,7 +495,7 @@ public class WDLEvents {
 				return;
 			}
 			
-			IChatComponent unsafeMessage = EntityUtils.isUnsafeToSaveEntity(entity);
+			ITextComponent unsafeMessage = EntityUtils.isUnsafeToSaveEntity(entity);
 			if (unsafeMessage != null) {
 				WDLMessages.chatMessageTranslated(
 						WDLMessageTypes.REMOVE_ENTITY,

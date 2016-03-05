@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-import com.google.common.collect.ImmutableList;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -19,12 +17,12 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemMap;
-import net.minecraft.network.play.server.S02PacketChat;
-import net.minecraft.network.play.server.S24PacketBlockAction;
-import net.minecraft.network.play.server.S34PacketMaps;
-import net.minecraft.network.play.server.S3FPacketCustomPayload;
+import net.minecraft.network.play.server.SPacketBlockAction;
+import net.minecraft.network.play.server.SPacketChat;
+import net.minecraft.network.play.server.SPacketCustomPayload;
+import net.minecraft.network.play.server.SPacketMaps;
 import net.minecraft.profiler.Profiler;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.storage.MapData;
 import wdl.api.IBlockEventListener;
@@ -34,6 +32,8 @@ import wdl.api.IPluginChannelListener;
 import wdl.gui.GuiWDL;
 import wdl.gui.GuiWDLAbout;
 import wdl.gui.GuiWDLPermissions;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * The various hooks for WDL. <br/>
@@ -72,7 +72,6 @@ public class WDLHooks {
 		try {
 			profiler.startSection("wdl");
 			
-			@SuppressWarnings("unchecked")
 			List<EntityPlayer> players = ImmutableList.copyOf(sender.playerEntities);
 			
 			if (sender != WDL.worldClient) {
@@ -220,13 +219,13 @@ public class WDLHooks {
 	}
 
 	/**
-	 * Called when {@link NetHandlerPlayClient#handleChat(S02PacketChat)} is
+	 * Called when {@link NetHandlerPlayClient#handleChat(SPacketChat)} is
 	 * called.
 	 * <br/>
 	 * Should be at the end of the method.
 	 */
 	public static void onNHPCHandleChat(NetHandlerPlayClient sender,
-			S02PacketChat packet) {
+			SPacketChat packet) {
 		try {
 			if (!Minecraft.getMinecraft().isCallingFromMinecraftThread()) {
 				return;
@@ -236,8 +235,7 @@ public class WDLHooks {
 			
 			profiler.startSection("wdl.onChatMessage");
 			
-			//func_148915_c returns the IChatComponent.
-			String chatMessage = packet.func_148915_c().getUnformattedText();
+			String chatMessage = packet.getChatComponent().getUnformattedText();
 			
 			profiler.startSection("Core");
 			WDLEvents.onChatMessage(chatMessage);
@@ -257,13 +255,13 @@ public class WDLHooks {
 	}
 
 	/**
-	 * Called when {@link NetHandlerPlayClient#handleMaps(S34PacketMaps)} is
+	 * Called when {@link NetHandlerPlayClient#handleMaps(SPacketMaps)} is
 	 * called.
 	 * <br/>
 	 * Should be at the end of the method.
 	 */
 	public static void onNHPCHandleMaps(NetHandlerPlayClient sender,
-			S34PacketMaps packet) {
+			SPacketMaps packet) {
 		try {
 			if (!Minecraft.getMinecraft().isCallingFromMinecraftThread()) {
 				return;
@@ -289,13 +287,13 @@ public class WDLHooks {
 
 	/**
 	 * Called when
-	 * {@link NetHandlerPlayClient#handleCustomPayload(S3FPacketCustomPayload)}
+	 * {@link NetHandlerPlayClient#handleCustomPayload(SPacketCustomPayload)}
 	 * is called.
 	 * <br/>
 	 * Should be at the end of the method.
 	 */
 	public static void onNHPCHandleCustomPayload(NetHandlerPlayClient sender,
-			S3FPacketCustomPayload packet) {
+			SPacketCustomPayload packet) {
 		try {
 			if (!Minecraft.getMinecraft().isCallingFromMinecraftThread()) {
 				return;
@@ -327,13 +325,13 @@ public class WDLHooks {
 
 	/**
 	 * Called when
-	 * {@link NetHandlerPlayClient#handleBlockAction(S24PacketBlockAction)} is
+	 * {@link NetHandlerPlayClient#handleBlockAction(SPacketBlockAction)} is
 	 * called.
 	 * <br/>
 	 * Should be at the end of the method.
 	 */
 	public static void onNHPCHandleBlockAction(NetHandlerPlayClient sender,
-			S24PacketBlockAction packet) {
+			SPacketBlockAction packet) {
 		try {
 			if (!Minecraft.getMinecraft().isCallingFromMinecraftThread()) {
 				return;
@@ -343,7 +341,7 @@ public class WDLHooks {
 			
 			profiler.startSection("wdl.onBlockEvent");
 			
-			BlockPos pos = packet.func_179825_a();
+			BlockPos pos = packet.getBlockPosition();
 			Block block = packet.getBlockType();
 			int data1 = packet.getData1();
 			int data2 = packet.getData2();

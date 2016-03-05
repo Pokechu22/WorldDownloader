@@ -52,11 +52,11 @@ import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.tileentity.TileEntityNote;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.ClassInheratanceMultiMap;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.ClassInheritanceMultiMap;
 import net.minecraft.util.LongHashMap;
 import net.minecraft.util.ReportedException;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.MinecraftException;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.AnvilSaveConverter;
@@ -87,11 +87,11 @@ public class WDL {
 	/**
 	 * Current version.  This should match the git tag for the current release.
 	 */
-	public static final String VERSION = "1.8d-beta1";
+	public static final String VERSION = "1.9a-beta1";
 	/**
 	 * The version of minecraft that this mod is installed on.
 	 */
-	public static final String EXPECTED_MINECRAFT_VERSION = "1.8";
+	public static final String EXPECTED_MINECRAFT_VERSION = "1.9";
 	/**
 	 * Owning username for the github repository to check for updates against.
 	 * 
@@ -670,8 +670,10 @@ public class WDL {
 				for (int i = 0; i < tileEntitiesNBT.tagCount(); i++) {
 					NBTTagCompound tileEntityNBT = tileEntitiesNBT
 							.getCompoundTagAt(i);
+					// NOTE: The first parameter, a MinecraftServer, does not
+					// seem to be used, so 'null' is passed.  This may change.
 					TileEntity te = TileEntity
-							.createAndLoadEntity(tileEntityNBT);
+							.createTileEntity(null, tileEntityNBT);
 					
 					te.setWorldObj(worldClient);
 					
@@ -761,8 +763,7 @@ public class WDL {
 		for (Map.Entry<String, ITileEntityEditor> editor : tileEntityEditors
 				.entrySet()) {
 			try {
-				@SuppressWarnings("unchecked")
-				Map<BlockPos, TileEntity> tileEntityMap = (Map<BlockPos, TileEntity>) chunk
+				Map<BlockPos, TileEntity> tileEntityMap = chunk
 						.getTileEntityMap();
 				
 				for (Map.Entry<BlockPos, TileEntity> entry : tileEntityMap
@@ -848,7 +849,7 @@ public class WDL {
 			// func_178779_a is a getter for the instance.
 			// Look inside of ThreadedFileIOBase.java for
 			// such a getter.
-			ThreadedFileIOBase.func_178779_a().waitForFinish();
+			ThreadedFileIOBase.getThreadedIOInstance().waitForFinish();
 		} catch (Exception e) {
 			throw new RuntimeException("Threw exception waiting for asynchronous IO to finish. Hmmm.", e);
 		}
@@ -1049,6 +1050,7 @@ public class WDL {
 	 * @throws IllegalAccessException
 	 * @throws IllegalArgumentException
 	 */
+	@SuppressWarnings("unchecked")
 	public static void saveChunks(GuiWDLSaveProgress progressScreen)
 			throws IllegalArgumentException, IllegalAccessException {
 		if (!WDLPluginChannels.canDownloadAtAll()) { return; }
@@ -1078,7 +1080,7 @@ public class WDL {
 
 		hashArrayField.setAccessible(true);
 		// Steal the instance of LongHashMap from our chunk provider
-		LongHashMap lhm = ReflectionUtils.stealAndGetField(chunkProvider,
+		LongHashMap<Chunk> lhm = ReflectionUtils.stealAndGetField(chunkProvider,
 				LongHashMap.class);
 		
 		progressScreen.startMajorTask(I18n.format("wdl.saveProgress.chunk.title"), 
@@ -1166,8 +1168,8 @@ public class WDL {
 		c.setTerrainPopulated(true);
 
 		try {
-			ClassInheratanceMultiMap[] oldMaps = c.getEntityLists().clone();
-			ClassInheratanceMultiMap[] maps = c.getEntityLists();
+			ClassInheritanceMultiMap<Entity>[] oldMaps = c.getEntityLists().clone();
+			ClassInheritanceMultiMap<Entity>[] maps = c.getEntityLists();
 			
 			if (!WDLPluginChannels.canSaveEntities(c)) {
 				// Temporarily delete entities if saving them is disabled.
@@ -1176,7 +1178,7 @@ public class WDL {
 							WrappedClassInheratanceMultiMap
 							.<Entity> copyOf(maps[i]);
 					maps[i] = map;
-					for (Entity e : map.asIterable()) {
+					for (Entity e : map) {
 						if (e instanceof EntityPlayer) {
 							//Skip players, as otherwise bad things happen, 
 							//such as deleting the current player and causing
@@ -1194,7 +1196,7 @@ public class WDL {
 							WrappedClassInheratanceMultiMap
 							.<Entity> copyOf(maps[i]);
 					maps[i] = map;
-					for (Entity e : map.asIterable()) {
+					for (Entity e : map) {
 						if (e instanceof EntityPlayer) {
 							//Skip players, as otherwise bad things happen, 
 							//such as deleting the current player and causing
@@ -1210,7 +1212,7 @@ public class WDL {
 							
 							map.removeWDL(e);
 						} else {
-							IChatComponent unsafeReason = EntityUtils
+							ITextComponent unsafeReason = EntityUtils
 									.isUnsafeToSaveEntity(e);
 							if (unsafeReason != null) {
 								WDLMessages.chatMessageTranslated(
@@ -1235,7 +1237,6 @@ public class WDL {
 						// it actually means "Delete this entity next tick",
 						// not "this entitiy was killed by a player".
 						e.isDead = false;
-						@SuppressWarnings("unchecked")
 						WrappedClassInheratanceMultiMap<Entity> map = 
 								(WrappedClassInheratanceMultiMap<Entity>) maps[e.chunkCoordY];
 						map.addWDL(e);
@@ -1243,7 +1244,6 @@ public class WDL {
 				}
 			}
 			
-			@SuppressWarnings("unchecked")
 			Iterable<Entity>[] iterableMaps = c.getEntityLists();
 			for (Iterable<Entity> entityList :  iterableMaps) {
 				for (Entity e : entityList) {
@@ -1755,18 +1755,14 @@ public class WDL {
 	}
 
 	/**
-	 * Converts a position from the fixed-point version that a packet
-	 * (or {@link Entity#serverPosX} and the like use) into a double.
-	 *
-	 * @see
-	 *      <a href="http://wiki.vg/Protocol#Fixed-point_numbers">
-	 *      wiki.vg on Fixed-point numbers</a>
+	 * Converts a position from the fixed-point version that
+	 * {@link Entity#serverPosX} and the like use into a double.
 	 *
 	 * @param serverPos
 	 * @return The double version of the position.
 	 */
-	public static double convertServerPos(int serverPos) {
-		return serverPos / 32.0;
+	public static double convertServerPos(long serverPos) {
+		return serverPos / 4096.0;
 	}
 	
 	/**
@@ -1790,7 +1786,7 @@ public class WDL {
 		info.append("### CORE INFO\n\n");
 		info.append("WDL version: ").append(VERSION).append('\n');
 		info.append("Launched version: ")
-				.append(Minecraft.getMinecraft().func_175600_c()).append('\n');
+				.append(Minecraft.getMinecraft().getVersion()).append('\n');
 		info.append("Client brand: ")
 				.append(ClientBrandRetriever.getClientModName()).append('\n');
 		info.append("File location: ");
@@ -1945,7 +1941,7 @@ public class WDL {
 	public static String getMinecraftVersion() {
 		//Returns some session info used when making a HTTP request for resource packs.
 		//Only matters because X-Minecraft-Version is included.
-		Map<?, ?> map = Minecraft.func_175596_ai();
+		Map<?, ?> map = Minecraft.getSessionInfo();
 		if (map.containsKey("X-Minecraft-Version")) {
 			return (String) map.get("X-Minecraft-Version");
 		} else {
@@ -1959,7 +1955,7 @@ public class WDL {
 	public static String getMinecraftVersionInfo() {
 		String version = getMinecraftVersion();
 		// Gets the launched version (appears in F3)
-		String launchedVersion = Minecraft.getMinecraft().func_175600_c();
+		String launchedVersion = Minecraft.getMinecraft().getVersion();
 		String brand = ClientBrandRetriever.getClientModName();
 		
 		return String.format("Minecraft %s (%s/%s)", version,

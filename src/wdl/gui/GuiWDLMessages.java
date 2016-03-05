@@ -236,13 +236,13 @@ public class GuiWDLMessages extends GuiScreen {
 	@Override
 	public void handleMouseInput() throws IOException {
 		super.handleMouseInput();
-		this.list.func_178039_p();
+		this.list.handleMouseInput();
 	}
 	
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
 			throws IOException {
-		if (list.func_148179_a(mouseX, mouseY, mouseButton)) {
+		if (list.mouseClicked(mouseX, mouseY, mouseButton)) {
 			return;
 		}
 		super.mouseClicked(mouseX, mouseY, mouseButton);
@@ -250,7 +250,7 @@ public class GuiWDLMessages extends GuiScreen {
 	
 	@Override
 	protected void mouseReleased(int mouseX, int mouseY, int state) {
-		if (list.func_148181_b(mouseX, mouseY, state)) {
+		if (list.mouseReleased(mouseX, mouseY, state)) {
 			return;
 		}
 		super.mouseReleased(mouseX, mouseY, state);

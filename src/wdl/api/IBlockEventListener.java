@@ -2,7 +2,7 @@ package wdl.api;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.multiplayer.WorldClient;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 
 public interface IBlockEventListener extends IWDLMod {
 	/**

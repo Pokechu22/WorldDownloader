@@ -13,7 +13,7 @@ import java.util.Map;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.client.C17PacketCustomPayload;
+import net.minecraft.network.play.client.CPacketCustomPayload;
 import net.minecraft.world.chunk.Chunk;
 
 import org.apache.logging.log4j.LogManager;
@@ -563,7 +563,7 @@ public class WDLPluginChannels {
 		
 		PacketBuffer requestBuffer = new PacketBuffer(Unpooled.buffer());
 		requestBuffer.writeBytes(output.toByteArray());
-		C17PacketCustomPayload requestPacket = new C17PacketCustomPayload(
+		CPacketCustomPayload requestPacket = new CPacketCustomPayload(
 				"WDL|REQUEST", requestBuffer);
 		Minecraft.getMinecraft().getNetHandler().addToSendQueue(requestPacket);
 	}
@@ -594,21 +594,21 @@ public class WDLPluginChannels {
 				'W', 'D', 'L', '|', 'I', 'N', 'I', 'T', '\0',
 				'W', 'D', 'L', '|', 'C', 'O', 'N', 'T', 'R', 'O', 'L', '\0',
 				'W', 'D', 'L', '|', 'R', 'E', 'Q', 'U', 'E', 'S', 'T', '\0' });
-		C17PacketCustomPayload registerPacket = new C17PacketCustomPayload(
+		CPacketCustomPayload registerPacket = new CPacketCustomPayload(
 				"REGISTER", registerPacketBuffer);
 		minecraft.getNetHandler().addToSendQueue(registerPacket);
 
 		// Send the init message.
-		C17PacketCustomPayload initPacket;
+		CPacketCustomPayload initPacket;
 		try {
-			initPacket = new C17PacketCustomPayload("WDL|INIT",
+			initPacket = new CPacketCustomPayload("WDL|INIT",
 					new PacketBuffer(Unpooled.copiedBuffer(WDL.VERSION
 							.getBytes("UTF-8"))));
 		} catch (UnsupportedEncodingException e) {
 			WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR,
 					"wdl.messages.generalError.noUTF8", e);
 
-			initPacket = new C17PacketCustomPayload("WDL|INIT",
+			initPacket = new CPacketCustomPayload("WDL|INIT",
 					new PacketBuffer(Unpooled.buffer()));
 		}
 		minecraft.getNetHandler().addToSendQueue(initPacket);

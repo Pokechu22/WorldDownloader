@@ -1,7 +1,7 @@
 package wdl;
 
 import net.minecraft.client.resources.I18n;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 import wdl.api.IMessageTypeAdder;
 import wdl.api.IWDLMessageType;
 
@@ -14,13 +14,13 @@ import wdl.api.IWDLMessageType;
  * it's a perfect fit.
  */
 public enum WDLMessageTypes implements IWDLMessageType {
-	INFO("wdl.messages.message.info", EnumChatFormatting.RED,
-			EnumChatFormatting.GOLD, true, MessageTypeCategory.CORE_RECOMMENDED),
-	ERROR("wdl.messages.message.error", EnumChatFormatting.DARK_GREEN,
-			EnumChatFormatting.DARK_RED, true,
+	INFO("wdl.messages.message.info", TextFormatting.RED,
+			TextFormatting.GOLD, true, MessageTypeCategory.CORE_RECOMMENDED),
+	ERROR("wdl.messages.message.error", TextFormatting.DARK_GREEN,
+			TextFormatting.DARK_RED, true,
 			MessageTypeCategory.CORE_RECOMMENDED),
-	UPDATES("wdl.messages.message.updates", EnumChatFormatting.RED,
-			EnumChatFormatting.GOLD, true, MessageTypeCategory.CORE_RECOMMENDED),
+	UPDATES("wdl.messages.message.updates", TextFormatting.RED,
+			TextFormatting.GOLD, true, MessageTypeCategory.CORE_RECOMMENDED),
 	LOAD_TILE_ENTITY("wdl.messages.message.loadingTileEntity", false),
 	ON_WORLD_LOAD("wdl.messages.message.onWorldLoad",false),
 	ON_BLOCK_EVENT("wdl.messages.message.blockEvent", true),
@@ -38,15 +38,15 @@ public enum WDLMessageTypes implements IWDLMessageType {
 	 */
 	private WDLMessageTypes(String i18nKey,
 			boolean enabledByDefault) {
-		this(i18nKey, EnumChatFormatting.DARK_GREEN,
-				EnumChatFormatting.GOLD, enabledByDefault,
+		this(i18nKey, TextFormatting.DARK_GREEN,
+				TextFormatting.GOLD, enabledByDefault,
 				MessageTypeCategory.CORE_DEBUG);
 	}
 	/**
 	 * Constructor that allows specification of all values.
 	 */
-	private WDLMessageTypes(String i18nKey, EnumChatFormatting titleColor,
-			EnumChatFormatting textColor, boolean enabledByDefault,
+	private WDLMessageTypes(String i18nKey, TextFormatting titleColor,
+			TextFormatting textColor, boolean enabledByDefault,
 			MessageTypeCategory category) {
 		this.displayTextKey = i18nKey + ".text";
 		this.titleColor = titleColor;
@@ -64,11 +64,11 @@ public enum WDLMessageTypes implements IWDLMessageType {
 	/**
 	 * Format code for the '[WorldDL]' label.
 	 */
-	private final EnumChatFormatting titleColor;
+	private final TextFormatting titleColor;
 	/**
 	 * Format code for the text after the label.
 	 */
-	private final EnumChatFormatting textColor;
+	private final TextFormatting textColor;
 	/**
 	 * I18n key for the description text.
 	 */
@@ -83,12 +83,12 @@ public enum WDLMessageTypes implements IWDLMessageType {
 	}
 
 	@Override
-	public EnumChatFormatting getTitleColor() {
+	public TextFormatting getTitleColor() {
 		return titleColor;
 	}
 	
 	@Override
-	public EnumChatFormatting getTextColor() {
+	public TextFormatting getTextColor() {
 		return textColor;
 	}
 

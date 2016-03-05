@@ -333,7 +333,7 @@ public class GuiWDLEntities extends GuiScreen {
 	@Override
 	public void handleMouseInput() throws IOException {
 		super.handleMouseInput();
-		this.entityList.func_178039_p();
+		this.entityList.handleMouseInput();
 	}
 	
 	@Override
@@ -357,7 +357,7 @@ public class GuiWDLEntities extends GuiScreen {
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
 			throws IOException {
-		if (entityList.func_148179_a(mouseX, mouseY, mouseButton)) {
+		if (entityList.mouseClicked(mouseX, mouseY, mouseButton)) {
 			return;
 		}
 		super.mouseClicked(mouseX, mouseY, mouseButton);
@@ -365,7 +365,7 @@ public class GuiWDLEntities extends GuiScreen {
 	
 	@Override
 	protected void mouseReleased(int mouseX, int mouseY, int state) {
-		if (entityList.func_148181_b(mouseX, mouseY, state)) {
+		if (entityList.mouseReleased(mouseX, mouseY, state)) {
 			return;
 		}
 		super.mouseReleased(mouseX, mouseY, state);

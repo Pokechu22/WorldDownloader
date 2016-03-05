@@ -8,7 +8,7 @@ import java.io.UnsupportedEncodingException;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.client.C17PacketCustomPayload;
+import net.minecraft.network.play.client.CPacketCustomPayload;
 import wdl.WDL;
 import wdl.WDLMessageTypes;
 import wdl.WDLMessages;
@@ -136,7 +136,7 @@ public class GuiWDLPermissions extends GuiScreen {
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
 	throws IOException {
-		list.func_148179_a(mouseX, mouseY, mouseButton);
+		list.mouseClicked(mouseX, mouseY, mouseButton);
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 	}
 	
@@ -146,12 +146,12 @@ public class GuiWDLPermissions extends GuiScreen {
 	@Override
 	public void handleMouseInput() throws IOException {
 		super.handleMouseInput();
-		this.list.func_178039_p();
+		this.list.handleMouseInput();
 	}
 	
 	@Override
 	protected void mouseReleased(int mouseX, int mouseY, int state) {
-		if (list.func_148181_b(mouseX, mouseY, state)) {
+		if (list.mouseReleased(mouseX, mouseY, state)) {
 			return;
 		}
 		super.mouseReleased(mouseX, mouseY, state);
@@ -161,16 +161,16 @@ public class GuiWDLPermissions extends GuiScreen {
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if (button.id == 1) {
 			// Send the init packet.
-			C17PacketCustomPayload initPacket;
+			CPacketCustomPayload initPacket;
 			try {
-				initPacket = new C17PacketCustomPayload("WDL|INIT",
+				initPacket = new CPacketCustomPayload("WDL|INIT",
 						new PacketBuffer(Unpooled.copiedBuffer(WDL.VERSION
 								.getBytes("UTF-8"))));
 			} catch (UnsupportedEncodingException e) {
 				WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR,
 						"wdl.messages.generalError.noUTF8");
 
-				initPacket = new C17PacketCustomPayload("WDL|INIT",
+				initPacket = new CPacketCustomPayload("WDL|INIT",
 						new PacketBuffer(Unpooled.buffer()));
 			}
 			WDL.minecraft.getNetHandler().addToSendQueue(initPacket);

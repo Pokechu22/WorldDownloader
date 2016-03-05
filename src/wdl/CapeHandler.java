@@ -8,15 +8,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.mojang.authlib.GameProfile;
-
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.mojang.authlib.GameProfile;
 
 /**
  * Handles giving players capes.
@@ -103,7 +103,7 @@ public class CapeHandler {
 				return;
 			}
 			
-			GameProfile profile = info.func_178845_a();
+			GameProfile profile = info.getGameProfile();
 			
 			if (capes.containsKey(profile.getId())) {
 				setPlayerCape(info, capes.get(profile.getId()));
@@ -125,6 +125,7 @@ public class CapeHandler {
 				//We're looking for the second such field.
 				if (foundBefore) {
 					capeField = f;
+					break;
 				} else {
 					foundBefore = true;
 				}

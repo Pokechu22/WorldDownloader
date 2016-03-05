@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

@@ -3,7 +3,7 @@ package wdl.api;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.Container;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 
 public interface IGuiHooksListener extends IWDLMod {
 	/**
