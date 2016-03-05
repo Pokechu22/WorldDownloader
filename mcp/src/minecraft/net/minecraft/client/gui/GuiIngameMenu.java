@@ -1,26 +1,29 @@
 package net.minecraft.client.gui;
 
+import java.io.IOException;
 import net.minecraft.client.gui.achievement.GuiAchievements;
 import net.minecraft.client.gui.achievement.GuiStats;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.realms.RealmsBridge;
 
 public class GuiIngameMenu extends GuiScreen {
 	private int field_146445_a;
 	private int field_146444_f;
-	private static final String __OBFID = "CL_00000703";
 
 	/**
-	 * Adds the buttons (and other controls) to the screen in question.
+	 * Adds the buttons (and other controls) to the screen in question. Called
+	 * when the GUI is displayed and when the window resizes, the buttonList is
+	 * cleared beforehand.
 	 */
-	@Override
 	public void initGui() {
 		this.field_146445_a = 0;
 		this.buttonList.clear();
-		byte var1 = -16;
-		boolean var2 = true;
-		this.buttonList.add(new GuiButton(1, this.width / 2 - 100, this.height
-				/ 4 + 120 + var1, I18n.format("menu.returnToMenu",
+		int i = -16;
+		int j = 98;
+		this.buttonList
+				.add(new GuiButton(1, this.width / 2 - 100, this.height / 4
+						+ 120 + i, I18n.format("menu.returnToMenu",
 						new Object[0])));
 
 		if (!this.mc.isIntegratedServerRunning()) {
@@ -29,44 +32,55 @@ public class GuiIngameMenu extends GuiScreen {
 		}
 
 		this.buttonList.add(new GuiButton(4, this.width / 2 - 100, this.height
-				/ 4 + 24 + var1, I18n
-				.format("menu.returnToGame", new Object[0])));
+				/ 4 + 24 + i, I18n.format("menu.returnToGame", new Object[0])));
 		this.buttonList.add(new GuiButton(0, this.width / 2 - 100, this.height
-				/ 4 + 96 + var1, 98, 20, I18n.format("menu.options",
-						new Object[0])));
-		GuiButton var3;
-		this.buttonList.add(var3 = new GuiButton(7, this.width / 2 + 2,
-				this.height / 4 + 96 + var1, 98, 20, I18n.format(
+				/ 4 + 96 + i, 98, 20, I18n
+				.format("menu.options", new Object[0])));
+		GuiButton guibutton;
+		this.buttonList.add(guibutton = new GuiButton(7, this.width / 2 + 2,
+				this.height / 4 + 96 + i, 98, 20, I18n.format(
 						"menu.shareToLan", new Object[0])));
 		this.buttonList.add(new GuiButton(5, this.width / 2 - 100, this.height
-				/ 4 + 48 + var1, 98, 20, I18n.format("gui.achievements",
-						new Object[0])));
+				/ 4 + 48 + i, 98, 20, I18n.format("gui.achievements",
+				new Object[0])));
 		this.buttonList.add(new GuiButton(6, this.width / 2 + 2, this.height
-				/ 4 + 48 + var1, 98, 20, I18n
-				.format("gui.stats", new Object[0])));
-		var3.enabled = this.mc.isSingleplayer()
+				/ 4 + 48 + i, 98, 20, I18n.format("gui.stats", new Object[0])));
+		guibutton.enabled = this.mc.isSingleplayer()
 				&& !this.mc.getIntegratedServer().getPublic();
 		/* WDL >>> */
 		wdl.WDLHooks.injectWDLButtons(this, buttonList);
 		/* <<< WDL */
 	}
 
-	@Override
-	protected void actionPerformed(GuiButton p_146284_1_) {
+	/**
+	 * Called by the controls from the buttonList when activated. (Mouse pressed
+	 * for buttons)
+	 */
+	protected void actionPerformed(GuiButton button) throws IOException {
 		/* WDL >>> */
-		wdl.WDLHooks.handleWDLButtonClick(this, p_146284_1_);
-
+		wdl.WDLHooks.handleWDLButtonClick(this, button); 
 		/* <<< WDL */
-		switch (p_146284_1_.id) {
+		
+		switch (button.id) {
 		case 0:
 			this.mc.displayGuiScreen(new GuiOptions(this, this.mc.gameSettings));
 			break;
 
 		case 1:
-			p_146284_1_.enabled = false;
+			boolean flag = this.mc.isIntegratedServerRunning();
+			boolean flag1 = this.mc.isConnectedToRealms();
+			button.enabled = false;
 			this.mc.theWorld.sendQuittingDisconnectingPacket();
 			this.mc.loadWorld((WorldClient) null);
-			this.mc.displayGuiScreen(new GuiMainMenu());
+
+			if (flag) {
+				this.mc.displayGuiScreen(new GuiMainMenu());
+			} else if (flag1) {
+				RealmsBridge realmsbridge = new RealmsBridge();
+				realmsbridge.switchToRealms(new GuiMainMenu());
+			} else {
+				this.mc.displayGuiScreen(new GuiMultiplayer(new GuiMainMenu()));
+			}
 
 		case 2:
 		case 3:
@@ -96,7 +110,6 @@ public class GuiIngameMenu extends GuiScreen {
 	/**
 	 * Called from the main game loop to update the screen.
 	 */
-	@Override
 	public void updateScreen() {
 		super.updateScreen();
 		++this.field_146444_f;
@@ -106,12 +119,11 @@ public class GuiIngameMenu extends GuiScreen {
 	 * Draws the screen and all the components in it. Args : mouseX, mouseY,
 	 * renderPartialTicks
 	 */
-	@Override
-	public void drawScreen(int p_73863_1_, int p_73863_2_, float p_73863_3_) {
+	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		this.drawDefaultBackground();
 		this.drawCenteredString(this.fontRendererObj,
 				I18n.format("menu.game", new Object[0]), this.width / 2, 40,
 				16777215);
-		super.drawScreen(p_73863_1_, p_73863_2_, p_73863_3_);
+		super.drawScreen(mouseX, mouseY, partialTicks);
 	}
 }

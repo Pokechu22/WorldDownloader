@@ -1,97 +1,89 @@
 package net.minecraft.client.resources;
 
+import com.google.common.collect.ImmutableSet;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Map;
 import java.util.Set;
-
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.resources.data.IMetadataSection;
 import net.minecraft.client.resources.data.IMetadataSerializer;
 import net.minecraft.util.ResourceLocation;
 
-import com.google.common.collect.ImmutableSet;
-
 public class DefaultResourcePack implements IResourcePack {
-	public static final Set defaultResourceDomains = ImmutableSet.of(
-			"minecraft", "realms", "wdl");
-	private final Map field_152781_b;
-	private static final String __OBFID = "CL_00001073";
+	public static final Set<String> defaultResourceDomains = ImmutableSet
+			.<String> of("minecraft", "realms" /* WDL >>> */, "wdl" /* <<< WDL */);
+	private final ResourceIndex field_188549_b;
 
-	public DefaultResourcePack(Map p_i46346_1_) {
-		this.field_152781_b = p_i46346_1_;
+	public DefaultResourcePack(ResourceIndex p_i46541_1_) {
+		this.field_188549_b = p_i46541_1_;
 	}
 
-	@Override
-	public InputStream getInputStream(ResourceLocation p_110590_1_)
-	throws IOException {
-		InputStream var2 = this.getResourceStream(p_110590_1_);
+	public InputStream getInputStream(ResourceLocation location)
+			throws IOException {
+		InputStream inputstream = this.getResourceStream(location);
 
-		if (var2 != null) {
-			return var2;
+		if (inputstream != null) {
+			return inputstream;
 		} else {
-			InputStream var3 = this.func_152780_c(p_110590_1_);
+			InputStream inputstream1 = this.getInputStreamAssets(location);
 
-			if (var3 != null) {
-				return var3;
+			if (inputstream1 != null) {
+				return inputstream1;
 			} else {
-				throw new FileNotFoundException(p_110590_1_.getResourcePath());
+				throw new FileNotFoundException(location.getResourcePath());
 			}
 		}
 	}
 
-	public InputStream func_152780_c(ResourceLocation p_152780_1_)
-	throws IOException {
-		File var2 = (File) this.field_152781_b.get(p_152780_1_.toString());
-		return var2 != null && var2.isFile() ? new FileInputStream(var2) : null;
+	public InputStream getInputStreamAssets(ResourceLocation location)
+			throws IOException, FileNotFoundException {
+		File file1 = this.field_188549_b.func_188547_a(location);
+		return file1 != null && file1.isFile() ? new FileInputStream(file1)
+				: null;
 	}
 
-	private InputStream getResourceStream(ResourceLocation p_110605_1_) {
+	private InputStream getResourceStream(ResourceLocation location) {
 		return DefaultResourcePack.class.getResourceAsStream("/assets/"
-				+ p_110605_1_.getResourceDomain() + "/"
-				+ p_110605_1_.getResourcePath());
+				+ location.getResourceDomain() + "/"
+				+ location.getResourcePath());
 	}
 
-	@Override
-	public boolean resourceExists(ResourceLocation p_110589_1_) {
-		return this.getResourceStream(p_110589_1_) != null
-			   || this.field_152781_b.containsKey(p_110589_1_.toString());
+	public boolean resourceExists(ResourceLocation location) {
+		return this.getResourceStream(location) != null
+				|| this.field_188549_b.func_188545_b(location);
 	}
 
-	@Override
-	public Set getResourceDomains() {
+	public Set<String> getResourceDomains() {
 		return defaultResourceDomains;
 	}
 
-	@Override
-	public IMetadataSection getPackMetadata(IMetadataSerializer p_135058_1_,
-			String p_135058_2_) throws IOException {
+	public <T extends IMetadataSection> T getPackMetadata(
+			IMetadataSerializer metadataSerializer, String metadataSectionName)
+			throws IOException {
 		try {
-			FileInputStream var3 = new FileInputStream(
-				(File) this.field_152781_b.get("pack.mcmeta"));
-			return AbstractResourcePack.readMetadata(p_135058_1_, var3,
-					p_135058_2_);
+			InputStream inputstream = new FileInputStream(
+					this.field_188549_b.func_188546_a());
+			return AbstractResourcePack.readMetadata(metadataSerializer,
+					inputstream, metadataSectionName);
 		} catch (RuntimeException var4) {
-			return null;
+			return (T) null;
 		} catch (FileNotFoundException var5) {
-			return null;
+			return (T) null;
 		}
 	}
 
-	@Override
 	public BufferedImage getPackImage() throws IOException {
 		return TextureUtil
-			   .func_177053_a(DefaultResourcePack.class
-					   .getResourceAsStream("/"
-							   + (new ResourceLocation("pack.png"))
-							   .getResourcePath()));
+				.readBufferedImage(DefaultResourcePack.class
+						.getResourceAsStream("/"
+								+ (new ResourceLocation("pack.png"))
+										.getResourcePath()));
 	}
 
-	@Override
 	public String getPackName() {
 		return "Default";
 	}
