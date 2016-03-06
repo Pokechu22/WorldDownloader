@@ -207,7 +207,7 @@ public class WorldClient extends World {
 		this.entityList.remove(entityIn);
 	}
 
-	protected void d(Entity entityIn) {
+	protected void onEntityAdded(Entity entityIn) {
 		super.onEntityAdded(entityIn);
 
 		if (this.entitySpawnQueue.contains(entityIn)) {
@@ -306,7 +306,7 @@ public class WorldClient extends World {
 			k = k + p_147467_2_;
 
 			if (iblockstate.getMaterial() == Material.air && this.getLight(blockpos) <= this.rand.nextInt(8) && this.getLightFor(EnumSkyBlock.SKY, blockpos) <= 0 && this.mc.thePlayer != null && this.mc.thePlayer.getDistanceSq((double)j + 0.5D, (double)l + 0.5D, (double)k + 0.5D) > 4.0D) {
-				this.playSound((double)j + 0.5D, (double)l + 0.5D, (double)k + 0.5D, SoundEvents.ambient_cave, SoundCategory.AMBIENT, 0.7F, 0.8F + this.rand.nextFloat() * 0.2F, false);
+				this.func_184134_a((double)j + 0.5D, (double)l + 0.5D, (double)k + 0.5D, SoundEvents.ambient_cave, SoundCategory.AMBIENT, 0.7F, 0.8F + this.rand.nextFloat() * 0.2F, false);
 				this.field_184158_M = this.rand.nextInt(12000) + 6000;
 			}
 		}
@@ -414,21 +414,21 @@ public class WorldClient extends World {
 		return crashreportcategory;
 	}
 
-	public void playSound(EntityPlayer player, double x, double y, double z, SoundEvent soundIn, SoundCategory category, float volume, float pitch) {
+	public void func_184148_a(EntityPlayer player, double x, double y, double z, SoundEvent soundIn, SoundCategory category, float volume, float pitch) {
 		if (player == this.mc.thePlayer) {
-			this.playSound(x, y, z, soundIn, category, volume, pitch, false);
+			this.func_184134_a(x, y, z, soundIn, category, volume, pitch, false);
 		}
 	}
 
 	public void func_184156_a(BlockPos p_184156_1_, SoundEvent p_184156_2_, SoundCategory p_184156_3_, float p_184156_4_, float p_184156_5_, boolean p_184156_6_) {
-		this.playSound((double)p_184156_1_.getX() + 0.5D, (double)p_184156_1_.getY() + 0.5D, (double)p_184156_1_.getZ() + 0.5D, p_184156_2_, p_184156_3_, p_184156_4_, p_184156_5_, p_184156_6_);
+		this.func_184134_a((double) p_184156_1_.getX() + 0.5D, (double) p_184156_1_.getY() + 0.5D, (double) p_184156_1_.getZ() + 0.5D, p_184156_2_, p_184156_3_, p_184156_4_, p_184156_5_, p_184156_6_);
 	}
 
-	public void playSound(double x, double y, double z, SoundEvent soundIn, SoundCategory category, float volume, float pitch, boolean distanceDelay) {
-		double d0 = this.mc.getRenderViewEntity().getDistanceSq(x, y, z);
-		PositionedSoundRecord positionedsoundrecord = new PositionedSoundRecord(soundIn, category, volume, pitch, (float)x, (float)y, (float)z);
+	public void func_184134_a(double p_184134_1_, double p_184134_3_, double p_184134_5_, SoundEvent p_184134_7_, SoundCategory p_184134_8_, float p_184134_9_, float p_184134_10_, boolean p_184134_11_) {
+		double d0 = this.mc.getRenderViewEntity().getDistanceSq(p_184134_1_, p_184134_3_, p_184134_5_);
+		PositionedSoundRecord positionedsoundrecord = new PositionedSoundRecord(p_184134_7_, p_184134_8_, p_184134_9_, p_184134_10_, (float) p_184134_1_, (float) p_184134_3_, (float) p_184134_5_);
 
-		if (distanceDelay && d0 > 100.0D) {
+		if (p_184134_11_ && d0 > 100.0D) {
 			double d1 = Math.sqrt(d0) / 40.0D;
 			this.mc.getSoundHandler().playDelayedSound(positionedsoundrecord, (int)(d1 * 20.0D));
 		} else {
