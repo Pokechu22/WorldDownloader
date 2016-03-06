@@ -1,6 +1,5 @@
 package wdl;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -17,6 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 
 /**
  * Handles giving players capes.
@@ -118,22 +118,11 @@ public class CapeHandler {
 	
 	private static void setPlayerCape(NetworkPlayerInfo info,
 			ResourceLocation cape) throws Exception {
-		boolean foundBefore = false;
-		Field capeField = null;
-		for (Field f : info.getClass().getDeclaredFields()) {
-			if (f.getType().equals(ResourceLocation.class)) {
-				//We're looking for the second such field.
-				if (foundBefore) {
-					capeField = f;
-					break;
-				} else {
-					foundBefore = true;
-				}
-			}
-		}
-		if (capeField != null) {
-			capeField.setAccessible(true);
-			capeField.set(info, cape);
+		@SuppressWarnings("unchecked")
+		Map<MinecraftProfileTexture.Type, ResourceLocation> map = ReflectionUtils
+				.stealAndGetField(info, Map.class);
+		if (!map.containsKey(MinecraftProfileTexture.Type.CAPE)) {
+			map.put(MinecraftProfileTexture.Type.CAPE, cape);
 		}
 	}
 	
