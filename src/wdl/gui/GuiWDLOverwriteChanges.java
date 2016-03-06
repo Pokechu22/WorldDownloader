@@ -119,6 +119,7 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements
 	private String footer;
 	private String captionTitle;
 	private String captionSubtitle;
+	private String overwriteWarning1, overwriteWarning2;
 	
 	private String backingUpTitle;
 	
@@ -127,14 +128,22 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements
 		backingUp = false;
 		
 		title = I18n.format("wdl.gui.overwriteChanges.title");
-		footer = I18n.format("wdl.gui.overwriteChanges.footer", lastSaved, lastPlayed);
+		if (lastSaved != -1) {
+			footer = I18n.format("wdl.gui.overwriteChanges.footer", lastSaved, lastPlayed);
+		} else {
+			footer = I18n.format("wdl.gui.overwriteChanges.footerNeverSaved", lastPlayed);
+		}
 		captionTitle = I18n.format("wdl.gui.overwriteChanges.captionTitle");
 		captionSubtitle = I18n.format("wdl.gui.overwriteChanges.captionSubtitle");
+		overwriteWarning1 = I18n.format("wdl.gui.overwriteChanges.overwriteWarning1");
+		overwriteWarning2 = I18n.format("wdl.gui.overwriteChanges.overwriteWarning2");
 		
 		backingUpTitle = I18n.format("wdl.gui.overwriteChanges.backingUp.title");
 		
-		infoBoxWidth = fontRendererObj.getStringWidth(captionTitle);
-		infoBoxHeight = 22 * 5;
+		// TODO: Figure out the widest between captionTitle, captionSubtitle,
+		// overwriteWarning1, and overwriteWarning2.
+		infoBoxWidth = fontRendererObj.getStringWidth(overwriteWarning1);
+		infoBoxHeight = 22 * 6;
 		
 		// Ensure that the infobox is wide enough for the buttons.
 		// While the default caption title is short enough, a translation may
@@ -235,6 +244,11 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements
 					infoBoxY, 0xFFFFFF);
 			drawCenteredString(fontRendererObj, captionSubtitle, width / 2,
 					infoBoxY + fontRendererObj.FONT_HEIGHT, 0xFFFFFF);
+
+			drawCenteredString(fontRendererObj, overwriteWarning1, width / 2,
+					infoBoxY + 115, 0xFFFFFF);
+			drawCenteredString(fontRendererObj, overwriteWarning2, width / 2,
+					infoBoxY + 115 + fontRendererObj.FONT_HEIGHT, 0xFFFFFF);
 			
 			super.drawScreen(mouseX, mouseY, partialTicks);
 			
