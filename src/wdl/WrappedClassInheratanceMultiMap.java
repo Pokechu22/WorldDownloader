@@ -13,7 +13,7 @@ import net.minecraft.world.chunk.storage.AnvilChunkLoader;
  * Wraps a {@link ClassInheritanceMultiMap}, to help avoid
  * {@link ConcurrentModificationException}s.
  * 
- * The {@link #iterator()} and {@link #func_180215_b(Class)} methods will return
+ * The {@link #iterator()} and {@link #getByClass(Class)} methods will return
  * different things based off of the current stack trace -- if it contains
  * {@link AnvilChunkLoader}, the iterator for this instance is returned;
  * otherwise the iterator for the real one is returned.
@@ -84,7 +84,6 @@ public class WrappedClassInheratanceMultiMap<T> extends ClassInheritanceMultiMap
 	 */
 	@Override
 	public boolean add(T obj) {
-		System.out.println("Added " + obj);
 		super.add(obj);
 		return wrapped.add(obj);
 	}
@@ -97,7 +96,6 @@ public class WrappedClassInheratanceMultiMap<T> extends ClassInheritanceMultiMap
 	 */
 	@Override
 	public boolean remove(Object obj) {
-		System.out.println("Removed " + obj);
 		super.remove(obj);
 		return wrapped.remove(obj);
 	}
@@ -110,7 +108,6 @@ public class WrappedClassInheratanceMultiMap<T> extends ClassInheritanceMultiMap
 	 * @return
 	 */
 	public boolean removeWDL(Object obj) {
-		System.out.println("Really removed " + obj);
 		return super.remove(obj);
 	}
 	
@@ -122,7 +119,6 @@ public class WrappedClassInheratanceMultiMap<T> extends ClassInheritanceMultiMap
 	 * @return
 	 */
 	public boolean addWDL(T obj) {
-		System.out.println("Really added " + obj);
 		return super.add(obj);
 	}
 	
