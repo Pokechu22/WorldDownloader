@@ -18,12 +18,14 @@
 <p><label>Forum comment link<input type="text" id="post" /></label></p>
 <p><label>Installed minecraft version</label></p>
 <p><select id="main-version">
+<optgroup label="-- select --"><option disabled selected> -- </option></optgroup>
 <optgroup label="Protocol 107"><option>1.9</option></optgroup>
 <optgroup label="Protocol 47"><option>1.8.9</option><option>1.8.8</option><option>1.8.7</option><option>1.8.6</option><option>1.8.5</option><option>1.8.4</option><option>1.8.3</option><option>1.8.2</option><option>1.8.1</option><option>1.8</option></optgroup>
 <optgroup label="Protocol 5"><option>1.7.10</option><option>1.7.9</option><option>1.7.8</option><option>1.7.7</option><option>1.7.6</option></optgroup>
 <optgroup label="Protocol 4"><option>1.7.5</option><option>1.7.4</option><option>1.7.3</option><option>1.7.2</option><option>1.7.1</option></optgroup></select></p>
 <p><label>Supported minecraft versions (hold shift or control)</label></p>
 <p><select id="supported-versions" size="23" multiple>
+<optgroup label="-- select --"><option disabled selected> -- </option></optgroup>
 <optgroup label="Protocol 107"><option>1.9</option></optgroup>
 <optgroup label="Protocol 47"><option>1.8.9</option><option>1.8.8</option><option>1.8.7</option><option>1.8.6</option><option>1.8.5</option><option>1.8.4</option><option>1.8.3</option><option>1.8.2</option><option>1.8.1</option><option>1.8</option></optgroup>
 <optgroup label="Protocol 5"><option>1.7.10</option><option>1.7.9</option><option>1.7.8</option><option>1.7.7</option><option>1.7.6</option></optgroup>
@@ -42,7 +44,7 @@
 		Loader: "",
 		Post: "",
 		Minecraft: "",
-		MinecraftSupported: [],
+		MinecraftCompatible: [],
 		Hashes: []
 	};
 	
