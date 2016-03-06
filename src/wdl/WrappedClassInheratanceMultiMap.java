@@ -41,15 +41,19 @@ public class WrappedClassInheratanceMultiMap<T> extends ClassInheritanceMultiMap
 				ClassInheritanceMultiMap.class, Set.class);
 		Class<T> clazz = ReflectionUtils.stealAndGetField(original,
 				ClassInheritanceMultiMap.class, Class.class);
+		List<T> values = ReflectionUtils.stealAndGetField(original,
+				ClassInheritanceMultiMap.class, List.class);
 		
-		return new WrappedClassInheratanceMultiMap<T>(clazz, set, map, original);
+		return new WrappedClassInheratanceMultiMap<T>(clazz, set, map, values,
+				original);
 	}
 
 	private final ClassInheritanceMultiMap<T> wrapped;
 	
 	@SuppressWarnings("unchecked")
 	private WrappedClassInheratanceMultiMap(Class<T> clazz, Set<T> set,
-			Map<Class<?>, List<T>> map, ClassInheritanceMultiMap<T> wrapped) {
+			Map<Class<?>, List<T>> map, List<T> list,
+			ClassInheritanceMultiMap<T> wrapped) {
 		super(clazz);
 		
 		this.wrapped = wrapped;
@@ -59,12 +63,17 @@ public class WrappedClassInheratanceMultiMap<T> extends ClassInheritanceMultiMap
 				ClassInheritanceMultiMap.class, Set.class);
 		Map<Class<?>, List<T>> ownMap = ReflectionUtils.stealAndGetField(this,
 				ClassInheritanceMultiMap.class, Map.class);
+		List<T> ownList = ReflectionUtils.stealAndGetField(this,
+				ClassInheritanceMultiMap.class, List.class);
 		
 		ownSet.clear();
 		ownSet.addAll(set);
 		
 		ownMap.clear();
 		ownMap.putAll(map);
+		
+		ownList.clear();
+		ownList.addAll(list);
 	}
 	
 	/**
@@ -75,6 +84,7 @@ public class WrappedClassInheratanceMultiMap<T> extends ClassInheritanceMultiMap
 	 */
 	@Override
 	public boolean add(T obj) {
+		System.out.println("Added " + obj);
 		super.add(obj);
 		return wrapped.add(obj);
 	}
@@ -87,6 +97,7 @@ public class WrappedClassInheratanceMultiMap<T> extends ClassInheritanceMultiMap
 	 */
 	@Override
 	public boolean remove(Object obj) {
+		System.out.println("Removed " + obj);
 		super.remove(obj);
 		return wrapped.remove(obj);
 	}
@@ -99,6 +110,7 @@ public class WrappedClassInheratanceMultiMap<T> extends ClassInheritanceMultiMap
 	 * @return
 	 */
 	public boolean removeWDL(Object obj) {
+		System.out.println("Really removed " + obj);
 		return super.remove(obj);
 	}
 	
@@ -110,6 +122,7 @@ public class WrappedClassInheratanceMultiMap<T> extends ClassInheritanceMultiMap
 	 * @return
 	 */
 	public boolean addWDL(T obj) {
+		System.out.println("Really added " + obj);
 		return super.add(obj);
 	}
 	
