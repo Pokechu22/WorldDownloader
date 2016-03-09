@@ -515,6 +515,27 @@ public class WDLPluginChannels {
 	}
 	
 	/**
+	 * Removes the given key from the current permission requests.
+	 * 
+	 * Does nothing if that value was not already being requested.
+	 * 
+	 * @param key The key to remove.
+	 */
+	public static void removeRequest(String key) {
+			requests.remove(key);
+	}
+	
+	/**
+	 * Gets the requested value for the given key.
+	 * 
+	 * @param key The key to get.
+	 * @return The requested value, or null if there is no such request.
+	 */
+	public static String getRequest(String key) {
+			return requests.get(key);
+	}
+	
+	/**
 	 * Gets an immutable copy of the current requests.
 	 */
 	public static Map<String, String> getRequests() {
