@@ -468,7 +468,7 @@ public class WDL {
 		}
 		WDL.minecraft.displayGuiScreen((GuiScreen) null);
 		WDL.minecraft.setIngameFocus();
-		chunkLoader = saveHandler.getChunkLoader(worldClient.provider);
+		chunkLoader = WDLChunkLoader.create(saveHandler, worldClient.provider);
 		newTileEntities = new HashMap<BlockPos, TileEntity>();
 		newEntities = new HashMap<Integer, Entity>();
 		newMapDatas = new HashMap<Integer, MapData>();
