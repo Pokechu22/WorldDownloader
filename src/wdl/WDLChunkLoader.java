@@ -3,16 +3,16 @@ package wdl;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.ClassInheratanceMultiMap;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.MinecraftException;
 import net.minecraft.world.NextTickListEntry;
@@ -117,6 +117,7 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 	 *            time.
 	 * @return A new NBTTagCompound
 	 */
+	@SuppressWarnings("unchecked")
 	private NBTTagCompound writeChunkToNBT(Chunk chunk, World world) {
 		NBTTagCompound compound = new NBTTagCompound();
 		
@@ -129,25 +130,20 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 				chunk.isTerrainPopulated());
 		compound.setBoolean("LightPopulated", chunk.isLightPopulated());
 		compound.setLong("InhabitedTime", chunk.getInhabitedTime());
-		ExtendedBlockStorage[] var4 = chunk.getBlockStorageArray();
-		NBTTagList var5 = new NBTTagList();
-		boolean var6 = !world.provider.getHasNoSky();
-		ExtendedBlockStorage[] var7 = var4;
-		int var8 = var4.length;
-		NBTTagCompound var11;
+		ExtendedBlockStorage[] blockStorageArray = chunk.getBlockStorageArray();
+		NBTTagList blockStorageList = new NBTTagList();
+		boolean hasNoSky = !world.provider.getHasNoSky();
 
-		for (int var9 = 0; var9 < var8; ++var9) {
-			ExtendedBlockStorage var10 = var7[var9];
-
-			if (var10 != null) {
-				var11 = new NBTTagCompound();
-				var11.setByte("Y", (byte)(var10.getYLocation() >> 4 & 255));
-				byte[] var12 = new byte[var10.getData().length];
+		for (ExtendedBlockStorage blockStorage : blockStorageArray) {
+			if (blockStorage != null) {
+				NBTTagCompound blockData = new NBTTagCompound();
+				blockData.setByte("Y", (byte)(blockStorage.getYLocation() >> 4 & 255));
+				byte[] var12 = new byte[blockStorage.getData().length];
 				NibbleArray var13 = new NibbleArray();
 				NibbleArray var14 = null;
 
-				for (int var15 = 0; var15 < var10.getData().length; ++var15) {
-					char var16 = var10.getData()[var15];
+				for (int var15 = 0; var15 < blockStorage.getData().length; ++var15) {
+					char var16 = blockStorage.getData()[var15];
 					int var17 = var15 & 15;
 					int var18 = var15 >> 8 & 15;
 					int var19 = var15 >> 4 & 15;
@@ -164,82 +160,77 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 					var13.set(var17, var18, var19, var16 & 15);
 				}
 
-				var11.setByteArray("Blocks", var12);
-				var11.setByteArray("Data", var13.getData());
+				blockData.setByteArray("Blocks", var12);
+				blockData.setByteArray("Data", var13.getData());
 
 				if (var14 != null) {
-					var11.setByteArray("Add", var14.getData());
+					blockData.setByteArray("Add", var14.getData());
 				}
 
-				var11.setByteArray("BlockLight", var10.getBlocklightArray()
+				blockData.setByteArray("BlockLight", blockStorage.getBlocklightArray()
 						.getData());
 
-				if (var6) {
-					var11.setByteArray("SkyLight", var10.getSkylightArray()
+				if (hasNoSky) {
+					blockData.setByteArray("SkyLight", blockStorage.getSkylightArray()
 							.getData());
 				} else {
-					var11.setByteArray("SkyLight", new byte[var10
+					blockData.setByteArray("SkyLight", new byte[blockStorage
 							.getBlocklightArray().getData().length]);
 				}
 
-				var5.appendTag(var11);
+				blockStorageList.appendTag(blockData);
 			}
 		}
 
-		compound.setTag("Sections", var5);
+		compound.setTag("Sections", blockStorageList);
 		compound.setByteArray("Biomes", chunk.getBiomeArray());
 		chunk.setHasEntities(false);
-		NBTTagList var20 = new NBTTagList();
-		Iterator var22;
+		NBTTagList entityList = new NBTTagList();
 
-		for (var8 = 0; var8 < chunk.getEntityLists().length; ++var8) {
-			var22 = chunk.getEntityLists()[var8].iterator();
+		for (ClassInheratanceMultiMap map : chunk.getEntityLists()) {
+			for (Entity entity : (Iterable<Entity>)map) {
+				NBTTagCompound entityData = new NBTTagCompound();
 
-			while (var22.hasNext()) {
-				Entity var24 = (Entity) var22.next();
-				var11 = new NBTTagCompound();
-
-				if (var24.writeToNBTOptional(var11)) {
+				if (entity.writeToNBTOptional(entityData)) {
 					chunk.setHasEntities(true);
-					var20.appendTag(var11);
+					entityList.appendTag(entityData);
 				}
 			}
 		}
 
-		compound.setTag("Entities", var20);
-		NBTTagList var21 = new NBTTagList();
-		var22 = chunk.getTileEntityMap().values().iterator();
-
-		while (var22.hasNext()) {
-			TileEntity var25 = (TileEntity) var22.next();
-			var11 = new NBTTagCompound();
-			var25.writeToNBT(var11);
-			var21.appendTag(var11);
+		compound.setTag("Entities", entityList);
+		
+		NBTTagList tileEntityList = new NBTTagList();
+		Map<BlockPos, TileEntity> tileEntityMap = chunk.getTileEntityMap();
+		for (Map.Entry<BlockPos, TileEntity> e : tileEntityMap.entrySet()) {
+			TileEntity te = e.getValue();
+			NBTTagCompound teData = new NBTTagCompound();
+			te.writeToNBT(teData);
+			tileEntityList.appendTag(teData);
 		}
 
-		compound.setTag("TileEntities", var21);
-		List var23 = world.getPendingBlockUpdates(chunk, false);
+		compound.setTag("TileEntities", tileEntityList);
+		List<NextTickListEntry> updateList = world.getPendingBlockUpdates(chunk,
+				false);
 
-		if (var23 != null) {
-			long var26 = world.getTotalWorldTime();
-			NBTTagList var27 = new NBTTagList();
-			Iterator var28 = var23.iterator();
+		if (updateList != null) {
+			long worldTime = world.getTotalWorldTime();
+			NBTTagList entries = new NBTTagList();
 
-			while (var28.hasNext()) {
-				NextTickListEntry var29 = (NextTickListEntry) var28.next();
-				NBTTagCompound var30 = new NBTTagCompound();
-				ResourceLocation var31 = (ResourceLocation) Block.blockRegistry
-						.getNameForObject(var29.func_151351_a());
-				var30.setString("i", var31 == null ? "" : var31.toString());
-				var30.setInteger("x", var29.field_180282_a.getX());
-				var30.setInteger("y", var29.field_180282_a.getY());
-				var30.setInteger("z", var29.field_180282_a.getZ());
-				var30.setInteger("t", (int)(var29.scheduledTime - var26));
-				var30.setInteger("p", var29.priority);
-				var27.appendTag(var30);
+			for (NextTickListEntry entry : updateList) {
+				NBTTagCompound entryTag = new NBTTagCompound();
+				ResourceLocation location = (ResourceLocation) Block.blockRegistry
+						.getNameForObject(entry.func_151351_a());
+				entryTag.setString("i", location == null ? "" : location.toString());
+				entryTag.setInteger("x", entry.field_180282_a.getX());
+				entryTag.setInteger("y", entry.field_180282_a.getY());
+				entryTag.setInteger("z", entry.field_180282_a.getZ());
+				entryTag.setInteger("t", (int)(entry.scheduledTime - worldTime));
+				entryTag.setInteger("p", entry.priority);
+				entries.appendTag(entryTag);
 			}
 
-			compound.setTag("TileTicks", var27);
+			compound.setTag("TileTicks", entries);
 		}
 		
 		return compound;
