@@ -1,6 +1,5 @@
 package wdl;
 
-import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -13,14 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockBeacon;
-import net.minecraft.block.BlockBrewingStand;
-import net.minecraft.block.BlockChest;
-import net.minecraft.block.BlockDispenser;
-import net.minecraft.block.BlockFurnace;
-import net.minecraft.block.BlockHopper;
-import net.minecraft.block.BlockNote;
 import net.minecraft.client.ClientBrandRetriever;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -43,13 +34,6 @@ import net.minecraft.nbt.NBTTagFloat;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityBeacon;
-import net.minecraft.tileentity.TileEntityBrewingStand;
-import net.minecraft.tileentity.TileEntityChest;
-import net.minecraft.tileentity.TileEntityDispenser;
-import net.minecraft.tileentity.TileEntityFurnace;
-import net.minecraft.tileentity.TileEntityHopper;
-import net.minecraft.tileentity.TileEntityNote;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ClassInheratanceMultiMap;
 import net.minecraft.util.IChatComponent;
@@ -58,7 +42,6 @@ import net.minecraft.world.MinecraftException;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.AnvilSaveConverter;
 import net.minecraft.world.chunk.storage.IChunkLoader;
-import net.minecraft.world.chunk.storage.RegionFileCache;
 import net.minecraft.world.storage.MapData;
 import net.minecraft.world.storage.SaveHandler;
 import net.minecraft.world.storage.ThreadedFileIOBase;
@@ -651,121 +634,6 @@ public class WDL {
 	}
 
 	/**
-	 * Load the previous version of the chunk, and copy in any previous tile
-	 * entities.
-	 * 
-	 * Needed so that the old tile entities aren't lost.
-	 */
-	public static void importTileEntities(Chunk chunk) {
-		File chunkSaveLocation = ReflectionUtils.stealAndGetField(chunkLoader,
-				File.class);
-		DataInputStream dis = null;
-		
-		try {
-			dis = RegionFileCache.getChunkInputStream(
-					chunkSaveLocation, chunk.xPosition, chunk.zPosition);
-
-			if (dis == null) {
-				// This happens whenever the chunk hasn't been saved before.
-				// It's a normal case.
-				return;
-			}
-			
-			NBTTagCompound chunkNBT = CompressedStreamTools.read(dis);
-			// NBTTagCompound levelNBT = chunkNBT.getCompoundTag( "Level" );
-			NBTTagCompound levelNBT = chunkNBT.getCompoundTag("Level");
-			// The official code checks if the chunk is in the right location.
-			// Should I too?.
-			NBTTagList tileEntitiesNBT = levelNBT
-					.getTagList("TileEntities", 10);
-
-			if (tileEntitiesNBT != null) {
-				for (int i = 0; i < tileEntitiesNBT.tagCount(); i++) {
-					NBTTagCompound tileEntityNBT = tileEntitiesNBT
-							.getCompoundTagAt(i);
-					TileEntity te = TileEntity
-							.createAndLoadEntity(tileEntityNBT);
-					
-					te.setWorldObj(worldClient);
-					
-					String entityType = tileEntityNBT.getString("id") +
-							" (" + te.getClass().getCanonicalName() +")";
-
-					if (shouldImportTileEntity(te)) {
-						if (!newTileEntities.containsKey(te.getPos())) {
-							//The player didn't save this tile entity in
-							//this download session.  So we use the old one.
-							//Note that this doesn't mean that the old one's
-							//a valid one; it could be empty.
-							worldClient.setTileEntity(te.getPos(), te);
-							WDLMessages.chatMessageTranslated(
-									WDLMessageTypes.LOAD_TILE_ENTITY,
-									"wdl.messages.tileEntity.usingOld", 
-									entityType, te.getPos());
-						} else {
-							worldClient.setTileEntity(te.getPos(), 
-									newTileEntities.get(te.getPos()));
-							WDLMessages.chatMessageTranslated(
-									WDLMessageTypes.LOAD_TILE_ENTITY,
-									"wdl.messages.tileEntity.usingNew", 
-									entityType, te.getPos());
-						}
-					} else {
-						WDLMessages.chatMessageTranslated(
-								WDLMessageTypes.LOAD_TILE_ENTITY,
-								"wdl.messages.tileEntity.notImporting", 
-								entityType, te.getPos());
-					}
-				}
-			}
-		} catch (Exception e) {
-			WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR,
-					"wdl.messages.generalError.failedToImportTE",
-					chunk.xPosition, chunk.zPosition, e);
-		} finally {
-			if (dis != null) {
-				try {
-					dis.close();
-				} catch (Exception e) {
-					throw new RuntimeException(e);
-				}
-			}
-		}
-	}
-
-	/**
-	 * Checks if the TileEntity should be imported. Only "problematic" (IE,
-	 * those that require manual interaction such as chests) TileEntities
-	 * will be imported.
-	 */
-	public static boolean shouldImportTileEntity(TileEntity te) {
-		Block block = te.getBlockType();
-
-		if (block instanceof BlockChest && te instanceof TileEntityChest) {
-			return true;
-		} else if (block instanceof BlockDispenser
-				&& te instanceof TileEntityDispenser) {
-			return true;
-		} else if (block instanceof BlockFurnace
-				&& te instanceof TileEntityFurnace) {
-			return true;
-		} else if (block instanceof BlockNote && te instanceof TileEntityNote) {
-			return true;
-		} else if (block instanceof BlockBrewingStand
-				&& te instanceof TileEntityBrewingStand) {
-			return true;
-		} else if (block instanceof BlockHopper
-				&& te instanceof TileEntityHopper) {
-			return true;
-		} else if (block instanceof BlockBeacon
-				&& te instanceof TileEntityBeacon) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	/**
 	 * Applies all registered {@link ITileEntityEditor}s to the given chunk.
 	 * 
 	 * Note: {@link #importTileEntities(Chunk)} must be called before this method.
@@ -1111,12 +979,6 @@ public class WDL {
 		if (!WDLPluginChannels.canDownloadAtAll()) { return; }
 		
 		if (!WDLPluginChannels.canSaveChunk(c)) { return; }
-		
-		if (!WDLPluginChannels.canSaveTileEntities()) {
-			c.getTileEntityMap().clear();
-		}
-		
-		importTileEntities(c);
 		
 		if (WDLPluginChannels.canSaveTileEntities()) {
 			editTileEntities(c);
