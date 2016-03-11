@@ -5,8 +5,10 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBeacon;
@@ -216,7 +218,7 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 
 		compound.setTag("Entities", entityList);
 
-		NBTTagList tileEntityList = saveTileEntities(chunk);
+		NBTTagList tileEntityList = getTileEntityList(chunk);
 		compound.setTag("TileEntities", tileEntityList);
 		List<NextTickListEntry> updateList = world.getPendingBlockUpdates(
 				chunk, false);
@@ -250,7 +252,7 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 	 * Creates an NBT list of all tile entities in this chunk, importing tile
 	 * entities as needed.
 	 */
-	public NBTTagList saveTileEntities(Chunk chunk) {
+	public NBTTagList getTileEntityList(Chunk chunk) {
 		NBTTagList tileEntityList = new NBTTagList();
 		
 		if (!WDLPluginChannels.canSaveTileEntities(chunk)) {
@@ -258,23 +260,56 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 		}
 		
 		@SuppressWarnings("unchecked")
-		Map<BlockPos, TileEntity> tileEntityMap = chunk.getTileEntityMap();
+		Map<BlockPos, TileEntity> chunkTEMap = chunk.getTileEntityMap();
+		Map<BlockPos, NBTTagCompound> oldTEMap = getOldTileEntities(chunk);
 
-		// The benefit of a map is that it allows us to overwrite old values.
-		Map<BlockPos, NBTTagCompound> dataMap = new HashMap<BlockPos, NBTTagCompound>();
-
-		for (Map.Entry<BlockPos, TileEntity> e : tileEntityMap.entrySet()) {
-			TileEntity te = e.getValue();
-			NBTTagCompound teData = new NBTTagCompound();
-			te.writeToNBT(teData);
-			dataMap.put(e.getKey(), teData);
-		}
-		// TODO: I may be redundantly writing a tile entity out, but it seem
-		// easier to do that than check if it's imported.
-		dataMap.putAll(importTileEntities(chunk));
+		// All of the locations of tile entities in the chunk.
+		Set<BlockPos> allTELocations = new HashSet<BlockPos>();
+		allTELocations.addAll(chunkTEMap.keySet());
+		allTELocations.addAll(oldTEMap.keySet());
 		
-		for (NBTTagCompound compound : dataMap.values()) {
-			tileEntityList.appendTag(compound);
+		// TODO: Performance here isn't good - excessive iteration
+		// I'll make the newTileEntities value stored chunk-wise later.
+		for (BlockPos pos : WDL.newTileEntities.keySet()) {
+			if (chunk.isAtLocation(pos.getX() << 4, pos.getZ() << 4)) {
+				allTELocations.add(pos);
+			}
+		}
+
+		for (BlockPos pos : allTELocations) {
+			// Now, add all of the tile entities, using the "best" map
+			// if it's in multiple.
+			if (WDL.newTileEntities.containsKey(pos)) {
+				TileEntity te = WDL.newTileEntities.get(pos);
+				NBTTagCompound compound = new NBTTagCompound();
+				te.writeToNBT(compound);
+				
+				String entityType = compound.getString("id") +
+						" (" + te.getClass().getCanonicalName() +")";
+				WDLMessages.chatMessageTranslated(
+						WDLMessageTypes.LOAD_TILE_ENTITY,
+						"wdl.messages.tileEntity.usingNew",
+						entityType, pos);
+				
+				tileEntityList.appendTag(compound);
+			} else if (oldTEMap.containsKey(pos)) {
+				NBTTagCompound compound = oldTEMap.get(pos);
+				String entityType = compound.getString("id");
+				WDLMessages.chatMessageTranslated(
+						WDLMessageTypes.LOAD_TILE_ENTITY,
+						"wdl.messages.tileEntity.usingOld",
+						entityType, pos);
+				
+				tileEntityList.appendTag(compound);
+			} else if (chunkTEMap.containsKey(pos)) {
+				// TODO: Do we want a chat message for this?
+				// It seems unnecessary.
+				TileEntity te = chunkTEMap.get(pos);
+				NBTTagCompound compound = new NBTTagCompound();
+				te.writeToNBT(compound);
+				
+				tileEntityList.appendTag(compound);
+			}
 		}
 		
 		return tileEntityList;
@@ -282,8 +317,17 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 
 	/**
 	 * Gets a map of all tile entities in the previous version of that chunk.
+	 * Only "problematic" tile entities (those that require manual opening) will
+	 * be imported, and the tile entity must be in the correct position (IE, the
+	 * block at the tile entity's position must match the block normally used
+	 * with that tile entity). See
+	 * {@link #shouldImportTileEntity(String, BlockPos)} for details.
+	 * 
+	 * @param chunk
+	 *            The chunk to import tile entities from.
+	 * @return A map of positions to tile entities.
 	 */
-	public Map<BlockPos, NBTTagCompound> importTileEntities(Chunk chunk) {
+	public Map<BlockPos, NBTTagCompound> getOldTileEntities(Chunk chunk) {
 		DataInputStream dis = null;
 		Map<BlockPos, NBTTagCompound> returned = new HashMap<BlockPos, NBTTagCompound>();
 
@@ -308,27 +352,12 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 					BlockPos pos = new BlockPos(oldNBT.getInteger("x"),
 							oldNBT.getInteger("y"), oldNBT.getInteger("z"));
 
-					if (shouldImportTileEntity(entityID, pos)) {
-						if (!WDL.newTileEntities.containsKey(pos)) {
-							// The player didn't save this tile entity in
-							// this download session. So we use the old one.
-							// Note that this doesn't mean that the old one's
-							// a valid one; it could be empty.
-							WDLMessages.chatMessageTranslated(
-									WDLMessageTypes.LOAD_TILE_ENTITY,
-									"wdl.messages.tileEntity.usingOld",
-									entityID, pos);
-							returned.put(pos, oldNBT);
-						} else {
-							NBTTagCompound compound = new NBTTagCompound();
-							WDL.newTileEntities.get(pos).writeToNBT(compound);
-							WDLMessages.chatMessageTranslated(
-									WDLMessageTypes.LOAD_TILE_ENTITY,
-									"wdl.messages.tileEntity.usingNew",
-									entityID, pos);
-							returned.put(pos, compound);
-						}
+					if (shouldImportTileEntity(entityID, pos, chunk)) {
+						returned.put(pos, oldNBT);
 					} else {
+						// Even if this tile entity is saved in another way
+						// later, we still want the player to know we did not
+						// import something in that chunk.
 						WDLMessages.chatMessageTranslated(
 								WDLMessageTypes.LOAD_TILE_ENTITY,
 								"wdl.messages.tileEntity.notImporting",
@@ -355,10 +384,22 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 	/**
 	 * Checks if the TileEntity should be imported. Only "problematic" (IE,
 	 * those that require manual interaction such as chests) TileEntities will
-	 * be imported.
+	 * be imported. Additionally, the block at the tile entity's coordinates
+	 * must be one that would normally be used with that tile entity.
+	 * 
+	 * @param entityID
+	 *            The tile entity's ID, as found in the 'id' tag.
+	 * @param pos
+	 *            The location of the tile entity, as created by its 'x', 'y',
+	 *            and 'z' tags.
+	 * @param chunk
+	 *            The chunk for which entities are being imported, used to get
+	 *            blocks.
+	 * @return <code>true</code> if that tile entity should be imported.
 	 */
-	public boolean shouldImportTileEntity(String entityID, BlockPos pos) {
-		Block block = WDL.worldClient.getBlockState(pos).getBlock();
+	public boolean shouldImportTileEntity(String entityID, BlockPos pos,
+			Chunk chunk) {
+		Block block = chunk.getBlock(pos);
 
 		if (block instanceof BlockChest && entityID.equals("Chest")) {
 			return true;
