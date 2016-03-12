@@ -47,7 +47,7 @@ public class WDLApi {
 			return;
 		}
 		
-		WDL.newTileEntities.put(pos, te);
+		WDL.saveTileEntity(pos, te);
 	}
 	
 	/**

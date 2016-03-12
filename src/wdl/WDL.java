@@ -38,6 +38,7 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.ClassInheratanceMultiMap;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ReportedException;
+import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.MinecraftException;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.AnvilSaveConverter;
@@ -141,10 +142,9 @@ public class WDL {
 	public static IChunkLoader chunkLoader;
 
 	/**
-	 * Positions and contents of all of the new tileentities, to be overwritten
-	 * from the old version when {@linkplain #importTileEntities(Chunk) saving}.
+	 * All tile entities that were saved manually, by chunk and then position.
 	 */
-	public static HashMap<BlockPos, TileEntity> newTileEntities = new HashMap<BlockPos, TileEntity>();
+	public static HashMap<ChunkCoordIntPair, Map<BlockPos, TileEntity>> newTileEntities = new HashMap<ChunkCoordIntPair, Map<BlockPos, TileEntity>>();
 	
 	/**
 	 * All entities that were downloaded.  The key is the entity's EID.
@@ -452,7 +452,7 @@ public class WDL {
 		WDL.minecraft.displayGuiScreen((GuiScreen) null);
 		WDL.minecraft.setIngameFocus();
 		chunkLoader = WDLChunkLoader.create(saveHandler, worldClient.provider);
-		newTileEntities = new HashMap<BlockPos, TileEntity>();
+		newTileEntities = new HashMap<ChunkCoordIntPair,Map<BlockPos,TileEntity>>();
 		newEntities = new HashMap<Integer, Entity>();
 		newMapDatas = new HashMap<Integer, MapData>();
 
@@ -1567,6 +1567,26 @@ public class WDL {
 		for (int i = 0; i < inventory.getFieldCount(); i++) {
 			tileEntity.setField(i, inventory.getField(i));
 		}
+	}
+	
+	/**
+	 * Adds the given tile entity to {@link #newTileEntities}.
+	 * 
+	 * @param pos
+	 *            The position of the tile entity
+	 * @param te
+	 *            The tile entity to add
+	 */
+	public static void saveTileEntity(BlockPos pos, TileEntity te) {
+		int chunkX = pos.getX() / 16;
+		int chunkZ = pos.getZ() / 16;
+		
+		ChunkCoordIntPair chunkPos = new ChunkCoordIntPair(chunkX, chunkZ);
+		
+		if (!newTileEntities.containsKey(chunkPos)) {
+			newTileEntities.put(chunkPos, new HashMap<BlockPos, TileEntity>());
+		}
+		newTileEntities.get(chunkPos).put(pos, te);
 	}
 	
 	/**

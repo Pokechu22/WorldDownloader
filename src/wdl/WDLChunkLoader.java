@@ -262,25 +262,22 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 		@SuppressWarnings("unchecked")
 		Map<BlockPos, TileEntity> chunkTEMap = chunk.getTileEntityMap();
 		Map<BlockPos, NBTTagCompound> oldTEMap = getOldTileEntities(chunk);
-
+		Map<BlockPos, TileEntity> newTEMap = WDL.newTileEntities.get(chunk.getChunkCoordIntPair());
+		if (newTEMap == null) {
+			newTEMap = new HashMap<BlockPos, TileEntity>();
+		}
+		
 		// All of the locations of tile entities in the chunk.
 		Set<BlockPos> allTELocations = new HashSet<BlockPos>();
 		allTELocations.addAll(chunkTEMap.keySet());
-		allTELocations.addAll(oldTEMap.keySet());
-		
-		// TODO: Performance here isn't good - excessive iteration
-		// I'll make the newTileEntities value stored chunk-wise later.
-		for (BlockPos pos : WDL.newTileEntities.keySet()) {
-			if (chunk.isAtLocation(pos.getX() << 4, pos.getZ() << 4)) {
-				allTELocations.add(pos);
-			}
-		}
+		allTELocations.addAll(oldTEMap.keySet()); 
+		allTELocations.addAll(newTEMap.keySet());
 
 		for (BlockPos pos : allTELocations) {
 			// Now, add all of the tile entities, using the "best" map
 			// if it's in multiple.
-			if (WDL.newTileEntities.containsKey(pos)) {
-				TileEntity te = WDL.newTileEntities.get(pos);
+			if (newTEMap.containsKey(pos)) {
+				TileEntity te = newTEMap.get(pos);
 				NBTTagCompound compound = new NBTTagCompound();
 				te.writeToNBT(compound);
 				

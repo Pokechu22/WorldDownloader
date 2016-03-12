@@ -374,15 +374,15 @@ public class WDLEvents {
 
 				WDL.saveContainerItems(WDL.windowContainer, chest1, 0);
 				WDL.saveContainerItems(WDL.windowContainer, chest2, 27);
-				WDL.newTileEntities.put(chestPos1, chest1);
-				WDL.newTileEntities.put(chestPos2, chest2);
+				WDL.saveTileEntity(chestPos1, chest1);
+				WDL.saveTileEntity(chestPos2, chest2);
 				
 				saveName = "doubleChest";
 			}
 			// basic chest
 			else {
 				WDL.saveContainerItems(WDL.windowContainer, (TileEntityChest) te, 0);
-				WDL.newTileEntities.put(WDL.lastClickedBlock, te);
+				WDL.saveTileEntity(WDL.lastClickedBlock, te);
 				saveName = "singleChest";
 			}
 		} else if (WDL.windowContainer instanceof ContainerChest
@@ -403,22 +403,22 @@ public class WDLEvents {
 					WDL.windowContainer, IInventory.class);
 			WDL.saveContainerItems(WDL.windowContainer, (TileEntityBrewingStand) te, 0);
 			WDL.saveInventoryFields(brewingInventory, (TileEntityBrewingStand) te);
-			WDL.newTileEntities.put(WDL.lastClickedBlock, te);
+			WDL.saveTileEntity(WDL.lastClickedBlock, te);
 			saveName = "brewingStand";
 		} else if (WDL.windowContainer instanceof ContainerDispenser) {
 			WDL.saveContainerItems(WDL.windowContainer, (TileEntityDispenser) te, 0);
-			WDL.newTileEntities.put(WDL.lastClickedBlock, te);
+			WDL.saveTileEntity(WDL.lastClickedBlock, te);
 			saveName = "dispenser";
 		} else if (WDL.windowContainer instanceof ContainerFurnace) {
 			IInventory furnaceInventory = ReflectionUtils.stealAndGetField(
 					WDL.windowContainer, IInventory.class);
 			WDL.saveContainerItems(WDL.windowContainer, (TileEntityFurnace) te, 0);
 			WDL.saveInventoryFields(furnaceInventory, (TileEntityFurnace) te);
-			WDL.newTileEntities.put(WDL.lastClickedBlock, te);
+			WDL.saveTileEntity(WDL.lastClickedBlock, te);
 			saveName = "furnace";
 		} else if (WDL.windowContainer instanceof ContainerHopper) {
 			WDL.saveContainerItems(WDL.windowContainer, (TileEntityHopper) te, 0);
-			WDL.newTileEntities.put(WDL.lastClickedBlock, te);
+			WDL.saveTileEntity(WDL.lastClickedBlock, te);
 			saveName = "hopper";
 		} else if (WDL.windowContainer instanceof ContainerBeacon) {
 			//func_180611_e returns the beacon's IInventory tileBeacon.
@@ -427,7 +427,7 @@ public class WDLEvents {
 			TileEntityBeacon savedBeacon = (TileEntityBeacon)te;
 			WDL.saveContainerItems(WDL.windowContainer, savedBeacon, 0);
 			WDL.saveInventoryFields(beaconInventory, savedBeacon);
-			WDL.newTileEntities.put(WDL.lastClickedBlock, te);
+			WDL.saveTileEntity(WDL.lastClickedBlock, te);
 			saveName = "beacon";
 		} else {
 			return false;
@@ -454,7 +454,7 @@ public class WDLEvents {
 			TileEntityNote newTE = new TileEntityNote();
 			newTE.note = (byte)(param % 25);
 			WDL.worldClient.setTileEntity(pos, newTE);
-			WDL.newTileEntities.put(pos, newTE);
+			WDL.saveTileEntity(pos, newTE);
 			WDLMessages.chatMessageTranslated(WDLMessageTypes.ON_BLOCK_EVENT,
 					"wdl.messages.onBlockEvent.noteblock", pos, param, newTE);
 		}
