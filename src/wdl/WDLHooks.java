@@ -31,6 +31,7 @@ import wdl.api.IBlockEventListener;
 import wdl.api.IChatMessageListener;
 import wdl.api.IGuiHooksListener;
 import wdl.api.IPluginChannelListener;
+import wdl.api.WDLApi;
 import wdl.gui.GuiWDL;
 import wdl.gui.GuiWDLAbout;
 import wdl.gui.GuiWDLChunkOverrides;
@@ -402,6 +403,8 @@ public class WDLHooks {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void injectWDLButtons(GuiIngameMenu gui, List buttonList) {
+		WDLApi.ensureInitialized();
+		
 		int insertAtYPos = 0;
 	
 		for (Object obj : buttonList) {

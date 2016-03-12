@@ -338,6 +338,8 @@ public class WDL {
 	 * Starts the download.
 	 */
 	public static void startDownload() {
+		WDLApi.ensureInitialized();
+		
 		worldClient = minecraft.theWorld;
 
 		if (isMultiworld && worldName.isEmpty()) {

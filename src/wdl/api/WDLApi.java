@@ -286,7 +286,16 @@ public class WDLApi {
 		}
 	}
 	
+	/**
+	 * A method that ensures that this class has been loaded and everything is
+	 * initialized.  Extensions should not call this method.
+	 */
+	public static void ensureInitialized() {
+		logger.debug("WDLApi.ensureInitialized()");
+	}
+	
 	static {
+		logger.info("Loading default WDL extensions");
 		addWDLMod(new HologramHandler());
 		addWDLMod(new EntityRealigner());
 	}
