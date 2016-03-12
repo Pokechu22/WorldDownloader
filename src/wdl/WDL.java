@@ -23,7 +23,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -35,8 +34,6 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.ClassInheratanceMultiMap;
-import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ReportedException;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.MinecraftException;
@@ -943,139 +940,7 @@ public class WDL {
 		c.setTerrainPopulated(true);
 
 		try {
-			ClassInheratanceMultiMap[] oldMaps = c.getEntityLists().clone();
-			ClassInheratanceMultiMap[] maps = c.getEntityLists();
-			
-			if (!WDLPluginChannels.canSaveEntities(c)) {
-				// Temporarily delete entities if saving them is disabled.
-				for (int i = 0; i < maps.length; i++) {
-					WrappedClassInheratanceMultiMap<Entity> map =
-							WrappedClassInheratanceMultiMap
-							.<Entity> copyOf(maps[i]);
-					maps[i] = map;
-					for (Entity e : map.asIterable()) {
-						if (e instanceof EntityPlayer) {
-							//Skip players, as otherwise bad things happen, 
-							//such as deleting the current player and causing
-							//the screen to flicker.
-							continue;
-						}
-						
-						map.removeWDL(e);
-					}
-				}
-			} else {
-				// Remove entities of unwanted types.
-				for (int i = 0; i < maps.length; i++) {
-					WrappedClassInheratanceMultiMap<Entity> map =
-							WrappedClassInheratanceMultiMap
-							.<Entity> copyOf(maps[i]);
-					maps[i] = map;
-					for (Entity e : map.asIterable()) {
-						if (e instanceof EntityPlayer) {
-							//Skip players, as otherwise bad things happen, 
-							//such as deleting the current player and causing
-							//the screen to flicker.
-							continue;
-						}
-						
-						if (!EntityUtils.isEntityEnabled(e)) {
-							WDLMessages.chatMessageTranslated(
-									WDLMessageTypes.REMOVE_ENTITY,
-									"wdl.messages.removeEntity.notSavingUserPreference",
-									e);
-							
-							map.removeWDL(e);
-						} else {
-							IChatComponent unsafeReason = EntityUtils
-									.isUnsafeToSaveEntity(e);
-							if (unsafeReason != null) {
-								WDLMessages.chatMessageTranslated(
-										WDLMessageTypes.REMOVE_ENTITY,
-										"wdl.messages.removeEntity.notSavingUnsafe",
-										e, unsafeReason);
-								
-								map.removeWDL(e);
-							}
-						}
-					}
-				}
-				
-				// Add in new entities now.
-				// TODO: This is probably inefficient (as we go through ALL
-				// entities that were loaded.
-				for (Entity e : newEntities.values()) {
-					if (e.chunkCoordX == c.xPosition &&
-							e.chunkCoordZ == c.zPosition) {
-						// Unkill the entity so that it doesn't despawn on
-						// world load.  Note that 'isDead' is a bad name, as
-						// it actually means "Delete this entity next tick",
-						// not "this entitiy was killed by a player".
-						e.isDead = false;
-						@SuppressWarnings("unchecked")
-						WrappedClassInheratanceMultiMap<Entity> map = 
-								(WrappedClassInheratanceMultiMap<Entity>) maps[e.chunkCoordY];
-						map.addWDL(e);
-					}
-				}
-			}
-			
-			@SuppressWarnings("unchecked")
-			Iterable<Entity>[] iterableMaps = c.getEntityLists();
-			for (Iterable<Entity> entityList :  iterableMaps) {
-				for (Entity e : entityList) {
-					if (e instanceof EntityPlayer) {
-						// Again, skip players as moving or modifying them can
-						// cause bad things to happen.
-						continue;
-					}
-					
-					if (e.serverPosX != 0 || e.serverPosY != 0 || e.serverPosZ != 0) {
-						// Force the entity into its serverside location.
-						// Needed for certain things that move clientside,
-						// such as boats (http://imgur.com/3QQchZL)
-						//
-						// We make sure that at least one of serverPosX, y, and
-						// z is not 0 because an entity with a server pos of 0,
-						// 0, 0 probably has a different way of setting up its
-						// position (paintings).
-						// No sane entity will be at 0, 0, 0.  And moving them
-						// to it can effectively delete entities - see
-						// https://github.com/uyjulian/LiteModWDL/issues/4.
-						// (I also think this is the cause for the "world going
-						// invisible" issue).
-						e.posX = convertServerPos(e.serverPosX);
-						e.posY = convertServerPos(e.serverPosY);
-						e.posZ = convertServerPos(e.serverPosZ);
-					}
-					
-					for (Map.Entry<String, IEntityEditor> editor : entityEditors
-							.entrySet()) {
-						try {
-							if (editor.getValue().shouldEdit(e)) {
-								editor.getValue().editEntity(e);
-							}
-						} catch (Exception ex) {
-							String chunkInfo;
-							if (c == null) {
-								chunkInfo = "null";
-							} else {
-								chunkInfo = "at " + c.xPosition + ", " + c.zPosition;
-							}
-							throw new RuntimeException("Failed to edit entity " + e
-									+ " for chunk " + chunkInfo + " with extension "
-									+ editor.getKey(), ex);
-						}
-					}
-				}
-			}
-			
 			chunkLoader.saveChunk(worldClient, c);
-			
-			// Return the entity maps to the previous state.
-			for (int i = 0; i < oldMaps.length; i++) {
-				maps[i] = oldMaps[i];
-			}
 		} catch (Exception e) {
 			// Better tell the player that something didn't work:
 			WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR,

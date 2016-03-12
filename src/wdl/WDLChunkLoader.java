@@ -4,12 +4,17 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import wdl.api.IEntityEditor;
 import wdl.api.ITileEntityEditor;
 import wdl.api.ITileEntityEditor.TileEntityCreationMode;
 import wdl.api.WDLApi;
@@ -23,12 +28,14 @@ import net.minecraft.block.BlockFurnace;
 import net.minecraft.block.BlockHopper;
 import net.minecraft.block.BlockNote;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ClassInheratanceMultiMap;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.MinecraftException;
 import net.minecraft.world.NextTickListEntry;
@@ -48,6 +55,7 @@ import net.minecraft.world.storage.SaveHandler;
  * WDL-specific properties of chunks as they are being saved.
  */
 public class WDLChunkLoader extends AnvilChunkLoader {
+	private static Logger logger = LogManager.getLogger();
 
 	public static WDLChunkLoader create(SaveHandler handler,
 			WorldProvider provider) {
@@ -206,19 +214,8 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 		compound.setTag("Sections", blockStorageList);
 		compound.setByteArray("Biomes", chunk.getBiomeArray());
 		chunk.setHasEntities(false);
-		NBTTagList entityList = new NBTTagList();
-
-		for (ClassInheratanceMultiMap map : chunk.getEntityLists()) {
-			for (Entity entity : (Iterable<Entity>) map) {
-				NBTTagCompound entityData = new NBTTagCompound();
-
-				if (entity.writeToNBTOptional(entityData)) {
-					chunk.setHasEntities(true);
-					entityList.appendTag(entityData);
-				}
-			}
-		}
-
+		
+		NBTTagList entityList = getEntityList(chunk);
 		compound.setTag("Entities", entityList);
 
 		NBTTagList tileEntityList = getTileEntityList(chunk);
@@ -251,6 +248,113 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 		return compound;
 	}
 
+	/**
+	 * Creates an NBT list of all entities in this chunk, adding in custom entities.
+	 * @param chunk
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public NBTTagList getEntityList(Chunk chunk) {
+		NBTTagList entityList = new NBTTagList();
+		
+		if (!WDLPluginChannels.canSaveEntities(chunk)) {
+			return entityList;
+		}
+		
+		// Build a list of all entities in the chunk.
+		List<Entity> entities = new ArrayList<Entity>();
+		// Add the entities already in the chunk.
+		for (ClassInheratanceMultiMap map : chunk.getEntityLists()) {
+			entities.addAll(map);
+		}
+		// Add the manually saved entities.
+		// TODO: This is probably inefficient (as we go through ALL
+		// entities that were loaded.
+		for (Entity e : WDL.newEntities.values()) {
+			if (e.chunkCoordX == chunk.xPosition &&
+					e.chunkCoordZ == chunk.zPosition) {
+				// "Unkill" the entity, since it is killed when it is unloaded.
+				e.isDead = false;
+				entities.add(e);
+			}
+		}
+		
+		for (Entity entity : entities) {
+			if (entity == null) {
+				logger.warn("[WDL] Null entity in chunk at "
+						+ chunk.getChunkCoordIntPair());
+				continue;
+			}
+			
+			if (!shouldSaveEntity(entity)) {
+				continue;
+			}
+			
+			// Apply any editors.
+			for (Map.Entry<String, IEntityEditor> editor : WDL.entityEditors
+					.entrySet()) {
+				try {
+					if (editor.getValue().shouldEdit(entity)) {
+						editor.getValue().editEntity(entity);
+					}
+				} catch (Exception ex) {
+					String chunkInfo;
+					if (chunk == null) {
+						chunkInfo = "null";
+					} else {
+						chunkInfo = "at " + chunk.xPosition + ", " + chunk.zPosition;
+					}
+					throw new RuntimeException("Failed to edit entity " + entity
+							+ " for chunk " + chunkInfo + " with extension "
+							+ editor.getKey(), ex);
+				}
+			}
+			
+			NBTTagCompound entityData = new NBTTagCompound();
+	
+			if (entity.writeToNBTOptional(entityData)) {
+				chunk.setHasEntities(true);
+				entityList.appendTag(entityData);
+			}
+		}
+		
+		return entityList;
+	}
+	
+	/**
+	 * Checks if the given entity should be saved, putting a message into the
+	 * chat if it can't.
+	 * 
+	 * @param e
+	 *            The entity to check
+	 * @return True if the entity should be saved.
+	 */
+	public static boolean shouldSaveEntity(Entity e) {
+		if (e instanceof EntityPlayer) {
+			// Players shouldn't be saved, and it's dangerous to mess with them.
+			return false;
+		}
+		
+		if (!EntityUtils.isEntityEnabled(e)) {
+			WDLMessages.chatMessageTranslated(
+					WDLMessageTypes.REMOVE_ENTITY,
+					"wdl.messages.removeEntity.notSavingUserPreference",
+					e);
+			return false;
+		}
+		IChatComponent unsafeReason = EntityUtils
+				.isUnsafeToSaveEntity(e);
+		if (unsafeReason != null) {
+			WDLMessages.chatMessageTranslated(
+					WDLMessageTypes.REMOVE_ENTITY,
+					"wdl.messages.removeEntity.notSavingUnsafe",
+					e, unsafeReason);
+			return false;
+		}
+		
+		return true;
+	}
+	
 	/**
 	 * Creates an NBT list of all tile entities in this chunk, importing tile
 	 * entities as needed.
