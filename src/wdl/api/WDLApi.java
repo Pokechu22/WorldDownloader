@@ -11,6 +11,7 @@ import net.minecraft.util.BlockPos;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import wdl.EntityRealigner;
 import wdl.EntityUtils;
 import wdl.HologramHandler;
 import wdl.MessageTypeCategory;
@@ -287,5 +288,6 @@ public class WDLApi {
 	
 	static {
 		addWDLMod(new HologramHandler());
+		addWDLMod(new EntityRealigner());
 	}
 }

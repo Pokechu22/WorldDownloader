@@ -1443,21 +1443,6 @@ public class WDL {
 
 		return saveVersion;
 	}
-
-	/**
-	 * Converts a position from the fixed-point version that a packet
-	 * (or {@link Entity#serverPosX} and the like use) into a double.
-	 *
-	 * @see
-	 *      <a href="http://wiki.vg/Protocol#Fixed-point_numbers">
-	 *      wiki.vg on Fixed-point numbers</a>
-	 *
-	 * @param serverPos
-	 * @return The double version of the position.
-	 */
-	public static double convertServerPos(int serverPos) {
-		return serverPos / 32.0;
-	}
 	
 	/**
 	 * Is the current server running spigot?
