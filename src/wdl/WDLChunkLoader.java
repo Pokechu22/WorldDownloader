@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import wdl.api.ITileEntityEditor;
+import wdl.api.ITileEntityEditor.TileEntityCreationMode;
+import wdl.api.WDLApi;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBeacon;
 import net.minecraft.block.BlockBrewingStand;
@@ -288,6 +291,8 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 						"wdl.messages.tileEntity.usingNew",
 						entityType, pos);
 				
+				editTileEntity(pos, compound, TileEntityCreationMode.NEW);
+				
 				tileEntityList.appendTag(compound);
 			} else if (oldTEMap.containsKey(pos)) {
 				NBTTagCompound compound = oldTEMap.get(pos);
@@ -297,6 +302,8 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 						"wdl.messages.tileEntity.usingOld",
 						entityType, pos);
 				
+				editTileEntity(pos, compound, TileEntityCreationMode.IMPORTED);
+				
 				tileEntityList.appendTag(compound);
 			} else if (chunkTEMap.containsKey(pos)) {
 				// TODO: Do we want a chat message for this?
@@ -304,6 +311,8 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 				TileEntity te = chunkTEMap.get(pos);
 				NBTTagCompound compound = new NBTTagCompound();
 				te.writeToNBT(compound);
+				
+				editTileEntity(pos, compound, TileEntityCreationMode.EXISTING);
 				
 				tileEntityList.appendTag(compound);
 			}
@@ -417,6 +426,32 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 			return true;
 		} else {
 			return false;
+		}
+	}
+	
+	/**
+	 * Applies all registered {@link ITileEntityEditor}s to the given tile entity.
+	 */
+	public static void editTileEntity(BlockPos pos, NBTTagCompound compound,
+			TileEntityCreationMode creationMode) {
+		for (Map.Entry<String, ITileEntityEditor> editor : WDL.tileEntityEditors
+				.entrySet()) {
+			try {
+				if (editor.getValue().shouldEdit(pos, compound, creationMode)) {
+					editor.getValue().editTileEntity(pos, compound, creationMode);
+					
+					WDLMessages.chatMessageTranslated(
+							WDLMessageTypes.LOAD_TILE_ENTITY,
+							"wdl.messages.tileEntity.edited", 
+							pos, WDLApi.getModName(editor.getValue()));
+				}
+			} catch (Exception ex) {
+				throw new RuntimeException("Failed to edit tile entity at "
+						+ pos + " with extension " + editor.getKey()
+						+ "; NBT is now " + compound + " (this may be the "
+						+ "initial value, an edited value, or a partially "
+						+ "edited value)", ex);
+			}
 		}
 	}
 }

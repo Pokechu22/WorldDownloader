@@ -634,46 +634,6 @@ public class WDL {
 	}
 
 	/**
-	 * Applies all registered {@link ITileEntityEditor}s to the given chunk.
-	 * 
-	 * Note: {@link #importTileEntities(Chunk)} must be called before this method.
-	 */
-	public static void editTileEntities(Chunk chunk) {
-		for (Map.Entry<String, ITileEntityEditor> editor : tileEntityEditors
-				.entrySet()) {
-			try {
-				@SuppressWarnings("unchecked")
-				Map<BlockPos, TileEntity> tileEntityMap = (Map<BlockPos, TileEntity>) chunk
-						.getTileEntityMap();
-				
-				for (Map.Entry<BlockPos, TileEntity> entry : tileEntityMap
-						.entrySet()) {
-					boolean wasImported = !newTileEntities.containsKey(entry.getKey());
-					if (editor.getValue().shouldEdit(entry.getValue(), wasImported)) {
-						editor.getValue().editTileEntity(entry.getValue(),
-								wasImported);
-						
-						WDLMessages.chatMessageTranslated(
-								WDLMessageTypes.LOAD_TILE_ENTITY,
-								"wdl.messages.tileEntity.edited", 
-								entry.getKey(), WDLApi.getModName(editor.getValue()));
-					}
-				}
-			} catch (Exception ex) {
-				String chunkInfo;
-				if (chunk == null) {
-					chunkInfo = "null";
-				} else {
-					chunkInfo = "at " + chunk.xPosition + ", " + chunk.zPosition;
-				}
-				throw new RuntimeException("Failed to update tile entities "
-						+ "for chunk " + chunkInfo + " with extension "
-						+ editor.getKey(), ex);
-			}
-		}
-	}
-
-	/**
 	 * Saves all remaining chunks, world info and player info. Usually called
 	 * when stopping.
 	 */
@@ -979,10 +939,6 @@ public class WDL {
 		if (!WDLPluginChannels.canDownloadAtAll()) { return; }
 		
 		if (!WDLPluginChannels.canSaveChunk(c)) { return; }
-		
-		if (WDLPluginChannels.canSaveTileEntities()) {
-			editTileEntities(c);
-		}
 		
 		c.setTerrainPopulated(true);
 
