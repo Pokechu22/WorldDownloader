@@ -492,16 +492,7 @@ public class WDL {
 			saving = false;
 			downloading = false;
 			worldLoadingDeferred = false;
-			
-			// Force the world to redraw as if the player pressed F3+A.
-			// This fixes the world going invisible issue.
-			minecraft.addScheduledTask(new Runnable() {
-				@Override
-				public void run() {
-					WDL.minecraft.renderGlobal.loadRenderers();	
-				}
-			});
-		
+
 			WDLMessages.chatMessageTranslated(WDLMessageTypes.INFO,
 					"wdl.messages.generalInfo.downloadCanceled");
 		}
@@ -608,16 +599,7 @@ public class WDL {
 		WDL.minecraft.getSaveLoader().flushCache();
 		WDL.saveHandler.flush();
 		WDL.worldClient = null;
-		
-		// Force the world to redraw as if the player pressed F3+A.
-		// This fixes the world going invisible issue.
-		WDL.minecraft.addScheduledTask(new Runnable() {
-			@Override
-			public void run() {
-				WDL.minecraft.renderGlobal.loadRenderers();	
-			}
-		});
-		
+
 		worldLoadingDeferred = false;
 
 		// If still downloading, load the current world and keep on downloading
