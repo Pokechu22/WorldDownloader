@@ -47,6 +47,8 @@ import net.minecraft.world.storage.ThreadedFileIOBase;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.google.common.collect.HashMultimap;
+
 import wdl.WorldBackup.WorldBackupType;
 import wdl.api.IEntityEditor;
 import wdl.api.IPlayerInfoEditor;
@@ -144,9 +146,9 @@ public class WDL {
 	public static HashMap<ChunkCoordIntPair, Map<BlockPos, TileEntity>> newTileEntities = new HashMap<ChunkCoordIntPair, Map<BlockPos, TileEntity>>();
 	
 	/**
-	 * All entities that were downloaded.  The key is the entity's EID.
+	 * All entities that were downloaded, by chunk.
 	 */
-	public static HashMap<Integer, Entity> newEntities = new HashMap<Integer, Entity>();
+	public static HashMultimap<ChunkCoordIntPair, Entity> newEntities = HashMultimap.create();
 	
 	/**
 	 * All of the {@link MapData}s that were sent to the client in the current
@@ -452,7 +454,7 @@ public class WDL {
 		WDL.minecraft.setIngameFocus();
 		chunkLoader = WDLChunkLoader.create(saveHandler, worldClient.provider);
 		newTileEntities = new HashMap<ChunkCoordIntPair,Map<BlockPos,TileEntity>>();
-		newEntities = new HashMap<Integer, Entity>();
+		newEntities = HashMultimap.create();
 		newMapDatas = new HashMap<Integer, MapData>();
 
 		if (baseProps.getProperty("ServerName").isEmpty()) {

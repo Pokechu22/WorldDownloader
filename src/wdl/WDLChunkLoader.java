@@ -268,15 +268,10 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 			entities.addAll(map);
 		}
 		// Add the manually saved entities.
-		// TODO: This is probably inefficient (as we go through ALL
-		// entities that were loaded.
-		for (Entity e : WDL.newEntities.values()) {
-			if (e.chunkCoordX == chunk.xPosition &&
-					e.chunkCoordZ == chunk.zPosition) {
-				// "Unkill" the entity, since it is killed when it is unloaded.
-				e.isDead = false;
-				entities.add(e);
-			}
+		for (Entity e : WDL.newEntities.get(chunk.getChunkCoordIntPair())) {
+			// "Unkill" the entity, since it is killed when it is unloaded.
+			e.isDead = false;
+			entities.add(e);
 		}
 		
 		for (Entity entity : entities) {

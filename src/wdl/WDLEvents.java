@@ -40,6 +40,7 @@ import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.village.MerchantRecipeList;
+import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.storage.MapData;
 import wdl.api.IWorldLoadListener;
@@ -539,7 +540,8 @@ public class WDLEvents {
 				entity.chunkCoordZ = MathHelper
 						.floor_double(entity.posZ / 16.0D);
 
-				WDL.newEntities.put(entity.getEntityId(), entity);
+				WDL.newEntities.put(new ChunkCoordIntPair(entity.chunkCoordX,
+						entity.chunkCoordZ), entity);
 				return;
 			}
 
