@@ -293,14 +293,9 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 						editor.getValue().editEntity(entity);
 					}
 				} catch (Exception ex) {
-					String chunkInfo;
-					if (chunk == null) {
-						chunkInfo = "null";
-					} else {
-						chunkInfo = "at " + chunk.xPosition + ", " + chunk.zPosition;
-					}
-					throw new RuntimeException("Failed to edit entity " + entity
-							+ " for chunk " + chunkInfo + " with extension "
+					throw new RuntimeException("Failed to edit entity "
+							+ entity + " for chunk at "
+							+ chunk.getChunkCoordIntPair() + " with extension "
 							+ editor.getKey(), ex);
 				}
 			}
