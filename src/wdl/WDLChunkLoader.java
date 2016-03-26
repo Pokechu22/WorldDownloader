@@ -17,6 +17,7 @@ import org.apache.logging.log4j.Logger;
 import wdl.api.IEntityEditor;
 import wdl.api.ITileEntityEditor;
 import wdl.api.ITileEntityEditor.TileEntityCreationMode;
+import wdl.api.ITileEntityImportationIdentifier;
 import wdl.api.WDLApi;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBeacon;
@@ -56,6 +57,12 @@ import net.minecraft.world.storage.SaveHandler;
  */
 public class WDLChunkLoader extends AnvilChunkLoader {
 	private static Logger logger = LogManager.getLogger();
+
+	/**
+	 * All ITileEntityImportationIdentifier used by
+	 * {@link #shouldImportTileEntity(NBTTagCompound, Chunk)}.
+	 */
+	public static Map<String, ITileEntityImportationIdentifier> tileEntityImportationIdentifiers = new HashMap<String, ITileEntityImportationIdentifier>();
 
 	public static WDLChunkLoader create(SaveHandler handler,
 			WorldProvider provider) {
@@ -448,11 +455,13 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 			if (oldList != null) {
 				for (int i = 0; i < oldList.tagCount(); i++) {
 					NBTTagCompound oldNBT = oldList.getCompoundTagAt(i);
+
 					String entityID = oldNBT.getString("id");
 					BlockPos pos = new BlockPos(oldNBT.getInteger("x"),
 							oldNBT.getInteger("y"), oldNBT.getInteger("z"));
+					Block block = chunk.getBlock(pos);
 
-					if (shouldImportTileEntity(entityID, pos, chunk)) {
+					if (shouldImportTileEntity(entityID, pos, block, oldNBT, chunk)) {
 						returned.put(pos, oldNBT);
 					} else {
 						// Even if this tile entity is saved in another way
@@ -492,15 +501,18 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 	 * @param pos
 	 *            The location of the tile entity, as created by its 'x', 'y',
 	 *            and 'z' tags.
+	 * @param block
+	 *            The block at the given position.
+	 * @param tileEntityNBT
+	 *            The full NBT tag of the existing tile entity. May be used if
+	 *            further identification is needed.
 	 * @param chunk
-	 *            The chunk for which entities are being imported, used to get
-	 *            blocks.
+	 *            The chunk for which entities are being imported. May be used
+	 *            if further identification is needed (eg nearby blocks).
 	 * @return <code>true</code> if that tile entity should be imported.
 	 */
 	public boolean shouldImportTileEntity(String entityID, BlockPos pos,
-			Chunk chunk) {
-		Block block = chunk.getBlock(pos);
-
+			Block block, NBTTagCompound tileEntityNBT, Chunk chunk) {
 		if (block instanceof BlockChest && entityID.equals("Chest")) {
 			return true;
 		} else if (block instanceof BlockDispenser && entityID.equals("Trap")) {
@@ -518,9 +530,17 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 			return true;
 		} else if (block instanceof BlockBeacon && entityID.equals("Beacon")) {
 			return true;
-		} else {
-			return false;
 		}
+		
+		for (ITileEntityImportationIdentifier identifier : tileEntityImportationIdentifiers
+				.values()) {
+			if (identifier.shouldImportTileEntity(entityID, pos, block,
+					tileEntityNBT, chunk)) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	/**
