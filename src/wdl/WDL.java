@@ -50,10 +50,8 @@ import org.apache.logging.log4j.Logger;
 import com.google.common.collect.HashMultimap;
 
 import wdl.WorldBackup.WorldBackupType;
-import wdl.api.IEntityEditor;
 import wdl.api.IPlayerInfoEditor;
 import wdl.api.ISaveListener;
-import wdl.api.ITileEntityEditor;
 import wdl.api.IWDLMod;
 import wdl.api.IWorldInfoEditor;
 import wdl.api.WDLApi;
@@ -221,32 +219,6 @@ public class WDL {
 	 * Default properties that are used to create the global properites.
 	 */
 	public static Properties defaultProps;
-	
-	/**
-	 * All IWDLMods that implement {@link ISaveListener}.
-	 */
-	public static Map<String, ISaveListener> saveListeners =
-			new HashMap<String, ISaveListener>();
-	/**
-	 * All IWDLMods that implement {@link ITileEntityEditor}.
-	 */
-	public static Map<String, ITileEntityEditor> tileEntityEditors =
-			new HashMap<String, ITileEntityEditor>();
-	/**
-	 * All IWDLMods that implement {@link IEntityEditor}.
-	 */
-	public static Map<String, IEntityEditor> entityEditors =
-			new HashMap<String, IEntityEditor>();
-	/**
-	 * All IWDLMods that implement {@link IWorldInfoEditor}.
-	 */
-	public static Map<String, IWorldInfoEditor> worldInfoEditors =
-			new HashMap<String, IWorldInfoEditor>();
-	/**
-	 * All IWDLMods that implement {@link IPlayerInfoEditor}.
-	 */
-	public static Map<String, IPlayerInfoEditor> playerInfoEditors =
-			new HashMap<String, IPlayerInfoEditor>();
 	
 	private static Logger logger = LogManager.getLogger();
 	
@@ -633,7 +605,7 @@ public class WDL {
 		final GuiWDLSaveProgress progressScreen = new GuiWDLSaveProgress(
 				I18n.format("wdl.saveProgress.title"), 
 				(backupType != WorldBackupType.NONE ? 6 : 5)
-						+ saveListeners.size());
+						+ WDLApi.getImplementingExtensions(ISaveListener.class).size());
 		
 		minecraft.addScheduledTask(new Runnable() {
 			@Override
@@ -660,7 +632,8 @@ public class WDL {
 		
 		saveProps();
 		
-		for (ISaveListener listener : saveListeners.values()) {
+		for (ISaveListener listener : WDLApi.getImplementingExtensions(
+				ISaveListener.class).values()) {
 			progressScreen.startMajorTask(I18n.format(
 					"wdl.saveProgress.extension.title",	WDLApi.getModName(listener)), 1);
 			listener.afterChunksSaved(saveHandler.getWorldDirectory());
@@ -714,7 +687,7 @@ public class WDL {
 		
 		progressScreen.startMajorTask(
 				I18n.format("wdl.saveProgress.playerData.title"),
-				3 + playerInfoEditors.size());
+				3 + WDLApi.getImplementingExtensions(IPlayerInfoEditor.class).size());
 		WDLMessages.chatMessageTranslated(WDLMessageTypes.SAVING,
 				"wdl.messages.saving.savingPlayer");
 		
@@ -729,7 +702,8 @@ public class WDL {
 		applyOverridesToPlayer(playerNBT);
 		
 		int taskNum = 3;
-		for (IPlayerInfoEditor editor : playerInfoEditors.values()) {
+		for (IPlayerInfoEditor editor : WDLApi.getImplementingExtensions(
+				IPlayerInfoEditor.class).values()) {
 			progressScreen.setMinorTaskProgress(
 					I18n.format("wdl.saveProgress.playerData.extension",
 							WDLApi.getModName(editor)), taskNum);
@@ -789,7 +763,7 @@ public class WDL {
 		
 		progressScreen.startMajorTask(
 				I18n.format("wdl.saveProgress.worldMetadata.title"),
-				3 + worldInfoEditors.size());
+				3 + WDLApi.getImplementingExtensions(IWorldInfoEditor.class).size());
 		WDLMessages.chatMessageTranslated(WDLMessageTypes.SAVING,
 				"wdl.messages.saving.savingWorld");
 		
@@ -813,7 +787,8 @@ public class WDL {
 		applyOverridesToWorldInfo(worldInfoNBT);
 		
 		int taskNum = 3;
-		for (IWorldInfoEditor editor : worldInfoEditors.values()) {
+		for (IWorldInfoEditor editor : WDLApi.getImplementingExtensions(
+				IWorldInfoEditor.class).values()) {
 			progressScreen.setMinorTaskProgress(
 					I18n.format("wdl.saveProgress.worldMetadata.extension",
 							WDLApi.getModName(editor)), taskNum);

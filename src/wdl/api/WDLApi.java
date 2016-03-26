@@ -16,9 +16,6 @@ import wdl.EntityUtils;
 import wdl.HologramHandler;
 import wdl.MessageTypeCategory;
 import wdl.WDL;
-import wdl.WDLChunkLoader;
-import wdl.WDLEvents;
-import wdl.WDLHooks;
 import wdl.WDLMessages;
 import wdl.WDLPluginChannels;
 
@@ -75,27 +72,16 @@ public class WDLApi {
 		}
 		
 		wdlMods.put(modName, mod);
-		if (mod instanceof IGuiHooksListener) {
-			WDLHooks.guiListeners.put(modName, (IGuiHooksListener) mod);
-		}
-		if (mod instanceof IBlockEventListener) {
-			WDLHooks.blockEventListeners.put(modName, (IBlockEventListener) mod);
-		}
-		if (mod instanceof IChatMessageListener) {
-			WDLHooks.chatMessageListeners.put(modName, (IChatMessageListener) mod);
-		}
-		if (mod instanceof IPluginChannelListener) {
-			WDLHooks.pluginChannelListeners.put(modName, (IPluginChannelListener) mod);
-		}
-		if (mod instanceof IWorldLoadListener) {
-			WDLEvents.worldLoadListeners.put(modName, (IWorldLoadListener) mod);
-		}
+		
+		// Right now I don't think it's possible to make EntityUtils work
+		// dynamically.
 		if (mod instanceof IEntityAdder) {
 			EntityUtils.addEntityAdder((IEntityAdder) mod);
 		}
 		if (mod instanceof ISpecialEntityHandler) {
 			EntityUtils.addSpecialEntityHandler((ISpecialEntityHandler) mod);
 		}
+		// Or this.
 		if (mod instanceof IMessageTypeAdder) {
 			Map<String, IWDLMessageType> types = 
 					((IMessageTypeAdder) mod).getMessageTypes();
@@ -106,25 +92,28 @@ public class WDLApi {
 				WDLMessages.registerMessage(e.getKey(), e.getValue(), category);
 			}
 		}
-		if (mod instanceof ITileEntityEditor) {
-			WDL.tileEntityEditors.put(modName, (ITileEntityEditor) mod);
+	}
+	
+	/**
+	 * Gets a list of all {@link IWDLMod}s that implement the given interface.
+	 * 
+	 * @param clazz The class to check for implementation of.
+	 * @return
+	 */
+	public static <T extends IWDLMod> Map<String, T> getImplementingExtensions(
+			Class<T> clazz) {
+		if (clazz == null) {
+			throw new IllegalArgumentException("clazz must not be null!");
 		}
-		if (mod instanceof IEntityEditor) {
-			WDL.entityEditors.put(modName, (IEntityEditor) mod);
+		Map<String, T> returned = new HashMap<String, T>();
+		
+		for (Map.Entry<String, IWDLMod> e : wdlMods.entrySet()) {
+			if (clazz.isAssignableFrom(e.getValue().getClass())) {
+				returned.put(e.getKey(), clazz.cast(e.getValue()));
+			}
 		}
-		if (mod instanceof ISaveListener) {
-			WDL.saveListeners.put(modName, (ISaveListener) mod);
-		}
-		if (mod instanceof IWorldInfoEditor) {
-			WDL.worldInfoEditors.put(modName, (IWorldInfoEditor) mod);
-		}
-		if (mod instanceof IPlayerInfoEditor) {
-			WDL.playerInfoEditors.put(modName, (IPlayerInfoEditor) mod);
-		}
-		if (mod instanceof ITileEntityImportationIdentifier) {
-			WDLChunkLoader.tileEntityImportationIdentifiers.put(modName,
-					(ITileEntityImportationIdentifier) mod);
-		}
+		
+		return returned;
 	}
 	
 	/**

@@ -1,6 +1,5 @@
 package wdl;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -45,27 +44,6 @@ public class WDLHooks {
 	private static final Profiler profiler = Minecraft.getMinecraft().mcProfiler;
 	
 	/**
-	 * All WDLMods that implement {@link IGuiHooksListener}.
-	 */
-	public static Map<String, IGuiHooksListener> guiListeners =
-			new HashMap<String, IGuiHooksListener>();
-	/**
-	 * All WDLMods that implement {@link IChatMessageListener}.
-	 */
-	public static Map<String, IChatMessageListener> chatMessageListeners =
-			new HashMap<String, IChatMessageListener>();
-	/**
-	 * All WDLMods that implement {@link IPluginChannelListener}.
-	 */
-	public static Map<String, IPluginChannelListener> pluginChannelListeners =
-			new HashMap<String, IPluginChannelListener>();
-	/**
-	 * All WDLMods that implement {@link IBlockEventListener}.
-	 */
-	public static Map<String, IBlockEventListener> blockEventListeners =
-			new HashMap<String, IBlockEventListener>();
-	
-	/**
 	 * Called when {@link WorldClient#tick()} is called.
 	 * <br/>
 	 * Should be at end of the method.
@@ -102,7 +80,7 @@ public class WDLHooks {
 								Entity entity = WDL.lastEntity;
 
 								for (Map.Entry<String, IGuiHooksListener> e :
-										guiListeners.entrySet()) {
+										WDLApi.getImplementingExtensions(IGuiHooksListener.class).entrySet()) {
 									if (handled) {
 										break;
 									}
@@ -122,7 +100,7 @@ public class WDLHooks {
 							} else {
 								BlockPos pos = WDL.lastClickedBlock;
 								for (Map.Entry<String, IGuiHooksListener> e :
-										guiListeners.entrySet()) {
+									WDLApi.getImplementingExtensions(IGuiHooksListener.class).entrySet()) {
 									if (handled) {
 										break;
 									}
@@ -245,8 +223,8 @@ public class WDLHooks {
 			WDLEvents.onChatMessage(chatMessage);
 			profiler.endSection();
 			
-			for (Map.Entry<String, IChatMessageListener> e : 
-					chatMessageListeners.entrySet()) {
+			for (Map.Entry<String, IChatMessageListener> e :
+				WDLApi.getImplementingExtensions(IChatMessageListener.class).entrySet()) {
 				profiler.startSection(e.getKey());
 				e.getValue().onChat(WDL.worldClient, chatMessage);
 				profiler.endSection();
@@ -312,8 +290,8 @@ public class WDLHooks {
 			WDLEvents.onPluginChannelPacket(channel, payload);
 			profiler.endSection();
 			
-			for (Map.Entry<String, IPluginChannelListener> e : 
-					pluginChannelListeners.entrySet()) {
+			for (Map.Entry<String, IPluginChannelListener> e :
+				WDLApi.getImplementingExtensions(IPluginChannelListener.class).entrySet()) {
 				profiler.startSection(e.getKey());
 				e.getValue().onPluginChannelPacket(WDL.worldClient, channel,
 						payload);
@@ -354,8 +332,9 @@ public class WDLHooks {
 			WDLEvents.onBlockEvent(pos, block, data1, data2);
 			profiler.endSection();
 			
-			for (Map.Entry<String, IBlockEventListener> e : 
-					blockEventListeners.entrySet()) {
+			for (Map.Entry<String, IBlockEventListener> e : WDLApi
+					.getImplementingExtensions(IBlockEventListener.class)
+					.entrySet()) {
 				profiler.startSection(e.getKey());
 				e.getValue().onBlockEvent(WDL.worldClient, pos, block, 
 						data1, data2);

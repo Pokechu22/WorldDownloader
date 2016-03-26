@@ -58,12 +58,6 @@ import net.minecraft.world.storage.SaveHandler;
 public class WDLChunkLoader extends AnvilChunkLoader {
 	private static Logger logger = LogManager.getLogger();
 
-	/**
-	 * All ITileEntityImportationIdentifier used by
-	 * {@link #shouldImportTileEntity(NBTTagCompound, Chunk)}.
-	 */
-	public static Map<String, ITileEntityImportationIdentifier> tileEntityImportationIdentifiers = new HashMap<String, ITileEntityImportationIdentifier>();
-
 	public static WDLChunkLoader create(SaveHandler handler,
 			WorldProvider provider) {
 		return new WDLChunkLoader(getWorldSaveFolder(handler, provider));
@@ -293,8 +287,8 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 			}
 			
 			// Apply any editors.
-			for (Map.Entry<String, IEntityEditor> editor : WDL.entityEditors
-					.entrySet()) {
+			for (Map.Entry<String, IEntityEditor> editor : WDLApi
+					.getImplementingExtensions(IEntityEditor.class).entrySet()) {
 				try {
 					if (editor.getValue().shouldEdit(entity)) {
 						editor.getValue().editEntity(entity);
@@ -532,8 +526,9 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 			return true;
 		}
 		
-		for (ITileEntityImportationIdentifier identifier : tileEntityImportationIdentifiers
-				.values()) {
+		for (ITileEntityImportationIdentifier identifier : WDLApi
+				.getImplementingExtensions(
+						ITileEntityImportationIdentifier.class).values()) {
 			if (identifier.shouldImportTileEntity(entityID, pos, block,
 					tileEntityNBT, chunk)) {
 				return true;
@@ -548,8 +543,8 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 	 */
 	public static void editTileEntity(BlockPos pos, NBTTagCompound compound,
 			TileEntityCreationMode creationMode) {
-		for (Map.Entry<String, ITileEntityEditor> editor : WDL.tileEntityEditors
-				.entrySet()) {
+		for (Map.Entry<String, ITileEntityEditor> editor : WDLApi
+				.getImplementingExtensions(ITileEntityEditor.class).entrySet()) {
 			try {
 				if (editor.getValue().shouldEdit(pos, compound, creationMode)) {
 					editor.getValue().editTileEntity(pos, compound, creationMode);

@@ -1,6 +1,5 @@
 package wdl;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import net.minecraft.block.Block;
@@ -44,6 +43,7 @@ import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.storage.MapData;
 import wdl.api.IWorldLoadListener;
+import wdl.api.WDLApi;
 import wdl.update.WDLUpdateChecker;
 
 /**
@@ -58,12 +58,6 @@ import wdl.update.WDLUpdateChecker;
 public class WDLEvents {
 	private static final Profiler profiler = Minecraft.getMinecraft().mcProfiler;
 
-	/**
-	 * All WDLMods that implement {@link IWorldLoadListener}.
-	 */
-	public static Map<String, IWorldLoadListener> worldLoadListeners =
-			new HashMap<String, IWorldLoadListener>();
-	
 	/**
 	 * Must be called after the static World object in Minecraft has been
 	 * replaced.
@@ -96,7 +90,8 @@ public class WDLEvents {
 		
 		profiler.endSection();
 		
-		for (Map.Entry<String, IWorldLoadListener> e : worldLoadListeners.entrySet()) {
+		for (Map.Entry<String, IWorldLoadListener> e : WDLApi
+				.getImplementingExtensions(IWorldLoadListener.class).entrySet()) {
 			profiler.startSection(e.getKey());
 			e.getValue().onWorldLoad(world, sameServer);
 			profiler.endSection();
