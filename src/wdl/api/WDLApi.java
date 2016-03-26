@@ -16,6 +16,7 @@ import wdl.EntityUtils;
 import wdl.HologramHandler;
 import wdl.MessageTypeCategory;
 import wdl.WDL;
+import wdl.WDLChunkLoader;
 import wdl.WDLEvents;
 import wdl.WDLHooks;
 import wdl.WDLMessages;
@@ -119,6 +120,10 @@ public class WDLApi {
 		}
 		if (mod instanceof IPlayerInfoEditor) {
 			WDL.playerInfoEditors.put(modName, (IPlayerInfoEditor) mod);
+		}
+		if (mod instanceof ITileEntityImportationIdentifier) {
+			WDLChunkLoader.tileEntityImportationIdentifiers.put(modName,
+					(ITileEntityImportationIdentifier) mod);
 		}
 	}
 	
