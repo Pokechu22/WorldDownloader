@@ -13,20 +13,14 @@ import wdl.api.IWDLModDescripted;
  * This is also an example of how an {@link IWDLMod} would be implemented.
  */
 public class EntityRealigner implements IEntityEditor, IWDLModDescripted {
-
 	@Override
-	public String getName() {
-		return "EntityRealigner";
+	public boolean isValidEnvironment(String version) {
+		return true;
 	}
 
 	@Override
-	public String getVersion() {
-		return "1.0";
-	}
-
-	@Override
-	public String getTargetedWDLVersion() {
-		return WDL.VERSION;
+	public String getEnvironmentErrorMessage(String version) {
+		return null;
 	}
 
 	@Override

@@ -12,10 +12,9 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
-import wdl.api.IWDLMod;
-import wdl.api.IWDLModDescripted;
 import wdl.api.IWDLModWithGui;
 import wdl.api.WDLApi;
+import wdl.api.WDLApi.ModInfo;
 
 /**
  * GUI showing the currently enabled mods, and their information.
@@ -61,24 +60,16 @@ public class GuiWDLExtensions extends GuiScreen {
 		}
 		
 		private class ModEntry implements IGuiListEntry {
-			public final IWDLMod mod;
+			public final ModInfo mod;
 			private final String modDesc;
 			private GuiButton button;
 			
-			public ModEntry(IWDLMod mod) {
+			public ModEntry(ModInfo mod) {
 				this.mod = mod;
-				String name = mod.getName();
-				if (mod instanceof IWDLModDescripted) {
-					String displayName = ((IWDLModDescripted) mod)
-							.getDisplayName();
-					
-					if (displayName != null && !displayName.isEmpty()) {
-						name = displayName;
-					}
-				}
+				String name = mod.getDisplayName();
 				this.modDesc = I18n.format("wdl.gui.extensions.modVersion",
-						name, mod.getVersion());
-				
+						name, mod.version);
+
 				if (mod instanceof IWDLModWithGui) {
 					String buttonName = ((IWDLModWithGui) mod).getButtonName();
 					if (buttonName == null || buttonName.isEmpty()) {
@@ -150,7 +141,7 @@ public class GuiWDLExtensions extends GuiScreen {
 		}
 		
 		private List<IGuiListEntry> entries = new ArrayList<IGuiListEntry>() {{
-			for (IWDLMod mod : WDLApi.getWDLMods().values()) {
+			for (ModInfo mod : WDLApi.getWDLMods().values()) {
 				add(new ModEntry(mod));
 			}
 		}};
@@ -251,11 +242,11 @@ public class GuiWDLExtensions extends GuiScreen {
 		}
 	}
 	
-	private void updateDetailsList(IWDLMod selectedMod) {
+	private void updateDetailsList(ModInfo selectedMod) {
 		detailsList.clearLines();
 		
 		if (selectedMod != null) {
-			String info = WDLApi.getModInfo(selectedMod);
+			String info = selectedMod.getInfo();
 			
 			detailsList.addLine(info);
 		}

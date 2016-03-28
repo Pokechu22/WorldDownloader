@@ -52,9 +52,9 @@ import com.google.common.collect.HashMultimap;
 import wdl.WorldBackup.WorldBackupType;
 import wdl.api.IPlayerInfoEditor;
 import wdl.api.ISaveListener;
-import wdl.api.IWDLMod;
 import wdl.api.IWorldInfoEditor;
 import wdl.api.WDLApi;
+import wdl.api.WDLApi.ModInfo;
 import wdl.gui.GuiWDLMultiworld;
 import wdl.gui.GuiWDLMultiworldSelect;
 import wdl.gui.GuiWDLOverwriteChanges;
@@ -1444,12 +1444,12 @@ public class WDL {
 			info.append("Unknown (").append(e.toString()).append(')');
 		}
 		info.append("\n\n### EXTENSIONS\n\n");
-		Map<String, IWDLMod> extensions = WDLApi.getWDLMods();
+		Map<String, ModInfo> extensions = WDLApi.getWDLMods();
 		info.append(extensions.size()).append(" loaded\n");
-		for (Map.Entry<String, IWDLMod> e : extensions.entrySet()) {
+		for (Map.Entry<String, ModInfo> e : extensions.entrySet()) {
 			info.append("\n#### ").append(e.getKey()).append("\n\n");
 			try {
-				info.append(WDLApi.getModInfo(e.getValue()));
+				info.append(e.getValue().getInfo());
 			} catch (Exception ex) {
 				info.append("ERROR: ").append(ex).append('\n');
 				for (StackTraceElement elm : ex.getStackTrace()) {

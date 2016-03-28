@@ -27,7 +27,7 @@ import com.google.common.collect.ImmutableMap;
 public class WDLApi {
 	private static Logger logger = LogManager.getLogger();
 	
-	private static Map<String, IWDLMod> wdlMods = new HashMap<String, IWDLMod>();
+	private static Map<String, ModInfo> wdlMods = new HashMap<String, ModInfo>();
 	
 	/**
 	 * Saved a TileEntity to the given position.
@@ -52,26 +52,39 @@ public class WDLApi {
 	/**
 	 * Adds a mod to the list of the listened mods.
 	 */
-	public static void addWDLMod(IWDLMod mod) {
+	public static void addWDLMod(String id, String version, IWDLMod mod) {
+		if (id == null) {
+			throw new IllegalArgumentException("id must not be null!  (mod="
+					+ mod + ", version=" + version + ")");
+		}
+		if (version == null) {
+			throw new IllegalArgumentException("version must not be null!  "
+					+ "(mod=" + mod + ", id=" + version + ")");
+		}
 		if (mod == null) {
-			throw new IllegalArgumentException("mod must not be null!");
+			throw new IllegalArgumentException("mod must not be null!  " +
+					"(id=" + id + ", version=" + version + ")");
 		}
-		
-		String modName = mod.getName();
-		
-		if (!WDL.VERSION.equals(mod.getTargetedWDLVersion())) {
-			throw new IllegalArgumentException("mod " + modName
-					+ " targets WDL " + mod.getTargetedWDLVersion()
-					+ ", but you are running " + WDL.VERSION + "!");
-		}
-		if (wdlMods.containsKey(modName)) {
+
+		ModInfo info = new ModInfo(id, version, mod);
+		if (wdlMods.containsKey(id)) {
 			throw new IllegalArgumentException("A mod by the name of '"
-					+ modName + "' is already registered by "
-					+ wdlMods.get(modName) + " (tried to register "
-					+ mod + " over it)");
+					+ id + "' is already registered by "
+					+ wdlMods.get(id) + " (tried to register "
+					+ info + " over it)");
+		}
+		if (!mod.isValidEnvironment(WDL.VERSION)) {
+			String errorMessage = mod.getEnvironmentErrorMessage(WDL.VERSION);
+			if (errorMessage != null) {
+				throw new IllegalArgumentException(errorMessage);
+			} else {
+				throw new IllegalArgumentException("Environment for " + info
+						+ " is incorrect!  Perhaps it is for a different"
+						+ " version of WDL?  You are running " + WDL.VERSION + ".");
+			}
 		}
 		
-		wdlMods.put(modName, mod);
+		wdlMods.put(id, info);
 		
 		// Right now I don't think it's possible to make EntityUtils work
 		// dynamically.
@@ -86,7 +99,7 @@ public class WDLApi {
 			Map<String, IWDLMessageType> types = 
 					((IMessageTypeAdder) mod).getMessageTypes();
 			
-			ModMessageTypeCategory category = new ModMessageTypeCategory(mod);
+			ModMessageTypeCategory category = new ModMessageTypeCategory(info);
 			
 			for (Map.Entry<String, IWDLMessageType> e : types.entrySet()) {
 				WDLMessages.registerMessage(e.getKey(), e.getValue(), category);
@@ -107,8 +120,8 @@ public class WDLApi {
 		}
 		Map<String, T> returned = new HashMap<String, T>();
 		
-		for (Map.Entry<String, IWDLMod> e : wdlMods.entrySet()) {
-			if (clazz.isAssignableFrom(e.getValue().getClass())) {
+		for (Map.Entry<String, ModInfo> e : wdlMods.entrySet()) {
+			if (clazz.isAssignableFrom(e.getValue().mod.getClass())) {
 				returned.put(e.getKey(), clazz.cast(e.getValue()));
 			}
 		}
@@ -119,7 +132,7 @@ public class WDLApi {
 	/**
 	 * Gets an immutable map of WDL mods.
 	 */
-	public static Map<String, IWDLMod> getWDLMods() {
+	public static Map<String, ModInfo> getWDLMods() {
 		return ImmutableMap.copyOf(wdlMods);
 	}
 	
@@ -133,122 +146,20 @@ public class WDLApi {
 			return null;
 		}
 		
-		return getModInfo(wdlMods.get(name));
+		return wdlMods.get(name).getInfo();
 	}
 	
 	/**
-	 * Gets detailed information on the given mod.
-	 * @param mod The mod to get info of.
-	 * @return The details.
+	 * TODO: Make this unnecessary by using ModInfo in other contexts.
 	 */
-	public static String getModInfo(IWDLMod mod) {
-		if (mod == null) {
-			return null;
-		}
-		
-		StringBuilder info = new StringBuilder();
-		
-		info.append("Name: ").append(mod.getName()).append('\n');
-		info.append("Version: ").append(mod.getVersion()).append('\n');
-		if (mod instanceof IWDLModDescripted) {
-			IWDLModDescripted dmod = (IWDLModDescripted)mod;
-			
-			String displayName = dmod.getDisplayName();
-			String mainAuthor = dmod.getMainAuthor();
-			String[] authors = dmod.getAuthors();
-			String url = dmod.getURL();
-			String description = dmod.getDescription();
-			
-			if (displayName != null && !displayName.isEmpty()) {
-				info.append("Display name: ").append(displayName).append('\n');
-			}
-			if (mainAuthor != null && !mainAuthor.isEmpty()) {
-				info.append("Main author: ").append(mainAuthor).append('\n');
-			}
-			if (authors != null && authors.length > 0) {
-				info.append("Authors: ");
-				
-				for (int i = 0; i < authors.length; i++) {
-					if (authors[i].equals(mainAuthor)) {
-						continue;
-					}
-					
-					if (i <= authors.length - 2) {
-						info.append(", ");
-					} else if (i == authors.length - 1) {
-						info.append(", and ");
-					} else {
-						info.append('\n');
-					}
-				}
-			}
-			
-			if (url != null && !url.isEmpty()) {
-				info.append("URL: ").append(url).append('\n');
-			}
-			if (description != null && !description.isEmpty()) {
-				info.append("Description: \n").append(description).append('\n');
-			}
-		}
-		
-		info.append("Main class: ").append(mod.getClass().getName()).append('\n');
-		info.append("Containing file: ");
-		try {
-			//http://stackoverflow.com/q/320542/3991344
-			String path = new File(mod.getClass().getProtectionDomain()
-					.getCodeSource().getLocation().toURI()).getPath();
-			
-			//Censor username.
-			String username = System.getProperty("user.name");
-			path = path.replace(username, "<USERNAME>");
-			
-			info.append(path);
-		} catch (Exception e) {
-			info.append("Unknown (").append(e.toString()).append(')');
-		}
-		info.append('\n');
-		Class<?>[] interfaces = mod.getClass().getInterfaces();
-		info.append("Implemented interfaces (").append(interfaces.length)
-				.append(")\n");
-		for (int i = 0; i < interfaces.length; i++) {
-			info.append(i).append(": ").append(interfaces[i].getName())
-					.append('\n');
-		}
-		info.append("Superclass: ")
-				.append(mod.getClass().getSuperclass().getName()).append('\n');
-		ClassLoader loader = mod.getClass().getClassLoader();
-		info.append("Classloader: ").append(loader);
-		if (loader != null) {
-			info.append(" (").append(loader.getClass().getName()).append(')');
-		}
-		info.append('\n');
-		Annotation[] annotations = mod.getClass().getAnnotations();
-		info.append("Annotations (").append(annotations.length)
-				.append(")\n");
-		for (int i = 0; i < annotations.length; i++) {
-			info.append(i).append(": ").append(annotations[i].toString())
-					.append(" (")
-					.append(annotations[i].annotationType().getName())
-					.append(")\n");
-		}
-		
-		return info.toString();
-	}
-	
-	/**
-	 * Gets the name of the mod, using the display name if possible.
-	 */
+	@Deprecated
 	public static String getModName(IWDLMod mod) {
-		String modName = mod.getName();
-		
-		if (mod instanceof IWDLModDescripted) {
-			String dname = ((IWDLModDescripted) mod).getDisplayName();
-			if (dname != null && !dname.isEmpty()) {
-				return dname;
+		for (ModInfo info : wdlMods.values()) {
+			if (info.mod == mod) {
+				return info.getDisplayName();
 			}
 		}
-		
-		return modName;
+		return null;
 	}
 	
 	/**
@@ -265,18 +176,15 @@ public class WDLApi {
 	 * Implementation of {@link MessageTypeCategory} for {@link IWDLMod}s.
 	 */
 	private static class ModMessageTypeCategory extends MessageTypeCategory {
-		private IWDLMod mod;
+		private ModInfo mod;
 		
-		public ModMessageTypeCategory(IWDLMod mod) {
-			super(mod.getName());
+		public ModMessageTypeCategory(ModInfo mod) {
+			super(mod.id);
 		}
 		
 		@Override
 		public String getDisplayName() {
-			if (mod instanceof IWDLModDescripted) {
-				return ((IWDLModDescripted) mod).getDisplayName();
-			}
-			return internalName;
+			return mod.getDisplayName();
 		}
 	}
 	
@@ -287,10 +195,138 @@ public class WDLApi {
 	public static void ensureInitialized() {
 		logger.debug("WDLApi.ensureInitialized()");
 	}
-	
+
+	/**
+	 * Information about a single extension.
+	 */
+	public static class ModInfo {
+		public final String id;
+		public final String version;
+		public final IWDLMod mod;
+		
+		private ModInfo(String id, String version, IWDLMod mod) {
+			this.id = id;
+			this.version = version;
+			this.mod = mod;
+		}
+		
+		@Override
+		public String toString() {
+			return id + "v" + version + " (" + mod.toString() + "/"
+					+ mod.getClass().getName() + ")";
+		}
+
+		/**
+		 * Gets the display name for this extension, using the ID if no display
+		 * name is specified.
+		 */
+		public String getDisplayName() {
+			if (mod instanceof IWDLModDescripted) {
+				String name = ((IWDLModDescripted) mod).getDisplayName();
+				if (name != null && !name.isEmpty()) {
+					return name;
+				}
+			}
+			return id;
+		}
+		
+		/**
+		 * Gets detailed information about this extension.
+		 */
+		public String getInfo() {
+			StringBuilder info = new StringBuilder();
+			
+			info.append("Id: ").append(id).append('\n');
+			info.append("Version: ").append(version).append('\n');
+			if (mod instanceof IWDLModDescripted) {
+				IWDLModDescripted dmod = (IWDLModDescripted)mod;
+				
+				String displayName = dmod.getDisplayName();
+				String mainAuthor = dmod.getMainAuthor();
+				String[] authors = dmod.getAuthors();
+				String url = dmod.getURL();
+				String description = dmod.getDescription();
+				
+				if (displayName != null && !displayName.isEmpty()) {
+					info.append("Display name: ").append(displayName).append('\n');
+				}
+				if (mainAuthor != null && !mainAuthor.isEmpty()) {
+					info.append("Main author: ").append(mainAuthor).append('\n');
+				}
+				if (authors != null && authors.length > 0) {
+					info.append("Authors: ");
+					
+					for (int i = 0; i < authors.length; i++) {
+						if (authors[i].equals(mainAuthor)) {
+							continue;
+						}
+						
+						if (i <= authors.length - 2) {
+							info.append(", ");
+						} else if (i == authors.length - 1) {
+							info.append(", and ");
+						} else {
+							info.append('\n');
+						}
+					}
+				}
+				
+				if (url != null && !url.isEmpty()) {
+					info.append("URL: ").append(url).append('\n');
+				}
+				if (description != null && !description.isEmpty()) {
+					info.append("Description: \n").append(description).append('\n');
+				}
+			}
+			
+			info.append("Main class: ").append(mod.getClass().getName()).append('\n');
+			info.append("Containing file: ");
+			try {
+				//http://stackoverflow.com/q/320542/3991344
+				String path = new File(mod.getClass().getProtectionDomain()
+						.getCodeSource().getLocation().toURI()).getPath();
+				
+				//Censor username.
+				String username = System.getProperty("user.name");
+				path = path.replace(username, "<USERNAME>");
+				
+				info.append(path);
+			} catch (Exception e) {
+				info.append("Unknown (").append(e.toString()).append(')');
+			}
+			info.append('\n');
+			Class<?>[] interfaces = mod.getClass().getInterfaces();
+			info.append("Implemented interfaces (").append(interfaces.length)
+					.append(")\n");
+			for (int i = 0; i < interfaces.length; i++) {
+				info.append(i).append(": ").append(interfaces[i].getName())
+						.append('\n');
+			}
+			info.append("Superclass: ")
+					.append(mod.getClass().getSuperclass().getName()).append('\n');
+			ClassLoader loader = mod.getClass().getClassLoader();
+			info.append("Classloader: ").append(loader);
+			if (loader != null) {
+				info.append(" (").append(loader.getClass().getName()).append(')');
+			}
+			info.append('\n');
+			Annotation[] annotations = mod.getClass().getAnnotations();
+			info.append("Annotations (").append(annotations.length)
+					.append(")\n");
+			for (int i = 0; i < annotations.length; i++) {
+				info.append(i).append(": ").append(annotations[i].toString())
+						.append(" (")
+						.append(annotations[i].annotationType().getName())
+						.append(")\n");
+			}
+			
+			return info.toString();
+		}
+	}
+
 	static {
 		logger.info("Loading default WDL extensions");
-		addWDLMod(new HologramHandler());
-		addWDLMod(new EntityRealigner());
+		addWDLMod("Hologram", "1.0", new HologramHandler());
+		addWDLMod("EntityRealigner", "1.0", new EntityRealigner());
 	}
 }
