@@ -60,11 +60,11 @@ public class GuiWDLExtensions extends GuiScreen {
 		}
 		
 		private class ModEntry implements IGuiListEntry {
-			public final ModInfo mod;
+			public final ModInfo<?> mod;
 			private final String modDesc;
 			private GuiButton button;
 			
-			public ModEntry(ModInfo mod) {
+			public ModEntry(ModInfo<?> mod) {
 				this.mod = mod;
 				String name = mod.getDisplayName();
 				this.modDesc = I18n.format("wdl.gui.extensions.modVersion",
@@ -141,7 +141,7 @@ public class GuiWDLExtensions extends GuiScreen {
 		}
 		
 		private List<IGuiListEntry> entries = new ArrayList<IGuiListEntry>() {{
-			for (ModInfo mod : WDLApi.getWDLMods().values()) {
+			for (ModInfo<?> mod : WDLApi.getWDLMods().values()) {
 				add(new ModEntry(mod));
 			}
 		}};
@@ -242,7 +242,7 @@ public class GuiWDLExtensions extends GuiScreen {
 		}
 	}
 	
-	private void updateDetailsList(ModInfo selectedMod) {
+	private void updateDetailsList(ModInfo<?> selectedMod) {
 		detailsList.clearLines();
 		
 		if (selectedMod != null) {

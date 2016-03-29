@@ -632,11 +632,12 @@ public class WDL {
 		
 		saveProps();
 		
-		for (ISaveListener listener : WDLApi.getImplementingExtensions(
-				ISaveListener.class).values()) {
-			progressScreen.startMajorTask(I18n.format(
-					"wdl.saveProgress.extension.title",	WDLApi.getModName(listener)), 1);
-			listener.afterChunksSaved(saveHandler.getWorldDirectory());
+		for (ModInfo<ISaveListener> info : WDLApi
+				.getImplementingExtensions(ISaveListener.class)) {
+			progressScreen.startMajorTask(
+					I18n.format("wdl.saveProgress.extension.title",
+							info.getDisplayName()), 1);
+			info.mod.afterChunksSaved(saveHandler.getWorldDirectory());
 		}
 		
 		try {
@@ -702,13 +703,13 @@ public class WDL {
 		applyOverridesToPlayer(playerNBT);
 		
 		int taskNum = 3;
-		for (IPlayerInfoEditor editor : WDLApi.getImplementingExtensions(
-				IPlayerInfoEditor.class).values()) {
+		for (ModInfo<IPlayerInfoEditor> info : WDLApi
+				.getImplementingExtensions(IPlayerInfoEditor.class)) {
 			progressScreen.setMinorTaskProgress(
 					I18n.format("wdl.saveProgress.playerData.extension",
-							WDLApi.getModName(editor)), taskNum);
+							info.getDisplayName()), taskNum);
 			
-			editor.editPlayerInfo(thePlayer, saveHandler, playerNBT);
+			info.mod.editPlayerInfo(thePlayer, saveHandler, playerNBT);
 			
 			taskNum++;
 		}
@@ -787,13 +788,13 @@ public class WDL {
 		applyOverridesToWorldInfo(worldInfoNBT);
 		
 		int taskNum = 3;
-		for (IWorldInfoEditor editor : WDLApi.getImplementingExtensions(
-				IWorldInfoEditor.class).values()) {
+		for (ModInfo<IWorldInfoEditor> info : WDLApi
+				.getImplementingExtensions(IWorldInfoEditor.class)) {
 			progressScreen.setMinorTaskProgress(
 					I18n.format("wdl.saveProgress.worldMetadata.extension",
-							WDLApi.getModName(editor)), taskNum);
+							info.getDisplayName()), taskNum);
 			
-			editor.editWorldInfo(worldClient, worldClient.getWorldInfo(),
+			info.mod.editWorldInfo(worldClient, worldClient.getWorldInfo(),
 					saveHandler, worldInfoNBT);
 			
 			taskNum++;
@@ -1444,9 +1445,9 @@ public class WDL {
 			info.append("Unknown (").append(e.toString()).append(')');
 		}
 		info.append("\n\n### EXTENSIONS\n\n");
-		Map<String, ModInfo> extensions = WDLApi.getWDLMods();
+		Map<String, ModInfo<?>> extensions = WDLApi.getWDLMods();
 		info.append(extensions.size()).append(" loaded\n");
-		for (Map.Entry<String, ModInfo> e : extensions.entrySet()) {
+		for (Map.Entry<String, ModInfo<?>> e : extensions.entrySet()) {
 			info.append("\n#### ").append(e.getKey()).append("\n\n");
 			try {
 				info.append(e.getValue().getInfo());

@@ -1,7 +1,6 @@
 package wdl;
 
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Callable;
 
 import com.google.common.collect.ImmutableList;
@@ -31,6 +30,7 @@ import wdl.api.IChatMessageListener;
 import wdl.api.IGuiHooksListener;
 import wdl.api.IPluginChannelListener;
 import wdl.api.WDLApi;
+import wdl.api.WDLApi.ModInfo;
 import wdl.gui.GuiWDL;
 import wdl.gui.GuiWDLAbout;
 import wdl.gui.GuiWDLChunkOverrides;
@@ -79,14 +79,14 @@ public class WDLHooks {
 							if (WDL.lastEntity != null) {
 								Entity entity = WDL.lastEntity;
 
-								for (Map.Entry<String, IGuiHooksListener> e :
-										WDLApi.getImplementingExtensions(IGuiHooksListener.class).entrySet()) {
+								for (ModInfo<IGuiHooksListener> info : WDLApi
+										.getImplementingExtensions(IGuiHooksListener.class)) {
 									if (handled) {
 										break;
 									}
 
-									profiler.startSection(e.getKey());
-									handled = e.getValue().onEntityGuiClosed(
+									profiler.startSection(info.id);
+									handled = info.mod.onEntityGuiClosed(
 											sender, entity, container);
 									profiler.endSection();
 								}
@@ -99,14 +99,14 @@ public class WDLHooks {
 								}
 							} else {
 								BlockPos pos = WDL.lastClickedBlock;
-								for (Map.Entry<String, IGuiHooksListener> e :
-									WDLApi.getImplementingExtensions(IGuiHooksListener.class).entrySet()) {
+								for (ModInfo<IGuiHooksListener> info : WDLApi
+										.getImplementingExtensions(IGuiHooksListener.class)) {
 									if (handled) {
 										break;
 									}
 
-									profiler.startSection(e.getKey());
-									handled = e.getValue().onBlockGuiClosed(
+									profiler.startSection(info.id);
+									handled = info.mod.onBlockGuiClosed(
 											sender, pos, container);
 									profiler.endSection();
 								}
@@ -223,10 +223,10 @@ public class WDLHooks {
 			WDLEvents.onChatMessage(chatMessage);
 			profiler.endSection();
 			
-			for (Map.Entry<String, IChatMessageListener> e :
-				WDLApi.getImplementingExtensions(IChatMessageListener.class).entrySet()) {
-				profiler.startSection(e.getKey());
-				e.getValue().onChat(WDL.worldClient, chatMessage);
+			for (ModInfo<IChatMessageListener> info : WDLApi
+					.getImplementingExtensions(IChatMessageListener.class)) {
+				profiler.startSection(info.id);
+				info.mod.onChat(WDL.worldClient, chatMessage);
 				profiler.endSection();
 			}
 			
@@ -290,10 +290,10 @@ public class WDLHooks {
 			WDLEvents.onPluginChannelPacket(channel, payload);
 			profiler.endSection();
 			
-			for (Map.Entry<String, IPluginChannelListener> e :
-				WDLApi.getImplementingExtensions(IPluginChannelListener.class).entrySet()) {
-				profiler.startSection(e.getKey());
-				e.getValue().onPluginChannelPacket(WDL.worldClient, channel,
+			for (ModInfo<IPluginChannelListener> info : WDLApi
+					.getImplementingExtensions(IPluginChannelListener.class)) {
+				profiler.startSection(info.id);
+				info.mod.onPluginChannelPacket(WDL.worldClient, channel,
 						payload);
 				profiler.endSection();
 			}
@@ -332,11 +332,10 @@ public class WDLHooks {
 			WDLEvents.onBlockEvent(pos, block, data1, data2);
 			profiler.endSection();
 			
-			for (Map.Entry<String, IBlockEventListener> e : WDLApi
-					.getImplementingExtensions(IBlockEventListener.class)
-					.entrySet()) {
-				profiler.startSection(e.getKey());
-				e.getValue().onBlockEvent(WDL.worldClient, pos, block, 
+			for (ModInfo<IBlockEventListener> info : WDLApi
+					.getImplementingExtensions(IBlockEventListener.class)) {
+				profiler.startSection(info.id);
+				info.mod.onBlockEvent(WDL.worldClient, pos, block, 
 						data1, data2);
 				profiler.endSection();
 			}

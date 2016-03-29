@@ -2,7 +2,9 @@ package wdl.api;
 
 import java.io.File;
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import net.minecraft.tileentity.TileEntity;
@@ -27,7 +29,7 @@ import com.google.common.collect.ImmutableMap;
 public class WDLApi {
 	private static Logger logger = LogManager.getLogger();
 	
-	private static Map<String, ModInfo> wdlMods = new HashMap<String, ModInfo>();
+	private static Map<String, ModInfo<?>> wdlMods = new HashMap<String, ModInfo<?>>();
 	
 	/**
 	 * Saved a TileEntity to the given position.
@@ -66,7 +68,7 @@ public class WDLApi {
 					"(id=" + id + ", version=" + version + ")");
 		}
 
-		ModInfo info = new ModInfo(id, version, mod);
+		ModInfo<IWDLMod> info = new ModInfo<IWDLMod>(id, version, mod);
 		if (wdlMods.containsKey(id)) {
 			throw new IllegalArgumentException("A mod by the name of '"
 					+ id + "' is already registered by "
@@ -113,16 +115,20 @@ public class WDLApi {
 	 * @param clazz The class to check for implementation of.
 	 * @return
 	 */
-	public static <T extends IWDLMod> Map<String, T> getImplementingExtensions(
+	public static <T extends IWDLMod> List<ModInfo<T>> getImplementingExtensions(
 			Class<T> clazz) {
 		if (clazz == null) {
 			throw new IllegalArgumentException("clazz must not be null!");
 		}
-		Map<String, T> returned = new HashMap<String, T>();
+		List<ModInfo<T>> returned = new ArrayList<ModInfo<T>>();
 		
-		for (Map.Entry<String, ModInfo> e : wdlMods.entrySet()) {
-			if (clazz.isAssignableFrom(e.getValue().mod.getClass())) {
-				returned.put(e.getKey(), clazz.cast(e.getValue()));
+		for (ModInfo<?> info : wdlMods.values()) {
+			if (clazz.isAssignableFrom(info.mod.getClass())) {
+				// We know the actual type of the given mod is correct,
+				// so it's safe to do this cast.
+				@SuppressWarnings("unchecked")
+				ModInfo<T> infoCasted = (ModInfo<T>)info;
+				returned.add(infoCasted);
 			}
 		}
 		
@@ -132,7 +138,7 @@ public class WDLApi {
 	/**
 	 * Gets an immutable map of WDL mods.
 	 */
-	public static Map<String, ModInfo> getWDLMods() {
+	public static Map<String, ModInfo<?>> getWDLMods() {
 		return ImmutableMap.copyOf(wdlMods);
 	}
 	
@@ -148,20 +154,7 @@ public class WDLApi {
 		
 		return wdlMods.get(name).getInfo();
 	}
-	
-	/**
-	 * TODO: Make this unnecessary by using ModInfo in other contexts.
-	 */
-	@Deprecated
-	public static String getModName(IWDLMod mod) {
-		for (ModInfo info : wdlMods.values()) {
-			if (info.mod == mod) {
-				return info.getDisplayName();
-			}
-		}
-		return null;
-	}
-	
+
 	/**
 	 * Writes out the current stacktrace to the logger in warn mode.
 	 */
@@ -176,9 +169,9 @@ public class WDLApi {
 	 * Implementation of {@link MessageTypeCategory} for {@link IWDLMod}s.
 	 */
 	private static class ModMessageTypeCategory extends MessageTypeCategory {
-		private ModInfo mod;
+		private ModInfo<?> mod;
 		
-		public ModMessageTypeCategory(ModInfo mod) {
+		public ModMessageTypeCategory(ModInfo<?> mod) {
 			super(mod.id);
 		}
 		
@@ -199,12 +192,12 @@ public class WDLApi {
 	/**
 	 * Information about a single extension.
 	 */
-	public static class ModInfo {
+	public static class ModInfo<T extends IWDLMod> {
 		public final String id;
 		public final String version;
-		public final IWDLMod mod;
+		public final T mod;
 		
-		private ModInfo(String id, String version, IWDLMod mod) {
+		private ModInfo(String id, String version, T mod) {
 			this.id = id;
 			this.version = version;
 			this.mod = mod;

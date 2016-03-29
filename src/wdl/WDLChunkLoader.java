@@ -19,6 +19,7 @@ import wdl.api.ITileEntityEditor;
 import wdl.api.ITileEntityEditor.TileEntityCreationMode;
 import wdl.api.ITileEntityImportationIdentifier;
 import wdl.api.WDLApi;
+import wdl.api.WDLApi.ModInfo;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBeacon;
 import net.minecraft.block.BlockBrewingStand;
@@ -287,17 +288,17 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 			}
 			
 			// Apply any editors.
-			for (Map.Entry<String, IEntityEditor> editor : WDLApi
-					.getImplementingExtensions(IEntityEditor.class).entrySet()) {
+			for (ModInfo<IEntityEditor> info : WDLApi
+					.getImplementingExtensions(IEntityEditor.class)) {
 				try {
-					if (editor.getValue().shouldEdit(entity)) {
-						editor.getValue().editEntity(entity);
+					if (info.mod.shouldEdit(entity)) {
+						info.mod.editEntity(entity);
 					}
 				} catch (Exception ex) {
 					throw new RuntimeException("Failed to edit entity "
 							+ entity + " for chunk at "
 							+ chunk.getChunkCoordIntPair() + " with extension "
-							+ editor.getKey(), ex);
+							+ info, ex);
 				}
 			}
 			
@@ -526,10 +527,9 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 			return true;
 		}
 		
-		for (ITileEntityImportationIdentifier identifier : WDLApi
-				.getImplementingExtensions(
-						ITileEntityImportationIdentifier.class).values()) {
-			if (identifier.shouldImportTileEntity(entityID, pos, block,
+		for (ModInfo<ITileEntityImportationIdentifier> info : WDLApi
+				.getImplementingExtensions(ITileEntityImportationIdentifier.class)) {
+			if (info.mod.shouldImportTileEntity(entityID, pos, block,
 					tileEntityNBT, chunk)) {
 				return true;
 			}
@@ -543,20 +543,20 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 	 */
 	public static void editTileEntity(BlockPos pos, NBTTagCompound compound,
 			TileEntityCreationMode creationMode) {
-		for (Map.Entry<String, ITileEntityEditor> editor : WDLApi
-				.getImplementingExtensions(ITileEntityEditor.class).entrySet()) {
+		for (ModInfo<ITileEntityEditor> info : WDLApi
+				.getImplementingExtensions(ITileEntityEditor.class)) {
 			try {
-				if (editor.getValue().shouldEdit(pos, compound, creationMode)) {
-					editor.getValue().editTileEntity(pos, compound, creationMode);
+				if (info.mod.shouldEdit(pos, compound, creationMode)) {
+					info.mod.editTileEntity(pos, compound, creationMode);
 					
 					WDLMessages.chatMessageTranslated(
 							WDLMessageTypes.LOAD_TILE_ENTITY,
 							"wdl.messages.tileEntity.edited", 
-							pos, WDLApi.getModName(editor.getValue()));
+							pos, info.getDisplayName());
 				}
 			} catch (Exception ex) {
 				throw new RuntimeException("Failed to edit tile entity at "
-						+ pos + " with extension " + editor.getKey()
+						+ pos + " with extension " + info
 						+ "; NBT is now " + compound + " (this may be the "
 						+ "initial value, an edited value, or a partially "
 						+ "edited value)", ex);

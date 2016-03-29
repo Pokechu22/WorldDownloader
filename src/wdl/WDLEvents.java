@@ -1,7 +1,5 @@
 package wdl;
 
-import java.util.Map;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
@@ -44,6 +42,7 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.storage.MapData;
 import wdl.api.IWorldLoadListener;
 import wdl.api.WDLApi;
+import wdl.api.WDLApi.ModInfo;
 import wdl.update.WDLUpdateChecker;
 
 /**
@@ -90,10 +89,10 @@ public class WDLEvents {
 		
 		profiler.endSection();
 		
-		for (Map.Entry<String, IWorldLoadListener> e : WDLApi
-				.getImplementingExtensions(IWorldLoadListener.class).entrySet()) {
-			profiler.startSection(e.getKey());
-			e.getValue().onWorldLoad(world, sameServer);
+		for (ModInfo<IWorldLoadListener> info : WDLApi
+				.getImplementingExtensions(IWorldLoadListener.class)) {
+			profiler.startSection(info.id);
+			info.mod.onWorldLoad(world, sameServer);
 			profiler.endSection();
 		}
 	}
