@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +37,6 @@ import net.minecraft.util.ReportedException;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.MinecraftException;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.storage.AnvilSaveConverter;
 import net.minecraft.world.chunk.storage.IChunkLoader;
 import net.minecraft.world.storage.MapData;
 import net.minecraft.world.storage.SaveHandler;
@@ -755,6 +753,14 @@ public class WDL {
 	}
 
 	/**
+	 * Hardcoded, unchanging anvil save version ID.
+	 * 
+	 * 19132: McRegion; 19133: Anvil.  If it's necessary to specify a new
+	 * version, many other parts of the mod will be broken anyways.
+	 */
+	private static final int ANVIL_SAVE_VERSION = 19133;
+
+	/**
 	 * Save the world metadata (time, gamemode, seed, ...) into the level.dat
 	 * file.
 	 */
@@ -771,12 +777,10 @@ public class WDL {
 		progressScreen.setMinorTaskProgress(
 				I18n.format("wdl.saveProgress.worldMetadata.creatingNBT"), 1);
 		
-		// TODO: It would be nice to have save version setup as a separate section,
-		// but it needs to be set before the NBT tag can be created.
-		AnvilSaveConverter saveConverter = (AnvilSaveConverter) minecraft
-				.getSaveLoader();
-		worldClient.getWorldInfo()
-				.setSaveVersion(getSaveVersion(saveConverter));
+		// Set the save version, which isn't done automatically for some
+		// strange reason.
+		worldClient.getWorldInfo().setSaveVersion(ANVIL_SAVE_VERSION);
+
 		// cloneNBTCompound takes the PLAYER's nbt file, and puts it in the
 		// right place.
 		// This is needed because single player uses that data.
@@ -1370,40 +1374,6 @@ public class WDL {
 			newTileEntities.put(chunkPos, new HashMap<BlockPos, TileEntity>());
 		}
 		newTileEntities.get(chunkPos).put(pos, te);
-	}
-	
-	/**
-	 * Gets the save version.
-	 * 
-	 * TODO: This seems mostly unnecessary -- this is just the NBT
-	 * version, which is always 19133, yes?  This seems like it
-	 * may be overkill (the number has not changed in years).
-	 */
-	private static int getSaveVersion(AnvilSaveConverter asc) {
-		int saveVersion = 0;
-
-		try {
-			Method[] anvilMethods = AnvilSaveConverter.class
-					.getDeclaredMethods();
-
-			for (Method m : anvilMethods) {
-				if (m.getParameterTypes().length == 0
-						&& m.getReturnType().equals(int.class)) {
-					m.setAccessible(true);
-					saveVersion = (Integer) m.invoke(asc);
-					break;
-				}
-			}
-		} catch (Throwable t) {
-			t.printStackTrace();
-		}
-
-		if (saveVersion == 0) {
-			//Default version for 1.8
-			saveVersion = 19133;
-		}
-
-		return saveVersion;
 	}
 	
 	/**
