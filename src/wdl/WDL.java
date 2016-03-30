@@ -1293,6 +1293,7 @@ public class WDL {
 				return name;
 			}
 		} catch (Exception e) {
+			logger.warn("Exception while getting server name: ", e);
 		}
 
 		return "Unidentified Server";
