@@ -33,6 +33,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.ReportedException;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.MinecraftException;
@@ -1209,9 +1210,9 @@ public class WDL {
 		String spawn = worldProps.getProperty("Spawn");
 
 		if (spawn.equals("player")) {
-			int x = (int) Math.floor(thePlayer.posX);
-			int y = (int) Math.floor(thePlayer.posY);
-			int z = (int) Math.floor(thePlayer.posZ);
+			int x = MathHelper.floor_double(thePlayer.posX);
+			int y = MathHelper.floor_double(thePlayer.posY);
+			int z = MathHelper.floor_double(thePlayer.posZ);
 			worldInfoNBT.setInteger("SpawnX", x);
 			worldInfoNBT.setInteger("SpawnY", y);
 			worldInfoNBT.setInteger("SpawnZ", z);
