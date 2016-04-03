@@ -180,14 +180,6 @@ public class WDLApi {
 			return mod.getDisplayName();
 		}
 	}
-	
-	/**
-	 * A method that ensures that this class has been loaded and everything is
-	 * initialized.  Extensions should not call this method.
-	 */
-	public static void ensureInitialized() {
-		logger.debug("WDLApi.ensureInitialized()");
-	}
 
 	/**
 	 * Information about a single extension.

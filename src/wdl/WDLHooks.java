@@ -381,8 +381,6 @@ public class WDLHooks {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void injectWDLButtons(GuiIngameMenu gui, List buttonList) {
-		WDLApi.ensureInitialized();
-		
 		int insertAtYPos = 0;
 	
 		for (Object obj : buttonList) {
