@@ -107,10 +107,10 @@ public class EntityUtils {
 			}
 			
 			if (mappingSTC == null) {
-				throw new Error("WDL: Failed to find stringToClassMapping!");
+				throw new Exception("WDL: Failed to find stringToClassMapping!");
 			}
 			if (mappingCTS == null) {
-				throw new Error("WDL: Failed to find classToStringMapping!");
+				throw new Exception("WDL: Failed to find classToStringMapping!");
 			}
 			
 			stringToClassMapping = mappingSTC;
@@ -151,10 +151,10 @@ public class EntityUtils {
 			entitiesByGroup.putAll("Other", otherEntities);
 		} catch (Exception e) {
 			Minecraft.getMinecraft().crashed(
-					new CrashReport("WDL Mod: failed to set up entity ranges!",
+					new CrashReport("World Downloader Mod: failed to set up entity ranges!",
 							e));
 			//Will never happen.
-			throw new Error("WDL Mod: failed to set up entity ranges!");
+			throw new Error("World Downloader Mod: failed to set up entity ranges!", e);
 		}
 	}
 	
