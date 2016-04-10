@@ -213,11 +213,11 @@ public class WDL {
 	 * Default properties used for creating baseProps.  Saved and loaded;
 	 * shared between all servers.
 	 */
-	public static Properties globalProps;
+	public static final Properties globalProps;
 	/**
 	 * Default properties that are used to create the global properites.
 	 */
-	public static Properties defaultProps;
+	public static final Properties defaultProps;
 	
 	private static Logger logger = LogManager.getLogger();
 	

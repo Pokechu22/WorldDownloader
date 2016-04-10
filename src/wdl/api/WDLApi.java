@@ -307,6 +307,34 @@ public class WDLApi {
 			
 			return info.toString();
 		}
+		
+		/**
+		 * Checks whether this extension is enabled in the
+		 * {@linkplain WDL#globalProps global config file}.
+		 */
+		public boolean isEnabled() {
+			return WDL.globalProps.getProperty("Extensions." + id + "enabled",
+					"true").equals("true");
+		}
+		
+		/**
+		 * Sets whether or not this extension is enabled in the
+		 * {@linkplain WDL#globalProps global config file}, and saves
+		 * the global config file afterwards.
+		 */
+		public void setEnabled(boolean enabled) {
+			WDL.globalProps.setProperty("Extensions." + id + "enabled",
+					Boolean.toString(enabled));
+			WDL.saveGlobalProps();
+		}
+		
+		/**
+		 * Toggles whether or not this extension is enabled, and saves the
+		 * global config file afterwards.
+		 */
+		public void toggleEnabled() {
+			this.setEnabled(!this.isEnabled());
+		}
 	}
 
 	static {

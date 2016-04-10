@@ -11,6 +11,7 @@ import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 import wdl.api.IWDLModWithGui;
 import wdl.api.WDLApi;
@@ -61,39 +62,64 @@ public class GuiWDLExtensions extends GuiScreen {
 		
 		private class ModEntry implements IGuiListEntry {
 			public final ModInfo<?> mod;
-			private final String modDesc;
+			/**
+			 * Constant information about the extension (name & version)
+			 */
+			private final String modDescription;
+			/**
+			 * The {@link #modDescription}, formated depending on whether
+			 * the mod is enabled.
+			 */
+			private String label;
 			private GuiButton button;
+			private GuiButton disableButton;
 			
 			public ModEntry(ModInfo<?> mod) {
 				this.mod = mod;
 				String name = mod.getDisplayName();
-				this.modDesc = I18n.format("wdl.gui.extensions.modVersion",
+				this.modDescription = I18n.format("wdl.gui.extensions.modVersion",
 						name, mod.version);
 
-				if (mod instanceof IWDLModWithGui) {
-					String buttonName = ((IWDLModWithGui) mod).getButtonName();
+				if (!mod.isEnabled()) {
+					this.label = "" + EnumChatFormatting.GRAY
+							+ EnumChatFormatting.ITALIC + modDescription;
+				} else {
+					this.label = modDescription;
+				}
+
+				if (mod.mod instanceof IWDLModWithGui) {
+					IWDLModWithGui guiMod = (IWDLModWithGui) mod.mod;
+					String buttonName = (guiMod).getButtonName();
 					if (buttonName == null || buttonName.isEmpty()) {
 						buttonName = I18n.format("wdl.gui.extensions.defaultSettingsButtonText");
 					}
 					
 					button = new GuiButton(0, 0, 0, 80, 20,
-							((IWDLModWithGui) mod).getButtonName());
+							guiMod.getButtonName());
 				}
+				
+				disableButton = new GuiButton(0, 0, 0, 80, 20,
+						I18n.format("wdl.gui.extensions."
+								+ (mod.isEnabled() ? "enabled" : "disabled")));
 			}
 			
 			@Override
 			public void drawEntry(int slotIndex, int x, int y, int listWidth,
 					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
 				if (button != null) {
-					button.xPosition = GuiWDLExtensions.this.width - 92;
+					button.xPosition = GuiWDLExtensions.this.width - 180;
 					button.yPosition = y - 1;
 					
 					button.drawButton(mc, mouseX, mouseY);
 				}
 				
+				disableButton.xPosition = GuiWDLExtensions.this.width - 92;
+				disableButton.yPosition = y - 1;
+				disableButton.drawButton(mc, mouseX, mouseY);
+				
 				int centerY = y + slotHeight / 2
 						- fontRendererObj.FONT_HEIGHT / 2;
-				fontRendererObj.drawString(modDesc, x, centerY, 0xFFFFFF);
+				fontRendererObj.drawString(label, x, centerY, 0xFFFFFF);
 			}
 
 			@Override
@@ -101,12 +127,28 @@ public class GuiWDLExtensions extends GuiScreen {
 					int mouseEvent, int relativeX, int relativeY) {
 				if (button != null) {
 					if (button.mousePressed(mc, x, y)) {
-						if (mod instanceof IWDLModWithGui) {
-							((IWDLModWithGui) mod).openGui(GuiWDLExtensions.this);
+						if (mod.mod instanceof IWDLModWithGui) {
+							((IWDLModWithGui) mod.mod).openGui(GuiWDLExtensions.this);
 						}
 						
 						button.playPressSound(mc.getSoundHandler());
+						return true;
 					}
+				}
+				if (disableButton.mousePressed(mc, x, y)) {
+					mod.toggleEnabled();
+					
+					disableButton.playPressSound(mc.getSoundHandler());
+					disableButton.displayString = I18n.format("wdl.gui.extensions."
+							+ (mod.isEnabled() ? "enabled" : "disabled"));
+					
+					if (!mod.isEnabled()) {
+						this.label = "" + EnumChatFormatting.GRAY
+								+ EnumChatFormatting.ITALIC + modDescription;
+					} else {
+						this.label = modDescription;
+					}
+					return true;
 				}
 				
 				if (selectedModIndex != slotIndex) {
