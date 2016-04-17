@@ -355,6 +355,8 @@ wdl.messages.generalError.forbidden=The server forbids downloading this world!
 wdl.messages.generalError.failedToBackUp=Error while backing up world: %s
 wdl.messages.generalError.noUTF8=Your computer doesn't support the UTF-8 charset: %s.  You should feel bad.
 wdl.messages.generalError.failedToSetUpEntityUI=Error setting up Entity List UI: %s
+wdl.messages.generalError.failedToSaveEntity=Failed to save entity %s for chunk at %d, %d: %s
+wdl.messages.generalError.failedToSaveTE=Failed to save tile entity %s at %s for chunk at %d, %d: %s
 
 wdl.messages.updates.releaseCount=Found %d releases.
 wdl.messages.updates.failedToFindMatchingRelease=Could not find a release matching %s.  You may be running a version that hasn't been released yet.

@@ -29,6 +29,7 @@ import net.minecraft.block.BlockDropper;
 import net.minecraft.block.BlockFurnace;
 import net.minecraft.block.BlockHopper;
 import net.minecraft.block.BlockNote;
+import net.minecraft.entity.DataWatcher;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.CompressedStreamTools;
@@ -304,9 +305,43 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 			
 			NBTTagCompound entityData = new NBTTagCompound();
 	
-			if (entity.writeToNBTOptional(entityData)) {
-				chunk.setHasEntities(true);
-				entityList.appendTag(entityData);
+			try {
+				if (entity.writeToNBTOptional(entityData)) {
+					chunk.setHasEntities(true);
+					entityList.appendTag(entityData);
+				}
+			} catch (Exception e) {
+				WDLMessages.chatMessageTranslated(
+						WDLMessageTypes.ERROR,
+						"wdl.messages.generalError.failedToSaveEntity",
+						entity, chunk.xPosition, chunk.zPosition, e);
+				logger.warn("Compound: " + entityData);
+				logger.warn("Entity metadata dump:");
+				try {
+					List<DataWatcher.WatchableObject> objects = entity
+							.getDataWatcher().getAllWatched();
+					if (objects == null) {
+						logger.warn("No entries (getAllWatched() returned null)");
+					} else {
+						logger.warn(objects);
+						for (DataWatcher.WatchableObject obj : objects) {
+							if (obj != null) {
+								logger.warn("WatchableObject [getDataValueId()="
+										+ obj.getDataValueId()
+										+ ", getObject()="
+										+ obj.getObject()
+										+ ", getObjectType()="
+										+ obj.getObjectType()
+										+ ", isWatched()="
+										+ obj.isWatched() + "]");
+							}
+						}
+					}
+				} catch (Exception e2) {
+					logger.warn("Failed to complete dump: ", e);
+				}
+				logger.warn("End entity metadata dump");
+				continue;
 			}
 		}
 		
@@ -376,9 +411,19 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 			// Now, add all of the tile entities, using the "best" map
 			// if it's in multiple.
 			if (newTEMap.containsKey(pos)) {
-				TileEntity te = newTEMap.get(pos);
 				NBTTagCompound compound = new NBTTagCompound();
-				te.writeToNBT(compound);
+				
+				TileEntity te = newTEMap.get(pos);
+				try {
+					te.writeToNBT(compound);
+				} catch (Exception e) {
+					WDLMessages.chatMessageTranslated(
+							WDLMessageTypes.ERROR,
+							"wdl.messages.generalError.failedToSaveTE",
+							te, pos, chunk.xPosition, chunk.zPosition, e);
+					logger.warn("Compound: " + compound);
+					continue;
+				}
 				
 				String entityType = compound.getString("id") +
 						" (" + te.getClass().getCanonicalName() +")";
@@ -406,7 +451,16 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 				// It seems unnecessary.
 				TileEntity te = chunkTEMap.get(pos);
 				NBTTagCompound compound = new NBTTagCompound();
-				te.writeToNBT(compound);
+				try {
+					te.writeToNBT(compound);
+				} catch (Exception e) {
+					WDLMessages.chatMessageTranslated(
+							WDLMessageTypes.ERROR,
+							"wdl.messages.generalError.failedToSaveTE",
+							te, pos, chunk.xPosition, chunk.zPosition, e);
+					logger.warn("Compound: " + compound);
+					continue;
+				}
 				
 				editTileEntity(pos, compound, TileEntityCreationMode.EXISTING);
 				
