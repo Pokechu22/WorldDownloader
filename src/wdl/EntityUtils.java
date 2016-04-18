@@ -45,8 +45,6 @@ import net.minecraft.entity.projectile.EntityFishHook;
 import net.minecraft.entity.projectile.EntityPotion;
 import net.minecraft.entity.projectile.EntitySmallFireball;
 import net.minecraft.entity.projectile.EntitySnowball;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.IChatComponent;
 
 import wdl.api.IEntityAdder;
 import wdl.api.ISpecialEntityHandler;
@@ -547,28 +545,5 @@ public class EntityUtils {
 		} else {
 			return otherRange;
 		}
-	}
-	
-	/**
-	 * Is the given entity not safe to save?
-	 * 
-	 * If it isn't safe, it may cause a crash or another issue when attempting
-	 * to save it.
-	 * 
-	 * TODO: This is basically a bandaid for a base issue with broken entities.
-	 * Solve that if possible.
-	 * 
-	 * @return <code>null</code> if it is safe to save, or a message explaining
-	 *         why the entity is NOT safe to save if so.
-	 */
-	public static IChatComponent isUnsafeToSaveEntity(Entity e) {
-		try {
-			e.getCustomNameTag();
-		} catch (ClassCastException ex) {
-			return new ChatComponentTranslation(
-					"wdl.unsafeReasons.badCustomName", ex.toString());
-		}
-		
-		return null;
 	}
 }

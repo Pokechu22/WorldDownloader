@@ -38,7 +38,6 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ClassInheratanceMultiMap;
-import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.MinecraftException;
 import net.minecraft.world.NextTickListEntry;
@@ -367,15 +366,6 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 					WDLMessageTypes.REMOVE_ENTITY,
 					"wdl.messages.removeEntity.notSavingUserPreference",
 					e);
-			return false;
-		}
-		IChatComponent unsafeReason = EntityUtils
-				.isUnsafeToSaveEntity(e);
-		if (unsafeReason != null) {
-			WDLMessages.chatMessageTranslated(
-					WDLMessageTypes.REMOVE_ENTITY,
-					"wdl.messages.removeEntity.notSavingUnsafe",
-					e, unsafeReason);
 			return false;
 		}
 		
