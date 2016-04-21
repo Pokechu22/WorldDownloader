@@ -9,6 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.entity.Entity;
@@ -45,9 +48,10 @@ import net.minecraft.entity.projectile.EntityFishHook;
 import net.minecraft.entity.projectile.EntityPotion;
 import net.minecraft.entity.projectile.EntitySmallFireball;
 import net.minecraft.entity.projectile.EntitySnowball;
-
 import wdl.api.IEntityAdder;
 import wdl.api.ISpecialEntityHandler;
+import wdl.api.WDLApi;
+import wdl.api.WDLApi.ModInfo;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -56,6 +60,8 @@ import com.google.common.collect.Multimap;
  * Provides utility functions for recognising entities.
  */
 public class EntityUtils {
+	private static final Logger logger = LogManager.getLogger();
+	
 	/**
 	 * Reference to the {@link EntityList#stringToClassMapping} field.
 	 */
@@ -64,12 +70,6 @@ public class EntityUtils {
 	 * Reference to the {@link EntityList#classToStringMapping} field.
 	 */
 	public static final Map<Class<?>, String> classToStringMapping;
-	
-	/**
-	 * Entities arranged by the grouping used in the entity GUI.
-	 */
-	public static final Multimap<String, String> entitiesByGroup = 
-			HashMultimap.<String, String>create();
 	
 	/*
 	 * Add the vanilla entities to entitiesByGroup and steal the 
@@ -138,8 +138,6 @@ public class EntityUtils {
 				}
 			}
 			
-			otherEntities.add("Hologram");
-			
 			Collections.sort(hostileEntities, Collator.getInstance());
 			Collections.sort(passiveEntities, Collator.getInstance());
 			Collections.sort(otherEntities, Collator.getInstance());
@@ -157,78 +155,6 @@ public class EntityUtils {
 	}
 	
 	/**
-	 * Custom entity handlers.
-	 * 
-	 * @see ISpecialEntityHandler
-	 */
-	private static final List<ISpecialEntityHandler> specialEntityHandlers =
-			new ArrayList<ISpecialEntityHandler>();
-	/**
-	 * List of all entities that have special variants and the mods that handle
-	 * said special variants.
-	 */
-	private static final Multimap<String, ISpecialEntityHandler> extendedEntities =
-			HashMultimap.<String, ISpecialEntityHandler>create();
-	
-	/**
-	 * New entity adders.
-	 * 
-	 * @see IEntityAdder
-	 */
-	private static final List<IEntityAdder> entityAdders =
-			new ArrayList<IEntityAdder>();
-	/**
-	 * New entities and the mods that handle them.
-	 */
-	private static final Map<String, IEntityAdder> addedEntities = 
-			new HashMap<String, IEntityAdder>();
-	
-	public static void addSpecialEntityHandler(ISpecialEntityHandler handler) {
-		specialEntityHandlers.add(handler);
-		
-		for (String s : handler.getSpecialEntities().keySet()) {
-			extendedEntities.put(s, handler);
-		}
-		for (Map.Entry<String, String> e : handler.getSpecialEntities().entries()) {
-			WDL.defaultProps.setProperty("Entity." + e.getValue() + ".Enabled", 
-					"true");
-			int trackDistance = handler.getSpecialEntityTrackDistance(e
-					.getValue());
-			if (trackDistance < 0) {
-				trackDistance = getDefaultEntityRange(e.getKey());
-			}
-			WDL.defaultProps.setProperty("Entity." + e.getValue()
-					+ ".TrackDistance", Integer.toString(trackDistance));
-			
-			String group = handler.getSpecialEntityCategory(e.getValue());
-			entitiesByGroup.put(group, e.getValue());
-			
-			WDL.defaultProps.setProperty("EntityGroup." + group + ".Enabled",
-					"true");
-		}
-	}
-	
-	public static void addEntityAdder(IEntityAdder adder) {
-		entityAdders.add(adder);
-		
-		for (String s : adder.getModEntities()) {
-			addedEntities.put(s, adder);
-			
-			WDL.defaultProps.setProperty("Entity." + s + ".Enabled", 
-					"true");
-			int trackDistance = adder.getDefaultEntityTrackDistance(s);
-			WDL.defaultProps.setProperty("Entity." + s
-					+ ".TrackDistance", Integer.toString(trackDistance));
-			
-			String group = adder.getEntityCategory(s);
-			entitiesByGroup.put(group, s);
-			
-			WDL.defaultProps.setProperty("EntityGroup." + group + ".Enabled",
-					"true");
-		}
-	}
-	
-	/**
 	 * Gets a list of all types of entities.
 	 */
 	public static List<String> getEntityTypes() {
@@ -242,8 +168,9 @@ public class EntityUtils {
 			returned.add(e.getKey());
 		}
 		
-		for (ISpecialEntityHandler adder : specialEntityHandlers) {
-			returned.addAll(adder.getSpecialEntities().values());
+		for (ModInfo<ISpecialEntityHandler> info : WDLApi
+				.getImplementingExtensions(ISpecialEntityHandler.class)) {
+			returned.addAll(info.mod.getSpecialEntities().values());
 		}
 		
 		return returned;
@@ -263,16 +190,31 @@ public class EntityUtils {
 		if (type == null) {
 			return -1;
 		}
-		if (addedEntities.get(type) != null) {
-			return addedEntities.get(type).getDefaultEntityTrackDistance(type);
+		for (ModInfo<IEntityAdder> info : WDLApi
+				.getImplementingExtensions(IEntityAdder.class)) {
+			List<String> names = info.mod.getModEntities();
+			if (names == null) {
+				logger.warn(info.toString()
+						+ " returned null for getModEntities()!");
+				continue;
+			}
+			if (names.contains(type)) {
+				return info.mod.getDefaultEntityTrackDistance(type);
+			}
 		}
-		for (ISpecialEntityHandler handler : specialEntityHandlers) {
-			for (Map.Entry<String, String> e : handler.getSpecialEntities()
-					.entries()) {
+		for (ModInfo<ISpecialEntityHandler> info : WDLApi
+				.getImplementingExtensions(ISpecialEntityHandler.class)) {
+			Multimap<String, String> specialEntities = info.mod.getSpecialEntities();
+			if (specialEntities == null) {
+				logger.warn(info.toString()
+						+ " returned null for getSpecialEntities()!");
+			}
+			for (Map.Entry<String, String> e : specialEntities.entries()) {
 				if (e.getValue().equals(type)) {
-					int trackDistance = handler.getSpecialEntityTrackDistance(e
-							.getValue());
+					int trackDistance = info.mod
+							.getSpecialEntityTrackDistance(e.getValue());
 					if (trackDistance < 0) {
+						// Use vanilla value.
 						trackDistance = getDefaultEntityRange(e.getKey());
 					}
 					return trackDistance;
@@ -415,10 +357,12 @@ public class EntityUtils {
 	public static String getEntityType(Entity e) {
 		String vanillaName = EntityList.getEntityString(e);
 		
-		for (ISpecialEntityHandler handler : extendedEntities.get(vanillaName)) {
-			String specialName = handler.getSpecialEntityName(e);
-			if (specialName != null) {
-				return specialName;
+		for (ModInfo<ISpecialEntityHandler> info : WDLApi.getImplementingExtensions(ISpecialEntityHandler.class)) {
+			if (info.mod.getSpecialEntities().containsKey(vanillaName)) {
+				String specialName = info.mod.getSpecialEntityName(e);
+				if (specialName != null) {
+					return specialName;
+				}
 			}
 		}
 		
