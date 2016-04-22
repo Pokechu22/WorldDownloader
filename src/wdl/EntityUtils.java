@@ -2,15 +2,10 @@ package wdl;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.text.Collator;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import java.util.Set;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.crash.CrashReport;
@@ -48,6 +43,10 @@ import net.minecraft.entity.projectile.EntityFishHook;
 import net.minecraft.entity.projectile.EntityPotion;
 import net.minecraft.entity.projectile.EntitySmallFireball;
 import net.minecraft.entity.projectile.EntitySnowball;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import wdl.api.IEntityAdder;
 import wdl.api.ISpecialEntityHandler;
 import wdl.api.WDLApi;
@@ -113,38 +112,6 @@ public class EntityUtils {
 			
 			stringToClassMapping = mappingSTC;
 			classToStringMapping = mappingCTS;
-			
-			List<String> passiveEntities = new ArrayList<String>();
-			List<String> hostileEntities = new ArrayList<String>();
-			List<String> otherEntities = new ArrayList<String>();
-			
-			//Now build an actual list.
-			for (Map.Entry<String, Class<?>> e : 
-					EntityUtils.stringToClassMapping.entrySet()) {
-				String entity = e.getKey();
-				Class<?> c = e.getValue();
-				
-				if (Modifier.isAbstract(c.getModifiers())) {
-					//Don't include abstract classes.
-					continue;
-				}
-				
-				if (IMob.class.isAssignableFrom(c)) {
-					hostileEntities.add(entity);
-				} else if (IAnimals.class.isAssignableFrom(c)) {
-					passiveEntities.add(entity);
-				} else {
-					otherEntities.add(entity);
-				}
-			}
-			
-			Collections.sort(hostileEntities, Collator.getInstance());
-			Collections.sort(passiveEntities, Collator.getInstance());
-			Collections.sort(otherEntities, Collator.getInstance());
-			
-			entitiesByGroup.putAll("Hostile", hostileEntities);
-			entitiesByGroup.putAll("Passive", passiveEntities);
-			entitiesByGroup.putAll("Other", otherEntities);
 		} catch (Exception e) {
 			Minecraft.getMinecraft().crashed(
 					new CrashReport("World Downloader Mod: failed to set up entity ranges!",
@@ -155,10 +122,13 @@ public class EntityUtils {
 	}
 	
 	/**
-	 * Gets a list of all types of entities.
+	 * Gets a collection of all types of entities, both basic ones and special
+	 * entities.
+	 * 
+	 * This value is calculated each time and is not cached.
 	 */
-	public static List<String> getEntityTypes() {
-		List<String> returned = new ArrayList<String>();
+	public static Set<String> getEntityTypes() {
+		Set<String> returned = new HashSet<String>();
 		
 		for (Map.Entry<String, Class<?>> e : stringToClassMapping.entrySet()) {
 			if (Modifier.isAbstract(e.getValue().getModifiers())) {
@@ -171,6 +141,24 @@ public class EntityUtils {
 		for (ModInfo<ISpecialEntityHandler> info : WDLApi
 				.getImplementingExtensions(ISpecialEntityHandler.class)) {
 			returned.addAll(info.mod.getSpecialEntities().values());
+		}
+		
+		return returned;
+	}
+	
+	/**
+	 * Gets a multimap of entity groups to entity types, for both regular
+	 * entities and special entites.  The group is the key.
+	 * 
+	 * This value is calculated each time and is not cached.
+	 */
+	public static Multimap<String, String> getEntitiesByGroup() {
+		Multimap<String, String> returned = HashMultimap.create();
+		
+		Set<String> types = getEntityTypes();
+		
+		for (String type : types) {
+			returned.put(getEntityGroup(type), type);
 		}
 		
 		return returned;
@@ -314,9 +302,40 @@ public class EntityUtils {
 		if (type == null) {
 			return null;
 		}
-		for (Map.Entry<String, String> e : entitiesByGroup.entries()) {
-			if (type.equals(e.getValue())) {
-				return e.getKey();
+		for (ModInfo<IEntityAdder> info : WDLApi.getImplementingExtensions(IEntityAdder.class)) {
+			List<String> names = info.mod.getModEntities();
+			if (names == null) {
+				logger.warn(info.toString()
+						+ " returned null for getModEntities()!");
+				continue;
+			}
+			
+			if (names.contains(type)) {
+				return info.mod.getEntityCategory(type);
+			}
+		}
+		for (ModInfo<ISpecialEntityHandler> info : WDLApi.getImplementingExtensions(ISpecialEntityHandler.class)) {
+			Multimap<String, String> specialEntities = info.mod.getSpecialEntities();
+			if (specialEntities == null) {
+				logger.warn(info.toString()
+						+ " returned null for getSpecialEntities()!");
+				continue;
+			}
+			
+			if (specialEntities.containsValue(type)) {
+				return info.mod.getSpecialEntityCategory(type);
+			}
+		}
+		if (stringToClassMapping.containsKey(type)) {
+			Class<?> clazz = stringToClassMapping.get(type);
+			
+			// Fallback to vanilla logic: Hostile / passive / other
+			if (IMob.class.isAssignableFrom(clazz)) {
+				return "Hostile";
+			} else if (IAnimals.class.isAssignableFrom(clazz)) {
+				return "Passive";
+			} else {
+				return "Other";
 			}
 		}
 		

@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import net.minecraft.client.ClientBrandRetriever;
 import net.minecraft.client.Minecraft;
@@ -256,7 +257,7 @@ public class WDL {
 		//Set up entities.
 		defaultProps.setProperty("Entity.TrackDistanceMode", "server");
 		
-		List<String> entityTypes = EntityUtils.getEntityTypes();
+		Set<String> entityTypes = EntityUtils.getEntityTypes();
 		for (String entity : entityTypes) {
 			defaultProps.setProperty("Entity." + entity + ".Enabled", "true");
 			defaultProps.setProperty("Entity." + entity + ".TrackDistance", 

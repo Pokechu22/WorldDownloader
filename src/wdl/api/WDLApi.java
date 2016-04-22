@@ -14,7 +14,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import wdl.EntityRealigner;
-import wdl.EntityUtils;
 import wdl.HologramHandler;
 import wdl.MessageTypeCategory;
 import wdl.WDL;
@@ -88,15 +87,7 @@ public class WDLApi {
 		
 		wdlMods.put(id, info);
 		
-		// Right now I don't think it's possible to make EntityUtils work
-		// dynamically.
-		if (mod instanceof IEntityAdder) {
-			EntityUtils.addEntityAdder((IEntityAdder) mod);
-		}
-		if (mod instanceof ISpecialEntityHandler) {
-			EntityUtils.addSpecialEntityHandler((ISpecialEntityHandler) mod);
-		}
-		// Or this.
+		// IMessageAdder doesn't seem possible to do dynamically
 		if (mod instanceof IMessageTypeAdder) {
 			Map<String, IWDLMessageType> types = 
 					((IMessageTypeAdder) mod).getMessageTypes();
