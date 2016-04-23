@@ -275,7 +275,8 @@ public class EntityUtils {
 			return getMostLikelyEntityTrackDistance(type);
 		} else if ("server".equals(mode)) {
 			int serverDistance = WDLPluginChannels
-					.getEntityRange(mode);
+					.getEntityRange(type);
+			// TODO: Try to convert type to the base entity if it is an extended entity
 			
 			if (serverDistance < 0) {
 				return getMostLikelyEntityTrackDistance(type);
