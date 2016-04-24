@@ -220,8 +220,7 @@ public class EntityUtils {
 	 * @return
 	 */
 	public static int getEntityTrackDistance(Entity e) {
-		return getEntityTrackDistance(
-				WDL.worldProps.getProperty("Entity.TrackDistanceMode"), e);
+		return getEntityTrackDistance(getTrackDistanceMode(), e);
 	}
 	
 	/**
@@ -251,7 +250,13 @@ public class EntityUtils {
 			String prop = WDL.worldProps.getProperty("Entity." +
 					getEntityType(e) + ".TrackDistance", "-1");
 			
-			return Integer.valueOf(prop);
+			int value = Integer.valueOf(prop);
+			
+			if (value == -1) {
+				return getEntityTrackDistance("server", e);
+			} else {
+				return value;
+			}
 		} else {
 			throw new IllegalArgumentException("Mode is not a valid mode: " + mode);
 		}
@@ -264,8 +269,7 @@ public class EntityUtils {
 	 * @return
 	 */
 	public static int getEntityTrackDistance(String type) {
-		return getEntityTrackDistance(
-				WDL.worldProps.getProperty("Entity.TrackDistanceMode"), type);
+		return getEntityTrackDistance(getTrackDistanceMode(), type);
 	}
 	
 	/**
@@ -292,7 +296,13 @@ public class EntityUtils {
 			String prop = WDL.worldProps.getProperty("Entity." +
 					type + ".TrackDistance", "-1");
 			
-			return Integer.valueOf(prop);
+			int value = Integer.valueOf(prop);
+			
+			if (value == -1) {
+				return getEntityTrackDistance("server", type);
+			} else {
+				return value;
+			}
 		} else {
 			throw new IllegalArgumentException("Mode is not a valid mode: " + mode);
 		}
@@ -436,6 +446,13 @@ public class EntityUtils {
 	 */
 	public static int getVanillaEntityRange(String type) {
 		return getVanillaEntityRange(classToStringMapping.get(type)); 
+	}
+	
+	/**
+	 * Gets the currently selected track distance mode from {@link WDL#worldProps}.
+	 */
+	public static String getTrackDistanceMode() {
+		return WDL.worldProps.getProperty("Entity.TrackDistanceMode", "server");
 	}
 	
 	/**

@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 
 import net.minecraft.client.ClientBrandRetriever;
 import net.minecraft.client.Minecraft;
@@ -47,8 +46,6 @@ import net.minecraft.world.storage.ThreadedFileIOBase;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.google.common.collect.HashMultimap;
-
 import wdl.WorldBackup.WorldBackupType;
 import wdl.api.IPlayerInfoEditor;
 import wdl.api.ISaveListener;
@@ -60,6 +57,8 @@ import wdl.gui.GuiWDLMultiworldSelect;
 import wdl.gui.GuiWDLOverwriteChanges;
 import wdl.gui.GuiWDLSaveProgress;
 import wdl.update.GithubInfoGrabber;
+
+import com.google.common.collect.HashMultimap;
 
 /**
  * This is the main class that does most of the work.
@@ -256,13 +255,6 @@ public class WDL {
 		
 		//Set up entities.
 		defaultProps.setProperty("Entity.TrackDistanceMode", "server");
-		
-		Set<String> entityTypes = EntityUtils.getEntityTypes();
-		for (String entity : entityTypes) {
-			defaultProps.setProperty("Entity." + entity + ".Enabled", "true");
-			defaultProps.setProperty("Entity." + entity + ".TrackDistance", 
-					Integer.toString(EntityUtils.getDefaultEntityRange(entity)));
-		}
 		
 		//Don't save these entities by default -- they're problematic.
 		defaultProps.setProperty("Entity.FireworksRocketEntity.Enabled", "false");
