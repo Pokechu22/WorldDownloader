@@ -238,7 +238,12 @@ public class EntityUtils {
 					.getEntityRange(getEntityType(e));
 			
 			if (serverDistance < 0) {
-				return getMostLikelyEntityTrackDistance(e);
+				serverDistance = WDLPluginChannels.getEntityRange(EntityList
+						.getEntityString(e));
+				
+				if (serverDistance < 0) {
+					return getMostLikelyEntityTrackDistance(e);
+				}
 			}
 			
 			return serverDistance;
