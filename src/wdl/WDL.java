@@ -947,14 +947,15 @@ public class WDL {
 	/**
 	 * Loads the properties for the given world, and returns it.
 	 * 
-	 * Returns null if there is no properties for that world.
+	 * Returns an empty Properties that inherits from baseProps if the specific
+	 * world cannot be found.
 	 */
 	public static Properties loadWorldProps(String theWorldName) {
-		if (theWorldName.isEmpty()) {
-			return null;
-		}
-		
 		Properties ret = new Properties(baseProps);
+		
+		if (theWorldName.isEmpty()) {
+			return ret;
+		}
 		
 		File savesDir = new File(minecraft.mcDataDir, "saves");
 		
@@ -969,7 +970,7 @@ public class WDL {
 			return ret;
 		} catch (Exception e) {
 			logger.debug("Failed to load world props for " + worldName, e);
-			return null;
+			return ret;
 		} finally {
 			if (reader != null) {
 				try {

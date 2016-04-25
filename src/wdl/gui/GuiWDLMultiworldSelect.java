@@ -232,7 +232,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 			
 			Properties props = WDL.loadWorldProps(worldName);
 
-			if (props == null) {
+			if (!props.containsKey("WorldName")) {
 				continue;
 			}
 			
