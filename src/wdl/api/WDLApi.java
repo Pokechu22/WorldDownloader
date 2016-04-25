@@ -114,6 +114,10 @@ public class WDLApi {
 		List<ModInfo<T>> returned = new ArrayList<ModInfo<T>>();
 		
 		for (ModInfo<?> info : wdlMods.values()) {
+			if (!info.isEnabled()) {
+				continue;
+			}
+			
 			if (clazz.isAssignableFrom(info.mod.getClass())) {
 				// We know the actual type of the given mod is correct,
 				// so it's safe to do this cast.
