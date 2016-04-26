@@ -21,7 +21,6 @@ import net.minecraft.inventory.ContainerHorseInventory;
 import net.minecraft.inventory.ContainerMerchant;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryEnderChest;
-import net.minecraft.network.play.server.S3FPacketCustomPayload;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityBeacon;
@@ -455,7 +454,8 @@ public class WDLEvents {
 	}
 
 	/**
-	 * Must be called when Packet 0x34 (map data) is received.
+	 * Must be called when a Map Data packet is received, to store the image on
+	 * the map item.
 	 */
 	public static void onMapDataLoaded(int mapID, 
 			MapData mapData) {
@@ -472,8 +472,8 @@ public class WDLEvents {
 	}
 
 	/**
-	 * Must be called whenever a {@link S3FPacketCustomPayload} is
-	 * received by the client.
+	 * Must be called whenever a plugin channel message / custom payload packet
+	 * is received.
 	 */
 	public static void onPluginChannelPacket(String channel,
 			byte[] bytes) {
