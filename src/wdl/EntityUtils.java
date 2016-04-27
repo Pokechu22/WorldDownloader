@@ -196,14 +196,15 @@ public class EntityUtils {
 			if (specialEntities == null) {
 				logger.warn(info.toString()
 						+ " returned null for getSpecialEntities()!");
+				continue;
 			}
 			for (Map.Entry<String, String> e : specialEntities.entries()) {
 				if (e.getValue().equals(type)) {
 					int trackDistance = info.mod
 							.getSpecialEntityTrackDistance(e.getValue());
 					if (trackDistance < 0) {
-						// Use vanilla value.
-						trackDistance = getDefaultEntityRange(e.getKey());
+						// Fall back to the vanilla value.
+						trackDistance = getMostLikelyEntityTrackDistance(e.getKey());
 					}
 					return trackDistance;
 				}
@@ -237,11 +238,13 @@ public class EntityUtils {
 					.getEntityRange(getEntityType(e));
 			
 			if (serverDistance < 0) {
-				serverDistance = WDLPluginChannels.getEntityRange(EntityList
-						.getEntityString(e));
-				
-				if (serverDistance < 0) {
-					return getMostLikelyEntityTrackDistance(e);
+				// Will be provided by an extension
+				int mostLikelyRange = getMostLikelyEntityTrackDistance(e);
+				if (mostLikelyRange < 0) {
+					return WDLPluginChannels.getEntityRange(EntityList
+							.getEntityString(e));
+				} else {
+					return mostLikelyRange;
 				}
 			}
 			
@@ -281,14 +284,48 @@ public class EntityUtils {
 	 */
 	public static int getEntityTrackDistance(String mode, String type) {
 		if ("default".equals(mode)) {
-			return getMostLikelyEntityTrackDistance(type);
+			int mostLikelyDistance = getMostLikelyEntityTrackDistance(type);
+			
+			if (mostLikelyDistance < 0) {
+				// TODO: Cache this or move it somewhere where other methods can use it...
+				// Get the base entity for the extended entity.
+				for (ModInfo<ISpecialEntityHandler> info : WDLApi.getImplementingExtensions(ISpecialEntityHandler.class)) {
+					Multimap<String, String> specialEntities = info.mod.getSpecialEntities();
+					
+					for (Map.Entry<String, String> mapping : specialEntities.entries()) {
+						if (type.equals(mapping.getValue())) {
+							// We found a match - try using the base entity.
+							return getEntityTrackDistance(mode,
+									mapping.getKey());
+						}
+					}
+				}
+			}
+			return mostLikelyDistance;
 		} else if ("server".equals(mode)) {
 			int serverDistance = WDLPluginChannels
 					.getEntityRange(type);
-			// TODO: Try to convert type to the base entity if it is an extended entity
 			
 			if (serverDistance < 0) {
-				return getMostLikelyEntityTrackDistance(type);
+				int mostLikelyDistance = getMostLikelyEntityTrackDistance(type);
+				
+				if (mostLikelyDistance < 0) {
+					// Try to repeat the process with the base entity
+					for (ModInfo<ISpecialEntityHandler> info : WDLApi.getImplementingExtensions(ISpecialEntityHandler.class)) {
+						// TODO: Redundant code from before...
+						Multimap<String, String> specialEntities = info.mod.getSpecialEntities();
+						
+						for (Map.Entry<String, String> mapping : specialEntities.entries()) {
+							if (type.equals(mapping.getValue())) {
+								// We found a match - try using the base entity.
+								return getEntityTrackDistance(mode,
+										mapping.getKey());
+							}
+						}
+					}
+				} else {
+					return mostLikelyDistance;
+				}
 			}
 			
 			return serverDistance;
