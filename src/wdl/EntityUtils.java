@@ -148,7 +148,7 @@ public class EntityUtils {
 	
 	/**
 	 * Gets a multimap of entity groups to entity types, for both regular
-	 * entities and special entites.  The group is the key.
+	 * entities and special entities.  The group is the key.
 	 * 
 	 * This value is calculated each time and is not cached.
 	 */
@@ -168,7 +168,7 @@ public class EntityUtils {
 	 * Gets the entity tracking range used by vanilla minecraft.
 	 * <br/>
 	 * Proper tracking ranges can be found in EntityTracker#trackEntity
-	 * (the one that takes an Entity as a paremeter) -- it's the 2nd arg
+	 * (the one that takes an Entity as a parameter) -- it's the 2nd argument
 	 * given to addEntityToTracker.
 	 * 
 	 * @param type The vanilla minecraft entity string.
@@ -443,7 +443,7 @@ public class EntityUtils {
 	
 	/**
 	 * Gets the track distance for the given entity, making a guess about
-	 * whether to use spigot track distances based off of the server brand.
+	 * whether to use Spigot track distances based off of the server brand.
 	 */
 	public static int getMostLikelyEntityTrackDistance(Entity e) {
 		if (WDL.isSpigot()) {
@@ -455,7 +455,7 @@ public class EntityUtils {
 	
 	/**
 	 * Gets the track distance for the given entity, making a guess about
-	 * whether to use spigot track distances based off of the server brand.
+	 * whether to use Spigot track distances based off of the server brand.
 	 */
 	public static int getMostLikelyEntityTrackDistance(String type) {
 		if (WDL.isSpigot()) {
@@ -493,10 +493,10 @@ public class EntityUtils {
 	}
 	
 	/**
-	 * Gets the entity tracking range used by vanilla minecraft.
+	 * Gets the entity tracking range used by vanilla Minecraft.
 	 * <br/>
 	 * Proper tracking ranges can be found in EntityTracker#trackEntity
-	 * (the one that takes an Entity as a paremeter) -- it's the 2nd arg
+	 * (the one that takes an Entity as a parameter) -- it's the 2nd argument
 	 * given to addEntityToTracker.
 	 * 
 	 * @param c The entity class.
