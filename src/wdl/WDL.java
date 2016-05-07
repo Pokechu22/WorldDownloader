@@ -1182,16 +1182,12 @@ public class WDL {
 			worldInfoNBT.setInteger("rainTime", 0);
 			worldInfoNBT.setBoolean("thundering", false);
 			worldInfoNBT.setInteger("thunderTime", 0);
-		}
-
-		if (weather.equals("rain")) {
+		} else if (weather.equals("rain")) {
 			worldInfoNBT.setBoolean("raining", true);
 			worldInfoNBT.setInteger("rainTime", 24000);
 			worldInfoNBT.setBoolean("thundering", false);
 			worldInfoNBT.setInteger("thunderTime", 0);
-		}
-
-		if (weather.equals("thunderstorm")) {
+		} else if (weather.equals("thunderstorm")) {
 			worldInfoNBT.setBoolean("raining", true);
 			worldInfoNBT.setInteger("rainTime", 24000);
 			worldInfoNBT.setBoolean("thundering", true);
