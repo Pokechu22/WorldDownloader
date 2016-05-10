@@ -39,6 +39,19 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 	private static final int SCALE = 8;
 	
 	/**
+	 * Is a request currently being performed?
+	 */
+	private boolean requesting;
+	/**
+	 * Is the request end coordinate being set (true) or start coordinate being
+	 * set (false)?
+	 */
+	private boolean partiallyRequested;
+	/**
+	 * Coordinates of the active request.
+	 */
+	private int requestStartX, requestStartZ, requestEndX, requestEndZ;
+	/**
 	 * Is the background being dragged?
 	 */
 	private boolean dragging;
@@ -132,10 +145,26 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 		list.func_148179_a(mouseX, mouseY, mouseButton);
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 		
-		if (mouseY > TOP_MARGIN && mouseY < height - BOTTOM_MARGIN && mouseButton == 0) {
-			dragging = true;
-			lastTickX = mouseX;
-			lastTickY = mouseY;
+		if (requesting) {
+			if (partiallyRequested) {
+				requestEndX = displayXToChunkX(mouseX);
+				requestEndZ = displayZToChunkZ(mouseY);
+				
+				// TODO: Add to the list of requested overrides
+
+				partiallyRequested = false;
+			} else {
+				requestStartX = displayXToChunkX(mouseX);
+				requestStartZ = displayZToChunkZ(mouseY);
+				
+				partiallyRequested = true;
+			}
+		} else {
+			if (mouseY > TOP_MARGIN && mouseY < height - BOTTOM_MARGIN && mouseButton == 0) {
+				dragging = true;
+				lastTickX = mouseX;
+				lastTickY = mouseY;
+			}
 		}
 	}
 	
@@ -256,6 +285,7 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 	private int chunkXToDisplayX(int chunkX) {
 		return (int)((chunkX - scrollX) * SCALE + (width / 2));
 	}
+	
 	/**
 	 * Converts a chunk z coordinate to a display z coordinate, taking
 	 * into account the value of {@link scrollZ}. 
@@ -265,6 +295,28 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 	 */
 	private int chunkZToDisplayZ(int chunkZ) {
 		return (int)((chunkZ - scrollZ) * SCALE + (height / 2));
+	}
+	
+	/**
+	 * Converts a display x coordinate to a chunk x coordinate, taking
+	 * into account the value of {@link scrollX}. 
+	 * 
+	 * @param displayX The display x coordinate. 
+	 * @return The chunk position.
+	 */
+	private int displayXToChunkX(int displayX) {
+		return (int)((displayX - (width / 2)) / SCALE + scrollX);
+	}
+	
+	/**
+	 * Converts a display z coordinate to a chunk z coordinate, taking
+	 * into account the value of {@link scrollZ}. 
+	 * 
+	 * @param displayZ The display z coordinate. 
+	 * @return The chunk position.
+	 */
+	private int displayZToChunkZ(int displayZ) {
+		return (int)((displayZ - (height / 2)) / SCALE + scrollZ);
 	}
 	
 	/**
