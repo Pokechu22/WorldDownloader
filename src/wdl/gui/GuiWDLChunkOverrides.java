@@ -3,9 +3,12 @@ package wdl.gui;
 import java.io.IOException;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 import wdl.WDL;
 import wdl.WDLPluginChannels;
 import wdl.WDLPluginChannels.ChunkRange;
@@ -13,20 +16,19 @@ import wdl.WDLPluginChannels.ChunkRange;
 import com.google.common.collect.Multimap;
 
 /**
- * A GUI that Lists... well, will list, the current chunk overrides.  Currently
- * a work in progress.
+ * A GUI that lists and allows requesting chunk overrides.
  * 
  * Also, expect a possible minimap integration in the future.
  */
 public class GuiWDLChunkOverrides extends GuiScreen {
 	private static final int TOP_MARGIN = 61, BOTTOM_MARGIN = 32;
 	
-	private TextList list;
 	/**
 	 * Parent GUI screen; displayed when this GUI is closed.
 	 */
 	private final GuiScreen parent;
 	
+	private GuiButton requestButton;
 	private GuiButton startDownloadButton;
 	
 	/**
@@ -72,24 +74,9 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui() {
-		this.list = new TextList(mc, width, height, TOP_MARGIN, BOTTOM_MARGIN);
-		list.addLine("\u00A7c\u00A7lThis is a work in progress.");
-		list.addLine("You can download in overriden chunks even if you are " +
-				"not allowed to download elsewhere on the server.");
-		list.addLine("Here is a list of the current chunk overrides; in the " +
-				"future, a map will appear here.");
-		list.addLine("Maybe also there will be a minimap mod integration.");
-		list.addBlankLine();
-		list.addLine(WDLPluginChannels.getChunkOverrides().toString());
-		list.addBlankLine();
-		list.addLine("You are requesting the following ranges " +
-				"(to submit your request, go to the permission request page): ");
-		for (ChunkRange range : WDLPluginChannels.getChunkOverrideRequests()) {
-			list.addLine(range.toString());
-		}
-		
-		this.buttonList.add(new GuiButton(5, width / 2 - 155, 18, 150, 20,
-				"Add range request"));
+		requestButton = new GuiButton(5, width / 2 - 155, 18, 150, 20,
+				(requesting ? "Cancel request" : "Request ranges"));
+		this.buttonList.add(requestButton);
 		startDownloadButton = new GuiButton(6, width / 2 + 5, 18, 150, 20,
 				"Start download in these ranges");
 		startDownloadButton.enabled = WDLPluginChannels.canDownloadAtAll();
@@ -109,9 +96,16 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if (button.id == 5) {
-			// TODO: Add range
-			// WDLPluginChannels.addChunkOverrideRequest(range);
-			// list.addLine(range.toString());
+			// Toggle request mode
+			if (requesting) {
+				requesting = false;
+				partiallyRequested = false;
+			} else {
+				requesting = true;
+			}
+			
+			requestButton.displayString = (requesting ? "Cancel request"
+					: "Request ranges");
 		}
 		if (button.id == 6) {
 			if (!WDLPluginChannels.canDownloadAtAll()) {
@@ -142,25 +136,30 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
 	throws IOException {
-		list.func_148179_a(mouseX, mouseY, mouseButton);
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 		
-		if (requesting) {
-			if (partiallyRequested) {
-				requestEndX = displayXToChunkX(mouseX);
-				requestEndZ = displayZToChunkZ(mouseY);
+		if (mouseY > TOP_MARGIN && mouseY < height - BOTTOM_MARGIN && mouseButton == 0) {
+			if (requesting) {
+				if (partiallyRequested) {
+					requestEndX = displayXToChunkX(mouseX);
+					requestEndZ = displayZToChunkZ(mouseY);
+					
+					ChunkRange requestRange = new ChunkRange("", requestStartX,
+							requestStartZ, requestEndX, requestEndZ);
+					WDLPluginChannels.addChunkOverrideRequest(requestRange);
+	
+					partiallyRequested = false;
+				} else {
+					requestStartX = displayXToChunkX(mouseX);
+					requestStartZ = displayZToChunkZ(mouseY);
+					
+					partiallyRequested = true;
+				}
 				
-				// TODO: Add to the list of requested overrides
-
-				partiallyRequested = false;
+				mc.getSoundHandler().playSound(PositionedSoundRecord
+						.createPositionedSoundRecord(new ResourceLocation(
+								"gui.button.press"), 1.0F));
 			} else {
-				requestStartX = displayXToChunkX(mouseX);
-				requestStartZ = displayZToChunkZ(mouseY);
-				
-				partiallyRequested = true;
-			}
-		} else {
-			if (mouseY > TOP_MARGIN && mouseY < height - BOTTOM_MARGIN && mouseButton == 0) {
 				dragging = true;
 				lastTickX = mouseX;
 				lastTickY = mouseY;
@@ -168,20 +167,8 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 		}
 	}
 	
-	/**
-	 * Handles mouse input.
-	 */
-	@Override
-	public void handleMouseInput() throws IOException {
-		super.handleMouseInput();
-		this.list.func_178039_p();
-	}
-	
 	@Override
 	protected void mouseReleased(int mouseX, int mouseY, int state) {
-		if (list.func_148181_b(mouseX, mouseY, state)) {
-			return;
-		}
 		super.mouseReleased(mouseX, mouseY, state);
 		if (state == 0) {
 			dragging = false;
@@ -205,14 +192,21 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 	
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		if (this.list == null) {
-			return;
-		}
-		
-		//TODO: remove list
-		//this.list.drawScreen(mouseX, mouseY, partialTicks);
-		
 		Utils.drawListBackground(TOP_MARGIN, BOTTOM_MARGIN, 0, 0, height, width);
+		
+		if (requesting) {
+			int x1 = (partiallyRequested ? requestStartX : displayXToChunkX(mouseX));
+			int z1 = (partiallyRequested ? requestStartZ : displayZToChunkZ(mouseY));
+			int x2 = displayXToChunkX(mouseX);
+			int z2 = displayZToChunkZ(mouseY);
+			
+			// TODO: Maybe cache this range in some way rather than creating a new one each frame
+			ChunkRange requestRange = new ChunkRange("", x1, z1, x2, z2);
+			
+			// Fancy sin alpha changing by time.
+			int alpha = 127 + (int)(Math.sin(Minecraft.getSystemTime() * Math.PI / 5000) * 64);
+			drawRange(requestRange, 0xffffff, alpha);
+		}
 		
 		for (Multimap<String, ChunkRange> group : WDLPluginChannels.getChunkOverrides().values()) {
 			for (ChunkRange range : group.values()) {
@@ -305,7 +299,7 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 	 * @return The chunk position.
 	 */
 	private int displayXToChunkX(int displayX) {
-		return (int)((displayX - (width / 2)) / SCALE + scrollX);
+		return MathHelper.floor_float((displayX - (float)(width / 2)) / SCALE + scrollX);
 	}
 	
 	/**
@@ -316,7 +310,7 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 	 * @return The chunk position.
 	 */
 	private int displayZToChunkZ(int displayZ) {
-		return (int)((displayZ - (height / 2)) / SCALE + scrollZ);
+		return MathHelper.floor_float((displayZ - (float)(height / 2)) / SCALE + scrollZ);
 	}
 	
 	/**

@@ -827,14 +827,26 @@ public class WDLPluginChannels {
 	public static class ChunkRange {
 		public ChunkRange(String tag, int x1, int z1, int x2, int z2) {
 			this.tag = tag;
-			this.x1 = x1;
-			this.z1 = z1;
-			this.x2 = x2;
-			this.z2 = z2;
+			
+			// Ensure that the order is correct
+			if (x1 > x2) {
+				this.x1 = x2;
+				this.x2 = x1;
+			} else {
+				this.x1 = x1;
+				this.x2 = x2;
+			}
+			if (z1 > z2) {
+				this.z1 = z2;
+				this.z2 = z1;
+			} else {
+				this.z1 = z1;
+				this.z2 = z2;
+			}
 		}
 		
 		/**
-		 * The tag of this chunk range/
+		 * The tag of this chunk range.
 		 */
 		public final String tag;
 		/**
