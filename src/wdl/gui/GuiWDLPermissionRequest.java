@@ -6,6 +6,7 @@ import java.util.Map;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.resources.I18n;
 
 import org.lwjgl.input.Keyboard;
 
@@ -65,14 +66,14 @@ public class GuiWDLPermissionRequest extends GuiScreen {
 		this.buttonList.add(this.submitButton);
 		
 		this.buttonList.add(new GuiButton(100, width / 2 - 100, height - 29,
-				"Done"));
+				I18n.format("gui.done")));
 		
 		this.buttonList.add(new GuiButton(200, this.width / 2 - 155, 39, 100, 20,
-				"Current perms"));
+				I18n.format("wdl.gui.permissions.current")));
 		this.buttonList.add(new GuiButton(201, this.width / 2 - 50, 39, 100, 20,
-				"Request perms"));
+				I18n.format("wdl.gui.permissions.request")));
 		this.buttonList.add(new GuiButton(202, this.width / 2 + 55, 39, 100, 20,
-				"Chunk Overrides"));
+				I18n.format("wdl.gui.permissions.overrides")));
 	}
 	
 	@Override

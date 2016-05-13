@@ -86,11 +86,11 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 				I18n.format("gui.done")));
 		
 		this.buttonList.add(new GuiButton(200, this.width / 2 - 155, 39, 100, 20,
-				"Current perms"));
+				I18n.format("wdl.gui.permissions.current")));
 		this.buttonList.add(new GuiButton(201, this.width / 2 - 50, 39, 100, 20,
-				"Request perms"));
+				I18n.format("wdl.gui.permissions.request")));
 		this.buttonList.add(new GuiButton(202, this.width / 2 + 55, 39, 100, 20,
-				"Chunk Overrides"));
+				I18n.format("wdl.gui.permissions.overrides")));
 	}
 	
 	@Override

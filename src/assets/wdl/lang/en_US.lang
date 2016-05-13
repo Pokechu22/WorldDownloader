@@ -243,6 +243,10 @@ wdl.gui.updates.update.viewForumPost=View forum post
 #Used in various places when update info can't be found
 wdl.gui.updates.update.unknown=Unknown
 
+wdl.gui.permissions.current=Current perms
+wdl.gui.permissions.request=Request perms
+wdl.gui.permissions.overrides=Chunk Overrides
+
 wdl.backup.none=No backup
 wdl.backup.folder=Copy world folder
 wdl.backup.zip=Zip a copy of a world
