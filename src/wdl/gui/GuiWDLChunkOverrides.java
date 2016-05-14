@@ -23,12 +23,18 @@ import com.google.common.collect.Multimap;
 public class GuiWDLChunkOverrides extends GuiScreen {
 	private static final int TOP_MARGIN = 61, BOTTOM_MARGIN = 32;
 	
+	private static enum Mode {
+		PANNING,
+		REQUESTING,
+		ERASING,
+		MOVING
+	}
+	
 	/**
 	 * Parent GUI screen; displayed when this GUI is closed.
 	 */
 	private final GuiScreen parent;
 	
-	private GuiButton requestButton;
 	private GuiButton startDownloadButton;
 	
 	/**
@@ -41,9 +47,10 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 	private static final int SCALE = 8;
 	
 	/**
-	 * Is a request currently being performed?
+	 * Current mode for the GUI
 	 */
-	private boolean requesting;
+	private Mode mode = Mode.PANNING;
+
 	/**
 	 * Is the request end coordinate being set (true) or start coordinate being
 	 * set (false)?
@@ -74,9 +81,12 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui() {
-		requestButton = new GuiButton(5, width / 2 - 155, 18, 150, 20,
-				(requesting ? "Cancel request" : "Request ranges"));
-		this.buttonList.add(requestButton);
+		// TODO: Images for these buttons
+		this.buttonList.add(new GuiButton(0, width / 2 - 155, 18, 20, 20,
+				"P"));
+		this.buttonList.add(new GuiButton(1, width / 2 - 155, 18, 20, 20,
+				"R"));
+		// TODO: Eraser; move tool
 		startDownloadButton = new GuiButton(6, width / 2 + 5, 18, 150, 20,
 				"Start download in these ranges");
 		startDownloadButton.enabled = WDLPluginChannels.canDownloadAtAll();
@@ -95,17 +105,12 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 	
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
-		if (button.id == 5) {
-			// Toggle request mode
-			if (requesting) {
-				requesting = false;
-				partiallyRequested = false;
-			} else {
-				requesting = true;
-			}
-			
-			requestButton.displayString = (requesting ? "Cancel request"
-					: "Request ranges");
+		if (button.id == 0) {
+			mode = Mode.PANNING;
+		}
+		if (button.id == 1) {
+			mode = Mode.REQUESTING;
+			partiallyRequested = false;
 		}
 		if (button.id == 6) {
 			if (!WDLPluginChannels.canDownloadAtAll()) {
@@ -139,7 +144,13 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 		
 		if (mouseY > TOP_MARGIN && mouseY < height - BOTTOM_MARGIN && mouseButton == 0) {
-			if (requesting) {
+			switch (mode) {
+			case PANNING:
+				dragging = true;
+				lastTickX = mouseX;
+				lastTickY = mouseY;
+				break;
+			case REQUESTING:
 				if (partiallyRequested) {
 					requestEndX = displayXToChunkX(mouseX);
 					requestEndZ = displayZToChunkZ(mouseY);
@@ -159,10 +170,7 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 				mc.getSoundHandler().playSound(PositionedSoundRecord
 						.createPositionedSoundRecord(new ResourceLocation(
 								"gui.button.press"), 1.0F));
-			} else {
-				dragging = true;
-				lastTickX = mouseX;
-				lastTickY = mouseY;
+				break;
 			}
 		}
 	}
@@ -194,7 +202,7 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		Utils.drawListBackground(TOP_MARGIN, BOTTOM_MARGIN, 0, 0, height, width);
 		
-		if (requesting) {
+		if (mode == Mode.REQUESTING) {
 			int x1 = (partiallyRequested ? requestStartX : displayXToChunkX(mouseX));
 			int z1 = (partiallyRequested ? requestStartZ : displayZToChunkZ(mouseY));
 			int x2 = displayXToChunkX(mouseX);
