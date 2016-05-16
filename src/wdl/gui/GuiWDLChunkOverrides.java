@@ -23,11 +23,28 @@ import com.google.common.collect.Multimap;
 public class GuiWDLChunkOverrides extends GuiScreen {
 	private static final int TOP_MARGIN = 61, BOTTOM_MARGIN = 32;
 	
+	/**
+	 * Location of the button overlay textures.
+	 */
+	private static final ResourceLocation WIDGET_TEXTURES = new ResourceLocation(
+			"wdl:textures/permission_widgets.png");
+	
 	private static enum Mode {
-		PANNING,
-		REQUESTING,
-		ERASING,
-		MOVING
+		PANNING(0, 128),
+		REQUESTING(16, 128),
+		ERASING(32, 128),
+		MOVING(48, 128);
+		
+		private Mode(int overlayU, int overlayV) {
+			this.overlayU = overlayU;
+			this.overlayV = overlayV;
+		}
+		
+		/**
+		 * Coordinates for the U and V of the texture for the button associated
+		 * with this mode.
+		 */
+		public final int overlayU, overlayV;
 	}
 	
 	/**
@@ -81,12 +98,11 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui() {
-		// TODO: Images for these buttons
-		this.buttonList.add(new GuiButton(0, width / 2 - 155, 18, 20, 20,
-				"P"));
-		this.buttonList.add(new GuiButton(1, width / 2 - 155, 18, 20, 20,
-				"R"));
-		// TODO: Eraser; move tool
+		this.buttonList.add(new RequestModeButton(0, width / 2 - 155, 18, Mode.PANNING));
+		this.buttonList.add(new RequestModeButton(1, width / 2 - 130, 18, Mode.REQUESTING));
+		this.buttonList.add(new RequestModeButton(2, width / 2 - 105, 18, Mode.ERASING) {{ enabled = false; }});
+		this.buttonList.add(new RequestModeButton(3, width / 2 - 80, 18, Mode.MOVING) {{ enabled = false; }});
+
 		startDownloadButton = new GuiButton(6, width / 2 + 5, 18, 150, 20,
 				"Start download in these ranges");
 		startDownloadButton.enabled = WDLPluginChannels.canDownloadAtAll();
@@ -200,8 +216,10 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 	
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		Utils.drawListBackground(TOP_MARGIN, BOTTOM_MARGIN, 0, 0, height, width);
+		// Draw the dirt background, but not the borders.
+		drawBackground(0);
 		
+		// Draw the current request range.
 		if (mode == Mode.REQUESTING) {
 			int x1 = (partiallyRequested ? requestStartX : displayXToChunkX(mouseX));
 			int z1 = (partiallyRequested ? requestStartZ : displayZToChunkZ(mouseY));
@@ -216,6 +234,7 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 			drawRange(requestRange, 0xffffff, alpha);
 		}
 		
+		// Draw current ranges
 		for (Multimap<String, ChunkRange> group : WDLPluginChannels.getChunkOverrides().values()) {
 			for (ChunkRange range : group.values()) {
 				drawRange(range, RNG_SEED, 0xFF);
@@ -235,7 +254,7 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 		// Vertical is 1px taller because it seems to be needed to make it proportional
 		drawVerticalLine(playerPosX, playerPosZ - 4, playerPosZ + 4, 0xFFFFFFFF);
 		
-		//TODO: Drawing twice for clipping reasons - it may be suboptimal.
+		// Draw the main borders now so that ranges are hidden behind it.
 		Utils.drawBorder(TOP_MARGIN, BOTTOM_MARGIN, 0, 0, height, width);
 		
 		this.drawCenteredString(this.fontRendererObj, "Chunk overrides",
@@ -334,5 +353,44 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 		b /= 2;
 
 		return (r << 16) + (g << 8) + b;
+	}
+	
+	/**
+	 * Button for a mode that displays the icon for the given mode.
+	 */
+	private class RequestModeButton extends GuiButton {
+		/**
+		 * The mode for this button.
+		 */
+		public final Mode mode;
+
+		/**
+		 * Constructor
+		 * @param buttonId
+		 * @param x
+		 * @param y
+		 * @param mode
+		 */
+		public RequestModeButton(int buttonId, int x, int y, Mode mode) {
+			super(buttonId, x, y, 20, 20, "");
+			this.mode = mode;
+		}
+
+		@Override
+		public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+			if (GuiWDLChunkOverrides.this.mode == this.mode) {
+				// Mode is currently selected - draw a green outline.
+				drawRect(this.xPosition - 2, this.yPosition - 2,
+						this.xPosition + width + 2, this.yPosition + height + 2,
+						0xFF007F00);
+			}
+			
+			super.drawButton(mc, mouseX, mouseY);
+
+			mc.getTextureManager().bindTexture(WIDGET_TEXTURES);
+
+			this.drawTexturedModalRect(this.xPosition + 2, this.yPosition + 2,
+					mode.overlayU, mode.overlayV, 16, 16);
+		}
 	}
 }
