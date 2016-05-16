@@ -217,8 +217,7 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 	
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		// Draw the dirt background, but not the borders.
-		drawBackground(0);
+		Utils.drawDarkBackground(0, 0, height, width);
 		
 		// Draw the current request range.
 		if (mode == Mode.REQUESTING) {
