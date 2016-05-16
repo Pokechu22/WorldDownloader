@@ -308,7 +308,7 @@ public class WDLApi {
 		 * {@linkplain WDL#globalProps global config file}.
 		 */
 		public boolean isEnabled() {
-			return WDL.globalProps.getProperty("Extensions." + id + "enabled",
+			return WDL.globalProps.getProperty("Extensions." + id + ".enabled",
 					"true").equals("true");
 		}
 		
@@ -318,7 +318,7 @@ public class WDLApi {
 		 * the global config file afterwards.
 		 */
 		public void setEnabled(boolean enabled) {
-			WDL.globalProps.setProperty("Extensions." + id + "enabled",
+			WDL.globalProps.setProperty("Extensions." + id + ".enabled",
 					Boolean.toString(enabled));
 			WDL.saveGlobalProps();
 		}
