@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
@@ -387,6 +388,8 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 			
 			super.drawButton(mc, mouseX, mouseY);
 
+			// Reset the color, which gets set somewhere (probably when drawing text)
+			GlStateManager.color(1.0f, 1.0f, 1.0f);
 			mc.getTextureManager().bindTexture(WIDGET_TEXTURES);
 
 			this.drawTexturedModalRect(this.xPosition + 2, this.yPosition + 2,
