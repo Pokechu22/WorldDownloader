@@ -391,29 +391,34 @@ public class WDLEvents {
 			}
 
 			saveName = "enderChest";
-		} else if (WDL.windowContainer instanceof ContainerBrewingStand) {
+		} else if (WDL.windowContainer instanceof ContainerBrewingStand
+				&& te instanceof TileEntityBrewingStand) {
 			IInventory brewingInventory = ReflectionUtils.stealAndGetField(
 					WDL.windowContainer, IInventory.class);
 			WDL.saveContainerItems(WDL.windowContainer, (TileEntityBrewingStand) te, 0);
 			WDL.saveInventoryFields(brewingInventory, (TileEntityBrewingStand) te);
 			WDL.saveTileEntity(WDL.lastClickedBlock, te);
 			saveName = "brewingStand";
-		} else if (WDL.windowContainer instanceof ContainerDispenser) {
+		} else if (WDL.windowContainer instanceof ContainerDispenser
+				&& te instanceof TileEntityDispenser) {
 			WDL.saveContainerItems(WDL.windowContainer, (TileEntityDispenser) te, 0);
 			WDL.saveTileEntity(WDL.lastClickedBlock, te);
 			saveName = "dispenser";
-		} else if (WDL.windowContainer instanceof ContainerFurnace) {
+		} else if (WDL.windowContainer instanceof ContainerFurnace
+				&& te instanceof TileEntityFurnace) {
 			IInventory furnaceInventory = ReflectionUtils.stealAndGetField(
 					WDL.windowContainer, IInventory.class);
 			WDL.saveContainerItems(WDL.windowContainer, (TileEntityFurnace) te, 0);
 			WDL.saveInventoryFields(furnaceInventory, (TileEntityFurnace) te);
 			WDL.saveTileEntity(WDL.lastClickedBlock, te);
 			saveName = "furnace";
-		} else if (WDL.windowContainer instanceof ContainerHopper) {
+		} else if (WDL.windowContainer instanceof ContainerHopper
+				&& te instanceof TileEntityHopper) {
 			WDL.saveContainerItems(WDL.windowContainer, (TileEntityHopper) te, 0);
 			WDL.saveTileEntity(WDL.lastClickedBlock, te);
 			saveName = "hopper";
-		} else if (WDL.windowContainer instanceof ContainerBeacon) {
+		} else if (WDL.windowContainer instanceof ContainerBeacon
+				&& te instanceof TileEntityBeacon) {
 			//func_180611_e returns the beacon's IInventory tileBeacon.
 			IInventory beaconInventory =
 					((ContainerBeacon)WDL.windowContainer).func_180611_e();
