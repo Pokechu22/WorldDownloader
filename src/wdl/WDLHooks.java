@@ -286,6 +286,7 @@ public class WDLHooks {
 			String channel = packet.getChannelName();
 			byte[] payload = packet.getBufferData().array();
 			
+			profiler.startSection("wdl.onPluginMessage");
 			profiler.startSection("Core");
 			WDLEvents.onPluginChannelPacket(channel, payload);
 			profiler.endSection();
