@@ -134,8 +134,9 @@ public class WDLHooks {
 				profiler.endSection();
 			}
 			
-			profiler.endStartSection("capes");
+			profiler.startSection("capes");
 			CapeHandler.onWorldTick(players);
+			profiler.endSection();
 			profiler.endSection();
 		} catch (Throwable e) {
 			WDL.crashed(e, "WDL mod: exception in onWorldClientTick event");
