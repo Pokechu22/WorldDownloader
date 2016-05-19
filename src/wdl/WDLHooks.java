@@ -62,7 +62,7 @@ public class WDLHooks {
 				}
 				
 				WDLEvents.onWorldLoad(sender);
-				profiler.endSection();
+				profiler.endSection();  // "onWorldLoad"
 			} else {
 				profiler.startSection("inventoryCheck");
 				if (WDL.downloading && WDL.thePlayer != null) {
@@ -73,7 +73,7 @@ public class WDLHooks {
 							profiler.startSection("onItemGuiClosed");
 							profiler.startSection("Core");
 							handled = WDLEvents.onItemGuiClosed();
-							profiler.endSection();
+							profiler.endSection();  // "Core"
 							
 							Container container = WDL.thePlayer.openContainer;
 							if (WDL.lastEntity != null) {
@@ -88,7 +88,7 @@ public class WDLHooks {
 									profiler.startSection(info.id);
 									handled = info.mod.onEntityGuiClosed(
 											sender, entity, container);
-									profiler.endSection();
+									profiler.endSection();  // info.id
 								}
 								
 								if (!handled) {
@@ -108,7 +108,7 @@ public class WDLHooks {
 									profiler.startSection(info.id);
 									handled = info.mod.onBlockGuiClosed(
 											sender, pos, container);
-									profiler.endSection();
+									profiler.endSection();  // info.id
 								}
 								
 								if (!handled) {
@@ -119,25 +119,25 @@ public class WDLHooks {
 								}
 							}
 							
-							profiler.endSection();
+							profiler.endSection();  // onItemGuiClosed
 						} else {
 							profiler.startSection("onItemGuiOpened");
 							profiler.startSection("Core");
 							WDLEvents.onItemGuiOpened();
-							profiler.endSection();
-							profiler.endSection();
+							profiler.endSection();  // "Core"
+							profiler.endSection();  // "onItemGuiOpened"
 						}
 	
 						WDL.windowContainer = WDL.thePlayer.openContainer;
 					}
 				}
-				profiler.endSection();
+				profiler.endSection();  // "inventoryCheck"
 			}
 			
 			profiler.startSection("capes");
 			CapeHandler.onWorldTick(players);
-			profiler.endSection();
-			profiler.endSection();
+			profiler.endSection();  // "capes"
+			profiler.endSection();  // "wdl"
 		} catch (Throwable e) {
 			WDL.crashed(e, "WDL mod: exception in onWorldClientTick event");
 		}
@@ -161,9 +161,9 @@ public class WDLHooks {
 				
 				profiler.startSection("Core");
 				wdl.WDLEvents.onChunkNoLongerNeeded(c);
-				profiler.endSection();
+				profiler.endSection();  // "Core"
 				
-				profiler.endSection();
+				profiler.endSection();  // "onChunkNoLongerNeeded"
 			}
 			
 			profiler.endSection();
@@ -191,9 +191,9 @@ public class WDLHooks {
 			
 			profiler.startSection("Core");
 			WDLEvents.onRemoveEntityFromWorld(entity);
-			profiler.endSection();
+			profiler.endSection();  // "Core"
 			
-			profiler.endSection();
+			profiler.endSection();  // "wdl.onRemoveEntityFromWorld"
 		} catch (Throwable e) {
 			WDL.crashed(e,
 					"WDL mod: exception in onWorldRemoveEntityFromWorld event");
@@ -222,16 +222,16 @@ public class WDLHooks {
 			
 			profiler.startSection("Core");
 			WDLEvents.onChatMessage(chatMessage);
-			profiler.endSection();
+			profiler.endSection();  // "Core"
 			
 			for (ModInfo<IChatMessageListener> info : WDLApi
 					.getImplementingExtensions(IChatMessageListener.class)) {
 				profiler.startSection(info.id);
 				info.mod.onChat(WDL.worldClient, chatMessage);
-				profiler.endSection();
+				profiler.endSection();  // info.id
 			}
 			
-			profiler.endSection();
+			profiler.endSection();  // "wdl.onChatMessage"
 		} catch (Throwable e) {
 			WDL.crashed(e, "WDL mod: exception in onNHPCHandleChat event");
 		}
@@ -260,9 +260,9 @@ public class WDLHooks {
 			
 			profiler.startSection("Core");
 			WDLEvents.onMapDataLoaded(id, mapData);
-			profiler.endSection();
+			profiler.endSection();  // "Core"
 			
-			profiler.endSection();
+			profiler.endSection();  // "wdl.onMapDataLoaded"
 		} catch (Throwable e) {
 			WDL.crashed(e, "WDL mod: exception in onNHPCHandleMaps event");
 		}
@@ -290,17 +290,17 @@ public class WDLHooks {
 			profiler.startSection("wdl.onPluginMessage");
 			profiler.startSection("Core");
 			WDLEvents.onPluginChannelPacket(channel, payload);
-			profiler.endSection();
+			profiler.endSection();  // "Core"
 			
 			for (ModInfo<IPluginChannelListener> info : WDLApi
 					.getImplementingExtensions(IPluginChannelListener.class)) {
 				profiler.startSection(info.id);
 				info.mod.onPluginChannelPacket(WDL.worldClient, channel,
 						payload);
-				profiler.endSection();
+				profiler.endSection();  // info.id
 			}
 			
-			profiler.endSection();
+			profiler.endSection();  // "wdl.onPluginMessage"
 		} catch (Throwable e) {
 			WDL.crashed(e,
 					"WDL mod: exception in onNHPCHandleCustomPayload event");
@@ -332,17 +332,17 @@ public class WDLHooks {
 			
 			profiler.startSection("Core");
 			WDLEvents.onBlockEvent(pos, block, data1, data2);
-			profiler.endSection();
+			profiler.endSection();  // "Core"
 			
 			for (ModInfo<IBlockEventListener> info : WDLApi
 					.getImplementingExtensions(IBlockEventListener.class)) {
 				profiler.startSection(info.id);
 				info.mod.onBlockEvent(WDL.worldClient, pos, block, 
 						data1, data2);
-				profiler.endSection();
+				profiler.endSection();  // info.id
 			}
 			
-			profiler.endSection();
+			profiler.endSection();  // "wdl.onBlockEvent"
 		} catch (Throwable e) {
 			WDL.crashed(e,
 					"WDL mod: exception in onNHPCHandleBlockAction event");

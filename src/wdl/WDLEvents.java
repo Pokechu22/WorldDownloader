@@ -77,7 +77,7 @@ public class WDLEvents {
 				WDL.startSaveThread();
 			}
 			
-			profiler.endSection();
+			profiler.endSection();  // "Core"
 			return;
 		}
 
@@ -85,13 +85,13 @@ public class WDLEvents {
 		
 		WDLUpdateChecker.startIfNeeded();
 		
-		profiler.endSection();
+		profiler.endSection();  // "Core"
 		
 		for (ModInfo<IWorldLoadListener> info : WDLApi
 				.getImplementingExtensions(IWorldLoadListener.class)) {
 			profiler.startSection(info.id);
 			info.mod.onWorldLoad(world, sameServer);
-			profiler.endSection();
+			profiler.endSection();  // info.id
 		}
 	}
 
