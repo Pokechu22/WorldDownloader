@@ -104,6 +104,9 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 		this.buttonList.add(new RequestModeButton(2, width / 2 - 105, 18, Mode.ERASING) {{ enabled = false; }});
 		this.buttonList.add(new RequestModeButton(3, width / 2 - 80, 18, Mode.MOVING) {{ enabled = false; }});
 
+		this.buttonList.add(new GuiButton(4, width / 2 - 80, 18, 80, 20,
+				"Send request"));
+
 		startDownloadButton = new GuiButton(6, width / 2 + 5, 18, 150, 20,
 				"Start download in these ranges");
 		startDownloadButton.enabled = WDLPluginChannels.canDownloadAtAll();
@@ -128,6 +131,9 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 		if (button.id == 1) {
 			mode = Mode.REQUESTING;
 			partiallyRequested = false;
+		}
+		if (button.id == 4) {
+			WDLPluginChannels.sendRequests();
 		}
 		if (button.id == 6) {
 			if (!WDLPluginChannels.canDownloadAtAll()) {
@@ -261,6 +267,9 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 				this.width / 2, 8, 0xFFFFFF);
 		
 		super.drawScreen(mouseX, mouseY, partialTicks);
+
+		this.drawCenteredString(this.fontRendererObj, "\u00A7c\u00A7lThis is a work in progress.",
+				this.width / 2, this.height / 2, 0xFFFFFF);
 	}
 	
 	/**
