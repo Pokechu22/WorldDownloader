@@ -101,10 +101,12 @@ public class WDLApi {
 	}
 	
 	/**
-	 * Gets a list of all {@link IWDLMod}s that implement the given interface.
+	 * Gets a list of all enabled {@link IWDLMod}s that implement the given
+	 * interface.
 	 * 
-	 * @param clazz The class to check for implementation of.
-	 * @return
+	 * @param clazz
+	 *            The class to check for implementation of.
+	 * @return A list of all implementing extensions.
 	 */
 	public static <T extends IWDLMod> List<ModInfo<T>> getImplementingExtensions(
 			Class<T> clazz) {
@@ -118,6 +120,34 @@ public class WDLApi {
 				continue;
 			}
 			
+			if (clazz.isAssignableFrom(info.mod.getClass())) {
+				// We know the actual type of the given mod is correct,
+				// so it's safe to do this cast.
+				@SuppressWarnings("unchecked")
+				ModInfo<T> infoCasted = (ModInfo<T>)info;
+				returned.add(infoCasted);
+			}
+		}
+		
+		return returned;
+	}
+	
+	/**
+	 * Gets a list of all {@link IWDLMod}s that implement the given
+	 * interface, regardless as to whether they are enabled or not.
+	 * 
+	 * @param clazz
+	 *            The class to check for implementation of.
+	 * @return A list of all implementing extensions.
+	 */
+	public static <T extends IWDLMod> List<ModInfo<T>> getAllImplementingExtensions(
+			Class<T> clazz) {
+		if (clazz == null) {
+			throw new IllegalArgumentException("clazz must not be null!");
+		}
+		List<ModInfo<T>> returned = new ArrayList<ModInfo<T>>();
+		
+		for (ModInfo<?> info : wdlMods.values()) {
 			if (clazz.isAssignableFrom(info.mod.getClass())) {
 				// We know the actual type of the given mod is correct,
 				// so it's safe to do this cast.
