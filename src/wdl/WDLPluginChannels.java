@@ -29,16 +29,38 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 
 /**
- * Plugin channel handler.
+ * World Downloader permission system implemented with Plugin Channels.
  * 
- * This is used in combination with the "WDL Serverside Companion" plugin
- * to control which functions of WDL are enabled, without using crappy
- * color codes in the MOTD.
+ * This system is used to configure the mod, and disable certain features,
+ * at a server's decision.  I've made this system because there already were
+ * other (more esoteric) methods of finding the mod, based off of forge and
+ * lightloader handshakes.  I think that a system like this, where there are
+ * <em>degrees of control</em>, is better than one where the player is
+ * indiscriminately kicked.  For instance, this system allows for permission
+ * requests, which would be hard to do with another mechanism.
  * 
- * The structure of the packets is documented on the WDLCompanion source: 
- * https://github.com/Pokechu22/WorldDownloader-Serverside-Companion
+ * This system makes use of plugin channels (hence the class name).  If you
+ * haven't read <a href="http://wiki.vg/Plugin_channels">their info</a>,
+ * they're a vanilla minecraft packet intended for mods.  But they <em>do</em>
+ * need each channel to be REGISTERed before use, so the server does know
+ * when the mod is installed.  As such, I actually did a second step and
+ * instead send a second packet when the data is ready to be received by the
+ * client, since mid-download permission changes can be problematic.
  * 
- * @author Pokechu22
+ * Theoretically, these could be implemented with chat-based codes or even
+ * MOTD-based codes.  However, I <em>really</em> do not like that system, as
+ * it is really rigid.  So I chose this one, which is also highly expandable.
+ * 
+ * This system is also used to fetch a few things from willing servers, mainly
+ * entity track distances so that things can be saved correctly. 
+ * 
+ * And yes, this is the fabled "backdoor" / "back door"; I don't like that term
+ * but people will call it that.  I think it's the best possible system out
+ * of the available options (and doing nothing wouldn't work - as I said,
+ * there <em>are</em> weird ways of finding mods).
+ * 
+ * <a href="http://wiki.vg/User:Pokechu22/World_downloader">Packet
+ * documentation is on wiki.vg</a>, if you're interested.
  */
 public class WDLPluginChannels {
 	private static Logger logger = LogManager.getLogger();
@@ -805,14 +827,26 @@ public class WDLPluginChannels {
 	public static class ChunkRange {
 		public ChunkRange(String tag, int x1, int z1, int x2, int z2) {
 			this.tag = tag;
-			this.x1 = x1;
-			this.z1 = z1;
-			this.x2 = x2;
-			this.z2 = z2;
+			
+			// Ensure that the order is correct
+			if (x1 > x2) {
+				this.x1 = x2;
+				this.x2 = x1;
+			} else {
+				this.x1 = x1;
+				this.x2 = x2;
+			}
+			if (z1 > z2) {
+				this.z1 = z2;
+				this.z2 = z1;
+			} else {
+				this.z1 = z1;
+				this.z2 = z2;
+			}
 		}
 		
 		/**
-		 * The tag of this chunk range/
+		 * The tag of this chunk range.
 		 */
 		public final String tag;
 		/**

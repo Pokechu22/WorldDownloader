@@ -1,7 +1,7 @@
 package wdl.gui;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Set;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -120,7 +120,7 @@ public class GuiWDLEntityRangePresets extends GuiScreen implements GuiYesNoCallb
 	@Override
 	public void confirmClicked(boolean result, int id) {
 		if (result) {
-			List<String> entities = EntityUtils.getEntityTypes();
+			Set<String> entities = EntityUtils.getEntityTypes();
 			
 			if (id == 0) {
 				for (String entity : entities) {

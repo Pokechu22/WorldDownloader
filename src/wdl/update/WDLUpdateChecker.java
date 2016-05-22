@@ -176,7 +176,7 @@ public class WDLUpdateChecker extends Thread {
 	}
 	
 	private static final String FORUMS_THREAD_USAGE_LINK = "http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465#Usage";
-	private static final String WIKI_LINK = "https://github.com/pokechu22/WorldDownloader/wiki"; 
+	private static final String WIKI_LINK = "https://github.com/pokechu22/WorldDownloader/wiki";
 	private static final String GITHUB_LINK = "https://github.com/pokechu22/WorldDownloader";
 	private static final String REDISTRIBUTION_LINK = "http://pokechu22.github.io/WorldDownloader/redistribution";
 	private static final String SMR_LINK = "http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/mods-discussion/2314237";
@@ -202,9 +202,9 @@ public class WDLUpdateChecker extends Thread {
 				TextComponentTranslation wikiLink = new TextComponentTranslation(
 						"wdl.intro.wikiLink");
 				wikiLink.getChatStyle().setColor(TextFormatting.BLUE)
-						.setUnderlined(true).setChatClickEvent(
-								new ClickEvent(Action.OPEN_URL,
-										WIKI_LINK));
+				.setUnderlined(true).setChatClickEvent(
+						new ClickEvent(Action.OPEN_URL,
+								WIKI_LINK));
 				TextComponentTranslation usage = new TextComponentTranslation(
 						"wdl.intro.usage", mcfThread, wikiLink);
 				TextComponentTranslation githubRepo = new TextComponentTranslation(

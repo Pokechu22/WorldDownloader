@@ -4,7 +4,9 @@ import com.google.common.collect.Maps;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.mojang.authlib.GameProfile;
+
 import io.netty.buffer.Unpooled;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -15,6 +17,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 import java.util.Map.Entry;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.ClientBrandRetriever;
 import net.minecraft.client.Minecraft;
@@ -230,6 +233,7 @@ import net.minecraft.world.WorldProviderSurface;
 import net.minecraft.world.WorldSettings;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.storage.MapData;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -828,6 +832,18 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 	 * Closes the network channel
 	 */
 	public void handleDisconnect(SPacketDisconnect packetIn) {
+		/* WDL >>> */
+		if (wdl.WDL.downloading) {
+			wdl.WDL.stopDownload();
+
+			try {
+				Thread.sleep(2000L);
+			} catch (Exception var3) {
+				;
+			}
+		}
+
+		/* <<< WDL */
 		this.netManager.closeChannel(packetIn.getReason());
 	}
 
@@ -836,6 +852,18 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 	 * the reason for termination
 	 */
 	public void onDisconnect(ITextComponent reason) {
+		/* WDL >>> */
+		if (wdl.WDL.downloading) {
+			wdl.WDL.stopDownload();
+
+			try {
+				Thread.sleep(2000L);
+			} catch (Exception var3) {
+				;
+			}
+		}
+
+		/* <<< WDL */
 		this.gameController.loadWorld((WorldClient) null);
 
 		if (this.guiScreenServer != null) {

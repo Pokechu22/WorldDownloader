@@ -27,18 +27,13 @@ public class HologramHandler implements ISpecialEntityHandler,
 		IWDLModDescripted {
 
 	@Override
-	public String getName() {
-		return "Hologram";
+	public boolean isValidEnvironment(String version) {
+		return true;
 	}
 	
 	@Override
-	public String getVersion() {
-		return "1.0";
-	}
-	
-	@Override
-	public String getTargetedWDLVersion() {
-		return WDL.VERSION;
+	public String getEnvironmentErrorMessage(String version) {
+		return null;
 	}
 	
 	@Override

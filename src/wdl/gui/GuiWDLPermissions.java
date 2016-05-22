@@ -7,6 +7,7 @@ import java.io.UnsupportedEncodingException;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.client.CPacketCustomPayload;
 import wdl.WDL;
@@ -56,15 +57,15 @@ public class GuiWDLPermissions extends GuiScreen {
 		this.buttonList.clear();
 		
 		this.buttonList.add(new GuiButton(100, width / 2 - 100, height - 29,
-				"Done"));
+				I18n.format("gui.done")));
 		
 		this.buttonList.add(new GuiButton(200, this.width / 2 - 155, 39, 100, 20,
-				"Current perms"));
+				I18n.format("wdl.gui.permissions.current")));
 		if (WDLPluginChannels.canRequestPermissions()) {
 			this.buttonList.add(new GuiButton(201, this.width / 2 - 50, 39, 100, 20,
-					"Request perms"));
+					I18n.format("wdl.gui.permissions.request")));
 			this.buttonList.add(new GuiButton(202, this.width / 2 + 55, 39, 100, 20,
-					"Chunk Overrides"));
+					I18n.format("wdl.gui.permissions.overrides")));
 		}
 		
 		reloadButton = new GuiButton(1, (this.width / 2) + 5, 18, 150, 20,
@@ -73,7 +74,7 @@ public class GuiWDLPermissions extends GuiScreen {
 		
 		this.list = new TextList(mc, width, height, TOP_MARGIN, BOTTOM_MARGIN);
 		
-		list.addLine("§c§lThis is a work in progress.");
+		list.addLine("\u00A7c\u00A7lThis is a work in progress.");
 		
 		if (!WDLPluginChannels.hasPermissions()) {
 			return;
@@ -81,7 +82,7 @@ public class GuiWDLPermissions extends GuiScreen {
 		
 		list.addBlankLine();
 		if (!WDLPluginChannels.canRequestPermissions()) {
-			list.addLine("§cThe serverside permission plugin is out of date " +
+			list.addLine("\u00A7cThe serverside permission plugin is out of date " +
 					"and does support permission requests.  Please go ask a " +
 					"server administrator to update the plugin.");
 			list.addBlankLine();
