@@ -141,6 +141,8 @@ wdl.gui.about.debugInfo.copied=Copied!
 wdl.gui.extensions.title=World Downloader mod: Extensions
 wdl.gui.extensions.detailsCaption=Details (resizable)
 wdl.gui.extensions.modVersion=%s v%s
+wdl.gui.extensions.enabled=§aEnabled
+wdl.gui.extensions.disabled=§cDisabled
 #The following line is used as a fallback for extensions that have their own
 #GUI but don't give a name for the button to use.
 wdl.gui.extensions.defaultSettingsButtonText=Settings...
@@ -183,8 +185,11 @@ wdl.gui.rangePresets.cancel.description=Cancel without making changes.
 
 wdl.gui.overwriteChanges.title=World Downloader: Overwrite changes?
 wdl.gui.overwriteChanges.footer=Last downloaded on %tc, last played on %tc
+wdl.gui.overwriteChanges.footerNeverSaved=Never downloaded (different world with the same name as the server?) - last played on %tc
 wdl.gui.overwriteChanges.captionTitle=The local copy of the world may have been changed.
 wdl.gui.overwriteChanges.captionSubtitle=Changes may be lost if not backed up.
+wdl.gui.overwriteChanges.overwriteWarning1=It's also possible that you have a separate world with the same
+wdl.gui.overwriteChanges.overwriteWarning2=name as the server that may be overwritten - use caution!
 wdl.gui.overwriteChanges.asZip.name=Backup as zip (then start download)
 wdl.gui.overwriteChanges.asZip.description=Creates a .zip folder in the saves folder.%n%nThis backup can't be played in game unless extracted, but is useful if you just want to archive the changes.
 wdl.gui.overwriteChanges.asFolder.name=Backup folder (then start download)
@@ -238,6 +243,10 @@ wdl.gui.updates.update.viewForumPost=View forum post
 #Used in various places when update info can't be found
 wdl.gui.updates.update.unknown=Unknown
 
+wdl.gui.permissions.current=Current perms
+wdl.gui.permissions.request=Request perms
+wdl.gui.permissions.overrides=Chunk Overrides
+
 wdl.backup.none=No backup
 wdl.backup.folder=Copy world folder
 wdl.backup.zip=Zip a copy of a world
@@ -275,12 +284,10 @@ wdl.messages.category.core_recommended=Core (recommended)
 wdl.messages.category.core_debug=Core (debug)
 
 wdl.messages.removeEntity.allowingRemoveUserPref=removeEntityFromWorld: Allowing removal of %s (user pref)
-wdl.messages.removeEntity.allowingRemoveUnsafe=removeEntityFromWorld: Allowing removal of %s (not safe to save - %s)
 wdl.messages.removeEntity.allowingRemoveUnrecognizedDistance=removeEntityFromWorld: Allowing removal of %s (unrecognized distance)
 wdl.messages.removeEntity.allowingRemoveDistance=removeEntityFromWorld: Allowing removal of %s at distance %.2f (<= %d)
 wdl.messages.removeEntity.savingDistance=removeEntityFromWorld: Saving %s at distance %.2f (> %d)
 wdl.messages.removeEntity.notSavingUserPreference=saveChunk: Not saving %s (User preference)
-wdl.messages.removeEntity.notSavingUnsafe=saveChunk: Not saving %s (not safe to save - %s)
 
 wdl.messages.tileEntity.usingOld=Using old TE from saved file: %s at %s
 wdl.messages.tileEntity.usingNew=Using new TE: %s at %s
@@ -332,8 +339,6 @@ wdl.messages.onGuiClosedWarning.unhandledEntity=onItemGuiClosed: Unrecognised en
 wdl.messages.onGuiClosedWarning.unhandledTileEntity=onItemGuiClosed: Unhandled Tile Entity at %s: %s
 wdl.messages.onGuiClosedWarning.failedToFindDoubleChest=Could not save this double chest!  Failed to find all neighboring chest blocks.
 
-wdl.unsafeReasons.badCustomName=Invalid custom name!  (Threw %s)
-
 wdl.messages.generalInfo.downloadStarted=Download started
 wdl.messages.generalInfo.downloadStopped=Download stopped.
 wdl.messages.generalInfo.saveStarted=Save started.
@@ -346,13 +351,12 @@ wdl.messages.generalInfo.seedAndGenSet=Setting single-player world seed to %s an
 
 wdl.messages.generalError.failedToImportTE=Failed to import tile entities for chunk at %d, %d: %s
 wdl.messages.generalError.failedToSaveChunk=Chunk at position %d, %d cannot be saved!  (%s)
-wdl.messages.generalError.failedToFindHashArrayField=Couldn't save chunks: Failed to find hash array field.
-wdl.messages.generalError.couldNotGetLHMEntry=Couldn't save chunks: Failed to get class for LongHashMap.Entry.
-wdl.messages.generalError.chunkProviderClientEmpty=Can't save currently loaded chunks: ChunkProviderClient has no data!  (If you changed dimensions just now, this is normal and the chunks were still saved)
 wdl.messages.generalError.forbidden=The server forbids downloading this world!
 wdl.messages.generalError.failedToBackUp=Error while backing up world: %s
 wdl.messages.generalError.noUTF8=Your computer doesn't support the UTF-8 charset: %s.  You should feel bad.
 wdl.messages.generalError.failedToSetUpEntityUI=Error setting up Entity List UI: %s
+wdl.messages.generalError.failedToSaveEntity=Failed to save entity %s for chunk at %d, %d: %s
+wdl.messages.generalError.failedToSaveTE=Failed to save tile entity %s at %s for chunk at %d, %d: %s
 
 wdl.messages.updates.releaseCount=Found %d releases.
 wdl.messages.updates.failedToFindMatchingRelease=Could not find a release matching %s.  You may be running a version that hasn't been released yet.
@@ -407,8 +411,9 @@ wdl.props.world.title=These settings are used for a single world in a multiworld
 
 #Some of these messages are using format substitutions, so that special coloring can be added.
 wdl.intro.success=The World Downloader mod has been successfully installed!
-wdl.intro.usage=For information on how to use this mod, please see the %s.
+wdl.intro.usage=For information on how to use this mod, please see the %s and the %s.
 wdl.intro.forumsLink=Official Minecraft Forums thread
+wdl.intro.wikiLink=Project Wiki
 wdl.intro.contribute=To report a bug, suggest a feature, contribute code, or help translate, check out %s.
 wdl.intro.githubRepo=GitHub repository
 wdl.intro.stolen=%s: If you downloaded this mod from a location other than the Minecraft Forums or GitHub (or another site on %s), you may have used a site that is %s redistributing this mod.

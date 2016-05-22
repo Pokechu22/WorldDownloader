@@ -15,10 +15,25 @@ import net.minecraft.client.resources.I18n;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
+/**
+ * Performs backup of worlds.
+ */
 public class WorldBackup {
+	/**
+	 * Different modes for backups.
+	 */
 	public static enum WorldBackupType {
+		/**
+		 * No backup is performed.
+		 */
 		NONE("wdl.backup.none", ""),
+		/**
+		 * The world folder is copied.
+		 */
 		FOLDER("wdl.backup.folder", "wdl.saveProgress.backingUp.title.folder"),
+		/**
+		 * The world folder is copied to a zip folder.
+		 */
 		ZIP("wdl.backup.zip", "wdl.saveProgress.backingUp.title.zip");
 
 		/**
@@ -51,6 +66,13 @@ public class WorldBackup {
 			return I18n.format(titleKey);
 		}
 		
+		/**
+		 * Attempts to parse the given string into a WorldBackupType.  This
+		 * is performed case-insensitively.
+		 * 
+		 * @param name The name of the backup type.
+		 * @return The backup type corresponding to the name.
+		 */
 		public static WorldBackupType match(String name) {
 			for (WorldBackupType type : WorldBackupType.values()) {
 				if (type.name().equalsIgnoreCase(name)) {
@@ -63,7 +85,7 @@ public class WorldBackup {
 	}
 
 	/**
-	 * Something that listens to backup progress.
+	 * Something (usually a GUI) that listens to backup progress.
 	 */
 	public static interface IBackupProgressMonitor {
 		/**

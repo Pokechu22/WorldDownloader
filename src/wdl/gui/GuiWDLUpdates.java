@@ -3,14 +3,14 @@ package wdl.gui;
 import java.util.ArrayList;
 import java.util.List;
 
-import wdl.WDL;
-import wdl.update.Release;
-import wdl.update.WDLUpdateChecker;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
+import wdl.WDL;
+import wdl.update.Release;
+import wdl.update.WDLUpdateChecker;
 
 /**
  * Gui that lists updates fetched via {@link wdl.update.GithubInfoGrabber}.
@@ -29,7 +29,7 @@ public class GuiWDLUpdates extends GuiScreen {
 					GuiWDLUpdates.this.height, TOP_MARGIN,
 					GuiWDLUpdates.this.height - BOTTOM_MARGIN, 
 					(fontRendererObj.FONT_HEIGHT + 1) * 6 + 2);
-			this.setShowSelectionBox(true);
+			this.showSelectionBox = true;
 		}
 		
 		private class VersionEntry implements IGuiListEntry {
@@ -62,8 +62,7 @@ public class GuiWDLUpdates extends GuiScreen {
 			
 			@Override
 			public void drawEntry(int slotIndex, int x, int y, int listWidth,
-					int slotHeight, int mouseX, int mouseY,
-					boolean isSelected) {
+					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
 				String title;
 				//The 'isSelected' parameter is actually 'isMouseOver'
 				if (isSelected(slotIndex)) {
@@ -108,6 +107,12 @@ public class GuiWDLUpdates extends GuiScreen {
 			@Override
 			public void mouseReleased(int slotIndex, int x, int y,
 					int mouseEvent, int relativeX, int relativeY) {
+				
+			}
+			
+			@Override
+			public void setSelected(int p_178011_1_, int p_178011_2_,
+					int p_178011_3_) {
 				
 			}
 		}
@@ -251,21 +256,21 @@ public class GuiWDLUpdates extends GuiScreen {
 	}
 	
 	/**
-	 * Handles mouse input.
-	 */
-	@Override
-	public void handleMouseInput() {
-		super.handleMouseInput();
-		this.list.handleMouseInput();
-	}
-
-	/**
 	 * Called when the mouse is clicked.
 	 */
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
 		list.func_148179_a(mouseX, mouseY, mouseButton);
 		super.mouseClicked(mouseX, mouseY, mouseButton);
+	}
+	
+	/**
+	 * Handles mouse input.
+	 */
+	@Override
+	public void handleMouseInput() {
+		super.handleMouseInput();
+		this.list.handleMouseInput();
 	}
 	
 	@Override
@@ -437,6 +442,15 @@ public class GuiWDLUpdates extends GuiScreen {
 			super.mouseClicked(mouseX, mouseY, mouseButton);
 		}
 		
+		/**
+		 * Handles mouse input.
+		 */
+		@Override
+		public void handleMouseInput() {
+			super.handleMouseInput();
+			this.list.handleMouseInput();
+		}
+		
 		@Override
 		protected void mouseReleased(int mouseX, int mouseY, int state) {
 			if (list.func_148181_b(mouseX, mouseY, state)) {
@@ -457,15 +471,6 @@ public class GuiWDLUpdates extends GuiScreen {
 					this.width / 2, 8, 0xFFFFFF);
 			
 			super.drawScreen(mouseX, mouseY, partialTicks);
-		}
-		
-		/**
-		 * Handles mouse input.
-		 */
-		@Override
-		public void handleMouseInput() {
-			super.handleMouseInput();
-			this.list.handleMouseInput();
 		}
 	}
 }

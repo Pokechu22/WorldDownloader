@@ -8,8 +8,10 @@ import net.minecraft.util.Session;
 import wdl.WDL;
 
 /**
- * Base GUI with the player in the background turning slowly to show the 
- * entire world.
+ * NOTE: 1.8d changes have NOT been backported on this screen due to a rendering
+ * issue (the player's head still appears).
+ * 
+ * Base GUI with the player in the background turning slowly to show the entire world.
  */
 public abstract class GuiTurningCameraBase extends GuiScreen {
 	/**

@@ -19,21 +19,6 @@ import com.google.common.collect.Multimap;
  */
 public class HologramHandler implements ISpecialEntityHandler,
 		IWDLModDescripted {
-
-	@Override
-	public String getName() {
-		return "Hologram";
-	}
-	
-	@Override
-	public String getVersion() {
-		return "1.0";
-	}
-	
-	@Override
-	public String getTargetedWDLVersion() {
-		return WDL.VERSION;
-	}
 	
 	@Override
 	public String getDisplayName() {
@@ -91,5 +76,15 @@ public class HologramHandler implements ISpecialEntityHandler,
 	@Override
 	public String getDescription() {
 		return "Provides basic support for disabling holograms.";
+	}
+
+	@Override
+	public boolean isValidEnvironment(String version) {
+		return true;
+	}
+
+	@Override
+	public String getEnvironmentErrorMessage(String version) {
+		return null;
 	}
 }

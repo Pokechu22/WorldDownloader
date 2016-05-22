@@ -36,11 +36,16 @@ public class GuiWDLMessages extends GuiScreen implements GuiYesNoCallback {
 				this.category = category;
 				this.button = new GuiButton(0, 0, 0, 80, 20, "");
 			}
+			
+			@Override
+			public void setSelected(int p_178011_1_, int p_178011_2_,
+					int p_178011_3_) {
+				
+			}
 
 			@Override
 			public void drawEntry(int slotIndex, int x, int y, int listWidth,
-					int slotHeight, int mouseX, int mouseY,
-					boolean isSelected) {
+					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
 				drawCenteredString(fontRendererObj, category.getDisplayName(),
 						GuiWDLMessages.this.width / 2 - 40, y + slotHeight
 						- mc.fontRendererObj.FONT_HEIGHT - 1, 0xFFFFFF);
@@ -89,9 +94,14 @@ public class GuiWDLMessages extends GuiScreen implements GuiYesNoCallback {
 			}
 			
 			@Override
+			public void setSelected(int p_178011_1_, int p_178011_2_,
+					int p_178011_3_) {
+				
+			}
+
+			@Override
 			public void drawEntry(int slotIndex, int x, int y, int listWidth,
-					int slotHeight, int mouseX, int mouseY,
-					boolean isSelected) {
+					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
 				button.xPosition = GuiWDLMessages.this.width / 2 - 100;
 				button.yPosition = y;
 				
@@ -228,9 +238,6 @@ public class GuiWDLMessages extends GuiScreen implements GuiYesNoCallback {
 		this.list.handleMouseInput();
 	}
 	
-	/**
-	 * Handles mouse input.
-	 */
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
 		if (list.func_148179_a(mouseX, mouseY, mouseButton)) {

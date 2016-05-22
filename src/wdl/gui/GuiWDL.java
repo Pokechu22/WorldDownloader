@@ -51,11 +51,16 @@ public class GuiWDL extends GuiScreen {
 				
 				this.tooltip = I18n.format("wdl.gui.wdl." + key + ".description");
 			}
+			
+			@Override
+			public void setSelected(int p_178011_1_, int p_178011_2_,
+					int p_178011_3_) {
+				
+			}
 
 			@Override
 			public void drawEntry(int slotIndex, int x, int y, int listWidth,
-					int slotHeight, int mouseX, int mouseY,
-					boolean isSelected) {
+					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
 				button.xPosition = GuiWDL.this.width / 2 - 100;
 				button.yPosition = y;
 				
@@ -250,12 +255,6 @@ public class GuiWDL extends GuiScreen {
 			WDL.saveProps();
 		}
 	}
-	
-	@Override
-	public void handleMouseInput() {
-		super.handleMouseInput();
-		list.handleMouseInput();
-	}
 
 	/**
 	 * Called when the mouse is clicked.
@@ -265,6 +264,15 @@ public class GuiWDL extends GuiScreen {
 		list.func_148179_a(mouseX, mouseY, mouseButton);
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 		this.worldname.mouseClicked(mouseX, mouseY, mouseButton);
+	}
+	
+	/**
+	 * Handles mouse input.
+	 */
+	@Override
+	public void handleMouseInput() {
+		super.handleMouseInput();
+		this.list.handleMouseInput();
 	}
 	
 	@Override

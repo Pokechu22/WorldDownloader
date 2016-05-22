@@ -3,18 +3,19 @@ package wdl.gui;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
-import wdl.api.IWDLMod;
-import wdl.api.IWDLModDescripted;
+
+import org.lwjgl.opengl.GL11;
+
 import wdl.api.IWDLModWithGui;
 import wdl.api.WDLApi;
+import wdl.api.WDLApi.ModInfo;
 
 /**
  * GUI showing the currently enabled mods, and their information.
@@ -56,53 +57,69 @@ public class GuiWDLExtensions extends GuiScreen {
 		public ModList() {
 			super(GuiWDLExtensions.this.mc, GuiWDLExtensions.this.width,
 					bottomLocation, TOP_HEIGHT, bottomLocation, 22);
-			this.setShowSelectionBox(true);
+			this.showSelectionBox = true;
 		}
 		
 		private class ModEntry implements IGuiListEntry {
-			public final IWDLMod mod;
-			private final String modDesc;
+			public final ModInfo<?> mod;
+			/**
+			 * Constant information about the extension (name & version)
+			 */
+			private final String modDescription;
+			/**
+			 * The {@link #modDescription}, formated depending on whether
+			 * the mod is enabled.
+			 */
+			private String label;
 			private GuiButton button;
+			private GuiButton disableButton;
 			
-			public ModEntry(IWDLMod mod) {
+			public ModEntry(ModInfo<?> mod) {
 				this.mod = mod;
-				String name = mod.getName();
-				if (mod instanceof IWDLModDescripted) {
-					String displayName = ((IWDLModDescripted) mod)
-							.getDisplayName();
-					
-					if (displayName != null && !displayName.isEmpty()) {
-						name = displayName;
-					}
+				String name = mod.getDisplayName();
+				this.modDescription = I18n.format("wdl.gui.extensions.modVersion",
+						name, mod.version);
+
+				if (!mod.isEnabled()) {
+					this.label = "" + EnumChatFormatting.GRAY
+							+ EnumChatFormatting.ITALIC + modDescription;
+				} else {
+					this.label = modDescription;
 				}
-				this.modDesc = I18n.format("wdl.gui.extensions.modVersion",
-						name, mod.getVersion());
-				
-				if (mod instanceof IWDLModWithGui) {
-					String buttonName = ((IWDLModWithGui) mod).getButtonName();
+
+				if (mod.mod instanceof IWDLModWithGui) {
+					IWDLModWithGui guiMod = (IWDLModWithGui) mod.mod;
+					String buttonName = (guiMod).getButtonName();
 					if (buttonName == null || buttonName.isEmpty()) {
 						buttonName = I18n.format("wdl.gui.extensions.defaultSettingsButtonText");
 					}
 					
 					button = new GuiButton(0, 0, 0, 80, 20,
-							((IWDLModWithGui) mod).getButtonName());
+							guiMod.getButtonName());
 				}
+				
+				disableButton = new GuiButton(0, 0, 0, 80, 20,
+						I18n.format("wdl.gui.extensions."
+								+ (mod.isEnabled() ? "enabled" : "disabled")));
 			}
 			
 			@Override
 			public void drawEntry(int slotIndex, int x, int y, int listWidth,
-					int slotHeight, int mouseX, int mouseY,
-					boolean isSelected) {
+					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
 				if (button != null) {
-					button.xPosition = GuiWDLExtensions.this.width - 92;
+					button.xPosition = GuiWDLExtensions.this.width - 180;
 					button.yPosition = y - 1;
 					
 					button.drawButton(mc, mouseX, mouseY);
 				}
 				
+				disableButton.xPosition = GuiWDLExtensions.this.width - 92;
+				disableButton.yPosition = y - 1;
+				disableButton.drawButton(mc, mouseX, mouseY);
+				
 				int centerY = y + slotHeight / 2
 						- fontRendererObj.FONT_HEIGHT / 2;
-				fontRendererObj.drawString(modDesc, x, centerY, 0xFFFFFF);
+				fontRendererObj.drawString(label, x, centerY, 0xFFFFFF);
 			}
 
 			@Override
@@ -110,12 +127,28 @@ public class GuiWDLExtensions extends GuiScreen {
 					int mouseEvent, int relativeX, int relativeY) {
 				if (button != null) {
 					if (button.mousePressed(mc, x, y)) {
-						if (mod instanceof IWDLModWithGui) {
-							((IWDLModWithGui) mod).openGui(GuiWDLExtensions.this);
+						if (mod.mod instanceof IWDLModWithGui) {
+							((IWDLModWithGui) mod.mod).openGui(GuiWDLExtensions.this);
 						}
 						
 						button.playPressSound(mc.getSoundHandler());
+						return true;
 					}
+				}
+				if (disableButton.mousePressed(mc, x, y)) {
+					mod.toggleEnabled();
+					
+					disableButton.playPressSound(mc.getSoundHandler());
+					disableButton.displayString = I18n.format("wdl.gui.extensions."
+							+ (mod.isEnabled() ? "enabled" : "disabled"));
+					
+					if (!mod.isEnabled()) {
+						this.label = "" + EnumChatFormatting.GRAY
+								+ EnumChatFormatting.ITALIC + modDescription;
+					} else {
+						this.label = modDescription;
+					}
+					return true;
 				}
 				
 				if (selectedModIndex != slotIndex) {
@@ -141,10 +174,16 @@ public class GuiWDLExtensions extends GuiScreen {
 					button.mouseReleased(x, y);
 				}
 			}
+
+			@Override
+			public void setSelected(int slotIndex, int p_178011_2_,
+					int p_178011_3_) {
+				
+			}
 		}
 		
 		private List<IGuiListEntry> entries = new ArrayList<IGuiListEntry>() {{
-			for (IWDLMod mod : WDLApi.getWDLMods().values()) {
+			for (ModInfo<?> mod : WDLApi.getWDLMods().values()) {
 				add(new ModEntry(mod));
 			}
 		}};
@@ -179,6 +218,13 @@ public class GuiWDLExtensions extends GuiScreen {
 		@Override
 		protected int getScrollBarX() {
 			return GuiWDLExtensions.this.width - 10;
+		}
+		
+		@Override
+		public void handleMouseInput() {
+			if (mouseY < bottomLocation) {
+				super.handleMouseInput();
+			}
 		}
 	}
 	
@@ -225,13 +271,24 @@ public class GuiWDLExtensions extends GuiScreen {
 				GL11.glTranslatef(0, bottomLocation, 0);
 			}
 		}
+		
+		@Override
+		public void handleMouseInput() {
+			mouseY -= bottomLocation;
+			
+			if (mouseY > 0) {
+				super.handleMouseInput();
+			}
+			
+			mouseY += bottomLocation;
+		}
 	}
 	
-	private void updateDetailsList(IWDLMod selectedMod) {
+	private void updateDetailsList(ModInfo<?> selectedMod) {
 		detailsList.clearLines();
 		
 		if (selectedMod != null) {
-			String info = WDLApi.getModInfo(selectedMod);
+			String info = selectedMod.getInfo();
 			
 			detailsList.addLine(info);
 		}

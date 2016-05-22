@@ -313,6 +313,7 @@ public class WDLMessages {
 			if (args[i] instanceof Entity) {
 				Entity e = (Entity)args[i];
 				String entityType = EntityUtils.getEntityType(e);
+				HoverEvent event = null;
 				String customName = null;
 				
 				try {
@@ -337,6 +338,8 @@ public class WDLMessages {
 				} else {
 					component = new ChatComponentText(entityType);
 				}
+				component.setChatStyle(component.getChatStyle()
+						.setChatHoverEvent(event));
 				
 				args[i] = component;
 			} else if (args[i] instanceof Throwable) {

@@ -1,6 +1,19 @@
 package wdl.gui;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_ALPHA_TEST;
+import static org.lwjgl.opengl.GL11.GL_BLEND;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL11.GL_FLAT;
+import static org.lwjgl.opengl.GL11.GL_FOG;
+import static org.lwjgl.opengl.GL11.GL_LIGHTING;
+import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_SMOOTH;
+import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.glColor4f;
+import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glShadeModel;
 
 import java.lang.reflect.Field;
 import java.net.URI;
@@ -99,7 +112,7 @@ class Utils {
 	}
 	
 	/**
-	 * Draws the border used by list GUIs.
+	 * Draws the background/border used by list GUIs.
 	 * <br/> 
 	 * Based off of
 	 * {@link net.minecraft.client.gui.GuiSlot#drawScreen(int, int, float)}.
@@ -114,6 +127,20 @@ class Utils {
 	 * @param right Where to stop drawing (usually, width)
 	 */
 	public static void drawListBackground(int topMargin, int bottomMargin, int top, int left, int bottom, int right) {
+		drawDarkBackground(top, left, bottom, right);
+		drawBorder(topMargin, bottomMargin, top, left, bottom, right);
+	}
+	
+	/**
+	 * Draws a dark background, similar to {@link GuiScreen#drawBackground(int)} but darker.
+	 * Same appearence as the background in lists. 
+	 * 
+	 * @param top Where to start drawing (usually, 0)
+	 * @param left Where to start drawing (usually, 0)
+	 * @param bottom Where to stop drawing (usually, height).
+	 * @param right Where to stop drawing (usually, width)
+	 */
+	public static void drawDarkBackground(int top, int left, int bottom, int right) {
 		glDisable(GL_LIGHTING);
 		glDisable(GL_FOG);
 		Tessellator t = Tessellator.instance;
@@ -135,10 +162,6 @@ class Utils {
 		t.addVertexWithUV(left, top, 0, left / textureSize, 
 				top / textureSize);
 		t.draw();
-		
-		drawBorder(topMargin, bottomMargin, top, left, bottom, right);
-		
-		//Flags are reset by drawBorder
 	}
 	
 	/**
@@ -503,7 +526,6 @@ class GuiNumericTextField extends GuiTextField {
 class TextList extends GuiListExtended {
 	public final int topMargin;
 	public final int bottomMargin;
-	private final Minecraft mc;
 	
 	/**
 	 * Creates a new TextList with no text.
@@ -512,8 +534,6 @@ class TextList extends GuiListExtended {
 			int bottomMargin) {
 		super(mc, width, height, topMargin, height - bottomMargin,
 				mc.fontRendererObj.FONT_HEIGHT + 1);
-		
-		this.mc = mc;
 		
 		this.topMargin = topMargin;
 		this.bottomMargin = bottomMargin;
@@ -608,6 +628,11 @@ class TextEntry implements IGuiListEntry {
 	@Override
 	public void mouseReleased(int slotIndex, int x, int y, int mouseEvent,
 			int relativeX, int relativeY) {
+		
+	}
+	
+	@Override
+	public void setSelected(int p_178011_1_, int p_178011_2_, int p_178011_3_) {
 		
 	}
 }
@@ -1238,8 +1263,8 @@ abstract class GuiListExtended {
 }
 
 interface IGuiListEntry {
-	// Ignoring the useless method.
-	// void setSelected(int p_178011_1_, int p_178011_2_, int p_178011_3_);
+	// Unused, but defined to keep things simple
+	void setSelected(int p_178011_1_, int p_178011_2_, int p_178011_3_);
 
 	void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight,
 			int mouseX, int mouseY, boolean isSelected);

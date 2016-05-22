@@ -1,9 +1,8 @@
 package wdl.gui;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -14,6 +13,8 @@ import wdl.WDL;
 import wdl.WDLMessageTypes;
 import wdl.WDLMessages;
 import wdl.WDLPluginChannels;
+
+import com.google.common.collect.Multimap;
 
 /**
  * GUI that controls what entities are saved.
@@ -35,15 +36,33 @@ public class GuiWDLEntities extends GuiScreen {
 			try {
 				int largestWidthSoFar = 0;
 				
-				Map<String, Collection<String>> entities = 
-						EntityUtils.entitiesByGroup.asMap();
-				for (Map.Entry<String, Collection<String>> e : entities
-						.entrySet()) {
-					CategoryEntry category = new CategoryEntry(e.getKey());
-					add(category);
+				Multimap<String, String> entities = EntityUtils
+						.getEntitiesByGroup();
+				
+				// Partially sort map items so that the basic things are
+				// near the top. In some cases, there will be more items
+				// than just "Passive"/"Hostile"/"Other", which we want
+				// further down, but for Passive/Hostile/Other it's better
+				// to have it in consistent places.
+				List<String> categories = new ArrayList<String>(entities.keySet());
+				categories.remove("Passive");
+				categories.remove("Hostile");
+				categories.remove("Other");
+				Collections.sort(categories);
+				categories.add(0, "Hostile");
+				categories.add(1, "Passive");
+				categories.add("Other");
+				
+				for (String category : categories) {
+					CategoryEntry categoryEntry = new CategoryEntry(category);
+					add(categoryEntry);
 
-					for (String entity : e.getValue()) {
-						add(new EntityEntry(category, entity));
+					List<String> categoryEntities = new ArrayList<String>(
+							entities.get(category));
+					Collections.sort(categoryEntities);
+					
+					for (String entity : categoryEntities) {
+						add(new EntityEntry(categoryEntry, entity));
 
 						int width = fontRendererObj.getStringWidth(entity);
 						if (width > largestWidthSoFar) {
@@ -89,8 +108,7 @@ public class GuiWDLEntities extends GuiScreen {
 
 			@Override
 			public void drawEntry(int slotIndex, int x, int y, int listWidth,
-					int slotHeight, int mouseX, int mouseY,
-					boolean isSelected) {
+					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
 				mc.fontRendererObj.drawString(this.group, (x + 110 / 2)
 						- (this.labelWidth / 2), y + slotHeight
 						- mc.fontRendererObj.FONT_HEIGHT - 1, 0xFFFFFF);
@@ -122,6 +140,11 @@ public class GuiWDLEntities extends GuiScreen {
 			@Override
 			public void mouseReleased(int slotIndex, int x, int y,
 					int mouseEvent, int relativeX, int relativeY) {
+			}
+
+			@Override
+			public void setSelected(int p_178011_1_, int p_178011_2_,
+					int p_178011_3_) {
 			}
 			
 			boolean isGroupEnabled() {
@@ -180,8 +203,7 @@ public class GuiWDLEntities extends GuiScreen {
 
 			@Override
 			public void drawEntry(int slotIndex, int x, int y, int listWidth,
-					int slotHeight, int mouseX, int mouseY,
-					boolean isSelected) {
+					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
 				//Center for everything but the labels.
 				int center = (GuiWDLEntities.this.width / 2) - (totalWidth / 2)
 						+ largestWidth + 10;
@@ -248,6 +270,11 @@ public class GuiWDLEntities extends GuiScreen {
 							+ ".TrackDistance",
 							Integer.toString(range));
 				}
+			}
+
+			@Override
+			public void setSelected(int p_178011_1_, int p_178011_2_,
+					int p_178011_3_) {
 			}
 			
 			/**
@@ -317,6 +344,15 @@ public class GuiWDLEntities extends GuiScreen {
 		this.entityList = new GuiEntityList();
 	}
 	
+	/**
+	 * Handles mouse input.
+	 */
+	@Override
+	public void handleMouseInput() {
+		super.handleMouseInput();
+		this.entityList.handleMouseInput();
+	}
+	
 	@Override
 	protected void actionPerformed(GuiButton button) {
 		if (button.id == 100) {
@@ -333,15 +369,6 @@ public class GuiWDLEntities extends GuiScreen {
 	@Override
 	public void onGuiClosed() {
 		WDL.saveProps();
-	}
-	
-	/**
-	 * Handles mouse input.
-	 */
-	@Override
-	public void handleMouseInput() {
-		super.handleMouseInput();
-		this.entityList.handleMouseInput();
 	}
 	
 	@Override
