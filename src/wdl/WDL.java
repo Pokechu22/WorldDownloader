@@ -305,6 +305,10 @@ public class WDL {
 	 */
 	public static void startDownload() {
 		worldClient = minecraft.theWorld;
+		
+		if (!WDLPluginChannels.canDownloadAtAll()) {
+			return;
+		}
 
 		if (isMultiworld && worldName.isEmpty()) {
 			// Ask the user which world is loaded
@@ -452,7 +456,7 @@ public class WDL {
 		if (wasDownloading) {
 			minecraft.getSaveLoader().flushCache();
 			saveHandler.flush();
-			worldClient = null;
+			startOnChange = false;
 			saving = false;
 			downloading = false;
 			worldLoadingDeferred = false;
