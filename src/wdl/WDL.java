@@ -1,28 +1,16 @@
 package wdl;
 
-import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockBeacon;
-import net.minecraft.block.BlockBrewingStand;
-import net.minecraft.block.BlockChest;
-import net.minecraft.block.BlockDispenser;
-import net.minecraft.block.BlockFurnace;
-import net.minecraft.block.BlockHopper;
-import net.minecraft.block.BlockNote;
 import net.minecraft.client.ClientBrandRetriever;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -34,7 +22,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -45,39 +32,33 @@ import net.minecraft.nbt.NBTTagFloat;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityBeacon;
-import net.minecraft.tileentity.TileEntityBrewingStand;
-import net.minecraft.tileentity.TileEntityChest;
-import net.minecraft.tileentity.TileEntityDispenser;
-import net.minecraft.tileentity.TileEntityFurnace;
-import net.minecraft.tileentity.TileEntityHopper;
-import net.minecraft.tileentity.TileEntityNote;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.ClassInheritanceMultiMap;
-import net.minecraft.util.IChatComponent;
-import net.minecraft.util.LongHashMap;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.ReportedException;
+import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.MinecraftException;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.storage.AnvilSaveConverter;
 import net.minecraft.world.chunk.storage.IChunkLoader;
-import net.minecraft.world.chunk.storage.RegionFileCache;
 import net.minecraft.world.storage.MapData;
 import net.minecraft.world.storage.SaveHandler;
 import net.minecraft.world.storage.ThreadedFileIOBase;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import wdl.WorldBackup.WorldBackupType;
-import wdl.api.IEntityEditor;
 import wdl.api.IPlayerInfoEditor;
 import wdl.api.ISaveListener;
-import wdl.api.ITileEntityEditor;
-import wdl.api.IWDLMod;
 import wdl.api.IWorldInfoEditor;
 import wdl.api.WDLApi;
+import wdl.api.WDLApi.ModInfo;
 import wdl.gui.GuiWDLMultiworld;
 import wdl.gui.GuiWDLMultiworldSelect;
 import wdl.gui.GuiWDLOverwriteChanges;
 import wdl.gui.GuiWDLSaveProgress;
 import wdl.update.GithubInfoGrabber;
+
+import com.google.common.collect.HashMultimap;
 
 /**
  * This is the main class that does most of the work.
@@ -87,7 +68,7 @@ public class WDL {
 	/**
 	 * Current version.  This should match the git tag for the current release.
 	 */
-	public static final String VERSION = "1.8.9a-beta1";
+	public static final String VERSION = "1.8.9a-beta2";
 	/**
 	 * The version of minecraft that this mod is installed on.
 	 */
@@ -157,15 +138,14 @@ public class WDL {
 	public static IChunkLoader chunkLoader;
 
 	/**
-	 * Positions and contents of all of the new tileentities, to be overwritten
-	 * from the old version when {@linkplain #importTileEntities(Chunk) saving}.
+	 * All tile entities that were saved manually, by chunk and then position.
 	 */
-	public static HashMap<BlockPos, TileEntity> newTileEntities = new HashMap<BlockPos, TileEntity>();
+	public static HashMap<ChunkCoordIntPair, Map<BlockPos, TileEntity>> newTileEntities = new HashMap<ChunkCoordIntPair, Map<BlockPos, TileEntity>>();
 	
 	/**
-	 * All entities that were downloaded.  The key is the entity's EID.
+	 * All entities that were downloaded, by chunk.
 	 */
-	public static HashMap<Integer, Entity> newEntities = new HashMap<Integer, Entity>();
+	public static HashMultimap<ChunkCoordIntPair, Entity> newEntities = HashMultimap.create();
 	
 	/**
 	 * All of the {@link MapData}s that were sent to the client in the current
@@ -233,37 +213,13 @@ public class WDL {
 	 * Default properties used for creating baseProps.  Saved and loaded;
 	 * shared between all servers.
 	 */
-	public static Properties globalProps;
+	public static final Properties globalProps;
 	/**
 	 * Default properties that are used to create the global properites.
 	 */
-	public static Properties defaultProps;
+	public static final Properties defaultProps;
 	
-	/**
-	 * All IWDLMods that implement {@link ISaveListener}.
-	 */
-	public static Map<String, ISaveListener> saveListeners =
-			new HashMap<String, ISaveListener>();
-	/**
-	 * All IWDLMods that implement {@link ITileEntityEditor}.
-	 */
-	public static Map<String, ITileEntityEditor> tileEntityEditors =
-			new HashMap<String, ITileEntityEditor>();
-	/**
-	 * All IWDLMods that implement {@link IEntityEditor}.
-	 */
-	public static Map<String, IEntityEditor> entityEditors =
-			new HashMap<String, IEntityEditor>();
-	/**
-	 * All IWDLMods that implement {@link IWorldInfoEditor}.
-	 */
-	public static Map<String, IWorldInfoEditor> worldInfoEditors =
-			new HashMap<String, IWorldInfoEditor>();
-	/**
-	 * All IWDLMods that implement {@link IPlayerInfoEditor}.
-	 */
-	public static Map<String, IPlayerInfoEditor> playerInfoEditors =
-			new HashMap<String, IPlayerInfoEditor>();
+	private static Logger logger = LogManager.getLogger();
 	
 	// Initialization:
 	static {
@@ -300,13 +256,6 @@ public class WDL {
 		//Set up entities.
 		defaultProps.setProperty("Entity.TrackDistanceMode", "server");
 		
-		List<String> entityTypes = EntityUtils.getEntityTypes();
-		for (String entity : entityTypes) {
-			defaultProps.setProperty("Entity." + entity + ".Enabled", "true");
-			defaultProps.setProperty("Entity." + entity + ".TrackDistance", 
-					Integer.toString(EntityUtils.getDefaultEntityRange(entity)));
-		}
-		
 		//Don't save these entities by default -- they're problematic.
 		defaultProps.setProperty("Entity.FireworksRocketEntity.Enabled", "false");
 		defaultProps.setProperty("Entity.EnderDragon.Enabled", "false");
@@ -331,11 +280,21 @@ public class WDL {
 		defaultProps.setProperty("UpdateAllowBetas", "true");
 		
 		globalProps = new Properties(defaultProps);
+		FileReader reader = null;
 		try {
-			globalProps.load(new FileReader(new File(minecraft.mcDataDir,
-					"WorldDownloader.txt")));
+			reader = new FileReader(new File(minecraft.mcDataDir,
+					"WorldDownloader.txt"));
+			globalProps.load(reader);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.debug("Failed to load global properties", e);
+		} finally {
+			if (reader != null) {
+				try {
+					reader.close();
+				} catch (Exception e) {
+					logger.warn("Failed to close global properties reader", e);
+				}
+			}
 		}
 		baseProps = new Properties(globalProps);
 		worldProps = new Properties(baseProps);
@@ -346,6 +305,10 @@ public class WDL {
 	 */
 	public static void startDownload() {
 		worldClient = minecraft.theWorld;
+
+		if (!WDLPluginChannels.canDownloadAtAll()) {
+			return;
+		}
 
 		if (isMultiworld && worldName.isEmpty()) {
 			// Ask the user which world is loaded
@@ -425,15 +388,15 @@ public class WDL {
 		
 		FileInputStream worldDat = null;
 		try {
-			long lastSaved = Long.parseLong(worldProps.getProperty("LastSaved"));
+			long lastSaved = Long.parseLong(worldProps.getProperty("LastSaved",
+					"-1"));
 			//Can't directly use worldClient.getWorldInfo, as that doesn't use
 			//the saved version.
 			worldDat = new FileInputStream(new File(
 					saveHandler.getWorldDirectory(), "level.dat"));
 			long lastPlayed = CompressedStreamTools.readCompressed(worldDat)
 					.getCompoundTag("Data").getLong("LastPlayed");
-			if (!overrideLastModifiedCheck && lastSaved != -1 &&
-					lastPlayed > lastSaved) {
+			if (!overrideLastModifiedCheck && lastPlayed > lastSaved) {
 				// The world was played later than it was saved; confirm that the
 				// user is willing for possible changes they made to be overwritten.
 				minecraft.displayGuiScreen(new GuiWDLOverwriteChanges(
@@ -441,9 +404,9 @@ public class WDL {
 				return;
 			}
 		} catch (Exception e) {
-			//TODO: handle this in a useful way -- will always happen
-			//on new worlds.
-			e.printStackTrace();
+			logger.warn("Error while checking if the map has been played and" +
+					"needs to be backed up (this is normal if this world " +
+					"has not been saved before): ", e);
 		} finally {
 			if (worldDat != null) {
 				try {
@@ -455,9 +418,9 @@ public class WDL {
 		}
 		WDL.minecraft.displayGuiScreen((GuiScreen) null);
 		WDL.minecraft.setIngameFocus();
-		chunkLoader = saveHandler.getChunkLoader(worldClient.provider);
-		newTileEntities = new HashMap<BlockPos, TileEntity>();
-		newEntities = new HashMap<Integer, Entity>();
+		chunkLoader = WDLChunkLoader.create(saveHandler, worldClient.provider);
+		newTileEntities = new HashMap<ChunkCoordIntPair,Map<BlockPos,TileEntity>>();
+		newEntities = HashMultimap.create();
 		newMapDatas = new HashMap<Integer, MapData>();
 
 		if (baseProps.getProperty("ServerName").isEmpty()) {
@@ -493,20 +456,11 @@ public class WDL {
 		if (wasDownloading) {
 			minecraft.getSaveLoader().flushCache();
 			saveHandler.flush();
-			worldClient = null;
+			startOnChange = false;
 			saving = false;
 			downloading = false;
 			worldLoadingDeferred = false;
-			
-			// Force the world to redraw as if the player pressed F3+A.
-			// This fixes the world going invisible issue.
-			minecraft.addScheduledTask(new Runnable() {
-				@Override
-				public void run() {
-					WDL.minecraft.renderGlobal.loadRenderers();	
-				}
-			});
-		
+
 			WDLMessages.chatMessageTranslated(WDLMessageTypes.INFO,
 					"wdl.messages.generalInfo.downloadCanceled");
 		}
@@ -613,16 +567,7 @@ public class WDL {
 		WDL.minecraft.getSaveLoader().flushCache();
 		WDL.saveHandler.flush();
 		WDL.worldClient = null;
-		
-		// Force the world to redraw as if the player pressed F3+A.
-		// This fixes the world going invisible issue.
-		WDL.minecraft.addScheduledTask(new Runnable() {
-			@Override
-			public void run() {
-				WDL.minecraft.renderGlobal.loadRenderers();	
-			}
-		});
-		
+
 		worldLoadingDeferred = false;
 
 		// If still downloading, load the current world and keep on downloading
@@ -635,160 +580,6 @@ public class WDL {
 
 		WDLMessages.chatMessageTranslated(WDLMessageTypes.INFO,
 				"wdl.messages.generalInfo.saveComplete.done");
-	}
-
-	/**
-	 * Load the previous version of the chunk, and copy in any previous tile
-	 * entities.
-	 * 
-	 * Needed so that the old tile entities aren't lost.
-	 */
-	public static void importTileEntities(Chunk chunk) {
-		File chunkSaveLocation = ReflectionUtils.stealAndGetField(chunkLoader,
-				File.class);
-		DataInputStream dis = null;
-		
-		try {
-			dis = RegionFileCache.getChunkInputStream(
-					chunkSaveLocation, chunk.xPosition, chunk.zPosition);
-
-			if (dis == null) {
-				// This happens whenever the chunk hasn't been saved before.
-				// It's a normal case.
-				return;
-			}
-			
-			NBTTagCompound chunkNBT = CompressedStreamTools.read(dis);
-			// NBTTagCompound levelNBT = chunkNBT.getCompoundTag( "Level" );
-			NBTTagCompound levelNBT = chunkNBT.getCompoundTag("Level");
-			// The official code checks if the chunk is in the right location.
-			// Should I too?.
-			NBTTagList tileEntitiesNBT = levelNBT
-					.getTagList("TileEntities", 10);
-
-			if (tileEntitiesNBT != null) {
-				for (int i = 0; i < tileEntitiesNBT.tagCount(); i++) {
-					NBTTagCompound tileEntityNBT = tileEntitiesNBT
-							.getCompoundTagAt(i);
-					TileEntity te = TileEntity
-							.createAndLoadEntity(tileEntityNBT);
-					
-					te.setWorldObj(worldClient);
-					
-					String entityType = tileEntityNBT.getString("id") +
-							" (" + te.getClass().getCanonicalName() +")";
-
-					if (shouldImportTileEntity(te)) {
-						if (!newTileEntities.containsKey(te.getPos())) {
-							//The player didn't save this tile entity in
-							//this download session.  So we use the old one.
-							//Note that this doesn't mean that the old one's
-							//a valid one; it could be empty.
-							worldClient.setTileEntity(te.getPos(), te);
-							WDLMessages.chatMessageTranslated(
-									WDLMessageTypes.LOAD_TILE_ENTITY,
-									"wdl.messages.tileEntity.usingOld", 
-									entityType, te.getPos());
-						} else {
-							worldClient.setTileEntity(te.getPos(), 
-									newTileEntities.get(te.getPos()));
-							WDLMessages.chatMessageTranslated(
-									WDLMessageTypes.LOAD_TILE_ENTITY,
-									"wdl.messages.tileEntity.usingNew", 
-									entityType, te.getPos());
-						}
-					} else {
-						WDLMessages.chatMessageTranslated(
-								WDLMessageTypes.LOAD_TILE_ENTITY,
-								"wdl.messages.tileEntity.notImporting", 
-								entityType, te.getPos());
-					}
-				}
-			}
-		} catch (Exception e) {
-			WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR,
-					"wdl.messages.generalError.failedToImportTE",
-					chunk.xPosition, chunk.zPosition, e);
-		} finally {
-			if (dis != null) {
-				try {
-					dis.close();
-				} catch (Exception e) {
-					throw new RuntimeException(e);
-				}
-			}
-		}
-	}
-
-	/**
-	 * Checks if the TileEntity should be imported. Only "problematic" (IE,
-	 * those that require manual interaction such as chests) TileEntities
-	 * will be imported.
-	 */
-	public static boolean shouldImportTileEntity(TileEntity te) {
-		Block block = te.getBlockType();
-
-		if (block instanceof BlockChest && te instanceof TileEntityChest) {
-			return true;
-		} else if (block instanceof BlockDispenser
-				&& te instanceof TileEntityDispenser) {
-			return true;
-		} else if (block instanceof BlockFurnace
-				&& te instanceof TileEntityFurnace) {
-			return true;
-		} else if (block instanceof BlockNote && te instanceof TileEntityNote) {
-			return true;
-		} else if (block instanceof BlockBrewingStand
-				&& te instanceof TileEntityBrewingStand) {
-			return true;
-		} else if (block instanceof BlockHopper
-				&& te instanceof TileEntityHopper) {
-			return true;
-		} else if (block instanceof BlockBeacon
-				&& te instanceof TileEntityBeacon) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	/**
-	 * Applies all registered {@link ITileEntityEditor}s to the given chunk.
-	 * 
-	 * Note: {@link #importTileEntities(Chunk)} must be called before this method.
-	 */
-	public static void editTileEntities(Chunk chunk) {
-		for (Map.Entry<String, ITileEntityEditor> editor : tileEntityEditors
-				.entrySet()) {
-			try {
-				Map<BlockPos, TileEntity> tileEntityMap = chunk
-						.getTileEntityMap();
-				
-				for (Map.Entry<BlockPos, TileEntity> entry : tileEntityMap
-						.entrySet()) {
-					boolean wasImported = !newTileEntities.containsKey(entry.getKey());
-					if (editor.getValue().shouldEdit(entry.getValue(), wasImported)) {
-						editor.getValue().editTileEntity(entry.getValue(),
-								wasImported);
-						
-						WDLMessages.chatMessageTranslated(
-								WDLMessageTypes.LOAD_TILE_ENTITY,
-								"wdl.messages.tileEntity.edited", 
-								entry.getKey(), WDLApi.getModName(editor.getValue()));
-					}
-				}
-			} catch (Exception ex) {
-				String chunkInfo;
-				if (chunk == null) {
-					chunkInfo = "null";
-				} else {
-					chunkInfo = "at " + chunk.xPosition + ", " + chunk.zPosition;
-				}
-				throw new RuntimeException("Failed to update tile entities "
-						+ "for chunk " + chunkInfo + " with extension "
-						+ editor.getKey(), ex);
-			}
-		}
 	}
 
 	/**
@@ -805,11 +596,17 @@ public class WDL {
 		WorldBackupType backupType = 
 				WorldBackupType.match(baseProps.getProperty("Backup", "ZIP"));
 		
-		GuiWDLSaveProgress progressScreen = new GuiWDLSaveProgress(
+		final GuiWDLSaveProgress progressScreen = new GuiWDLSaveProgress(
 				I18n.format("wdl.saveProgress.title"), 
 				(backupType != WorldBackupType.NONE ? 6 : 5)
-						+ saveListeners.size());
-		minecraft.displayGuiScreen(progressScreen);
+						+ WDLApi.getImplementingExtensions(ISaveListener.class).size());
+		
+		minecraft.addScheduledTask(new Runnable() {
+			@Override
+			public void run() {
+				minecraft.displayGuiScreen(progressScreen);
+			}
+		});
 		
 		saveProps();
 
@@ -829,10 +626,12 @@ public class WDL {
 		
 		saveProps();
 		
-		for (ISaveListener listener : saveListeners.values()) {
-			progressScreen.startMajorTask(I18n.format(
-					"wdl.saveProgress.extension.title",	WDLApi.getModName(listener)), 1);
-			listener.afterChunksSaved(saveHandler.getWorldDirectory());
+		for (ModInfo<ISaveListener> info : WDLApi
+				.getImplementingExtensions(ISaveListener.class)) {
+			progressScreen.startMajorTask(
+					I18n.format("wdl.saveProgress.extension.title",
+							info.getDisplayName()), 1);
+			info.mod.afterChunksSaved(saveHandler.getWorldDirectory());
 		}
 		
 		try {
@@ -883,7 +682,7 @@ public class WDL {
 		
 		progressScreen.startMajorTask(
 				I18n.format("wdl.saveProgress.playerData.title"),
-				3 + playerInfoEditors.size());
+				3 + WDLApi.getImplementingExtensions(IPlayerInfoEditor.class).size());
 		WDLMessages.chatMessageTranslated(WDLMessageTypes.SAVING,
 				"wdl.messages.saving.savingPlayer");
 		
@@ -898,12 +697,13 @@ public class WDL {
 		applyOverridesToPlayer(playerNBT);
 		
 		int taskNum = 3;
-		for (IPlayerInfoEditor editor : playerInfoEditors.values()) {
+		for (ModInfo<IPlayerInfoEditor> info : WDLApi
+				.getImplementingExtensions(IPlayerInfoEditor.class)) {
 			progressScreen.setMinorTaskProgress(
 					I18n.format("wdl.saveProgress.playerData.extension",
-							WDLApi.getModName(editor)), taskNum);
+							info.getDisplayName()), taskNum);
 			
-			editor.editPlayerInfo(thePlayer, saveHandler, playerNBT);
+			info.mod.editPlayerInfo(thePlayer, saveHandler, playerNBT);
 			
 			taskNum++;
 		}
@@ -949,6 +749,14 @@ public class WDL {
 	}
 
 	/**
+	 * Hardcoded, unchanging anvil save version ID.
+	 * 
+	 * 19132: McRegion; 19133: Anvil.  If it's necessary to specify a new
+	 * version, many other parts of the mod will be broken anyways.
+	 */
+	private static final int ANVIL_SAVE_VERSION = 19133;
+
+	/**
 	 * Save the world metadata (time, gamemode, seed, ...) into the level.dat
 	 * file.
 	 */
@@ -958,19 +766,17 @@ public class WDL {
 		
 		progressScreen.startMajorTask(
 				I18n.format("wdl.saveProgress.worldMetadata.title"),
-				3 + worldInfoEditors.size());
+				3 + WDLApi.getImplementingExtensions(IWorldInfoEditor.class).size());
 		WDLMessages.chatMessageTranslated(WDLMessageTypes.SAVING,
 				"wdl.messages.saving.savingWorld");
 		
 		progressScreen.setMinorTaskProgress(
 				I18n.format("wdl.saveProgress.worldMetadata.creatingNBT"), 1);
 		
-		// TODO: It would be nice to have save version setup as a separate section,
-		// but it needs to be set before the NBT tag can be created.
-		AnvilSaveConverter saveConverter = (AnvilSaveConverter) minecraft
-				.getSaveLoader();
-		worldClient.getWorldInfo()
-				.setSaveVersion(getSaveVersion(saveConverter));
+		// Set the save version, which isn't done automatically for some
+		// strange reason.
+		worldClient.getWorldInfo().setSaveVersion(ANVIL_SAVE_VERSION);
+
 		// cloneNBTCompound takes the PLAYER's nbt file, and puts it in the
 		// right place.
 		// This is needed because single player uses that data.
@@ -982,12 +788,13 @@ public class WDL {
 		applyOverridesToWorldInfo(worldInfoNBT);
 		
 		int taskNum = 3;
-		for (IWorldInfoEditor editor : worldInfoEditors.values()) {
+		for (ModInfo<IWorldInfoEditor> info : WDLApi
+				.getImplementingExtensions(IWorldInfoEditor.class)) {
 			progressScreen.setMinorTaskProgress(
 					I18n.format("wdl.saveProgress.worldMetadata.extension",
-							WDLApi.getModName(editor)), taskNum);
+							info.getDisplayName()), taskNum);
 			
-			editor.editWorldInfo(worldClient, worldClient.getWorldInfo(),
+			info.mod.editWorldInfo(worldClient, worldClient.getWorldInfo(),
 					saveHandler, worldInfoNBT);
 			
 			taskNum++;
@@ -1048,7 +855,6 @@ public class WDL {
 	 * @throws IllegalAccessException
 	 * @throws IllegalArgumentException
 	 */
-	@SuppressWarnings("unchecked")
 	public static void saveChunks(GuiWDLSaveProgress progressScreen)
 			throws IllegalArgumentException, IllegalAccessException {
 		if (!WDLPluginChannels.canDownloadAtAll()) { return; }
@@ -1059,90 +865,30 @@ public class WDL {
 		// Get the ChunkProviderClient from WorldClient
 		ChunkProviderClient chunkProvider = (ChunkProviderClient) worldClient
 				.getChunkProvider();
-		// Get the hashArray field and set it accessible
-		Field hashArrayField = null;
-		Field[] lhmFields = LongHashMap.class.getDeclaredFields();
-
-		for (Field f : lhmFields) {
-			if (f.getType().isArray()) {
-				hashArrayField = f;
-				break;
-			}
-		}
-
-		if (hashArrayField == null) {
-			WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR,
-					"wdl.messages.generalError.failedToFindHashArrayField");
-			return;
-		}
-
-		hashArrayField.setAccessible(true);
-		// Steal the instance of LongHashMap from our chunk provider
-		LongHashMap<Chunk> lhm = ReflectionUtils.stealAndGetField(chunkProvider,
-				LongHashMap.class);
+		// Get the list of loaded chunks
+		List<?> chunks = ReflectionUtils.stealAndGetField(chunkProvider,
+				List.class);
 		
 		progressScreen.startMajorTask(I18n.format("wdl.saveProgress.chunk.title"), 
-				lhm.getNumHashElements());
+				chunks.size());
 		
-		// Get the LongHashMap.Entry[] through the now accessible field using a
-		// LongHashMap we steal from our chunkProvider.
-		Object[] hashArray = (Object[]) hashArrayField.get(lhm);
-
-		if (lhm.getNumHashElements() == 0 || hashArray.length == 0) {
-			WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR,
-					"wdl.messages.generalError.chunkProviderClientEmpty");
-			return;
-		} else {
-			// Get the actual class for LongHashMap.Entry
-			Class<?> Entry = null;
-
-			for (Object o : hashArray) {
-				if (o != null) {
-					Entry = o.getClass();
-					break;
+		for (int currentChunk = 0; currentChunk < chunks.size(); currentChunk++) {
+			Chunk c = (Chunk) chunks.get(currentChunk);
+			if (c != null) {
+				//Serverside restrictions check
+				if (!WDLPluginChannels.canSaveChunk(c)) {
+					continue;
 				}
+				
+				progressScreen.setMinorTaskProgress(I18n.format(
+						"wdl.saveProgress.chunk.saving", c.xPosition,
+						c.zPosition), currentChunk);
+				
+				saveChunk(c);
 			}
-
-			if (Entry == null) {
-				WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR,
-						"wdl.messages.generalError.couldNotGetLHMEntry");
-				return;
-			}
-
-			// Find the private fields for 'value' and 'nextEntry' in
-			// LongHashMap.Entry and make them accessible
-			Field valueField = Entry.getDeclaredFields()[1]; // value
-			valueField.setAccessible(true);
-			Field nextEntryField = Entry.getDeclaredFields()[2]; // nextEntry
-			nextEntryField.setAccessible(true);
-			
-			int currentChunk = 0;
-			
-			for (int i = 0; i < hashArray.length; ++i) {
-				for (Object lhme = hashArray[i]; lhme != null; 
-						lhme = nextEntryField.get(lhme)) {
-					Chunk c = (Chunk) valueField.get(lhme);
-
-					if (c != null) {
-						currentChunk++;
-						
-						//Serverside restrictions check
-						if (!WDLPluginChannels.canSaveChunk(c)) {
-							continue;
-						}
-						
-						progressScreen.setMinorTaskProgress(I18n.format(
-								"wdl.saveProgress.chunk.saving", c.xPosition,
-								c.zPosition), currentChunk);
-						
-						saveChunk(c);
-					}
-				}
-			}
-
-			WDLMessages.chatMessageTranslated(WDLMessageTypes.SAVING,
-					"wdl.messages.saving.chunksSaved");
 		}
+		WDLMessages.chatMessageTranslated(WDLMessageTypes.SAVING,
+				"wdl.messages.saving.chunksSaved");
 	}
 
 	/**
@@ -1153,150 +899,10 @@ public class WDL {
 		
 		if (!WDLPluginChannels.canSaveChunk(c)) { return; }
 		
-		if (!WDLPluginChannels.canSaveTileEntities()) {
-			c.getTileEntityMap().clear();
-		}
-		
-		importTileEntities(c);
-		
-		if (WDLPluginChannels.canSaveTileEntities()) {
-			editTileEntities(c);
-		}
-		
 		c.setTerrainPopulated(true);
 
 		try {
-			ClassInheritanceMultiMap<Entity>[] oldMaps = c.getEntityLists().clone();
-			ClassInheritanceMultiMap<Entity>[] maps = c.getEntityLists();
-			
-			if (!WDLPluginChannels.canSaveEntities(c)) {
-				// Temporarily delete entities if saving them is disabled.
-				for (int i = 0; i < maps.length; i++) {
-					WrappedClassInheratanceMultiMap<Entity> map =
-							WrappedClassInheratanceMultiMap
-							.<Entity> copyOf(maps[i]);
-					maps[i] = map;
-					for (Entity e : map) {
-						if (e instanceof EntityPlayer) {
-							//Skip players, as otherwise bad things happen, 
-							//such as deleting the current player and causing
-							//the screen to flicker.
-							continue;
-						}
-						
-						map.removeWDL(e);
-					}
-				}
-			} else {
-				// Remove entities of unwanted types.
-				for (int i = 0; i < maps.length; i++) {
-					WrappedClassInheratanceMultiMap<Entity> map =
-							WrappedClassInheratanceMultiMap
-							.<Entity> copyOf(maps[i]);
-					maps[i] = map;
-					for (Entity e : map) {
-						if (e instanceof EntityPlayer) {
-							//Skip players, as otherwise bad things happen, 
-							//such as deleting the current player and causing
-							//the screen to flicker.
-							continue;
-						}
-						
-						if (!EntityUtils.isEntityEnabled(e)) {
-							WDLMessages.chatMessageTranslated(
-									WDLMessageTypes.REMOVE_ENTITY,
-									"wdl.messages.removeEntity.notSavingUserPreference",
-									e);
-							
-							map.removeWDL(e);
-						} else {
-							IChatComponent unsafeReason = EntityUtils
-									.isUnsafeToSaveEntity(e);
-							if (unsafeReason != null) {
-								WDLMessages.chatMessageTranslated(
-										WDLMessageTypes.REMOVE_ENTITY,
-										"wdl.messages.removeEntity.notSavingUnsafe",
-										e, unsafeReason);
-								
-								map.removeWDL(e);
-							}
-						}
-					}
-				}
-				
-				// Add in new entities now.
-				// TODO: This is probably inefficient (as we go through ALL
-				// entities that were loaded.
-				for (Entity e : newEntities.values()) {
-					if (e.chunkCoordX == c.xPosition &&
-							e.chunkCoordZ == c.zPosition) {
-						// Unkill the entity so that it doesn't despawn on
-						// world load.  Note that 'isDead' is a bad name, as
-						// it actually means "Delete this entity next tick",
-						// not "this entitiy was killed by a player".
-						e.isDead = false;
-						WrappedClassInheratanceMultiMap<Entity> map = 
-								(WrappedClassInheratanceMultiMap<Entity>) maps[e.chunkCoordY];
-						map.addWDL(e);
-					}
-				}
-			}
-			
-			Iterable<Entity>[] iterableMaps = c.getEntityLists();
-			for (Iterable<Entity> entityList :  iterableMaps) {
-				for (Entity e : entityList) {
-					if (e instanceof EntityPlayer) {
-						// Again, skip players as moving or modifying them can
-						// cause bad things to happen.
-						continue;
-					}
-					
-					if (e.serverPosX != 0 || e.serverPosY != 0 || e.serverPosZ != 0) {
-						// Force the entity into its serverside location.
-						// Needed for certain things that move clientside,
-						// such as boats (http://imgur.com/3QQchZL)
-						//
-						// We make sure that at least one of serverPosX, y, and
-						// z is not 0 because an entity with a server pos of 0,
-						// 0, 0 probably has a different way of setting up its
-						// position (paintings).
-						// No sane entity will be at 0, 0, 0.  And moving them
-						// to it can effectively delete entities - see
-						// https://github.com/uyjulian/LiteModWDL/issues/4.
-						// (I also think this is the cause for the "world going
-						// invisible" issue).
-						e.posX = convertServerPos(e.serverPosX);
-						e.posY = convertServerPos(e.serverPosY);
-						e.posZ = convertServerPos(e.serverPosZ);
-					}
-					
-					for (Map.Entry<String, IEntityEditor> editor : entityEditors
-							.entrySet()) {
-						try {
-							if (editor.getValue().shouldEdit(e)) {
-								editor.getValue().editEntity(e);
-							}
-						} catch (Exception ex) {
-							String chunkInfo;
-							if (c == null) {
-								chunkInfo = "null";
-							} else {
-								chunkInfo = "at " + c.xPosition + ", " + c.zPosition;
-							}
-							throw new RuntimeException("Failed to edit entity " + e
-									+ " for chunk " + chunkInfo + " with extension "
-									+ editor.getKey(), ex);
-						}
-					}
-				}
-			}
-			
 			chunkLoader.saveChunk(worldClient, c);
-			
-			// Return the entity maps to the previous state.
-			for (int i = 0; i < oldMaps.length; i++) {
-				maps[i] = oldMaps[i];
-			}
 		} catch (Exception e) {
 			// Better tell the player that something didn't work:
 			WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR,
@@ -1313,13 +919,25 @@ public class WDL {
 		baseFolderName = getBaseFolderName();
 		baseProps = new Properties(globalProps);
 
+		FileReader reader = null;
 		try {
-			baseProps.load(new FileReader(new File(minecraft.mcDataDir,
-					"saves/" + baseFolderName + "/WorldDownloader.txt")));
+			File savesFolder = new File(minecraft.mcDataDir, "saves");
+			File baseFolder = new File(savesFolder, baseFolderName);
+			reader = new FileReader(new File(baseFolder,
+					"WorldDownloader.txt"));
+			baseProps.load(reader);
 			propsFound = true;
-		} catch (FileNotFoundException e) {
-			propsFound = false;
 		} catch (Exception e) {
+			propsFound = false;
+			logger.debug("Failed to load base properties", e);
+		} finally {
+			if (reader != null) {
+				try {
+					reader.close();
+				} catch (Exception e) {
+					logger.warn("Failed to close base properties reader", e);
+				}
+			}
 		}
 
 		if (baseProps.getProperty("LinkedWorlds").isEmpty()) {
@@ -1332,25 +950,41 @@ public class WDL {
 
 	/**
 	 * Loads the properties for the given world, and returns it.
+	 * 
+	 * Returns an empty Properties that inherits from baseProps if the specific
+	 * world cannot be found.
 	 */
 	public static Properties loadWorldProps(String theWorldName) {
 		Properties ret = new Properties(baseProps);
 		
+		if (theWorldName.isEmpty()) {
+			return ret;
+		}
+		
 		File savesDir = new File(minecraft.mcDataDir, "saves");
+		
+		String folder = getWorldFolderName(theWorldName);
+		File worldFolder = new File(savesDir, folder);
 
-		if (!theWorldName.isEmpty()) {
-			String folder = getWorldFolderName(theWorldName);
-			File worldFolder = new File(savesDir, folder);
-
-			try {
-				ret.load(new FileReader(new File(worldFolder,
-						"WorldDownloader.txt")));
-			} catch (Exception e) {
-				return null;
+		FileReader reader = null;
+		try {
+			ret.load(new FileReader(new File(worldFolder,
+					"WorldDownloader.txt")));
+			
+			return ret;
+		} catch (Exception e) {
+			logger.debug("Failed to load world props for " + worldName, e);
+			return ret;
+		} finally {
+			if (reader != null) {
+				try {
+					reader.close();
+				} catch (Exception e) {
+					logger.warn("Failed to close world props reader for "
+							+ worldName, e);						
+				}
 			}
 		}
-
-		return ret;
 	}
 
 	/**
@@ -1552,16 +1186,12 @@ public class WDL {
 			worldInfoNBT.setInteger("rainTime", 0);
 			worldInfoNBT.setBoolean("thundering", false);
 			worldInfoNBT.setInteger("thunderTime", 0);
-		}
-
-		if (weather.equals("rain")) {
+		} else if (weather.equals("rain")) {
 			worldInfoNBT.setBoolean("raining", true);
 			worldInfoNBT.setInteger("rainTime", 24000);
 			worldInfoNBT.setBoolean("thundering", false);
 			worldInfoNBT.setInteger("thunderTime", 0);
-		}
-
-		if (weather.equals("thunderstorm")) {
+		} else if (weather.equals("thunderstorm")) {
 			worldInfoNBT.setBoolean("raining", true);
 			worldInfoNBT.setInteger("rainTime", 24000);
 			worldInfoNBT.setBoolean("thundering", true);
@@ -1572,9 +1202,9 @@ public class WDL {
 		String spawn = worldProps.getProperty("Spawn");
 
 		if (spawn.equals("player")) {
-			int x = (int) Math.floor(thePlayer.posX);
-			int y = (int) Math.floor(thePlayer.posY);
-			int z = (int) Math.floor(thePlayer.posZ);
+			int x = MathHelper.floor_double(thePlayer.posX);
+			int y = MathHelper.floor_double(thePlayer.posY);
+			int z = MathHelper.floor_double(thePlayer.posZ);
 			worldInfoNBT.setInteger("SpawnX", x);
 			worldInfoNBT.setInteger("SpawnY", y);
 			worldInfoNBT.setInteger("SpawnZ", z);
@@ -1656,6 +1286,7 @@ public class WDL {
 				return name;
 			}
 		} catch (Exception e) {
+			logger.warn("Exception while getting server name: ", e);
 		}
 
 		return "Unidentified Server";
@@ -1682,24 +1313,25 @@ public class WDL {
 	/**
 	 * Saves the items of a container to the given TileEntity.
 	 *
-	 * @param contaioner The container to save from -- usually
-	 *                   {@link #windowContainer}.
-	 * @param tileEntity The TileEntity to save to.
-	 * @param startInContainerAt The position to start at in the
-	 *                           container, for saving.
+	 * @param container
+	 *            The container to save from, usually {@link #windowContainer} .
+	 * @param tileEntity
+	 *            The TileEntity to save to.
+	 * @param containerStartIndex
+	 *            The index in the container to start copying items from.
 	 */
-	public static void saveContainerItems(Container contaioner,
-			IInventory tileEntity, int startInContainerAt) {
-		int containerSize = contaioner.inventorySlots.size();
+	public static void saveContainerItems(Container container,
+			IInventory tileEntity, int containerStartIndex) {
+		int containerSize = container.inventorySlots.size();
 		int inventorySize = tileEntity.getSizeInventory();
-		int nc = startInContainerAt;
-		int ni = 0;
+		int containerIndex = containerStartIndex;
+		int inventoryIndex = 0;
 
-		while ((nc < containerSize) && (ni < inventorySize)) {
-			ItemStack is = contaioner.getSlot(nc).getStack();
-			tileEntity.setInventorySlotContents(ni, is);
-			ni++;
-			nc++;
+		while ((containerIndex < containerSize) && (inventoryIndex < inventorySize)) {
+			ItemStack item = container.getSlot(containerIndex).getStack();
+			tileEntity.setInventorySlotContents(inventoryIndex, item);
+			inventoryIndex++;
+			containerIndex++;
 		}
 	}
 
@@ -1719,52 +1351,23 @@ public class WDL {
 	}
 	
 	/**
-	 * Gets the save version.
+	 * Adds the given tile entity to {@link #newTileEntities}.
 	 * 
-	 * TODO: This seems mostly unnecessary -- this is just the NBT
-	 * version, which is always 19133, yes?  This seems like it
-	 * may be overkill (the number has not changed in years).
+	 * @param pos
+	 *            The position of the tile entity
+	 * @param te
+	 *            The tile entity to add
 	 */
-	private static int getSaveVersion(AnvilSaveConverter asc) {
-		int saveVersion = 0;
-
-		try {
-			Method[] anvilMethods = AnvilSaveConverter.class
-					.getDeclaredMethods();
-
-			for (Method m : anvilMethods) {
-				if (m.getParameterTypes().length == 0
-						&& m.getReturnType().equals(int.class)) {
-					m.setAccessible(true);
-					saveVersion = (Integer) m.invoke(asc);
-					break;
-				}
-			}
-		} catch (Throwable t) {
-			t.printStackTrace();
+	public static void saveTileEntity(BlockPos pos, TileEntity te) {
+		int chunkX = pos.getX() / 16;
+		int chunkZ = pos.getZ() / 16;
+		
+		ChunkCoordIntPair chunkPos = new ChunkCoordIntPair(chunkX, chunkZ);
+		
+		if (!newTileEntities.containsKey(chunkPos)) {
+			newTileEntities.put(chunkPos, new HashMap<BlockPos, TileEntity>());
 		}
-
-		if (saveVersion == 0) {
-			//Default version for 1.8
-			saveVersion = 19133;
-		}
-
-		return saveVersion;
-	}
-
-	/**
-	 * Converts a position from the fixed-point version that a packet
-	 * (or {@link Entity#serverPosX} and the like use) into a double.
-	 *
-	 * @see
-	 *      <a href="http://wiki.vg/Protocol#Fixed-point_numbers">
-	 *      wiki.vg on Fixed-point numbers</a>
-	 *
-	 * @param serverPos
-	 * @return The double version of the position.
-	 */
-	public static double convertServerPos(int serverPos) {
-		return serverPos / 32.0;
+		newTileEntities.get(chunkPos).put(pos, te);
 	}
 	
 	/**
@@ -1806,12 +1409,12 @@ public class WDL {
 			info.append("Unknown (").append(e.toString()).append(')');
 		}
 		info.append("\n\n### EXTENSIONS\n\n");
-		Map<String, IWDLMod> extensions = WDLApi.getWDLMods();
+		Map<String, ModInfo<?>> extensions = WDLApi.getWDLMods();
 		info.append(extensions.size()).append(" loaded\n");
-		for (Map.Entry<String, IWDLMod> e : extensions.entrySet()) {
+		for (Map.Entry<String, ModInfo<?>> e : extensions.entrySet()) {
 			info.append("\n#### ").append(e.getKey()).append("\n\n");
 			try {
-				info.append(WDLApi.getModInfo(e.getValue()));
+				info.append(e.getValue().getInfo());
 			} catch (Exception ex) {
 				info.append("ERROR: ").append(ex).append('\n');
 				for (StackTraceElement elm : ex.getStackTrace()) {

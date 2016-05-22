@@ -102,7 +102,7 @@ class Utils {
 	}
 	
 	/**
-	 * Draws the border used by list GUIs.
+	 * Draws the background/border used by list GUIs.
 	 * <br/> 
 	 * Based off of
 	 * {@link net.minecraft.client.gui.GuiSlot#drawScreen(int, int, float)}.
@@ -117,13 +117,26 @@ class Utils {
 	 * @param right Where to stop drawing (usually, width)
 	 */
 	public static void drawListBackground(int topMargin, int bottomMargin, int top, int left, int bottom, int right) {
+		drawDarkBackground(top, left, bottom, right);
+		drawBorder(topMargin, bottomMargin, top, left, bottom, right);
+	}
+	
+	/**
+	 * Draws a dark background, similar to {@link GuiScreen#drawBackground(int)} but darker.
+	 * Same appearence as the background in lists. 
+	 * 
+	 * @param top Where to start drawing (usually, 0)
+	 * @param left Where to start drawing (usually, 0)
+	 * @param bottom Where to stop drawing (usually, height).
+	 * @param right Where to stop drawing (usually, width)
+	 */
+	public static void drawDarkBackground(int top, int left, int bottom, int right) {
 		GlStateManager.disableLighting();
 		GlStateManager.disableFog();
+
 		Tessellator t = Tessellator.getInstance();
 		WorldRenderer wr = t.getWorldRenderer();
-		//wr.func_178991_c sets the color.
-		//wr.func_178974_a sets the color and the alpha.
-		
+
 		mc.getTextureManager().bindTexture(Gui.optionsBackground);
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		
@@ -138,10 +151,6 @@ class Utils {
 		wr.pos(left, top, 0).tex(left / textureSize, 
 				top / textureSize).color(32, 32, 32, 255).endVertex();
 		t.draw();
-		
-		drawBorder(topMargin, bottomMargin, top, left, bottom, right);
-		
-		//Flags are reset by drawBorder
 	}
 	
 	/**
@@ -172,6 +181,9 @@ class Utils {
 		
 		Tessellator t = Tessellator.getInstance();
 		WorldRenderer wr = t.getWorldRenderer();
+
+		//wr.func_178991_c sets the color.
+		//wr.func_178974_a sets the color and the alpha.
 		
 		//Box code is GuiSlot.overlayBackground
 		//Upper box

@@ -1,8 +1,5 @@
 package wdl;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
@@ -24,7 +21,6 @@ import net.minecraft.inventory.ContainerHorseInventory;
 import net.minecraft.inventory.ContainerMerchant;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryEnderChest;
-import net.minecraft.network.play.server.S3FPacketCustomPayload;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityBeacon;
@@ -36,13 +32,15 @@ import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.tileentity.TileEntityNote;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.village.MerchantRecipeList;
+import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.storage.MapData;
 import wdl.api.IWorldLoadListener;
+import wdl.api.WDLApi;
+import wdl.api.WDLApi.ModInfo;
 import wdl.update.WDLUpdateChecker;
 
 /**
@@ -57,12 +55,6 @@ import wdl.update.WDLUpdateChecker;
 public class WDLEvents {
 	private static final Profiler profiler = Minecraft.getMinecraft().mcProfiler;
 
-	/**
-	 * All WDLMods that implement {@link IWorldLoadListener}.
-	 */
-	public static Map<String, IWorldLoadListener> worldLoadListeners =
-			new HashMap<String, IWorldLoadListener>();
-	
 	/**
 	 * Must be called after the static World object in Minecraft has been
 	 * replaced.
@@ -85,7 +77,7 @@ public class WDLEvents {
 				WDL.startSaveThread();
 			}
 			
-			profiler.endSection();
+			profiler.endSection();  // "Core"
 			return;
 		}
 
@@ -93,12 +85,13 @@ public class WDLEvents {
 		
 		WDLUpdateChecker.startIfNeeded();
 		
-		profiler.endSection();
+		profiler.endSection();  // "Core"
 		
-		for (Map.Entry<String, IWorldLoadListener> e : worldLoadListeners.entrySet()) {
-			profiler.startSection(e.getKey());
-			e.getValue().onWorldLoad(world, sameServer);
-			profiler.endSection();
+		for (ModInfo<IWorldLoadListener> info : WDLApi
+				.getImplementingExtensions(IWorldLoadListener.class)) {
+			profiler.startSection(info.id);
+			info.mod.onWorldLoad(world, sameServer);
+			profiler.endSection();  // info.id
 		}
 	}
 
@@ -141,6 +134,8 @@ public class WDLEvents {
 			WDL.lastEntity = WDL.minecraft.objectMouseOver.entityHit;
 		} else {
 			WDL.lastEntity = null;
+			// func_178782_a returns a BlockPos; find another one
+			// if it is reobfuscated.
 			WDL.lastClickedBlock = WDL.minecraft.objectMouseOver.getBlockPos();
 		}
 	}
@@ -249,6 +244,9 @@ public class WDLEvents {
 						(entityHorse.isChested() &&
 								(entityHorse.getHorseType() == 1 ||
 								entityHorse.getHorseType() == 2)) ? 17 : 2);
+				//func_110133_a sets the custom name -- if changed look
+				//for one that sets hasCustomName to true and gives
+				//inventoryTitle the value of the parameter.
 				horseChest.setCustomName(entityHorse.getName());
 				WDL.saveContainerItems(WDL.windowContainer, horseChest, 0);
 				//I don't even know what this does, but it's part of the
@@ -366,15 +364,15 @@ public class WDLEvents {
 
 				WDL.saveContainerItems(WDL.windowContainer, chest1, 0);
 				WDL.saveContainerItems(WDL.windowContainer, chest2, 27);
-				WDL.newTileEntities.put(chestPos1, chest1);
-				WDL.newTileEntities.put(chestPos2, chest2);
+				WDL.saveTileEntity(chestPos1, chest1);
+				WDL.saveTileEntity(chestPos2, chest2);
 				
 				saveName = "doubleChest";
 			}
 			// basic chest
 			else {
 				WDL.saveContainerItems(WDL.windowContainer, (TileEntityChest) te, 0);
-				WDL.newTileEntities.put(WDL.lastClickedBlock, te);
+				WDL.saveTileEntity(WDL.lastClickedBlock, te);
 				saveName = "singleChest";
 			}
 		} else if (WDL.windowContainer instanceof ContainerChest
@@ -390,36 +388,41 @@ public class WDLEvents {
 			}
 
 			saveName = "enderChest";
-		} else if (WDL.windowContainer instanceof ContainerBrewingStand) {
+		} else if (WDL.windowContainer instanceof ContainerBrewingStand
+				&& te instanceof TileEntityBrewingStand) {
 			IInventory brewingInventory = ReflectionUtils.stealAndGetField(
 					WDL.windowContainer, IInventory.class);
 			WDL.saveContainerItems(WDL.windowContainer, (TileEntityBrewingStand) te, 0);
 			WDL.saveInventoryFields(brewingInventory, (TileEntityBrewingStand) te);
-			WDL.newTileEntities.put(WDL.lastClickedBlock, te);
+			WDL.saveTileEntity(WDL.lastClickedBlock, te);
 			saveName = "brewingStand";
-		} else if (WDL.windowContainer instanceof ContainerDispenser) {
+		} else if (WDL.windowContainer instanceof ContainerDispenser
+				&& te instanceof TileEntityDispenser) {
 			WDL.saveContainerItems(WDL.windowContainer, (TileEntityDispenser) te, 0);
-			WDL.newTileEntities.put(WDL.lastClickedBlock, te);
+			WDL.saveTileEntity(WDL.lastClickedBlock, te);
 			saveName = "dispenser";
-		} else if (WDL.windowContainer instanceof ContainerFurnace) {
+		} else if (WDL.windowContainer instanceof ContainerFurnace
+				&& te instanceof TileEntityFurnace) {
 			IInventory furnaceInventory = ReflectionUtils.stealAndGetField(
 					WDL.windowContainer, IInventory.class);
 			WDL.saveContainerItems(WDL.windowContainer, (TileEntityFurnace) te, 0);
 			WDL.saveInventoryFields(furnaceInventory, (TileEntityFurnace) te);
-			WDL.newTileEntities.put(WDL.lastClickedBlock, te);
+			WDL.saveTileEntity(WDL.lastClickedBlock, te);
 			saveName = "furnace";
-		} else if (WDL.windowContainer instanceof ContainerHopper) {
+		} else if (WDL.windowContainer instanceof ContainerHopper
+				&& te instanceof TileEntityHopper) {
 			WDL.saveContainerItems(WDL.windowContainer, (TileEntityHopper) te, 0);
-			WDL.newTileEntities.put(WDL.lastClickedBlock, te);
+			WDL.saveTileEntity(WDL.lastClickedBlock, te);
 			saveName = "hopper";
-		} else if (WDL.windowContainer instanceof ContainerBeacon) {
+		} else if (WDL.windowContainer instanceof ContainerBeacon
+				&& te instanceof TileEntityBeacon) {
 			//func_180611_e returns the beacon's IInventory tileBeacon.
 			IInventory beaconInventory =
 					((ContainerBeacon)WDL.windowContainer).func_180611_e();
 			TileEntityBeacon savedBeacon = (TileEntityBeacon)te;
 			WDL.saveContainerItems(WDL.windowContainer, savedBeacon, 0);
 			WDL.saveInventoryFields(beaconInventory, savedBeacon);
-			WDL.newTileEntities.put(WDL.lastClickedBlock, te);
+			WDL.saveTileEntity(WDL.lastClickedBlock, te);
 			saveName = "beacon";
 		} else {
 			return false;
@@ -446,14 +449,15 @@ public class WDLEvents {
 			TileEntityNote newTE = new TileEntityNote();
 			newTE.note = (byte)(param % 25);
 			WDL.worldClient.setTileEntity(pos, newTE);
-			WDL.newTileEntities.put(pos, newTE);
+			WDL.saveTileEntity(pos, newTE);
 			WDLMessages.chatMessageTranslated(WDLMessageTypes.ON_BLOCK_EVENT,
 					"wdl.messages.onBlockEvent.noteblock", pos, param, newTE);
 		}
 	}
 
 	/**
-	 * Must be called when Packet 0x34 (map data) is received.
+	 * Must be called when a Map Data packet is received, to store the image on
+	 * the map item.
 	 */
 	public static void onMapDataLoaded(int mapID, 
 			MapData mapData) {
@@ -470,8 +474,8 @@ public class WDLEvents {
 	}
 
 	/**
-	 * Must be called whenever a {@link S3FPacketCustomPayload} is
-	 * received by the client.
+	 * Must be called whenever a plugin channel message / custom payload packet
+	 * is received.
 	 */
 	public static void onPluginChannelPacket(String channel,
 			byte[] bytes) {
@@ -499,15 +503,6 @@ public class WDLEvents {
 				return;
 			}
 			
-			IChatComponent unsafeMessage = EntityUtils.isUnsafeToSaveEntity(entity);
-			if (unsafeMessage != null) {
-				WDLMessages.chatMessageTranslated(
-						WDLMessageTypes.REMOVE_ENTITY,
-						"wdl.messages.removeEntity.allowingRemoveUnsafe",
-						entity, unsafeMessage);
-				return;
-			}
-			
 			int threshold = EntityUtils.getEntityTrackDistance(entity);
 			
 			if (threshold < 0) {
@@ -531,7 +526,8 @@ public class WDLEvents {
 				entity.chunkCoordZ = MathHelper
 						.floor_double(entity.posZ / 16.0D);
 
-				WDL.newEntities.put(entity.getEntityId(), entity);
+				WDL.newEntities.put(new ChunkCoordIntPair(entity.chunkCoordX,
+						entity.chunkCoordZ), entity);
 				return;
 			}
 

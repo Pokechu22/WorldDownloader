@@ -339,9 +339,6 @@ wdl.messages.generalInfo.seedAndGenSet=Asignando semilla de mundo un jugador a %
 
 wdl.messages.generalError.failedToImportTE=Fracasé en importar los entidades de bloque por chunk en %d, %d: %s
 wdl.messages.generalError.failedToSaveChunk=¡Fracasé en guardar el chunk en %d, %d!  (%s)
-wdl.messages.generalError.failedToFindHashArrayField=No pude guardar los chunks: no pude ubicar el hash array field.
-wdl.messages.generalError.couldNotGetLHMEntry=No pude guardar los chunks: Fracasar en ubicar el class por LongHashMap.Entry.
-wdl.messages.generalError.chunkProviderClientEmpty=No pude guardar los chunks cercas: ¡ChunkProviderClient no tiene data!  (Si cambias de dimensión ahora, esto es normal y los chunks aún están guardado)
 wdl.messages.generalError.forbidden=¡El servidor no permite descargando este mundo!
 wdl.messages.generalError.failedToBackUp=Un error occurió durante el backup del mundo: %s
 wdl.messages.generalError.noUTF8=Su computadora no habilita el charset UTF-8: %s.  Debe sentir mal.

@@ -1,8 +1,6 @@
 package wdl;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Callable;
 
 import com.google.common.collect.ImmutableList;
@@ -31,8 +29,11 @@ import wdl.api.IBlockEventListener;
 import wdl.api.IChatMessageListener;
 import wdl.api.IGuiHooksListener;
 import wdl.api.IPluginChannelListener;
+import wdl.api.WDLApi;
+import wdl.api.WDLApi.ModInfo;
 import wdl.gui.GuiWDL;
 import wdl.gui.GuiWDLAbout;
+import wdl.gui.GuiWDLChunkOverrides;
 import wdl.gui.GuiWDLPermissions;
 
 /**
@@ -41,27 +42,6 @@ import wdl.gui.GuiWDLPermissions;
  */
 public class WDLHooks {
 	private static final Profiler profiler = Minecraft.getMinecraft().mcProfiler;
-	
-	/**
-	 * All WDLMods that implement {@link IGuiHooksListener}.
-	 */
-	public static Map<String, IGuiHooksListener> guiListeners =
-			new HashMap<String, IGuiHooksListener>();
-	/**
-	 * All WDLMods that implement {@link IChatMessageListener}.
-	 */
-	public static Map<String, IChatMessageListener> chatMessageListeners =
-			new HashMap<String, IChatMessageListener>();
-	/**
-	 * All WDLMods that implement {@link IPluginChannelListener}.
-	 */
-	public static Map<String, IPluginChannelListener> pluginChannelListeners =
-			new HashMap<String, IPluginChannelListener>();
-	/**
-	 * All WDLMods that implement {@link IBlockEventListener}.
-	 */
-	public static Map<String, IBlockEventListener> blockEventListeners =
-			new HashMap<String, IBlockEventListener>();
 	
 	/**
 	 * Called when {@link WorldClient#tick()} is called.
@@ -81,7 +61,7 @@ public class WDLHooks {
 				}
 				
 				WDLEvents.onWorldLoad(sender);
-				profiler.endSection();
+				profiler.endSection();  // "onWorldLoad"
 			} else {
 				profiler.startSection("inventoryCheck");
 				if (WDL.downloading && WDL.thePlayer != null) {
@@ -92,22 +72,22 @@ public class WDLHooks {
 							profiler.startSection("onItemGuiClosed");
 							profiler.startSection("Core");
 							handled = WDLEvents.onItemGuiClosed();
-							profiler.endSection();
+							profiler.endSection();  // "Core"
 							
 							Container container = WDL.thePlayer.openContainer;
 							if (WDL.lastEntity != null) {
 								Entity entity = WDL.lastEntity;
 
-								for (Map.Entry<String, IGuiHooksListener> e :
-										guiListeners.entrySet()) {
+								for (ModInfo<IGuiHooksListener> info : WDLApi
+										.getImplementingExtensions(IGuiHooksListener.class)) {
 									if (handled) {
 										break;
 									}
 
-									profiler.startSection(e.getKey());
-									handled = e.getValue().onEntityGuiClosed(
+									profiler.startSection(info.id);
+									handled = info.mod.onEntityGuiClosed(
 											sender, entity, container);
-									profiler.endSection();
+									profiler.endSection();  // info.id
 								}
 								
 								if (!handled) {
@@ -118,16 +98,16 @@ public class WDLHooks {
 								}
 							} else {
 								BlockPos pos = WDL.lastClickedBlock;
-								for (Map.Entry<String, IGuiHooksListener> e :
-										guiListeners.entrySet()) {
+								for (ModInfo<IGuiHooksListener> info : WDLApi
+										.getImplementingExtensions(IGuiHooksListener.class)) {
 									if (handled) {
 										break;
 									}
 
-									profiler.startSection(e.getKey());
-									handled = e.getValue().onBlockGuiClosed(
+									profiler.startSection(info.id);
+									handled = info.mod.onBlockGuiClosed(
 											sender, pos, container);
-									profiler.endSection();
+									profiler.endSection();  // info.id
 								}
 								
 								if (!handled) {
@@ -138,24 +118,25 @@ public class WDLHooks {
 								}
 							}
 							
-							profiler.endSection();
+							profiler.endSection();  // onItemGuiClosed
 						} else {
 							profiler.startSection("onItemGuiOpened");
 							profiler.startSection("Core");
 							WDLEvents.onItemGuiOpened();
-							profiler.endSection();
-							profiler.endSection();
+							profiler.endSection();  // "Core"
+							profiler.endSection();  // "onItemGuiOpened"
 						}
 	
 						WDL.windowContainer = WDL.thePlayer.openContainer;
 					}
 				}
-				profiler.endSection();
+				profiler.endSection();  // "inventoryCheck"
 			}
 			
-			profiler.endStartSection("capes");
+			profiler.startSection("capes");
 			CapeHandler.onWorldTick(players);
-			profiler.endSection();
+			profiler.endSection();  // "capes"
+			profiler.endSection();  // "wdl"
 		} catch (Throwable e) {
 			WDL.crashed(e, "WDL mod: exception in onWorldClientTick event");
 		}
@@ -179,9 +160,9 @@ public class WDLHooks {
 				
 				profiler.startSection("Core");
 				wdl.WDLEvents.onChunkNoLongerNeeded(c);
-				profiler.endSection();
+				profiler.endSection();  // "Core"
 				
-				profiler.endSection();
+				profiler.endSection();  // "onChunkNoLongerNeeded"
 			}
 			
 			profiler.endSection();
@@ -209,9 +190,9 @@ public class WDLHooks {
 			
 			profiler.startSection("Core");
 			WDLEvents.onRemoveEntityFromWorld(entity);
-			profiler.endSection();
+			profiler.endSection();  // "Core"
 			
-			profiler.endSection();
+			profiler.endSection();  // "wdl.onRemoveEntityFromWorld"
 		} catch (Throwable e) {
 			WDL.crashed(e,
 					"WDL mod: exception in onWorldRemoveEntityFromWorld event");
@@ -222,7 +203,7 @@ public class WDLHooks {
 	 * Called when {@link NetHandlerPlayClient#handleChat(S02PacketChat)} is
 	 * called.
 	 * <br/>
-	 * Should be at the end of the method.
+	 * Should be at the start of the method.
 	 */
 	public static void onNHPCHandleChat(NetHandlerPlayClient sender,
 			S02PacketChat packet) {
@@ -235,20 +216,21 @@ public class WDLHooks {
 			
 			profiler.startSection("wdl.onChatMessage");
 			
+			//func_148915_c returns the IChatComponent.
 			String chatMessage = packet.getChatComponent().getUnformattedText();
 			
 			profiler.startSection("Core");
 			WDLEvents.onChatMessage(chatMessage);
-			profiler.endSection();
+			profiler.endSection();  // "Core"
 			
-			for (Map.Entry<String, IChatMessageListener> e : 
-					chatMessageListeners.entrySet()) {
-				profiler.startSection(e.getKey());
-				e.getValue().onChat(WDL.worldClient, chatMessage);
-				profiler.endSection();
+			for (ModInfo<IChatMessageListener> info : WDLApi
+					.getImplementingExtensions(IChatMessageListener.class)) {
+				profiler.startSection(info.id);
+				info.mod.onChat(WDL.worldClient, chatMessage);
+				profiler.endSection();  // info.id
 			}
 			
-			profiler.endSection();
+			profiler.endSection();  // "wdl.onChatMessage"
 		} catch (Throwable e) {
 			WDL.crashed(e, "WDL mod: exception in onNHPCHandleChat event");
 		}
@@ -258,7 +240,7 @@ public class WDLHooks {
 	 * Called when {@link NetHandlerPlayClient#handleMaps(S34PacketMaps)} is
 	 * called.
 	 * <br/>
-	 * Should be at the end of the method.
+	 * Should be at the start of the method.
 	 */
 	public static void onNHPCHandleMaps(NetHandlerPlayClient sender,
 			S34PacketMaps packet) {
@@ -277,9 +259,9 @@ public class WDLHooks {
 			
 			profiler.startSection("Core");
 			WDLEvents.onMapDataLoaded(id, mapData);
-			profiler.endSection();
+			profiler.endSection();  // "Core"
 			
-			profiler.endSection();
+			profiler.endSection();  // "wdl.onMapDataLoaded"
 		} catch (Throwable e) {
 			WDL.crashed(e, "WDL mod: exception in onNHPCHandleMaps event");
 		}
@@ -290,7 +272,7 @@ public class WDLHooks {
 	 * {@link NetHandlerPlayClient#handleCustomPayload(S3FPacketCustomPayload)}
 	 * is called.
 	 * <br/>
-	 * Should be at the end of the method.
+	 * Should be at the start of the method.
 	 */
 	public static void onNHPCHandleCustomPayload(NetHandlerPlayClient sender,
 			S3FPacketCustomPayload packet) {
@@ -304,19 +286,20 @@ public class WDLHooks {
 			String channel = packet.getChannelName();
 			byte[] payload = packet.getBufferData().array();
 			
+			profiler.startSection("wdl.onPluginMessage");
 			profiler.startSection("Core");
 			WDLEvents.onPluginChannelPacket(channel, payload);
-			profiler.endSection();
+			profiler.endSection();  // "Core"
 			
-			for (Map.Entry<String, IPluginChannelListener> e : 
-					pluginChannelListeners.entrySet()) {
-				profiler.startSection(e.getKey());
-				e.getValue().onPluginChannelPacket(WDL.worldClient, channel,
+			for (ModInfo<IPluginChannelListener> info : WDLApi
+					.getImplementingExtensions(IPluginChannelListener.class)) {
+				profiler.startSection(info.id);
+				info.mod.onPluginChannelPacket(WDL.worldClient, channel,
 						payload);
-				profiler.endSection();
+				profiler.endSection();  // info.id
 			}
 			
-			profiler.endSection();
+			profiler.endSection();  // "wdl.onPluginMessage"
 		} catch (Throwable e) {
 			WDL.crashed(e,
 					"WDL mod: exception in onNHPCHandleCustomPayload event");
@@ -328,7 +311,7 @@ public class WDLHooks {
 	 * {@link NetHandlerPlayClient#handleBlockAction(S24PacketBlockAction)} is
 	 * called.
 	 * <br/>
-	 * Should be at the end of the method.
+	 * Should be at the start of the method.
 	 */
 	public static void onNHPCHandleBlockAction(NetHandlerPlayClient sender,
 			S24PacketBlockAction packet) {
@@ -348,17 +331,17 @@ public class WDLHooks {
 			
 			profiler.startSection("Core");
 			WDLEvents.onBlockEvent(pos, block, data1, data2);
-			profiler.endSection();
+			profiler.endSection();  // "Core"
 			
-			for (Map.Entry<String, IBlockEventListener> e : 
-					blockEventListeners.entrySet()) {
-				profiler.startSection(e.getKey());
-				e.getValue().onBlockEvent(WDL.worldClient, pos, block, 
+			for (ModInfo<IBlockEventListener> info : WDLApi
+					.getImplementingExtensions(IBlockEventListener.class)) {
+				profiler.startSection(info.id);
+				info.mod.onBlockEvent(WDL.worldClient, pos, block, 
 						data1, data2);
-				profiler.endSection();
+				profiler.endSection();  // info.id
 			}
 			
-			profiler.endSection();
+			profiler.endSection();  // "wdl.onBlockEvent"
 		} catch (Throwable e) {
 			WDL.crashed(e,
 					"WDL mod: exception in onNHPCHandleBlockAction event");
@@ -474,22 +457,27 @@ public class WDLHooks {
 				return; // WDL not available if in singleplayer or LAN server mode
 			}
 			
-			if (!WDLPluginChannels.canDownloadAtAll()) {
-				// TODO: A bit more complex logic - if they can't download in
-				// most terrain, but they DO have chunk overrides, do we want
-				// to open a GUI?
-				if (WDLPluginChannels.canRequestPermissions()) {
-					WDL.minecraft.displayGuiScreen(new GuiWDLPermissions(gui));
-				} else {
-					button.enabled = false;
-				}
-				
-				return;
-			}
 			if (WDL.downloading) {
 				WDL.stopDownload();
 			} else {
-				WDL.startDownload();
+				if (!WDLPluginChannels.canDownloadAtAll()) {
+					// If they don't have any permissions, let the player
+					// request some.
+					if (WDLPluginChannels.canRequestPermissions()) {
+						WDL.minecraft.displayGuiScreen(new GuiWDLPermissions(gui));
+					} else {
+						button.enabled = false;
+					}
+					
+					return;
+				} else if (WDLPluginChannels.hasChunkOverrides()
+						&& !WDLPluginChannels.canDownloadInGeneral()) {
+					// Handle the "only has chunk overrides" state - notify
+					// the player of limited areas.
+					WDL.minecraft.displayGuiScreen(new GuiWDLChunkOverrides(gui));
+				} else {
+					WDL.startDownload();
+				}
 			}
 		} else if (button.id == WDLo) { // "..." (options)
 			if (WDL.minecraft.isIntegratedServerRunning()) {
