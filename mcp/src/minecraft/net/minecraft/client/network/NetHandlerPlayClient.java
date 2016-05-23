@@ -104,6 +104,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemMap;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketBuffer;
@@ -186,7 +187,6 @@ import net.minecraft.network.play.server.SPacketUnloadChunk;
 import net.minecraft.network.play.server.SPacketUpdateEntityNBT;
 import net.minecraft.network.play.server.SPacketUpdateHealth;
 import net.minecraft.network.play.server.SPacketUpdateScore;
-import net.minecraft.network.play.server.SPacketUpdateSign;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.network.play.server.SPacketUseBed;
 import net.minecraft.network.play.server.SPacketWindowItems;
@@ -615,7 +615,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 			double d2 = packetIn.getZ();
 			EntityTracker.func_187254_a(entity, d0, d1, d2);
 
-			if (!entity.func_184186_bw()) {
+			if (!entity.canPassengerSteer()) {
 				float f = (float) (packetIn.getYaw() * 360) / 256.0F;
 				float f1 = (float) (packetIn.getPitch() * 360) / 256.0F;
 
@@ -640,7 +640,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 		PacketThreadUtil.checkThreadAndEnqueue(packetIn, this,
 				this.gameController);
 
-		if (InventoryPlayer.func_184435_e(packetIn.getHeldItemHotbarIndex())) {
+		if (InventoryPlayer.isHotbar(packetIn.getHeldItemHotbarIndex())) {
 			this.gameController.thePlayer.inventory.currentItem = packetIn
 					.getHeldItemHotbarIndex();
 		}
@@ -665,7 +665,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 			double d1 = (double) entity.serverPosY / 4096.0D;
 			double d2 = (double) entity.serverPosZ / 4096.0D;
 
-			if (!entity.func_184186_bw()) {
+			if (!entity.canPassengerSteer()) {
 				float f = packetIn.func_149060_h() ? (float) (packetIn
 						.func_149066_f() * 360) / 256.0F : entity.rotationYaw;
 				float f1 = packetIn.func_149060_h() ? (float) (packetIn
@@ -808,6 +808,18 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 				|| !(this.clientWorldController.provider instanceof WorldProviderSurface)) {
 			chunk.resetRelightChecks();
 		}
+
+		for (NBTTagCompound nbttagcompound : packetIn.func_500019_f()) {
+			BlockPos blockpos = new BlockPos(nbttagcompound.getInteger("x"),
+					nbttagcompound.getInteger("y"),
+					nbttagcompound.getInteger("z"));
+			TileEntity tileentity = this.clientWorldController
+					.getTileEntity(blockpos);
+
+			if (tileentity != null) {
+				tileentity.readFromNBT(nbttagcompound);
+			}
+		}
 	}
 
 	public void processChunkUnload(SPacketUnloadChunk packetIn) {
@@ -902,17 +914,15 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 
 		if (entity != null) {
 			if (entity instanceof EntityXPOrb) {
-				this.clientWorldController.func_184134_a(entity.posX,
-						entity.posY, entity.posZ,
-						SoundEvents.entity_experience_orb_pickup,
+				this.clientWorldController.playSound(entity.posX, entity.posY,
+						entity.posZ, SoundEvents.entity_experience_orb_pickup,
 						SoundCategory.PLAYERS, 0.2F,
 						((this.avRandomizer.nextFloat() - this.avRandomizer
 								.nextFloat()) * 0.7F + 1.0F) * 2.0F, false);
 			} else {
-				this.clientWorldController.func_184134_a(entity.posX,
-						entity.posY, entity.posZ,
-						SoundEvents.entity_item_pickup, SoundCategory.PLAYERS,
-						0.2F,
+				this.clientWorldController.playSound(entity.posX, entity.posY,
+						entity.posZ, SoundEvents.entity_item_pickup,
+						SoundCategory.PLAYERS, 0.2F,
 						((this.avRandomizer.nextFloat() - this.avRandomizer
 								.nextFloat()) * 0.7F + 1.0F) * 2.0F, false);
 			}
@@ -1209,7 +1219,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 					.getEntityId());
 
 			if (entity instanceof EntityHorse) {
-				entityplayersp.func_184826_a(
+				entityplayersp.openGuiHorseInventory(
 						(EntityHorse) entity,
 						new AnimalChest(packetIn.getWindowTitle(), packetIn
 								.getSlotCount()));
@@ -1332,38 +1342,6 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 	}
 
 	/**
-	 * Updates a specified sign with the specified text lines
-	 */
-	public void handleUpdateSign(SPacketUpdateSign packetIn) {
-		PacketThreadUtil.checkThreadAndEnqueue(packetIn, this,
-				this.gameController);
-		boolean flag = false;
-
-		if (this.gameController.theWorld.isBlockLoaded(packetIn.getPos())) {
-			TileEntity tileentity = this.gameController.theWorld
-					.getTileEntity(packetIn.getPos());
-
-			if (tileentity instanceof TileEntitySign) {
-				TileEntitySign tileentitysign = (TileEntitySign) tileentity;
-
-				if (tileentitysign.getIsEditable()) {
-					System.arraycopy(packetIn.getLines(), 0,
-							tileentitysign.signText, 0, 4);
-					tileentitysign.markDirty();
-				}
-
-				flag = true;
-			}
-		}
-
-		if (!flag && this.gameController.thePlayer != null) {
-			logger.debug("Unable to locate sign at " + packetIn.getPos().getX()
-					+ ", " + packetIn.getPos().getY() + ", "
-					+ packetIn.getPos().getZ());
-		}
-	}
-
-	/**
 	 * Updates the NBTTagCompound metadata of instances of the following
 	 * entitytypes: Mob spawners, command blocks, beacons, skulls, flowerpot
 	 */
@@ -1384,7 +1362,8 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 					|| i == 5 && tileentity instanceof TileEntityFlowerPot
 					|| i == 6 && tileentity instanceof TileEntityBanner
 					|| i == 7 && tileentity instanceof TileEntityStructure
-					|| i == 8 && tileentity instanceof TileEntityEndGateway) {
+					|| i == 8 && tileentity instanceof TileEntityEndGateway
+					|| i == 9 && tileentity instanceof TileEntitySign) {
 				tileentity.readFromNBT(packetIn.getNbtCompound());
 			}
 
@@ -1539,7 +1518,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 														.getKeyCode()) }));
 			}
 		} else if (i == 6) {
-			this.clientWorldController.func_184148_a(entityplayer,
+			this.clientWorldController.playSound(entityplayer,
 					entityplayer.posX, entityplayer.posY
 							+ (double) entityplayer.getEyeHeight(),
 					entityplayer.posZ, SoundEvents.entity_arrow_hit_player,
@@ -1553,7 +1532,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 					EnumParticleTypes.MOB_APPEARANCE, entityplayer.posX,
 					entityplayer.posY, entityplayer.posZ, 0.0D, 0.0D, 0.0D,
 					new int[0]);
-			this.clientWorldController.func_184148_a(entityplayer,
+			this.clientWorldController.playSound(entityplayer,
 					entityplayer.posX, entityplayer.posY, entityplayer.posZ,
 					SoundEvents.entity_elder_guardian_curse,
 					SoundCategory.HOSTILE, 1.0F, 1.0F);
@@ -1612,7 +1591,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 					this.gameController.guiAchievement
 							.displayAchievement(achievement);
 
-					if (statbase == AchievementList.field_187982_f) {
+					if (statbase == AchievementList.openInventory) {
 						this.gameController.gameSettings.showInventoryAchievementHint = false;
 						this.gameController.gameSettings.saveOptions();
 					}
@@ -1630,7 +1609,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 				&& !flag
 				&& this.gameController.gameSettings.showInventoryAchievementHint) {
 			this.gameController.guiAchievement
-					.displayUnformattedAchievement(AchievementList.field_187982_f);
+					.displayUnformattedAchievement(AchievementList.openInventory);
 		}
 
 		this.hasStatistics = true;
@@ -1830,18 +1809,17 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 
 		if (this.gameController.currentScreen instanceof ITabCompleter) {
 			((ITabCompleter) this.gameController.currentScreen)
-					.func_184072_a(astring);
+					.setCompletions(astring);
 		}
 	}
 
 	public void handleSoundEffect(SPacketSoundEffect packetIn) {
 		PacketThreadUtil.checkThreadAndEnqueue(packetIn, this,
 				this.gameController);
-		this.gameController.theWorld.func_184148_a(
-				this.gameController.thePlayer, packetIn.getX(),
-				packetIn.getY(), packetIn.getZ(), packetIn.getSound(),
-				packetIn.getCategory(), packetIn.getVolume(),
-				packetIn.getPitch());
+		this.gameController.theWorld.playSound(this.gameController.thePlayer,
+				packetIn.getX(), packetIn.getY(), packetIn.getZ(),
+				packetIn.getSound(), packetIn.getCategory(),
+				packetIn.getVolume(), packetIn.getPitch());
 	}
 
 	public void handleCustomSound(SPacketCustomSound packetIn) {
@@ -2013,10 +1991,10 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 				this.gameController);
 
 		if (packetIn.getTicks() == 0) {
-			this.gameController.thePlayer.func_184811_cZ().removeCooldown(
+			this.gameController.thePlayer.getCooldownTracker().removeCooldown(
 					packetIn.getItem());
 		} else {
-			this.gameController.thePlayer.func_184811_cZ().setCooldown(
+			this.gameController.thePlayer.getCooldownTracker().setCooldown(
 					packetIn.getItem(), packetIn.getTicks());
 		}
 	}
@@ -2026,7 +2004,8 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 				this.gameController);
 		Entity entity = this.gameController.thePlayer.getLowestRidingEntity();
 
-		if (entity != this.gameController.thePlayer && entity.func_184186_bw()) {
+		if (entity != this.gameController.thePlayer
+				&& entity.canPassengerSteer()) {
 			entity.setPositionAndRotation(packetIn.getX(), packetIn.getY(),
 					packetIn.getZ(), packetIn.getYaw(), packetIn.getPitch());
 			this.netManager.sendPacket(new CPacketVehicleMove(entity));
@@ -2071,7 +2050,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 				packetbuffer.release();
 			}
 		} else if ("MC|Brand".equals(packetIn.getChannelName())) {
-			this.gameController.thePlayer.setClientBrand(packetIn
+			this.gameController.thePlayer.setServerBrand(packetIn
 					.getBufferData().readStringFromBuffer(32767));
 		} else if ("MC|BOpen".equals(packetIn.getChannelName())) {
 			EnumHand enumhand = (EnumHand) packetIn.getBufferData()
@@ -2089,8 +2068,14 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 			int j = packetbuffer1.readInt();
 			float f = packetbuffer1.readFloat();
 			PathEntity pathentity = PathEntity.func_186311_b(packetbuffer1);
-			this.gameController.field_184132_p.field_188286_a.func_188289_a(j,
-					pathentity, f);
+			this.gameController.debugRenderer.debugRendererPathfinding
+					.func_188289_a(j, pathentity, f);
+		} else if ("MC|StopSound".equals(packetIn.getChannelName())) {
+			PacketBuffer packetbuffer2 = packetIn.getBufferData();
+			String s = packetbuffer2.readStringFromBuffer(32767);
+			String s1 = packetbuffer2.readStringFromBuffer(256);
+			this.gameController.getSoundHandler().func_500054_a(s1,
+					SoundCategory.getByName(s));
 		}
 	}
 
@@ -2304,28 +2289,28 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 						.getAttributeMap();
 
 				for (SPacketEntityProperties.Snapshot spacketentityproperties$snapshot : packetIn
-						.func_149441_d()) {
+						.getSnapshots()) {
 					IAttributeInstance iattributeinstance = abstractattributemap
 							.getAttributeInstanceByName(spacketentityproperties$snapshot
-									.func_151409_a());
+									.getName());
 
 					if (iattributeinstance == null) {
 						iattributeinstance = abstractattributemap
 								.registerAttribute(new RangedAttribute(
 										(IAttribute) null,
 										spacketentityproperties$snapshot
-												.func_151409_a(), 0.0D,
+												.getName(), 0.0D,
 										2.2250738585072014E-308D,
 										Double.MAX_VALUE));
 					}
 
 					iattributeinstance
 							.setBaseValue(spacketentityproperties$snapshot
-									.func_151410_b());
+									.getBaseValue());
 					iattributeinstance.removeAllModifiers();
 
 					for (AttributeModifier attributemodifier : spacketentityproperties$snapshot
-							.func_151408_c()) {
+							.getModifiers()) {
 						iattributeinstance.applyModifier(attributemodifier);
 					}
 				}

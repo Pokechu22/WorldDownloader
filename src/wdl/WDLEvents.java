@@ -180,7 +180,7 @@ public class WDLEvents {
 					//Based off of EntityHorse.initHorseChest
 					HorseArmorType horseType = entityHorse.getType();
 					AnimalChest horseChest = new AnimalChest("HorseChest",
-							(entityHorse.isChested() && horseType.func_188600_f()) ? 17 : 2);
+							(entityHorse.isChested() && horseType.canBeChested()) ? 17 : 2);
 					horseChest.setCustomName(entityHorse.getName());
 					WDL.saveContainerItems(WDL.windowContainer, horseChest, 0);
 					//I don't know if it's a good idea to copy this, but I am...
@@ -241,7 +241,7 @@ public class WDLEvents {
 				//Based off of EntityHorse.initHorseChest
 				HorseArmorType horseType = entityHorse.getType();
 				AnimalChest horseChest = new AnimalChest("HorseChest",
-						(entityHorse.isChested() && horseType.func_188600_f()) ? 17 : 2);
+						(entityHorse.isChested() && horseType.canBeChested()) ? 17 : 2);
 				horseChest.setCustomName(entityHorse.getName());
 				WDL.saveContainerItems(WDL.windowContainer, horseChest, 0);
 				//I don't know if it's a good idea to copy this, but I am...

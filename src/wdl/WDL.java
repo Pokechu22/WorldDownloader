@@ -1,11 +1,14 @@
 package wdl;
 
+import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,11 +71,11 @@ public class WDL {
 	/**
 	 * Current version.  This should match the git tag for the current release.
 	 */
-	public static final String VERSION = "1.9a-beta3";
+	public static final String VERSION = "1.9.4a-beta1";
 	/**
 	 * The version of minecraft that this mod is installed on.
 	 */
-	public static final String EXPECTED_MINECRAFT_VERSION = "1.9";
+	public static final String EXPECTED_MINECRAFT_VERSION = "1.9.4";
 	/**
 	 * Owning username for the github repository to check for updates against.
 	 * 
@@ -524,12 +527,12 @@ public class WDL {
 				WDLMessages.chatMessageTranslated(
 						WDLMessageTypes.ON_WORLD_LOAD,
 						"wdl.messages.onWorldLoad.spigot",
-						thePlayer.getClientBrand());
+						thePlayer.getServerBrand());
 			} else {
 				WDLMessages.chatMessageTranslated(
 						WDLMessageTypes.ON_WORLD_LOAD,
 						"wdl.messages.onWorldLoad.vanilla",
-						thePlayer.getClientBrand());
+						thePlayer.getServerBrand());
 			}
 			
 			startOnChange = false;
@@ -544,12 +547,12 @@ public class WDL {
 				WDLMessages.chatMessageTranslated(
 						WDLMessageTypes.ON_WORLD_LOAD,
 						"wdl.messages.onWorldLoad.spigot",
-						thePlayer.getClientBrand());
+						thePlayer.getServerBrand());
 			} else {
 				WDLMessages.chatMessageTranslated(
 						WDLMessageTypes.ON_WORLD_LOAD,
 						"wdl.messages.onWorldLoad.vanilla",
-						thePlayer.getClientBrand());
+						thePlayer.getServerBrand());
 			}
 			
 			if (startOnChange) {
@@ -866,8 +869,10 @@ public class WDL {
 		ChunkProviderClient chunkProvider = (ChunkProviderClient) worldClient
 				.getChunkProvider();
 		// Get the list of loaded chunks
-		List<?> chunks = ReflectionUtils.stealAndGetField(chunkProvider,
-				List.class);
+		@SuppressWarnings("unchecked")
+		Long2ObjectMap<Chunk> chunkMap = (Long2ObjectMap<Chunk>) ReflectionUtils
+				.stealAndGetField(chunkProvider, Long2ObjectMap.class);
+		List<Chunk> chunks = new ArrayList<Chunk>(chunkMap.values());
 		
 		progressScreen.startMajorTask(I18n.format("wdl.saveProgress.chunk.title"), 
 				chunks.size());
@@ -1377,8 +1382,8 @@ public class WDL {
 	 */
 	public static boolean isSpigot() {
 		//getClientBrand() returns the server brand; blame MCP.
-		if (thePlayer != null && thePlayer.getClientBrand() != null) {
-			return thePlayer.getClientBrand().toLowerCase().contains("spigot");
+		if (thePlayer != null && thePlayer.getServerBrand() != null) {
+			return thePlayer.getServerBrand().toLowerCase().contains("spigot");
 		}
 		return false;
 	}

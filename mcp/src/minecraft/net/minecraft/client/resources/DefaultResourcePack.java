@@ -16,10 +16,10 @@ import net.minecraft.util.ResourceLocation;
 public class DefaultResourcePack implements IResourcePack {
 	public static final Set<String> defaultResourceDomains = ImmutableSet
 			.<String> of("minecraft", "realms" /* WDL >>> */, "wdl" /* <<< WDL */);
-	private final ResourceIndex field_188549_b;
+	private final ResourceIndex resourceIndex;
 
-	public DefaultResourcePack(ResourceIndex p_i46541_1_) {
-		this.field_188549_b = p_i46541_1_;
+	public DefaultResourcePack(ResourceIndex resourceIndexIn) {
+		this.resourceIndex = resourceIndexIn;
 	}
 
 	public InputStream getInputStream(ResourceLocation location)
@@ -41,7 +41,7 @@ public class DefaultResourcePack implements IResourcePack {
 
 	public InputStream getInputStreamAssets(ResourceLocation location)
 			throws IOException, FileNotFoundException {
-		File file1 = this.field_188549_b.func_188547_a(location);
+		File file1 = this.resourceIndex.getFile(location);
 		return file1 != null && file1.isFile() ? new FileInputStream(file1)
 				: null;
 	}
@@ -54,7 +54,7 @@ public class DefaultResourcePack implements IResourcePack {
 
 	public boolean resourceExists(ResourceLocation location) {
 		return this.getResourceStream(location) != null
-				|| this.field_188549_b.func_188545_b(location);
+				|| this.resourceIndex.isFileExisting(location);
 	}
 
 	public Set<String> getResourceDomains() {
@@ -66,7 +66,7 @@ public class DefaultResourcePack implements IResourcePack {
 			throws IOException {
 		try {
 			InputStream inputstream = new FileInputStream(
-					this.field_188549_b.func_188546_a());
+					this.resourceIndex.getPackMcmeta());
 			return AbstractResourcePack.readMetadata(metadataSerializer,
 					inputstream, metadataSectionName);
 		} catch (RuntimeException var4) {

@@ -171,8 +171,8 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 						(byte) (blockStorage.getYLocation() >> 4 & 255));
 				byte[] buffer = new byte[4096];
 				NibbleArray nibblearray = new NibbleArray();
-				NibbleArray nibblearray1 = blockStorage.func_186049_g()
-						.func_186017_a(buffer, nibblearray);
+				NibbleArray nibblearray1 = blockStorage.getData()
+						.getDataForNBT(buffer, nibblearray);
 				blockData.setByteArray("Blocks", buffer);
 				blockData.setByteArray("Data", nibblearray.getData());
 

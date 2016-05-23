@@ -11,7 +11,7 @@ import java.lang.management.RuntimeMXBean;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.Callable;
+import net.minecraft.util.CallableExt;
 import net.minecraft.util.ReportedException;
 import net.minecraft.world.gen.layer.IntCache;
 import org.apache.commons.io.IOUtils;
@@ -53,13 +53,13 @@ public class CrashReport {
 	 */
 	private void populateEnvironment() {
 		this.theReportCategory.addCrashSectionCallable("Minecraft Version",
-				new Callable<String>() {
+				new CallableExt<String>() {
 					public String call() {
-						return "1.9";
+						return "1.9.4";
 					}
 				});
 		this.theReportCategory.addCrashSectionCallable("Operating System",
-				new Callable<String>() {
+				new CallableExt<String>() {
 					public String call() {
 						return System.getProperty("os.name") + " ("
 								+ System.getProperty("os.arch") + ") version "
@@ -67,14 +67,14 @@ public class CrashReport {
 					}
 				});
 		this.theReportCategory.addCrashSectionCallable("Java Version",
-				new Callable<String>() {
+				new CallableExt<String>() {
 					public String call() {
 						return System.getProperty("java.version") + ", "
 								+ System.getProperty("java.vendor");
 					}
 				});
 		this.theReportCategory.addCrashSectionCallable("Java VM Version",
-				new Callable<String>() {
+				new CallableExt<String>() {
 					public String call() {
 						return System.getProperty("java.vm.name") + " ("
 								+ System.getProperty("java.vm.info") + "), "
@@ -82,7 +82,7 @@ public class CrashReport {
 					}
 				});
 		this.theReportCategory.addCrashSectionCallable("Memory",
-				new Callable<String>() {
+				new CallableExt<String>() {
 					public String call() {
 						Runtime runtime = Runtime.getRuntime();
 						long i = runtime.maxMemory();
@@ -97,7 +97,7 @@ public class CrashReport {
 					}
 				});
 		this.theReportCategory.addCrashSectionCallable("JVM Flags",
-				new Callable<String>() {
+				new CallableExt<String>() {
 					public String call() {
 						RuntimeMXBean runtimemxbean = ManagementFactory
 								.getRuntimeMXBean();
@@ -120,7 +120,7 @@ public class CrashReport {
 					}
 				});
 		this.theReportCategory.addCrashSectionCallable("IntCache",
-				new Callable<String>() {
+				new CallableExt<String>() {
 					public String call() throws Exception {
 						return IntCache.getCacheSizes();
 					}
@@ -159,6 +159,8 @@ public class CrashReport {
 
 		if (this.stacktrace != null && this.stacktrace.length > 0) {
 			builder.append("-- Head --\n");
+			builder.append("Thread: ").append(Thread.currentThread().getName())
+					.append("\n");
 			builder.append("Stacktrace:\n");
 
 			for (StackTraceElement stacktraceelement : this.stacktrace) {

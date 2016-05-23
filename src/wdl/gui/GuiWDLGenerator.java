@@ -261,7 +261,7 @@ public class GuiWDLGenerator extends GuiScreen {
 		 * Gets the current flat preset.
 		 */
 		@Override
-		public String func_146384_e() {
+		public String getPreset() {
 			return WDL.worldProps.getProperty("GeneratorOptions", "");
 		}
 		
@@ -269,7 +269,7 @@ public class GuiWDLGenerator extends GuiScreen {
 		 * Sets the current flat preset.
 		 */
 		@Override
-		public void func_146383_a(String preset) {
+		public void setPreset(String preset) {
 			if (preset == null) {
 				preset = "";
 			}
