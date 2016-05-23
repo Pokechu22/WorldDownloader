@@ -8,6 +8,6 @@ You can also try [@uyjulian's liteloader version](https://github.com/uyjulian/Li
 
 ##Resources 
 
- * [Minecraft Forums Thread](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465-worlddownloader-create-backups-of-your-builds-on)
+ * [Minecraft Forums Thread](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465-1-9-4-1-8-9-world-downloader-mod-create-backups)
  * [Project Wiki](https://github.com/pokechu22/WorldDownloader/wiki)
  * [Issue tracker](https://github.com/Pokechu22/WorldDownloader/issues)
