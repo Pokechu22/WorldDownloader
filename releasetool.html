@@ -169,9 +169,9 @@
 						}
 						hashInfo["RelativeTo"] = relativeTo;
 						hashInfo["File"] = fileName;
-						hashInfo["Hash"].push(hash);
-						
-						hashes.push(hashInfo);
+						if (hashInfo["Hash"].indexOf(hash) === -1) {
+							hashInfo["Hash"].push(hash);
+						}
 					}
 					
 					callback();
