@@ -110,7 +110,7 @@
 		var fileInput = document.getElementById("file-input");
 		var fileList = document.getElementById("file-list");
 		
-		var hashes = [];
+		var hashes = versionInfoJson["Hashes"] || [];
 		
 		function addHash(entry, dd, callback) {
 			var unzipProgress = document.createElement("progress");
@@ -122,7 +122,7 @@
 				var fileReader = new FileReader();
 				
 				fileReader.onerror = function () {
-					console.warn('oops, something went wrong.');
+					alert('Something went wrong with the file reader.');
 				};
 				
 				fileReader.onloadend = function (e) {
@@ -137,8 +137,6 @@
 						// Only include files starting with WDL
 						// and that have a file extension.
 					
-						var hashInfo = {};
-						
 						var path = entry.filename;
 						var innerClassIndex = path.indexOf("$");
 						var relativeTo;
@@ -157,14 +155,21 @@
 						// File name relative to the given class.
 						var fileName = path.substring(classNameStart);
 						
+						var hashInfo = null;
+						hashes.forEach(function(entry) {
+							if (entry["RelativeTo"] == relativeTo && entry["File"] == fileName) {
+								hashInfo = entry;
+							}
+						});
+
+						if (!hashInfo) {
+							hashInfo = {}
+							hashInfo["Hash"] = [];
+							hashes.push(hashInfo);
+						}
 						hashInfo["RelativeTo"] = relativeTo;
 						hashInfo["File"] = fileName;
-						
-						// TODO: Right now, we only have 1 possible hash; it may be wanted to have more
-						// than one in the future.
-						var possibleHashes = [];
-						possibleHashes.push(hash);
-						hashInfo["Hash"] = possibleHashes;
+						hashInfo["Hash"].push(hash);
 						
 						hashes.push(hashInfo);
 					}
