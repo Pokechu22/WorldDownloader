@@ -65,11 +65,9 @@ public class EntityRealigner implements IEntityEditor, IWDLModDescripted {
 
 	@Override
 	public void editEntity(Entity e) {
-		System.out.println("Realigning " + e);
 		e.posX = convertServerPos(e.serverPosX);
 		e.posY = convertServerPos(e.serverPosY);
 		e.posZ = convertServerPos(e.serverPosZ);
-		System.out.println("Realigned " + e);
 	}
 	
 	/**
