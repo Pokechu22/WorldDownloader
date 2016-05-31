@@ -1,8 +1,11 @@
 package wdl.gui;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
@@ -16,8 +19,68 @@ import wdl.WDLPluginChannels;
  * GUI for requesting permissions.  Again, this is a work in progress.
  */
 public class GuiWDLPermissionRequest extends GuiScreen {
-	private static final int TOP_MARGIN = 61, BOTTOM_MARGIN = 32;
+	private static final int TOP_MARGIN = 61;
+
+	private static final int BOTTOM_MARGIN = 32;
+
+	private List<BoolFieldButton> fields;
 	
+	/**
+	 * Next y coord to use for a BoolFieldButton.
+	 */
+	private int nextFieldButtonY;
+	
+	/**
+	 * Single field.
+	 * TODO: This should be a list element...
+	 */
+	private class BoolFieldButton extends GuiButton {
+		/**
+		 * Current value for this field.
+		 * If null, then the default value is used.
+		 */
+		private Boolean value = null;
+		private final String field;
+		
+		/**
+		 * Constructs a new button and increments {@link #nextFieldButtonY}.
+		 * @param field Name of the field.
+		 */
+		public BoolFieldButton(String field) {
+			super(-1, 0, nextFieldButtonY, "");
+			nextFieldButtonY += 22;
+			this.field = field;
+		}
+		
+		@Override
+		public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+			this.xPosition = GuiWDLPermissionRequest.this.width / 2 - this.width / 2;
+			
+			if (this.value == null) {
+				// TODO: Display default value (caching?)
+			}
+			
+			super.drawButton(mc, mouseX, mouseY);
+		}
+		
+		@Override
+		public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
+			if (super.mousePressed(mc, mouseX, mouseY)) {
+				if (this.value == null) {
+					this.value = true;
+				} else if (this.value == true) {
+					this.value = false;
+				} else if (this.value == false) {
+					this.value = null;
+				}
+				this.displayString = field + ": " + value; // TODO: default value when null?
+				// TODO: reset to default (right now invalid?)?
+				WDLPluginChannels.addRequest(field, "" + value);
+				return true;
+			}
+			return false;
+		}
+	}
 	private TextList list;
 	/**
 	 * Parent GUI screen; displayed when this GUI is closed.
@@ -34,6 +97,11 @@ public class GuiWDLPermissionRequest extends GuiScreen {
 	
 	public GuiWDLPermissionRequest(GuiScreen parent) {
 		this.parent = parent;
+		nextFieldButtonY = TOP_MARGIN + 6;
+		this.fields = new ArrayList<BoolFieldButton>();
+		for (String field : WDLPluginChannels.BOOLEAN_REQUEST_FIELDS) {
+			this.fields.add(new BoolFieldButton(field));
+		}
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -74,6 +142,8 @@ public class GuiWDLPermissionRequest extends GuiScreen {
 				I18n.format("wdl.gui.permissions.request")));
 		this.buttonList.add(new GuiButton(202, this.width / 2 + 55, 39, 100, 20,
 				I18n.format("wdl.gui.permissions.overrides")));
+		
+		this.buttonList.addAll(this.fields);
 	}
 	
 	@Override
