@@ -422,6 +422,8 @@ class GuiSlider extends GuiButton {
  * {@link GuiTextField} that only accepts numbers.
  */
 class GuiNumericTextField extends GuiTextField {
+	private static Logger logger = LogManager.getLogger();
+
 	public GuiNumericTextField(int id, FontRenderer fontRenderer,
 			int x, int y, int width, int height) {
 		super(id, fontRenderer, x, y, width,
@@ -456,7 +458,9 @@ class GuiNumericTextField extends GuiTextField {
 			return Integer.parseInt("0" + getText());
 		} catch (NumberFormatException e) {
 			// Should not happen, hopefully.
-			e.printStackTrace();
+			logger.warn("Failed to parse value of NumericTextBox - " +
+					"this should not happen!  (value was " + getText() + "): ",
+					e);
 			return 0;
 		}
 	}

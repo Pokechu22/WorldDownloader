@@ -412,7 +412,7 @@ public class WDL {
 				try {
 					worldDat.close();
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.warn("Error while closing world data stream: ", e);
 				}
 			}
 		}
