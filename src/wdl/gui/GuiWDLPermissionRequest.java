@@ -76,6 +76,7 @@ public class GuiWDLPermissionRequest extends GuiScreen {
 				this.displayString = field + ": " + value; // TODO: default value when null?
 				// TODO: reset to default (right now invalid?)?
 				WDLPluginChannels.addRequest(field, "" + value);
+				list.addLine("Requesting '" + field + "' to be '" + value + "'.");
 				return true;
 			}
 			return false;
