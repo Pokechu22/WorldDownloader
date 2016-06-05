@@ -47,7 +47,14 @@ public class GuiWDLPermissionRequest extends GuiScreen {
 		 * @param field Name of the field.
 		 */
 		public BoolFieldButton(String field) {
-			super(-1, 0, nextFieldButtonY, "");
+			super(-1, 0, nextFieldButtonY, null);
+			String currentValue = WDLPluginChannels.getRequests().get(value);
+			if (currentValue == null) {
+				this.value = null;
+			} else {
+				this.value = Boolean.parseBoolean(currentValue);
+			}
+			this.displayString = field + ": " + value;
 			nextFieldButtonY += 22;
 			this.field = field;
 		}
