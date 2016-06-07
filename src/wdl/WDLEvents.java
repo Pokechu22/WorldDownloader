@@ -96,27 +96,59 @@ public class WDLEvents {
 	}
 
 	/**
-	 * Must be called when a chunk is no longer needed and is about to be removed.
+	 * Must be called when a chunk is no longer needed and is about to be
+	 * removed.
+	 * 
+	 * @param unneededChunk
+	 *            The chunk that is about to be removed
+	 * @param x
+	 *            The x coordinate of that chunk
+	 * @param z
+	 *            The z coordinate of that chunk
 	 */
-	public static void onChunkNoLongerNeeded(Chunk unneededChunk) {
-		if (!WDL.downloading) { return; }
+	public static void onChunkNoLongerNeeded(Chunk unneededChunk, int x, int z) {
+		if (!WDL.downloading) {
+			return;
+		}
 		
 		if (unneededChunk == null) {
+			WDLMessages.chatMessageTranslated(
+					WDLMessageTypes.ON_CHUNK_NO_LONGER_NEEDED,
+					"wdl.messages.onChunkNoLongerNeeded.didNotSave.null",
+					x, z);
 			return;
 		}
 
-		if (WDLPluginChannels.canSaveChunk(unneededChunk)) {
+		if (unneededChunk.isEmpty()) {
 			WDLMessages.chatMessageTranslated(
 					WDLMessageTypes.ON_CHUNK_NO_LONGER_NEEDED,
-					"wdl.messages.onChunkNoLongerNeeded.saved",
+					"wdl.messages.onChunkNoLongerNeeded.didNotSave.empty",
+					x, z, unneededChunk.toString(),
 					unneededChunk.xPosition, unneededChunk.zPosition);
-			WDL.saveChunk(unneededChunk);
-		} else {
+			return;
+		}
+		
+		if (unneededChunk.xPosition != x || unneededChunk.zPosition != z) {
+			// Wrongly positioned chunks are not good...
 			WDLMessages.chatMessageTranslated(
 					WDLMessageTypes.ON_CHUNK_NO_LONGER_NEEDED,
-					"wdl.messages.onChunkNoLongerNeeded.didNotSave",
+					"wdl.messages.onChunkNoLongerNeeded.didNotSave.dislocated",
+					x, z, unneededChunk.toString(),
 					unneededChunk.xPosition, unneededChunk.zPosition);
 		}
+
+		if (!WDLPluginChannels.canSaveChunk(unneededChunk)) {
+			WDLMessages.chatMessageTranslated(
+					WDLMessageTypes.ON_CHUNK_NO_LONGER_NEEDED,
+					"wdl.messages.onChunkNoLongerNeeded.didNotSave.noPermission",
+					x, z);
+			return;
+		}
+		
+		WDLMessages.chatMessageTranslated(
+				WDLMessageTypes.ON_CHUNK_NO_LONGER_NEEDED,
+				"wdl.messages.onChunkNoLongerNeeded.saved", x, z);
+		WDL.saveChunk(unneededChunk);
 	}
 
 	/**

@@ -160,7 +160,7 @@ public class WDLHooks {
 				Chunk c = sender.getChunkFromChunkCoords(x, z); 
 				
 				profiler.startSection("Core");
-				wdl.WDLEvents.onChunkNoLongerNeeded(c);
+				wdl.WDLEvents.onChunkNoLongerNeeded(c, x, z);
 				profiler.endSection();  // "Core"
 				
 				profiler.endSection();  // "onChunkNoLongerNeeded"

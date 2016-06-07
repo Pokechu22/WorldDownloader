@@ -879,6 +879,10 @@ public class WDL {
 				if (!WDLPluginChannels.canSaveChunk(c)) {
 					continue;
 				}
+				if (c.isEmpty()) {
+					// Empty chunks tend to be bad
+					continue;
+				}
 				
 				progressScreen.setMinorTaskProgress(I18n.format(
 						"wdl.saveProgress.chunk.saving", c.xPosition,

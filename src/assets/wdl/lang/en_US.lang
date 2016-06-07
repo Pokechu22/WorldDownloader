@@ -316,7 +316,10 @@ wdl.messages.onBlockEvent.noteblock=onBlockEvent: Note Block: %s pitch: %d - %s
 wdl.messages.onMapSaved=onMapDataLoaded: Saved map %d.
 
 wdl.messages.onChunkNoLongerNeeded.saved=onChunkNoLongerNeeded: Saved chunk at %d, %d
-wdl.messages.onChunkNoLongerNeeded.didNotSave=onChunkNoLongerNeeded: Could not save chunk at %d, %d due to server restrictions!
+wdl.messages.onChunkNoLongerNeeded.didNotSave.null=onChunkNoLongerNeeded: Could not save chunk at %d, %d as it is null!?
+wdl.messages.onChunkNoLongerNeeded.didNotSave.empty=onChunkNoLongerNeeded: Could not save chunk at %d, %d as it is empty!?  (It is %s and located at %d, %d; did the server unload the chunk twice?)
+wdl.messages.onChunkNoLongerNeeded.didNotSave.dislocated=onChunkNoLongerNeeded: Could not save chunk at %d, %d as it is at the wrong location!?  (It is %s and its position values are %d, %d)
+wdl.messages.onChunkNoLongerNeeded.didNotSave.noPermission=onChunkNoLongerNeeded: Could not save chunk at %d, %d due to lack of permission.
 
 wdl.messages.onGuiClosedInfo.cannotSaveEntities=Server configuration forbids saving of Entities!
 wdl.messages.onGuiClosedInfo.cannotSaveTileEntities=Server configuration forbids saving of TileEntities!
