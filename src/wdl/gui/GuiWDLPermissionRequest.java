@@ -3,7 +3,6 @@ package wdl.gui;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -81,9 +80,12 @@ public class GuiWDLPermissionRequest extends GuiScreen {
 					this.value = null;
 				}
 				this.displayString = field + ": " + value; // TODO: default value when null?
-				// TODO: reset to default (right now invalid?)?
-				WDLPluginChannels.addRequest(field, "" + value);
-				list.addLine("Requesting '" + field + "' to be '" + value + "'.");
+				
+				if (this.value != null) {
+					WDLPluginChannels.addRequest(field, "" + value);
+				} else {
+					WDLPluginChannels.removeRequest(field);
+				}
 				return true;
 			}
 			return false;
@@ -124,14 +126,6 @@ public class GuiWDLPermissionRequest extends GuiScreen {
 		list.addLine("Boolean fields: " + WDLPluginChannels.BOOLEAN_REQUEST_FIELDS);
 		list.addLine("Integer fields: " + WDLPluginChannels.INTEGER_REQUEST_FIELDS);
 		list.addBlankLine();
-		
-		
-		//Get the existing requests.
-		for (Map.Entry<String, String> request : WDLPluginChannels
-				.getRequests().entrySet()) {
-			list.addLine("Requesting '" + request.getKey() + "' to be '"
-					+ request.getValue() + "'.");
-		}
 		
 		this.requestField = new GuiTextField(0, fontRendererObj,
 				width / 2 - 155, 18, 150, 20);
