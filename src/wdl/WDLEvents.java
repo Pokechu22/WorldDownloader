@@ -502,10 +502,15 @@ public class WDLEvents {
 			return;
 		}
 
+		boolean hadMap = WDL.newMapDatas.containsKey(mapID);
+		
 		WDL.newMapDatas.put(mapID, mapData);
 
-		WDLMessages.chatMessageTranslated(WDLMessageTypes.ON_MAP_SAVED,
-				"wdl.messages.onMapSaved", mapID);
+		if (!hadMap) {
+			// Only do the saved message once.
+			WDLMessages.chatMessageTranslated(WDLMessageTypes.ON_MAP_SAVED,
+					"wdl.messages.onMapSaved", mapID);
+		}
 	}
 
 	/**
