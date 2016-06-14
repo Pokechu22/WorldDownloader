@@ -16,9 +16,15 @@ public class GuiWDLGenerator extends GuiScreen {
 	private String title;
 	private GuiScreen parent;
 	private GuiTextField seedField;
+	private GuiButton fetchSeedBtn;
 	private GuiButton generatorBtn;
 	private GuiButton generateStructuresBtn;
 	private GuiButton settingsPageBtn;
+	
+	/**
+	 * Has a request for the seed been sent (has /seed been run)?
+	 */
+	private boolean hasSentSeedRequest = false;
 
 	private String seedText;
 	
@@ -43,6 +49,30 @@ public class GuiWDLGenerator extends GuiScreen {
 				this.width / 2 - (100 - seedWidth), y, 200 - seedWidth, 18);
 		this.seedField.setText(WDL.worldProps.getProperty("RandomSeed"));
 		y += 22;
+		
+		this.fetchSeedBtn = new GuiButton(0, this.width / 2 - 100, y,
+				I18n.format("wdl.gui.generator.fetchSeed"));
+		// Attempt to automatically disable the button if it seems unlikely
+		// that the player can use /seed.  However, /seed is only usable by
+		// OPs.  In 1.9 and above, the server tells the client what permission
+		// level it has, but 1.8 doesn't have this, so this check can only
+		// be used in 1.9.  Thus, we need to check the version as well.
+		if (WDL.thePlayer.canCommandSenderUseCommand(2, "seed")) {
+			String mcVersion = WDL.getMinecraftVersion();
+			if (!mcVersion.startsWith("1.7") && !mcVersion.startsWith("1.8")) {
+				this.fetchSeedBtn.enabled = false;
+			}
+		}
+		if (this.hasSentSeedRequest) {
+			this.fetchSeedBtn.enabled = false;
+			this.fetchSeedBtn.displayString = I18n
+					.format("wdl.gui.generator.fetchSeed.fetched");
+			
+			this.seedField.setEnabled(false);
+		}
+		this.buttonList.add(this.fetchSeedBtn);
+		
+		y += 30;
 		this.generatorBtn = new GuiButton(1, this.width / 2 - 100, y,
 				getGeneratorText());
 		this.buttonList.add(this.generatorBtn);
@@ -67,7 +97,19 @@ public class GuiWDLGenerator extends GuiScreen {
 	@Override
 	protected void actionPerformed(GuiButton button) {
 		if (button.enabled) {
-			if (button.id == 1) {
+			if (button.id == 0) {
+				if (this.hasSentSeedRequest) {
+					return;
+				}
+				
+				WDL.thePlayer.sendChatMessage("/seed");
+				this.hasSentSeedRequest = true;
+				button.displayString = I18n.format("wdl.gui.generator.fetchSeed.fetched");
+				
+				// Because the seed fetching isn't instant, we want to disable
+				// the text field (don't want the user to start typing there).
+				seedField.setEnabled(false);
+			} else if (button.id == 1) {
 				this.cycleGenerator();
 			} else if (button.id == 2) {
 				this.cycleGenerateStructures();
@@ -90,7 +132,9 @@ public class GuiWDLGenerator extends GuiScreen {
 	
 	@Override
 	public void onGuiClosed() {
-		WDL.worldProps.setProperty("RandomSeed", this.seedField.getText());
+		if (!this.hasSentSeedRequest) {
+			WDL.worldProps.setProperty("RandomSeed", this.seedField.getText());
+		}
 		
 		WDL.saveProps();
 	}
@@ -136,6 +180,12 @@ public class GuiWDLGenerator extends GuiScreen {
 		
 		this.drawString(this.fontRendererObj, seedText, this.width / 2 - 100,
 				this.height / 4 - 10, 0xFFFFFF);
+		
+		if (this.hasSentSeedRequest) {
+			// Keep refreshing the seed text, so that it always matches the seed
+			// the server sent.
+			this.seedField.setText(WDL.worldProps.getProperty("RandomSeed"));
+		}
 		this.seedField.drawTextBox();
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		
@@ -143,6 +193,8 @@ public class GuiWDLGenerator extends GuiScreen {
 		
 		if (Utils.isMouseOverTextBox(mouseX, mouseY, seedField)) {
 			tooltip = I18n.format("wdl.gui.generator.seed.description");
+		} else if (fetchSeedBtn.isMouseOver()) {
+			tooltip = I18n.format("wdl.gui.generator.fetchSeed.description");
 		} else if (generatorBtn.isMouseOver()) {
 			tooltip = I18n.format("wdl.gui.generator.generator.description");
 		} else if (generateStructuresBtn.isMouseOver()) {
