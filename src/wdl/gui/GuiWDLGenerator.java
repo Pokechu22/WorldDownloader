@@ -181,11 +181,6 @@ public class GuiWDLGenerator extends GuiScreen {
 		this.drawString(this.fontRendererObj, seedText, this.width / 2 - 100,
 				this.height / 4 - 10, 0xFFFFFF);
 		
-		if (this.hasSentSeedRequest) {
-			// Keep refreshing the seed text, so that it always matches the seed
-			// the server sent.
-			this.seedField.setText(WDL.worldProps.getProperty("RandomSeed"));
-		}
 		this.seedField.drawTextBox();
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		

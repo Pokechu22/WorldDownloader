@@ -41,6 +41,7 @@ import net.minecraft.world.storage.MapData;
 import wdl.api.IWorldLoadListener;
 import wdl.api.WDLApi;
 import wdl.api.WDLApi.ModInfo;
+import wdl.gui.GuiWDLGenerator;
 import wdl.update.WDLUpdateChecker;
 
 /**
@@ -598,6 +599,12 @@ public class WDLEvents {
 			} else {
 				WDLMessages.chatMessageTranslated(WDLMessageTypes.INFO,
 						"wdl.messages.generalInfo.seedSet", seed);
+			}
+			
+			if (WDL.minecraft.currentScreen instanceof GuiWDLGenerator) {
+				// Manually refresh the controls on the generator screen,
+				// since the seed and such have changed.
+				WDL.minecraft.currentScreen.initGui();
 			}
 		}
 	}
