@@ -583,7 +583,12 @@ public class WDLEvents {
 	 * Called upon any chat message.  Used for getting the seed.
 	 */
 	public static void onChatMessage(String msg) {
-		if (WDL.downloading && msg.startsWith("Seed: ")) {
+		boolean inGeneratorScreen = (WDL.minecraft.currentScreen instanceof GuiWDLGenerator);
+		
+		// Prevent random messages starting with "Seed: " from updating the
+		// current seed - only update it when expected (either the seed button
+		// or currently downloading).
+		if ((inGeneratorScreen || WDL.downloading) && msg.startsWith("Seed: ")) {
 			String seed = msg.substring(6);
 			WDL.worldProps.setProperty("RandomSeed", seed);
 			
@@ -601,7 +606,7 @@ public class WDLEvents {
 						"wdl.messages.generalInfo.seedSet", seed);
 			}
 			
-			if (WDL.minecraft.currentScreen instanceof GuiWDLGenerator) {
+			if (inGeneratorScreen) {
 				// Manually refresh the controls on the generator screen,
 				// since the seed and such have changed.
 				WDL.minecraft.currentScreen.initGui();
