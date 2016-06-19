@@ -106,6 +106,7 @@ public class GuiWDLGenerator extends GuiScreen {
 				this.hasSentSeedRequest = true;
 				button.displayString = I18n.format("wdl.gui.generator.fetchSeed.fetched");
 				
+				this.fetchSeedBtn.enabled = false;
 				// Because the seed fetching isn't instant, we want to disable
 				// the text field (don't want the user to start typing there).
 				seedField.setEnabled(false);
