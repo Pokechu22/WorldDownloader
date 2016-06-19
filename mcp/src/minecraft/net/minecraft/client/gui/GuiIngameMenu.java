@@ -8,8 +8,8 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.realms.RealmsBridge;
 
 public class GuiIngameMenu extends GuiScreen {
-	private int field_146445_a;
-	private int field_146444_f;
+	private int saveStep;
+	private int visibleTime;
 
 	/**
 	 * Adds the buttons (and other controls) to the screen in question. Called
@@ -17,36 +17,37 @@ public class GuiIngameMenu extends GuiScreen {
 	 * cleared beforehand.
 	 */
 	public void initGui() {
-		this.field_146445_a = 0;
+		this.saveStep = 0;
 		this.buttonList.clear();
 		int i = -16;
 		int j = 98;
-		this.buttonList
-				.add(new GuiButton(1, this.width / 2 - 100, this.height / 4
-						+ 120 + i, I18n.format("menu.returnToMenu",
-						new Object[0])));
+		this.buttonList.add(new GuiButton(1, this.width / 2 - 100, this.height
+				/ 4 + 120 + -16, I18n
+				.format("menu.returnToMenu", new Object[0])));
 
 		if (!this.mc.isIntegratedServerRunning()) {
 			((GuiButton) this.buttonList.get(0)).displayString = I18n.format(
 					"menu.disconnect", new Object[0]);
 		}
 
-		this.buttonList.add(new GuiButton(4, this.width / 2 - 100, this.height
-				/ 4 + 24 + i, I18n.format("menu.returnToGame", new Object[0])));
+		this.buttonList
+				.add(new GuiButton(4, this.width / 2 - 100, this.height / 4
+						+ 24 + -16, I18n.format("menu.returnToGame",
+						new Object[0])));
 		this.buttonList.add(new GuiButton(0, this.width / 2 - 100, this.height
-				/ 4 + 96 + i, 98, 20, I18n
-				.format("menu.options", new Object[0])));
-		GuiButton guibutton;
-		this.buttonList.add(guibutton = new GuiButton(7, this.width / 2 + 2,
-				this.height / 4 + 96 + i, 98, 20, I18n.format(
-						"menu.shareToLan", new Object[0])));
-		this.buttonList.add(new GuiButton(5, this.width / 2 - 100, this.height
-				/ 4 + 48 + i, 98, 20, I18n.format("gui.achievements",
+				/ 4 + 96 + -16, 98, 20, I18n.format("menu.options",
 				new Object[0])));
-		this.buttonList.add(new GuiButton(6, this.width / 2 + 2, this.height
-				/ 4 + 48 + i, 98, 20, I18n.format("gui.stats", new Object[0])));
+		GuiButton guibutton = this.func_189646_b(new GuiButton(7,
+				this.width / 2 + 2, this.height / 4 + 96 + -16, 98, 20, I18n
+						.format("menu.shareToLan", new Object[0])));
 		guibutton.enabled = this.mc.isSingleplayer()
 				&& !this.mc.getIntegratedServer().getPublic();
+		this.buttonList.add(new GuiButton(5, this.width / 2 - 100, this.height
+				/ 4 + 48 + -16, 98, 20, I18n.format("gui.achievements",
+				new Object[0])));
+		this.buttonList
+				.add(new GuiButton(6, this.width / 2 + 2, this.height / 4 + 48
+						+ -16, 98, 20, I18n.format("gui.stats", new Object[0])));
 		/* WDL >>> */
 		wdl.WDLHooks.injectWDLButtons(this, buttonList);
 		/* <<< WDL */
@@ -112,12 +113,11 @@ public class GuiIngameMenu extends GuiScreen {
 	 */
 	public void updateScreen() {
 		super.updateScreen();
-		++this.field_146444_f;
+		++this.visibleTime;
 	}
 
 	/**
-	 * Draws the screen and all the components in it. Args : mouseX, mouseY,
-	 * renderPartialTicks
+	 * Draws the screen and all the components in it.
 	 */
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		this.drawDefaultBackground();

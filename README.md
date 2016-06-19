@@ -1,6 +1,6 @@
-#WorldDownloader 1.9a for Minecraft 1.9 using MCP 9.24
+#WorldDownloader 1.10a for Minecraft 1.10 using MCP 9.28 (+Custom SRGs)
 
-A minecraft mod that downloads a copy of a world on a multiplayer server for personal singleplayer use.  This is a fork of [@dslake's original version](https://github.com/dslake/WorldDownloader), updated to 1.9.
+A minecraft mod that downloads a copy of a world on a multiplayer server for personal singleplayer use.  This is a fork of [@dslake's original version](https://github.com/dslake/WorldDownloader), updated to 1.10.
 
 MCP is used for decompilation and recompilation.  Download it from [here](http://www.modcoderpack.com/website/releases).
 

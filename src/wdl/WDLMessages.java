@@ -316,7 +316,7 @@ public class WDLMessages {
 				String customName = null;
 				
 				try {
-					event = e.getDisplayName().getChatStyle().getChatHoverEvent();
+					event = e.getDisplayName().getStyle().getHoverEvent();
 					
 					if (e.hasCustomName()) {
 						customName = e.getCustomNameTag();
@@ -334,8 +334,8 @@ public class WDLMessages {
 				} else {
 					component = new TextComponentString(entityType);
 				}
-				component.setChatStyle(component.getChatStyle()
-						.setChatHoverEvent(event));
+				component.setStyle(component.getStyle()
+						.setHoverEvent(event));
 				
 				args[i] = component;
 			} else if (args[i] instanceof Throwable) {
@@ -353,8 +353,8 @@ public class WDLMessages {
 				HoverEvent event = new HoverEvent(Action.SHOW_TEXT,
 						new TextComponentString(exceptionAsString));
 				
-				component.setChatStyle(component.getChatStyle()
-						.setChatHoverEvent(event));
+				component.setStyle(component.getStyle()
+						.setHoverEvent(event));
 				
 				// Also, log the stacktrace for future use.
 				logger.warn(t);
@@ -387,14 +387,14 @@ public class WDLMessages {
 		ITextComponent text = new TextComponentString("");
 		
 		ITextComponent header = new TextComponentString("[WorldDL]");
-		header.getChatStyle().setColor(type.getTitleColor());
-		header.getChatStyle().setChatHoverEvent(
+		header.getStyle().setColor(type.getTitleColor());
+		header.getStyle().setHoverEvent(
 				new HoverEvent(Action.SHOW_TEXT, tooltip));
 
 		// If the message has its own style, it'll use that instead.
 		// TODO: Better way?
 		TextComponentString messageFormat = new TextComponentString(" ");
-		messageFormat.getChatStyle().setColor(type.getTextColor());
+		messageFormat.getStyle().setColor(type.getTextColor());
 
 		messageFormat.appendSibling(message);
 		text.appendSibling(header);

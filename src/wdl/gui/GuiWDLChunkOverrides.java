@@ -192,7 +192,7 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 				
 				mc.getSoundHandler().playSound(
 						PositionedSoundRecord.getMasterRecord(
-								SoundEvents.ui_button_click, 1.0F));
+								SoundEvents.UI_BUTTON_CLICK, 1.0F));
 				break;
 			}
 		}

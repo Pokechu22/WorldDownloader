@@ -587,7 +587,7 @@ public class WDLPluginChannels {
 		requestBuffer.writeBytes(output.toByteArray());
 		CPacketCustomPayload requestPacket = new CPacketCustomPayload(
 				"WDL|REQUEST", requestBuffer);
-		Minecraft.getMinecraft().getNetHandler().addToSendQueue(requestPacket);
+		Minecraft.getMinecraft().getConnection().sendPacket(requestPacket);
 	}
 	
 	/**
@@ -618,7 +618,7 @@ public class WDLPluginChannels {
 				'W', 'D', 'L', '|', 'R', 'E', 'Q', 'U', 'E', 'S', 'T', '\0' });
 		CPacketCustomPayload registerPacket = new CPacketCustomPayload(
 				"REGISTER", registerPacketBuffer);
-		minecraft.getNetHandler().addToSendQueue(registerPacket);
+		minecraft.getConnection().sendPacket(registerPacket);
 
 		// Send the init message.
 		CPacketCustomPayload initPacket;
@@ -633,7 +633,7 @@ public class WDLPluginChannels {
 			initPacket = new CPacketCustomPayload("WDL|INIT",
 					new PacketBuffer(Unpooled.buffer()));
 		}
-		minecraft.getNetHandler().addToSendQueue(initPacket);
+		minecraft.getConnection().sendPacket(initPacket);
 	}
 	
 	static void onPluginChannelPacket(String channel, byte[] bytes) {

@@ -173,7 +173,7 @@ public class GuiWDLPermissions extends GuiScreen {
 				initPacket = new CPacketCustomPayload("WDL|INIT",
 						new PacketBuffer(Unpooled.buffer()));
 			}
-			WDL.minecraft.getNetHandler().addToSendQueue(initPacket);
+			WDL.minecraft.getConnection().sendPacket(initPacket);
 			
 			button.enabled = false;
 			button.displayString = "Refershing...";

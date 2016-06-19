@@ -9,7 +9,7 @@ import net.minecraft.entity.item.EntityMinecartChest;
 import net.minecraft.entity.item.EntityMinecartHopper;
 import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.passive.EntityVillager;
-import net.minecraft.entity.passive.HorseArmorType;
+import net.minecraft.entity.passive.HorseType;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.AnimalChest;
 import net.minecraft.inventory.ContainerBeacon;
@@ -33,10 +33,10 @@ import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.tileentity.TileEntityNote;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.village.MerchantRecipeList;
-import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.storage.MapData;
 import wdl.api.IWorldLoadListener;
@@ -178,7 +178,7 @@ public class WDLEvents {
 					//Apparently the saved horse has the wrong size by
 					//default.
 					//Based off of EntityHorse.initHorseChest
-					HorseArmorType horseType = entityHorse.getType();
+					HorseType horseType = entityHorse.getType();
 					AnimalChest horseChest = new AnimalChest("HorseChest",
 							(entityHorse.isChested() && horseType.canBeChested()) ? 17 : 2);
 					horseChest.setCustomName(entityHorse.getName());
@@ -239,7 +239,7 @@ public class WDLEvents {
 				//Apparently the saved horse has the wrong size by
 				//default.
 				//Based off of EntityHorse.initHorseChest
-				HorseArmorType horseType = entityHorse.getType();
+				HorseType horseType = entityHorse.getType();
 				AnimalChest horseChest = new AnimalChest("HorseChest",
 						(entityHorse.isChested() && horseType.canBeChested()) ? 17 : 2);
 				horseChest.setCustomName(entityHorse.getName());
@@ -410,9 +410,8 @@ public class WDLEvents {
 			saveName = "hopper";
 		} else if (WDL.windowContainer instanceof ContainerBeacon
 				&& te instanceof TileEntityBeacon) {
-			//func_180611_e returns the beacon's IInventory tileBeacon.
 			IInventory beaconInventory =
-					((ContainerBeacon)WDL.windowContainer).func_180611_e();
+					((ContainerBeacon)WDL.windowContainer).getTileEntity();
 			TileEntityBeacon savedBeacon = (TileEntityBeacon)te;
 			WDL.saveContainerItems(WDL.windowContainer, savedBeacon, 0);
 			WDL.saveInventoryFields(beaconInventory, savedBeacon);
@@ -439,7 +438,7 @@ public class WDLEvents {
 				pos.getZ() << 4)) {
 			return;
 		}
-		if (block == Blocks.noteblock) {
+		if (block == Blocks.NOTEBLOCK) {
 			TileEntityNote newTE = new TileEntityNote();
 			newTE.note = (byte)(param % 25);
 			WDL.worldClient.setTileEntity(pos, newTE);
@@ -520,7 +519,7 @@ public class WDLEvents {
 				entity.chunkCoordZ = MathHelper
 						.floor_double(entity.posZ / 16.0D);
 
-				WDL.newEntities.put(new ChunkCoordIntPair(entity.chunkCoordX,
+				WDL.newEntities.put(new ChunkPos(entity.chunkCoordX,
 						entity.chunkCoordZ), entity);
 				return;
 			}

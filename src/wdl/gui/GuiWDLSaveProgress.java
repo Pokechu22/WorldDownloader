@@ -147,7 +147,7 @@ public class GuiWDLSaveProgress extends GuiTurningCameraBase implements
 			return;
 		}
 		
-		this.mc.getTextureManager().bindTexture(Gui.icons);
+		this.mc.getTextureManager().bindTexture(Gui.ICONS);
 		
 		final int fullWidth = 182;
 		final int currentWidth = (progress * fullWidth) / maximum;

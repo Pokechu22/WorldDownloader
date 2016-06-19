@@ -195,46 +195,46 @@ public class WDLUpdateChecker extends Thread {
 						"wdl.intro.success");
 				TextComponentTranslation mcfThread = new TextComponentTranslation(
 						"wdl.intro.forumsLink");
-				mcfThread.getChatStyle().setColor(TextFormatting.BLUE)
-						.setUnderlined(true).setChatClickEvent(
+				mcfThread.getStyle().setColor(TextFormatting.BLUE)
+						.setUnderlined(true).setClickEvent(
 								new ClickEvent(Action.OPEN_URL,
 										FORUMS_THREAD_USAGE_LINK));
 				TextComponentTranslation wikiLink = new TextComponentTranslation(
 						"wdl.intro.wikiLink");
-				wikiLink.getChatStyle().setColor(TextFormatting.BLUE)
-				.setUnderlined(true).setChatClickEvent(
+				wikiLink.getStyle().setColor(TextFormatting.BLUE)
+				.setUnderlined(true).setClickEvent(
 						new ClickEvent(Action.OPEN_URL,
 								WIKI_LINK));
 				TextComponentTranslation usage = new TextComponentTranslation(
 						"wdl.intro.usage", mcfThread, wikiLink);
 				TextComponentTranslation githubRepo = new TextComponentTranslation(
 						"wdl.intro.githubRepo");
-				githubRepo.getChatStyle().setColor(TextFormatting.BLUE)
-						.setUnderlined(true).setChatClickEvent(
+				githubRepo.getStyle().setColor(TextFormatting.BLUE)
+						.setUnderlined(true).setClickEvent(
 								new ClickEvent(Action.OPEN_URL,
 										GITHUB_LINK));
 				TextComponentTranslation contribute = new TextComponentTranslation(
 						"wdl.intro.contribute", githubRepo);
 				TextComponentTranslation redistributionList = new TextComponentTranslation(
 						"wdl.intro.redistributionList");
-				redistributionList.getChatStyle().setColor(TextFormatting.BLUE)
-						.setUnderlined(true).setChatClickEvent(
+				redistributionList.getStyle().setColor(TextFormatting.BLUE)
+						.setUnderlined(true).setClickEvent(
 								new ClickEvent(Action.OPEN_URL,
 										REDISTRIBUTION_LINK));
 				TextComponentTranslation warning = new TextComponentTranslation(
 						"wdl.intro.warning");
-				warning.getChatStyle().setColor(TextFormatting.DARK_RED)
+				warning.getStyle().setColor(TextFormatting.DARK_RED)
 						.setBold(true);
 				TextComponentTranslation illegally = new TextComponentTranslation(
 						"wdl.intro.illegally");
-				illegally.getChatStyle().setColor(TextFormatting.DARK_RED)
+				illegally.getStyle().setColor(TextFormatting.DARK_RED)
 						.setBold(true);
 				TextComponentTranslation stolen = new TextComponentTranslation(
 						"wdl.intro.stolen", warning, redistributionList, illegally);
 				TextComponentTranslation smr = new TextComponentTranslation(
 						"wdl.intro.stopModReposts");
-				smr.getChatStyle().setColor(TextFormatting.BLUE)
-						.setUnderlined(true).setChatClickEvent(
+				smr.getStyle().setColor(TextFormatting.BLUE)
+						.setUnderlined(true).setClickEvent(
 								new ClickEvent(Action.OPEN_URL,
 										SMR_LINK));
 				TextComponentTranslation stolenBeware = new TextComponentTranslation(
@@ -282,8 +282,8 @@ public class WDLUpdateChecker extends Thread {
 				
 				TextComponentTranslation updateLink = new TextComponentTranslation(
 						"wdl.messages.updates.newRelease.updateLink");
-				updateLink.getChatStyle().setColor(TextFormatting.BLUE)
-						.setUnderlined(true).setChatClickEvent(
+				updateLink.getStyle().setColor(TextFormatting.BLUE)
+						.setUnderlined(true).setClickEvent(
 								new ClickEvent(Action.OPEN_URL,
 										recomendedRelease.URL));
 				
@@ -336,8 +336,8 @@ public class WDLUpdateChecker extends Thread {
 			if (failed.size() > 0) {
 				TextComponentTranslation mcfThread = new TextComponentTranslation(
 						"wdl.intro.forumsLink");
-				mcfThread.getChatStyle().setColor(TextFormatting.BLUE)
-						.setUnderlined(true).setChatClickEvent(
+				mcfThread.getStyle().setColor(TextFormatting.BLUE)
+						.setUnderlined(true).setClickEvent(
 								new ClickEvent(Action.OPEN_URL,
 										FORUMS_THREAD_USAGE_LINK));
 				WDLMessages.chatMessageTranslated(WDLMessageTypes.UPDATES,

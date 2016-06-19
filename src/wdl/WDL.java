@@ -38,7 +38,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ReportedException;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.ChunkCoordIntPair;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.MinecraftException;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.IChunkLoader;
@@ -71,11 +71,11 @@ public class WDL {
 	/**
 	 * Current version.  This should match the git tag for the current release.
 	 */
-	public static final String VERSION = "1.9.4a-beta1";
+	public static final String VERSION = "1.10a-beta1";
 	/**
 	 * The version of minecraft that this mod is installed on.
 	 */
-	public static final String EXPECTED_MINECRAFT_VERSION = "1.9.4";
+	public static final String EXPECTED_MINECRAFT_VERSION = "1.10";
 	/**
 	 * Owning username for the github repository to check for updates against.
 	 * 
@@ -143,12 +143,12 @@ public class WDL {
 	/**
 	 * All tile entities that were saved manually, by chunk and then position.
 	 */
-	public static HashMap<ChunkCoordIntPair, Map<BlockPos, TileEntity>> newTileEntities = new HashMap<ChunkCoordIntPair, Map<BlockPos, TileEntity>>();
+	public static HashMap<ChunkPos, Map<BlockPos, TileEntity>> newTileEntities = new HashMap<ChunkPos, Map<BlockPos, TileEntity>>();
 	
 	/**
 	 * All entities that were downloaded, by chunk.
 	 */
-	public static HashMultimap<ChunkCoordIntPair, Entity> newEntities = HashMultimap.create();
+	public static HashMultimap<ChunkPos, Entity> newEntities = HashMultimap.create();
 	
 	/**
 	 * All of the {@link MapData}s that were sent to the client in the current
@@ -422,7 +422,7 @@ public class WDL {
 		WDL.minecraft.displayGuiScreen((GuiScreen) null);
 		WDL.minecraft.setIngameFocus();
 		chunkLoader = WDLChunkLoader.create(saveHandler, worldClient.provider);
-		newTileEntities = new HashMap<ChunkCoordIntPair,Map<BlockPos,TileEntity>>();
+		newTileEntities = new HashMap<ChunkPos,Map<BlockPos,TileEntity>>();
 		newEntities = HashMultimap.create();
 		newMapDatas = new HashMap<Integer, MapData>();
 
@@ -504,7 +504,7 @@ public class WDL {
 		windowContainer = thePlayer.openContainer;
 		overrideLastModifiedCheck = false;
 		
-		NetworkManager newNM = thePlayer.sendQueue.getNetworkManager();
+		NetworkManager newNM = thePlayer.connection.getNetworkManager();
 		
 		// Handle checking if the server changes here so that
 		// messages are loaded FIRST.
@@ -1367,7 +1367,7 @@ public class WDL {
 		int chunkX = pos.getX() / 16;
 		int chunkZ = pos.getZ() / 16;
 		
-		ChunkCoordIntPair chunkPos = new ChunkCoordIntPair(chunkX, chunkZ);
+		ChunkPos chunkPos = new ChunkPos(chunkX, chunkZ);
 		
 		if (!newTileEntities.containsKey(chunkPos)) {
 			newTileEntities.put(chunkPos, new HashMap<BlockPos, TileEntity>());
@@ -1549,14 +1549,7 @@ public class WDL {
 	 * version; it is constant between profile names.
 	 */
 	public static String getMinecraftVersion() {
-		//Returns some session info used when making a HTTP request for resource packs.
-		//Only matters because X-Minecraft-Version is included.
-		Map<?, ?> map = Minecraft.getSessionInfo();
-		if (map.containsKey("X-Minecraft-Version")) {
-			return (String) map.get("X-Minecraft-Version");
-		} else {
-			return EXPECTED_MINECRAFT_VERSION;
-		}
+		return EXPECTED_MINECRAFT_VERSION;
 	}
 
 	/**

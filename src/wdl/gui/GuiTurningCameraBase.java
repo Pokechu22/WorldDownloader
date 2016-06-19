@@ -59,7 +59,7 @@ public abstract class GuiTurningCameraBase extends GuiScreen {
 	public void initGui() {
 		if (!initializedCamera) {
 			this.cam = new EntityPlayerSP(WDL.minecraft, WDL.worldClient,
-					WDL.thePlayer.sendQueue, WDL.thePlayer.getStatFileWriter());
+					WDL.thePlayer.connection, WDL.thePlayer.getStatFileWriter());
 			this.cam.setLocationAndAngles(WDL.thePlayer.posX, WDL.thePlayer.posY
 					- WDL.thePlayer.getYOffset(), WDL.thePlayer.posZ,
 					WDL.thePlayer.rotationYaw, 0.0F);
