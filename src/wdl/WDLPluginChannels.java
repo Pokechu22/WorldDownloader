@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.PacketBuffer;
@@ -157,6 +158,11 @@ public class WDLPluginChannels {
 	 * List of new chunk override requests.
 	 */
 	private static List<ChunkRange> chunkOverrideRequests = new ArrayList<ChunkRange>();
+	
+	/**
+	 * Collection of plugin channels that the server has registered.
+	 */
+	private static Set<String> registeredChannels = new HashSet<String>();
 	
 	/**
 	 * Checks whether players can use functions unknown to the server.
@@ -838,6 +844,24 @@ public class WDLPluginChannels {
 				}
 
 				logger.info(messageBuilder.toString());
+			}
+		} else if ("REGISTER".equals(channel)) {
+			try {
+				String channelsString = new String(bytes, "UTF-8");
+				List<String> channels = Arrays.asList(channelsString.split("\0"));
+				registeredChannels.addAll(channels);
+			} catch (UnsupportedEncodingException e) {
+				WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR,
+						"wdl.messages.generalError.noUTF8", e);
+			}
+		} else if ("UNREGISTER".equals(channel)) {
+			try {
+				String channelsString = new String(bytes, "UTF-8");
+				List<String> channels = Arrays.asList(channelsString.split("\0"));
+				registeredChannels.removeAll(channels);
+			} catch (UnsupportedEncodingException e) {
+				WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR,
+						"wdl.messages.generalError.noUTF8", e);
 			}
 		}
 	}
