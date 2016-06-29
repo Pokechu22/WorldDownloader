@@ -618,11 +618,13 @@ public class WDLPluginChannels {
 	}
 	
 	/**
-	 * Event that is called when the world is loaded.
-	 * Sets the default values, and then asks the server to give the
-	 * correct ones.
+	 * Event that is called when the world is loaded. Sets the default values,
+	 * and then asks the server to give the correct ones.
+	 * 
+	 * @param isDifferentServer
+	 *            Is the server different from the previous server?
 	 */
-	static void onWorldLoad() {
+	static void onWorldLoad(boolean isDifferentServer) {
 		Minecraft minecraft = Minecraft.getMinecraft();
 		
 		receivedPackets = new HashSet<Integer>();
@@ -661,6 +663,10 @@ public class WDLPluginChannels {
 					new PacketBuffer(Unpooled.buffer()));
 		}
 		minecraft.getNetHandler().addToSendQueue(initPacket);
+		
+		if (isDifferentServer) {
+			registeredChannels.clear();
+		}
 	}
 	
 	static void onPluginChannelPacket(String channel, byte[] bytes) {

@@ -510,10 +510,12 @@ public class WDL {
 			WDLMessages.onNewServer();
 		}
 		
-		WDLPluginChannels.onWorldLoad();
+		// If the network manager changed, then it's a different server.
+		boolean isDifferentServer = (networkManager != newNM);
+		WDLPluginChannels.onWorldLoad(isDifferentServer);
 		
 		// Is this a different server?
-		if (networkManager != newNM) {
+		if (isDifferentServer) {
 			// Different server, different world!
 			WDLMessages.chatMessageTranslated(WDLMessageTypes.ON_WORLD_LOAD,
 					"wdl.messages.onWorldLoad.differentServer");
@@ -533,8 +535,6 @@ public class WDL {
 			}
 			
 			startOnChange = false;
-			
-			return true;
 		} else {
 			// Same server, different world!
 			WDLMessages.chatMessageTranslated(WDLMessageTypes.ON_WORLD_LOAD,
@@ -555,9 +555,9 @@ public class WDL {
 			if (startOnChange) {
 				startDownload();
 			}
-			
-			return false;
 		}
+		
+		return isDifferentServer;
 	}
 
 	/**
