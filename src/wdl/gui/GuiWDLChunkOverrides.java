@@ -133,7 +133,8 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 			partiallyRequested = false;
 		}
 		if (button.id == 4) {
-			WDLPluginChannels.sendRequests();
+			// TODO
+			WDLPluginChannels.sendRequests("Request reason not yet implemented clientside");
 		}
 		if (button.id == 6) {
 			if (!WDLPluginChannels.canDownloadAtAll()) {

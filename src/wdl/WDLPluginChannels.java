@@ -591,14 +591,14 @@ public class WDLPluginChannels {
 	/**
 	 * Sends the current requests to the server.
 	 */
-	public static void sendRequests() {
+	public static void sendRequests(String requestReason) {
 		if (requests.isEmpty() && chunkOverrideRequests.isEmpty()) {
 			return;
 		}
 		
 		ByteArrayDataOutput output = ByteStreams.newDataOutput();
 		
-		output.writeUTF("REQUEST REASON WILL GO HERE"); //TODO
+		output.writeUTF(requestReason);
 		output.writeInt(requests.size());
 		for (Map.Entry<String, String> request : requests.entrySet()) {
 			output.writeUTF(request.getKey());

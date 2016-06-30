@@ -151,7 +151,8 @@ public class GuiWDLPermissionRequest extends GuiScreen {
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if (button.id == 1) {
-			WDLPluginChannels.sendRequests();
+			// TODO
+			WDLPluginChannels.sendRequests("Request reason not yet implemented clientside");
 			button.displayString = "Submitted!";
 		}
 		
