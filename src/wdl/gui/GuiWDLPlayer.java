@@ -20,8 +20,8 @@ public class GuiWDLPlayer extends GuiScreen {
 	private GuiNumericTextField posZ;
 	private int posTextY;
 
-	public GuiWDLPlayer(GuiScreen var1) {
-		this.parent = var1;
+	public GuiWDLPlayer(GuiScreen parent) {
+		this.parent = parent;
 	}
 
 	/**
@@ -73,17 +73,17 @@ public class GuiWDLPlayer extends GuiScreen {
 	 * ActionListener.actionPerformed(ActionEvent e).
 	 */
 	@Override
-	protected void actionPerformed(GuiButton var1) {
-		if (var1.enabled) {
-			if (var1.id == 1) {
+	protected void actionPerformed(GuiButton button) {
+		if (button.enabled) {
+			if (button.id == 1) {
 				this.cycleHealth();
-			} else if (var1.id == 2) {
+			} else if (button.id == 2) {
 				this.cycleHunger();
-			} else if (var1.id == 3) {
+			} else if (button.id == 3) {
 				this.cyclePlayerPos();
-			} else if (var1.id == 4) {
+			} else if (button.id == 4) {
 				this.setPlayerPosToPlayerPosition();
-			} else if (var1.id == 100) {
+			} else if (button.id == 100) {
 				this.mc.displayGuiScreen(this.parent);
 			}
 		}
