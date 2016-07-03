@@ -425,7 +425,8 @@ public class WDLPluginChannels {
 	 * Gets whether permissions are available.
 	 */
 	public static boolean canRequestPermissions() {
-		return receivedPackets.contains(3) && canRequestPermissions;
+		return registeredChannels.contains("WDL|REQUEST")
+				&& receivedPackets.contains(3) && canRequestPermissions;
 	}
 	
 	/**
