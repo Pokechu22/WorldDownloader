@@ -177,7 +177,7 @@ public class GuiWDLPermissions extends GuiScreen {
 			WDL.minecraft.getNetHandler().addToSendQueue(initPacket);
 			
 			button.enabled = false;
-			button.displayString = "Refershing...";
+			button.displayString = "Refreshing...";
 			
 			refreshTicks = 50; // 2.5 seconds
 		}
