@@ -11,8 +11,8 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import wdl.WDL;
-import wdl.WDLPluginChannels;
-import wdl.WDLPluginChannels.ChunkRange;
+import wdl.chan.WDLPluginChannels;
+import wdl.chan.WDLPluginChannels.ChunkRange;
 
 import com.google.common.collect.Multimap;
 

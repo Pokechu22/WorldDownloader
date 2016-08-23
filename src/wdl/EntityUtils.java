@@ -51,6 +51,7 @@ import wdl.api.IEntityAdder;
 import wdl.api.ISpecialEntityHandler;
 import wdl.api.WDLApi;
 import wdl.api.WDLApi.ModInfo;
+import wdl.chan.WDLPluginChannels;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;

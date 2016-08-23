@@ -20,6 +20,7 @@ import wdl.api.ITileEntityEditor.TileEntityCreationMode;
 import wdl.api.ITileEntityImportationIdentifier;
 import wdl.api.WDLApi;
 import wdl.api.WDLApi.ModInfo;
+import wdl.chan.WDLPluginChannels;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBeacon;
 import net.minecraft.block.BlockBrewingStand;

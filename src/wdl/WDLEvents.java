@@ -41,6 +41,7 @@ import net.minecraft.world.storage.MapData;
 import wdl.api.IWorldLoadListener;
 import wdl.api.WDLApi;
 import wdl.api.WDLApi.ModInfo;
+import wdl.chan.WDLPluginChannels;
 import wdl.gui.GuiWDLGenerator;
 import wdl.update.WDLUpdateChecker;
 

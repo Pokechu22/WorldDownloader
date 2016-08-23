@@ -31,6 +31,7 @@ import wdl.api.IGuiHooksListener;
 import wdl.api.IPluginChannelListener;
 import wdl.api.WDLApi;
 import wdl.api.WDLApi.ModInfo;
+import wdl.chan.WDLPluginChannels;
 import wdl.gui.GuiWDL;
 import wdl.gui.GuiWDLAbout;
 import wdl.gui.GuiWDLChunkOverrides;

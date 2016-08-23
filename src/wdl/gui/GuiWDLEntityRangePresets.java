@@ -10,7 +10,7 @@ import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraft.client.resources.I18n;
 import wdl.EntityUtils;
 import wdl.WDL;
-import wdl.WDLPluginChannels;
+import wdl.chan.WDLPluginChannels;
 
 /**
  * Provides fast setting for various entity options.

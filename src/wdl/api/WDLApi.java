@@ -18,7 +18,7 @@ import wdl.HologramHandler;
 import wdl.MessageTypeCategory;
 import wdl.WDL;
 import wdl.WDLMessages;
-import wdl.WDLPluginChannels;
+import wdl.chan.WDLPluginChannels;
 
 import com.google.common.collect.ImmutableMap;
 

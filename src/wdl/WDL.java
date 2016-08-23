@@ -52,6 +52,7 @@ import wdl.api.ISaveListener;
 import wdl.api.IWorldInfoEditor;
 import wdl.api.WDLApi;
 import wdl.api.WDLApi.ModInfo;
+import wdl.chan.WDLPluginChannels;
 import wdl.gui.GuiWDLMultiworld;
 import wdl.gui.GuiWDLMultiworldSelect;
 import wdl.gui.GuiWDLOverwriteChanges;

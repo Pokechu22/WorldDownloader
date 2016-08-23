@@ -1,4 +1,4 @@
-package wdl;
+package wdl.chan;
 
 import io.netty.buffer.Unpooled;
 
@@ -20,6 +20,11 @@ import net.minecraft.world.chunk.Chunk;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import wdl.EntityUtils;
+import wdl.WDL;
+import wdl.WDLMessageTypes;
+import wdl.WDLMessages;
+
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -30,38 +35,8 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 
 /**
- * World Downloader permission system implemented with Plugin Channels.
- * 
- * This system is used to configure the mod, and disable certain features,
- * at a server's decision.  I've made this system because there already were
- * other (more esoteric) methods of finding the mod, based off of forge and
- * lightloader handshakes.  I think that a system like this, where there are
- * <em>degrees of control</em>, is better than one where the player is
- * indiscriminately kicked.  For instance, this system allows for permission
- * requests, which would be hard to do with another mechanism.
- * 
- * This system makes use of plugin channels (hence the class name).  If you
- * haven't read <a href="http://wiki.vg/Plugin_channels">their info</a>,
- * they're a vanilla minecraft packet intended for mods.  But they <em>do</em>
- * need each channel to be REGISTERed before use, so the server does know
- * when the mod is installed.  As such, I actually did a second step and
- * instead send a second packet when the data is ready to be received by the
- * client, since mid-download permission changes can be problematic.
- * 
- * Theoretically, these could be implemented with chat-based codes or even
- * MOTD-based codes.  However, I <em>really</em> do not like that system, as
- * it is really rigid.  So I chose this one, which is also highly expandable.
- * 
- * This system is also used to fetch a few things from willing servers, mainly
- * entity track distances so that things can be saved correctly. 
- * 
- * And yes, this is the fabled "backdoor" / "back door"; I don't like that term
- * but people will call it that.  I think it's the best possible system out
- * of the available options (and doing nothing wouldn't work - as I said,
- * there <em>are</em> weird ways of finding mods).
- * 
- * <a href="http://wiki.vg/User:Pokechu22/World_downloader">Packet
- * documentation is on wiki.vg</a>, if you're interested.
+ * Main plugin channel handler. See {@link wdl.chan package-info.java} for more
+ * info.
  */
 public class WDLPluginChannels {
 	private static Logger logger = LogManager.getLogger();
@@ -625,7 +600,7 @@ public class WDLPluginChannels {
 	 * @param isDifferentServer
 	 *            Is the server different from the previous server?
 	 */
-	static void onWorldLoad(boolean isDifferentServer) {
+	public static void onWorldLoad(boolean isDifferentServer) {
 		Minecraft minecraft = Minecraft.getMinecraft();
 		
 		receivedPackets = new HashSet<Integer>();
@@ -670,7 +645,7 @@ public class WDLPluginChannels {
 		}
 	}
 	
-	static void onPluginChannelPacket(String channel, byte[] bytes) {
+	public static void onPluginChannelPacket(String channel, byte[] bytes) {
 		if ("WDL|CONTROL".equals(channel)) {
 			ByteArrayDataInput input = ByteStreams.newDataInput(bytes);
 

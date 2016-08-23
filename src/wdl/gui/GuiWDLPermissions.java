@@ -13,7 +13,7 @@ import net.minecraft.network.play.client.C17PacketCustomPayload;
 import wdl.WDL;
 import wdl.WDLMessageTypes;
 import wdl.WDLMessages;
-import wdl.WDLPluginChannels;
+import wdl.chan.WDLPluginChannels;
 
 /**
  * GUI that shows the current permissions for the user.

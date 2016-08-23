@@ -14,7 +14,7 @@ import wdl.EntityUtils;
 import wdl.WDL;
 import wdl.WDLMessageTypes;
 import wdl.WDLMessages;
-import wdl.WDLPluginChannels;
+import wdl.chan.WDLPluginChannels;
 
 import com.google.common.collect.Multimap;
 

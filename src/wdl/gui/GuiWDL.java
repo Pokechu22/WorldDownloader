@@ -10,7 +10,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 import wdl.WDL;
-import wdl.WDLPluginChannels;
+import wdl.chan.WDLPluginChannels;
 import wdl.update.WDLUpdateChecker;
 
 public class GuiWDL extends GuiScreen {
