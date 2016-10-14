@@ -296,54 +296,54 @@ wdl.messages.tileEntity.edited=TE édité à %s avec %s
 
 wdl.messages.entityTypeAndCustomName=%s (nommé %s)
 
-wdl.messages.saving.savingChunks=Sauvegarde chunks...
-wdl.messages.saving.chunksSaved=Chunk data saved.
-wdl.messages.saving.flushingIO=Waiting for ThreadedFileIOBase to finish...
-wdl.messages.saving.backingUp=Backing up the world...
-wdl.messages.saving.savingPlayer=Saving player data...
-wdl.messages.saving.playerSaved=Player data saved.
-wdl.messages.saving.savingWorld=Saving world metadata...
-wdl.messages.saving.worldSaved=World metadata saved.
-wdl.messages.saving.savingMapItemData=Saving map data...
-wdl.messages.saving.mapItemDataSaved=Map data saved.
+wdl.messages.saving.savingChunks=Enregistrement chunks...
+wdl.messages.saving.chunksSaved=Chunks enregistrés.
+wdl.messages.saving.flushingIO=En attente de ThreadedFileIOBase pour terminer...
+wdl.messages.saving.backingUp=Enregistrement du monde...
+wdl.messages.saving.savingPlayer=Enregistrement des données joueurs...
+wdl.messages.saving.playerSaved=Données joueurs enregistrées.
+wdl.messages.saving.savingWorld=Enregistrement des metadatas du monde...
+wdl.messages.saving.worldSaved=Metadatas enregistrées.
+wdl.messages.saving.savingMapItemData=Enregistrement de la carte...
+wdl.messages.saving.mapItemDataSaved=Carte enregistrée.
 
-wdl.messages.onWorldLoad.sameServer=onWorldLoad: same server!
-wdl.messages.onWorldLoad.differentServer=onWorldLoad: different server!
+wdl.messages.onWorldLoad.sameServer=onWorldLoad: même serveur!
+wdl.messages.onWorldLoad.differentServer=onWorldLoad: serveur différent!
 wdl.messages.onWorldLoad.spigot=Server brand = %s.  Using spigot track distances.
 wdl.messages.onWorldLoad.vanilla=Server brand = %s.  Using vanilla track distances.
 
 wdl.messages.onBlockEvent.noteblock=onBlockEvent: Note Block: %s pitch: %d - %s
-wdl.messages.onMapSaved=onMapDataLoaded: Saved map %d.
+wdl.messages.onMapSaved=onMapDataLoaded: Carte enregistrée %d.
 
-wdl.messages.onChunkNoLongerNeeded.saved=onChunkNoLongerNeeded: Saved chunk at %d, %d
-wdl.messages.onChunkNoLongerNeeded.didNotSave.null=onChunkNoLongerNeeded: Could not save chunk at %d, %d as it is null!?
-wdl.messages.onChunkNoLongerNeeded.didNotSave.empty=onChunkNoLongerNeeded: Could not save chunk at %d, %d as it is empty!?  (It is %s and located at %d, %d; did the server unload the chunk twice?)
-wdl.messages.onChunkNoLongerNeeded.didNotSave.dislocated=onChunkNoLongerNeeded: Could not save chunk at %d, %d as it is at the wrong location!?  (It is %s and its position values are %d, %d)
-wdl.messages.onChunkNoLongerNeeded.didNotSave.noPermission=onChunkNoLongerNeeded: Could not save chunk at %d, %d due to lack of permission.
+wdl.messages.onChunkNoLongerNeeded.saved=onChunkNoLongerNeeded: Chunk enregsitré à %d, %d
+wdl.messages.onChunkNoLongerNeeded.didNotSave.null=onChunkNoLongerNeeded: Impossible d'enregistrer Chunk at %d, %d car il est null!?
+wdl.messages.onChunkNoLongerNeeded.didNotSave.empty=onChunkNoLongerNeeded: Impossible d'enregistrer Chunk at %d, %d car il est vide!?  (C'est %s et situé à %d, %d; Est-ce que le serveur à déchargé le chunk 2 fois?)
+wdl.messages.onChunkNoLongerNeeded.didNotSave.dislocated=onChunkNoLongerNeeded: Impossible d'enregistrer Chunk at %d, %d car il est à la mauvaise position!?  (C'est %s et ses coordonnées sont %d, %d)
+wdl.messages.onChunkNoLongerNeeded.didNotSave.noPermission=onChunkNoLongerNeeded: Impossible d'enregistrer Chunk at %d, %d car vous n'avez pas la permission.
 
-wdl.messages.onGuiClosedInfo.cannotSaveEntities=Server configuration forbids saving of Entities!
-wdl.messages.onGuiClosedInfo.cannotSaveTileEntities=Server configuration forbids saving of TileEntities!
-wdl.messages.onGuiClosedInfo.savedRiddenHorse=Saved ridden horse inventory.
-wdl.messages.onGuiClosedInfo.savedEntity.storageMinecart=Saved storage minecart contents.
-wdl.messages.onGuiClosedInfo.savedEntity.hopperMinecart=Saved hopper minecart contents.
-wdl.messages.onGuiClosedInfo.savedEntity.villager=Saved villager trades.
-wdl.messages.onGuiClosedInfo.savedEntity.horse=Saved horse inventory.
-wdl.messages.onGuiClosedInfo.savedTileEntity.singleChest=Saved chest contents.
-wdl.messages.onGuiClosedInfo.savedTileEntity.doubleChest=Saved double chest contents.
-wdl.messages.onGuiClosedInfo.savedTileEntity.enderChest=Saved ender chest contents.
-wdl.messages.onGuiClosedInfo.savedTileEntity.brewingStand=Saved brewing stand contents.
-wdl.messages.onGuiClosedInfo.savedTileEntity.dispenser=Saved dispenser contents.
-wdl.messages.onGuiClosedInfo.savedTileEntity.furnace=Saved furnace contents.
-wdl.messages.onGuiClosedInfo.savedTileEntity.hopper=Saved hopper contents.
-wdl.messages.onGuiClosedInfo.savedTileEntity.beacon=Saved beacon effects.
+wdl.messages.onGuiClosedInfo.cannotSaveEntities=La configuration du serveur interdit l'enregistrement d'entités!
+wdl.messages.onGuiClosedInfo.cannotSaveTileEntities=La configuration du serveur interdit l'enregistrement de Tiles!
+wdl.messages.onGuiClosedInfo.savedRiddenHorse=Inventaire du cheval monté sauvegardé.
+wdl.messages.onGuiClosedInfo.savedEntity.storageMinecart=Contenu du wagonnet de stockage sauvegardé.
+wdl.messages.onGuiClosedInfo.savedEntity.hopperMinecart=Contenu du wagonnet à entonnoir sauvegardé.
+wdl.messages.onGuiClosedInfo.savedEntity.villager=Echanges villageois sauvegardé.
+wdl.messages.onGuiClosedInfo.savedEntity.horse=Inventaire du cheval sauvegardé.
+wdl.messages.onGuiClosedInfo.savedTileEntity.singleChest=Contenu du coffre sauvegardé.
+wdl.messages.onGuiClosedInfo.savedTileEntity.doubleChest=Contenu du double coffre sauvegardé.
+wdl.messages.onGuiClosedInfo.savedTileEntity.enderChest=Contenu du coffre de l'ender sauvegardé.
+wdl.messages.onGuiClosedInfo.savedTileEntity.brewingStand=Contenu de l'alambic sauvegardé.
+wdl.messages.onGuiClosedInfo.savedTileEntity.dispenser=Contenu du dispenseur sauvegardé.
+wdl.messages.onGuiClosedInfo.savedTileEntity.furnace=Contenu du four sauvegardé.
+wdl.messages.onGuiClosedInfo.savedTileEntity.hopper=Contenu de l'entonnoir sauvegardé.
+wdl.messages.onGuiClosedInfo.savedTileEntity.beacon=Effet de la balise sauvegardé.
 
-wdl.messages.onGuiClosedWarning.couldNotGetTE=onItemGuiClosed could not get TE at %s.
-wdl.messages.onGuiClosedWarning.unhandledEntity=onItemGuiClosed: Unrecognised entity could not be saved: %s
-wdl.messages.onGuiClosedWarning.unhandledTileEntity=onItemGuiClosed: Unhandled Tile Entity at %s: %s
-wdl.messages.onGuiClosedWarning.failedToFindDoubleChest=Could not save this double chest!  Failed to find all neighboring chest blocks.
+wdl.messages.onGuiClosedWarning.couldNotGetTE=onItemGuiClosed ne peut obtenir TE à %s.
+wdl.messages.onGuiClosedWarning.unhandledEntity=onItemGuiClosed: Entity inconnue ne peut être sauvegardée: %s
+wdl.messages.onGuiClosedWarning.unhandledTileEntity=onItemGuiClosed: Tile non gérée à %s: %s
+wdl.messages.onGuiClosedWarning.failedToFindDoubleChest=Impossible d'enregistrer ce double coffre!  Echec pour trouver tous les block de coffre voisins.
 
-wdl.messages.generalInfo.downloadStarted=Download started
-wdl.messages.generalInfo.downloadStopped=Download stopped.
+wdl.messages.generalInfo.downloadStarted=Début du téléchargement
+wdl.messages.generalInfo.downloadStopped=Téléchargement arrêté.
 wdl.messages.generalInfo.saveStarted=Save started.
 wdl.messages.generalInfo.saveComplete.startingAgain=Save complete. Starting download again.
 wdl.messages.generalInfo.saveComplete.done=Save complete. Your single player file is ready to play!
