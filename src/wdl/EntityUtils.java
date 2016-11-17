@@ -43,6 +43,7 @@ import net.minecraft.entity.projectile.EntityFishHook;
 import net.minecraft.entity.projectile.EntityPotion;
 import net.minecraft.entity.projectile.EntitySmallFireball;
 import net.minecraft.entity.projectile.EntitySnowball;
+import net.minecraft.util.ResourceLocation;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -61,20 +62,11 @@ import com.google.common.collect.Multimap;
 public class EntityUtils {
 	private static final Logger logger = LogManager.getLogger();
 	
-	/**
-	 * Reference to the {@link EntityList#stringToClassMapping} field.
-	 */
-	public static final Map<String, Class<?>> stringToClassMapping;
-	/**
-	 * Reference to the {@link EntityList#classToStringMapping} field.
-	 */
-	public static final Map<Class<?>, String> classToStringMapping;
-	
 	/*
 	 * Add the vanilla entities to entitiesByGroup and steal the 
 	 * classToStringMapping and stringToClassMapping fields.
 	 */
-	static {
+	/*static {
 		try {
 			Map<String, Class<?>> mappingSTC = null;
 			Map<Class<?>, String> mappingCTS = null;
@@ -119,7 +111,7 @@ public class EntityUtils {
 			//Will never happen.
 			throw new Error("World Downloader Mod: failed to set up entity ranges!", e);
 		}
-	}
+	}*/
 	
 	/**
 	 * Gets a collection of all types of entities, both basic ones and special
@@ -130,7 +122,7 @@ public class EntityUtils {
 	public static Set<String> getEntityTypes() {
 		Set<String> returned = new HashSet<String>();
 		
-		for (Map.Entry<String, Class<?>> e : stringToClassMapping.entrySet()) {
+		/*for (Map.Entry<String, Class<?>> e : stringToClassMapping.entrySet()) {
 			if (Modifier.isAbstract(e.getValue().getModifiers())) {
 				continue;
 			}
@@ -141,7 +133,7 @@ public class EntityUtils {
 		for (ModInfo<ISpecialEntityHandler> info : WDLApi
 				.getImplementingExtensions(ISpecialEntityHandler.class)) {
 			returned.addAll(info.mod.getSpecialEntities().values());
-		}
+		}*/
 		
 		return returned;
 	}
@@ -210,8 +202,8 @@ public class EntityUtils {
 				}
 			}
 		}
-		
-		return getVanillaEntityRange(stringToClassMapping.get(type));
+		return -1;
+		//return getVanillaEntityRange(stringToClassMapping.get(type));
 	}
 	
 	/**
@@ -352,7 +344,7 @@ public class EntityUtils {
 	 * @return The group, or <code>null</code> if none is found.
 	 */
 	public static String getEntityGroup(String type) {
-		if (type == null) {
+		/*if (type == null) {
 			return null;
 		}
 		for (ModInfo<IEntityAdder> info : WDLApi.getImplementingExtensions(IEntityAdder.class)) {
@@ -392,7 +384,8 @@ public class EntityUtils {
 			}
 		}
 		
-		return null;
+		return null;*/
+		return "Other";
 	}
 	
 	/**
@@ -458,7 +451,7 @@ public class EntityUtils {
 	 * whether to use Spigot track distances based off of the server brand.
 	 */
 	public static int getMostLikelyEntityTrackDistance(String type) {
-		if (WDL.isSpigot()) {
+		/*if (WDL.isSpigot()) {
 			Class<?> c = stringToClassMapping.get(type);
 			
 			if (c != null) {
@@ -466,9 +459,9 @@ public class EntityUtils {
 			} else {
 				return getDefaultEntityRange(type);
 			}
-		} else {
+		} else {*/
 			return getDefaultEntityRange(type);
-		}
+		//}
 	}
 	
 	/**
@@ -482,7 +475,7 @@ public class EntityUtils {
 	 * @return
 	 */
 	public static int getVanillaEntityRange(String type) {
-		return getVanillaEntityRange(classToStringMapping.get(type)); 
+		return getVanillaEntityRange(EntityList.field_191308_b.getObject(new ResourceLocation(type))); 
 	}
 	
 	/**

@@ -4,7 +4,6 @@ import com.google.common.collect.Sets;
 import java.util.Random;
 import java.util.Set;
 import javax.annotation.Nullable;
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -20,6 +19,7 @@ import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.Packet;
@@ -45,7 +45,6 @@ import net.minecraft.world.storage.SaveHandlerMP;
 import net.minecraft.world.storage.WorldInfo;
 
 public class WorldClient extends World {
-
 	/** The packets that need to be sent to the server. */
 	private final NetHandlerPlayClient connection;
 
@@ -111,7 +110,7 @@ public class WorldClient extends World {
 
 	/**
 	 * Invalidates an AABB region of blocks from the receive queue, in the event
-	 * that the block has been modified client- side in the intervening 80
+	 * that the block has been modified client-side in the intervening 80
 	 * receive ticks.
 	 */
 	public void invalidateBlockReceiveRegion(int x1, int y1, int z1, int x2,
@@ -136,8 +135,8 @@ public class WorldClient extends World {
 		this.viewableChunks.clear();
 		int i = this.mc.gameSettings.renderDistanceChunks;
 		this.theProfiler.startSection("buildList");
-		int j = MathHelper.floor_double(this.mc.thePlayer.posX / 16.0D);
-		int k = MathHelper.floor_double(this.mc.thePlayer.posZ / 16.0D);
+		int j = MathHelper.floor(this.mc.player.posX / 16.0D);
+		int k = MathHelper.floor(this.mc.player.posZ / 16.0D);
 
 		for (int l = -i; l <= i; ++l) {
 			for (int i1 = -i; i1 <= i; ++i1) {
@@ -268,7 +267,7 @@ public class WorldClient extends World {
 	 * Returns the Entity with the given ID, or null if it doesn't exist in this World.
 	 */
 	public Entity getEntityByID(int id) {
-		return (Entity) (id == this.mc.thePlayer.getEntityId() ? this.mc.thePlayer
+		return (Entity) (id == this.mc.player.getEntityId() ? this.mc.player
 				: super.getEntityByID(id));
 	}
 
@@ -328,8 +327,8 @@ public class WorldClient extends World {
 			if (iblockstate.getMaterial() == Material.AIR
 					&& this.getLight(blockpos) <= this.rand.nextInt(8)
 					&& this.getLightFor(EnumSkyBlock.SKY, blockpos) <= 0
-					&& this.mc.thePlayer != null
-					&& this.mc.thePlayer.getDistanceSq((double) j + 0.5D,
+					&& this.mc.player != null
+					&& this.mc.player.getDistanceSq((double) j + 0.5D,
 							(double) l + 0.5D, (double) k + 0.5D) > 4.0D) {
 				this.playSound((double) j + 0.5D, (double) l + 0.5D,
 						(double) k + 0.5D, SoundEvents.AMBIENT_CAVE,
@@ -343,10 +342,10 @@ public class WorldClient extends World {
 	public void doVoidFogParticles(int posX, int posY, int posZ) {
 		int i = 32;
 		Random random = new Random();
-		ItemStack itemstack = this.mc.thePlayer.getHeldItemMainhand();
+		ItemStack itemstack = this.mc.player.getHeldItemMainhand();
 		boolean flag = this.mc.playerController.getCurrentGameType() == GameType.CREATIVE
-				&& itemstack != null
-				&& Block.getBlockFromItem(itemstack.getItem()) == Blocks.BARRIER;
+				&& !itemstack.func_190926_b()
+				&& itemstack.getItem() == Item.getItemFromBlock(Blocks.BARRIER);
 		BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
 
 		for (int j = 0; j < 667; ++j) {
@@ -450,7 +449,7 @@ public class WorldClient extends World {
 		crashreportcategory.setDetail("Server brand",
 				new ICrashReportDetail<String>() {
 					public String call() throws Exception {
-						return WorldClient.this.mc.thePlayer.getServerBrand();
+						return WorldClient.this.mc.player.getServerBrand();
 					}
 				});
 		crashreportcategory.setDetail("Server type",
@@ -466,7 +465,7 @@ public class WorldClient extends World {
 	public void playSound(@Nullable EntityPlayer player, double x, double y,
 			double z, SoundEvent soundIn, SoundCategory category, float volume,
 			float pitch) {
-		if (player == this.mc.thePlayer) {
+		if (player == this.mc.player) {
 			this.playSound(x, y, z, soundIn, category, volume, pitch, false);
 		}
 	}

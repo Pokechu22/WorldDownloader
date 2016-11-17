@@ -54,7 +54,7 @@ public class CrashReport {
 		this.theReportCategory.setDetail("Minecraft Version",
 				new ICrashReportDetail<String>() {
 					public String call() {
-						return "1.10";
+						return "1.11";
 					}
 				});
 		this.theReportCategory.setDetail("Operating System",

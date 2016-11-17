@@ -27,7 +27,7 @@ import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
+import net.minecraft.inventory.Slot;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagDouble;
@@ -307,7 +307,7 @@ public class WDL {
 	 * Starts the download.
 	 */
 	public static void startDownload() {
-		worldClient = minecraft.theWorld;
+		worldClient = minecraft.world;
 
 		if (!WDLPluginChannels.canDownloadAtAll()) {
 			return;
@@ -499,8 +499,8 @@ public class WDL {
 	 */
 	public static boolean loadWorld() {
 		worldName = ""; // The new (multi-)world name is unknown at the moment
-		worldClient = minecraft.theWorld;
-		thePlayer = minecraft.thePlayer;
+		worldClient = minecraft.world;
+		thePlayer = minecraft.player;
 		windowContainer = thePlayer.openContainer;
 		overrideLastModifiedCheck = false;
 		
@@ -1207,9 +1207,9 @@ public class WDL {
 		String spawn = worldProps.getProperty("Spawn");
 
 		if (spawn.equals("player")) {
-			int x = MathHelper.floor_double(thePlayer.posX);
-			int y = MathHelper.floor_double(thePlayer.posY);
-			int z = MathHelper.floor_double(thePlayer.posZ);
+			int x = MathHelper.floor(thePlayer.posX);
+			int y = MathHelper.floor(thePlayer.posY);
+			int z = MathHelper.floor(thePlayer.posZ);
 			worldInfoNBT.setInteger("SpawnX", x);
 			worldInfoNBT.setInteger("SpawnY", y);
 			worldInfoNBT.setInteger("SpawnZ", z);
@@ -1333,8 +1333,10 @@ public class WDL {
 		int inventoryIndex = 0;
 
 		while ((containerIndex < containerSize) && (inventoryIndex < inventorySize)) {
-			ItemStack item = container.getSlot(containerIndex).getStack();
-			tileEntity.setInventorySlotContents(inventoryIndex, item);
+			Slot slot = WDL.windowContainer.getSlot(containerIndex);
+			if (slot.getHasStack()) {
+				tileEntity.setInventorySlotContents(inventoryIndex, slot.getStack());
+			}
 			inventoryIndex++;
 			containerIndex++;
 		}

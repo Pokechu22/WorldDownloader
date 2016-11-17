@@ -130,7 +130,7 @@ public class GuiWDLEntityRangePresets extends GuiScreen implements GuiYesNoCallb
 				}
 			} else if (id == 1) {
 				for (String entity : entities) {
-					Class<?> c = EntityUtils.stringToClassMapping.get(entity);
+					Class<?> c = null;//EntityUtils.stringToClassMapping.get(entity);
 					if (c == null) {
 						continue;
 					}

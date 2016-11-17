@@ -7,21 +7,21 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.IMerchant;
 import net.minecraft.entity.item.EntityMinecartChest;
 import net.minecraft.entity.item.EntityMinecartHopper;
-import net.minecraft.entity.passive.EntityHorse;
+import net.minecraft.entity.passive.AbstractHorse;
 import net.minecraft.entity.passive.EntityVillager;
-import net.minecraft.entity.passive.HorseType;
 import net.minecraft.init.Blocks;
-import net.minecraft.inventory.AnimalChest;
 import net.minecraft.inventory.ContainerBeacon;
 import net.minecraft.inventory.ContainerBrewingStand;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.ContainerDispenser;
 import net.minecraft.inventory.ContainerFurnace;
 import net.minecraft.inventory.ContainerHopper;
+import net.minecraft.inventory.ContainerHorseChest;
 import net.minecraft.inventory.ContainerHorseInventory;
 import net.minecraft.inventory.ContainerMerchant;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryEnderChest;
+import net.minecraft.inventory.Slot;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityBeacon;
@@ -150,15 +150,14 @@ public class WDLEvents {
 		
 		String saveName = "";
 
-		if (WDL.thePlayer.getRidingEntity() != null &&
-				WDL.thePlayer.getRidingEntity() instanceof EntityHorse) {
+		if (WDL.thePlayer.getRidingEntity() instanceof AbstractHorse) {
 			//If the player is on a horse, check if they are opening the
 			//inventory of the horse they are on.  If so, use that,
 			//rather than the entity being looked at.
 			if (WDL.windowContainer instanceof ContainerHorseInventory) {
-				EntityHorse horseInContainer = ReflectionUtils
+				AbstractHorse horseInContainer = ReflectionUtils
 						.stealAndGetField(WDL.windowContainer,
-								EntityHorse.class);
+								AbstractHorse.class);
 
 				//Intentional reference equals
 				if (horseInContainer == WDL.thePlayer.getRidingEntity()) {
@@ -172,21 +171,10 @@ public class WDLEvents {
 						return true;
 					}
 
-					EntityHorse entityHorse = (EntityHorse)
+					AbstractHorse entityHorse = (AbstractHorse)
 							WDL.thePlayer.getRidingEntity();
-					//Resize the horse's chest.  Needed because... reasons.
-					//Apparently the saved horse has the wrong size by
-					//default.
-					//Based off of EntityHorse.initHorseChest
-					HorseType horseType = entityHorse.getType();
-					AnimalChest horseChest = new AnimalChest("HorseChest",
-							(entityHorse.isChested() && horseType.canBeChested()) ? 17 : 2);
-					horseChest.setCustomName(entityHorse.getName());
-					WDL.saveContainerItems(WDL.windowContainer, horseChest, 0);
-					//I don't know if it's a good idea to copy this, but I am...
-					horseChest.addInventoryChangeListener(entityHorse);
-					//Save the actual data value to the other horse.
-					ReflectionUtils.stealAndSetField(entityHorse, AnimalChest.class, horseChest);
+					saveHorse((ContainerHorseInventory)WDL.windowContainer, entityHorse);
+
 					WDLMessages.chatMessageTranslated(WDLMessageTypes.ON_GUI_CLOSED_INFO,
 							"wdl.messages.onGuiClosedInfo.savedRiddenHorse");
 					return true;
@@ -208,8 +196,10 @@ public class WDLEvents {
 				EntityMinecartChest emcc = (EntityMinecartChest) WDL.lastEntity;
 
 				for (int i = 0; i < emcc.getSizeInventory(); i++) {
-					emcc.setInventorySlotContents(i, WDL.windowContainer
-							.getSlot(i).getStack());
+					Slot slot = WDL.windowContainer.getSlot(i);
+					if (slot.getHasStack()) {
+						emcc.setInventorySlotContents(i, slot.getStack());
+					}
 				}
 				
 				saveName = "storageMinecart";
@@ -218,8 +208,10 @@ public class WDLEvents {
 				EntityMinecartHopper emch = (EntityMinecartHopper) WDL.lastEntity;
 
 				for (int i = 0; i < emch.getSizeInventory(); i++) {
-					emch.setInventorySlotContents(i, WDL.windowContainer
-							.getSlot(i).getStack());
+					Slot slot = WDL.windowContainer.getSlot(i);
+					if (slot.getHasStack()) {
+						emch.setInventorySlotContents(i, slot.getStack());
+					}
 				}
 				
 				saveName = "hopperMinecart";
@@ -232,22 +224,10 @@ public class WDLEvents {
 				ReflectionUtils.stealAndSetField(ev, MerchantRecipeList.class, list);
 				
 				saveName = "villager";
-			} else if (WDL.lastEntity instanceof EntityHorse
+			} else if (WDL.lastEntity instanceof AbstractHorse
 					&& WDL.windowContainer instanceof ContainerHorseInventory) {
-				EntityHorse entityHorse = (EntityHorse)WDL.lastEntity;
-				//Resize the horse's chest.  Needed because... reasons.
-				//Apparently the saved horse has the wrong size by
-				//default.
-				//Based off of EntityHorse.initHorseChest
-				HorseType horseType = entityHorse.getType();
-				AnimalChest horseChest = new AnimalChest("HorseChest",
-						(entityHorse.isChested() && horseType.canBeChested()) ? 17 : 2);
-				horseChest.setCustomName(entityHorse.getName());
-				WDL.saveContainerItems(WDL.windowContainer, horseChest, 0);
-				//I don't know if it's a good idea to copy this, but I am...
-				horseChest.addInventoryChangeListener(entityHorse);
-				//Save the actual data value to the other horse.
-				ReflectionUtils.stealAndSetField(entityHorse, AnimalChest.class, horseChest);
+				saveHorse((ContainerHorseInventory) WDL.windowContainer,
+						(AbstractHorse) WDL.lastEntity);
 				
 				saveName = "horse";
 			} else {
@@ -377,8 +357,10 @@ public class WDLEvents {
 			int containerSize = WDL.windowContainer.inventorySlots.size();
 
 			for (int i = 0; i < containerSize && i < inventorySize; i++) {
-				inventoryEnderChest.setInventorySlotContents(i, WDL.windowContainer
-						.getSlot(i).getStack());
+				Slot slot = WDL.windowContainer.getSlot(i);
+				if (slot.getHasStack()) {
+					inventoryEnderChest.setInventorySlotContents(i, slot.getStack());
+				}
 			}
 
 			saveName = "enderChest";
@@ -515,9 +497,9 @@ public class WDLEvents {
 						"wdl.messages.removeEntity.savingDistance",
 						entity, distance, threshold);
 				entity.chunkCoordX = MathHelper
-						.floor_double(entity.posX / 16.0D);
+						.floor(entity.posX / 16.0D);
 				entity.chunkCoordZ = MathHelper
-						.floor_double(entity.posZ / 16.0D);
+						.floor(entity.posZ / 16.0D);
 
 				WDL.newEntities.put(new ChunkPos(entity.chunkCoordX,
 						entity.chunkCoordZ), entity);
@@ -553,5 +535,26 @@ public class WDLEvents {
 						"wdl.messages.generalInfo.seedSet", seed);
 			}
 		}
+	}
+
+	/**
+	 * Saves all data for a horse into its inventory.
+	 *
+	 * @param container
+	 * @param horse
+	 */
+	private static void saveHorse(ContainerHorseInventory container, AbstractHorse horse) {
+		final int PLAYER_INVENTORY_SLOTS = 4 * 9;
+		ContainerHorseChest horseInventory = new ContainerHorseChest(
+				"HorseChest", container.inventorySlots.size()
+						- PLAYER_INVENTORY_SLOTS);
+		for (int i = 0; i < horseInventory.getSizeInventory(); i++) {
+			Slot slot = container.getSlot(i);
+			if (slot.getHasStack()) {
+				horseInventory.setInventorySlotContents(i, slot.getStack());
+			}
+		}
+
+		ReflectionUtils.stealAndSetField(horse, ContainerHorseChest.class, horseInventory);
 	}
 }

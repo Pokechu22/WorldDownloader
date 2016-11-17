@@ -344,7 +344,7 @@ class GuiSlider extends GuiButton {
 			if (this.dragging) {
 				this.sliderValue = (float)(mouseX - (this.xPosition + 4))
 						/ (float)(this.width - 8);
-				this.sliderValue = MathHelper.clamp_float(this.sliderValue, 0.0F,
+				this.sliderValue = MathHelper.clamp(this.sliderValue, 0.0F,
 						1.0F);
 				this.dragging = true;
 				
@@ -381,7 +381,7 @@ class GuiSlider extends GuiButton {
 		if (super.mousePressed(mc, mouseX, mouseY)) {
 			this.sliderValue = (float)(mouseX - (this.xPosition + 4))
 					/ (float)(this.width - 8);
-			this.sliderValue = MathHelper.clamp_float(this.sliderValue, 0.0F,
+			this.sliderValue = MathHelper.clamp(this.sliderValue, 0.0F,
 					1.0F);
 			this.displayString = I18n.format(text, getValue());
 			

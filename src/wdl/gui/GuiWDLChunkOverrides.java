@@ -335,7 +335,7 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 	 * @return The chunk position.
 	 */
 	private int displayXToChunkX(int displayX) {
-		return MathHelper.floor_float((displayX - (float)(width / 2)) / SCALE + scrollX);
+		return MathHelper.floor((displayX - (float)(width / 2)) / SCALE + scrollX);
 	}
 	
 	/**
@@ -346,7 +346,7 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 	 * @return The chunk position.
 	 */
 	private int displayZToChunkZ(int displayZ) {
-		return MathHelper.floor_float((displayZ - (float)(height / 2)) / SCALE + scrollZ);
+		return MathHelper.floor((displayZ - (float)(height / 2)) / SCALE + scrollZ);
 	}
 	
 	/**

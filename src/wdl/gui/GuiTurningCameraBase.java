@@ -151,7 +151,7 @@ public abstract class GuiTurningCameraBase extends GuiScreen {
 			Vec3d from = playerPos.addVector(offsetX, offsetY, offsetZ);
 			Vec3d to = offsetPos.addVector(offsetX, offsetY, offsetZ);
 			
-			RayTraceResult pos = mc.theWorld.rayTraceBlocks(from, to);
+			RayTraceResult pos = mc.world.rayTraceBlocks(from, to);
 	
 			if (pos != null) {
 				double distance = pos.hitVec.distanceTo(playerPos);

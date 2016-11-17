@@ -37,7 +37,7 @@ public class GuiIngameMenu extends GuiScreen {
 		this.buttonList.add(new GuiButton(0, this.width / 2 - 100, this.height
 				/ 4 + 96 + -16, 98, 20, I18n.format("menu.options",
 				new Object[0])));
-		GuiButton guibutton = this.func_189646_b(new GuiButton(7,
+		GuiButton guibutton = this.addButton(new GuiButton(7,
 				this.width / 2 + 2, this.height / 4 + 96 + -16, 98, 20, I18n
 						.format("menu.shareToLan", new Object[0])));
 		guibutton.enabled = this.mc.isSingleplayer()
@@ -71,7 +71,7 @@ public class GuiIngameMenu extends GuiScreen {
 			boolean flag = this.mc.isIntegratedServerRunning();
 			boolean flag1 = this.mc.isConnectedToRealms();
 			button.enabled = false;
-			this.mc.theWorld.sendQuittingDisconnectingPacket();
+			this.mc.world.sendQuittingDisconnectingPacket();
 			this.mc.loadWorld((WorldClient) null);
 
 			if (flag) {
@@ -95,12 +95,12 @@ public class GuiIngameMenu extends GuiScreen {
 
 		case 5:
 			this.mc.displayGuiScreen(new GuiAchievements(this,
-					this.mc.thePlayer.getStatFileWriter()));
+					this.mc.player.getStatFileWriter()));
 			break;
 
 		case 6:
-			this.mc.displayGuiScreen(new GuiStats(this, this.mc.thePlayer
-					.getStatFileWriter()));
+			this.mc.displayGuiScreen(new GuiStats(this,
+					this.mc.player.getStatFileWriter()));
 			break;
 
 		case 7:
