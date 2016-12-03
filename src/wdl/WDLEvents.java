@@ -461,6 +461,7 @@ public class WDLEvents {
 	 * Must be called when an entity is about to be removed from the world.
 	 */
 	public static void onRemoveEntityFromWorld(Entity entity) {
+		/*
 		// If the entity is being removed and it's outside the default tracking
 		// range, go ahead and remember it until the chunk is saved.
 
@@ -510,7 +511,7 @@ public class WDLEvents {
 					WDLMessageTypes.REMOVE_ENTITY,
 					"wdl.messages.removeEntity.allowingRemoveDistance",
 					entity, distance, threshold);
-		}
+		}*/
 	}
 
 	/**
