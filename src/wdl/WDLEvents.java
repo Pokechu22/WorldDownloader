@@ -556,6 +556,6 @@ public class WDLEvents {
 			}
 		}
 
-		ReflectionUtils.stealAndSetField(horse, ContainerHorseChest.class, horseInventory);
+		ReflectionUtils.stealAndSetField(horse, AbstractHorse.class, ContainerHorseChest.class, horseInventory);
 	}
 }
