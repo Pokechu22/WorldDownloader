@@ -5,6 +5,7 @@ import java.io.IOException;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+import wdl.VersionConstants;
 import wdl.WDL;
 
 /**
@@ -42,9 +43,9 @@ public class GuiWDLAbout extends GuiScreen {
 		buttonList.add(new GuiButton(2, (this.width / 2) - 100,
 				this.height - 29, I18n.format("gui.done")));
 		
-		String wdlVersion = WDL.VERSION;
+		String wdlVersion = VersionConstants.getModVersion();
 		
-		String mcVersion = WDL.getMinecraftVersionInfo();
+		String mcVersion = VersionConstants.getMinecraftVersionInfo();
 		
 		list = new TextList(mc, width, height, 39, 32);
 		list.addLine(I18n.format("wdl.gui.about.blurb"));

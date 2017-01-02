@@ -5,11 +5,13 @@ import io.netty.buffer.Unpooled;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.client.CPacketCustomPayload;
+import wdl.VersionConstants;
 import wdl.WDL;
 import wdl.WDLMessageTypes;
 import wdl.WDLMessages;
@@ -163,20 +165,22 @@ public class GuiWDLPermissions extends GuiScreen {
 			// Send the init packet.
 			CPacketCustomPayload initPacket;
 			try {
+				String payload = "{\"X-RTFM\":\"http://wiki.vg/Plugin_channels/World_downloader\",\"X-UpdateNote\":\"The plugin message system will be changing shortly.  Please stay tuned.\",\"Version\":\"%s\",\"State\":\"Refresh?\"}";
+				payload = String.format(payload, VersionConstants.getMinecraftVersion());
 				initPacket = new CPacketCustomPayload("WDL|INIT",
-						new PacketBuffer(Unpooled.copiedBuffer(WDL.VERSION
+						new PacketBuffer(Unpooled.copiedBuffer(payload
 								.getBytes("UTF-8"))));
 			} catch (UnsupportedEncodingException e) {
 				WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR,
-						"wdl.messages.generalError.noUTF8");
+						"wdl.messages.generalError.noUTF8", e);
 
 				initPacket = new CPacketCustomPayload("WDL|INIT",
 						new PacketBuffer(Unpooled.buffer()));
 			}
-			WDL.minecraft.getConnection().sendPacket(initPacket);
+			Minecraft.getMinecraft().getConnection().sendPacket(initPacket);
 			
 			button.enabled = false;
-			button.displayString = "Refershing...";
+			button.displayString = "Refreshing...";
 			
 			refreshTicks = 50; // 2.5 seconds
 		}

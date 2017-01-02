@@ -16,6 +16,7 @@ import org.apache.logging.log4j.Logger;
 import wdl.EntityRealigner;
 import wdl.HologramHandler;
 import wdl.MessageTypeCategory;
+import wdl.VersionConstants;
 import wdl.WDL;
 import wdl.WDLMessages;
 import wdl.WDLPluginChannels;
@@ -74,14 +75,17 @@ public class WDLApi {
 					+ wdlMods.get(id) + " (tried to register "
 					+ info + " over it)");
 		}
-		if (!mod.isValidEnvironment(WDL.VERSION)) {
-			String errorMessage = mod.getEnvironmentErrorMessage(WDL.VERSION);
+		if (!mod.isValidEnvironment(VersionConstants.getModVersion())) {
+			String errorMessage = mod
+					.getEnvironmentErrorMessage(VersionConstants
+							.getModVersion());
 			if (errorMessage != null) {
 				throw new IllegalArgumentException(errorMessage);
 			} else {
 				throw new IllegalArgumentException("Environment for " + info
 						+ " is incorrect!  Perhaps it is for a different"
-						+ " version of WDL?  You are running " + WDL.VERSION + ".");
+						+ " version of WDL?  You are running "
+						+ VersionConstants.getModVersion() + ".");
 			}
 		}
 		

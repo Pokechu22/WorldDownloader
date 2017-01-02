@@ -623,8 +623,10 @@ public class WDLPluginChannels {
 		// Send the init message.
 		CPacketCustomPayload initPacket;
 		try {
+			String payload = "{\"X-RTFM\":\"http://wiki.vg/Plugin_channels/World_downloader\",\"X-UpdateNote\":\"The plugin message system will be changing shortly.  Please stay tuned.\",\"Version\":\"%s\",\"State\":\"Init?\"}";
+			payload = String.format(payload, VersionConstants.getMinecraftVersion());
 			initPacket = new CPacketCustomPayload("WDL|INIT",
-					new PacketBuffer(Unpooled.copiedBuffer(WDL.VERSION
+					new PacketBuffer(Unpooled.copiedBuffer(payload
 							.getBytes("UTF-8"))));
 		} catch (UnsupportedEncodingException e) {
 			WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR,

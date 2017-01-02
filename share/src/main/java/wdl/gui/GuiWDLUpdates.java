@@ -10,6 +10,7 @@ import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.SoundEvents;
+import wdl.VersionConstants;
 import wdl.WDL;
 import wdl.update.Release;
 import wdl.update.WDLUpdateChecker;
@@ -165,7 +166,7 @@ public class GuiWDLUpdates extends GuiScreen {
 		protected boolean isSelected(int slotIndex) {
 			VersionEntry entry = getListEntry(slotIndex);
 			
-			return WDL.VERSION.equals(entry.release.tag);
+			return VersionConstants.getModVersion().equals(entry.release.tag);
 		}
 		
 		@Override
@@ -248,7 +249,7 @@ public class GuiWDLUpdates extends GuiScreen {
 	private String getUpdateMinecraftVersionText() {
 		return I18n.format("wdl.gui.updates.updateMinecraftVersion."
 				+ WDL.globalProps.getProperty("UpdateMinecraftVersion"),
-				WDL.getMinecraftVersion());
+				VersionConstants.getMinecraftVersion());
 	}
 	
 	private String getAllowBetasText() {
@@ -314,7 +315,7 @@ public class GuiWDLUpdates extends GuiScreen {
 		if (updateMinecraftVersionButton.isMouseOver()) {
 			Utils.drawGuiInfoBox(
 					I18n.format("wdl.gui.updates.updateMinecraftVersion.description",
-							WDL.getMinecraftVersion()),
+							VersionConstants.getMinecraftVersion()),
 					width, height, BOTTOM_MARGIN);
 		} else if (updateAllowBetasButton.isMouseOver()) {
 			Utils.drawGuiInfoBox(

@@ -12,6 +12,7 @@ import java.util.List;
 import javax.net.ssl.HttpsURLConnection;
 
 import net.minecraft.client.Minecraft;
+import wdl.VersionConstants;
 import wdl.WDL;
 import wdl.WDLMessageTypes;
 import wdl.WDLMessages;
@@ -39,10 +40,10 @@ public class GithubInfoGrabber {
 			"WorldDownloader_Update_Cache.json");
 	
 	static {
-		String mcVersion = WDL.getMinecraftVersionInfo();
-		String wdlVersion = WDL.VERSION;
+		String mcVersion = VersionConstants.getMinecraftVersionInfo();
+		String wdlVersion = VersionConstants.getModVersion();
 		
-		USER_AGENT = String.format("WorldDownloader mod by Pokechu22 "
+		USER_AGENT = String.format("World Downloader mod by Pokechu22 "
 				+ "(Minecraft %s; WDL %s) ", mcVersion, wdlVersion);
 	}
 	

@@ -14,16 +14,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import net.minecraft.client.ClientBrandRetriever;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.ChunkProviderClient;
-import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
+import net.minecraft.crash.ICrashReportDetail;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
@@ -37,8 +36,8 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ReportedException;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.MinecraftException;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.IChunkLoader;
@@ -67,15 +66,6 @@ import com.google.common.collect.HashMultimap;
  * This is the main class that does most of the work.
  */
 public class WDL {
-	// VERSION INFO - IF YOU ARE MAKING A CUSTOM VERSION, **PLEASE** CHANGE THIS
-	/**
-	 * Current version.  This should match the git tag for the current release.
-	 */
-	public static final String VERSION = "1.11a-beta1";
-	/**
-	 * The version of minecraft that this mod is installed on.
-	 */
-	public static final String EXPECTED_MINECRAFT_VERSION = "1.11";
 	/**
 	 * Owning username for the github repository to check for updates against.
 	 * 
@@ -1394,28 +1384,43 @@ public class WDL {
 	 * Gets the current setup information.
 	 */
 	public static String getDebugInfo() {
-		StringBuilder info = new StringBuilder();
-		info.append("### CORE INFO\n\n");
-		info.append("WDL version: ").append(VERSION).append('\n');
-		info.append("Launched version: ")
-				.append(Minecraft.getMinecraft().getVersion()).append('\n');
-		info.append("Client brand: ")
-				.append(ClientBrandRetriever.getClientModName()).append('\n');
-		info.append("File location: ");
-		try {
-			//http://stackoverflow.com/q/320542/3991344
-			String path = new File(WDL.class.getProtectionDomain()
-					.getCodeSource().getLocation().toURI()).getPath();
-			
-			//Censor username.
-			String username = System.getProperty("user.name");
-			path = path.replace(username, "<USERNAME>");
-			
-			info.append(path);
-		} catch (Exception e) {
-			info.append("Unknown (").append(e.toString()).append(')');
-		}
-		info.append("\n\n### EXTENSIONS\n\n");
+		Exception ex = new Exception();
+		ex.setStackTrace(new StackTraceElement[0]);
+		CrashReport report = new CrashReport("Wrapper crash report", ex);
+		addInfoToCrash(report);
+		StringBuilder sb = new StringBuilder();
+		report.getSectionsInStringBuilder(sb);
+		return sb.toString();
+	}
+	/**
+	 * Adds information to the given crash report.
+	 * @param report The report to add sections to.
+	 */
+	public static void addInfoToCrash(CrashReport report) {
+		CrashReportCategory core = report.makeCategoryDepth(
+				"World Downloader Mod - Core", 0);
+		core.addCrashSection("WDL version", VersionConstants.getModVersion());
+		core.addCrashSection("Minecraft version", VersionConstants.getMinecraftVersionInfo());
+		core.addCrashSection("Expected version", VersionConstants.getExpectedVersion());
+		core.addCrashSection("Protocol version", VersionConstants.getProtocolVersion());
+		core.addCrashSection("Data version", VersionConstants.getDataVersion());
+		core.setDetail("File location", new ICrashReportDetail<String>() {
+			@Override
+			public String call() throws Exception {
+				//http://stackoverflow.com/q/320542/3991344
+				String path = new File(WDL.class.getProtectionDomain()
+						.getCodeSource().getLocation().toURI()).getPath();
+
+				//Censor username.
+				String username = System.getProperty("user.name");
+				path = path.replace(username, "<USERNAME>");
+
+				return path;
+			}
+		});
+
+		/*CrashReportCategory ext = report.makeCategoryDepth(
+				"World Downloader Mod - Extensions", 0);
 		Map<String, ModInfo<?>> extensions = WDLApi.getWDLMods();
 		info.append(extensions.size()).append(" loaded\n");
 		for (Map.Entry<String, ModInfo<?>> e : extensions.entrySet()) {
@@ -1428,83 +1433,83 @@ public class WDL {
 					info.append(elm).append('\n');
 				}
 			}
-		}
-		info.append("\n### STATE\n\n");
-		info.append("minecraft: ").append(minecraft).append('\n');
-		info.append("worldClient: ").append(worldClient).append('\n');
-		info.append("networkManager: ").append(networkManager).append('\n');
-		info.append("thePlayer: ").append(thePlayer).append('\n');
-		info.append("windowContainer: ").append(windowContainer).append('\n');
-		info.append("lastClickedBlock: ").append(lastClickedBlock).append('\n');
-		info.append("lastEntity: ").append(lastEntity).append('\n');
-		info.append("saveHandler: ").append(saveHandler).append('\n');
-		info.append("chunkLoader: ").append(chunkLoader).append('\n');
-		info.append("newTileEntities: ").append(newTileEntities).append('\n');
-		info.append("newEntities: ").append(newEntities).append('\n');
-		info.append("newMapDatas: ").append(newMapDatas).append('\n');
-		info.append("downloading: ").append(downloading).append('\n');
-		info.append("isMultiworld: ").append(isMultiworld).append('\n');
-		info.append("propsFound: ").append(propsFound).append('\n');
-		info.append("startOnChange: ").append(startOnChange).append('\n');
-		info.append("overrideLastModifiedCheck: ")
-				.append(overrideLastModifiedCheck).append('\n');
-		info.append("saving: ").append(saving).append('\n');
-		info.append("worldLoadingDeferred: ").append(worldLoadingDeferred)
-				.append('\n');
-		info.append("worldName: ").append(worldName).append('\n');
-		info.append("baseFolderName: ").append(baseFolderName).append('\n');
-		
-		info.append("### CONNECTED SERVER\n\n");
-		ServerData data = Minecraft.getMinecraft().getCurrentServerData();
-		if (data == null) {
-			info.append("No data\n");
-		} else {
-			info.append("Name: ").append(data.serverName).append('\n');
-			info.append("IP: ").append(data.serverIP).append('\n');
-		}
-		
-		info.append("\n### PROPERTIES\n\n");
-		info.append("\n#### BASE\n\n");
+		}*/
+
+		CrashReportCategory state = report.makeCategoryDepth(
+				"World Downloader Mod - State", 0);
+		state.addCrashSection("minecraft", minecraft);
+		state.addCrashSection("worldClient", worldClient);
+		state.addCrashSection("networkManager", networkManager);
+		state.addCrashSection("thePlayer", thePlayer);
+		state.addCrashSection("windowContainer", windowContainer);
+		state.addCrashSection("lastClickedBlock", lastClickedBlock);
+		state.addCrashSection("lastEntity", lastEntity);
+		state.addCrashSection("saveHandler", saveHandler);
+		state.addCrashSection("chunkLoader", chunkLoader);
+		state.addCrashSection("newTileEntities", newTileEntities);
+		state.addCrashSection("newEntities", newEntities);
+		state.addCrashSection("newMapDatas", newMapDatas);
+		state.addCrashSection("downloading", downloading);
+		state.addCrashSection("isMultiworld", isMultiworld);
+		state.addCrashSection("propsFound", propsFound);
+		state.addCrashSection("startOnChange", startOnChange);
+		state.addCrashSection("overrideLastModifiedCheck", overrideLastModifiedCheck);
+		state.addCrashSection("saving", saving);
+		state.addCrashSection("worldLoadingDeferred", worldLoadingDeferred);
+		state.addCrashSection("worldName", worldName);
+		state.addCrashSection("baseFolderName", baseFolderName);
+
+		CrashReportCategory base = report.makeCategoryDepth(
+				"World Downloader Mod - Base properties", 0);
 		if (baseProps != null) {
 			if (!baseProps.isEmpty()) {
 				for (Map.Entry<Object, Object> e : baseProps.entrySet()) {
-					info.append(e.getKey()).append(": ").append(e.getValue());
-					info.append('\n');
+					if (!(e.getKey() instanceof String)) {
+						logger.warn("Non-string key " + e.getKey() + " in baseProps");
+						continue;
+					}
+					base.addCrashSection((String)e.getKey(), e.getValue());
 				}
 			} else {
-				info.append("empty\n");
+				base.addCrashSection("-", "empty");
 			}
 		} else {
-			info.append("null\n");
+			base.addCrashSection("-", "null");
 		}
-		info.append("\n#### WORLD\n\n");
+		CrashReportCategory world = report.makeCategoryDepth(
+				"World Downloader Mod - World properties", 0);
 		if (worldProps != null) {
 			if (!worldProps.isEmpty()) {
 				for (Map.Entry<Object, Object> e : worldProps.entrySet()) {
-					info.append(e.getKey()).append(": ").append(e.getValue());
-					info.append('\n');
+					if (!(e.getKey() instanceof String)) {
+						logger.warn("Non-string key " + e.getKey() + " in worldProps");
+						continue;
+					}
+					world.addCrashSection((String)e.getKey(), e.getValue());
 				}
 			} else {
-				info.append("empty\n");
+				world.addCrashSection("-", "empty");
 			}
 		} else {
-			info.append("null\n");
+			world.addCrashSection("-", "null");
 		}
-		info.append("\n#### DEFAULT\n\n");
+		CrashReportCategory global = report.makeCategoryDepth(
+				"World Downloader Mod - Global properties", 0);
 		if (globalProps != null) {
 			if (!globalProps.isEmpty()) {
 				for (Map.Entry<Object, Object> e : globalProps.entrySet()) {
-					info.append(e.getKey()).append(": ").append(e.getValue());
-					info.append('\n');
+					if (!(e.getKey() instanceof String)) {
+						logger.warn("Non-string key " + e.getKey() + " in globalProps");
+						continue;
+					}
+					global.addCrashSection((String)e.getKey(), e.getValue());
 				}
 			} else {
-				info.append("empty\n");
+				global.addCrashSection("-", "empty");
 			}
 		} else {
-			info.append("null\n");
+			global.addCrashSection("-", "null");
 		}
-		
-		return info.toString();
 	}
 	
 	/**
@@ -1544,26 +1549,5 @@ public class WDL {
 			report = CrashReport.makeCrashReport(t, category);
 		}
 		minecraft.crashed(report);
-	}
-	
-	/**
-	 * Gets the current minecraft version. This is different from the launched
-	 * version; it is constant between profile names.
-	 */
-	public static String getMinecraftVersion() {
-		return EXPECTED_MINECRAFT_VERSION;
-	}
-
-	/**
-	 * Gets version info similar to the info that appears at the top of F3.
-	 */
-	public static String getMinecraftVersionInfo() {
-		String version = getMinecraftVersion();
-		// Gets the launched version (appears in F3)
-		String launchedVersion = Minecraft.getMinecraft().getVersion();
-		String brand = ClientBrandRetriever.getClientModName();
-		
-		return String.format("Minecraft %s (%s/%s)", version,
-				launchedVersion, brand);
 	}
 }

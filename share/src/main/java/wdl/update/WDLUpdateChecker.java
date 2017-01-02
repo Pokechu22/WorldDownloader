@@ -9,6 +9,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.ClickEvent.Action;
+import wdl.VersionConstants;
 import wdl.WDL;
 import wdl.WDLMessageTypes;
 import wdl.WDLMessages;
@@ -76,7 +77,7 @@ public class WDLUpdateChecker extends Thread {
 			return null;
 		}
 		
-		String mcVersion = WDL.getMinecraftVersion();
+		String mcVersion = VersionConstants.getMinecraftVersion();
 		
 		boolean usePrereleases = WDL.globalProps.getProperty(
 				"UpdateAllowBetas").equals("true");
@@ -265,7 +266,7 @@ public class WDLUpdateChecker extends Thread {
 			for (int i = 0; i < releases.size(); i++) {
 				Release release = releases.get(i);
 				
-				if (release.tag.equalsIgnoreCase(WDL.VERSION)) {
+				if (release.tag.equalsIgnoreCase(VersionConstants.getModVersion())) {
 					runningRelease = release;
 				}
 			}
@@ -273,7 +274,7 @@ public class WDLUpdateChecker extends Thread {
 			if (runningRelease == null) {
 				WDLMessages.chatMessageTranslated(WDLMessageTypes.UPDATE_DEBUG,
 						"wdl.messages.updates.failedToFindMatchingRelease",
-						WDL.VERSION);
+						VersionConstants.getModVersion());
 				return;
 			}
 			
@@ -296,7 +297,7 @@ public class WDLUpdateChecker extends Thread {
 			if (runningRelease.hiddenInfo == null) {
 				WDLMessages.chatMessageTranslated(WDLMessageTypes.UPDATE_DEBUG,
 						"wdl.messages.updates.failedToFindMetadata",
-						WDL.VERSION);
+						VersionConstants.getModVersion());
 				return;
 			}
 			//Check the hashes, and list any failing ones.

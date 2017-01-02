@@ -23,8 +23,8 @@ public interface IWDLMod {
 	 * 
 	 * @param version
 	 *            The version string for WDL, as found with
-	 *            {@link wdl.WDL#VERSION}. It's recommended that you check
-	 *            against it.
+	 *            {@link wdl.VersionConstants#getModVersion()}. It's recommended
+	 *            that you check against it.
 	 */
 	public abstract boolean isValidEnvironment(String version);
 	
