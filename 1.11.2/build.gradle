@@ -1,0 +1,42 @@
+apply plugin: 'pokechu22.test'
+apply plugin: 'java'
+
+version = "4.0.0.0"
+group = "wdl"
+archivesBaseName = "WorldDownloader"
+
+minecraft {
+    suppressMappingVersionWarnings = true
+    version = "1.11.2"
+    mappings = "snapshot_20170101"
+    runDir = "run"
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir "src/main/java"
+            srcDir project(':share').file("src/main/java")
+        }
+        resources {
+            srcDir project(':share').file("src/main/resources")
+        }
+        base {
+            baseClasses = [
+                // Main hooks
+                "net.minecraft.client.gui.GuiIngameMenu",
+                "net.minecraft.client.multiplayer.WorldClient",
+                "net.minecraft.client.network.NetHandlerPlayClient",
+                // Auxiliary hooks, only needed for the base edit
+                "net.minecraft.crash.CrashReport",
+                "net.minecraft.client.ClientBrandRetriever",
+                "net.minecraft.client.resources.DefaultResourcePack"
+            ]
+        }
+    }
+}
+
+// Use tabs instead of spaces
+fixMcSources {
+    astyleConfig = "../astyle.cfg"
+}

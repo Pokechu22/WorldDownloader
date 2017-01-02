@@ -1,0 +1,409 @@
+wdl.translatorCredit=Tranducido a español por pokechu22 (mi español no es perfecto, si hay errores favor de creer un issue en GitHub)
+
+wdl.gui.wdl.title=World Downloader mod: Opciones por %s
+wdl.gui.wdl.worldname=Nombre:
+wdl.gui.wdl.worldOverrides.name=Ajustes del mundo...
+wdl.gui.wdl.worldOverrides.description=Ajustar opciones específicos del mundo descargado.  Por ejemplo, el punto de reaparición o el modo de juego.
+wdl.gui.wdl.generatorOverrides.name=Ajustes del generador...
+wdl.gui.wdl.generatorOverrides.description=Ajustar opciones de como se genera el mundo, por ejemplo la semilla.
+wdl.gui.wdl.playerOverrides.name=Ajustes del jugador...
+wdl.gui.wdl.playerOverrides.description=Ajustar opciones específicos del jugador descargado.  Por ejemplo, la salud y la posición.
+wdl.gui.wdl.entityOptions.name=Opciones de entidades...
+# I'm not so sure about renderizado as translation of "Track distance".  It's used for render distance, which seems OK, but it's an odd form.
+wdl.gui.wdl.entityOptions.description=Seleccionar cuáles entidades debes descargar, y los renderizados de los entidades.
+wdl.gui.wdl.backupOptions.name=Opciones de backup...
+wdl.gui.wdl.backupOptions.description=Ajustar como las copias de seguridad son creado después de descargar el mundo
+wdl.gui.wdl.messageOptions.name=Opciones de mensajes...
+wdl.gui.wdl.messageOptions.description=Ajustar cuáles mensajes aparecen en el chat.
+wdl.gui.wdl.permissionsInfo.name=Información de permisos...
+wdl.gui.wdl.permissionsInfo.description=Información de los permisos de este servidor y el formulario para solicitar permisos nuevos.
+wdl.gui.wdl.about.name=Acerca de World Downloader...
+wdl.gui.wdl.about.description=Información de su versión de World Downloader y los extensiones.
+wdl.gui.wdl.updates.name=Actualizados...
+wdl.gui.wdl.updates.description=Ver la lista de versiones y su versión y seleccionar las requisitos de los versiones nuevos.
+wdl.gui.wdl.updates.hasNew.name=Actualizados... (§6¡Hay un versión nuevo!§r)
+wdl.gui.wdl.updates.hasNew.description=Ver la lista de versiones y su versión, seleccionar las requisitos de los versiones nuevos, y actualizar su versión.
+
+wdl.gui.world.title=World Downloader mod: Opciones por mundo %s
+wdl.gui.world.allowCheats.true=Permitir trucos: Sí
+wdl.gui.world.allowCheats.false=Permitir trucos: No
+wdl.gui.world.gamemode.keep=Modo de juego: Dejar sin cambios
+wdl.gui.world.gamemode.creative=Modo de juego: Creativo
+wdl.gui.world.gamemode.survival=Modo de juego: Supervivencia
+wdl.gui.world.gamemode.hardcore=Modo de juego: Supervivencia Extrema
+# Tiempo is both time and weather - should Hora be used or should Tiempo be used?
+wdl.gui.world.time.keep=Hora: Dejar sin cambios
+wdl.gui.world.time.23000=Hora: Amanecer
+wdl.gui.world.time.0=Hora: Mañana
+wdl.gui.world.time.6000=Hora: Mediodía
+wdl.gui.world.time.11500=Hora: Tarde
+wdl.gui.world.time.12500=Hora: Atardecer
+wdl.gui.world.time.18000=Hora: Medianoche
+wdl.gui.world.time.custom=Hora: Otro (%s)
+wdl.gui.world.weather.keep=Tiempo: Dejar sin cambios
+wdl.gui.world.weather.sunny=Tiempo: Soleado
+wdl.gui.world.weather.rain=Tiempo: Lluvia
+wdl.gui.world.weather.thunderstorm=Tiempo: Tormenta eléctrica
+# Again, spawn point is odd.
+wdl.gui.world.spawn.auto=Punto de reaparición: Automático
+wdl.gui.world.spawn.player=Punto de reaparición: Jugador
+wdl.gui.world.spawn.xyz=Punto de reaparición:
+wdl.gui.world.setSpawnToCurrentPosition=Aquí
+wdl.gui.world.allowCheats.description=Ajustar si se puede usar trucos (como /gamemode) en el mundo descargado.
+wdl.gui.world.gamemode.description=Ajustar cuál modo del juego se usa en el mundo descargado.
+wdl.gui.world.time.description=Ajustar la hora en el mundo descargado.
+wdl.gui.world.weather.description=Ajustar el tiempo en el mundo descargado.
+wdl.gui.world.spawn.description=Ajustar el punto de reaparición en el mundo descargado.%n%n§lDejar sin cambios§r: Usa el lugar del servidor.%n§lJugador§r: Usa el lugar donde el jugador fue cuando el descargado fue terminado.%n§lXYZ§r: Se puede poner un lugar especifico.
+wdl.gui.world.setSpawnToCurrentPosition.description=Poner su lugar en los cajas de texto para el punto de reaparición.
+wdl.gui.world.spawnPos.description=Usa estes cajas de texto para asignar la posición exacta del punto de reaparición.%n%nEste caja es por la coordenada %s.
+
+wdl.gui.player.title=World Downloader mod: Opciones del jugador por mundo %s
+wdl.gui.player.health.keep=Salud: Dejar sin cambios
+wdl.gui.player.health.20=Salud: Lleno
+wdl.gui.player.health.custom=Salud: Otro (%s)
+wdl.gui.player.hunger.keep=Hambre: Dejar sin cambios
+wdl.gui.player.hunger.20=Hambre: Lleno
+wdl.gui.player.hunger.custom=Hambre: Otro (%s)
+wdl.gui.player.position.keep=Posición del jugador: Dejar sin cambios
+wdl.gui.player.position.xyz=Posición de jugador:
+wdl.gui.player.setPositionToCurrentPosition=Aquí
+# "Usa la salud de cuando el descargado fue terminado" seems wrong.
+wdl.gui.player.health.description=Ajustar la salud del jugador en el mundo descargado.%n%n§lDejar sin cambios§r: Usa la salud de cuando el descargado fue terminado.%n§lLleno§r: Usa la salud máxima del jugador (10 corazones).
+wdl.gui.player.hunger.description=Ajustar el hambre del jugador en el mundo descargado.%n%n§lDejar sin cambios§r Usa la salud de cuando el descargado fue terminado.%n§lLleno§r: Usa el hambre máxima del jugador (10 palillos).
+wdl.gui.player.position.description=Ajustar el punto de reaparición en el mundo descargado.%n%n§lDejar sin cambios§r: Usa el lugar donde el jugador fue cuando el descargado fue terminado.%n§lXYZ§r: Se puede poner un lugar especifico.
+wdl.gui.player.setPositionToCurrentPosition.description=Poner su lugar en los cajas de texto para el lugar de jugador.
+wdl.gui.player.positionTextBox.description=Usa estes cajas de texto para asignar la posición exacta del jugador.%n%nEste caja es por la coordenada %s.
+
+wdl.gui.generator.title=World Downloader mod: Opciones del generador por mundo %s
+wdl.gui.generator.seed=Semilla:
+# Is vacío a good translation for "empty"?
+wdl.gui.generator.generator.void=Generador: Mundo vacío
+wdl.gui.generator.generator.default=Generador: Predeterminado
+wdl.gui.generator.generator.flat=Generador: Extraplano
+wdl.gui.generator.generator.largeBiomes=Generador: Superbiomas
+wdl.gui.generator.generator.amplified=Generador: AMPLIFIED
+wdl.gui.generator.generator.custom=Generador: Personalizado
+wdl.gui.generator.generator.legacy=Generador: Viejo (1.1)
+wdl.gui.generator.generateStructures.true=Crear estructuras aleatorias: Sí
+wdl.gui.generator.generateStructures.false=Crear estructuras aleatorias: No
+wdl.gui.generator.seed.description=Asignar la semilla para usar en generar chunks nuevos en el mundo descargado.
+wdl.gui.generator.generator.description=El generador por el mundo descargado.
+wdl.gui.generator.generateStructures.description=Si estructuras aleatorias (Aldeas, mazmorras, etc.) debe ser generado en chunks nuevos en el mundo descargado.
+wdl.gui.generator.flatSettings=Opciones de mundo Extraplano...
+wdl.gui.generator.customSettings=Opciones de mundo Personalizado...
+
+wdl.gui.ingameMenu.downloadStatus.singlePlayer=No puede descargar en modo un jugador.
+wdl.gui.ingameMenu.downloadStatus.disabled=Descargar inhabilitado por server
+wdl.gui.ingameMenu.downloadStatus.request=Solicitar permiso para descargar
+wdl.gui.ingameMenu.downloadStatus.saving=Ya guardando...
+wdl.gui.ingameMenu.downloadStatus.stop=Terminar descargar
+wdl.gui.ingameMenu.downloadStatus.start=Descargar este mundo
+wdl.gui.ingameMenu.settings=...
+
+wdl.gui.messages.message.title=World Downloader mod: Opciones de mensajes
+wdl.gui.messages.message.true=%s: Sí
+wdl.gui.messages.message.false=%s: No
+wdl.gui.messages.group.true=Grupo habilitado
+wdl.gui.messages.group.false=Grupo inhabilitado
+wdl.gui.messages.all.true=Mostrar mensajes de WDL: Sí
+wdl.gui.messages.all.false=Mostrar mensajes de WDL: No
+wdl.gui.messages.reset=Restaurar a condición base
+wdl.gui.messages.reset.confirm.title=¿Seguro que quieres restaurar sus opciones de mensajes?
+wdl.gui.messages.reset.confirm.subtitle=desaparecerá... ¡para siempre! (¡mucho tiempo!)
+wdl.gui.messages.all.description=Habilitar / inhabilitar todos los mensajes de WDL.%n%nInhabilitando todos §lno es recomendable§r, porque es posible que faltes errores importantes.
+wdl.gui.messages.reset.description=Restaurar si cada tipo de mensaje es habilitado a su valor predeterminado.
+
+wdl.gui.about.title=Acerca de World Downloader
+#Is "que conceder descargado" the right term for "that allows downloading"
+wdl.gui.about.blurb=WorldDownloader es un mod creado por nariol, cubic72, y pokechu22 (el versión de liteloader es por julialy), con ayuda de otros (incluyendo soccerguy3, UltiNaruto, Net32, y El_garoo) que concede descargado una copia de un mundo multijugador por usa en un jugador.  Código fuente es publico.
+wdl.gui.about.version=Estás usando versión %s en Minecraft versión %s.
+wdl.gui.about.forumThread=Ver el hilo en Minecraft Forums (inglés).
+wdl.gui.about.coremodSrc=Ver el Código fuente de coremod en GitHub
+wdl.gui.about.litemodSrc=Ver el Código fuente de litemod en GitHub
+wdl.gui.about.extensions=Extensiones
+wdl.gui.about.debugInfo=Copiar information debug
+wdl.gui.about.debugInfo.copied=¡Copiado!
+
+wdl.gui.extensions.title=World Downloader mod: Extensiones
+# Does "de tamaño variable" make it clear that it is resizable?
+wdl.gui.extensions.detailsCaption=Detalles (de tamaño variable)
+wdl.gui.extensions.modVersion=%s v%s
+#The following line is used as a fallback for extensions that have their own
+#GUI but don't give a name for the button to use.
+wdl.gui.extensions.defaultSettingsButtonText=Opciones...
+
+wdl.gui.multiworldSelect.title.startDownload=World Downloader - Intentando a empezar descargar
+wdl.gui.multiworldSelect.title.changeOptions=World Downloader - Intentando a ajustar opciones
+wdl.gui.multiworldSelect.subtitle=¿Dónde estás?
+wdl.gui.multiworldSelect.newName=< Nombre nuevo >
+wdl.gui.multiworldSelect.search=Buscar...
+wdl.gui.multiworldSelect.done=Usa el mundo seleccionado
+
+# This entire block is going to be messy because "Multiworld support" is hard to translate.
+wdl.gui.multiworld.title=World Downloader: §cHabilitado Multiworld
+wdl.gui.multiworld.descirption.requiredWhen=Habilitando Multiworld es necesario si uno de esos condiciones es correcto: %n - "Multiworld" o "Multimundo" es mencionado en el sito de web de servidor%n - El servidor tiene más que 3 dimensiones (o mundos)%n - El servidor hay dimensiones diferente que los dimensiones oficiales (el mundo real / Overworld, el Inframundo / Nether, y el fin / End)
+# Also, "por cuál mundo estás" seems wrong (for what world you are in)
+wdl.gui.multiworld.descirption.whatIs=Habilitando Multiworld te pregunta por cuál mundo estás antes de empezar el descargado.  Si no hay Habilitando Multiworld pero el servidor es Multiworld, partes del mundo pueden ser sobrescrito.
+wdl.gui.multiworld.true=Multiworld: Habilitando
+wdl.gui.multiworld.false=Multiworld: Inhabilitando
+
+wdl.gui.backup.title=World Downloader mod: opciones de backup
+wdl.gui.backup.backupMode=Modo de backup: %s
+# Probably need to use some queer tense instead of just 'crea'
+wdl.gui.backup.description1=Después de terminar el descargado, World Downloader crea un backup del mundo.  Se puede ajustar esto aquí.
+wdl.gui.backup.description2=§lNo backup§r: No crea un backup antes de descargar.%n§lCopiar la carpeta del mundo§r: La carpeta del mundo es copiado.  Así que siempre tienes un copia del mundo que puedes jugar en este estado, si descargas otra vez.%n§lCrear un archivo zip del mundo§r: Una copia del mundo zipeado es creado en la carpeta de mundos, que puedes extractar si quieres.
+wdl.gui.backup.description3=Por todos los tipos de backups, el nombre del archivo tiene el tiempo.  Así que los backups viejos no serán sobrescrito.
+
+wdl.gui.saveProgress.progressInfo=%s (%d de %d)
+
+wdl.gui.rangePresets.title=World Downloader mod: Renderizados predeterminados
+wdl.gui.rangePresets.vanilla=Renderizados de Minecraft vanilla
+wdl.gui.rangePresets.spigot=Renderizados típicos de Spigot
+wdl.gui.rangePresets.server=Renderizados de servidor
+wdl.gui.rangePresets.upperWarning=¿Seguro que quieres restaurar sus renderizados de entidades?
+wdl.gui.rangePresets.vanilla.warning=§rAsignando a renderizados de Minecraft vanilla - §c§n§lNo es posible deshacer esto.§r
+wdl.gui.rangePresets.spigot.warning=§rAsignando a renderizados típicos de Spigot - §c§n§lNo es posible deshacer esto.§r
+wdl.gui.rangePresets.server.warning=§rAsignando a renderizados de servidor - §c§n§lNo es posible deshacer esto.§r
+wdl.gui.rangePresets.vanilla.description=Asignar los renderizados a los de un servidor de Minecraft sin modificaciones (vanilla), y de algunos servidores de Bukkit.
+wdl.gui.rangePresets.spigot.description=Asignar los renderizados a los predeterminados de un servidor usando Spigot.%nEs posible cambiar estos en Spigot, pero muchos servidores usan los predeterminados.
+wdl.gui.rangePresets.server.description=Asignar los renderizados a los que realmente son en el servidor.  Solo puede usar esto si el servidor tiene el plugin "WDLCompanion".
+wdl.gui.rangePresets.server.installed=§aEstá instilada, así que puede usar esto.
+wdl.gui.rangePresets.server.notInstalled=§cNo está instilada, así que no puede usar esto.
+wdl.gui.rangePresets.cancel.description=Cancelar sin haciendo cambios.
+
+wdl.gui.overwriteChanges.title=World Downloader: ¿Sobrescribir el mundo viejo?
+wdl.gui.overwriteChanges.footer=Bajado en %tc y jugado en %tc
+wdl.gui.overwriteChanges.captionTitle=Su copia del mundo posiblemente está cambiado.
+wdl.gui.overwriteChanges.captionSubtitle=Los cambios posiblemente serán eliminado si no hace una copia.
+wdl.gui.overwriteChanges.asZip.name=Copiar en un archivo ZIP (y después empezar descargando)
+wdl.gui.overwriteChanges.asZip.description=Crear una copia en un archivo ZIP en la carpeta de mundos.%n%nNo puede usar este copia en el juego a menos que lo descomprima.  Debe usar esto si quiere tener una copia pero no quieres jugarlo.
+wdl.gui.overwriteChanges.asFolder.name=Copiar la carpeta del mundo (y después empezar descargando)
+wdl.gui.overwriteChanges.asFolder.description=Crear una copia del mundo en la carpeta de mundos.%n%nPuede jugar este copia y lo aparece en la lista de mundos.
+wdl.gui.overwriteChanges.startNow.name=Sobrescribir (empezar descargando inmediatamente)
+wdl.gui.overwriteChanges.startNow.description=No crear nada copia del mundo.%n%n§cSus cambios serán sobrescrito.§r%nSi no ha creado cambios que quiere guardar, debe usar esto.
+wdl.gui.overwriteChanges.cancel.name=Cancelar (no empezar descargando)
+wdl.gui.overwriteChanges.cancel.description=No empezar descargando.%n%nRegresar al servidor.  Puede crear un backup manualmente o solo no descargar ahora.
+wdl.gui.overwriteChanges.backingUp.title=Respaldando el mundo...
+wdl.gui.overwriteChanges.backingUp.progress=%d / %d (%s)
+wdl.gui.overwriteChanges.backingUp.zip=Creyendo un archivo zip %s...
+wdl.gui.overwriteChanges.backingUp.folder=Copiando la carpeta del mundo a %s...
+
+wdl.gui.entities.title=World Downloader mod: Opciones de entidades
+wdl.gui.entities.trackDistanceMode.default=Renderizados: De Minecraft normal
+wdl.gui.entities.trackDistanceMode.server=Renderizados: De servidor
+wdl.gui.entities.trackDistanceMode.user=Renderizados: Personalizado
+wdl.gui.entities.rangePresets=Renderizados predeterminados...
+wdl.gui.entities.entity.included=§aIncluido
+wdl.gui.entities.entity.ignored=§cIgnorado
+wdl.gui.entities.group.enabled=§aHabilitado
+wdl.gui.entities.group.disabled=§cTodo inhabilitado
+wdl.gui.entities.trackDistance=Renderizado: %d
+
+wdl.gui.updates.title=World Downloader mod: Versiones
+wdl.gui.updates.updateMinecraftVersion.client=Instilado en Minecraft cliente versión %s
+wdl.gui.updates.updateMinecraftVersion.server=Puede conectar a servidores jugando %s
+wdl.gui.updates.updateMinecraftVersion.any=Todos los versiones de Minecraft
+wdl.gui.updates.updateMinecraftVersion.description=Que es necesario por el versión nuevo.%n%n§lInstilado en Minecraft cliente versión %1$s§r: La modificación necesita ser instilado en un cliente de Minecraft %$1s.%n§lPuede conectar a servidores jugando %1$s§r: Puede ser instilado en un cliente en cualquier versión al menos que puede conectar a un servidor en %1$s.%n§lTodos los versiones de Minecraft§r: Puede ser instilado en cualquier versión de Minecraft.
+wdl.gui.updates.updateAllowBetas.true=Usar versiones beta: Sí
+wdl.gui.updates.updateAllowBetas.false=Usar versiones beta: No
+# Is "inestable" the right term?
+wdl.gui.updates.updateAllowBetas.description=¿Puede usar versiones beta por los actualizados?%n%nEstos versiones puede ser inestable.
+wdl.gui.updates.currentVersion=%s §6(está usando este versión)
+wdl.gui.updates.recomendedVersion=%s §6(debe usar este versión)
+wdl.gui.updates.pleaseWait=Cargar la lista de versiones... Por favor, espera...
+wdl.gui.updates.checkFailed=Error cargando la lista de versiones.
+wdl.gui.updates.update.title.release=Edición World Downloader %s por Minecraft %s
+wdl.gui.updates.update.title.prerelease=Pre-edición World Downloader %s por Minecraft %s
+wdl.gui.updates.update.version=%s versión por Minecraft %s (puede conectar a %s)
+# Version list, inserted after 'supports' in the above key.
+# Note that listStart and listMiddle have spaces at the end.
+wdl.gui.updates.update.version.listSingle=%s
+wdl.gui.updates.update.version.listDouble=%s y %s
+wdl.gui.updates.update.version.listStart=%s, 
+wdl.gui.updates.update.version.listMiddle=%s, 
+wdl.gui.updates.update.version.listEnd=y %s
+wdl.gui.updates.update.releaseDate=Lanzado %s
+wdl.gui.updates.update.viewOnline=Ver en red (y descargar)
+wdl.gui.updates.update.viewForumPost=Ver el forum post
+
+#Used in various places when update info can't be found
+wdl.gui.updates.update.unknown=Desconocido
+
+wdl.backup.none=No backup
+wdl.backup.folder=Copiar la carpeta del mundo
+wdl.backup.zip=Crear un archivo zip del mundo
+
+# Is this the right place to use the imperative? (abra...)
+wdl.messages.tooltip=Este mensaje es del mod World Downloader.%nSi quiere inhabilitar este mensaje, abra las opciones de %nmensajes y inhabilitar §l%s§r.
+wdl.messages.message.info.text=Información general
+wdl.messages.message.error.text=Errores general
+wdl.messages.message.updates.text=Información de versiones nuevos
+wdl.messages.message.loadingTileEntity.text=Cargando entidad de bloque
+wdl.messages.message.onWorldLoad.text=Mundo cargando
+wdl.messages.message.blockEvent.text=Acontecimiento de bloque
+wdl.messages.message.mapDataSaved.text=Imagen de mapa guardado
+# Unloaded?  It translates the same as downloaded.  Confusing.  So I'm using "escondido", for hidden.
+wdl.messages.message.chunkUnloaded.text=Chunk escondido
+wdl.messages.message.guiClosedInfo.text=Inventario cerrado (información)
+wdl.messages.message.guiClosedWarning.text=Inventario cerrado (advertencia)
+wdl.messages.message.saving.text=Guardando data
+wdl.messages.message.removeEntity.text=Sacando entidad
+wdl.messages.message.pluginChannel.text=Mensaje de plugin channel
+wdl.messages.message.updateDebug.text=Información debug de actualizar
+wdl.messages.message.info.description=Información general.  Por ejemplo, "Descargando empezado" y "Terminado de guardar".%n%nEs recomendable que use esto, porque no es mucho información y la información es muy importante (por ejemplo, cuando es seguro a desconectarse).
+wdl.messages.message.error.description=Errors general.  Por ejemplo, "Fracasado a guardar chunk" y "Fracasado a importar entidades de bloque".%n%nEs recomendable porque es información importante.
+wdl.messages.message.updates.description=Información de versiones nuevos, si hay.
+wdl.messages.message.loadingTileEntity.description=Un entidad de bloque fue importando de un chunk viejo.  Es posible que haya mas qué uno entidad de bloque en un chunk.
+wdl.messages.message.onWorldLoad.description=Información cuando un mundo está empezado.  Por ejemplo, si el servidor es el mismo, y la marca (versión) del servidor.
+wdl.messages.message.blockEvent.description=Información de un acontecimiento de un bloque.  Está usado cuando un bloque musical se toca.
+wdl.messages.message.mapDataSaved.description=Ocurre cuando una la imagen de una mapa (el objecto) está guardado.  Es importante que recuerde que esto ocurre cada segundo con una mapa en un marco, y con más frecuencia si es en su inventario.
+wdl.messages.message.chunkUnloaded.description=Ocurre cuando un chunk está escondido y guardado.
+wdl.messages.message.guiClosedInfo.description=Información de cuando el inventario de un objecto está cerrado.  Este mensaje significa que el contento del objecto fue guardado exitosamente.
+wdl.messages.message.guiClosedWarning.description=Información de cuando el inventario de un objecto está cerrado.  Este mensaje significa que algo no fue correcto - ¿posiblemente usted gira a un bloque diferente?
+wdl.messages.message.saving.description=Detalles de guardando el mundo.
+wdl.messages.message.removeEntity.description=Ocurre cuando un entidad está sacado del mundo, y si el entidad fue guardado.
+wdl.messages.message.pluginChannel.description=Información del configuración del servidor y sus permisos.
+wdl.messages.message.updateDebug.description=Información de actualizados, pero menos importante.  Por ejemplo, su conexión al red.
+wdl.messages.category.core_recommended=Base (recomendable)
+wdl.messages.category.core_debug=Base (debug)
+
+wdl.messages.removeEntity.allowingRemoveUserPref=removeEntityFromWorld: Permitiendo sacar entidad %s (su preferencia)
+wdl.messages.removeEntity.allowingRemoveUnsafe=removeEntityFromWorld: Permitiendo sacar entidad %s (no es seguro guardarlo - %s)
+wdl.messages.removeEntity.allowingRemoveUnrecognizedDistance=removeEntityFromWorld: Permitiendo sacar entidad %s (no sé el renderizado)
+wdl.messages.removeEntity.allowingRemoveDistance=removeEntityFromWorld: Permitiendo sacar entidad %s con distancia %.2f (menos qué %d)
+wdl.messages.removeEntity.savingDistance=removeEntityFromWorld: Guardando entidad %s con distancia %.2f (más que %d)
+wdl.messages.removeEntity.notSavingUserPreference=saveChunk: No guardando %s (su preferencia)
+wdl.messages.removeEntity.notSavingUnsafe=saveChunk: No guardando %s (no es seguro guardarlo - %s)
+
+wdl.messages.tileEntity.usingOld=Usando entidad de bloque del chunk viejo: %s en %s
+wdl.messages.tileEntity.usingNew=Usando entidad de bloque nuevo: %s en %s
+wdl.messages.tileEntity.notImporting=No es necesario importar este entidad de bloque: %s en %s 
+wdl.messages.tileEntity.edited=Modifiqué entidad de bloque en %s usando %s
+
+wdl.messages.entityTypeAndCustomName=%s (llamado %s)
+
+wdl.messages.saving.savingChunks=Guardando chunks...
+wdl.messages.saving.chunksSaved=Guardé chunks.
+wdl.messages.saving.flushingIO=Esperando por ThreadedFileIOBase a terminar...
+wdl.messages.saving.backingUp=Creyendo una copia de seguridad del mundo...
+wdl.messages.saving.savingPlayer=Guardando el jugador...
+wdl.messages.saving.playerSaved=Guardé el jugador.
+wdl.messages.saving.savingWorld=Guardando información del mundo...
+wdl.messages.saving.worldSaved=Guardé información del mundo.
+wdl.messages.saving.savingMapItemData=Guardando las imagen de mapas...
+wdl.messages.saving.mapItemDataSaved=Guardé las imagen de mapas.
+
+wdl.messages.onWorldLoad.sameServer=onWorldLoad: ¡mismo servidor!
+wdl.messages.onWorldLoad.differentServer=onWorldLoad: ¡diferente servidor!
+wdl.messages.onWorldLoad.spigot=Marca del servidor = %s.  Usando renderizados de spigot.
+wdl.messages.onWorldLoad.vanilla=Marca del servidor = %s.  Usando renderizados de Minecraft vanilla.
+
+wdl.messages.onBlockEvent.noteblock=onBlockEvent: Bloque musical: %s tono: %d - %s
+wdl.messages.onMapSaved=onMapDataLoaded: Guardé imagen de mapa %d.
+
+wdl.messages.onChunkNoLongerNeeded.saved=onChunkNoLongerNeeded: Guardé chunk en %d, %d
+wdl.messages.onChunkNoLongerNeeded.didNotSave=onChunkNoLongerNeeded: ¡No puedo guardar chunk en %d, %d porque es prohibido!
+
+wdl.messages.onGuiClosedInfo.cannotSaveEntities=¡El servidor prohíbe guardar entidades!
+wdl.messages.onGuiClosedInfo.cannotSaveTileEntities=¡El servidor prohíbe guardar entidades de bloques!
+wdl.messages.onGuiClosedInfo.savedRiddenHorse=Guardé inventario de caballo montado.
+wdl.messages.onGuiClosedInfo.savedEntity.storageMinecart=Guardé inventario de vagoneta con cofre.
+wdl.messages.onGuiClosedInfo.savedEntity.hopperMinecart=Guardé inventario de vagoneta con tolva.
+wdl.messages.onGuiClosedInfo.savedEntity.villager=Guardé comercios de aldeano.
+wdl.messages.onGuiClosedInfo.savedEntity.horse=Guardé inventario de caballo.
+wdl.messages.onGuiClosedInfo.savedTileEntity.singleChest=Guardé inventario de cofre.
+wdl.messages.onGuiClosedInfo.savedTileEntity.doubleChest=Guardé inventario de cofre doble.
+wdl.messages.onGuiClosedInfo.savedTileEntity.enderChest=Guardé inventario de cofre del fin.
+wdl.messages.onGuiClosedInfo.savedTileEntity.brewingStand=Guardé inventario de soporte para pociones.
+wdl.messages.onGuiClosedInfo.savedTileEntity.dispenser=Guardé inventario de dispensador.
+wdl.messages.onGuiClosedInfo.savedTileEntity.furnace=Guardé inventario de horno.
+wdl.messages.onGuiClosedInfo.savedTileEntity.hopper=Guardé inventario de tolva.
+wdl.messages.onGuiClosedInfo.savedTileEntity.beacon=Guardé efectos de faro.
+
+wdl.messages.onGuiClosedWarning.couldNotGetTE=onItemGuiClosed no puede obtener entidad de bloque en %s.
+wdl.messages.onGuiClosedWarning.unhandledEntity=onItemGuiClosed: No puede guardar entidad de bloque desconocido %s
+wdl.messages.onGuiClosedWarning.unhandledTileEntity=onItemGuiClosed: Entidad de bloque %2$s en %1$s no fue encargado
+wdl.messages.onGuiClosedWarning.failedToFindDoubleChest=¡No pude guardar este cofre doble!  Fracasé en ubicar los cofres cercas.
+
+wdl.unsafeReasons.badCustomName=¡Inválido nombre!  (Threw %s)
+
+wdl.messages.generalInfo.downloadStarted=Empecé descargando.
+wdl.messages.generalInfo.downloadStopped=Terminé descargando.
+wdl.messages.generalInfo.saveStarted=Terminé guardando.
+wdl.messages.generalInfo.saveComplete.startingAgain=Terminé guardando.  Empezando descargando de nuevo.
+wdl.messages.generalInfo.saveComplete.done=Terminé guardando.  ¡Su mundo de un jugador está listo a jugar!
+wdl.messages.generalInfo.worldChanged=Cambio de mundo detectado.  Empezará a descargar cuando termina de guardar.
+wdl.messages.generalInfo.downloadCanceled=Cancelé descargado.
+wdl.messages.generalInfo.seedSet=Asignando semilla de mundo un jugador a %s.
+wdl.messages.generalInfo.seedAndGenSet=Asignando semilla de mundo un jugador a %s y usando el generador predeterminado (puede cambiar el generador en los opciones de generador)
+
+wdl.messages.generalError.failedToImportTE=Fracasé en importar los entidades de bloque por chunk en %d, %d: %s
+wdl.messages.generalError.failedToSaveChunk=¡Fracasé en guardar el chunk en %d, %d!  (%s)
+wdl.messages.generalError.forbidden=¡El servidor no permite descargando este mundo!
+wdl.messages.generalError.failedToBackUp=Un error occurió durante el backup del mundo: %s
+wdl.messages.generalError.noUTF8=Su computadora no habilita el charset UTF-8: %s.  Debe sentir mal.
+wdl.messages.generalError.failedToSetUpEntityUI=No pude crear los opciones de entidades: %s
+
+wdl.messages.updates.releaseCount=Ubiqué %d versiones.
+wdl.messages.updates.failedToFindMatchingRelease=No pudé ubicar un versión %s.  ¿Posiblamente está usando un versión que no está publica?
+wdl.messages.updates.failedToFindMetadata=No pude ubicar información extra de versión %s.  Faltando el hashing.
+wdl.messages.updates.newRelease=¡Hay un versión nuevo!  Está usando %s y el más nuevo versión es %s.  %s.
+wdl.messages.updates.newRelease.updateLink=Actualizar aquí
+wdl.messages.updates.incorrectHash=Hash incorrecta por %s (reletivo a %s): Anticipando MD5 %s, recibí MD5 %s.
+wdl.messages.updates.hashException=Hash incorrecta por %s (reletivo a %s): Anticipando MD5 %s, pero un %s fue tirando.
+wdl.messages.updates.badHashesFound=¡Unos archivos tienen hashes incorectos!  Su instalación posiblemente sera corrupto o comprometido.  Ten cuidado, por favor, y posiblamente re-descargar el mod de el %s.
+wdl.messages.updates.updateCheckError=No pude hacer el chequea de actualizados: %s.
+wdl.messages.updates.usingCachedUpdates=Usando la lista de versiones cacheado.
+wdl.messages.updates.grabingUpdatesFromGithub=Usando la lista de versiones de GitHub releases.
+
+wdl.messages.permissions.init=Enciendo la sistema de Plugin Chaneles.
+wdl.messages.permissions.packet0=Recibí paquete de opciones Nº 0: [canUseFunctionsUnknownToServer=%s]
+wdl.messages.permissions.packet1=Recibí paquete de opciones Nº 1: [canDownloadInGeneral=%s, canCacheChunks=%s, saveRadius=%d, canSaveEntities=%s, canSaveTileEntities=%s, canSaveContainers=%s]
+wdl.messages.permissions.packet2=Recibí paquete de opciones Nº #2: [entityRanges=(total of %d)]
+wdl.messages.permissions.packet3=Recibí paquete de opciones Nº #3: [canRequestPermissions=%s, requestMessage=(%d long, HashCode of %s)]
+wdl.messages.permissions.packet4=Recibí paquete de opciones Nº #4: [chunkOverrides=(%d groups, %d total ranges)]
+wdl.messages.permissions.packet5.added=Recibí paquete de opciones Nº #5: Added %d ChunkRanges to %s.
+wdl.messages.permissions.packet5.set=Recibí paquete de opciones Nº #5: Changed list of ChunkRanges to %d total in %s.
+wdl.messages.permissions.packet6=Recibí paquete de opciones Nº #6: Removed %d ChunkRanges from %s with tags matching %s.
+wdl.messages.permissions.packet7=Recibí paquete de opciones Nº #7: Replaced %d ChunkRanges in %s that had a tag of %s with %d new ranges.
+wdl.messages.permissions.unknownPacket=Received unknown settings packet #%d.  See log for binary contents.  
+
+wdl.saveProgress.title=Guardando mundo descargado...
+wdl.saveProgress.chunk.title=Guardando chunks
+wdl.saveProgress.chunk.saving=Guardando chunk en %d, %d
+wdl.saveProgress.map.title=Guardando imagen de mapas
+wdl.saveProgress.map.saving=Escribiendo mapa Nº %d
+wdl.saveProgress.playerData.title=Guardando información del jugador
+wdl.saveProgress.playerData.creatingNBT=Creyendo NBT del jugador
+wdl.saveProgress.playerData.editingNBT=Modificando NBT del jugador
+wdl.saveProgress.playerData.extension=Modificando NBT del jugador con extensión %s
+wdl.saveProgress.playerData.writingNBT=Escribiendo NBT del jugador
+wdl.saveProgress.worldMetadata.title=Guardando información del mundo
+wdl.saveProgress.worldMetadata.creatingNBT=Creyendo NBT del mundo
+wdl.saveProgress.worldMetadata.editingNBT=Modificando NBT del mundo
+wdl.saveProgress.worldMetadata.extension=Modificando NBT del mundo con extensión %s
+wdl.saveProgress.worldMetadata.writingNBT=Escribiendo NBT del mundo
+wdl.saveProgress.extension.title=Extensión: %s
+wdl.saveProgress.flushingIO.title=Procrastinando...
+wdl.saveProgress.flushingIO.subtitle=(Esperando por la terminación de ThreadedFileIOBase)
+wdl.saveProgress.backingUp.title.zip=Creyendo un backup del mundo (creyendo un archivo zip)
+wdl.saveProgress.backingUp.title.folder=Creyendo un backup del mundo (copiando la carpeta del mundo)
+wdl.saveProgress.backingUp.preparing=Preparando...
+wdl.saveProgress.backingUp.file=Copiando %s
+
+wdl.props.global.title=Estes opciones son los predeterminados y son usado si un servidor no tiene un opcion.  Si quiere, puede cambiarlos.
+wdl.props.base.title=Estes opciones son usado en todo de un servidor.  Si hay multiworld, son los predeterminados por todos los mundos; si no, son los reales opciones.
+wdl.props.world.title=Estes opciones son de solo un mundo de un servidor con multiworld.
+
+#Some of these messages are using format substitutions, so that special coloring can be added.
+wdl.intro.success=¡El mod World Downloader está instalada exitosamente!
+wdl.intro.usage=Por información de como se usa este mod, ver el %s.
+wdl.intro.forumsLink=Hilo oficial de Minecraft Forums
+wdl.intro.contribute=Para reportar un error, sugerir una aplicación, contribuir código, o ayudar en tranducir, ver %s.
+wdl.intro.githubRepo=depósito de GitHub
+wdl.intro.stolen=%s: Si ha descargado este mod de un sito que no es los Minecraft Forums o GitHub (o un otro en %s), es posible que haya usado un sito que está redistribuyendo %s este mod.
+wdl.intro.redistributionList=la lista de sitos
+wdl.intro.warning=¡CUIDADO!
+wdl.intro.illegally=ILEGALMENTE
+wdl.intro.stolenBeware=Ten cuidado de estos sitos, porque es posible que haya malware.  %s
+wdl.intro.stopModReposts=Mas información: ¡StopModReposts!

@@ -1,0 +1,29 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+        maven {
+            name = 'sponge'
+            url = 'http://repo.spongepowered.org/maven'
+        }
+        jcenter()
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+        classpath 'pokechu22.test.begradle:begradle:0.0.1'
+        classpath 'org.spongepowered:mixingradle:0.4-SNAPSHOT'
+    }
+}
+
+project(':1.11').evaluationDependsOn(':share')
+project(':1.11-litemod').evaluationDependsOn(':1.11')
+project(':1.11.2').evaluationDependsOn(':share')
+project(':1.11.2-litemod').evaluationDependsOn(':1.11.2')

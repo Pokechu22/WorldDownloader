@@ -1,0 +1,424 @@
+# WorldDownloader translation file
+# All of the text on the left side of the = is the key, while the right side is the value.
+# '%s', '%d', and similar are formatting tokens, as described on the formatter
+# docs: http://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html
+# '%s' is a string, '%d' is a decimal integer, and '%f' is a float.
+# '%%' is an escaped percent, and '%n' is a newline.  You can reference an argument
+# at a specific index with %i$s, where 'i' is the number (and 's' may be changed
+# with one of the other format types).
+# Precision can be specified like %.2f, giving 2 decimal points of accuracy.
+# Everything after a '#' is a comment.
+#  
+# Note that in all of the things put into chat (under wdl.messages) you can
+# ONLY use '%s', '%d', and '%f'.
+# 
+# Additionally, Minecraft's §-based color codes may be used.  See
+# http://minecraft.gamepedia.com/Formatting_codes for more info.
+
+# Translator name, preferably in the form of 'Translated to %s by <your name>'.
+# '%s' will be replaced with the language name automatically.
+# If left blank, it will not be displayed.
+wdl.translatorCredit=
+
+wdl.gui.wdl.title=World Downloader mod: Options for %s
+wdl.gui.wdl.worldname=Name:
+wdl.gui.wdl.worldOverrides.name=World Overrides...
+wdl.gui.wdl.worldOverrides.description=Control specific metadata about the saved world, such as the spawn point and game mode.
+wdl.gui.wdl.generatorOverrides.name=World Generator Overrides...
+wdl.gui.wdl.generatorOverrides.description=Control specific info about how the world is generated, such as the seed.
+wdl.gui.wdl.playerOverrides.name=Player Overrides...
+wdl.gui.wdl.playerOverrides.description=Control specific options about the saved player, such as their health and position. 
+wdl.gui.wdl.entityOptions.name=Entity options...
+wdl.gui.wdl.entityOptions.description=Control what types of entities to save, and the track distances of those entities.
+wdl.gui.wdl.backupOptions.name=Backup Options...
+wdl.gui.wdl.backupOptions.description=Control how the world is backed up after saving.
+wdl.gui.wdl.messageOptions.name=Message Options...
+wdl.gui.wdl.messageOptions.description=Control what messages appear in the chat.
+wdl.gui.wdl.permissionsInfo.name=Permissions info...
+wdl.gui.wdl.permissionsInfo.description=Information about permissions setup on this server, and the form for requesting new permissions.
+wdl.gui.wdl.about.name=About World Downloader...
+wdl.gui.wdl.about.description=Information about your current installation of WDL, and any extensions.
+wdl.gui.wdl.updates.name=Updates...
+wdl.gui.wdl.updates.description=View the version list and what version you are running, and configure the criteria for determining the next update.
+wdl.gui.wdl.updates.hasNew.name=Updates... (§6New update available!§r)
+wdl.gui.wdl.updates.hasNew.description=View the version list and what version you are running, configure the criteria for determining the next update, and download the newest update.
+
+wdl.gui.world.title=World Downloader mod: World Options for %s
+wdl.gui.world.allowCheats.true=Allow cheats: Yes
+wdl.gui.world.allowCheats.false=Allow cheats: No
+wdl.gui.world.gamemode.keep=Game Mode: Don't change
+wdl.gui.world.gamemode.creative=Game Mode: Creative
+wdl.gui.world.gamemode.survival=Game Mode: Survival
+wdl.gui.world.gamemode.hardcore=Game Mode: Survival Hardcore
+wdl.gui.world.time.keep=Time: Don't change
+wdl.gui.world.time.23000=Time: Sunrise
+wdl.gui.world.time.0=Time: Morning
+wdl.gui.world.time.6000=Time: Noon
+wdl.gui.world.time.11500=Time: Evening
+wdl.gui.world.time.12500=Time: Sunset
+wdl.gui.world.time.18000=Time: Midnight
+wdl.gui.world.time.custom=Time: Other (%s)
+wdl.gui.world.weather.keep=Weather: Don't change
+wdl.gui.world.weather.sunny=Weather: Sunny
+wdl.gui.world.weather.rain=Weather: Rain
+wdl.gui.world.weather.thunderstorm=Weather: Thunderstorm
+wdl.gui.world.spawn.auto=Spawn Position: Automatic
+wdl.gui.world.spawn.player=Spawn Position: Player position
+wdl.gui.world.spawn.xyz=Spawn Position:
+wdl.gui.world.setSpawnToCurrentPosition=Current position
+wdl.gui.world.allowCheats.description=Controls whether commands (such as /gamemode) are allowed in the downloaded world.
+wdl.gui.world.gamemode.description=Controls which gamemode is used in the downloaded world.
+wdl.gui.world.time.description=Controls the time in the downloaded world.
+wdl.gui.world.weather.description=Controls the weather in the downloaded world.
+wdl.gui.world.spawn.description=Controls the spawn point in the downloaded world.%n%n§lDon't change§r: Use the server spawn position.%n§lPlayer position§r: Use the position that the player was in when the download was stopped.%n§lXYZ§r: Allows specifying the exact coordinates.
+wdl.gui.world.setSpawnToCurrentPosition.description=Set the spawn position to your current position.
+wdl.gui.world.spawnPos.description=Use these text boxes to specify the exact spawn position.%n%nThis text box specifies the %s coordinate.
+
+wdl.gui.player.title=World Downloader mod: Player Options for %s
+wdl.gui.player.health.keep=Health: Don't change
+wdl.gui.player.health.20=Health: Full
+wdl.gui.player.health.custom=Health: Other (%s)
+wdl.gui.player.hunger.keep=Hunger: Don't change
+wdl.gui.player.hunger.20=Hunger: Full
+wdl.gui.player.hunger.custom=Hunger: Other (%s)
+wdl.gui.player.position.keep=Player Position: Don't change
+wdl.gui.player.position.xyz=Player Position:
+wdl.gui.player.setPositionToCurrentPosition=Current position
+wdl.gui.player.health.description=This option sets the health that the player has in the downloaded copy of the world.%n%n§lDon't change§r: Keep the health at its value from when the download was stopped.%n§lFull§r: Set the player's health to the maximum value.
+wdl.gui.player.hunger.description=This option sets the hunger that the player has in the downloaded copy of the world.%n%n§lDon't change§r: Keep the hunger at its value from when the download was stopped.%n§lFull§r: Set the player's hunger to the maximum value.
+wdl.gui.player.position.description=This option allows choosing where you want the player to be located in the downloaded world.%n%n§lDon't change§r: Use the position that the player was in when the download was stopped.%n§lXYZ§r: Allows specifying the exact coordinates.
+wdl.gui.player.setPositionToCurrentPosition.description=Set the position to your current position.
+wdl.gui.player.positionTextBox.description=Use these text boxes to specify the exact player position.%n%nThis text box specifies the %s coordinate.
+
+wdl.gui.generator.title=World Downloader mod: World Generator Options for %s
+wdl.gui.generator.seed=Seed:
+wdl.gui.generator.generator.void=World Generator: Leave empty
+wdl.gui.generator.generator.default=World Generator: Default
+wdl.gui.generator.generator.flat=World Generator: Flat
+wdl.gui.generator.generator.largeBiomes=World Generator: Large Biomes
+wdl.gui.generator.generator.amplified=World Generator: AMPLIFIED
+wdl.gui.generator.generator.custom=World Generator: Custom
+wdl.gui.generator.generator.legacy=World Generator: Legacy (1.1)
+wdl.gui.generator.generateStructures.true=Generate Structures: ON
+wdl.gui.generator.generateStructures.false=Generate Structures: OFF
+wdl.gui.generator.seed.description=Set the seed used for generating new chunks in the downloaded world.
+wdl.gui.generator.generator.description=The world generator used when generating new chunks.
+wdl.gui.generator.generateStructures.description=Whether structures (villages, strongholds, etc) should be generated in new chunks.
+wdl.gui.generator.flatSettings=Superflat options...
+wdl.gui.generator.customSettings=Customized options...
+
+wdl.gui.ingameMenu.downloadStatus.singlePlayer=Can't download in single player
+wdl.gui.ingameMenu.downloadStatus.disabled=Download disabled by server
+wdl.gui.ingameMenu.downloadStatus.request=Request permission to download
+wdl.gui.ingameMenu.downloadStatus.saving=Still saving...
+wdl.gui.ingameMenu.downloadStatus.stop=Stop download
+wdl.gui.ingameMenu.downloadStatus.start=Download this world
+wdl.gui.ingameMenu.settings=...
+
+wdl.gui.messages.message.title=World Downloader mod: Message options
+wdl.gui.messages.message.true=%s: On
+wdl.gui.messages.message.false=%s: Off
+wdl.gui.messages.group.true=Group enabled
+wdl.gui.messages.group.false=Group disabled
+wdl.gui.messages.all.true=Show WDL messages: Yes
+wdl.gui.messages.all.false=Show WDL messages: No
+wdl.gui.messages.reset=Reset to defaults
+wdl.gui.messages.reset.confirm.title=Are you sure you want to reset your message settings?
+wdl.gui.messages.reset.confirm.subtitle=Your old settings will be lost forever! (A long time!)
+wdl.gui.messages.all.description=Enable / disable all WDL messages.%n%nDisabling all is §lNOT§r recommended, as you may miss important errors.
+wdl.gui.messages.reset.description=Reset whether each message is enabled to its default value.
+
+wdl.gui.about.title=About World Downloader
+wdl.gui.about.blurb=WorldDownloader is a mod developed by nariol, cubic72, and pokechu22 (litemod version by julialy), with help from others (including soccerguy3, UltiNaruto, Net32, and El_garoo) that allows downloading a copy of a multiplayer world for singleplayer use.  Source code is publicly available.
+wdl.gui.about.version=You are running %s on Minecraft version %s.
+wdl.gui.about.forumThread=View the Minecraft Forums thread
+wdl.gui.about.coremodSrc=View the Coremod source code on GitHub
+wdl.gui.about.litemodSrc=View the Litemod source code on GitHub
+wdl.gui.about.extensions=Extensions
+wdl.gui.about.debugInfo=Copy debug info
+wdl.gui.about.debugInfo.copied=Copied!
+
+wdl.gui.extensions.title=World Downloader mod: Extensions
+wdl.gui.extensions.detailsCaption=Details (resizable)
+wdl.gui.extensions.modVersion=%s v%s
+wdl.gui.extensions.enabled=§aEnabled
+wdl.gui.extensions.disabled=§cDisabled
+#The following line is used as a fallback for extensions that have their own
+#GUI but don't give a name for the button to use.
+wdl.gui.extensions.defaultSettingsButtonText=Settings...
+
+wdl.gui.multiworldSelect.title.startDownload=World Downloader - Trying To Start Download
+wdl.gui.multiworldSelect.title.changeOptions=World Downloader - Trying To Change Options
+wdl.gui.multiworldSelect.subtitle=Where are you?
+wdl.gui.multiworldSelect.newName=< New Name >
+wdl.gui.multiworldSelect.search=Search...
+wdl.gui.multiworldSelect.done=Use selected world
+
+wdl.gui.multiworld.title=World Downloader: §cMultiworld support
+wdl.gui.multiworld.descirption.requiredWhen=Multiworld support is required if at least one of the following conditions are met:%n - "Multiworld" is mentioned on the server's website%n - The server has more than 3 dimensions (or worlds)%n - The server has other dimensions than the official ones (the overworld, the nether, and the end)
+wdl.gui.multiworld.descirption.whatIs=Multiworld support prompts you for which world you are in before the download is started.  If it isn't enabled but the server is a multiworld server, parts of the map may be overwritten.
+wdl.gui.multiworld.true=Multiworld support: Enabled
+wdl.gui.multiworld.false=Multiworld support: Disabled
+
+wdl.gui.backup.title=World Downloader mod: Backup options
+wdl.gui.backup.backupMode=Backup mode: %s
+wdl.gui.backup.description1=World Downloader backs up the world every time saving finishes.  You can control how this backup occurs using this GUI.
+wdl.gui.backup.description2=§lNo backup§r: No backup is performed after the download finishes.%n§lCopy world folder§r: The entire world folder is copied, meaning that you will always have a playable version of the world in this state, should you chose to download again.%n§lZip a copy of a world§r: A zipped copy of the world is created in your worlds folder, which can later be unzipped if you want to revert.
+wdl.gui.backup.description3=For all backup modes, the created backup is timestamped, so your older backups will not be overwritten.
+
+wdl.gui.saveProgress.progressInfo=%s (%d of %d)
+
+wdl.gui.rangePresets.title=World Downloader mod: Range presets
+wdl.gui.rangePresets.vanilla=Vanilla Minecraft ranges
+wdl.gui.rangePresets.spigot=Default spigot ranges
+wdl.gui.rangePresets.server=Server-configured ranges
+wdl.gui.rangePresets.upperWarning=Are you sure you want to reset your entity ranges?
+wdl.gui.rangePresets.vanilla.warning=§rSetting to vanilla Minecraft ranges - §c§n§lThis cannot be undone.§r
+wdl.gui.rangePresets.spigot.warning=§rSetting to default spigot ranges - §c§n§lThis cannot be undone.§r
+wdl.gui.rangePresets.server.warning=§rSetting to server configured ranges - §c§n§lThis cannot be undone.§r
+wdl.gui.rangePresets.vanilla.description=Set the ranges to those used by an unmodified (vanilla) Minecraft server, and for some Bukkit servers.
+wdl.gui.rangePresets.spigot.description=Set the ranges to the default values for spigot servers.%nSpigot allows these values to be customized, but these are the defaults.
+wdl.gui.rangePresets.server.description=Set the ranges to the values that are actually used on the server.  This option is only available if the server has the WDLCompanion plugin installed.
+wdl.gui.rangePresets.server.installed=§aAs it is installed, this may be used.
+wdl.gui.rangePresets.server.notInstalled=§cAs it is not installed, this cannot be used.
+wdl.gui.rangePresets.cancel.description=Cancel without making changes.
+
+wdl.gui.overwriteChanges.title=World Downloader: Overwrite changes?
+wdl.gui.overwriteChanges.footer=Last downloaded on %tc, last played on %tc
+wdl.gui.overwriteChanges.footerNeverSaved=Never downloaded (different world with the same name as the server?) - last played on %tc
+wdl.gui.overwriteChanges.captionTitle=The local copy of the world may have been changed.
+wdl.gui.overwriteChanges.captionSubtitle=Changes may be lost if not backed up.
+wdl.gui.overwriteChanges.overwriteWarning1=It's also possible that you have a separate world with the same
+wdl.gui.overwriteChanges.overwriteWarning2=name as the server that may be overwritten - use caution!
+wdl.gui.overwriteChanges.asZip.name=Backup as zip (then start download)
+wdl.gui.overwriteChanges.asZip.description=Creates a .zip folder in the saves folder.%n%nThis backup can't be played in game unless extracted, but is useful if you just want to archive the changes.
+wdl.gui.overwriteChanges.asFolder.name=Backup folder (then start download)
+wdl.gui.overwriteChanges.asFolder.description=Creates a copy of the existing world folder.%n%nThis backup can be loaded in-game and will appear in the world list.
+wdl.gui.overwriteChanges.startNow.name=Allow overwriting (start download now)
+wdl.gui.overwriteChanges.startNow.description=Don't create any backup at all.%n%n§cAny changes made to the world will be overwritten.§r%nIf you haven't made any changes you want to keep, this is the right option.
+wdl.gui.overwriteChanges.cancel.name=Cancel (don't start download)
+wdl.gui.overwriteChanges.cancel.description=Don't start any download.%n%nReturn to the sever.  You can manually make a backup or just not download for the moment.
+wdl.gui.overwriteChanges.backingUp.title=Backing up the world...
+wdl.gui.overwriteChanges.backingUp.progress=%d / %d (%s)
+wdl.gui.overwriteChanges.backingUp.zip=Creating zip folder %s.
+wdl.gui.overwriteChanges.backingUp.folder=Copying world folder to %s.
+
+wdl.gui.entities.title=World Downloader mod: Entity configuration
+wdl.gui.entities.trackDistanceMode.default=Track Distance: Default
+wdl.gui.entities.trackDistanceMode.server=Track Distance: Server
+wdl.gui.entities.trackDistanceMode.user=Track Distance: User
+wdl.gui.entities.rangePresets=Range presets...
+wdl.gui.entities.entity.included=§aIncluded
+wdl.gui.entities.entity.ignored=§cIgnored
+wdl.gui.entities.group.enabled=§aEnabled
+wdl.gui.entities.group.disabled=§cAll disabled
+wdl.gui.entities.trackDistance=Track Distance: %d
+
+wdl.gui.updates.title=World Downloader mod: Updates
+wdl.gui.updates.updateMinecraftVersion.client=Installed on %s client
+wdl.gui.updates.updateMinecraftVersion.server=Connects to %s servers
+wdl.gui.updates.updateMinecraftVersion.any=Any Minecraft version
+wdl.gui.updates.updateMinecraftVersion.description=What criteria to use when determining the next version that should be used.%n%n§lInstalled on %1$s client§r: The mod must be installed on the given version of Minecraft.%n§lCan connect to %1$s servers§r: Can be installed on any client version so long as it can connect to a server running %1$s.%n§lAny Minecraft version§r: Any Minecraft version is allowed.
+wdl.gui.updates.updateAllowBetas.true=Use beta versions: Yes
+wdl.gui.updates.updateAllowBetas.false=Use beta versions: No
+wdl.gui.updates.updateAllowBetas.description=Should beta versions be included in determining the next version?%n%nBeta versions may be unstable.
+wdl.gui.updates.currentVersion=%s §6(you are currently running this version)
+wdl.gui.updates.recomendedVersion=%s §6(you should run this version)
+wdl.gui.updates.pleaseWait=Loading update list... please wait...
+wdl.gui.updates.checkFailed=Update check failed.
+wdl.gui.updates.update.title.release=Release World Downloader %s for Minecraft %s
+wdl.gui.updates.update.title.prerelease=Prerelease World Downloader %s for Minecraft %s
+wdl.gui.updates.update.version=%s version for Minecraft %s (supports %s)
+# Version list, inserted after 'supports' in the above key.
+# Note that listStart and listMiddle have spaces at the end.
+wdl.gui.updates.update.version.listSingle=%s
+wdl.gui.updates.update.version.listDouble=%s and %s
+wdl.gui.updates.update.version.listStart=%s, 
+wdl.gui.updates.update.version.listMiddle=%s, 
+wdl.gui.updates.update.version.listEnd=and %s
+wdl.gui.updates.update.releaseDate=Released %s
+wdl.gui.updates.update.viewOnline=View online (+ downloads)
+wdl.gui.updates.update.viewForumPost=View forum post
+
+#Used in various places when update info can't be found
+wdl.gui.updates.update.unknown=Unknown
+
+wdl.gui.permissions.current=Current perms
+wdl.gui.permissions.request=Request perms
+wdl.gui.permissions.overrides=Chunk Overrides
+
+wdl.backup.none=No backup
+wdl.backup.folder=Copy world folder
+wdl.backup.zip=Zip a copy of a world
+
+wdl.messages.tooltip=This is a message generated by the World Downloader mod.%nYou can disable this message by turning off %n§l%s §rin the WDL messages GUI.
+wdl.messages.message.info.text=General info
+wdl.messages.message.error.text=General errors
+wdl.messages.message.updates.text=New version information
+wdl.messages.message.loadingTileEntity.text=Loading TileEntity
+wdl.messages.message.onWorldLoad.text=World loaded
+wdl.messages.message.blockEvent.text=Block Event
+wdl.messages.message.mapDataSaved.text=Map data saved
+wdl.messages.message.chunkUnloaded.text=Chunk unloaded
+wdl.messages.message.guiClosedInfo.text=GUI Closed (Info)
+wdl.messages.message.guiClosedWarning.text=GUI Closed (Warning)
+wdl.messages.message.saving.text=Saving data
+wdl.messages.message.removeEntity.text=Removing entity
+wdl.messages.message.pluginChannel.text=Plugin channel message
+wdl.messages.message.updateDebug.text=Update debug information
+wdl.messages.message.info.description=General messages, such as "Download started" and "Save complete".%n%nRecomended as it includes information about when it is safe to stop playing, and generally is very minimal.
+wdl.messages.message.error.description=General errors, such as "Failed to save chunk" and "Failed to import tile entities".%n%nRecomended as it is generally important information.
+wdl.messages.message.updates.description=Information about when a new version of WDL is released.
+wdl.messages.message.loadingTileEntity.description=Occurs when a tile entity is imported from the previously saved version of a chunk.  There may be many tile entities in a chunk.
+wdl.messages.message.onWorldLoad.description=Information when a world loads, including whether the player is on the same server or changed servers, and the server's brand (version).
+wdl.messages.message.blockEvent.description=Information about a block event.  This is only used for note blocks to include the saved pitch.
+wdl.messages.message.mapDataSaved.description=Occurs when new map (the item) data is saved.  Note that map data is sent about once per second when a map is in an item frame, and even more frequently when in one's inventory.
+wdl.messages.message.chunkUnloaded.description=Occurs when a chunk is unloaded and saved.
+wdl.messages.message.guiClosedInfo.description=Information about when an item's GUI is closed.  This message is used to state that the contents of the item were saved successfully.
+wdl.messages.message.guiClosedWarning.description=Warnings when an item's GUI is closed.  This message is used when something went wrong -- usually, when you are looking at something else.
+wdl.messages.message.saving.description=Gives details about the current progress in saving the downloaded world.
+wdl.messages.message.removeEntity.description=Occurs whenever an entity is removed from the world, and whether that entity was saved.
+wdl.messages.message.pluginChannel.description=Information about the serverside configuration system and user rights.
+wdl.messages.message.updateDebug.description=Debug information from the update checker, including network status information.
+wdl.messages.category.core_recommended=Core (recommended)
+wdl.messages.category.core_debug=Core (debug)
+
+wdl.messages.removeEntity.allowingRemoveUserPref=removeEntityFromWorld: Allowing removal of %s (user pref)
+wdl.messages.removeEntity.allowingRemoveUnrecognizedDistance=removeEntityFromWorld: Allowing removal of %s (unrecognized distance)
+wdl.messages.removeEntity.allowingRemoveDistance=removeEntityFromWorld: Allowing removal of %s at distance %.2f (<= %d)
+wdl.messages.removeEntity.savingDistance=removeEntityFromWorld: Saving %s at distance %.2f (> %d)
+wdl.messages.removeEntity.notSavingUserPreference=saveChunk: Not saving %s (User preference)
+
+wdl.messages.tileEntity.usingOld=Using old TE from saved file: %s at %s
+wdl.messages.tileEntity.usingNew=Using new TE: %s at %s
+wdl.messages.tileEntity.notImporting=Old TE does not need importing: %s at %s 
+wdl.messages.tileEntity.edited=Edited TE at %s using %s
+
+wdl.messages.entityTypeAndCustomName=%s (named %s)
+
+wdl.messages.saving.savingChunks=Saving chunks...
+wdl.messages.saving.chunksSaved=Chunk data saved.
+wdl.messages.saving.flushingIO=Waiting for ThreadedFileIOBase to finish...
+wdl.messages.saving.backingUp=Backing up the world...
+wdl.messages.saving.savingPlayer=Saving player data...
+wdl.messages.saving.playerSaved=Player data saved.
+wdl.messages.saving.savingWorld=Saving world metadata...
+wdl.messages.saving.worldSaved=World metadata saved.
+wdl.messages.saving.savingMapItemData=Saving map data...
+wdl.messages.saving.mapItemDataSaved=Map data saved.
+
+wdl.messages.onWorldLoad.sameServer=onWorldLoad: same server!
+wdl.messages.onWorldLoad.differentServer=onWorldLoad: different server!
+wdl.messages.onWorldLoad.spigot=Server brand = %s.  Using spigot track distances.
+wdl.messages.onWorldLoad.vanilla=Server brand = %s.  Using vanilla track distances.
+
+wdl.messages.onBlockEvent.noteblock=onBlockEvent: Note Block: %s pitch: %d - %s
+wdl.messages.onMapSaved=onMapDataLoaded: Saved map %d.
+
+wdl.messages.onChunkNoLongerNeeded.saved=onChunkNoLongerNeeded: Saved chunk at %d, %d
+wdl.messages.onChunkNoLongerNeeded.didNotSave=onChunkNoLongerNeeded: Could not save chunk at %d, %d due to server restrictions!
+
+wdl.messages.onGuiClosedInfo.cannotSaveEntities=Server configuration forbids saving of Entities!
+wdl.messages.onGuiClosedInfo.cannotSaveTileEntities=Server configuration forbids saving of TileEntities!
+wdl.messages.onGuiClosedInfo.savedRiddenHorse=Saved ridden horse inventory.
+wdl.messages.onGuiClosedInfo.savedEntity.storageMinecart=Saved storage minecart contents.
+wdl.messages.onGuiClosedInfo.savedEntity.hopperMinecart=Saved hopper minecart contents.
+wdl.messages.onGuiClosedInfo.savedEntity.villager=Saved villager trades.
+wdl.messages.onGuiClosedInfo.savedEntity.horse=Saved horse inventory.
+wdl.messages.onGuiClosedInfo.savedTileEntity.singleChest=Saved chest contents.
+wdl.messages.onGuiClosedInfo.savedTileEntity.doubleChest=Saved double chest contents.
+wdl.messages.onGuiClosedInfo.savedTileEntity.enderChest=Saved ender chest contents.
+wdl.messages.onGuiClosedInfo.savedTileEntity.brewingStand=Saved brewing stand contents.
+wdl.messages.onGuiClosedInfo.savedTileEntity.dispenser=Saved dispenser contents.
+wdl.messages.onGuiClosedInfo.savedTileEntity.furnace=Saved furnace contents.
+wdl.messages.onGuiClosedInfo.savedTileEntity.hopper=Saved hopper contents.
+wdl.messages.onGuiClosedInfo.savedTileEntity.beacon=Saved beacon effects.
+
+wdl.messages.onGuiClosedWarning.couldNotGetTE=onItemGuiClosed could not get TE at %s.
+wdl.messages.onGuiClosedWarning.unhandledEntity=onItemGuiClosed: Unrecognised entity could not be saved: %s
+wdl.messages.onGuiClosedWarning.unhandledTileEntity=onItemGuiClosed: Unhandled Tile Entity at %s: %s
+wdl.messages.onGuiClosedWarning.failedToFindDoubleChest=Could not save this double chest!  Failed to find all neighboring chest blocks.
+
+wdl.messages.generalInfo.downloadStarted=Download started
+wdl.messages.generalInfo.downloadStopped=Download stopped.
+wdl.messages.generalInfo.saveStarted=Save started.
+wdl.messages.generalInfo.saveComplete.startingAgain=Save complete. Starting download again.
+wdl.messages.generalInfo.saveComplete.done=Save complete. Your single player file is ready to play!
+wdl.messages.generalInfo.worldChanged=World change detected. Download will start once current save completes.
+wdl.messages.generalInfo.downloadCanceled=Download canceled.
+wdl.messages.generalInfo.seedSet=Setting single-player world seed to %s.
+wdl.messages.generalInfo.seedAndGenSet=Setting single-player world seed to %s and using the default terrain generator (you can change the generator in the generator options)
+
+wdl.messages.generalError.failedToImportTE=Failed to import tile entities for chunk at %d, %d: %s
+wdl.messages.generalError.failedToSaveChunk=Chunk at position %d, %d cannot be saved!  (%s)
+wdl.messages.generalError.forbidden=The server forbids downloading this world!
+wdl.messages.generalError.failedToBackUp=Error while backing up world: %s
+wdl.messages.generalError.noUTF8=Your computer doesn't support the UTF-8 charset: %s.  You should feel bad.
+wdl.messages.generalError.failedToSetUpEntityUI=Error setting up Entity List UI: %s
+wdl.messages.generalError.failedToSaveEntity=Failed to save entity %s for chunk at %d, %d: %s
+wdl.messages.generalError.failedToSaveTE=Failed to save tile entity %s at %s for chunk at %d, %d: %s
+
+wdl.messages.updates.releaseCount=Found %d releases.
+wdl.messages.updates.failedToFindMatchingRelease=Could not find a release matching %s.  You may be running a version that hasn't been released yet.
+wdl.messages.updates.failedToFindMetadata=Could not find metadata for release %s.  Skipping hashing.
+wdl.messages.updates.newRelease=New version available!  You are running %s; the newest version is %s.  %s.
+wdl.messages.updates.newRelease.updateLink=Update here
+wdl.messages.updates.incorrectHash=Bad hash for %s (relative to %s): Expected MD5 in %s, got MD5 of %s.
+wdl.messages.updates.hashException=Bad hash for %s (relative to %s): Expected MD5 in %s, instead a %s was thrown.
+wdl.messages.updates.badHashesFound=Some files have invalid hashes!  Your installation may be corrupt or compromised.  Please use caution, and consider redownloading from the %s.
+wdl.messages.updates.updateCheckError=Failed to perform update check: %s.
+wdl.messages.updates.usingCachedUpdates=Using cached version list.
+wdl.messages.updates.grabingUpdatesFromGithub=Loading verison list from GitHub releases.
+
+wdl.messages.permissions.init=Sending plugin channel registration.
+wdl.messages.permissions.packet0=Received settings packet #0: [canUseFunctionsUnknownToServer=%s]
+wdl.messages.permissions.packet1=Received settings packet #1: [canDownloadInGeneral=%s, canCacheChunks=%s, saveRadius=%d, canSaveEntities=%s, canSaveTileEntities=%s, canSaveContainers=%s]
+wdl.messages.permissions.packet2=Received settings packet #2: [entityRanges=(total of %d)]
+wdl.messages.permissions.packet3=Received settings packet #3: [canRequestPermissions=%s, requestMessage=(%d long, HashCode of %s)]
+wdl.messages.permissions.packet4=Received settings packet #4: [chunkOverrides=(%d groups, %d total ranges)]
+wdl.messages.permissions.packet5.added=Received settings packet #5: Added %d ChunkRanges to %s.
+wdl.messages.permissions.packet5.set=Received settings packet #5: Changed list of ChunkRanges to %d total in %s.
+wdl.messages.permissions.packet6=Received settings packet #6: Removed %d ChunkRanges from %s with tags matching %s.
+wdl.messages.permissions.packet7=Received settings packet #7: Replaced %d ChunkRanges in %s that had a tag of %s with %d new ranges.
+wdl.messages.permissions.unknownPacket=Received unknown settings packet #%d.  See log for binary contents.  
+
+wdl.saveProgress.title=Saving downloaded world
+wdl.saveProgress.chunk.title=Saving chunks
+wdl.saveProgress.chunk.saving=Saving chunk at %d, %d
+wdl.saveProgress.map.title=Saving map item data
+wdl.saveProgress.map.saving=Writing map #%d
+wdl.saveProgress.playerData.title=Saving player data
+wdl.saveProgress.playerData.creatingNBT=Creating player NBT
+wdl.saveProgress.playerData.editingNBT=Editing player NBT
+wdl.saveProgress.playerData.extension=Editing player NBT with extension %s
+wdl.saveProgress.playerData.writingNBT=Writing player NBT
+wdl.saveProgress.worldMetadata.title=Saving world metadata
+wdl.saveProgress.worldMetadata.creatingNBT=Creating world info NBT
+wdl.saveProgress.worldMetadata.editingNBT=Editing world info NBT
+wdl.saveProgress.worldMetadata.extension=Editing world info NBT with extension %s
+wdl.saveProgress.worldMetadata.writingNBT=Writing world info NBT
+wdl.saveProgress.extension.title=Extension: %s
+wdl.saveProgress.flushingIO.title=Procrastinating...
+wdl.saveProgress.flushingIO.subtitle=(Waiting for ThreadedFileIOBase to finish)
+wdl.saveProgress.backingUp.title.zip=Backing up the world (creating zip)
+wdl.saveProgress.backingUp.title.folder=Backing up the world (copying folder)
+wdl.saveProgress.backingUp.preparing=Preparing...
+wdl.saveProgress.backingUp.file=Copying %s
+
+wdl.props.global.title=These are the default settings used across all servers when the individual server has not yet had a setting set.  You can manually modify them, if you want.
+wdl.props.base.title=These settings are shared across an entire server.  If multiworld is enabled, they act as the default values for the individual world properties; otherwise, they are used directly.
+wdl.props.world.title=These settings are used for a single world in a multiworld server.
+
+#Some of these messages are using format substitutions, so that special coloring can be added.
+wdl.intro.success=The World Downloader mod has been successfully installed!
+wdl.intro.usage=For information on how to use this mod, please see the %s and the %s.
+wdl.intro.forumsLink=Official Minecraft Forums thread
+wdl.intro.wikiLink=Project Wiki
+wdl.intro.contribute=To report a bug, suggest a feature, contribute code, or help translate, check out %s.
+wdl.intro.githubRepo=GitHub repository
+wdl.intro.stolen=%s: If you downloaded this mod from a location other than the Minecraft Forums or GitHub (or another site on %s), you may have used a site that is %s redistributing this mod.
+wdl.intro.redistributionList=the redistribution list
+wdl.intro.warning=WARNING
+wdl.intro.illegally=ILLEGALLY
+wdl.intro.stolenBeware=Beware of such sites, as they can include malware.  %s
+wdl.intro.stopModReposts=More information: StopModReposts!
