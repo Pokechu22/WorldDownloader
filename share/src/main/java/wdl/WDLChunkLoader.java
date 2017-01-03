@@ -129,7 +129,7 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 
 		NBTTagCompound rootTag = new NBTTagCompound();
 		rootTag.setTag("Level", levelTag);
-		rootTag.setInteger("DataVersion", 510);
+		rootTag.setInteger("DataVersion", VersionConstants.getDataVersion());
 
 		addChunkToPending(chunk.getPos(), rootTag);
 	}

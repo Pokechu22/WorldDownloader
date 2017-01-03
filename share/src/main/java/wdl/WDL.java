@@ -1397,8 +1397,17 @@ public class WDL {
 	 * @param report The report to add sections to.
 	 */
 	public static void addInfoToCrash(CrashReport report) {
+		// Trick the crash report handler into not storing a stack trace
+		// (we don't want it)
+		int stSize;
+		try {
+			stSize = Thread.currentThread().getStackTrace().length - 1;
+		} catch (Exception e) {
+			// Ignore
+			stSize = 0;
+		}
 		CrashReportCategory core = report.makeCategoryDepth(
-				"World Downloader Mod - Core", 0);
+				"World Downloader Mod - Core", stSize);
 		core.addCrashSection("WDL version", VersionConstants.getModVersion());
 		core.addCrashSection("Minecraft version", VersionConstants.getMinecraftVersionInfo());
 		core.addCrashSection("Expected version", VersionConstants.getExpectedVersion());
@@ -1420,7 +1429,7 @@ public class WDL {
 		});
 
 		/*CrashReportCategory ext = report.makeCategoryDepth(
-				"World Downloader Mod - Extensions", 0);
+				"World Downloader Mod - Extensions", stSize);
 		Map<String, ModInfo<?>> extensions = WDLApi.getWDLMods();
 		info.append(extensions.size()).append(" loaded\n");
 		for (Map.Entry<String, ModInfo<?>> e : extensions.entrySet()) {
@@ -1436,7 +1445,7 @@ public class WDL {
 		}*/
 
 		CrashReportCategory state = report.makeCategoryDepth(
-				"World Downloader Mod - State", 0);
+				"World Downloader Mod - State", stSize);
 		state.addCrashSection("minecraft", minecraft);
 		state.addCrashSection("worldClient", worldClient);
 		state.addCrashSection("networkManager", networkManager);
@@ -1460,7 +1469,7 @@ public class WDL {
 		state.addCrashSection("baseFolderName", baseFolderName);
 
 		CrashReportCategory base = report.makeCategoryDepth(
-				"World Downloader Mod - Base properties", 0);
+				"World Downloader Mod - Base properties", stSize);
 		if (baseProps != null) {
 			if (!baseProps.isEmpty()) {
 				for (Map.Entry<Object, Object> e : baseProps.entrySet()) {
@@ -1477,7 +1486,7 @@ public class WDL {
 			base.addCrashSection("-", "null");
 		}
 		CrashReportCategory world = report.makeCategoryDepth(
-				"World Downloader Mod - World properties", 0);
+				"World Downloader Mod - World properties", stSize);
 		if (worldProps != null) {
 			if (!worldProps.isEmpty()) {
 				for (Map.Entry<Object, Object> e : worldProps.entrySet()) {
@@ -1494,7 +1503,7 @@ public class WDL {
 			world.addCrashSection("-", "null");
 		}
 		CrashReportCategory global = report.makeCategoryDepth(
-				"World Downloader Mod - Global properties", 0);
+				"World Downloader Mod - Global properties", stSize);
 		if (globalProps != null) {
 			if (!globalProps.isEmpty()) {
 				for (Map.Entry<Object, Object> e : globalProps.entrySet()) {

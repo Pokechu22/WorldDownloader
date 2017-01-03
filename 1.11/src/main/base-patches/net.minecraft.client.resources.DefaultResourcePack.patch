@@ -1,0 +1,11 @@
+--- net/minecraft/client/resources/DefaultResourcePack.java
++++ net/minecraft/client/resources/DefaultResourcePack.java
+@@ -16,7 +16,7 @@
+ import net.minecraft.util.ResourceLocation;
+ 
+ public class DefaultResourcePack implements IResourcePack {
+-	public static final Set<String> DEFAULT_RESOURCE_DOMAINS = ImmutableSet.<String>of("minecraft", "realms");
++	public static final Set<String> DEFAULT_RESOURCE_DOMAINS = ImmutableSet.<String>of("minecraft", "realms"/* WDL >>> */, "wdl" /* <<< WDL */);
+ 	private final ResourceIndex resourceIndex;
+ 
+ 	public DefaultResourcePack(ResourceIndex resourceIndexIn) {
