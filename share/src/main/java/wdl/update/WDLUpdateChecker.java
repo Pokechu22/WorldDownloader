@@ -263,10 +263,11 @@ public class WDLUpdateChecker extends Thread {
 				return;
 			}
 			
+			String expectedTag = "v" + VersionConstants.getModVersion();
 			for (int i = 0; i < releases.size(); i++) {
 				Release release = releases.get(i);
 				
-				if (release.tag.equalsIgnoreCase(VersionConstants.getModVersion())) {
+				if (release.tag.equalsIgnoreCase(expectedTag)) {
 					runningRelease = release;
 				}
 			}
@@ -274,7 +275,7 @@ public class WDLUpdateChecker extends Thread {
 			if (runningRelease == null) {
 				WDLMessages.chatMessageTranslated(WDLMessageTypes.UPDATE_DEBUG,
 						"wdl.messages.updates.failedToFindMatchingRelease",
-						VersionConstants.getModVersion());
+						expectedTag);
 				return;
 			}
 			
@@ -297,7 +298,7 @@ public class WDLUpdateChecker extends Thread {
 			if (runningRelease.hiddenInfo == null) {
 				WDLMessages.chatMessageTranslated(WDLMessageTypes.UPDATE_DEBUG,
 						"wdl.messages.updates.failedToFindMetadata",
-						VersionConstants.getModVersion());
+						expectedTag);
 				return;
 			}
 			//Check the hashes, and list any failing ones.

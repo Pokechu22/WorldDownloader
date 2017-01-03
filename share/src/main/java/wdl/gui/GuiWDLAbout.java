@@ -18,8 +18,7 @@ public class GuiWDLAbout extends GuiScreen {
 	private final GuiScreen parent;
 	
 	private static final String FORUMS_THREAD = "http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465";
-	private static final String COREMOD_GITHUB = "https://github.com/Pokechu22/WorldDownloader";
-	private static final String LITEMOD_GITHUB = "https://github.com/uyjulian/LiteModWDL/";
+	private static final String ALL_GITHUB = "https://github.com/Pokechu22/WorldDownloader";
 	
 	private TextList list;
 	
@@ -65,9 +64,7 @@ public class GuiWDLAbout extends GuiScreen {
 		
 		list.addLinkLine(I18n.format("wdl.gui.about.forumThread"), FORUMS_THREAD);
 		list.addBlankLine();
-		list.addLinkLine(I18n.format("wdl.gui.about.coremodSrc"), COREMOD_GITHUB);
-		list.addBlankLine();
-		list.addLinkLine(I18n.format("wdl.gui.about.litemodSrc"), LITEMOD_GITHUB);
+		list.addLinkLine(I18n.format("wdl.gui.about.allSrc"), ALL_GITHUB);
 	}
 	
 	@Override
