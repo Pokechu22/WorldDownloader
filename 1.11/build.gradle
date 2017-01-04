@@ -1,7 +1,7 @@
-apply plugin: 'pokechu22.test'
+apply plugin: 'pokechu22.test.begradle'
 apply plugin: 'java'
 
-version = "4.0.0.0"
+version = "4.0.0.1-SNAPSHOT"
 group = "wdl"
 archivesBaseName = "WorldDownloader"
 

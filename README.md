@@ -4,13 +4,15 @@ World Downloader is a mod that allows making backups of Minecraft worlds.  You c
 
 This is a continuation [dslake's original version](https://github.com/dslake/WorldDownloader).
 
+## How do I compile this?
+
+You first need to set up begradle.  Right now, this can be done by downloading [from this repo](https://github.com/Pokechu22/ForgeGradle-extensions) and then running `gradlew install`.  Later this'll be put into a maven repo so that it doesn't need to manually be installed, but at this phase in development, it needs to manually be done.
+
+Once that is set up, you should be able to get everything to work by running `gradlew setupDecompWorkspace build`.  Hopefully.  If something doesn't work quite right, it may be a bug with begradle or another part of the build system.
+
 ## What is this branch?
 
 I'm going to be putting v4 development in this branch.
-
-## Where's the code for this branch?
-
-There is no code finalized yet.  I'm still figuring out _how_ I'm setting up the build system - once I've got that figured out, I can port the existing code to it.
 
 ## Why a new version?
 
@@ -24,4 +26,4 @@ There's already `legacy` and `wdl2` branches separate from the `master` branch. 
 
 ## Where's the old code?
 
-On separate branches - `master`, and `1.7.10`/`1.9`/`1.10`...  If you're interested in the current code, go there.
+On separate branches - `master`, and `1.7.10`/`1.9`/`1.10`...
