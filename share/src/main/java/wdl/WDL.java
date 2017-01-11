@@ -397,7 +397,7 @@ public class WDL {
 				return;
 			}
 		} catch (Exception e) {
-			logger.warn("Error while checking if the map has been played and" +
+			logger.warn("Error while checking if the map has been played and " +
 					"needs to be backed up (this is normal if this world " +
 					"has not been saved before): ", e);
 		} finally {
