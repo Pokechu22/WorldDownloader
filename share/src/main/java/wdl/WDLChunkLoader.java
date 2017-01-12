@@ -163,7 +163,7 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 		compound.setLong("InhabitedTime", chunk.getInhabitedTime());
 		ExtendedBlockStorage[] blockStorageArray = chunk.getBlockStorageArray();
 		NBTTagList blockStorageList = new NBTTagList();
-		boolean hasNoSky = !world.provider.hasNoSky();
+		boolean hasSky = VersionedProperties.hasSkyLight(world);
 
 		for (ExtendedBlockStorage blockStorage : blockStorageArray) {
 			if (blockStorage != null) {
@@ -181,15 +181,24 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 					blockData.setByteArray("Add", nibblearray1.getData());
 				}
 
-				blockData.setByteArray("BlockLight", blockStorage
-						.getBlocklightArray().getData());
+				NibbleArray blocklightArray = blockStorage.getBlocklightArray();
+				int lightArrayLen = blocklightArray.getData().length;
+				blockData.setByteArray("BlockLight", blocklightArray.getData());
 
-				if (hasNoSky) {
-					blockData.setByteArray("SkyLight", blockStorage
-							.getSkylightArray().getData());
+				if (hasSky) {
+					NibbleArray skylightArray = blockStorage.getSkylightArray();
+					if (skylightArray != null) {
+						blockData.setByteArray("SkyLight", skylightArray.getData());
+					} else {
+						// Shouldn't happen, but if it does, handle it smoothly.
+						logger.error("[WDL] Skylight array for chunk at " +
+								chunk.xPosition + ", " + chunk.zPosition +
+								" is null despite VersionedProperties " +
+								"saying it shouldn't be!");
+						blockData.setByteArray("SkyLight", new byte[lightArrayLen]);
+					}
 				} else {
-					blockData.setByteArray("SkyLight", new byte[blockStorage
-							.getBlocklightArray().getData().length]);
+					blockData.setByteArray("SkyLight", new byte[lightArrayLen]);
 				}
 
 				blockStorageList.appendTag(blockData);
