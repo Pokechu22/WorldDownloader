@@ -1,0 +1,17 @@
+package wdl;
+
+/**
+ * Helper that determines verison-specific information about things, such
+ * as whether a world has skylight.
+ */
+public class VersionedProperties {
+	/**
+	 * Returns true if the given world has skylight data.
+	 * 
+	 * @return a boolean
+	 */
+	public static boolean hasSkyLight(World world) {
+		// 1.11+: use hasSkyLight
+		return world.provider.hasSkylight();
+	}
+}
