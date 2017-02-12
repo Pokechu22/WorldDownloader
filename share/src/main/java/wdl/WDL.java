@@ -268,7 +268,7 @@ public class WDL {
 		defaultProps.setProperty("TutorialShown", "false");
 		
 		// Updates
-		defaultProps.setProperty("UpdateMinecraftVersion", "client");
+		defaultProps.setProperty("UpdateMinecraftVersion", "server");
 		//XXX change this based off of whether the current build is beta or not
 		defaultProps.setProperty("UpdateAllowBetas", "true");
 		
