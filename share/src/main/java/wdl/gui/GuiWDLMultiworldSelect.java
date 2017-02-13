@@ -282,10 +282,10 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 				I18n.format("wdl.gui.multiworldSelect.newName"));
 		this.buttonList.add(newWorldButton);
 
-		this.newNameField = new GuiTextField(40, this.fontRendererObj,
+		this.newNameField = new GuiTextField(40, this.fontRenderer,
 				this.width / 2 - 155, 29, 150, 20);
 		
-		this.searchField = new GuiTextField(41, this.fontRendererObj,
+		this.searchField = new GuiTextField(41, this.fontRenderer,
 				this.width / 2 + 5, 29, 150, 20);
 		this.searchField.setText(searchText);
 	}
@@ -393,10 +393,10 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		
 		Utils.drawBorder(53, 53, 0, 0, height, width);
 		
-		this.drawCenteredString(this.fontRendererObj, title, this.width / 2, 8,
+		this.drawCenteredString(this.fontRenderer, title, this.width / 2, 8,
 				0xFFFFFF);
 
-		this.drawCenteredString(this.fontRendererObj,
+		this.drawCenteredString(this.fontRenderer,
 				I18n.format("wdl.gui.multiworldSelect.subtitle"),
 				this.width / 2, 18, 0xFF0000);
 		
@@ -406,7 +406,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		this.searchField.drawTextBox();
 		//Hint as to what the text box does
 		if (this.searchField.getText().isEmpty() && !this.searchField.isFocused()) {
-			drawString(fontRendererObj,
+			drawString(fontRenderer,
 					I18n.format("wdl.gui.multiworldSelect.search"),
 					searchField.xPosition + 4, searchField.yPosition + 6,
 					0x909090);
@@ -472,9 +472,9 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 				+ selectedMultiWorld.displayName;
 		List<String> description = selectedMultiWorld.getDescription();
 		
-		int maxWidth = fontRendererObj.getStringWidth(title);
+		int maxWidth = fontRenderer.getStringWidth(title);
 		for (String line : description) {
-			int width = fontRendererObj.getStringWidth(line);
+			int width = fontRenderer.getStringWidth(line);
 			if (width > maxWidth) {
 				maxWidth = width;
 			}
@@ -482,12 +482,12 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		
 		drawRect(2, 61, 5 + maxWidth + 3, height - 61, 0x80000000);
 		
-		drawString(fontRendererObj, title, 5, 64, 0xFFFFFF);
+		drawString(fontRenderer, title, 5, 64, 0xFFFFFF);
 		
-		int y = 64 + fontRendererObj.FONT_HEIGHT;
+		int y = 64 + fontRenderer.FONT_HEIGHT;
 		for (String s : description) {
-			drawString(fontRendererObj, s, 5, y, 0xFFFFFF);
-			y += fontRendererObj.FONT_HEIGHT;
+			drawString(fontRenderer, s, 5, y, 0xFFFFFF);
+			y += fontRenderer.FONT_HEIGHT;
 		}
 	}
 }

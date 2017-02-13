@@ -66,7 +66,7 @@ public class GuiWDLEntities extends GuiScreen {
 					for (String entity : categoryEntities) {
 						add(new EntityEntry(categoryEntry, entity));
 
-						int width = fontRendererObj.getStringWidth(entity);
+						int width = fontRenderer.getStringWidth(entity);
 						if (width > largestWidthSoFar) {
 							largestWidthSoFar = width;
 						}
@@ -99,7 +99,7 @@ public class GuiWDLEntities extends GuiScreen {
 
 			public CategoryEntry(String group) {
 				this.group = group;
-				this.labelWidth = mc.fontRendererObj.getStringWidth(group);
+				this.labelWidth = mc.fontRenderer.getStringWidth(group);
 				
 				this.groupEnabled = WDL.worldProps.getProperty("EntityGroup."
 						+ group + ".Enabled", "true").equals("true");
@@ -111,9 +111,9 @@ public class GuiWDLEntities extends GuiScreen {
 			@Override
 			public void drawEntry(int slotIndex, int x, int y, int listWidth,
 					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
-				mc.fontRendererObj.drawString(this.group, (x + 110 / 2)
+				mc.fontRenderer.drawString(this.group, (x + 110 / 2)
 						- (this.labelWidth / 2), y + slotHeight
-						- mc.fontRendererObj.FONT_HEIGHT - 1, 0xFFFFFF);
+						- mc.fontRenderer.FONT_HEIGHT - 1, 0xFFFFFF);
 				
 				this.enableGroupButton.xPosition = x + 110;
 				this.enableGroupButton.yPosition = y;
@@ -210,9 +210,9 @@ public class GuiWDLEntities extends GuiScreen {
 				int center = (GuiWDLEntities.this.width / 2) - (totalWidth / 2)
 						+ largestWidth + 10;
 				
-				mc.fontRendererObj.drawString(this.entity,
+				mc.fontRenderer.drawString(this.entity,
 						center - largestWidth - 10, y + slotHeight / 2 - 
-								mc.fontRendererObj.FONT_HEIGHT / 2, 0xFFFFFF);
+								mc.fontRenderer.FONT_HEIGHT / 2, 0xFFFFFF);
 				
 				this.onOffButton.xPosition = center;
 				this.onOffButton.yPosition = y;
@@ -394,7 +394,7 @@ public class GuiWDLEntities extends GuiScreen {
 		this.drawDefaultBackground();
 		this.entityList.drawScreen(mouseX, mouseY, partialTicks);
 		
-		this.drawCenteredString(this.fontRendererObj,
+		this.drawCenteredString(this.fontRenderer,
 				I18n.format("wdl.gui.entities.title"), this.width / 2, 8,
 				0xFFFFFF);
 		

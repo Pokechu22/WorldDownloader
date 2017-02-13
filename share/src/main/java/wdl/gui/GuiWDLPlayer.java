@@ -44,11 +44,11 @@ public class GuiWDLPlayer extends GuiScreen {
 		this.buttonList.add(this.playerPosBtn);
 		y += 22;
 		this.posTextY = y + 4;
-		this.posX = new GuiNumericTextField(40, this.fontRendererObj,
+		this.posX = new GuiNumericTextField(40, this.fontRenderer,
 				this.width / 2 - 87, y, 50, 16);
-		this.posY = new GuiNumericTextField(41, this.fontRendererObj,
+		this.posY = new GuiNumericTextField(41, this.fontRenderer,
 				this.width / 2 - 19, y, 50, 16);
-		this.posZ = new GuiNumericTextField(42, this.fontRendererObj,
+		this.posZ = new GuiNumericTextField(42, this.fontRenderer,
 				this.width / 2 + 48, y, 50, 16);
 		this.posX.setText(WDL.worldProps.getProperty("PlayerX"));
 		this.posY.setText(WDL.worldProps.getProperty("PlayerY"));
@@ -144,17 +144,17 @@ public class GuiWDLPlayer extends GuiScreen {
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		Utils.drawListBackground(23, 32, 0, 0, height, width);
 		
-		this.drawCenteredString(this.fontRendererObj, this.title,
+		this.drawCenteredString(this.fontRenderer, this.title,
 				this.width / 2, 8, 0xFFFFFF);
 		
 		String tooltip = null;
 
 		if (this.showPosFields) {
-			this.drawString(this.fontRendererObj, "X:", this.width / 2 - 99,
+			this.drawString(this.fontRenderer, "X:", this.width / 2 - 99,
 					this.posTextY, 0xFFFFFF);
-			this.drawString(this.fontRendererObj, "Y:", this.width / 2 - 31,
+			this.drawString(this.fontRenderer, "Y:", this.width / 2 - 31,
 					this.posTextY, 0xFFFFFF);
-			this.drawString(this.fontRendererObj, "Z:", this.width / 2 + 37,
+			this.drawString(this.fontRenderer, "Z:", this.width / 2 + 37,
 					this.posTextY, 0xFFFFFF);
 			this.posX.drawTextBox();
 			this.posY.drawTextBox();

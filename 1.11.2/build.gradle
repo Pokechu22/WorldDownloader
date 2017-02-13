@@ -1,14 +1,34 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+        jcenter()
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+        classpath 'pokechu22.test.begradle:begradle:0.0.2-SNAPSHOT'
+    }
+}
+
 apply plugin: 'pokechu22.test.begradle'
 apply plugin: 'java'
 
-version = "4.0.0.1-SNAPSHOT"
+version = "4.0.0.1"
 group = "wdl"
 archivesBaseName = "WorldDownloader"
 
 minecraft {
     suppressMappingVersionWarnings = true
     version = "1.11.2"
-    mappings = "snapshot_20170101"
+    mappings = "snapshot_20170210"
     runDir = "run"
 }
 

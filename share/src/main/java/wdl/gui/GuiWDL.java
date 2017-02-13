@@ -223,7 +223,7 @@ public class GuiWDL extends GuiScreen {
 			WDL.baseProps.setProperty("ServerName", WDL.getServerName());
 		}
 
-		this.worldname = new GuiTextField(42, this.fontRendererObj,
+		this.worldname = new GuiTextField(42, this.fontRenderer,
 				this.width / 2 - 155, 19, 150, 18);
 		this.worldname.setText(WDL.baseProps.getProperty("ServerName"));
 
@@ -315,11 +315,11 @@ public class GuiWDL extends GuiScreen {
 		
 		this.list.drawScreen(mouseX, mouseY, partialTicks);
 		
-		this.drawCenteredString(this.fontRendererObj, this.title,
+		this.drawCenteredString(this.fontRenderer, this.title,
 				this.width / 2, 8, 0xFFFFFF);
 		String name = I18n.format("wdl.gui.wdl.worldname");
-		this.drawString(this.fontRendererObj, name, this.worldname.xPosition
-				- this.fontRendererObj.getStringWidth(name + " "), 26, 0xFFFFFF);
+		this.drawString(this.fontRenderer, name, this.worldname.xPosition
+				- this.fontRenderer.getStringWidth(name + " "), 26, 0xFFFFFF);
 		this.worldname.drawTextBox();
 		
 		super.drawScreen(mouseX, mouseY, partialTicks);

@@ -47,9 +47,9 @@ public class GuiWDLMessages extends GuiScreen {
 			@Override
 			public void drawEntry(int slotIndex, int x, int y, int listWidth,
 					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
-				drawCenteredString(fontRendererObj, category.getDisplayName(),
+				drawCenteredString(fontRenderer, category.getDisplayName(),
 						GuiWDLMessages.this.width / 2 - 40, y + slotHeight
-						- mc.fontRendererObj.FONT_HEIGHT - 1, 0xFFFFFF);
+						- mc.fontRenderer.FONT_HEIGHT - 1, 0xFFFFFF);
 				
 				button.xPosition = GuiWDLMessages.this.width / 2 + 20;
 				button.yPosition = y;
@@ -262,7 +262,7 @@ public class GuiWDLMessages extends GuiScreen {
 		this.drawDefaultBackground();
 		this.list.drawScreen(mouseX, mouseY, partialTicks);
 		
-		this.drawCenteredString(this.fontRendererObj,
+		this.drawCenteredString(this.fontRenderer,
 				I18n.format("wdl.gui.messages.message.title"),
 				this.width / 2, 8, 0xFFFFFF);
 		

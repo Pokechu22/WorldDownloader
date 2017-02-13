@@ -121,7 +121,7 @@ public class GuiWDLAbout extends GuiScreen {
 		
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		
-		drawCenteredString(fontRendererObj, I18n.format("wdl.gui.about.title"),
+		drawCenteredString(fontRenderer, I18n.format("wdl.gui.about.title"),
 				width / 2, 2, 0xFFFFFF);
 	}
 }

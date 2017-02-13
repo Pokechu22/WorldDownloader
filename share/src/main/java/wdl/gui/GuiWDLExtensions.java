@@ -118,8 +118,8 @@ public class GuiWDLExtensions extends GuiScreen {
 				disableButton.drawButton(mc, mouseX, mouseY);
 				
 				int centerY = y + slotHeight / 2
-						- fontRendererObj.FONT_HEIGHT / 2;
-				fontRendererObj.drawString(label, x, centerY, 0xFFFFFF);
+						- fontRenderer.FONT_HEIGHT / 2;
+				fontRenderer.drawString(label, x, centerY, 0xFFFFFF);
 			}
 
 			@Override
@@ -243,7 +243,7 @@ public class GuiWDLExtensions extends GuiScreen {
 			
 			super.drawScreen(mouseX, mouseY, partialTicks);
 			
-			drawCenteredString(fontRendererObj,
+			drawCenteredString(fontRenderer,
 					I18n.format("wdl.gui.extensions.detailsCaption"),
 					GuiWDLExtensions.this.width / 2, 5, 0xFFFFFF);
 			
@@ -408,7 +408,7 @@ public class GuiWDLExtensions extends GuiScreen {
 		this.list.drawScreen(mouseX, mouseY, partialTicks);
 		this.detailsList.drawScreen(mouseX, mouseY, partialTicks);
 		
-		this.drawCenteredString(this.fontRendererObj,
+		this.drawCenteredString(this.fontRenderer,
 				I18n.format("wdl.gui.extensions.title"), this.width / 2, 8,
 				0xFFFFFF);
 		

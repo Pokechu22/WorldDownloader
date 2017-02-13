@@ -100,10 +100,10 @@ public class GuiWDLSaveProgress extends GuiTurningCameraBase implements
 						minorTaskProgress, minorTaskMaximum);
 			}
 			
-			this.drawCenteredString(this.fontRendererObj, this.title,
+			this.drawCenteredString(this.fontRenderer, this.title,
 					this.width / 2, 8, 0xFFFFFF);
 			
-			this.drawCenteredString(this.fontRendererObj,
+			this.drawCenteredString(this.fontRenderer,
 					majorTaskInfo, this.width / 2, 100, 0xFFFFFF);
 			
 			if (minorTaskMaximum > 0) {
@@ -115,7 +115,7 @@ public class GuiWDLSaveProgress extends GuiTurningCameraBase implements
 						majorTaskCount);
 			}
 			
-			this.drawCenteredString(this.fontRendererObj, minorTaskInfo,
+			this.drawCenteredString(this.fontRenderer, minorTaskInfo,
 					this.width / 2, 130, 0xFFFFFF);
 			this.drawProgressBar(140, 64, 69, minorTaskProgress, minorTaskMaximum);
 			

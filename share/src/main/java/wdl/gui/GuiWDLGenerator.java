@@ -32,13 +32,13 @@ public class GuiWDLGenerator extends GuiScreen {
 	@Override
 	public void initGui() {
 		this.seedText = I18n.format("wdl.gui.generator.seed");
-		int seedWidth = fontRendererObj.getStringWidth(seedText + " ");
+		int seedWidth = fontRenderer.getStringWidth(seedText + " ");
 		
 		this.buttonList.clear();
 		this.title = I18n.format("wdl.gui.generator.title",
 				 WDL.baseFolderName.replace('@', ':'));
 		int y = this.height / 4 - 15;
-		this.seedField = new GuiTextField(40, this.fontRendererObj,
+		this.seedField = new GuiTextField(40, this.fontRenderer,
 				this.width / 2 - (100 - seedWidth), y, 200 - seedWidth, 18);
 		this.seedField.setText(WDL.worldProps.getProperty("RandomSeed"));
 		y += 22;
@@ -130,10 +130,10 @@ public class GuiWDLGenerator extends GuiScreen {
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		Utils.drawListBackground(23, 32, 0, 0, height, width);
 		
-		this.drawCenteredString(this.fontRendererObj, this.title,
+		this.drawCenteredString(this.fontRenderer, this.title,
 				this.width / 2, 8, 0xFFFFFF);
 		
-		this.drawString(this.fontRendererObj, seedText, this.width / 2 - 100,
+		this.drawString(this.fontRenderer, seedText, this.width / 2 - 100,
 				this.height / 4 - 10, 0xFFFFFF);
 		this.seedField.drawTextBox();
 		super.drawScreen(mouseX, mouseY, partialTicks);

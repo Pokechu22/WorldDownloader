@@ -263,12 +263,12 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 		// Draw the main borders now so that ranges are hidden behind it.
 		Utils.drawBorder(TOP_MARGIN, BOTTOM_MARGIN, 0, 0, height, width);
 		
-		this.drawCenteredString(this.fontRendererObj, "Chunk overrides",
+		this.drawCenteredString(this.fontRenderer, "Chunk overrides",
 				this.width / 2, 8, 0xFFFFFF);
 		
 		super.drawScreen(mouseX, mouseY, partialTicks);
 
-		this.drawCenteredString(this.fontRendererObj, "\u00A7c\u00A7lThis is a work in progress.",
+		this.drawCenteredString(this.fontRenderer, "\u00A7c\u00A7lThis is a work in progress.",
 				this.width / 2, this.height / 2, 0xFFFFFF);
 	}
 	

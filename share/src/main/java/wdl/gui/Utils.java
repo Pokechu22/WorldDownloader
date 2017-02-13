@@ -80,8 +80,8 @@ class Utils {
 		List<String> lines = wordWrap(text, infoBoxWidth - 10);
 		
 		for (String s : lines) {
-			mc.fontRendererObj.drawString(s, infoX + 5, y, 0xFFFFFF);
-			y += mc.fontRendererObj.FONT_HEIGHT;
+			mc.fontRenderer.drawString(s, infoX + 5, y, 0xFFFFFF);
+			y += mc.fontRenderer.FONT_HEIGHT;
 		}
 	}
 	
@@ -96,7 +96,7 @@ class Utils {
 	public static List<String> wordWrap(String s, int width) {
 		s = s.replace("\r", ""); // If we got a \r\n in the text somehow, remove it.
 		
-		List<String> lines = mc.fontRendererObj.listFormattedStringToWidth(s, width);
+		List<String> lines = mc.fontRenderer.listFormattedStringToWidth(s, width);
 		
 		return lines;
 	}
@@ -294,7 +294,7 @@ class Utils {
 	 */
 	public static void drawStringWithShadow(String s, int x, int y, int color) {
 		//TODO: No longer obfuscated; should I care enough to inline this?
-		mc.fontRendererObj.drawStringWithShadow(s, x, y, color);
+		mc.fontRenderer.drawStringWithShadow(s, x, y, color);
 	}
 }
 
@@ -516,7 +516,7 @@ class TextList extends GuiListExtended {
 	public TextList(Minecraft mc, int width, int height, int topMargin,
 			int bottomMargin) {
 		super(mc, width, height, topMargin, height - bottomMargin,
-				mc.fontRendererObj.FONT_HEIGHT + 1);
+				mc.fontRenderer.FONT_HEIGHT + 1);
 		
 		this.topMargin = topMargin;
 		this.bottomMargin = bottomMargin;
@@ -632,8 +632,8 @@ class LinkEntry extends TextEntry {
 		super(mc, text, 0x5555FF);
 		
 		this.link = link;
-		this.textWidth = mc.fontRendererObj.getStringWidth(text);
-		this.linkWidth = mc.fontRendererObj.getStringWidth(link);
+		this.textWidth = mc.fontRenderer.getStringWidth(text);
+		this.linkWidth = mc.fontRenderer.getStringWidth(link);
 	}
 	
 	@Override
@@ -655,7 +655,7 @@ class LinkEntry extends TextEntry {
 				drawX = listWidth + x - (4 + linkWidth);
 			}
 			Gui.drawRect(drawX, mouseY - 2, drawX + linkWidth + 4,
-					mouseY + mc.fontRendererObj.FONT_HEIGHT + 2, 0x80000000);
+					mouseY + mc.fontRenderer.FONT_HEIGHT + 2, 0x80000000);
 			
 			Utils.drawStringWithShadow(link, drawX + 2, mouseY, 0xFFFFFF);
 		}

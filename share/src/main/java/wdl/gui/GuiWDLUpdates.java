@@ -31,7 +31,7 @@ public class GuiWDLUpdates extends GuiScreen {
 			super(GuiWDLUpdates.this.mc, GuiWDLUpdates.this.width,
 					GuiWDLUpdates.this.height, TOP_MARGIN,
 					GuiWDLUpdates.this.height - BOTTOM_MARGIN, 
-					(fontRendererObj.FONT_HEIGHT + 1) * 6 + 2);
+					(fontRenderer.FONT_HEIGHT + 1) * 6 + 2);
 			this.showSelectionBox = true;
 		}
 		
@@ -49,7 +49,7 @@ public class GuiWDLUpdates extends GuiScreen {
 			
 			public VersionEntry(Release release) {
 				this.release = release;
-				this.fontHeight = fontRendererObj.FONT_HEIGHT + 1;
+				this.fontHeight = fontRenderer.FONT_HEIGHT + 1;
 				
 				this.title = buildReleaseTitle(release);
 				this.caption = buildVersionInfo(release);
@@ -78,12 +78,12 @@ public class GuiWDLUpdates extends GuiScreen {
 					title = this.title;
 				}
 				
-				fontRendererObj.drawString(title, x, y + fontHeight * 0, 0xFFFFFF);
-				fontRendererObj.drawString(caption, x, y + fontHeight * 1, 0x808080);
-				fontRendererObj.drawString(body1, x, y + fontHeight * 2, 0xFFFFFF);
-				fontRendererObj.drawString(body2, x, y + fontHeight * 3, 0xFFFFFF);
-				fontRendererObj.drawString(body3, x, y + fontHeight * 4, 0xFFFFFF);
-				fontRendererObj.drawString(time, x, y + fontHeight * 5, 0x808080);
+				fontRenderer.drawString(title, x, y + fontHeight * 0, 0xFFFFFF);
+				fontRenderer.drawString(caption, x, y + fontHeight * 1, 0x808080);
+				fontRenderer.drawString(body1, x, y + fontHeight * 2, 0xFFFFFF);
+				fontRenderer.drawString(body2, x, y + fontHeight * 3, 0xFFFFFF);
+				fontRenderer.drawString(body3, x, y + fontHeight * 4, 0xFFFFFF);
+				fontRenderer.drawString(time, x, y + fontHeight * 5, 0x808080);
 				
 				if (mouseX > x && mouseX < x + listWidth && mouseY > y
 						&& mouseY < y + slotHeight) {
@@ -294,20 +294,20 @@ public class GuiWDLUpdates extends GuiScreen {
 		this.list.drawScreen(mouseX, mouseY, partialTicks);
 		
 		if (!WDLUpdateChecker.hasFinishedUpdateCheck()) {
-			drawCenteredString(fontRendererObj,
+			drawCenteredString(fontRenderer,
 					I18n.format("wdl.gui.updates.pleaseWait"), width / 2,
 					height / 2, 0xFFFFFF);
 		} else if (WDLUpdateChecker.hasUpdateCheckFailed()) {
 			String reason = WDLUpdateChecker.getUpdateCheckFailReason();
 			
-			drawCenteredString(fontRendererObj,
+			drawCenteredString(fontRenderer,
 					I18n.format("wdl.gui.updates.checkFailed"), width / 2,
-					height / 2 - fontRendererObj.FONT_HEIGHT / 2, 0xFF5555);
-			drawCenteredString(fontRendererObj, I18n.format(reason), width / 2,
-					height / 2 + fontRendererObj.FONT_HEIGHT / 2, 0xFF5555);
+					height / 2 - fontRenderer.FONT_HEIGHT / 2, 0xFF5555);
+			drawCenteredString(fontRenderer, I18n.format(reason), width / 2,
+					height / 2 + fontRenderer.FONT_HEIGHT / 2, 0xFF5555);
 		}
 		
-		drawCenteredString(fontRendererObj, I18n.format("wdl.gui.updates.title"),
+		drawCenteredString(fontRenderer, I18n.format("wdl.gui.updates.title"),
 				width / 2, 8, 0xFFFFFF);
 		
 		super.drawScreen(mouseX, mouseY, partialTicks);
@@ -470,7 +470,7 @@ public class GuiWDLUpdates extends GuiScreen {
 			
 			this.list.drawScreen(mouseX, mouseY, partialTicks);
 			
-			this.drawCenteredString(this.fontRendererObj, buildReleaseTitle(release),
+			this.drawCenteredString(this.fontRenderer, buildReleaseTitle(release),
 					this.width / 2, 8, 0xFFFFFF);
 			
 			super.drawScreen(mouseX, mouseY, partialTicks);

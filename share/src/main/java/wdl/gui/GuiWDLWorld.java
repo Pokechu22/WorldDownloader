@@ -58,11 +58,11 @@ public class GuiWDLWorld extends GuiScreen {
 		this.buttonList.add(this.spawnBtn);
 		y += 22;
 		this.spawnTextY = y + 4;
-		this.spawnX = new GuiNumericTextField(40, this.fontRendererObj, this.width / 2 - 87,
+		this.spawnX = new GuiNumericTextField(40, this.fontRenderer, this.width / 2 - 87,
 				y, 50, 16);
-		this.spawnY = new GuiNumericTextField(41, this.fontRendererObj, this.width / 2 - 19,
+		this.spawnY = new GuiNumericTextField(41, this.fontRenderer, this.width / 2 - 19,
 				y, 50, 16);
-		this.spawnZ = new GuiNumericTextField(42, this.fontRendererObj, this.width / 2 + 48,
+		this.spawnZ = new GuiNumericTextField(42, this.fontRenderer, this.width / 2 + 48,
 				y, 50, 16);
 		spawnX.setText(WDL.worldProps.getProperty("SpawnX"));
 		spawnY.setText(WDL.worldProps.getProperty("SpawnY"));
@@ -162,15 +162,15 @@ public class GuiWDLWorld extends GuiScreen {
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		Utils.drawListBackground(23, 32, 0, 0, height, width);
 		
-		this.drawCenteredString(this.fontRendererObj, this.title,
+		this.drawCenteredString(this.fontRenderer, this.title,
 				this.width / 2, 8, 0xFFFFFF);
 
 		if (this.showSpawnFields) {
-			this.drawString(this.fontRendererObj, "X:", this.width / 2 - 99,
+			this.drawString(this.fontRenderer, "X:", this.width / 2 - 99,
 					this.spawnTextY, 0xFFFFFF);
-			this.drawString(this.fontRendererObj, "Y:", this.width / 2 - 31,
+			this.drawString(this.fontRenderer, "Y:", this.width / 2 - 31,
 					this.spawnTextY, 0xFFFFFF);
-			this.drawString(this.fontRendererObj, "Z:", this.width / 2 + 37,
+			this.drawString(this.fontRenderer, "Z:", this.width / 2 + 37,
 					this.spawnTextY, 0xFFFFFF);
 			this.spawnX.drawTextBox();
 			this.spawnY.drawTextBox();

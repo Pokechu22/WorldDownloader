@@ -88,7 +88,7 @@ public class GuiWDLEntityRangePresets extends GuiScreen implements GuiYesNoCallb
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		Utils.drawListBackground(23, 32, 0, 0, height, width);
 		
-		this.drawCenteredString(this.fontRendererObj,
+		this.drawCenteredString(this.fontRenderer,
 				I18n.format("wdl.gui.rangePresets.title"), this.width / 2, 8,
 				0xFFFFFF);
 		

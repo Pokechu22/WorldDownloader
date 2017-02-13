@@ -43,7 +43,7 @@ public class GuiWDLMultiworld extends GuiScreen {
 		
 		infoBoxWidth = 320;
 		infoBoxLines = Utils.wordWrap(multiworldMessage, infoBoxWidth - 20);
-		infoBoxHeight = (fontRendererObj.FONT_HEIGHT * (infoBoxLines.size() + 1)) + 40;
+		infoBoxHeight = (fontRenderer.FONT_HEIGHT * (infoBoxLines.size() + 1)) + 40;
 		
 		infoBoxX = this.width / 2 - infoBoxWidth / 2;
 		infoBoxY = this.height / 2 - infoBoxHeight / 2;
@@ -109,7 +109,7 @@ public class GuiWDLMultiworld extends GuiScreen {
 		this.drawDefaultBackground();
 		Utils.drawBorder(32, 32, 0, 0, height, width);
 		
-		this.drawCenteredString(this.fontRendererObj, 
+		this.drawCenteredString(this.fontRenderer, 
 				I18n.format("wdl.gui.multiworld.title"),
 				this.width / 2, 8, 0xFFFFFF);
 		
@@ -120,8 +120,8 @@ public class GuiWDLMultiworld extends GuiScreen {
 		int y = infoBoxY + 10;
 		
 		for (String s : infoBoxLines) {
-			this.drawString(fontRendererObj, s, x, y, 0xFFFFFF);
-			y += fontRendererObj.FONT_HEIGHT;
+			this.drawString(fontRenderer, s, x, y, 0xFFFFFF);
+			y += fontRenderer.FONT_HEIGHT;
 		}
 		
 		//Red box around "multiworld support" button.

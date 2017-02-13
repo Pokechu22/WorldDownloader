@@ -56,7 +56,7 @@ public class GuiWDLPermissionRequest extends GuiScreen {
 					+ request.getValue() + "'.");
 		}
 		
-		this.requestField = new GuiTextField(0, fontRendererObj,
+		this.requestField = new GuiTextField(0, fontRenderer,
 				width / 2 - 155, 18, 150, 20);
 		
 		this.submitButton = new GuiButton(1, width / 2 + 5, 18, 150,
@@ -175,7 +175,7 @@ public class GuiWDLPermissionRequest extends GuiScreen {
 		
 		requestField.drawTextBox();
 		
-		this.drawCenteredString(this.fontRendererObj, "Permission request",
+		this.drawCenteredString(this.fontRenderer, "Permission request",
 				this.width / 2, 8, 0xFFFFFF);
 		
 		super.drawScreen(mouseX, mouseY, partialTicks);
