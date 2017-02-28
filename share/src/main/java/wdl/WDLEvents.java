@@ -7,7 +7,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.IMerchant;
 import net.minecraft.entity.item.EntityMinecartChest;
 import net.minecraft.entity.item.EntityMinecartHopper;
-import net.minecraft.entity.passive.AbstractHorse;
+import net.minecraft.entity.passive.EquineEntity;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.ContainerBeacon;
@@ -150,14 +150,14 @@ public class WDLEvents {
 		
 		String saveName = "";
 
-		if (WDL.thePlayer.getRidingEntity() instanceof AbstractHorse) {
+		if (WDL.thePlayer.getRidingEntity() instanceof EquineEntity) {
 			//If the player is on a horse, check if they are opening the
 			//inventory of the horse they are on.  If so, use that,
 			//rather than the entity being looked at.
 			if (WDL.windowContainer instanceof ContainerHorseInventory) {
-				AbstractHorse horseInContainer = ReflectionUtils
+				EquineEntity horseInContainer = ReflectionUtils
 						.stealAndGetField(WDL.windowContainer,
-								AbstractHorse.class);
+								EquineEntity.class);
 
 				//Intentional reference equals
 				if (horseInContainer == WDL.thePlayer.getRidingEntity()) {
@@ -171,7 +171,7 @@ public class WDLEvents {
 						return true;
 					}
 
-					AbstractHorse entityHorse = (AbstractHorse)
+					EquineEntity entityHorse = (EquineEntity)
 							WDL.thePlayer.getRidingEntity();
 					saveHorse((ContainerHorseInventory)WDL.windowContainer, entityHorse);
 
@@ -224,10 +224,10 @@ public class WDLEvents {
 				ReflectionUtils.stealAndSetField(ev, MerchantRecipeList.class, list);
 				
 				saveName = "villager";
-			} else if (WDL.lastEntity instanceof AbstractHorse
+			} else if (WDL.lastEntity instanceof EquineEntity
 					&& WDL.windowContainer instanceof ContainerHorseInventory) {
 				saveHorse((ContainerHorseInventory) WDL.windowContainer,
-						(AbstractHorse) WDL.lastEntity);
+						(EquineEntity) WDL.lastEntity);
 				
 				saveName = "horse";
 			} else {
@@ -544,7 +544,7 @@ public class WDLEvents {
 	 * @param container
 	 * @param horse
 	 */
-	private static void saveHorse(ContainerHorseInventory container, AbstractHorse horse) {
+	private static void saveHorse(ContainerHorseInventory container, EquineEntity horse) {
 		final int PLAYER_INVENTORY_SLOTS = 4 * 9;
 		ContainerHorseChest horseInventory = new ContainerHorseChest(
 				"HorseChest", container.inventorySlots.size()
@@ -556,6 +556,6 @@ public class WDLEvents {
 			}
 		}
 
-		ReflectionUtils.stealAndSetField(horse, AbstractHorse.class, ContainerHorseChest.class, horseInventory);
+		ReflectionUtils.stealAndSetField(horse, EquineEntity.class, ContainerHorseChest.class, horseInventory);
 	}
 }

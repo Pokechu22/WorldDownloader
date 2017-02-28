@@ -14,22 +14,27 @@ buildscript {
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
-        classpath 'pokechu22.test.begradle:begradle:0.0.2-SNAPSHOT'
+        classpath 'pokechu22.test.begradle:begradle:0.0.3'
     }
 }
 
 apply plugin: 'pokechu22.test.begradle'
+apply plugin: 'pokechu22.test.customsrg'
 apply plugin: 'java'
 
-version = "4.0.0.1"
+version = "4.0.0.2-SNAPSHOT"
 group = "wdl"
 archivesBaseName = "WorldDownloader"
 
 minecraft {
     suppressMappingVersionWarnings = true
     version = "1.11"
-    mappings = "snapshot_20170210"
+    mappings = "snapshot_20170227"
     runDir = "run"
+}
+
+extraSrgs {
+	add file('../srgs/AbstractHorseToEquineEntity.srg')
 }
 
 sourceSets {
@@ -59,4 +64,10 @@ sourceSets {
 // Use tabs instead of spaces
 fixMcSources {
     astyleConfig = "../astyle.cfg"
+    // TEMPORARY, until I can figure out an automatic patch system.
+    doFirst {
+        def field = net.minecraftforge.gradle.tasks.PostDecompileTask.class.getDeclaredField('patchesMap')
+        field.accessible = true
+        field.get(fixMcSources).put('net.minecraft.entity.passive.EquineEntity.java', file('../srgs/EE_1.11.x.patch'))
+    }
 }

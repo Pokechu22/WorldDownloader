@@ -10,70 +10,56 @@ buildscript {
             name = "forge"
             url = "http://files.minecraftforge.net/maven"
         }
-        maven {
-            name = 'sponge'
-            url = 'http://repo.spongepowered.org/maven'
-        }
         jcenter()
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
         classpath 'pokechu22.test.begradle:begradle:0.0.3'
-        classpath 'org.spongepowered:mixingradle:0.4-SNAPSHOT'
     }
 }
 
-apply plugin: 'net.minecraftforge.gradle.liteloader'
+apply plugin: 'pokechu22.test.begradle'
 apply plugin: 'pokechu22.test.customsrg'
-apply plugin: 'org.spongepowered.mixin'
+apply plugin: 'java'
 
 version = "4.0.0.2-SNAPSHOT"
-group = "com.uyjulian.LiteModWDL" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "LiteModWDL"
+group = "wdl"
+archivesBaseName = "WorldDownloader"
 
 minecraft {
-    version = "1.11.2"
+    suppressMappingVersionWarnings = true
+    version = "1.10.2"
     mappings = "snapshot_20170227"
     runDir = "run"
 }
 
 extraSrgs {
-    add file('../srgs/AbstractHorseToEquineEntity.srg')
+    add file('../srgs/EntityHorseToEquineEntity.srg')
+	add file('../srgs/AnimalChestToContainerHorseChest.srg')
 }
 
 sourceSets {
     main {
         java {
             srcDir "src/main/java"
-            srcDir project(':1.11.2').file("src/main/java")
             srcDir project(':share').file("src/main/java")
         }
         resources {
-            srcDir "src/main/resources"
             srcDir project(':share').file("src/main/resources")
         }
-        // Refmap declaration must match the refmap name specified in the json config
-        refMap = "mixins.LiteModWDL.refmap.json"
+        base {
+            baseClasses = [
+                // Main hooks
+                "net.minecraft.client.gui.GuiIngameMenu",
+                "net.minecraft.client.multiplayer.WorldClient",
+                "net.minecraft.client.network.NetHandlerPlayClient",
+                // Auxiliary hooks, only needed for the base edit
+                "net.minecraft.crash.CrashReport",
+                "net.minecraft.client.ClientBrandRetriever",
+                "net.minecraft.client.resources.DefaultResourcePack"
+            ]
+        }
     }
-}
-
-mixin {
-    defaultObfuscationEnv notch
-}
-
-litemod {
-    json {
-        name = "LiteModWDL"
-        displayName = "World Downloader for Liteloader"
-        author = "uyjulian"
-        mcversion = "1.11.2"
-        mixinConfigs += "mixins.LiteModWDL.json"
-        version = project.version
-    }
-}
-
-jar {
-    from litemod.outputs
 }
 
 // Use tabs instead of spaces
@@ -83,6 +69,6 @@ fixMcSources {
     doFirst {
         def field = net.minecraftforge.gradle.tasks.PostDecompileTask.class.getDeclaredField('patchesMap')
         field.accessible = true
-        field.get(fixMcSources).put('net.minecraft.entity.passive.EquineEntity.java', file('../srgs/EE_1.11.x.patch'))
+        field.get(fixMcSources).put('net.minecraft.entity.passive.EquineEntity.java', file('../srgs/EE_1.10.x.patch'))
     }
 }
