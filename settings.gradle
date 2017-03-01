@@ -1,1 +1,18 @@
 include 'share', '1.10.2', '1.11', '1.11-litemod', '1.11.2', '1.11.2-litemod'
+
+// More information about what went wrong
+gradle.buildFinished { buildResult ->
+  if (buildResult.failure != null && buildResult.failure.cause != null) {
+    if (buildResult.failure.cause.cause instanceof org.gradle.api.internal.tasks.compile.CompilationFailedException) {
+        println '----------------------------------------'
+        println 'Compilation failed.'
+        println 'If this was due to a bad class file, try running "gradlew setupDecompWorkspace"'
+        println 'The cause of this behavior is being investigated.'
+    } else if (buildResult.failure.cause.cause instanceof org.gradle.api.artifacts.ResolveException) {
+        println '----------------------------------------'
+        println 'Dependency resolution failed.'
+        println 'If this was due to begradle not being found, you need to manually install it.'
+        println 'Download https://github.com/Pokechu22/ForgeGradle-extensions and run "gradlew install" to install the library, and then it should work.'
+    }
+  }
+}
