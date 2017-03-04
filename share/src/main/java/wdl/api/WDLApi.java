@@ -15,6 +15,7 @@ import org.apache.logging.log4j.Logger;
 
 import wdl.EntityRealigner;
 import wdl.HologramHandler;
+import wdl.LegacyEntityManager;
 import wdl.MessageTypeCategory;
 import wdl.VersionConstants;
 import wdl.WDL;
@@ -30,6 +31,8 @@ public class WDLApi {
 	private static Logger logger = LogManager.getLogger();
 	
 	private static Map<String, ModInfo<?>> wdlMods = new HashMap<String, ModInfo<?>>();
+	
+	private static boolean hasLegacyEntityHandler = false;
 	
 	/**
 	 * Saved a TileEntity to the given position.
@@ -54,6 +57,7 @@ public class WDLApi {
 	/**
 	 * Adds a mod to the list of the listened mods.
 	 */
+	@SuppressWarnings("deprecation")
 	public static void addWDLMod(String id, String version, IWDLMod mod) {
 		if (id == null) {
 			throw new IllegalArgumentException("id must not be null!  (mod="
@@ -101,6 +105,11 @@ public class WDLApi {
 			for (Map.Entry<String, IWDLMessageType> e : types.entrySet()) {
 				WDLMessages.registerMessage(e.getKey(), e.getValue(), category);
 			}
+		}
+		// Needs callback for legacy interfaces
+		if (!hasLegacyEntityHandler
+				&& (mod instanceof IEntityAdder || mod instanceof ISpecialEntityHandler)) {
+			addWDLMod("LegacyEntitySupport", "1.0", new LegacyEntityManager());
 		}
 	}
 	

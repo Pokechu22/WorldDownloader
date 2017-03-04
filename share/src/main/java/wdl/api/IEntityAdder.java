@@ -8,7 +8,9 @@ import java.util.List;
  * This is for handling *new* entities that have names that aren't used in
  * vanilla minecraft.  Use {@link ISpecialEntityHandler} if you want to handle
  * using an entity for a non-intended purpose (eg holograms).
+ * @deprecated Use {@link IEntityManager} instead
  */
+@Deprecated
 public interface IEntityAdder extends IWDLMod {
 	/**
 	 * Gets a List of all entities that this mod handles.

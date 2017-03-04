@@ -7,4 +7,5 @@
  * Note that you do need to handle loading the mod yourself - use liteloader
  * or Minecraft Forge for that.
  */
+@javax.annotation.ParametersAreNonnullByDefault
 package wdl.api;

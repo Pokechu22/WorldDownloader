@@ -29,7 +29,7 @@ archivesBaseName = "WorldDownloader"
 minecraft {
     suppressMappingVersionWarnings = true
     version = "1.11"
-    mappings = "snapshot_20170227"
+    mappings = "snapshot_20170301"
     runDir = "run"
 }
 

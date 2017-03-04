@@ -12,7 +12,9 @@ import com.google.common.collect.Multimap;
  * <br>
  * For an example of how one of these might be implemented, see the built-in
  * {@link HologramHandler} class.
+ * @deprecated Use {@link IEntityManager} instead
  */
+@Deprecated
 public interface ISpecialEntityHandler extends IWDLMod {
 	/**
 	 * Gets the special entities handled by this mod.
