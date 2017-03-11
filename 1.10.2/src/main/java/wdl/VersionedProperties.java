@@ -14,6 +14,6 @@ public class VersionedProperties {
 	 */
 	public static boolean hasSkyLight(World world) {
 		// 1.10-: use hasNoSky
-		return world.provider.hasNoSky();
+		return !world.provider.hasNoSky();
 	}
 }

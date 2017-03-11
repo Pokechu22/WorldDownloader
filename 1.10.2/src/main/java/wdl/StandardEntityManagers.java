@@ -243,6 +243,7 @@ public enum StandardEntityManagers implements IEntityManager {
 
 			for (Field field : EntityList.class.getDeclaredFields()) {
 				if (field.getType().equals(Map.class)) {
+					field.setAccessible(true);
 					Map<?, ?> map = (Map<?, ?>) field.get(null);
 					// We know it's the right map if the keys are strings and
 					// the values are classes
@@ -263,6 +264,7 @@ public enum StandardEntityManagers implements IEntityManager {
 				typeToClassMap = result;
 			}
 		} catch (Exception ex) {
+			EntityUtils.logger.error("[WDL] Failed to set up entity mappings: ", ex);
 			throw new RuntimeException("Failed to set up entity mapping", ex);
 		}
 	}
