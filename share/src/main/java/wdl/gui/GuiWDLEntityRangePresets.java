@@ -9,6 +9,8 @@ import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraft.client.resources.I18n;
 import wdl.EntityUtils;
+import wdl.EntityUtils.SpigotEntityType;
+import wdl.StandardEntityManagers;
 import wdl.WDL;
 import wdl.WDLPluginChannels;
 
@@ -123,21 +125,18 @@ public class GuiWDLEntityRangePresets extends GuiScreen implements GuiYesNoCallb
 			Set<String> entities = EntityUtils.getEntityTypes();
 			
 			if (id == 0) {
-				for (String entity : entities) {
+				for (String entity : StandardEntityManagers.VANILLA.getProvidedEntities()) {
 					WDL.worldProps.setProperty("Entity." + entity
 							+ ".TrackDistance", Integer.toString(
-							EntityUtils.getDefaultEntityRange(entity)));
+							StandardEntityManagers.VANILLA.getTrackDistance(entity, null)));
 				}
 			} else if (id == 1) {
-				for (String entity : entities) {
-					Class<?> c = null;//EntityUtils.stringToClassMapping.get(entity);
-					if (c == null) {
-						continue;
-					}
-					
+				for (String entity : StandardEntityManagers.SPIGOT.getProvidedEntities()) {
+					SpigotEntityType type = StandardEntityManagers.SPIGOT.getSpigotType(entity);
+					// XXX Allow specifying the range for each type instead of the default
 					WDL.worldProps.setProperty("Entity." + entity
 							+ ".TrackDistance", Integer.toString(
-							EntityUtils.getDefaultSpigotEntityRange(c)));
+							type.getDefaultRange()));
 				}
 			} else if (id == 2) { 
 				for (String entity : entities) {

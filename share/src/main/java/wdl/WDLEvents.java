@@ -135,8 +135,6 @@ public class WDLEvents {
 			WDL.lastEntity = WDL.minecraft.objectMouseOver.entityHit;
 		} else {
 			WDL.lastEntity = null;
-			// func_178782_a returns a BlockPos; find another one
-			// if it is reobfuscated.
 			WDL.lastClickedBlock = WDL.minecraft.objectMouseOver.getBlockPos();
 		}
 	}
@@ -461,13 +459,8 @@ public class WDLEvents {
 	 * Must be called when an entity is about to be removed from the world.
 	 */
 	public static void onRemoveEntityFromWorld(Entity entity) {
-		/*
 		// If the entity is being removed and it's outside the default tracking
 		// range, go ahead and remember it until the chunk is saved.
-
-		// Proper tracking ranges can be found in EntityTracker#trackEntity
-		// (the one that takes an Entity as a paremeter) -- it's the 2nd arg
-		// given to addEntityToTracker.
 		if (WDL.downloading && entity != null
 				&& WDLPluginChannels.canSaveEntities(entity.chunkCoordX,
 						entity.chunkCoordZ)) {
@@ -511,7 +504,7 @@ public class WDLEvents {
 					WDLMessageTypes.REMOVE_ENTITY,
 					"wdl.messages.removeEntity.allowingRemoveDistance",
 					entity, distance, threshold);
-		}*/
+		}
 	}
 
 	/**

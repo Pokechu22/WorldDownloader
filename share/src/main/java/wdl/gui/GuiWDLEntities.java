@@ -91,6 +91,7 @@ public class GuiWDLEntities extends GuiScreen {
 		 */
 		private class CategoryEntry implements GuiListExtended.IGuiListEntry {
 			private final String group;
+			private final String displayGroup;
 			private final int labelWidth;
 			
 			private final GuiButton enableGroupButton; 
@@ -99,7 +100,8 @@ public class GuiWDLEntities extends GuiScreen {
 
 			public CategoryEntry(String group) {
 				this.group = group;
-				this.labelWidth = mc.fontRenderer.getStringWidth(group);
+				this.displayGroup = EntityUtils.getDisplayGroup(group);
+				this.labelWidth = mc.fontRenderer.getStringWidth(displayGroup);
 				
 				this.groupEnabled = WDL.worldProps.getProperty("EntityGroup."
 						+ group + ".Enabled", "true").equals("true");
@@ -111,7 +113,7 @@ public class GuiWDLEntities extends GuiScreen {
 			@Override
 			public void drawEntry(int slotIndex, int x, int y, int listWidth,
 					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
-				mc.fontRenderer.drawString(this.group, (x + 110 / 2)
+				mc.fontRenderer.drawString(this.displayGroup, (x + 110 / 2)
 						- (this.labelWidth / 2), y + slotHeight
 						- mc.fontRenderer.FONT_HEIGHT - 1, 0xFFFFFF);
 				
@@ -174,6 +176,7 @@ public class GuiWDLEntities extends GuiScreen {
 		private class EntityEntry implements GuiListExtended.IGuiListEntry {
 			private final CategoryEntry category;
 			private final String entity;
+			private final String displayEntity;
 			
 			private final GuiButton onOffButton;
 			private final GuiSlider rangeSlider;
@@ -186,6 +189,7 @@ public class GuiWDLEntities extends GuiScreen {
 			public EntityEntry(CategoryEntry category, String entity) {
 				this.category = category;
 				this.entity = entity;
+				this.displayEntity = EntityUtils.getDisplayType(entity);
 				
 				entityEnabled = WDL.worldProps.getProperty("Entity." + entity + 
 						".Enabled", "true").equals("true");
@@ -210,7 +214,7 @@ public class GuiWDLEntities extends GuiScreen {
 				int center = (GuiWDLEntities.this.width / 2) - (totalWidth / 2)
 						+ largestWidth + 10;
 				
-				mc.fontRenderer.drawString(this.entity,
+				mc.fontRenderer.drawString(this.displayEntity,
 						center - largestWidth - 10, y + slotHeight / 2 - 
 								mc.fontRenderer.FONT_HEIGHT / 2, 0xFFFFFF);
 				
