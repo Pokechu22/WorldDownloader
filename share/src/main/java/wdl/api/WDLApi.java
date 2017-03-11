@@ -377,7 +377,7 @@ public class WDLApi {
 
 	static {
 		logger.info("Loading default WDL extensions");
-		addWDLMod("Hologram", "1.0", new HologramHandler());
+		addWDLMod("Hologram", "2.0", new HologramHandler());
 		addWDLMod("EntityRealigner", "1.0", new EntityRealigner());
 	}
 }

@@ -1,13 +1,14 @@
 package wdl;
 
+import java.util.Set;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityArmorStand;
-import wdl.api.ISpecialEntityHandler;
+import wdl.api.IEntityManager;
 import wdl.api.IWDLMod;
 import wdl.api.IWDLModDescripted;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
+import com.google.common.collect.Sets;
 
 /**
  * Handles holograms.
@@ -23,55 +24,65 @@ import com.google.common.collect.Multimap;
  * <br/>
  * This is also an example of how a {@link IWDLMod} would be implemented.
  */
-public class HologramHandler implements ISpecialEntityHandler,
+public class HologramHandler implements IEntityManager,
 		IWDLModDescripted {
 
 	@Override
 	public boolean isValidEnvironment(String version) {
 		return true;
 	}
-	
+
 	@Override
 	public String getEnvironmentErrorMessage(String version) {
 		return null;
 	}
-	
+
 	@Override
 	public String getDisplayName() {
 		return "Hologram support";
 	}
-	
+
 	@Override
-	public Multimap<String, String> getSpecialEntities() {
-		Multimap<String, String> returned = HashMultimap.<String, String>create();
-		
-		returned.put("ArmorStand", "Hologram");
-		
-		return returned;
+	public Set<String> getProvidedEntities() {
+		return Sets.newHashSet("x-extended:hologram");
 	}
 
 	@Override
-	public String getSpecialEntityName(Entity entity) {
+	public String getIdentifierFor(Entity entity) {
 		if (entity instanceof EntityArmorStand &&
 				entity.isInvisible() &&
 				entity.hasCustomName()) {
-			return "Hologram";
+			return "x-extended:hologram";
 		}
-		
+
 		return null;
 	}
-
 	@Override
-	public String getSpecialEntityCategory(String name) {
-		if (name.equals("Hologram")) {
-			return "Other";
+	public int getTrackDistance(String identifier, Entity entity) {
+		// Assume holograms act the same as armor stands
+		if (identifier == "x-extended:hologram") {
+			return EntityUtils.getEntityTrackDistance("default", "minecraft:armor_stand", entity);
+		} else {
+			return -1;
 		}
+	}
+	@Override
+	public boolean enabledByDefault(String identifier) {
+		return true;
+	}
+	@Override
+	public String getGroup(String identifier) {
+		return "Other";
+	}
+	@Override
+	public String getDisplayGroup(String group) {
+		// TODO
 		return null;
 	}
-
 	@Override
-	public int getSpecialEntityTrackDistance(String name) {
-		return -1;
+	public String getDisplayIdentifier(String identifier) {
+		// TODO
+		return "Hologram";
 	}
 
 	@Override
