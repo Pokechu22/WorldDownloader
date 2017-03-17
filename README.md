@@ -8,7 +8,9 @@ This is a continuation [dslake's original version](https://github.com/dslake/Wor
 
 You first need to set up begradle.  Right now, this can be done by downloading [from this repo](https://github.com/Pokechu22/ForgeGradle-extensions) and then running `gradlew install`.  Later this'll be put into a maven repo so that it doesn't need to manually be installed, but at this phase in development, it needs to manually be done.
 
-Once that is set up, you should be able to get everything to work by running `gradlew setupDecompWorkspace build`.  Hopefully.  If something doesn't work quite right, it may be a bug with begradle or another part of the build system.
+Once that is set up, you should be able to get everything to work by running `gradlew setupDecompWorkspace build`.  Hopefully.  If something doesn't work quite right, it may be a bug with begradle or another part of the build system; there should be a notification in the most common cases as to what you need to do.
+
+To compile for a single Minecraft version, run `gradlew :version:build` (for instance, `gradlew :1.11.2-litemod:build`).
 
 ## What is this branch?
 
