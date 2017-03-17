@@ -19,7 +19,6 @@ import net.minecraft.network.play.server.SPacketChat;
 import net.minecraft.network.play.server.SPacketCustomPayload;
 import net.minecraft.network.play.server.SPacketMaps;
 import net.minecraft.profiler.Profiler;
-import net.minecraft.crash.ICrashReportDetail;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.storage.MapData;

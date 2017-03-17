@@ -177,10 +177,14 @@ public class WorldBackup {
 				stream = new ZipOutputStream(outStream);
 				zipFolder(src, stream, src.getPath().length() + 1, monitor);
 			} finally {
-				stream.close();
+				if (stream != null) {
+					stream.close();
+				}
 			}
 		} finally {
-			outStream.close();
+			if (outStream != null) {
+				outStream.close();
+			}
 		}
 	}
 	

@@ -79,6 +79,7 @@ public enum WDLMessageTypes implements IWDLMessageType {
 	 */
 	private final boolean enabledByDefault;
 	
+	@Override
 	public String getDisplayName() {
 		return I18n.format(displayTextKey);
 	}

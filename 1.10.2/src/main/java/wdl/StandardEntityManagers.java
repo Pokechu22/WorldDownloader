@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
@@ -82,8 +84,12 @@ public enum StandardEntityManagers implements IEntityManager {
 		@Override
 		public String getIdentifierFor(Entity entity) {
 			String id = EntityList.getEntityString(entity);
-			assert id != null;
-			return id;
+			if (id == null) {
+				// Happens with players.  This check isn't needed in 1.10 though
+				return null;
+			} else {
+				return id;
+			}
 		}
 
 		/**
@@ -291,6 +297,8 @@ public enum StandardEntityManagers implements IEntityManager {
 	static {
 		ImmutableSet.Builder<String> builder = ImmutableSet.builder();
 		for (String loc : EntityList.getEntityNameList()) {
+			if (loc.equals("LightningBolt")) continue;
+
 			builder.add(loc);
 		}
 		PROVIDED_ENTITIES = builder.build();
@@ -298,6 +306,7 @@ public enum StandardEntityManagers implements IEntityManager {
 	public static final List<? extends IEntityManager> DEFAULTS = ImmutableList.copyOf(values());
 
 	// XXX This should be in the SPIGOT constant, but can't be due to access reasons
+	@Nonnull
 	public SpigotEntityType getSpigotType(String identifier) {
 		Class<? extends Entity> c = entityClassFor(identifier);
 		if (c == null) {

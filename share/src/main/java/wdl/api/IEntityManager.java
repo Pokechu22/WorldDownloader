@@ -95,7 +95,7 @@ public interface IEntityManager extends IWDLMod {
 	 *            The identifier.
 	 * @return The group for the entity: an internal ID.
 	 */
-	@Nonnull
+	@Nullable
 	public abstract String getGroup(String identifier);
 
 	/**

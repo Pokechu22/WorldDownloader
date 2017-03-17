@@ -83,8 +83,12 @@ public enum StandardEntityManagers implements IEntityManager {
 		@Override
 		public String getIdentifierFor(Entity entity) {
 			ResourceLocation loc = EntityList.getKey(entity);
-			assert loc != null;
-			return loc.toString();
+			if (loc == null) {
+				// Eg players
+				return null;
+			} else {
+				return loc.toString();
+			}
 		}
 
 		/**
@@ -260,6 +264,8 @@ public enum StandardEntityManagers implements IEntityManager {
 	static {
 		ImmutableSet.Builder<String> builder = ImmutableSet.builder();
 		for (ResourceLocation loc : EntityList.KNOWN_TYPES) {
+			if (EntityList.LIGHTNING_BOLT.equals(loc)) continue;
+
 			builder.add(loc.toString());
 		}
 		PROVIDED_ENTITIES = builder.build();
