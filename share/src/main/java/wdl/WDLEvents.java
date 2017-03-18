@@ -154,7 +154,7 @@ public class WDLEvents {
 			//rather than the entity being looked at.
 			if (WDL.windowContainer instanceof ContainerHorseInventory) {
 				EquineEntity horseInContainer = ReflectionUtils
-						.stealAndGetField(WDL.windowContainer,
+						.findAndGetPrivateField(WDL.windowContainer,
 								EquineEntity.class);
 
 				//Intentional reference equals
@@ -216,10 +216,10 @@ public class WDLEvents {
 			} else if (WDL.lastEntity instanceof EntityVillager
 					&& WDL.windowContainer instanceof ContainerMerchant) {
 				EntityVillager ev = (EntityVillager) WDL.lastEntity;
-				MerchantRecipeList list = (ReflectionUtils.stealAndGetField(
+				MerchantRecipeList list = (ReflectionUtils.findAndGetPrivateField(
 						WDL.windowContainer, IMerchant.class)).getRecipes(
 								WDL.thePlayer);
-				ReflectionUtils.stealAndSetField(ev, MerchantRecipeList.class, list);
+				ReflectionUtils.findAndSetPrivateField(ev, MerchantRecipeList.class, list);
 				
 				saveName = "villager";
 			} else if (WDL.lastEntity instanceof EquineEntity
@@ -364,7 +364,7 @@ public class WDLEvents {
 			saveName = "enderChest";
 		} else if (WDL.windowContainer instanceof ContainerBrewingStand
 				&& te instanceof TileEntityBrewingStand) {
-			IInventory brewingInventory = ReflectionUtils.stealAndGetField(
+			IInventory brewingInventory = ReflectionUtils.findAndGetPrivateField(
 					WDL.windowContainer, IInventory.class);
 			WDL.saveContainerItems(WDL.windowContainer, (TileEntityBrewingStand) te, 0);
 			WDL.saveInventoryFields(brewingInventory, (TileEntityBrewingStand) te);
@@ -377,7 +377,7 @@ public class WDLEvents {
 			saveName = "dispenser";
 		} else if (WDL.windowContainer instanceof ContainerFurnace
 				&& te instanceof TileEntityFurnace) {
-			IInventory furnaceInventory = ReflectionUtils.stealAndGetField(
+			IInventory furnaceInventory = ReflectionUtils.findAndGetPrivateField(
 					WDL.windowContainer, IInventory.class);
 			WDL.saveContainerItems(WDL.windowContainer, (TileEntityFurnace) te, 0);
 			WDL.saveInventoryFields(furnaceInventory, (TileEntityFurnace) te);
@@ -549,6 +549,6 @@ public class WDLEvents {
 			}
 		}
 
-		ReflectionUtils.stealAndSetField(horse, EquineEntity.class, ContainerHorseChest.class, horseInventory);
+		ReflectionUtils.findAndSetPrivateField(horse, EquineEntity.class, ContainerHorseChest.class, horseInventory);
 	}
 }

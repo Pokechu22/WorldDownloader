@@ -861,7 +861,7 @@ public class WDL {
 		// Get the list of loaded chunks
 		@SuppressWarnings("unchecked")
 		Long2ObjectMap<Chunk> chunkMap = (Long2ObjectMap<Chunk>) ReflectionUtils
-				.stealAndGetField(chunkProvider, Long2ObjectMap.class);
+				.findAndGetPrivateField(chunkProvider, Long2ObjectMap.class);
 		List<Chunk> chunks = new ArrayList<Chunk>(chunkMap.values());
 		
 		progressScreen.startMajorTask(I18n.format("wdl.saveProgress.chunk.title"), 
@@ -1540,10 +1540,10 @@ public class WDL {
 				//Steal crashReportSections, and replace it.
 				@SuppressWarnings("unchecked")
 				List<CrashReportCategory> crashReportSectionsOld = ReflectionUtils
-						.stealAndGetField(oldReport, List.class);
+						.findAndGetPrivateField(oldReport, List.class);
 				@SuppressWarnings("unchecked")
 				List<CrashReportCategory> crashReportSectionsNew = ReflectionUtils
-						.stealAndGetField(report, List.class);
+						.findAndGetPrivateField(report, List.class);
 				
 				crashReportSectionsNew.addAll(crashReportSectionsOld);
 			} catch (Exception e) {

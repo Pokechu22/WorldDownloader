@@ -94,7 +94,7 @@ public class CapeHandler {
 	private static void setupPlayer(AbstractClientPlayer player) {
 		try {
 			NetworkPlayerInfo info = ReflectionUtils
-					.stealAndGetField((AbstractClientPlayer)player,
+					.findAndGetPrivateField((AbstractClientPlayer)player,
 							AbstractClientPlayer.class,
 							NetworkPlayerInfo.class);
 			
@@ -120,7 +120,7 @@ public class CapeHandler {
 			ResourceLocation cape) throws Exception {
 		@SuppressWarnings("unchecked")
 		Map<MinecraftProfileTexture.Type, ResourceLocation> map = ReflectionUtils
-				.stealAndGetField(info, Map.class);
+				.findAndGetPrivateField(info, Map.class);
 		if (!map.containsKey(MinecraftProfileTexture.Type.CAPE)) {
 			map.put(MinecraftProfileTexture.Type.CAPE, cape);
 		}
