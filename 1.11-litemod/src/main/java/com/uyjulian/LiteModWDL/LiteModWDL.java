@@ -2,6 +2,7 @@ package com.uyjulian.LiteModWDL;
 
 import java.io.File;
 import com.mumfrey.liteloader.LiteMod;
+import wdl.VersionConstants;
 
 public class LiteModWDL implements LiteMod {
 
@@ -12,7 +13,7 @@ public class LiteModWDL implements LiteMod {
 
 	@Override
 	public String getVersion() {
-		return "1.11";
+		return VersionConstants.getModVersion() + "-" + VersionConstants.getExpectedVersion();
 	}
 
 	@Override

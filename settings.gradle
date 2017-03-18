@@ -1,4 +1,7 @@
-include 'share', '1.10.2', '1.11', '1.11-litemod', '1.11.2', '1.11.2-litemod'
+include 'share'
+include '1.10.2', '1.10.2-litemod'
+include '1.11', '1.11-litemod'
+include '1.11.2', '1.11.2-litemod'
 
 // More information about what went wrong
 gradle.buildFinished { buildResult ->
