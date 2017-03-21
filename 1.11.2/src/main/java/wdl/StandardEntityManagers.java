@@ -262,13 +262,18 @@ public enum StandardEntityManagers implements IEntityManager {
 	 */
 	private static final Set<String> PROVIDED_ENTITIES;
 	static {
-		ImmutableSet.Builder<String> builder = ImmutableSet.builder();
-		for (ResourceLocation loc : EntityList.KNOWN_TYPES) {
-			if (EntityList.LIGHTNING_BOLT.equals(loc)) continue;
+		try {
+			ImmutableSet.Builder<String> builder = ImmutableSet.builder();
+			for (ResourceLocation loc : EntityList.KNOWN_TYPES) {
+				if (EntityList.LIGHTNING_BOLT.equals(loc)) continue;
 
-			builder.add(loc.toString());
+				builder.add(loc.toString());
+			}
+			PROVIDED_ENTITIES = builder.build();
+		} catch (Exception ex) {
+			EntityUtils.logger.error("[WDL] Failed to load entity list: ", ex);
+			throw new RuntimeException("[WDL] Failed to load entity list", ex);
 		}
-		PROVIDED_ENTITIES = builder.build();
 	}
 	public static final List<? extends IEntityManager> DEFAULTS = ImmutableList.copyOf(values());
 
