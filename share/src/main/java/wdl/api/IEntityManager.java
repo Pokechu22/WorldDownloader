@@ -53,7 +53,7 @@ public interface IEntityManager extends IWDLMod {
 	 * @see #getProvidedEntities()
 	 */
 	@Nullable
-	public abstract String getIdentifierFor(Entity entity);
+	public abstract String getIdentifierFor(@Nonnull Entity entity);
 
 	/**
 	 * Gets the track distance for the given entity.
@@ -82,7 +82,7 @@ public interface IEntityManager extends IWDLMod {
 	 *         entity.
 	 * @see #getProvidedEntities()
 	 */
-	public abstract int getTrackDistance(String identifier, @Nullable Entity entity);
+	public abstract int getTrackDistance(@Nonnull String identifier, @Nullable Entity entity);
 
 	/**
 	 * Gets an internal ID for the group to put that entity in. Used for
@@ -96,7 +96,7 @@ public interface IEntityManager extends IWDLMod {
 	 * @return The group for the entity: an internal ID.
 	 */
 	@Nullable
-	public abstract String getGroup(String identifier);
+	public abstract String getGroup(@Nonnull String identifier);
 
 	/**
 	 * Gets the player-visible display identifier for the given entity
@@ -111,7 +111,7 @@ public interface IEntityManager extends IWDLMod {
 	 *         <code>null</code> if no translated identifier could be provided.
 	 */
 	@Nullable
-	public abstract String getDisplayIdentifier(String identifier);
+	public abstract String getDisplayIdentifier(@Nonnull String identifier);
 
 	/**
 	 * Gets the player-visible name for the given entity group.
@@ -122,7 +122,7 @@ public interface IEntityManager extends IWDLMod {
 	 *         <code>null</code> if no translated group name could be provided.
 	 */
 	@Nullable
-	public abstract String getDisplayGroup(String group);
+	public abstract String getDisplayGroup(@Nonnull String group);
 
 	/**
 	 * Is the given type of entity enabled by default?
@@ -131,5 +131,5 @@ public interface IEntityManager extends IWDLMod {
 	 *            The ID for the entity.
 	 * @return True if that type of entity should be saved by default.
 	 */
-	public abstract boolean enabledByDefault(String identifier);
+	public abstract boolean enabledByDefault(@Nonnull String identifier);
 }

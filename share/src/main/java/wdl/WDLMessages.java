@@ -5,6 +5,8 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
@@ -28,7 +30,7 @@ import com.google.common.collect.ListMultimap;
  */
 public class WDLMessages {
 	private static Logger logger = LogManager.getLogger();
-	
+
 	/**
 	 * Information about an individual message type.
 	 */
@@ -36,7 +38,7 @@ public class WDLMessages {
 		public final String name;
 		public final IWDLMessageType type;
 		public final MessageTypeCategory category;
-		
+
 		/**
 		 * Creates a MessageRegistration.
 		 * 
@@ -50,7 +52,7 @@ public class WDLMessages {
 			this.type = type;
 			this.category = category;
 		}
-		
+
 		@Override
 		public String toString() {
 			return "MessageRegistration [name=" + name + ", type=" + type
@@ -103,19 +105,19 @@ public class WDLMessages {
 			return true;
 		}
 	}
-	
+
 	/**
 	 * If <code>false</code>, all messages are disabled.  Otherwise, per-
 	 * message settings are used.
 	 */
 	public static boolean enableAllMessages = true;
-	
+
 	/**
 	 * List of all registrations.
 	 */
 	private static List<MessageRegistration> registrations =
 			new ArrayList<MessageRegistration>();
-	
+
 	/**
 	 * Gets the {@link MessageRegistration} for the given name.
 	 * @param name
@@ -130,7 +132,7 @@ public class WDLMessages {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Gets the {@link MessageRegistration} for the given {@link IWDLMessageType}.
 	 * @param name
@@ -144,7 +146,7 @@ public class WDLMessages {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Adds registration for another type of message.
 	 * 
@@ -155,13 +157,13 @@ public class WDLMessages {
 	public static void registerMessage(String name, IWDLMessageType type,
 			MessageTypeCategory category) {
 		registrations.add(new MessageRegistration(name, type, category));
-		
+
 		WDL.defaultProps.setProperty("Messages." + name, 
-					Boolean.toString(type.isEnabledByDefault()));
+				Boolean.toString(type.isEnabledByDefault()));
 		WDL.defaultProps.setProperty("MessageGroup." + category.internalName, 
 				"true");
 	}
-	
+
 	/**
 	 * Is the specified type enabled?
 	 */
@@ -176,11 +178,11 @@ public class WDLMessages {
 		if (r == null) {
 			return false;
 		}
-		
+
 		if (!isGroupEnabled(r.category)) {
 			return false;
 		}
-		
+
 		if (!WDL.baseProps.containsKey("Messages." + r.name)) {
 			if (WDL.baseProps.containsKey("Debug." + r.name)) {
 				//Updating from older version
@@ -193,20 +195,20 @@ public class WDLMessages {
 		}
 		return WDL.baseProps.getProperty("Messages." + r.name).equals("true");
 	}
-	
+
 	/**
 	 * Toggles whether the given type is enabled.
 	 * @param type
 	 */
 	public static void toggleEnabled(IWDLMessageType type) {
 		MessageRegistration r = getRegistration(type);
-		
+
 		if (r != null) {
 			WDL.baseProps.setProperty("Messages." + r.name,
 					Boolean.toString(!isEnabled(type)));
 		}
 	}
-	
+
 	/**
 	 * Gets whether the given group is enabled.
 	 */
@@ -214,12 +216,12 @@ public class WDLMessages {
 		if (!enableAllMessages) {
 			return false;
 		}
-		
+
 		return WDL.baseProps.getProperty(
 				"MessageGroup." + group.internalName, "true").equals(
-				"true");
+						"true");
 	}
-	
+
 	/**
 	 * Toggles whether a group is enabled or not.
 	 */
@@ -227,22 +229,23 @@ public class WDLMessages {
 		WDL.baseProps.setProperty("MessageGroup." + group.internalName,
 				Boolean.toString(!isGroupEnabled(group)));
 	}
-	
+
 	/**
 	 * Gets all of the MessageTypes 
 	 * @return All the types, ordered by the category.
 	 */
+	@Nonnull
 	public static ListMultimap<MessageTypeCategory, IWDLMessageType> getTypes() {
 		ListMultimap<MessageTypeCategory, IWDLMessageType> returned = LinkedListMultimap
 				.create();
-		
+
 		for (MessageRegistration r : registrations) {
 			returned.put(r.category, r.type);
 		}
-		
+
 		return ImmutableListMultimap.copyOf(returned);
 	}
-	
+
 	/**
 	 * Reset all settings to default.
 	 */
@@ -250,7 +253,7 @@ public class WDLMessages {
 		WDL.baseProps.setProperty("Messages.enableAll", "true");
 		enableAllMessages = WDL.globalProps.getProperty("Messages.enableAll",
 				"true").equals("true");
-		
+
 		for (MessageRegistration r : registrations) {
 			WDL.baseProps.setProperty(
 					"MessageGroup." + r.category.internalName,
@@ -261,7 +264,7 @@ public class WDLMessages {
 					WDL.globalProps.getProperty("Messages." + r.name));
 		}
 	}
-	
+
 	/**
 	 * Should be called when the server has changed.
 	 */
@@ -276,21 +279,21 @@ public class WDLMessages {
 						WDL.globalProps.getProperty("Messages.enableAll", "true"));
 			}
 		}
-		
+
 		enableAllMessages = WDL.baseProps.getProperty("Messages.enableAll")
 				.equals("true");
 	}
-	
+
 	/**
 	 * Prints the given message into the chat.
 	 * 
 	 * @param type The type of the message.
 	 * @param message The message to display.
 	 */
-	public static void chatMessage(IWDLMessageType type, String message) {
+	public static void chatMessage(@Nonnull IWDLMessageType type, @Nonnull String message) {
 		chatMessage(type, new TextComponentString(message));
 	}
-	
+
 	/**
 	 * Prints a translated chat message into the chat.
 	 * 
@@ -304,88 +307,48 @@ public class WDLMessages {
 	 *            will be converted properly with a tooltip like the one
 	 *            generated by {@link Entity#getDisplayName()}.
 	 */
-	public static void chatMessageTranslated(IWDLMessageType type,
-			String translationKey, Object... args) {
+	public static void chatMessageTranslated(@Nonnull IWDLMessageType type,
+			@Nonnull String translationKey, @Nonnull Object... args) {
 		List<Throwable> exceptionsToPrint = new ArrayList<Throwable>();
-		
+
 		for (int i = 0; i < args.length; i++) {
-			if (args[i] instanceof Entity) {
+			if (args[i] == null) {
+				TextComponentString text = new TextComponentString("null");
+				text.getStyle().setHoverEvent(new HoverEvent(Action.SHOW_TEXT, new TextComponentString("~~null~~")));
+				args[i] = text;
+			} else if (args[i] instanceof Entity) {
 				Entity e = (Entity)args[i];
-				String entityType = EntityUtils.getEntityType(e);
-				HoverEvent event = null;
-				String customName = null;
-				
-				try {
-					event = e.getDisplayName().getStyle().getHoverEvent();
-					
-					if (e.hasCustomName()) {
-						customName = e.getCustomNameTag();
-					}
-				} catch (Exception ex) {
-					// Maybe an unsafe entity?  Just ignore the exception.
-				}
-				
-				ITextComponent component;
-				
-				if (customName != null) {
-					component = new TextComponentTranslation(
-							"wdl.messages.entityTypeAndCustomName", entityType,
-							customName);
-				} else {
-					component = new TextComponentString(entityType);
-				}
-				component.setStyle(component.getStyle()
-						.setHoverEvent(event));
-				
-				args[i] = component;
+
+				args[i] = convertEntityToComponent(e);
 			} else if (args[i] instanceof Throwable) {
-				Throwable t = (Throwable)args[i];
-				ITextComponent component = new TextComponentString(t.toString());
-				
-				// http://stackoverflow.com/a/1149721/3991344
-				StringWriter sw = new StringWriter();
-				t.printStackTrace(new PrintWriter(sw));
-				String exceptionAsString = sw.toString();
-				
-				exceptionAsString = exceptionAsString.replace("\r", "")
-						.replace("\t", "    ");
-				
-				HoverEvent event = new HoverEvent(Action.SHOW_TEXT,
-						new TextComponentString(exceptionAsString));
-				
-				component.setStyle(component.getStyle()
-						.setHoverEvent(event));
-				
-				// Also, log the stacktrace for future use.
-				logger.warn(t);
-				
-				args[i] = component;
-				
+				Throwable t = (Throwable) args[i];
+
+				args[i] = convertThrowableToComponent(t);
 				exceptionsToPrint.add(t);
 			}
 		}
-		
+
 		chatMessage(type, new TextComponentTranslation(translationKey, args));
-		
+
 		for (int i = 0; i < exceptionsToPrint.size(); i++) {
 			logger.warn("Exception #" + (i + 1) + ": ", exceptionsToPrint.get(i));
 		}
 	}
-	
+
 	/**
 	 * Prints the given message into the chat.
 	 * 
 	 * @param type The type of the message.
 	 * @param message The message to display.
 	 */
-	public static void chatMessage(IWDLMessageType type, ITextComponent message) {
+	public static void chatMessage(@Nonnull IWDLMessageType type, @Nonnull ITextComponent message) {
 		// Can't use a TextComponentTranslation here because it doesn't like new lines.
 		String tooltipText = I18n.format("wdl.messages.tooltip",
 				type.getDisplayName()).replace("\r", "");
 		ITextComponent tooltip = new TextComponentString(tooltipText);
-		
+
 		ITextComponent text = new TextComponentString("");
-		
+
 		ITextComponent header = new TextComponentString("[WorldDL]");
 		header.getStyle().setColor(type.getTitleColor());
 		header.getStyle().setHoverEvent(
@@ -405,5 +368,60 @@ public class WDLMessages {
 		} else {
 			logger.info(text.getUnformattedText());
 		}
+	}
+
+	@Nonnull
+	private static ITextComponent convertEntityToComponent(@Nonnull Entity e) {
+		ITextComponent wdlName, displayName;
+
+		try {
+			String identifier = EntityUtils.getEntityType(e);
+			if (identifier == null) {
+				wdlName = new TextComponentTranslation("wdl.messages.entityData.noKnownName");
+			} else {
+				String group = EntityUtils.getEntityGroup(identifier);
+				String displayIdentifier = EntityUtils.getDisplayType(identifier);
+				String displayGroup = EntityUtils.getDisplayGroup(group);
+				wdlName = new TextComponentString(displayIdentifier);
+
+				ITextComponent hoverText = new TextComponentString("");
+				hoverText.appendSibling(new TextComponentTranslation("wdl.messages.entityData.internalName", identifier));
+				hoverText.appendText("\n");
+				hoverText.appendSibling(new TextComponentTranslation("wdl.messages.entityData.group", displayGroup, group));
+
+				wdlName.getStyle().setHoverEvent(new HoverEvent(Action.SHOW_TEXT, hoverText));
+			}
+		} catch (Exception ex) {
+			logger.warn("[WDL] Exception in entity name!", ex);
+			wdlName = convertThrowableToComponent(ex);
+		}
+		try {
+			displayName = e.getDisplayName();
+		} catch (Exception ex) {
+			logger.warn("[WDL] Exception in entity display name!", ex);
+			displayName = convertThrowableToComponent(ex);
+		}
+
+		return new TextComponentTranslation("wdl.messages.entityData", wdlName, displayName);
+	}
+
+	@Nonnull
+	private static ITextComponent convertThrowableToComponent(@Nonnull Throwable t) {
+		ITextComponent component = new TextComponentString(t.toString());
+
+		// http://stackoverflow.com/a/1149721/3991344
+		StringWriter sw = new StringWriter();
+		t.printStackTrace(new PrintWriter(sw));
+		String exceptionAsString = sw.toString();
+
+		exceptionAsString = exceptionAsString.replace("\r", "")
+				.replace("\t", "    ");
+
+		HoverEvent event = new HoverEvent(Action.SHOW_TEXT,
+				new TextComponentString(exceptionAsString));
+
+		component.getStyle().setHoverEvent(event);
+
+		return component;
 	}
 }

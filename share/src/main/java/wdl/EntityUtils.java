@@ -5,9 +5,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.effect.EntityLightningBolt;
+import net.minecraft.entity.player.EntityPlayer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,7 +37,9 @@ public class EntityUtils {
 	public static Set<String> getEntityTypes() {
 		Set<String> set = new HashSet<String>();
 		for (IEntityManager manager : getEntityManagers()) {
-			set.addAll(manager.getProvidedEntities());
+			for (String type : manager.getProvidedEntities()) {
+				set.add(type);
+			}
 		}
 		return set;
 	}
@@ -75,8 +80,12 @@ public class EntityUtils {
 	 * @param entity
 	 * @return
 	 */
-	public static int getEntityTrackDistance(Entity entity) {
-		return getEntityTrackDistance(getTrackDistanceMode(), getEntityType(entity), entity);
+	public static int getEntityTrackDistance(@Nonnull Entity entity) {
+		String type = getEntityType(entity);
+		if (type == null) {
+			return -1;
+		}
+		return getEntityTrackDistance(getTrackDistanceMode(), type, entity);
 	}
 
 	/**
@@ -85,7 +94,7 @@ public class EntityUtils {
 	 * @param type
 	 * @return
 	 */
-	public static int getEntityTrackDistance(String type) {
+	public static int getEntityTrackDistance(@Nonnull String type) {
 		return getEntityTrackDistance(getTrackDistanceMode(), type, null);
 	}
 
@@ -97,7 +106,7 @@ public class EntityUtils {
 	 * @param entity
 	 * @return
 	 */
-	public static int getEntityTrackDistance(String mode, String type, @Nullable Entity entity) {
+	public static int getEntityTrackDistance(String mode, @Nonnull String type, @Nullable Entity entity) {
 		if ("default".equals(mode)) {
 			for (IEntityManager manager : getEntityManagers()) {
 				if (!manager.getProvidedEntities().contains(type)) {
@@ -139,9 +148,10 @@ public class EntityUtils {
 	 * Gets the group for the given entity type.
 	 *
 	 * @param identifier
-	 * @return The group, or <code>null</code> if none is found.
+	 * @return The group, or "Unknown" if none is found.
 	 */
-	public static String getEntityGroup(String identifier) {
+	@Nonnull
+	public static String getEntityGroup(@Nonnull String identifier) {
 		for (IEntityManager manager : getEntityManagers()) {
 			if (!manager.getProvidedEntities().contains(identifier)) {
 				continue;
@@ -161,8 +171,13 @@ public class EntityUtils {
 	 * @param e The entity to check.
 	 * @return
 	 */
-	public static boolean isEntityEnabled(Entity e) {
-		return isEntityEnabled(getEntityType(e));
+	public static boolean isEntityEnabled(@Nonnull Entity e) {
+		String type = getEntityType(e);
+		if (type == null) {
+			return false;
+		} else {
+			return isEntityEnabled(type);
+		}
 	}
 
 	/**
@@ -171,7 +186,7 @@ public class EntityUtils {
 	 * @param type The type of the entity (from {@link #getEntityType(Entity)})
 	 * @return
 	 */
-	public static boolean isEntityEnabled(String type) {
+	public static boolean isEntityEnabled(@Nonnull String type) {
 		boolean groupEnabled = WDL.worldProps.getProperty("EntityGroup." +
 				getEntityGroup(type) + ".Enabled", "true").equals("true");
 		boolean singleEnabled = WDL.worldProps.getProperty("Entity." +
@@ -186,7 +201,18 @@ public class EntityUtils {
 	 * @param e
 	 * @return
 	 */
-	public static String getEntityType(Entity e) {
+	@Nullable
+	public static String getEntityType(@Nonnull Entity e) {
+		if (e instanceof EntityPlayer || e instanceof EntityLightningBolt) {
+			// These entities can't be saved at all; it's normal that they won't
+			// be classified.
+			return null;
+		}
+		if (e == null) {
+			logger.warn("Can't get type for null entity", new Exception());
+			return null;
+		}
+
 		for (IEntityManager manager : getEntityManagers()) {
 			String type = manager.getIdentifierFor(e);
 			if (type != null) {
@@ -202,12 +228,13 @@ public class EntityUtils {
 	public static String getTrackDistanceMode() {
 		return WDL.worldProps.getProperty("Entity.TrackDistanceMode", "server");
 	}
-	
+
 	/**
 	 * Gets the display name for the given entity type. As a last resort,
 	 * returns the type itself.
 	 */
-	public static String getDisplayType(String identifier) {
+	@Nonnull
+	public static String getDisplayType(@Nonnull String identifier) {
 		for (IEntityManager manager : getEntityManagers()) {
 			if (!manager.getProvidedEntities().contains(identifier)) {
 				continue;
@@ -224,14 +251,15 @@ public class EntityUtils {
 	 * Gets the display name for the given entity group. As a last resort,
 	 * returns the group name itself.
 	 */
-	public static String getDisplayGroup(String group) {
+	@Nonnull
+	public static String getDisplayGroup(@Nonnull String group) {
 		for (IEntityManager manager : getEntityManagers()) {
 			String displayGroup = manager.getDisplayGroup(group);
 			if (displayGroup != null) {
 				return displayGroup;
 			}
 		}
-		logger.debug("Failed to get display name for " + group);
+		logger.debug("Failed to get display name for group " + group);
 		return group;
 	}
 

@@ -293,7 +293,14 @@ wdl.messages.tileEntity.usingNew=Using new TE: %s at %s
 wdl.messages.tileEntity.notImporting=Old TE does not need importing: %s at %s 
 wdl.messages.tileEntity.edited=Edited TE at %s using %s
 
-wdl.messages.entityTypeAndCustomName=%s (named %s)
+# MC = Minecraft; this is used to display what WDL and MC think of an entity
+# First arg is the display identifier, or the raw identifier if none availible
+# The second arg is MC's display entity component
+wdl.messages.entityData=%s (MC %s)
+wdl.messages.entityData.noKnownName=unidentified entity
+wdl.messages.entityData.internalName=Internally %s
+# First arg is display group, second is raw group
+wdl.messages.entityData.group=Grouped as %s (%s)
 
 wdl.messages.saving.savingChunks=Saving chunks...
 wdl.messages.saving.chunksSaved=Chunk data saved.
