@@ -1,8 +1,11 @@
 package wdl;
 
+import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+
+import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -48,9 +51,12 @@ import net.minecraft.entity.projectile.EntityShulkerBullet;
 import net.minecraft.entity.projectile.EntitySmallFireball;
 import net.minecraft.entity.projectile.EntitySnowball;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.RegistryNamespaced;
 import wdl.EntityUtils.SpigotEntityType;
 import wdl.api.IEntityManager;
 
+// WARNING: do NOT reference any of the EntityList fields directly;
+// forge deletes some of them.
 public enum StandardEntityManagers implements IEntityManager {
 	SPIGOT {
 		@Override
@@ -251,20 +257,56 @@ public enum StandardEntityManagers implements IEntityManager {
 		}
 		assert getProvidedEntities().contains(identifier);
 
-		Class<? extends Entity> c = EntityList.REGISTRY.getObject(loc);
+		Class<? extends Entity> c;
+		if (ENTITY_REGISTRY != null) {
+			c = ENTITY_REGISTRY.getObject(loc);
+		} else {
+			c = EntityList_forge_getClass(loc);
+		}
 		assert c != null;
 
 		return c;
 	}
 
 	/**
+	 * Reference to {@link EntityList#REGISTRY}. May be null under forge. If
+	 * null, indicates that the fallback method needs to be used.
+	 */
+	@Nullable
+	private static final RegistryNamespaced<ResourceLocation, Class <? extends Entity>> ENTITY_REGISTRY;
+	/**
+	 * Forge adds a replacement method when {@link EntityList#REGISTRY} is not
+	 * present; this is a reference to that. If ENTITY_REGISTRY is null, this
+	 * will not be null.
+	 * <p>
+	 * Returns a Class, and takes a ResourceLocation.
+	 *
+	 * @see #EntityList_forge_getClass()
+	 */
+	@Nullable
+	private static final Method FORGE_FALLBACK_METHOD;
+	/**
 	 * As returned by {@link #getProvidedEntities()}
 	 */
 	private static final Set<String> PROVIDED_ENTITIES;
 	static {
 		try {
+			RegistryNamespaced<ResourceLocation, Class <? extends Entity>> registry;
+			Method forgeMethod;
+			try {
+				registry = EntityList.REGISTRY;
+				forgeMethod = null;
+			} catch (NoSuchFieldError ex) {
+				// Yay, incompatible changes!
+				EntityUtils.logger.info("[WDL] NoSuchFieldException due to forge; switching to fallback. This is (sadly) expected: ", ex);
+				registry = null;
+				forgeMethod = EntityList.class.getMethod("getClass", ResourceLocation.class);
+			}
+			ENTITY_REGISTRY = registry;
+			FORGE_FALLBACK_METHOD = forgeMethod;
+
 			ImmutableSet.Builder<String> builder = ImmutableSet.builder();
-			for (ResourceLocation loc : EntityList.KNOWN_TYPES) {
+			for (ResourceLocation loc : EntityList.getEntityNameList()) {
 				if (EntityList.LIGHTNING_BOLT.equals(loc)) continue;
 
 				builder.add(loc.toString());
@@ -275,6 +317,16 @@ public enum StandardEntityManagers implements IEntityManager {
 			throw new RuntimeException("[WDL] Failed to load entity list", ex);
 		}
 	}
+	@SuppressWarnings("unchecked")
+	private Class<? extends Entity> EntityList_forge_getClass(ResourceLocation key) {
+		try {
+			return (Class<? extends Entity>) FORGE_FALLBACK_METHOD.invoke(null, key);
+		} catch (Exception ex) {
+			EntityUtils.logger.error("[WDL] Exception calling forge fallback method: ", ex);
+			throw new RuntimeException(ex);
+		}
+	}
+
 	public static final List<? extends IEntityManager> DEFAULTS = ImmutableList.copyOf(values());
 
 	// XXX This should be in the SPIGOT constant, but can't be due to access reasons
