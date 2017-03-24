@@ -15,7 +15,7 @@ gradle.buildFinished { buildResult ->
         println '----------------------------------------'
         println 'Dependency resolution failed.'
         println 'If this was due to begradle not being found, you need to manually install it.'
-        println 'Download https://github.com/Pokechu22/ForgeGradle-extensions and run "gradlew install" to install the library, and then it should work.'
+        println 'Download the latest version of https://github.com/Pokechu22/ForgeGradle-extensions and run "gradlew install" to install the library, and then it should work.'
     }
   }
 }
