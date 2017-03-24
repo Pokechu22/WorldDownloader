@@ -23,13 +23,15 @@ buildscript {
     }
 }
 
+apply plugin: 'java'
+
+version = "4.0.0.2-SNAPSHOT"
+group = "wdl"
+archivesBaseName = "LiteModWDL"
+
 apply plugin: 'net.minecraftforge.gradle.liteloader'
 apply plugin: 'pokechu22.test.customsrg'
 apply plugin: 'org.spongepowered.mixin'
-
-version = "4.0.0.2-SNAPSHOT"
-group = "com.uyjulian.LiteModWDL" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "LiteModWDL"
 
 minecraft {
     version = "1.11.2"
@@ -65,7 +67,7 @@ litemod {
     json {
         name = "LiteModWDL"
         displayName = "World Downloader for Liteloader"
-        author = "uyjulian"
+        author = "uyjulian, pokechu22"
         mcversion = "1.11.2"
         mixinConfigs += "mixins.LiteModWDL.json"
         version = project.version

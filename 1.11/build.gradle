@@ -18,13 +18,14 @@ buildscript {
     }
 }
 
-apply plugin: 'pokechu22.test.begradle'
-apply plugin: 'pokechu22.test.customsrg'
 apply plugin: 'java'
 
 version = "4.0.0.2-SNAPSHOT"
 group = "wdl"
 archivesBaseName = "WorldDownloader"
+
+apply plugin: 'pokechu22.test.begradle'
+apply plugin: 'pokechu22.test.customsrg'
 
 minecraft {
     suppressMappingVersionWarnings = true
