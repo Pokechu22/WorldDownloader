@@ -9,11 +9,13 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiScreen;
@@ -40,6 +42,8 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.MinecraftException;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.EmptyChunk;
+import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraft.world.chunk.storage.IChunkLoader;
 import net.minecraft.world.storage.MapData;
 import net.minecraft.world.storage.SaveHandler;
@@ -893,10 +897,13 @@ public class WDL {
 		if (!WDLPluginChannels.canDownloadAtAll()) { return; }
 		
 		if (!WDLPluginChannels.canSaveChunk(c)) { return; }
-		
-		c.setTerrainPopulated(true);
 
 		try {
+			if (isEmpty(c)) {
+				logger.warn("[WDL] Tried to save empty chunk! (" + c + "@" + c.xPosition + "," + c.zPosition + ")");
+				logger.warn("Sections: " + Arrays.toString(c.getBlockStorageArray()));
+				return;
+			}
 			chunkLoader.saveChunk(worldClient, c);
 		} catch (Exception e) {
 			// Better tell the player that something didn't work:
@@ -904,6 +911,33 @@ public class WDL {
 					"wdl.messages.generalError.failedToSaveChunk",
 					c.xPosition, c.zPosition, e);
 		}
+	}
+
+	private static boolean isEmpty(Chunk c) {
+		if (c.isEmpty() || c instanceof EmptyChunk) {
+			return true;
+		}
+		ExtendedBlockStorage[] array = c.getBlockStorageArray();
+		if (array[0] != null) {
+			for (int i = 1; i < array.length; i++) {
+				if (array[i] != null) {
+					return false;
+				}
+			}
+			// All-air empty chunks sometimes are sent with a bottom section;
+			// handle that and a few other special cases.
+			for (int y = 0; y < 16; y++) {
+				for (int z = 0; z < 16; z++) {
+					for (int x = 0; x < 16; x++) {
+						int id = Block.getStateId(array[0].get(x, y, z));
+						if (id != 0 && !(id >= 0x1A0 && id <= 0x1AF)) {
+							return true;
+						}
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	/**

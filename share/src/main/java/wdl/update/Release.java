@@ -179,13 +179,11 @@ public class Release {
 		this.object = object;
 		
 		this.markdownBody = object.get("body").getAsString();
-		System.out.println(this.markdownBody);
 		Matcher hiddenJSONMatcher = HIDDEN_JSON_REGEX.matcher(markdownBody);
 		if (hiddenJSONMatcher.find()) {
 			// Grab capture group #1 (inside the single quotes)
 			String hiddenJSONStr = markdownBody.substring(hiddenJSONMatcher.start(1),
 					hiddenJSONMatcher.end(1));
-			System.out.println(hiddenJSONStr);
 			JsonObject hiddenJSON = PARSER.parse(hiddenJSONStr)
 					.getAsJsonObject();
 			this.hiddenInfo = new HiddenInfo(hiddenJSON);

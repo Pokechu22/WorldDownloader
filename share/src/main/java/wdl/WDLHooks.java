@@ -2,6 +2,9 @@ package wdl;
 
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -41,6 +44,7 @@ import com.google.common.collect.ImmutableList;
  */
 public class WDLHooks {
 	private static final Profiler profiler = Minecraft.getMinecraft().mcProfiler;
+	private static final Logger logger = LogManager.getLogger();
 	
 	/**
 	 * Called when {@link WorldClient#tick()} is called.
@@ -162,6 +166,8 @@ public class WDLHooks {
 				profiler.endSection();  // "Core"
 				
 				profiler.endSection();  // "onChunkNoLongerNeeded"
+			} else {
+				logger.info("Adding new empty chunk at " + x + ", " + z + " (already has: " + sender.getChunkProvider().isChunkGeneratedAt(x, z) + ")");
 			}
 			
 			profiler.endSection();

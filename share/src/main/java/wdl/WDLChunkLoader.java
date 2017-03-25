@@ -20,6 +20,8 @@ import net.minecraft.block.BlockDropper;
 import net.minecraft.block.BlockFurnace;
 import net.minecraft.block.BlockHopper;
 import net.minecraft.block.BlockNote;
+import net.minecraft.block.BlockTripWire;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.CompressedStreamTools;
@@ -158,7 +160,7 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 		compound.setInteger("zPos", chunk.zPosition);
 		compound.setLong("LastUpdate", world.getTotalWorldTime());
 		compound.setIntArray("HeightMap", chunk.getHeightMap());
-		compound.setBoolean("TerrainPopulated", chunk.isTerrainPopulated());
+		compound.setBoolean("TerrainPopulated", true);  // We always want this
 		compound.setBoolean("LightPopulated", chunk.isLightPopulated());
 		compound.setLong("InhabitedTime", chunk.getInhabitedTime());
 		ExtendedBlockStorage[] blockStorageArray = chunk.getBlockStorageArray();
@@ -167,6 +169,22 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 
 		for (ExtendedBlockStorage blockStorage : blockStorageArray) {
 			if (blockStorage != null) {
+				// TEMPORARY debug logging:
+				for (int y = 0; y < 16; y++) {
+					for (int z = 0; z < 16; z++) {
+						for (int x = 0; x < 16; x++) {
+							IBlockState state = blockStorage.get(x, y, z);
+							if (state.getBlock() instanceof BlockTripWire) {
+								logger.info("Tripwire in chunk @ "
+										+ chunk.xPosition + ","
+										+ chunk.zPosition + " in section "
+										+ blockStorage.getYLocation() + ": "
+										+ x + "," + y + "," + z + " :: "
+										+ state + " = " + Block.getStateId(state));
+							}
+						}
+					}
+				}
 				NBTTagCompound blockData = new NBTTagCompound();
 				blockData.setByte("Y",
 						(byte) (blockStorage.getYLocation() >> 4 & 255));
