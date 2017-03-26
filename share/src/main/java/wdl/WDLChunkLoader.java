@@ -174,13 +174,16 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 					for (int z = 0; z < 16; z++) {
 						for (int x = 0; x < 16; x++) {
 							IBlockState state = blockStorage.get(x, y, z);
+							int id = Block.getStateId(state);
+							// Convert to standard global palette form
+							id = (id & 0xFFF) << 4 | (id & 0xF000) >> 12;
+
 							if (state.getBlock() instanceof BlockTripWire) {
-								logger.info("Tripwire in chunk @ "
-										+ chunk.xPosition + ","
-										+ chunk.zPosition + " in section "
-										+ blockStorage.getYLocation() + ": "
-										+ x + "," + y + "," + z + " :: "
-										+ state + " = " + Block.getStateId(state));
+								logger.info(String.format(
+"[WDL-debug] Tripwire in chunk @ %d, %d in section at y=%d: %d,%d,%d :: %s = %4X",
+										chunk.xPosition, chunk.zPosition,
+										blockStorage.getYLocation(),
+										x, y, z, state, id));
 							}
 						}
 					}

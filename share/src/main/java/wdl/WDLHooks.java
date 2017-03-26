@@ -167,7 +167,7 @@ public class WDLHooks {
 				
 				profiler.endSection();  // "onChunkNoLongerNeeded"
 			} else {
-				logger.info("Adding new empty chunk at " + x + ", " + z + " (already has: " + sender.getChunkProvider().isChunkGeneratedAt(x, z) + ")");
+				logger.debug("Adding new empty chunk at " + x + ", " + z + " (already has: " + (sender.getChunkProvider().getLoadedChunk(x, z) != null) + ")");
 			}
 			
 			profiler.endSection();

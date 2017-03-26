@@ -930,12 +930,18 @@ public class WDL {
 				for (int z = 0; z < 16; z++) {
 					for (int x = 0; x < 16; x++) {
 						int id = Block.getStateId(array[0].get(x, y, z));
-						if (id != 0 && !(id >= 0x1A0 && id <= 0x1AF)) {
-							return true;
+						// Convert to standard global palette form
+						id = (id & 0xFFF) << 4 | (id & 0xF000) >> 12;
+						if ((id > 0x00F) && (id < 0x1A0 || id > 0x1AF)) {
+							// Contains a non-airoid; stop
+							return false;
 						}
 					}
 				}
 			}
+			// Only composed of airoids; treat as empty
+			logger.warn("[WDL] Skipping airoid empty chunk at " + c.xPosition + ", " + c.zPosition);
+			return true;
 		}
 		return false;
 	}
