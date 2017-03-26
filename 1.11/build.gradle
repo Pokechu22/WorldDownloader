@@ -20,7 +20,7 @@ buildscript {
 
 apply plugin: 'java'
 
-version = "4.0.0.2"
+version = "4.0.0.3-SNAPSHOT"
 group = "wdl"
 archivesBaseName = "WorldDownloader"
 
@@ -30,7 +30,7 @@ apply plugin: 'pokechu22.test.customsrg'
 minecraft {
     suppressMappingVersionWarnings = true
     version = "1.11"
-    mappings = "snapshot_20170301"
+    mappings = "snapshot_20170326"
     runDir = "run"
 }
 
