@@ -365,7 +365,8 @@ wdl.messages.generalError.failedToSaveEntity=Failed to save entity %s for chunk 
 wdl.messages.generalError.failedToSaveTE=Failed to save tile entity %s at %s for chunk at %d, %d: %s
 
 wdl.messages.updates.releaseCount=Found %d releases.
-wdl.messages.updates.failedToFindMatchingRelease=Could not find a release matching %s.  You may be running a version that hasn't been released yet.
+wdl.messages.updates.failedToFindMatchingRelease=Could not find a release matching %s.  You may be running a full version that hasn't been released yet, or the update info has not been finished. This should not generally happen.
+wdl.messages.updates.failedToFindMatchingRelease.snapshot=Could not find a release matching %s.  You are running a development snapshot version for %s.
 wdl.messages.updates.failedToFindMetadata=Could not find metadata for release %s.  Skipping hashing.
 wdl.messages.updates.newRelease=New version available!  You are running %s; the newest version is %s.  %s.
 wdl.messages.updates.newRelease.updateLink=Update here

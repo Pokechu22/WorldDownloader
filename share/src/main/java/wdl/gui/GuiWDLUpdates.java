@@ -166,7 +166,8 @@ public class GuiWDLUpdates extends GuiScreen {
 		protected boolean isSelected(int slotIndex) {
 			VersionEntry entry = getListEntry(slotIndex);
 			
-			return VersionConstants.getModVersion().equals(entry.release.tag);
+			String currentTag = "v" + VersionConstants.getModVersion();
+			return currentTag.equals(entry.release.tag);
 		}
 		
 		@Override
@@ -181,8 +182,6 @@ public class GuiWDLUpdates extends GuiScreen {
 	}
 	
 	private UpdateList list;
-	private GuiButton updateMinecraftVersionButton;
-	private GuiButton updateAllowBetasButton;
 	
 	public GuiWDLUpdates(GuiScreen parent) {
 		this.parent = parent;
@@ -192,26 +191,12 @@ public class GuiWDLUpdates extends GuiScreen {
 	public void initGui() {
 		this.list = new UpdateList();
 		
-		this.updateMinecraftVersionButton = new GuiButton(0,
-				this.width / 2 - 155, 18, 150, 20,
-				getUpdateMinecraftVersionText());
-		this.buttonList.add(this.updateMinecraftVersionButton);
-		this.updateAllowBetasButton = new GuiButton(1,
-				this.width / 2 + 5, 18, 150, 20, getAllowBetasText());
-		this.buttonList.add(this.updateAllowBetasButton);
-		
 		this.buttonList.add(new GuiButton(100, this.width / 2 - 100, 
 				this.height - 29, I18n.format("gui.done")));
 	}
 	
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
-		if (button.id == 0) {
-			cycleUpdateMinecraftVersion();
-		}
-		if (button.id == 1) {
-			cycleAllowBetas();
-		}
 		if (button.id == 100) {
 			mc.displayGuiScreen(parent);
 		}
@@ -220,41 +205,6 @@ public class GuiWDLUpdates extends GuiScreen {
 	@Override
 	public void onGuiClosed() {
 		WDL.saveGlobalProps();
-	}
-	
-	private void cycleUpdateMinecraftVersion() {
-		String prop = WDL.globalProps.getProperty("UpdateMinecraftVersion");
-		
-		if (prop.equals("client")) {
-			WDL.globalProps.setProperty("UpdateMinecraftVersion", "server");
-		} else if (prop.equals("server")) {
-			WDL.globalProps.setProperty("UpdateMinecraftVersion", "any");
-		} else {
-			WDL.globalProps.setProperty("UpdateMinecraftVersion", "client");
-		}
-		
-		updateMinecraftVersionButton.displayString = getUpdateMinecraftVersionText();
-	}
-	
-	private void cycleAllowBetas() {
-		if (WDL.globalProps.getProperty("UpdateAllowBetas").equals("true")) {
-			WDL.globalProps.setProperty("UpdateAllowBetas", "false");
-		} else {
-			WDL.globalProps.setProperty("UpdateAllowBetas", "true");
-		}
-		
-		updateAllowBetasButton.displayString = getAllowBetasText();
-	}
-	
-	private String getUpdateMinecraftVersionText() {
-		return I18n.format("wdl.gui.updates.updateMinecraftVersion."
-				+ WDL.globalProps.getProperty("UpdateMinecraftVersion"),
-				VersionConstants.getMinecraftVersion());
-	}
-	
-	private String getAllowBetasText() {
-		return I18n.format("wdl.gui.updates.updateAllowBetas."
-				+ WDL.globalProps.getProperty("UpdateAllowBetas"));
 	}
 	
 	/**
@@ -311,17 +261,6 @@ public class GuiWDLUpdates extends GuiScreen {
 				width / 2, 8, 0xFFFFFF);
 		
 		super.drawScreen(mouseX, mouseY, partialTicks);
-		
-		if (updateMinecraftVersionButton.isMouseOver()) {
-			Utils.drawGuiInfoBox(
-					I18n.format("wdl.gui.updates.updateMinecraftVersion.description",
-							VersionConstants.getMinecraftVersion()),
-					width, height, BOTTOM_MARGIN);
-		} else if (updateAllowBetasButton.isMouseOver()) {
-			Utils.drawGuiInfoBox(
-					I18n.format("wdl.gui.updates.updateAllowBetas.description"),
-					width, height, BOTTOM_MARGIN);
-		}
 	}
 	
 	/**

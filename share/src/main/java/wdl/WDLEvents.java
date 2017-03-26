@@ -64,6 +64,9 @@ public class WDLEvents {
 		profiler.startSection("Core");
 		
 		if (WDL.minecraft.isIntegratedServerRunning()) {
+			// Don't do anything else in single player
+			
+			profiler.endSection();  // "Core"
 			return;
 		}
 		
@@ -84,7 +87,7 @@ public class WDLEvents {
 
 		boolean sameServer = WDL.loadWorld();
 		
-		WDLUpdateChecker.startIfNeeded();
+		WDLUpdateChecker.startIfNeeded();  // TODO: Always check for updates, even in single player
 		
 		profiler.endSection();  // "Core"
 		

@@ -9,6 +9,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
 import javax.net.ssl.HttpsURLConnection;
 
 import net.minecraft.client.Minecraft;
@@ -26,32 +27,37 @@ import com.google.gson.JsonParser;
  * various data.
  */
 public class GithubInfoGrabber {
+	@Nonnull
 	private static final String USER_AGENT;
+	@Nonnull
 	private static final JsonParser PARSER = new JsonParser();
 	/**
 	 * Location of the entire release list.
 	 */
+	@Nonnull
 	private static final String RELEASE_LIST_LOCATION = "https://api.github.com/repos/" + WDL.GITHUB_REPO + "/releases?per_page=100";
 	/**
 	 * File for the release cache.
 	 */
+	@Nonnull
 	private static final File CACHED_RELEASES_FILE = new File(
 			Minecraft.getMinecraft().mcDataDir,
 			"WorldDownloader_Update_Cache.json");
-	
+
 	static {
 		String mcVersion = VersionConstants.getMinecraftVersionInfo();
 		String wdlVersion = VersionConstants.getModVersion();
-		
+
 		USER_AGENT = String.format("World Downloader mod by Pokechu22 "
 				+ "(Minecraft %s; WDL %s) ", mcVersion, wdlVersion);
 	}
-	
+
 	/**
 	 * Gets a list of all releases.
 	 * 
 	 * @see https://developer.github.com/v3/repos/releases/#list-releases-for-a-repository
 	 */
+	@Nonnull
 	public static List<Release> getReleases() throws Exception {
 		JsonArray array = query(RELEASE_LIST_LOCATION).getAsJsonArray();
 		List<Release> returned = new ArrayList<Release>();
@@ -60,19 +66,20 @@ public class GithubInfoGrabber {
 		}
 		return returned;
 	}
-	
+
 	/**
 	 * Fetches the given URL, and converts it into a {@link JsonElement}.
 	 * @param path
 	 * @return
 	 * @throws Exception
 	 */
-	public static JsonElement query(String path) throws Exception {
+	@Nonnull
+	public static JsonElement query(@Nonnull String path) throws Exception {
 		InputStream stream = null;
 		try {
 			HttpsURLConnection connection = (HttpsURLConnection) (new URL(path))
 					.openConnection();
-			
+
 			connection.setRequestProperty("User-Agent", USER_AGENT);
 			connection.setRequestProperty("Accept",
 					"application/vnd.github.v3.full+json");
@@ -86,40 +93,40 @@ public class GithubInfoGrabber {
 					connection.setRequestProperty("If-None-Match", etag);
 				}
 			}
-			
+
 			connection.connect();
-			
+
 			if (connection.getResponseCode() == HttpsURLConnection.HTTP_NOT_MODIFIED) {
 				// 304 not modified; use the cached version.
 				WDLMessages.chatMessageTranslated(WDLMessageTypes.UPDATE_DEBUG,
 						"wdl.messages.updates.usingCachedUpdates");
-				
+
 				stream = new FileInputStream(CACHED_RELEASES_FILE);
 			} else if (connection.getResponseCode() == HttpsURLConnection.HTTP_OK) {
 				// 200 OK
 				WDLMessages.chatMessageTranslated(WDLMessageTypes.UPDATE_DEBUG,
 						"wdl.messages.updates.grabingUpdatesFromGithub");
-				
+
 				stream = connection.getInputStream();
 			} else {
 				throw new Exception("Unexpected response while getting " + path
 						+ ": " + connection.getResponseCode() + " "
 						+ connection.getResponseMessage());
 			}
-			
+
 			InputStreamReader reader = null;
-			
+
 			try {
 				reader = new InputStreamReader(stream);
 				JsonElement element = PARSER.parse(reader);
-				
+
 				// Write that cached version to disk, and save the ETAG.
 				PrintStream output = null;
 				String etag = null;
 				try {
 					output = new PrintStream(CACHED_RELEASES_FILE);
 					output.println(element.toString());
-					
+
 					etag = connection.getHeaderField("ETag");
 				} catch (Exception e) {
 					// We don't want to cache an old version if didn't save.
@@ -129,16 +136,16 @@ public class GithubInfoGrabber {
 					if (output != null) {
 						output.close();
 					}
-					
+
 					if (etag != null) {
 						WDL.globalProps.setProperty("UpdateETag", etag);
 					} else {
 						WDL.globalProps.remove("UpdateETag");
 					}
-					
+
 					WDL.saveGlobalProps();
 				}
-				
+
 				return element;
 			} finally {
 				if (reader != null) {
