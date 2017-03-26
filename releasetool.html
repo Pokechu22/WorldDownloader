@@ -103,7 +103,7 @@
 					zip.createReader(new zip.BlobReader(file), function(zipReader) {
 						zipReader.getEntries(onend);
 					}, onerror);
-				});
+				}
 			},
 			getEntryBlob : function(entry, onend, onprogress) {
 				var writer = new zip.BlobWriter();
