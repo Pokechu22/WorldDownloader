@@ -38,15 +38,15 @@ public class GithubInfoGrabber {
 	private static final File CACHED_RELEASES_FILE = new File(
 			Minecraft.getMinecraft().mcDataDir,
 			"WorldDownloader_Update_Cache.json");
-
+	
 	static {
 		String mcVersion = VersionConstants.getMinecraftVersionInfo();
 		String wdlVersion = VersionConstants.getModVersion();
-
+		
 		USER_AGENT = String.format("World Downloader mod by Pokechu22 "
 				+ "(Minecraft %s; WDL %s) ", mcVersion, wdlVersion);
 	}
-
+	
 	/**
 	 * Gets a list of all releases.
 	 * 
@@ -60,7 +60,7 @@ public class GithubInfoGrabber {
 		}
 		return returned;
 	}
-
+	
 	/**
 	 * Fetches the given URL, and converts it into a {@link JsonElement}.
 	 * @param path
@@ -72,7 +72,7 @@ public class GithubInfoGrabber {
 		try {
 			HttpsURLConnection connection = (HttpsURLConnection) (new URL(path))
 					.openConnection();
-
+			
 			connection.setRequestProperty("User-Agent", USER_AGENT);
 			connection.setRequestProperty("Accept",
 					"application/vnd.github.v3.full+json");
@@ -86,39 +86,40 @@ public class GithubInfoGrabber {
 					connection.setRequestProperty("If-None-Match", etag);
 				}
 			}
-
+			
 			connection.connect();
-
+			
 			if (connection.getResponseCode() == HttpsURLConnection.HTTP_NOT_MODIFIED) {
 				// 304 not modified; use the cached version.
 				WDLMessages.chatMessageTranslated(WDLMessageTypes.UPDATE_DEBUG,
 						"wdl.messages.updates.usingCachedUpdates");
-
+				
 				stream = new FileInputStream(CACHED_RELEASES_FILE);
 			} else if (connection.getResponseCode() == HttpsURLConnection.HTTP_OK) {
 				// 200 OK
 				WDLMessages.chatMessageTranslated(WDLMessageTypes.UPDATE_DEBUG,
 						"wdl.messages.updates.grabingUpdatesFromGithub");
-
+				
 				stream = connection.getInputStream();
 			} else {
 				throw new Exception("Unexpected response while getting " + path
 						+ ": " + connection.getResponseCode() + " "
 						+ connection.getResponseMessage());
 			}
-
+			
 			InputStreamReader reader = null;
-
+			
 			try {
 				reader = new InputStreamReader(stream);
 				JsonElement element = PARSER.parse(reader);
-
+				
 				// Write that cached version to disk, and save the ETAG.
 				PrintStream output = null;
 				String etag = null;
 				try {
 					output = new PrintStream(CACHED_RELEASES_FILE);
-
+					output.println(element.toString());
+					
 					etag = connection.getHeaderField("ETag");
 				} catch (Exception e) {
 					// We don't want to cache an old version if didn't save.
@@ -128,16 +129,16 @@ public class GithubInfoGrabber {
 					if (output != null) {
 						output.close();
 					}
-
+					
 					if (etag != null) {
 						WDL.globalProps.setProperty("UpdateETag", etag);
 					} else {
 						WDL.globalProps.remove("UpdateETag");
 					}
-
+					
 					WDL.saveGlobalProps();
 				}
-
+				
 				return element;
 			} finally {
 				if (reader != null) {
