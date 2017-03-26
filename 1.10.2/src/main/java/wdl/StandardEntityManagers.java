@@ -8,6 +8,7 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 
+import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
@@ -269,9 +270,9 @@ public enum StandardEntityManagers implements IEntityManager {
 			} else {
 				typeToClassMap = result;
 			}
-		} catch (Exception ex) {
+		} catch (Throwable ex) {
 			EntityUtils.logger.error("[WDL] Failed to set up entity mappings: ", ex);
-			throw new RuntimeException("Failed to set up entity mapping", ex);
+			throw Throwables.propagate(ex);
 		}
 	}
 
@@ -303,9 +304,9 @@ public enum StandardEntityManagers implements IEntityManager {
 				builder.add(loc);
 			}
 			PROVIDED_ENTITIES = builder.build();
-		} catch (Exception ex) {
+		} catch (Throwable ex) {
 			EntityUtils.logger.error("[WDL] Failed to load entity list: ", ex);
-			throw new RuntimeException("[WDL] Failed to load entity list", ex);
+			throw Throwables.propagate(ex);
 		}
 	}
 	public static final List<? extends IEntityManager> DEFAULTS = ImmutableList.copyOf(values());
