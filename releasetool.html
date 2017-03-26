@@ -13,13 +13,13 @@
 
 <body>
 <header>Internal tool to simplify release hidden JSON creation</header>
-<p><label><span class="form-label">choose a zip file</span><input type="file" accept="application/zip" id="file-input" /></label></p>
+<p><label><span class="form-label">choose a zip file</span><input type="file" accept="application/zip" id="file-input" multiple="multiple"/></label></p>
 <p><label>Loader / type<input type="text" id="loader" /></label></p>
 <p><label>Forum comment link<input type="text" id="post" /></label></p>
 <p><label>Installed minecraft version</label></p>
 <p><select id="main-version">
 <optgroup label="-- select --"><option disabled selected> -- </option></optgroup>
-<optgroup label="Protocol 316"><option>1.11.2</option></optgroup>
+<optgroup label="Protocol 316"><option>1.11.2</option><option>1.11.1</option></optgroup>
 <optgroup label="Protocol 315"><option>1.11</option></optgroup>
 <optgroup label="Protocol 210"><option>1.10.2</option><option>1.10.1</option><option>1.10</option></optgroup>
 <optgroup label="Protocol 110"><option>1.9.4</option><option>1.9.3</option></optgroup>
@@ -32,7 +32,7 @@
 <p><label>Supported minecraft versions (hold shift or control)</label></p>
 <p><select id="supported-versions" size="23" multiple>
 <optgroup label="-- select --"><option disabled selected> -- </option></optgroup>
-<optgroup label="Protocol 316"><option>1.11.2</option></optgroup>
+<optgroup label="Protocol 316"><option>1.11.2</option><option>1.11.1</option></optgroup>
 <optgroup label="Protocol 315"><option>1.11</option></optgroup>
 <optgroup label="Protocol 210"><option>1.10.2</option><option>1.10.1</option><option>1.10</option></optgroup>
 <optgroup label="Protocol 110"><option>1.9.4</option><option>1.9.3</option></optgroup>
@@ -97,10 +97,12 @@
 
 	var model = (function() {
 		return {
-			getEntries : function(file, onend) {
-				zip.createReader(new zip.BlobReader(file), function(zipReader) {
-					zipReader.getEntries(onend);
-				}, onerror);
+			getEntries : function(files, onend) {
+				files.forEach(function(file) {
+					zip.createReader(new zip.BlobReader(file), function(zipReader) {
+						zipReader.getEntries(onend);
+					}, onerror);
+				});
 			},
 			getEntryBlob : function(entry, onend, onprogress) {
 				var writer = new zip.BlobWriter();
@@ -193,7 +195,7 @@
 		
 		fileInput.addEventListener('change', function() {
 			fileInput.disabled = true;
-			model.getEntries(fileInput.files[0], function(entries) {
+			model.getEntries(fileInput.files, function(entries) {
 				fileList.innerHTML = "";
 				
 				var currentEntryNum = 0;
