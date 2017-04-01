@@ -1,0 +1,75 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+        jcenter()
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+        classpath 'pokechu22.test.begradle:begradle:0.0.4'
+    }
+}
+
+apply plugin: 'java'
+
+version = "4.0.0.3-SNAPSHOT"
+group = "wdl"
+archivesBaseName = "WorldDownloader"
+
+apply plugin: 'pokechu22.test.begradle'
+apply plugin: 'pokechu22.test.customsrg'
+
+minecraft {
+    suppressMappingVersionWarnings = true
+    version = "1.10"
+    mappings = "snapshot_20170326"
+    runDir = "run"
+}
+
+extraSrgs {
+    add file('../srgs/EntityHorseToEquineEntity.srg')
+    add file('../srgs/AnimalChestToContainerHorseChest.srg')
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir "src/main/java"
+            srcDir project(':share').file("src/main/java")
+        }
+        resources {
+            srcDir project(':share').file("src/main/resources")
+        }
+        base {
+            baseClasses = [
+                // Main hooks
+                "net.minecraft.client.gui.GuiIngameMenu",
+                "net.minecraft.client.multiplayer.WorldClient",
+                "net.minecraft.client.network.NetHandlerPlayClient",
+                // Auxiliary hooks, only needed for the base edit
+                "net.minecraft.crash.CrashReport",
+                "net.minecraft.client.ClientBrandRetriever",
+                "net.minecraft.client.resources.DefaultResourcePack"
+            ]
+        }
+    }
+}
+
+// Use tabs instead of spaces
+fixMcSources {
+    astyleConfig = "../astyle.cfg"
+    // TEMPORARY, until I can figure out an automatic patch system.
+    doFirst {
+        def field = net.minecraftforge.gradle.tasks.PostDecompileTask.class.getDeclaredField('patchesMap')
+        field.accessible = true
+        field.get(fixMcSources).put('net.minecraft.entity.passive.EquineEntity.java', file('../srgs/EE_1.10.x.patch'))
+    }
+}

@@ -1,0 +1,46 @@
+--- net/minecraft/client/network/NetHandlerPlayClient.java
++++ net/minecraft/client/network/NetHandlerPlayClient.java
+@@ -768,6 +768,10 @@
+ 		} else {
+ 			this.gameController.ingameGUI.getChatGUI().printChatMessage(packetIn.getChatComponent());
+ 		}
++
++		/* WDL >>> */
++		wdl.WDLHooks.onNHPCHandleChat(this, packetIn);
++		/* <<< WDL */
+ 	}
+ 
+ 	/**
+@@ -1131,6 +1135,10 @@
+ 	public void handleBlockAction(SPacketBlockAction packetIn) {
+ 		PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.gameController);
+ 		this.gameController.world.addBlockEvent(packetIn.getBlockPosition(), packetIn.getBlockType(), packetIn.getData1(), packetIn.getData2());
++
++		/* WDL >>> */
++		wdl.WDLHooks.onNHPCHandleBlockAction(this, packetIn);
++		/* <<< WDL */
+ 	}
+ 
+ 	/**
+@@ -1200,6 +1208,10 @@
+ 		MapData mapdata = ItemMap.loadMapData(packetIn.getMapId(), this.gameController.world);
+ 		packetIn.setMapdataTo(mapdata);
+ 		this.gameController.entityRenderer.getMapItemRenderer().updateMapTexture(mapdata);
++
++		/* WDL >>> */
++		wdl.WDLHooks.onNHPCHandleMaps(this, packetIn);
++		/* <<< WDL */
+ 	}
+ 
+ 	public void handleEffect(SPacketEffect packetIn) {
+@@ -1568,6 +1580,10 @@
+ 			String s1 = packetbuffer2.readString(256);
+ 			this.gameController.getSoundHandler().stop(s1, SoundCategory.getByName(s));
+ 		}
++
++		/* WDL >>> */
++		wdl.WDLHooks.onNHPCHandleCustomPayload(this, packetIn);
++		/* <<< WDL */
+ 	}
+ 
+ 	/**

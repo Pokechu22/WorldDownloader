@@ -1,0 +1,14 @@
+/.gradle/
+/bin/
+/build/
+/run/
+build.number
+
+# Eclipse
+.project
+.classpath
+1.10-litemod_Client.launch
+/.settings/
+
+# Idea
+1.10-litemod.iml
