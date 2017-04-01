@@ -34,12 +34,12 @@ public class Release {
 	 */
 	public class HiddenInfo {
 		/**
-		 * Main version of Minecraft supported by this version.
+		 * No longer needed; releases are always multi-versions.
 		 */
+		@Deprecated
 		public final String mainMinecraftVersion;
 		/**
-		 * Additional versions that can be connected to, but aren't
-		 * used by default.
+		 * Versions availible to the given release.
 		 */
 		public final String[] supportedMinecraftVersions;
 		/**
