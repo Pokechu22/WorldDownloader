@@ -896,7 +896,6 @@ public class WDL {
 		try {
 			if (isEmpty(c)) {
 				logger.warn("[WDL] Tried to save empty chunk! (" + c + "@" + c.xPosition + "," + c.zPosition + ")");
-				logger.warn("Sections: " + Arrays.toString(c.getBlockStorageArray()));
 				return;
 			}
 			chunkLoader.saveChunk(worldClient, c);
@@ -913,12 +912,12 @@ public class WDL {
 			return true;
 		}
 		ExtendedBlockStorage[] array = c.getBlockStorageArray();
-		if (array[0] != null) {
-			for (int i = 1; i < array.length; i++) {
-				if (array[i] != null) {
-					return false;
-				}
+		for (int i = 1; i < array.length; i++) {
+			if (array[i] != Chunk.NULL_BLOCK_STORAGE) {
+				return false;
 			}
+		}
+		if (array[0] != Chunk.NULL_BLOCK_STORAGE) {
 			// All-air empty chunks sometimes are sent with a bottom section;
 			// handle that and a few other special cases.
 			for (int y = 0; y < 16; y++) {
@@ -936,9 +935,11 @@ public class WDL {
 			}
 			// Only composed of airoids; treat as empty
 			logger.warn("[WDL] Skipping airoid empty chunk at " + c.xPosition + ", " + c.zPosition);
-			return true;
+		} else {
+			// Definitely empty
+			logger.warn("[WDL] Skipping chunk with all null sections at " + c.xPosition + ", " + c.zPosition);
 		}
-		return false;
+		return true;
 	}
 
 	/**
