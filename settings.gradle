@@ -17,6 +17,10 @@ gradle.buildFinished { buildResult ->
         println 'Dependency resolution failed.'
         println 'If this was due to begradle not being found, you need to manually install it.'
         println 'Download the latest version of https://github.com/Pokechu22/ForgeGradle-extensions and run "gradlew install" to install the library, and then it should work.'
+    } else if (buildResult.failure.cause.cause instanceof groovy.lang.MissingPropertyException) {
+        println '----------------------------------------'
+        println 'Build evaluation (most likely) failed.'
+        println 'If this was due to the `refMap` property not existing, you may need to downgrade gradle to version 2.14.1.'
     }
   }
 }
