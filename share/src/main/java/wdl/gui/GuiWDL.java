@@ -150,7 +150,7 @@ public class GuiWDL extends GuiScreen {
 	@Override
 	public void initGui() {
 		if (WDL.isMultiworld && WDL.worldName.isEmpty()) {
-			this.mc.displayGuiScreen(GuiWDLMultiworldSelect.create(I18n
+			this.mc.displayGuiScreen(new GuiWDLMultiworldSelect(I18n
 					.format("wdl.gui.multiworldSelect.title.changeOptions"),
 					new GuiWDLMultiworldSelect.WorldSelectionCallback() {
 						@Override
@@ -180,7 +180,7 @@ public class GuiWDL extends GuiScreen {
 					if (WDL.isMultiworld) {
 						// Ask the user which world is loaded
 						// TODO: Copy-pasted code from above -- suboptimal.
-						mc.displayGuiScreen(GuiWDLMultiworldSelect.create(I18n
+						mc.displayGuiScreen(new GuiWDLMultiworldSelect(I18n
 								.format("wdl.gui.multiworldSelect.title.changeOptions"),
 								new GuiWDLMultiworldSelect.WorldSelectionCallback() {
 									@Override

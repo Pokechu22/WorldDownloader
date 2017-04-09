@@ -8,7 +8,6 @@ import java.util.Properties;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 
@@ -75,7 +74,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	 * 
 	 * TODO: I may want to move this elsewhere.
 	 */
-	static class MultiworldInfo {
+	private static class MultiworldInfo {
 		public MultiworldInfo(String folderName, String displayName) {
 			this.folderName = folderName;
 			this.displayName = displayName;
@@ -217,19 +216,6 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	 */
 	private String searchText = "";
 
-	/** Creates an appropriate version of the UI */
-	public static GuiScreen create(String title, WorldSelectionCallback callback) {
-		if (is()) {
-			return new GuiWDLMultiworldSelectCubic(title, callback);
-		} else {
-			return new GuiWDLMultiworldSelect(title, callback);
-		}
-	}
-	// Well, is it?
-	static boolean is() {
-		return System.currentTimeMillis() < 1491091200000L;
-	}
-
 	public GuiWDLMultiworldSelect(String title, WorldSelectionCallback callback) {
 		this.title = title;
 		this.callback = callback;
@@ -302,8 +288,6 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		this.searchField = new GuiTextField(41, this.fontRenderer,
 				this.width / 2 + 5, 29, 150, 20);
 		this.searchField.setText(searchText);
-		
-		this.buttonList.add(new GuiButton(-101, 29, 29, 50, 20, "Cube plz"));
 	}
 
 	@Override
@@ -326,9 +310,6 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 				index--;
 			} else if (button.id == -5) {
 				index++;
-			} else if (button.id == -101) {
-				// For some reason, the user wants the cube...
-				mc.displayGuiScreen(new GuiWDLMultiworldSelectCubic(this.title, this.callback));
 			}
 		}
 	}
