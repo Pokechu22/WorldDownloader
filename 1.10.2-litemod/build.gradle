@@ -35,7 +35,7 @@ apply plugin: 'org.spongepowered.mixin'
 
 minecraft {
     version = "1.10.2"
-    mappings = "snapshot_20170326"
+    mappings = "snapshot_20170409"
     runDir = "run"
 }
 
