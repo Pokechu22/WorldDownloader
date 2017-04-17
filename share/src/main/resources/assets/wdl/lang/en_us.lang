@@ -30,6 +30,8 @@ wdl.gui.wdl.playerOverrides.name=Player Overrides...
 wdl.gui.wdl.playerOverrides.description=Control specific options about the saved player, such as their health and position. 
 wdl.gui.wdl.entityOptions.name=Entity options...
 wdl.gui.wdl.entityOptions.description=Control what types of entities to save, and the track distances of those entities.
+wdl.gui.wdl.gameruleOptions.name=Game rule options...
+wdl.gui.wdl.gameruleOptions.description=Select the values for various game rules.
 wdl.gui.wdl.backupOptions.name=Backup Options...
 wdl.gui.wdl.backupOptions.description=Control how the world is backed up after saving.
 wdl.gui.wdl.messageOptions.name=Message Options...
@@ -245,6 +247,37 @@ wdl.gui.updates.update.unknown=Unknown
 wdl.gui.permissions.current=Current perms
 wdl.gui.permissions.request=Request perms
 wdl.gui.permissions.overrides=Chunk Overrides
+
+wdl.gui.gamerules.title=World Downloader mod: Game rules
+wdl.gui.gamerules.resetRule=Reset
+wdl.gui.gamerules.custom=Custom rules
+wdl.gui.gamerules.deleteRule=Delete
+wdl.gui.gamerules.addCustom.name=Add custom rule
+wdl.gui.gamerules.addCustom.description=Add a additional custom game rule.%n%nMinecraft supports custom gamerules in the /gamerule command, but these generally are only used on custom maps.  Only use this feature if you know what you're doing.
+
+# Descriptions of individual rules, using their (case-sensitive) name.  Based off of the wiki article: https://minecraft.gamepedia.com/Commands#gamerule
+wdl.gui.gamerules.rules.commandBlockOutput=Should command blocks notify admins when performing commands?
+wdl.gui.gamerules.rules.disableElytraMovementCheck=Should the elytra movement anticheat check be skipped?  Has no effect in singleplayer (always skipped)
+wdl.gui.gamerules.rules.doDaylightCycle=Should time progress?
+wdl.gui.gamerules.rules.doEntityDrops=Should non-mob entities (such as minecarts) drop items on destruction?
+wdl.gui.gamerules.rules.doFireTick=Should fire spread and naturally extinguish?
+wdl.gui.gamerules.rules.doMobLoot=Should mobs (such as pigs and creepers) drop items on death?
+wdl.gui.gamerules.rules.doMobSpawning=Should mobs naturally spawn in dark areas?  (Does not affect mob spawners)
+wdl.gui.gamerules.rules.doTileDrops=Should blocks drop when broken?
+wdl.gui.gamerules.rules.doWeatherCycle=Should weather advance?
+wdl.gui.gamerules.rules.keepInventory=Should items be kept after death?
+wdl.gui.gamerules.rules.logAdminCommands=Should admin commands be written to the log file?
+wdl.gui.gamerules.rules.maxEntityCramming=How many entities can be put into a single space before they start taking suffocation damage?  (0 to disable this behavior)
+wdl.gui.gamerules.rules.mobGriefing=Can mobs can damage terrain?  (creeper explosions, endermen, etc)
+wdl.gui.gamerules.rules.naturalRegeneration=Can players naturally regenerate help when at full hunger?  (Sometimes known as "ultrahardcore" mode)
+wdl.gui.gamerules.rules.randomTickSpeed=How many random ticks (eg, for crop growth) should occur each game tick?  0 disables random ticks; higher numbers mean more ticks.
+wdl.gui.gamerules.rules.reducedDebugInfo=Should players be forced to use a limited F3 display?  (This display can also manually be enabled in chat settings; not recomended)
+wdl.gui.gamerules.rules.sendCommandFeedback=Should players get feedback on command usage?
+wdl.gui.gamerules.rules.showDeathMessages=Should death messages appear in chat?  (Both from players and their pets)
+wdl.gui.gamerules.rules.spawnRadius=How far from the central spawn (in blocks) should players be spread when spawning?
+wdl.gui.gamerules.rules.spectatorsGenerateChunks=Should players in spectator mode generate new chunks?
+# 1.12, preparation:
+wdl.gui.gamerules.rules.doLimitedCrafting=Should crafting be limited to recipes unlocked through advancements?
 
 wdl.backup.none=No backup
 wdl.backup.folder=Copy world folder

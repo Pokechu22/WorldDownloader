@@ -106,6 +106,8 @@ public class GuiWDL extends GuiScreen {
 					GuiWDL.this), true));
 			add(new ButtonEntry("entityOptions", new GuiWDLEntities(
 					GuiWDL.this), true));
+			add(new ButtonEntry("gameruleOptions", new GuiWDLGameRules(
+					GuiWDL.this), true));
 			add(new ButtonEntry("backupOptions", new GuiWDLBackup(
 					GuiWDL.this), true));
 			add(new ButtonEntry("messageOptions", new GuiWDLMessages(
