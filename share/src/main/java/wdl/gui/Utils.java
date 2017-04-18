@@ -581,7 +581,7 @@ class TextEntry implements IGuiListEntry {
 	 * Creates a new TextEntry with the default color.
 	 */
 	public TextEntry(Minecraft mc, String text) {
-		this(mc, text, 0xFFFFF);
+		this(mc, text, 0xFFFFFF);
 	}
 	
 	/**
