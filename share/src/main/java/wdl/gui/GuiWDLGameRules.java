@@ -37,7 +37,7 @@ public class GuiWDLGameRules extends GuiScreen {
 		public GuiGameRuleList() {
 			super(GuiWDLGameRules.this.mc, GuiWDLGameRules.this.width,
 					GuiWDLGameRules.this.height, 39,
-					GuiWDLGameRules.this.height - 32, 20);
+					GuiWDLGameRules.this.height - 32, 24);
 			this.entries = new ArrayList<IGuiListEntry>();
 			for (String rule : rules.getRules()) {
 				if (rules.areSameType(rule, ValueType.NUMERICAL_VALUE)) {
@@ -68,7 +68,7 @@ public class GuiWDLGameRules extends GuiScreen {
 			@Override
 			public final void drawEntry(int slotIndex, int x, int y, int listWidth,
 					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
-				drawString(fontRenderer, this.ruleName, x, y + 2, 0xFFFFFFFF);
+				drawString(fontRenderer, this.ruleName, x, y + 6, 0xFFFFFFFF);
 				this.resetButton.xPosition = x + listWidth / 2 + 110;
 				this.resetButton.yPosition = y;
 				this.resetButton.drawButton(mc, mouseX, mouseY);
@@ -169,6 +169,7 @@ public class GuiWDLGameRules extends GuiScreen {
 			@Override
 			protected boolean mouseDown(int x, int y, int button) {
 				if (this.button.mousePressed(mc, x, y)) {
+					this.button.playPressSound(mc.getSoundHandler());
 					boolean value = !rules.getBoolean(ruleName);
 					rules.setOrCreateGameRule(ruleName, Boolean.toString(value));
 					return true;
@@ -215,6 +216,16 @@ public class GuiWDLGameRules extends GuiScreen {
 				}
 			}
 		}
+
+		@Override
+		public int getListWidth() {
+			return 210 * 2;
+		}
+
+		@Override
+		protected int getScrollBarX() {
+			return this.width / 2 + getListWidth() / 2 + 4;
+		}
 	}
 
 	private String title;
@@ -232,6 +243,9 @@ public class GuiWDLGameRules extends GuiScreen {
 	public void initGui() {
 		this.title = I18n.format("wdl.gui.generator.title");
 		this.list = new GuiGameRuleList();
+
+		this.buttonList.add(new GuiButton(100, this.width / 2 - 100,
+				this.height - 29, I18n.format("gui.done")));
 	}
 
 	@Override
@@ -241,11 +255,12 @@ public class GuiWDLGameRules extends GuiScreen {
 
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		super.drawScreen(mouseX, mouseY, partialTicks);
-		this.drawCenteredString(fontRenderer, title, width / 2, 4, 0xFFFFFFF);
-
 		hoveredToolTip = null;
 		this.list.drawScreen(mouseX, mouseY, partialTicks);
+
+		super.drawScreen(mouseX, mouseY, partialTicks);
+
+		this.drawCenteredString(fontRenderer, title, width / 2, 4, 0xFFFFFFF);
 
 		if (hoveredToolTip != null) {
 			Utils.drawGuiInfoBox(hoveredToolTip, width, height, 48);
@@ -275,5 +290,12 @@ public class GuiWDLGameRules extends GuiScreen {
 	public void handleMouseInput() throws IOException {
 		super.handleMouseInput();
 		this.list.handleMouseInput();
+	}
+
+	@Override
+	protected void actionPerformed(GuiButton button) throws IOException {
+		if (button.id == 100) {
+			this.mc.displayGuiScreen(this.parent);
+		}
 	}
 }
