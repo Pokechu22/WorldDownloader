@@ -30,7 +30,7 @@ apply plugin: 'pokechu22.test.customsrg'
 minecraft {
     suppressMappingVersionWarnings = true
     version = "1.10.2"
-    mappings = "snapshot_20170409"
+    mappings = "snapshot_20170422"
     runDir = "run"
 }
 
@@ -71,5 +71,15 @@ fixMcSources {
         def field = net.minecraftforge.gradle.tasks.PostDecompileTask.class.getDeclaredField('patchesMap')
         field.accessible = true
         field.get(fixMcSources).put('net.minecraft.entity.passive.EquineEntity.java', file('../srgs/EE_1.10.x.patch'))
+    }
+}
+
+// TEMPORARY, until this is moved to begradle
+processResources {
+    rename { name ->
+        if (name.endsWith(".lang")) {
+            def index = name.indexOf("_")
+            return name.substring(0, index) + name.substring(index, index + 3).toUpperCase() + ".lang"
+        }
     }
 }
