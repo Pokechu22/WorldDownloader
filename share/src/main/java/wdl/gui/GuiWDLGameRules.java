@@ -4,18 +4,23 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiListExtended.IGuiListEntry;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.GameRules.ValueType;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 
 import wdl.WDL;
 
@@ -33,32 +38,157 @@ public class GuiWDLGameRules extends GuiScreen {
 		public abstract void onUpdate();
 	}
 
+	/**
+	 * Colors for the text field on numeric entries when there is/is not a
+	 * modified rule.
+	 */
+	private static final int SET_TEXT_FIELD = 0xE0E0E0, DEFAULT_TEXT_FIELD = 0x808080;
+
 	private class GuiGameRuleList extends GuiListExtended {
+		/** The rule that was last clicked.  This should be compared by ref. */
+		@Nullable
+		private String lastClickedRule = null;
+
 		public GuiGameRuleList() {
 			super(GuiWDLGameRules.this.mc, GuiWDLGameRules.this.width,
 					GuiWDLGameRules.this.height, 39,
 					GuiWDLGameRules.this.height - 32, 24);
 			this.entries = new ArrayList<IGuiListEntry>();
-			for (String rule : rules.getRules()) {
+			for (String rule : vanillaGameRules) {
 				if (rules.areSameType(rule, ValueType.NUMERICAL_VALUE)) {
 					this.entries.add(new IntRuleEntry(rule));
 				} else if (rules.areSameType(rule, ValueType.BOOLEAN_VALUE)) {
 					this.entries.add(new BooleanRuleEntry(rule));
 				} else {
-					LOGGER.debug("Couldn't identify type for game rule " + rule);
+					LOGGER.debug("Couldn't identify type for vanilla game rule " + rule);
 				}
 			}
-			this.entries.add(new TextEntry(GuiWDLGameRules.this.mc, I18n.format("wdl.gui.gamerules.custom")));
-			//this.entries.add(new CustomRuleEntry());
+
+			// Handle custom rules
+			this.entries.add(new CreateCustomRuleEntry());
+
+			for (String rule : getCustomRules()) {
+				addCustomRule(rule);
+			}
+		}
+
+		/**
+		 * Adds a custom rule entry with the given value.
+		 *
+		 * @param rule The name of the rule
+		 * @param value The current value of the rule
+		 */
+		private void addCustomRule(String rule) {
+			this.entries.add(new CustomRuleEntry(rule));
+		}
+
+		private class CreateCustomRuleEntry implements IGuiListEntry, KeyboardEntry {
+			private final String title;
+			private final GuiButton createButton;
+			private final GuiTextField nameField;
+
+			public CreateCustomRuleEntry() {
+				this.title = I18n.format("wdl.gui.gamerules.custom");
+				this.nameField = new GuiTextField(0, fontRenderer, 0, 0, 100, 20);
+				this.createButton = new GuiButton(0, 0, 0, 100, 20, I18n.format("wdl.gui.gamerules.addCustom.name"));
+			}
+
+			@Override
+			public void setSelected(int p_178011_1_, int p_178011_2_,
+					int p_178011_3_) { }
+
+			@Override
+			public void drawEntry(int slotIndex, int x, int y, int listWidth,
+					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
+				if (lastClickedRule != null) {
+					nameField.setFocused(false);
+				}
+
+				drawHorizontalLine(x, x + listWidth, y - 3, 0xFF808080);
+
+				drawString(fontRenderer, title, x, y + 6, 0xFFFFFF);
+
+				this.nameField.xPosition = x + listWidth / 2;
+				this.nameField.yPosition = y;
+				this.nameField.drawTextBox();
+
+				this.createButton.xPosition = x + listWidth / 2 + 110;
+				this.createButton.yPosition = y;
+				this.createButton.enabled = isValidName(this.nameField.getText());
+				this.createButton.drawButton(mc, mouseX, mouseY);
+			}
+
+			@Override
+			public boolean mousePressed(int slotIndex, int mouseX, int mouseY,
+					int mouseEvent, int relativeX, int relativeY) {
+				lastClickedRule = null;
+
+				if (this.createButton.mousePressed(mc, mouseX, mouseY)) {
+					createButton.playPressSound(mc.getSoundHandler());
+					confirmRule();
+					return true;
+				}
+				this.nameField.mouseClicked(mouseX, mouseY, mouseEvent);
+				return false;
+			}
+
+			@Override
+			public void mouseReleased(int slotIndex, int x, int y,
+					int mouseEvent, int relativeX, int relativeY) {
+				this.createButton.mouseReleased(x, y);
+			}
+
+			@Override
+			public void onUpdate() {
+				this.nameField.updateCursorCounter();
+			}
+
+			@Override
+			public void keyDown(char typedChar, int keyCode) {
+				this.nameField.textboxKeyTyped(typedChar, keyCode);
+				if (this.nameField.isFocused() && (typedChar == '\r' || typedChar == '\n')) {
+					confirmRule();
+				}
+			}
+
+			/** Checks if the given name is valid for a new custom rule */
+			private boolean isValidName(String name) {
+				if (name.isEmpty()) {
+					// Can't have an empty name
+					return false;
+				}
+				if (vanillaGameRules.contains(name)) {
+					// Can't create a custom rule for a vanilla one - use the other editor
+					return false;
+				}
+				if (isRuleSet(name)) {
+					// We already have a custom rule with that name
+					return false;
+				}
+				// All's good
+				return true;
+			}
+
+			private void confirmRule() {
+				String name = this.nameField.getText();
+
+				if (!isValidName(name)) return;
+
+				this.nameField.setText("");
+				addCustomRule(name);
+				setRule(name, "");  // Actually creates the rule
+				scrollBy(getContentHeight());  // Scroll to bottom to focus
+			}
 		}
 
 		private abstract class RuleEntry implements IGuiListEntry {
+			@Nonnull
 			protected final String ruleName;
 			private GuiButton resetButton;
 
-			public RuleEntry(String ruleName) {
+			public RuleEntry(@Nonnull String ruleName) {
 				this.ruleName = ruleName;
-				this.resetButton = new GuiButton(0, 0, 0, 50, 20, I18n.format("wdl.gui.gamerules.resetRule"));
+				this.resetButton = new GuiButton(0, 0, 0, 50, 20, getResetText());
 			}
 
 			@Override
@@ -71,6 +201,7 @@ public class GuiWDLGameRules extends GuiScreen {
 				drawString(fontRenderer, this.ruleName, x, y + 6, 0xFFFFFFFF);
 				this.resetButton.xPosition = x + listWidth / 2 + 110;
 				this.resetButton.yPosition = y;
+				this.resetButton.enabled = isRuleSet(this.ruleName);
 				this.resetButton.drawButton(mc, mouseX, mouseY);
 				this.draw(x, y, listWidth, slotHeight, mouseX, mouseY);
 
@@ -84,9 +215,11 @@ public class GuiWDLGameRules extends GuiScreen {
 			@Override
 			public final boolean mousePressed(int slotIndex, int mouseX, int mouseY,
 					int mouseEvent, int relativeX, int relativeY) {
+				lastClickedRule = this.ruleName;
+
 				if (resetButton.mousePressed(mc, mouseX, mouseY)) {
 					resetButton.playPressSound(mc.getSoundHandler());
-					// TODO
+					this.performResetAction();
 					return true;
 				}
 				return mouseDown(mouseX, mouseY, mouseEvent);
@@ -103,6 +236,24 @@ public class GuiWDLGameRules extends GuiScreen {
 			protected abstract boolean mouseDown(int x, int y, int button);
 			protected abstract void mouseUp(int x, int y, int button);
 			protected abstract boolean isMouseOverControl(int mouseX, int mouseY);
+
+			protected boolean isFocused() {
+				return lastClickedRule == this.ruleName;  // Ref equals
+			}
+
+			/** Called when the reset button is clicked. */
+			protected void performResetAction() {
+				clearRule(this.ruleName);
+			}
+
+			/**
+			 * Gets the text for the reset button.
+			 *
+			 * @return A pre-translated string
+			 */
+			protected String getResetText() {
+				return I18n.format("wdl.gui.gamerules.resetRule");
+			}
 		}
 
 		private class IntRuleEntry extends RuleEntry implements KeyboardEntry {
@@ -111,12 +262,20 @@ public class GuiWDLGameRules extends GuiScreen {
 			public IntRuleEntry(String ruleName) {
 				super(ruleName);
 				field = new GuiNumericTextField(0, fontRenderer, 0, 0, 100, 20);
-				field.setText(rules.getString(ruleName));
+				field.setText(getRule(ruleName));
 			}
 
 			@Override
 			public void draw(int x, int y, int listWidth, int slotHeight,
 					int mouseX, int mouseY) {
+				if (!this.isFocused()) {
+					field.setFocused(false);
+				}
+				if (isRuleSet(this.ruleName)) {
+					field.setTextColor(SET_TEXT_FIELD);
+				} else {
+					field.setTextColor(DEFAULT_TEXT_FIELD);
+				}
 				field.xPosition = x + listWidth / 2;
 				field.yPosition = y;
 				field.drawTextBox();
@@ -139,13 +298,19 @@ public class GuiWDLGameRules extends GuiScreen {
 			@Override
 			public void keyDown(char typedChar, int keyCode) {
 				if (this.field.textboxKeyTyped(typedChar, keyCode)) {
-					rules.setOrCreateGameRule(ruleName, Integer.toString(this.field.getValue()));
+					setRule(ruleName, Integer.toString(this.field.getValue()));
 				}
 			}
 
 			@Override
 			protected boolean isMouseOverControl(int mouseX, int mouseY) {
 				return Utils.isMouseOverTextBox(mouseX, mouseY, field);
+			}
+
+			@Override
+			protected void performResetAction() {
+				super.performResetAction();
+				this.field.setText(getRule(this.ruleName)); // Reset field text to default
 			}
 		}
 
@@ -162,7 +327,7 @@ public class GuiWDLGameRules extends GuiScreen {
 					int mouseX, int mouseY) {
 				this.button.xPosition = x + listWidth / 2;
 				this.button.yPosition = y;
-				this.button.displayString = rules.getString(ruleName);
+				this.button.displayString = getRule(ruleName);
 				this.button.drawButton(mc, mouseX, mouseY);
 			}
 
@@ -170,8 +335,8 @@ public class GuiWDLGameRules extends GuiScreen {
 			protected boolean mouseDown(int x, int y, int button) {
 				if (this.button.mousePressed(mc, x, y)) {
 					this.button.playPressSound(mc.getSoundHandler());
-					boolean value = !rules.getBoolean(ruleName);
-					rules.setOrCreateGameRule(ruleName, Boolean.toString(value));
+					boolean oldValue = getRule(ruleName).equals("true");
+					setRule(ruleName, oldValue ? "false" : "true");
 					return true;
 				} else {
 					return false;
@@ -189,6 +354,64 @@ public class GuiWDLGameRules extends GuiScreen {
 			}
 		}
 
+		private class CustomRuleEntry extends RuleEntry implements KeyboardEntry {
+			private GuiTextField field;
+
+			public CustomRuleEntry(String ruleName) {
+				super(ruleName);
+				field = new GuiTextField(0, fontRenderer, 0, 0, 100, 20);
+				field.setText(getRule(ruleName));
+			}
+
+			@Override
+			public void draw(int x, int y, int listWidth, int slotHeight,
+					int mouseX, int mouseY) {
+				if (!this.isFocused()) {
+					field.setFocused(false);
+				}
+				field.xPosition = x + listWidth / 2;
+				field.yPosition = y;
+				field.drawTextBox();
+			}
+
+			@Override
+			protected boolean mouseDown(int x, int y, int button) {
+				field.mouseClicked(x, y, button);
+				return false;
+			}
+
+			@Override
+			protected void mouseUp(int x, int y, int button) { }
+
+			@Override
+			public void onUpdate() {
+				this.field.updateCursorCounter();
+			}
+
+			@Override
+			public void keyDown(char typedChar, int keyCode) {
+				if (this.field.textboxKeyTyped(typedChar, keyCode)) {
+					setRule(ruleName, this.field.getText());
+				}
+			}
+
+			@Override
+			protected boolean isMouseOverControl(int mouseX, int mouseY) {
+				return Utils.isMouseOverTextBox(mouseX, mouseY, field);
+			}
+
+			@Override
+			protected String getResetText() {
+				return I18n.format("wdl.gui.gamerules.deleteRule");
+			}
+
+			@Override
+			protected void performResetAction() {
+				super.performResetAction();
+				entries.remove(this);
+			}
+		}
+
 		private final List<IGuiListEntry> entries;
 
 		@Override
@@ -202,7 +425,9 @@ public class GuiWDLGameRules extends GuiScreen {
 		}
 
 		public void update() {
-			for (IGuiListEntry entry : this.entries) {
+			// Use a manual for loop to avoid concurrent modification exceptions
+			for (int i = 0; i < getSize(); i++) {
+				IGuiListEntry entry = getListEntry(i);
 				if (entry instanceof KeyboardEntry) {
 					((KeyboardEntry) entry).onUpdate();
 				}
@@ -210,7 +435,9 @@ public class GuiWDLGameRules extends GuiScreen {
 		}
 
 		public void keyDown(char typedChar, int keyCode) {
-			for (IGuiListEntry entry : this.entries) {
+			// Use a manual for loop to avoid concurrent modification exceptions
+			for (int i = 0; i < getSize(); i++) {
+				IGuiListEntry entry = getListEntry(i);
 				if (entry instanceof KeyboardEntry) {
 					((KeyboardEntry) entry).keyDown(typedChar, keyCode);
 				}
@@ -233,15 +460,92 @@ public class GuiWDLGameRules extends GuiScreen {
 	@Nullable
 	private final GuiScreen parent;
 	private GameRules rules;
+	/** All vanilla game rules; this list is immutable. */
+	private final List<String> vanillaGameRules;
+
+	/**
+	 * Gets a list of all custom game rules.
+	 *
+	 * @return All custom rules, no vanilla rules.
+	 */
+	@Nonnull
+	private List<String> getCustomRules() {
+		List<String> rules = Lists.newArrayList();
+		for (String key : WDL.worldProps.stringPropertyNames()) {
+			if (!key.startsWith("GameRule.")) {
+				continue;
+			}
+			String ruleName = key.substring("GameRule.".length());
+			if (vanillaGameRules.contains(ruleName)) {
+				continue;
+			}
+			rules.add(ruleName);
+		}
+		return rules;
+	}
+
+	/**
+	 * Gets the value of the given rule, using WDL's overriden value if set,
+	 * otherwise the default.
+	 *
+	 * @param ruleName
+	 *            The name of the rule.
+	 * @return The rule's string value. Will be null if no such rule exists.
+	 */
+	@Nullable
+	private String getRule(@Nonnull String ruleName) {
+		if (isRuleSet(ruleName)) {
+			return WDL.worldProps.getProperty("GameRule." + ruleName);
+		} else {
+			return rules.getString(ruleName);
+		}
+	}
+
+	/**
+	 * Overrides the given rule in WDL's settings.
+	 *
+	 * @param ruleName
+	 *            The name of the rule.
+	 * @param value
+	 *            The new value. Must not be null; to clear a rule, use
+	 *            {@link #clearRule(String)}.
+	 */
+	private void setRule(@Nonnull String ruleName, @Nonnull String value) {
+		WDL.worldProps.setProperty("GameRule." + ruleName, value);
+	}
+
+	/**
+	 * Un-overrides the given rule. If the rule is not currently overridden, or
+	 * does not exist at all, nothing happens.
+	 *
+	 * @param ruleName
+	 *            The name of the rule.
+	 */
+	private void clearRule(@Nonnull String ruleName) {
+		WDL.worldProps.remove("GameRule." + ruleName);
+	}
+
+	/**
+	 * Checks if the given rule is overridden.
+	 *
+	 * @param ruleName
+	 *            The name of the rule.
+	 * @return True if the rule is overriden; false otherwise (not overriden or
+	 *         no such rule exists).
+	 */
+	private boolean isRuleSet(@Nonnull String ruleName) {
+		return WDL.worldProps.stringPropertyNames().contains("GameRule." + ruleName);
+	}
 
 	public GuiWDLGameRules(@Nullable GuiScreen parent) {
 		this.parent = parent;
 		this.rules = WDL.worldClient.getGameRules();
+		this.vanillaGameRules = ImmutableList.copyOf(rules.getRules());
 	}
 
 	@Override
 	public void initGui() {
-		this.title = I18n.format("wdl.gui.generator.title");
+		this.title = I18n.format("wdl.gui.gamerules.title");
 		this.list = new GuiGameRuleList();
 
 		this.buttonList.add(new GuiButton(100, this.width / 2 - 100,
@@ -260,7 +564,7 @@ public class GuiWDLGameRules extends GuiScreen {
 
 		super.drawScreen(mouseX, mouseY, partialTicks);
 
-		this.drawCenteredString(fontRenderer, title, width / 2, 4, 0xFFFFFFF);
+		this.drawCenteredString(fontRenderer, title, width / 2, 4, 0xFFFFFF);
 
 		if (hoveredToolTip != null) {
 			Utils.drawGuiInfoBox(hoveredToolTip, width, height, 48);
@@ -297,5 +601,10 @@ public class GuiWDLGameRules extends GuiScreen {
 		if (button.id == 100) {
 			this.mc.displayGuiScreen(this.parent);
 		}
+	}
+
+	@Override
+	public void onGuiClosed() {
+		WDL.saveProps();
 	}
 }
