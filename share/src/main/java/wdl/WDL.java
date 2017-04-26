@@ -1249,6 +1249,16 @@ public class WDL {
 			worldInfoNBT.setInteger("SpawnZ", z);
 			worldInfoNBT.setBoolean("initialized", true);
 		}
+
+		// Gamerules (most of these are already populated)
+		NBTTagCompound gamerules = worldInfoNBT.getCompoundTag("GameRules");
+		for (String prop : worldProps.stringPropertyNames()) {
+			if (!prop.startsWith("GameRule.")) {
+				continue;
+			}
+			String rule = prop.substring("GameRule.".length());
+			gamerules.setString(rule, worldProps.getProperty(prop));
+		}
 	}
 	
 	/**
