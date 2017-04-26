@@ -278,6 +278,7 @@ wdl.gui.gamerules.rules.spawnRadius=How far from the central spawn (in blocks) s
 wdl.gui.gamerules.rules.spectatorsGenerateChunks=Should players in spectator mode generate new chunks?
 # 1.12, preparation:
 wdl.gui.gamerules.rules.doLimitedCrafting=Should crafting be limited to recipes unlocked through advancements?
+wdl.gui.gamerules.rules.maxCommandChainLength=How many command blocks can be chained together?  This is only useful in custom maps with LOTS of command blocks.
 
 wdl.backup.none=No backup
 wdl.backup.folder=Copy world folder
