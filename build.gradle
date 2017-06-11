@@ -17,12 +17,10 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
-        classpath 'org.spongepowered:mixingradle:0.4-SNAPSHOT'
         // NOTE: must be compiled manually, not currently in any repos
         // Download https://github.com/Pokechu22/ForgeGradle-extensions and
         // then run 'gradlew install'
-        classpath 'pokechu22.test.begradle:begradle:0.0.4'
+        // classpath 'pokechu22.test.begradle:begradle:0.1.0'
     }
 }
 

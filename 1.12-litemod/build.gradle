@@ -17,8 +17,8 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
-        classpath 'pokechu22.test.begradle:begradle:0.0.4'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath 'pokechu22.test.begradle:begradle:0.1.0'
         classpath 'org.spongepowered:mixingradle:0.4-SNAPSHOT'
     }
 }
@@ -34,21 +34,20 @@ apply plugin: 'pokechu22.test.customsrg'
 apply plugin: 'org.spongepowered.mixin'
 
 minecraft {
-    version = "1.10.2"
+    version = "1.12"
     mappings = "snapshot_20170610"
     runDir = "run"
 }
 
 extraSrgs {
-    add file('../srgs/EntityHorseToEquineEntity.srg')
-    add file('../srgs/AnimalChestToContainerHorseChest.srg')
+    add file('../srgs/AbstractHorseToEquineEntity.srg')
 }
 
 sourceSets {
     main {
         java {
             srcDir "src/main/java"
-            srcDir project(':1.10.2').file("src/main/java")
+            srcDir project(':1.12').file("src/main/java")
             srcDir project(':share').file("src/main/java")
         }
         resources {
@@ -69,7 +68,7 @@ litemod {
         name = "LiteModWDL"
         displayName = "World Downloader for Liteloader"
         author = "uyjulian, pokechu22"
-        mcversion = "1.10.2"
+        mcversion = "1.12"
         mixinConfigs += "mixins.LiteModWDL.json"
         version = project.version
     }
@@ -82,20 +81,4 @@ jar {
 // Use tabs instead of spaces
 fixMcSources {
     astyleConfig = "../astyle.cfg"
-    // TEMPORARY, until I can figure out an automatic patch system.
-    doFirst {
-        def field = net.minecraftforge.gradle.tasks.PostDecompileTask.class.getDeclaredField('patchesMap')
-        field.accessible = true
-        field.get(fixMcSources).put('net.minecraft.entity.passive.EquineEntity.java', file('../srgs/EE_1.10.x.patch'))
-    }
-}
-
-// TEMPORARY, until this is moved to begradle
-processResources {
-    rename { name ->
-        if (name.endsWith(".lang")) {
-            def index = name.indexOf("_")
-            return name.substring(0, index) + name.substring(index, index + 3).toUpperCase() + ".lang"
-        }
-    }
 }

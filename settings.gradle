@@ -3,6 +3,7 @@ include '1.10', '1.10-litemod'
 include '1.10.2', '1.10.2-litemod'
 include '1.11', '1.11-litemod'
 include '1.11.2', '1.11.2-litemod'
+include '1.12', '1.12-litemod'
 
 // More information about what went wrong
 gradle.buildFinished { buildResult ->
