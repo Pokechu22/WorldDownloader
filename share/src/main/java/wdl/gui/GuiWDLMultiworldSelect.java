@@ -44,8 +44,8 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 			}
 			
 			if (info != null && info == selectedMultiWorld) {
-				drawRect(this.xPosition - 2, this.yPosition - 2,
-						this.xPosition + width + 2, this.yPosition + height + 2,
+				drawRect(this.x - 2, this.y - 2,
+						this.x + width + 2, this.y + height + 2,
 						0xFF007F00);
 			}
 			super.drawButton(mc, mouseX, mouseY);
@@ -408,7 +408,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		if (this.searchField.getText().isEmpty() && !this.searchField.isFocused()) {
 			drawString(fontRenderer,
 					I18n.format("wdl.gui.multiworldSelect.search"),
-					searchField.xPosition + 4, searchField.yPosition + 6,
+					searchField.x + 4, searchField.y + 6,
 					0x909090);
 		}
 		

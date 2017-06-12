@@ -389,8 +389,8 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 		public void drawButton(Minecraft mc, int mouseX, int mouseY) {
 			if (GuiWDLChunkOverrides.this.mode == this.mode) {
 				// Mode is currently selected - draw a green outline.
-				drawRect(this.xPosition - 2, this.yPosition - 2,
-						this.xPosition + width + 2, this.yPosition + height + 2,
+				drawRect(this.x - 2, this.y - 2,
+						this.x + width + 2, this.y + height + 2,
 						0xFF007F00);
 			}
 			
@@ -400,7 +400,7 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 			GlStateManager.color(1.0f, 1.0f, 1.0f);
 			mc.getTextureManager().bindTexture(WIDGET_TEXTURES);
 
-			this.drawTexturedModalRect(this.xPosition + 2, this.yPosition + 2,
+			this.drawTexturedModalRect(this.x + 2, this.y + 2,
 					mode.overlayU, mode.overlayV, 16, 16);
 		}
 	}

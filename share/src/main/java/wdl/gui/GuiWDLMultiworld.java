@@ -126,11 +126,11 @@ public class GuiWDLMultiworld extends GuiScreen {
 		
 		//Red box around "multiworld support" button.
 		drawRect(
-				multiworldEnabledBtn.xPosition - 2,
-				multiworldEnabledBtn.yPosition - 2,
-				multiworldEnabledBtn.xPosition
+				multiworldEnabledBtn.x - 2,
+				multiworldEnabledBtn.y - 2,
+				multiworldEnabledBtn.x
 						+ multiworldEnabledBtn.getButtonWidth() + 2,
-				multiworldEnabledBtn.yPosition + 20 + 2, 0xFFFF0000);
+				multiworldEnabledBtn.y + 20 + 2, 0xFFFF0000);
 		
 		super.drawScreen(mouseX, mouseY, partialTicks);
 	}

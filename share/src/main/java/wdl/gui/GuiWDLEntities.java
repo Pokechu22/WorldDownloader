@@ -117,8 +117,8 @@ public class GuiWDLEntities extends GuiScreen {
 						- (this.labelWidth / 2), y + slotHeight
 						- mc.fontRenderer.FONT_HEIGHT - 1, 0xFFFFFF);
 				
-				this.enableGroupButton.xPosition = x + 110;
-				this.enableGroupButton.yPosition = y;
+				this.enableGroupButton.x = x + 110;
+				this.enableGroupButton.y = y;
 				this.enableGroupButton.displayString = getButtonText();
 				
 				this.enableGroupButton.drawButton(mc, mouseX, mouseY);
@@ -218,13 +218,13 @@ public class GuiWDLEntities extends GuiScreen {
 						center - largestWidth - 10, y + slotHeight / 2 - 
 								mc.fontRenderer.FONT_HEIGHT / 2, 0xFFFFFF);
 				
-				this.onOffButton.xPosition = center;
-				this.onOffButton.yPosition = y;
+				this.onOffButton.x = center;
+				this.onOffButton.y = y;
 				this.onOffButton.enabled = category.isGroupEnabled();
 				this.onOffButton.displayString = getButtonText();
 				
-				this.rangeSlider.xPosition = center + 85;
-				this.rangeSlider.yPosition = y;
+				this.rangeSlider.x = center + 85;
+				this.rangeSlider.y = y;
 				
 				if (!this.cachedMode.equals(mode)) {
 					cachedMode = mode;

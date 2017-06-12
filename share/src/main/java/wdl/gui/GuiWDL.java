@@ -63,8 +63,8 @@ public class GuiWDL extends GuiScreen {
 			@Override
 			public void drawEntry(int slotIndex, int x, int y, int listWidth,
 					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
-				button.xPosition = GuiWDL.this.width / 2 - 100;
-				button.yPosition = y;
+				button.x = GuiWDL.this.width / 2 - 100;
+				button.y = y;
 				
 				button.drawButton(mc, mouseX, mouseY);
 				
@@ -320,7 +320,7 @@ public class GuiWDL extends GuiScreen {
 		this.drawCenteredString(this.fontRenderer, this.title,
 				this.width / 2, 8, 0xFFFFFF);
 		String name = I18n.format("wdl.gui.wdl.worldname");
-		this.drawString(this.fontRenderer, name, this.worldname.xPosition
+		this.drawString(this.fontRenderer, name, this.worldname.x
 				- this.fontRenderer.getStringWidth(name + " "), 26, 0xFFFFFF);
 		this.worldname.drawTextBox();
 		

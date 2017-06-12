@@ -107,14 +107,14 @@ public class GuiWDLExtensions extends GuiScreen {
 			public void drawEntry(int slotIndex, int x, int y, int listWidth,
 					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
 				if (button != null) {
-					button.xPosition = GuiWDLExtensions.this.width - 180;
-					button.yPosition = y - 1;
+					button.x = GuiWDLExtensions.this.width - 180;
+					button.y = y - 1;
 					
 					button.drawButton(mc, mouseX, mouseY);
 				}
 				
-				disableButton.xPosition = GuiWDLExtensions.this.width - 92;
-				disableButton.yPosition = y - 1;
+				disableButton.x = GuiWDLExtensions.this.width - 92;
+				disableButton.y = y - 1;
 				disableButton.drawButton(mc, mouseX, mouseY);
 				
 				int centerY = y + slotHeight / 2

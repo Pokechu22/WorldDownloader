@@ -51,8 +51,8 @@ public class GuiWDLMessages extends GuiScreen {
 						GuiWDLMessages.this.width / 2 - 40, y + slotHeight
 						- mc.fontRenderer.FONT_HEIGHT - 1, 0xFFFFFF);
 				
-				button.xPosition = GuiWDLMessages.this.width / 2 + 20;
-				button.yPosition = y;
+				button.x = GuiWDLMessages.this.width / 2 + 20;
+				button.y = y;
 				
 				button.displayString = I18n.format("wdl.gui.messages.group."
 						+ WDLMessages.isGroupEnabled(category));
@@ -103,8 +103,8 @@ public class GuiWDLMessages extends GuiScreen {
 			@Override
 			public void drawEntry(int slotIndex, int x, int y, int listWidth,
 					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
-				button.xPosition = GuiWDLMessages.this.width / 2 - 100;
-				button.yPosition = y;
+				button.x = GuiWDLMessages.this.width / 2 - 100;
+				button.y = y;
 				
 				button.displayString = I18n.format("wdl.gui.messages.message."
 						+ WDLMessages.isEnabled(type), type.getDisplayName());

@@ -388,7 +388,7 @@ public class WDLHooks {
 			GuiButton btn = (GuiButton) obj;
 	
 			if (btn.id == 5) { // Button "Achievements"
-				insertAtYPos = btn.yPosition + 24;
+				insertAtYPos = btn.y + 24;
 				break;
 			}
 		}
@@ -397,8 +397,8 @@ public class WDLHooks {
 		for (Object obj : buttonList) {
 			GuiButton btn = (GuiButton) obj;
 	
-			if (btn.yPosition >= insertAtYPos) {
-				btn.yPosition += 24;
+			if (btn.y >= insertAtYPos) {
+				btn.y += 24;
 			}
 		}
 	

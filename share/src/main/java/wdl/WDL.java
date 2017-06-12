@@ -9,7 +9,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -875,8 +874,8 @@ public class WDL {
 				}
 				
 				progressScreen.setMinorTaskProgress(I18n.format(
-						"wdl.saveProgress.chunk.saving", c.xPosition,
-						c.zPosition), currentChunk);
+						"wdl.saveProgress.chunk.saving", c.x,
+						c.z), currentChunk);
 				
 				saveChunk(c);
 			}
@@ -895,7 +894,7 @@ public class WDL {
 
 		try {
 			if (isEmpty(c)) {
-				logger.warn("[WDL] Tried to save empty chunk! (" + c + "@" + c.xPosition + "," + c.zPosition + ")");
+				logger.warn("[WDL] Tried to save empty chunk! (" + c + "@" + c.x + "," + c.z + ")");
 				return;
 			}
 			chunkLoader.saveChunk(worldClient, c);
@@ -903,7 +902,7 @@ public class WDL {
 			// Better tell the player that something didn't work:
 			WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR,
 					"wdl.messages.generalError.failedToSaveChunk",
-					c.xPosition, c.zPosition, e);
+					c.x, c.z, e);
 		}
 	}
 
@@ -934,10 +933,10 @@ public class WDL {
 				}
 			}
 			// Only composed of airoids; treat as empty
-			logger.warn("[WDL] Skipping airoid empty chunk at " + c.xPosition + ", " + c.zPosition);
+			logger.warn("[WDL] Skipping airoid empty chunk at " + c.x + ", " + c.z);
 		} else {
 			// Definitely empty
-			logger.warn("[WDL] Skipping chunk with all null sections at " + c.xPosition + ", " + c.zPosition);
+			logger.warn("[WDL] Skipping chunk with all null sections at " + c.x + ", " + c.z);
 		}
 		return true;
 	}
@@ -1459,7 +1458,7 @@ public class WDL {
 		core.addCrashSection("Expected version", VersionConstants.getExpectedVersion());
 		core.addCrashSection("Protocol version", VersionConstants.getProtocolVersion());
 		core.addCrashSection("Data version", VersionConstants.getDataVersion());
-		core.setDetail("File location", new ICrashReportDetail<String>() {
+		core.addDetail("File location", new ICrashReportDetail<String>() {
 			@Override
 			public String call() throws Exception {
 				//http://stackoverflow.com/q/320542/3991344

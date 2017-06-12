@@ -108,12 +108,12 @@ public class GuiWDLGameRules extends GuiScreen {
 
 				drawString(fontRenderer, title, x, y + 6, 0xFFFFFF);
 
-				this.nameField.xPosition = x + listWidth / 2;
-				this.nameField.yPosition = y;
+				this.nameField.x = x + listWidth / 2;
+				this.nameField.y = y;
 				this.nameField.drawTextBox();
 
-				this.createButton.xPosition = x + listWidth / 2 + 110;
-				this.createButton.yPosition = y;
+				this.createButton.x = x + listWidth / 2 + 110;
+				this.createButton.y = y;
 				this.createButton.enabled = isValidName(this.nameField.getText());
 				this.createButton.drawButton(mc, mouseX, mouseY);
 			}
@@ -199,8 +199,8 @@ public class GuiWDLGameRules extends GuiScreen {
 			public final void drawEntry(int slotIndex, int x, int y, int listWidth,
 					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
 				drawString(fontRenderer, this.ruleName, x, y + 6, 0xFFFFFFFF);
-				this.resetButton.xPosition = x + listWidth / 2 + 110;
-				this.resetButton.yPosition = y;
+				this.resetButton.x = x + listWidth / 2 + 110;
+				this.resetButton.y = y;
 				this.resetButton.enabled = isRuleSet(this.ruleName);
 				this.resetButton.drawButton(mc, mouseX, mouseY);
 				this.draw(x, y, listWidth, slotHeight, mouseX, mouseY);
@@ -276,8 +276,8 @@ public class GuiWDLGameRules extends GuiScreen {
 				} else {
 					field.setTextColor(DEFAULT_TEXT_FIELD);
 				}
-				field.xPosition = x + listWidth / 2;
-				field.yPosition = y;
+				field.x = x + listWidth / 2;
+				field.y = y;
 				field.drawTextBox();
 			}
 
@@ -325,8 +325,8 @@ public class GuiWDLGameRules extends GuiScreen {
 			@Override
 			protected void draw(int x, int y, int listWidth, int slotHeight,
 					int mouseX, int mouseY) {
-				this.button.xPosition = x + listWidth / 2;
-				this.button.yPosition = y;
+				this.button.x = x + listWidth / 2;
+				this.button.y = y;
 				this.button.displayString = getRule(ruleName);
 				this.button.drawButton(mc, mouseX, mouseY);
 			}
@@ -369,8 +369,8 @@ public class GuiWDLGameRules extends GuiScreen {
 				if (!this.isFocused()) {
 					field.setFocused(false);
 				}
-				field.xPosition = x + listWidth / 2;
-				field.yPosition = y;
+				field.x = x + listWidth / 2;
+				field.y = y;
 				field.drawTextBox();
 			}
 

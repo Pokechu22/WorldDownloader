@@ -13,7 +13,7 @@ public class VersionedProperties {
 	 * @return a boolean
 	 */
 	public static boolean hasSkyLight(World world) {
-		// 1.10-: use hasNoSky
-		return !world.provider.hasNoSky();
+		// 1.10-: use isNether (hasNoSky)
+		return !world.provider.isNether();
 	}
 }

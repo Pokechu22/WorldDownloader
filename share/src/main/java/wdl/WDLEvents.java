@@ -113,13 +113,13 @@ public class WDLEvents {
 			WDLMessages.chatMessageTranslated(
 					WDLMessageTypes.ON_CHUNK_NO_LONGER_NEEDED,
 					"wdl.messages.onChunkNoLongerNeeded.saved",
-					unneededChunk.xPosition, unneededChunk.zPosition);
+					unneededChunk.x, unneededChunk.z);
 			WDL.saveChunk(unneededChunk);
 		} else {
 			WDLMessages.chatMessageTranslated(
 					WDLMessageTypes.ON_CHUNK_NO_LONGER_NEEDED,
 					"wdl.messages.onChunkNoLongerNeeded.didNotSave",
-					unneededChunk.xPosition, unneededChunk.zPosition);
+					unneededChunk.x, unneededChunk.z);
 		}
 	}
 

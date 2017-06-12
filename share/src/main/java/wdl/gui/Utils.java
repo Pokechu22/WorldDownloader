@@ -260,8 +260,8 @@ class Utils {
 	 */
 	public static boolean isMouseOverTextBox(int mouseX, int mouseY,
 			GuiTextField textBox) {
-		int scaledX = mouseX - textBox.xPosition;
-		int scaledY = mouseY - textBox.yPosition;
+		int scaledX = mouseX - textBox.x;
+		int scaledY = mouseY - textBox.y;
 		
 		// Standard text box height -- there is no actual getter for the real
 		// one.
@@ -342,7 +342,7 @@ class GuiSlider extends GuiButton {
 	protected void mouseDragged(Minecraft mc, int mouseX, int mouseY) {
 		if (this.visible) {
 			if (this.dragging) {
-				this.sliderValue = (float)(mouseX - (this.xPosition + 4))
+				this.sliderValue = (float)(mouseX - (this.x + 4))
 						/ (float)(this.width - 8);
 				this.sliderValue = MathHelper.clamp(this.sliderValue, 0.0F,
 						1.0F);
@@ -355,19 +355,19 @@ class GuiSlider extends GuiButton {
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 			
 			if (this.enabled) {
-				this.drawTexturedModalRect(this.xPosition
+				this.drawTexturedModalRect(this.x
 						+ (int) (this.sliderValue * (this.width - 8)),
-						this.yPosition, 0, 66, 4, 20);
-				this.drawTexturedModalRect(this.xPosition
+						this.y, 0, 66, 4, 20);
+				this.drawTexturedModalRect(this.x
 						+ (int) (this.sliderValue * (this.width - 8))
-						+ 4, this.yPosition, 196, 66, 4, 20);
+						+ 4, this.y, 196, 66, 4, 20);
 			} else {
-				this.drawTexturedModalRect(this.xPosition
+				this.drawTexturedModalRect(this.x
 						+ (int) (this.sliderValue * (this.width - 8)),
-						this.yPosition, 0, 46, 4, 20);
-				this.drawTexturedModalRect(this.xPosition
+						this.y, 0, 46, 4, 20);
+				this.drawTexturedModalRect(this.x
 						+ (int) (this.sliderValue * (this.width - 8))
-						+ 4, this.yPosition, 196, 46, 4, 20);
+						+ 4, this.y, 196, 46, 4, 20);
 			}
 		}
 	}
@@ -379,7 +379,7 @@ class GuiSlider extends GuiButton {
 	@Override
 	public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
 		if (super.mousePressed(mc, mouseX, mouseY)) {
-			this.sliderValue = (float)(mouseX - (this.xPosition + 4))
+			this.sliderValue = (float)(mouseX - (this.x + 4))
 					/ (float)(this.width - 8);
 			this.sliderValue = MathHelper.clamp(this.sliderValue, 0.0F,
 					1.0F);
