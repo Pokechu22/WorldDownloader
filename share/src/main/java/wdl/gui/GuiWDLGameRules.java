@@ -33,7 +33,7 @@ public class GuiWDLGameRules extends GuiScreen {
 	@Nullable
 	private String hoveredToolTip;
 
-	private static interface KeyboardEntry extends IGuiListEntry {
+	private static interface KeyboardEntry extends GuiListEntry {
 		public abstract void keyDown(char typedChar, int keyCode);
 		public abstract void onUpdate();
 	}
@@ -53,7 +53,7 @@ public class GuiWDLGameRules extends GuiScreen {
 			super(GuiWDLGameRules.this.mc, GuiWDLGameRules.this.width,
 					GuiWDLGameRules.this.height, 39,
 					GuiWDLGameRules.this.height - 32, 24);
-			this.entries = new ArrayList<IGuiListEntry>();
+			this.entries = new ArrayList<GuiListEntry>();
 			for (String rule : vanillaGameRules) {
 				if (rules.areSameType(rule, ValueType.NUMERICAL_VALUE)) {
 					this.entries.add(new IntRuleEntry(rule));
@@ -82,7 +82,7 @@ public class GuiWDLGameRules extends GuiScreen {
 			this.entries.add(new CustomRuleEntry(rule));
 		}
 
-		private class CreateCustomRuleEntry implements IGuiListEntry, KeyboardEntry {
+		private class CreateCustomRuleEntry implements GuiListEntry, KeyboardEntry {
 			private final String title;
 			private final GuiButton createButton;
 			private final GuiTextField nameField;
@@ -92,10 +92,6 @@ public class GuiWDLGameRules extends GuiScreen {
 				this.nameField = new GuiTextField(0, fontRenderer, 0, 0, 100, 20);
 				this.createButton = new GuiButton(0, 0, 0, 100, 20, I18n.format("wdl.gui.gamerules.addCustom.name"));
 			}
-
-			@Override
-			public void setSelected(int p_178011_1_, int p_178011_2_,
-					int p_178011_3_) { }
 
 			@Override
 			public void drawEntry(int slotIndex, int x, int y, int listWidth,
@@ -181,7 +177,7 @@ public class GuiWDLGameRules extends GuiScreen {
 			}
 		}
 
-		private abstract class RuleEntry implements IGuiListEntry {
+		private abstract class RuleEntry implements GuiListEntry {
 			@Nonnull
 			protected final String ruleName;
 			private GuiButton resetButton;
@@ -190,10 +186,6 @@ public class GuiWDLGameRules extends GuiScreen {
 				this.ruleName = ruleName;
 				this.resetButton = new GuiButton(0, 0, 0, 50, 20, getResetText());
 			}
-
-			@Override
-			public void setSelected(int p_178011_1_, int p_178011_2_,
-					int p_178011_3_) { }
 
 			@Override
 			public final void drawEntry(int slotIndex, int x, int y, int listWidth,
@@ -412,7 +404,7 @@ public class GuiWDLGameRules extends GuiScreen {
 			}
 		}
 
-		private final List<IGuiListEntry> entries;
+		private final List<GuiListEntry> entries;
 
 		@Override
 		public IGuiListEntry getListEntry(int index) {

@@ -79,6 +79,10 @@ jar {
     from litemod.outputs
 }
 
+// Java 8 is needed
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
 // Use tabs instead of spaces
 fixMcSources {
     astyleConfig = "../astyle.cfg"

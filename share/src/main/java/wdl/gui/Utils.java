@@ -30,7 +30,7 @@ import org.apache.logging.log4j.Logger;
 class Utils {
 	private static final Minecraft mc = Minecraft.getMinecraft();
 	private static final Logger logger = LogManager.getLogger();
-	
+
 	/**
 	 * Draws a semitransparent description box.
 	 * 
@@ -69,22 +69,22 @@ class Utils {
 		if (text == null) {
 			return;
 		}
-		
+
 		int infoX = guiWidth / 2 - infoBoxWidth / 2;
 		int infoY = guiHeight - bottomPadding - infoBoxHeight;
 		int y = infoY + 5;
-		
+
 		GuiScreen.drawRect(infoX, infoY, infoX + infoBoxWidth, infoY
 				+ infoBoxHeight, 0x7F000000);
-		
+
 		List<String> lines = wordWrap(text, infoBoxWidth - 10);
-		
+
 		for (String s : lines) {
 			mc.fontRenderer.drawString(s, infoX + 5, y, 0xFFFFFF);
 			y += mc.fontRenderer.FONT_HEIGHT;
 		}
 	}
-	
+
 	/**
 	 * Converts a string into a list of lines that are each shorter than the 
 	 * given width.  Takes \n into consideration.
@@ -95,12 +95,12 @@ class Utils {
 	 */
 	public static List<String> wordWrap(String s, int width) {
 		s = s.replace("\r", ""); // If we got a \r\n in the text somehow, remove it.
-		
+
 		List<String> lines = mc.fontRenderer.listFormattedStringToWidth(s, width);
-		
+
 		return lines;
 	}
-	
+
 	/**
 	 * Draws the background/border used by list GUIs.
 	 * <br/> 
@@ -120,7 +120,7 @@ class Utils {
 		drawDarkBackground(top, left, bottom, right);
 		drawBorder(topMargin, bottomMargin, top, left, bottom, right);
 	}
-	
+
 	/**
 	 * Draws a dark background, similar to {@link GuiScreen#drawBackground(int)} but darker.
 	 * Same appearence as the background in lists. 
@@ -136,10 +136,10 @@ class Utils {
 
 		Tessellator t = Tessellator.getInstance();
 		VertexBuffer b = t.getBuffer();
-		
+
 		mc.getTextureManager().bindTexture(Gui.OPTIONS_BACKGROUND);
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-		
+
 		float textureSize = 32.0F;
 		b.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
 		b.pos(0, bottom, 0).tex(0 / textureSize, 
@@ -152,7 +152,7 @@ class Utils {
 				top / textureSize).color(32, 32, 32, 255).endVertex();
 		t.draw();
 	}
-	
+
 	/**
 	 * Draws the top and bottom borders found on gui lists (but no background).
 	 * <br/> 
@@ -173,18 +173,18 @@ class Utils {
 		GlStateManager.disableFog();
 		GlStateManager.disableDepth();
 		byte padding = 4;
-		
+
 		mc.getTextureManager().bindTexture(Gui.OPTIONS_BACKGROUND);
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-		
+
 		float textureSize = 32.0F;
-		
+
 		Tessellator t = Tessellator.getInstance();
 		VertexBuffer b = t.getBuffer();
 
 		//wr.func_178991_c sets the color.
 		//wr.func_178974_a sets the color and the alpha.
-		
+
 		//Box code is GuiSlot.overlayBackground
 		//Upper box
 		int upperBoxEnd = top + topMargin;
@@ -196,9 +196,9 @@ class Utils {
 		b.pos(right, upperBoxEnd, 0.0D).tex(right / textureSize,
 				upperBoxEnd / textureSize).color(64, 64, 64, 255).endVertex();
 		b.pos(right, top, 0.0D).tex(right / textureSize, top / textureSize)
-				.color(64, 64, 64, 255).endVertex();
+		.color(64, 64, 64, 255).endVertex();
 		b.pos(left, top, 0.0D).tex(0.0D, top / textureSize)
-				.color(64, 64, 64, 255).endVertex();
+		.color(64, 64, 64, 255).endVertex();
 		t.draw();
 
 		// Lower box
@@ -207,16 +207,16 @@ class Utils {
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		b.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
 		b.pos(left, bottom, 0.0D).tex(0.0D, bottom / textureSize)
-				.color(64, 64, 64, 255).endVertex();
+		.color(64, 64, 64, 255).endVertex();
 		b.pos(right, bottom, 0.0D).tex(right / textureSize, bottom
 				/ textureSize).color(64, 64, 64, 255).endVertex();
 		b.pos(right, lowerBoxStart, 0.0D)
-				.tex(right / textureSize, lowerBoxStart / textureSize)
-				.color(64, 64, 64, 255).endVertex();
+		.tex(right / textureSize, lowerBoxStart / textureSize)
+		.color(64, 64, 64, 255).endVertex();
 		b.pos(left, lowerBoxStart, 0.0D).tex(0.0D, lowerBoxStart
 				/ textureSize).color(64, 64, 64, 255).endVertex();
 		t.draw();
-		
+
 		//Gradients
 		GlStateManager.enableBlend();
 		GlStateManager.tryBlendFuncSeparate(GL_SRC_ALPHA,
@@ -226,31 +226,31 @@ class Utils {
 		GlStateManager.disableTexture2D();
 		b.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
 		b.pos(left, upperBoxEnd + padding, 0.0D).tex(0.0D, 1.0D)
-				.color(0, 0, 0, 0).endVertex();
+		.color(0, 0, 0, 0).endVertex();
 		b.pos(right, upperBoxEnd + padding, 0.0D).tex(1.0D, 1.0D)
-				.color(0, 0, 0, 0).endVertex();
+		.color(0, 0, 0, 0).endVertex();
 		b.pos(right, upperBoxEnd, 0.0D).tex(1.0D, 0.0D).color(0, 0, 0, 255)
-				.endVertex();
+		.endVertex();
 		b.pos(left, upperBoxEnd, 0.0D).tex(0.0D, 0.0D).color(0, 0, 0, 255)
-				.endVertex();
+		.endVertex();
 		t.draw();
 		b.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
 		b.pos(left, lowerBoxStart, 0.0D).tex(0.0D, 1.0D).color(0, 0, 0, 255)
-				.endVertex();
+		.endVertex();
 		b.pos(right, lowerBoxStart, 0.0D).tex(1.0D, 1.0D).color(0, 0, 0, 255)
-				.endVertex();
+		.endVertex();
 		b.pos(right, lowerBoxStart - padding, 0.0D).tex(1.0D, 0.0D)
-				.color(0, 0, 0, 0).endVertex();
+		.color(0, 0, 0, 0).endVertex();
 		b.pos(left, lowerBoxStart - padding, 0.0D).tex(0.0D, 0.0D)
-				.color(0, 0, 0, 0).endVertex();
+		.color(0, 0, 0, 0).endVertex();
 		t.draw();
-		
+
 		GlStateManager.enableTexture2D();
 		GlStateManager.shadeModel(GL_FLAT);
 		GlStateManager.enableAlpha();
 		GlStateManager.disableBlend();
 	}
-	
+
 	/**
 	 * Is the mouse over the given text box?
 	 * @param mouseX The mouse's current (scaled) x.
@@ -262,7 +262,7 @@ class Utils {
 			GuiTextField textBox) {
 		int scaledX = mouseX - textBox.x;
 		int scaledY = mouseY - textBox.y;
-		
+
 		// Standard text box height -- there is no actual getter for the real
 		// one.
 		final int height = 20;
@@ -270,7 +270,7 @@ class Utils {
 		return scaledX >= 0 && scaledX < textBox.getWidth() && scaledY >= 0
 				&& scaledY < height;
 	}
-	
+
 	/**
 	 * Attempts to open a link.
 	 * @param path the URL to open.
@@ -286,7 +286,7 @@ class Utils {
 			logger.error("Couldn\'t open link", e);
 		}
 	}
-	
+
 	/**
 	 * Draws a string with a shadow.
 	 * 
@@ -318,10 +318,10 @@ class GuiSlider extends GuiButton {
 	public GuiSlider(int id, int x, int y, int width, int height, 
 			String text, int value, int max) {
 		super(id, x, y, width, height, text);
-		
+
 		this.text = text;
 		this.max = max;
-		
+
 		setValue(value);
 	}
 
@@ -347,13 +347,13 @@ class GuiSlider extends GuiButton {
 				this.sliderValue = MathHelper.clamp(this.sliderValue, 0.0F,
 						1.0F);
 				this.dragging = true;
-				
+
 				this.displayString = I18n.format(text, getValue());
 			}
 
 			mc.getTextureManager().bindTexture(BUTTON_TEXTURES);
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-			
+
 			if (this.enabled) {
 				this.drawTexturedModalRect(this.x
 						+ (int) (this.sliderValue * (this.width - 8)),
@@ -384,7 +384,7 @@ class GuiSlider extends GuiButton {
 			this.sliderValue = MathHelper.clamp(this.sliderValue, 0.0F,
 					1.0F);
 			this.displayString = I18n.format(text, getValue());
-			
+
 			this.dragging = true;
 			return true;
 		} else {
@@ -399,17 +399,17 @@ class GuiSlider extends GuiButton {
 	public int getValue() {
 		return (int)(sliderValue * max);
 	}
-	
+
 	/**
 	 * Gets the current value of the slider.
 	 * @return
 	 */
 	public void setValue(int value) {
 		this.sliderValue = value / (float)max;
-		
+
 		this.displayString = I18n.format(text, getValue());
 	}
-	
+
 	/**
 	 * Fired when the mouse button is released. Equivalent of
 	 * MouseListener.mouseReleased(MouseEvent e).
@@ -430,12 +430,12 @@ class GuiNumericTextField extends GuiTextField {
 				height);
 		setText("0");
 	}
-	
+
 	/**
 	 * Last text that was successfully entered.
 	 */
 	private String lastSafeText = "0";
-	
+
 	@Override
 	public void drawTextBox() {
 		// Save last safe text.
@@ -445,10 +445,10 @@ class GuiNumericTextField extends GuiTextField {
 		} catch (NumberFormatException e) {
 			setText(lastSafeText);
 		}
-		
+
 		super.drawTextBox();
 	}
-	
+
 	/**
 	 * Gets the current value.
 	 * @return
@@ -462,7 +462,7 @@ class GuiNumericTextField extends GuiTextField {
 			return 0;
 		}
 	}
-	
+
 	/**
 	 * Sets the value.
 	 * @param value
@@ -473,11 +473,11 @@ class GuiNumericTextField extends GuiTextField {
 		lastSafeText = text;
 		setText(text);
 	}
-	
+
 	@Override
 	public String getText() {
 		String text = super.getText();
-		
+
 		try {
 			int value = Integer.parseInt("0" + text);
 			return String.valueOf(value);
@@ -486,17 +486,17 @@ class GuiNumericTextField extends GuiTextField {
 			return lastSafeText;
 		}
 	}
-	
+
 	@Override
 	public void setText(String text) {
 		String value;
-		
+
 		try {
 			value = String.valueOf(Integer.parseInt("0" + text));
 		} catch (NumberFormatException e) {
 			value = lastSafeText;
 		}
-		
+
 		super.setText(value);
 		lastSafeText = value;
 	}
@@ -509,7 +509,7 @@ class GuiNumericTextField extends GuiTextField {
 class TextList extends GuiListExtended {
 	public final int topMargin;
 	public final int bottomMargin;
-	
+
 	/**
 	 * Creates a new TextList with no text.
 	 */
@@ -517,73 +517,73 @@ class TextList extends GuiListExtended {
 			int bottomMargin) {
 		super(mc, width, height, topMargin, height - bottomMargin,
 				mc.fontRenderer.FONT_HEIGHT + 1);
-		
+
 		this.topMargin = topMargin;
 		this.bottomMargin = bottomMargin;
-		
+
 		this.entries = new ArrayList<IGuiListEntry>();
 	}
 
 	private List<IGuiListEntry> entries;
-	
+
 	@Override
 	public IGuiListEntry getListEntry(int index) {
 		return entries.get(index);
 	}
-	
+
 	@Override
 	protected int getSize() {
 		return entries.size();
 	}
-	
+
 	@Override
 	protected int getScrollBarX() {
 		return width - 10;
 	}
-	
+
 	@Override
 	public int getListWidth() {
 		return width - 18;
 	}
-	
+
 	public void addLine(String text) {
 		List<String> lines = Utils.wordWrap(text, getListWidth());
 		for (String line : lines) {
 			entries.add(new TextEntry(mc, line, 0xFFFFFF));
 		}
 	}
-	
+
 	public void addBlankLine() {
 		entries.add(new TextEntry(mc, "", 0xFFFFFF));
 	}
-	
+
 	public void addLinkLine(String text, String URL) {
 		List<String> lines = Utils.wordWrap(text, getListWidth());
 		for (String line : lines) {
 			entries.add(new LinkEntry(mc, line, URL));
 		}
 	}
-	
+
 	public void clearLines() {
 		entries.clear();
 	}
 }
 
 /**
- * {@link IGuiListEntry} that displays a single line of text.
+ * {@link GuiListEntry} that displays a single line of text.
  */
-class TextEntry implements IGuiListEntry {
+class TextEntry implements GuiListEntry {
 	private final String text;
 	private final int color;
 	protected final Minecraft mc;
-	
+
 	/**
 	 * Creates a new TextEntry with the default color.
 	 */
 	public TextEntry(Minecraft mc, String text) {
 		this(mc, text, 0xFFFFFF);
 	}
-	
+
 	/**
 	 * Creates a new TextEntry.
 	 */
@@ -592,7 +592,7 @@ class TextEntry implements IGuiListEntry {
 		this.text = text;
 		this.color = color;
 	}
-	
+
 	@Override
 	public void drawEntry(int slotIndex, int x, int y, int listWidth,
 			int slotHeight, int mouseX, int mouseY, boolean isSelected) {
@@ -601,22 +601,22 @@ class TextEntry implements IGuiListEntry {
 		}
 		Utils.drawStringWithShadow(text, x, y + 1, color);
 	}
-	
+
 	@Override
 	public boolean mousePressed(int slotIndex, int x, int y, int mouseEvent,
 			int relativeX, int relativeY) {
 		return false;
 	}
-	
+
 	@Override
 	public void mouseReleased(int slotIndex, int x, int y, int mouseEvent,
 			int relativeX, int relativeY) {
-		
+
 	}
-	
+
 	@Override
 	public void setSelected(int slotIndex, int p_178011_2_, int p_178011_3_) {
-		
+
 	}
 }
 
@@ -627,25 +627,25 @@ class LinkEntry extends TextEntry {
 	private final String link;
 	private final int textWidth;
 	private final int linkWidth;
-	
+
 	public LinkEntry(Minecraft mc, String text, String link) {
 		super(mc, text, 0x5555FF);
-		
+
 		this.link = link;
 		this.textWidth = mc.fontRenderer.getStringWidth(text);
 		this.linkWidth = mc.fontRenderer.getStringWidth(link);
 	}
-	
+
 	@Override
 	public void drawEntry(int slotIndex, int x, int y, int listWidth,
 			int slotHeight, int mouseX, int mouseY, boolean isSelected) {
 		if (y < 0) {
 			return;
 		}
-		
+
 		super.drawEntry(slotIndex, x, y, listWidth, slotHeight, mouseX,
 				mouseY, isSelected);
-		
+
 		int relativeX = mouseX - x;
 		int relativeY = mouseY - y;
 		if (relativeX >= 0 && relativeX <= textWidth &&
@@ -656,11 +656,11 @@ class LinkEntry extends TextEntry {
 			}
 			Gui.drawRect(drawX, mouseY - 2, drawX + linkWidth + 4,
 					mouseY + mc.fontRenderer.FONT_HEIGHT + 2, 0x80000000);
-			
+
 			Utils.drawStringWithShadow(link, drawX + 2, mouseY, 0xFFFFFF);
 		}
 	}
-	
+
 	@Override
 	public boolean mousePressed(int slotIndex, int x, int y, int mouseEvent,
 			int relativeX, int relativeY) {

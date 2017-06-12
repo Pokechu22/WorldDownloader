@@ -20,12 +20,12 @@ import wdl.update.WDLUpdateChecker;
  */
 public class GuiWDLUpdates extends GuiScreen {
 	private final GuiScreen parent;
-	
+
 	/**
 	 * Margins for the top and the bottom of the list.
 	 */
 	private static final int TOP_MARGIN = 39, BOTTOM_MARGIN = 32;
-	
+
 	private class UpdateList extends GuiListExtended {
 		public UpdateList() {
 			super(GuiWDLUpdates.this.mc, GuiWDLUpdates.this.width,
@@ -34,35 +34,35 @@ public class GuiWDLUpdates extends GuiScreen {
 					(fontRenderer.FONT_HEIGHT + 1) * 6 + 2);
 			this.showSelectionBox = true;
 		}
-		
-		private class VersionEntry implements IGuiListEntry {
+
+		private class VersionEntry implements GuiListEntry {
 			private final Release release;
-			
+
 			private String title;
 			private String caption;
 			private String body1;
 			private String body2;
 			private String body3;
 			private String time;
-			
+
 			private final int fontHeight;
-			
+
 			public VersionEntry(Release release) {
 				this.release = release;
 				this.fontHeight = fontRenderer.FONT_HEIGHT + 1;
-				
+
 				this.title = buildReleaseTitle(release);
 				this.caption = buildVersionInfo(release);
-				
+
 				List<String> body = Utils.wordWrap(release.textOnlyBody, getListWidth());
-				
+
 				body1 = (body.size() >= 1 ? body.get(0) : "");
 				body2 = (body.size() >= 2 ? body.get(1) : "");
 				body3 = (body.size() >= 3 ? body.get(2) : "");
-				
+
 				time = I18n.format("wdl.gui.updates.update.releaseDate", release.date);
 			}
-			
+
 			@Override
 			public void drawEntry(int slotIndex, int x, int y, int listWidth,
 					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
@@ -77,28 +77,28 @@ public class GuiWDLUpdates extends GuiScreen {
 				} else {
 					title = this.title;
 				}
-				
+
 				fontRenderer.drawString(title, x, y + fontHeight * 0, 0xFFFFFF);
 				fontRenderer.drawString(caption, x, y + fontHeight * 1, 0x808080);
 				fontRenderer.drawString(body1, x, y + fontHeight * 2, 0xFFFFFF);
 				fontRenderer.drawString(body2, x, y + fontHeight * 3, 0xFFFFFF);
 				fontRenderer.drawString(body3, x, y + fontHeight * 4, 0xFFFFFF);
 				fontRenderer.drawString(time, x, y + fontHeight * 5, 0x808080);
-				
+
 				if (mouseX > x && mouseX < x + listWidth && mouseY > y
 						&& mouseY < y + slotHeight) {
 					drawRect(x - 2, y - 2, x + listWidth - 3, y + slotHeight + 2,
 							0x1FFFFFFF);
 				}
 			}
-			
+
 			@Override
 			public boolean mousePressed(int slotIndex, int x, int y,
 					int mouseEvent, int relativeX, int relativeY) {
 				if (relativeY > 0 && relativeY < slotHeight) {
 					mc.displayGuiScreen(new GuiWDLSingleUpdate(GuiWDLUpdates.this,
 							this.release));
-					
+
 					mc.getSoundHandler().playSound(
 							PositionedSoundRecord.getMasterRecord(
 									SoundEvents.UI_BUTTON_CLICK, 1.0f));
@@ -106,26 +106,20 @@ public class GuiWDLUpdates extends GuiScreen {
 				}
 				return false;
 			}
-			
+
 			@Override
 			public void mouseReleased(int slotIndex, int x, int y,
 					int mouseEvent, int relativeX, int relativeY) {
-				
-			}
-			
-			@Override
-			public void setSelected(int p_178011_1_, int p_178011_2_,
-					int p_178011_3_) {
-				
+
 			}
 		}
-		
+
 		private List<VersionEntry> displayedVersions;
 		/**
 		 * Release that should be used.
 		 */
 		private Release recomendedRelease;
-		
+
 		/**
 		 * Regenerates the {@linkplain #displayedVersions version list}.
 		 * 
@@ -134,89 +128,89 @@ public class GuiWDLUpdates extends GuiScreen {
 		 */
 		private void regenerateVersionList() {
 			displayedVersions = new ArrayList<VersionEntry>();
-			
+
 			if (WDLUpdateChecker.hasNewVersion()) {
 				recomendedRelease = WDLUpdateChecker.getRecomendedRelease();
 			} else {
 				recomendedRelease = null;
 			}
-			
+
 			List<Release> releases = WDLUpdateChecker.getReleases();
-			
+
 			if (releases == null) {
 				return;
 			}
-			
+
 			for (Release release : releases) {
 				displayedVersions.add(new VersionEntry(release));
 			}
 		}
-		
+
 		@Override
 		public VersionEntry getListEntry(int index) {
 			return displayedVersions.get(index);
 		}
-		
+
 		@Override
 		protected int getSize() {
 			return displayedVersions.size();
 		}
-		
+
 		@Override
 		protected boolean isSelected(int slotIndex) {
 			VersionEntry entry = getListEntry(slotIndex);
-			
+
 			String currentTag = "v" + VersionConstants.getModVersion();
 			return currentTag.equals(entry.release.tag);
 		}
-		
+
 		@Override
 		public int getListWidth() {
 			return width - 30;
 		}
-		
+
 		@Override
 		protected int getScrollBarX() {
 			return width - 10;
 		}
 	}
-	
+
 	private UpdateList list;
-	
+
 	public GuiWDLUpdates(GuiScreen parent) {
 		this.parent = parent;
 	}
-	
+
 	@Override
 	public void initGui() {
 		this.list = new UpdateList();
-		
+
 		this.buttonList.add(new GuiButton(100, this.width / 2 - 100, 
 				this.height - 29, I18n.format("gui.done")));
 	}
-	
+
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if (button.id == 100) {
 			mc.displayGuiScreen(parent);
 		}
 	}
-	
+
 	@Override
 	public void onGuiClosed() {
 		WDL.saveGlobalProps();
 	}
-	
+
 	/**
 	 * Called when the mouse is clicked.
 	 */
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
-	throws IOException {
+			throws IOException {
 		list.mouseClicked(mouseX, mouseY, mouseButton);
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 	}
-	
+
 	/**
 	 * Handles mouse input.
 	 */
@@ -225,7 +219,7 @@ public class GuiWDLUpdates extends GuiScreen {
 		super.handleMouseInput();
 		this.list.handleMouseInput();
 	}
-	
+
 	@Override
 	protected void mouseReleased(int mouseX, int mouseY, int state) {
 		if (list.mouseReleased(mouseX, mouseY, state)) {
@@ -233,52 +227,52 @@ public class GuiWDLUpdates extends GuiScreen {
 		}
 		super.mouseReleased(mouseX, mouseY, state);
 	}
-	
+
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		if (this.list == null) {
 			return;
 		}
-		
+
 		this.list.regenerateVersionList();
 		this.list.drawScreen(mouseX, mouseY, partialTicks);
-		
+
 		if (!WDLUpdateChecker.hasFinishedUpdateCheck()) {
 			drawCenteredString(fontRenderer,
 					I18n.format("wdl.gui.updates.pleaseWait"), width / 2,
 					height / 2, 0xFFFFFF);
 		} else if (WDLUpdateChecker.hasUpdateCheckFailed()) {
 			String reason = WDLUpdateChecker.getUpdateCheckFailReason();
-			
+
 			drawCenteredString(fontRenderer,
 					I18n.format("wdl.gui.updates.checkFailed"), width / 2,
 					height / 2 - fontRenderer.FONT_HEIGHT / 2, 0xFF5555);
 			drawCenteredString(fontRenderer, I18n.format(reason), width / 2,
 					height / 2 + fontRenderer.FONT_HEIGHT / 2, 0xFF5555);
 		}
-		
+
 		drawCenteredString(fontRenderer, I18n.format("wdl.gui.updates.title"),
 				width / 2, 8, 0xFFFFFF);
-		
+
 		super.drawScreen(mouseX, mouseY, partialTicks);
 	}
-	
+
 	/**
 	 * Gets the translated version info for the given release.
 	 */
 	private String buildVersionInfo(Release release) {
 		String type = "?", supportedVersions = "?";
-		
+
 		if (release.hiddenInfo != null) {
 			type = release.hiddenInfo.loader;
-			
+
 			String[] versions = release.hiddenInfo.supportedMinecraftVersions;
 			supportedVersions = buildSupportedVersions(versions);
 		}
-		
+
 		return I18n.format("wdl.gui.updates.update.version", type, supportedVersions, supportedVersions);
 	}
-	
+
 	private String buildSupportedVersions(String[] versions) {
 		String supportedVersions;
 		if (versions.length == 1) {
@@ -291,7 +285,7 @@ public class GuiWDLUpdates extends GuiScreen {
 					versions[0], versions[1]);
 		} else {
 			StringBuilder builder = new StringBuilder();
-			
+
 			for (int i = 0; i < versions.length; i++) {
 				if (i == 0) {
 					builder.append(I18n.format(
@@ -307,19 +301,19 @@ public class GuiWDLUpdates extends GuiScreen {
 							versions[i]));
 				}
 			}
-			
+
 			supportedVersions = builder.toString();
 		}
 		return supportedVersions;
 	}
-	
+
 	/**
 	 * Gets the translated title for the given release.
 	 */
 	private String buildReleaseTitle(Release release) {
 		String version = release.tag;
 		String mcVersion = "?";
-		
+
 		if (release.hiddenInfo != null) {
 			mcVersion = buildSupportedVersions(release.hiddenInfo.supportedMinecraftVersions);
 		}
@@ -329,21 +323,21 @@ public class GuiWDLUpdates extends GuiScreen {
 			return I18n.format("wdl.gui.updates.update.title.release", version, mcVersion);
 		}
 	}
-	
+
 	/**
 	 * Gui that shows a single update.
 	 */
 	private class GuiWDLSingleUpdate extends GuiScreen {
 		private final GuiWDLUpdates parent;
 		private final Release release;
-		
+
 		private TextList list;
-		
+
 		public GuiWDLSingleUpdate(GuiWDLUpdates parent, Release releaseToShow) {
 			this.parent = parent;
 			this.release = releaseToShow;
 		}
-		
+
 		@Override
 		public void initGui() {
 			this.buttonList.add(new GuiButton(0, this.width / 2 - 155, 
@@ -354,16 +348,16 @@ public class GuiWDLUpdates extends GuiScreen {
 			}
 			this.buttonList.add(new GuiButton(100, this.width / 2 - 100, 
 					this.height - 29, I18n.format("gui.done")));
-			
+
 			this.list = new TextList(mc, width, height, TOP_MARGIN, BOTTOM_MARGIN);
-			
+
 			list.addLine(buildReleaseTitle(release));
 			list.addLine(I18n.format("wdl.gui.updates.update.releaseDate", release.date));
 			list.addLine(buildVersionInfo(release));
 			list.addBlankLine();
 			list.addLine(release.textOnlyBody);
 		}
-		
+
 		@Override
 		protected void actionPerformed(GuiButton button) throws IOException {
 			if (button.id == 0) {
@@ -376,17 +370,17 @@ public class GuiWDLUpdates extends GuiScreen {
 				mc.displayGuiScreen(parent);
 			}
 		}
-		
+
 		/**
 		 * Called when the mouse is clicked.
 		 */
 		@Override
 		protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
-		throws IOException {
+				throws IOException {
 			list.mouseClicked(mouseX, mouseY, mouseButton);
 			super.mouseClicked(mouseX, mouseY, mouseButton);
 		}
-		
+
 		/**
 		 * Handles mouse input.
 		 */
@@ -395,7 +389,7 @@ public class GuiWDLUpdates extends GuiScreen {
 			super.handleMouseInput();
 			this.list.handleMouseInput();
 		}
-		
+
 		@Override
 		protected void mouseReleased(int mouseX, int mouseY, int state) {
 			if (list.mouseReleased(mouseX, mouseY, state)) {
@@ -403,18 +397,18 @@ public class GuiWDLUpdates extends GuiScreen {
 			}
 			super.mouseReleased(mouseX, mouseY, state);
 		}
-		
+
 		@Override
 		public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 			if (this.list == null) {
 				return;
 			}
-			
+
 			this.list.drawScreen(mouseX, mouseY, partialTicks);
-			
+
 			this.drawCenteredString(this.fontRenderer, buildReleaseTitle(release),
 					this.width / 2, 8, 0xFFFFFF);
-			
+
 			super.drawScreen(mouseX, mouseY, partialTicks);
 		}
 	}
