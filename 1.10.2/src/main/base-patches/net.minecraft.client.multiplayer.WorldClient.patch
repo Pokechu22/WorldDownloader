@@ -1,6 +1,6 @@
 --- net/minecraft/client/multiplayer/WorldClient.java
 +++ net/minecraft/client/multiplayer/WorldClient.java
-@@ -97,6 +97,10 @@
+@@ -102,6 +102,10 @@
  		this.profiler.endStartSection("blocks");
  		this.updateBlocks();
  		this.profiler.endSection();
@@ -11,7 +11,7 @@
  	}
  
  	/**
-@@ -168,6 +172,10 @@
+@@ -173,6 +177,10 @@
  	}
  
  	public void doPreChunk(int chunkX, int chunkZ, boolean loadChunk) {
@@ -22,7 +22,7 @@
  		if (loadChunk) {
  			this.clientChunkProvider.loadChunk(chunkX, chunkZ);
  		} else {
-@@ -251,6 +259,10 @@
+@@ -256,6 +264,10 @@
  	}
  
  	public Entity removeEntityFromWorld(int entityID) {

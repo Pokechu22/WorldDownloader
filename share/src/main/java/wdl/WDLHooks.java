@@ -208,7 +208,7 @@ public class WDLHooks {
 	 * Called when {@link NetHandlerPlayClient#handleChat(SPacketChat)} is
 	 * called.
 	 * <br/>
-	 * Should be at the start of the method.
+	 * Should be at the end of the method.
 	 */
 	public static void onNHPCHandleChat(NetHandlerPlayClient sender,
 			SPacketChat packet) {
@@ -245,7 +245,7 @@ public class WDLHooks {
 	 * Called when {@link NetHandlerPlayClient#handleMaps(SPacketMaps)} is
 	 * called.
 	 * <br/>
-	 * Should be at the start of the method.
+	 * Should be at the end of the method.
 	 */
 	public static void onNHPCHandleMaps(NetHandlerPlayClient sender,
 			SPacketMaps packet) {
@@ -277,7 +277,7 @@ public class WDLHooks {
 	 * {@link NetHandlerPlayClient#handleCustomPayload(SPacketCustomPayload)}
 	 * is called.
 	 * <br/>
-	 * Should be at the start of the method.
+	 * Should be at the end of the method.
 	 */
 	public static void onNHPCHandleCustomPayload(NetHandlerPlayClient sender,
 			SPacketCustomPayload packet) {
@@ -316,7 +316,7 @@ public class WDLHooks {
 	 * {@link NetHandlerPlayClient#handleBlockAction(SPacketBlockAction)} is
 	 * called.
 	 * <br/>
-	 * Should be at the start of the method.
+	 * Should be at the end of the method.
 	 */
 	public static void onNHPCHandleBlockAction(NetHandlerPlayClient sender,
 			SPacketBlockAction packet) {

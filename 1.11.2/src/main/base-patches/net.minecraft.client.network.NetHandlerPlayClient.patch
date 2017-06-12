@@ -1,6 +1,6 @@
 --- net/minecraft/client/network/NetHandlerPlayClient.java
 +++ net/minecraft/client/network/NetHandlerPlayClient.java
-@@ -785,6 +785,10 @@
+@@ -786,6 +786,10 @@
  		} else {
  			this.gameController.ingameGUI.getChatGUI().printChatMessage(packetIn.getChatComponent());
  		}
@@ -11,7 +11,7 @@
  	}
  
  	/**
-@@ -1163,6 +1167,10 @@
+@@ -1164,6 +1168,10 @@
  	public void handleBlockAction(SPacketBlockAction packetIn) {
  		PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.gameController);
  		this.gameController.world.addBlockEvent(packetIn.getBlockPosition(), packetIn.getBlockType(), packetIn.getData1(), packetIn.getData2());
@@ -22,7 +22,7 @@
  	}
  
  	/**
-@@ -1249,6 +1257,10 @@
+@@ -1250,6 +1258,10 @@
  
  		packetIn.setMapdataTo(mapdata);
  		mapitemrenderer.updateMapTexture(mapdata);
@@ -33,7 +33,7 @@
  	}
  
  	public void handleEffect(SPacketEffect packetIn) {
-@@ -1631,6 +1643,10 @@
+@@ -1632,6 +1644,10 @@
  			String s1 = packetbuffer3.readString(256);
  			this.gameController.getSoundHandler().stop(s1, SoundCategory.getByName(s));
  		}
