@@ -37,6 +37,7 @@ minecraft {
 extraSrgs {
     add file('../srgs/EntityHorseToEquineEntity.srg')
     add file('../srgs/AnimalChestToContainerHorseChest.srg')
+    add file('../srgs/VertexBufferToBufferBuilder.srg')
 }
 
 sourceSets {
