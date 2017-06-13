@@ -111,7 +111,7 @@ public class GuiWDLGameRules extends GuiScreen {
 				this.createButton.x = x + listWidth / 2 + 110;
 				this.createButton.y = y;
 				this.createButton.enabled = isValidName(this.nameField.getText());
-				this.createButton.drawButton(mc, mouseX, mouseY);
+				LocalUtils.drawButton(this.createButton, mc, mouseX, mouseY);
 			}
 
 			@Override
@@ -194,7 +194,7 @@ public class GuiWDLGameRules extends GuiScreen {
 				this.resetButton.x = x + listWidth / 2 + 110;
 				this.resetButton.y = y;
 				this.resetButton.enabled = isRuleSet(this.ruleName);
-				this.resetButton.drawButton(mc, mouseX, mouseY);
+				LocalUtils.drawButton(this.resetButton, mc, mouseX, mouseY);
 				this.draw(x, y, listWidth, slotHeight, mouseX, mouseY);
 
 				if (this.isMouseOverControl(mouseX, mouseY)) {
@@ -320,7 +320,7 @@ public class GuiWDLGameRules extends GuiScreen {
 				this.button.x = x + listWidth / 2;
 				this.button.y = y;
 				this.button.displayString = getRule(ruleName);
-				this.button.drawButton(mc, mouseX, mouseY);
+				LocalUtils.drawButton(this.button, mc, mouseX, mouseY);
 			}
 
 			@Override

@@ -52,7 +52,7 @@ public class GuiWDLMessages extends GuiScreen {
 						+ WDLMessages.isGroupEnabled(category));
 				button.enabled = WDLMessages.enableAllMessages;
 
-				button.drawButton(mc, mouseX, mouseY);
+				LocalUtils.drawButton(this.button, mc, mouseX, mouseY);
 			}
 
 			@Override
@@ -99,7 +99,7 @@ public class GuiWDLMessages extends GuiScreen {
 				button.enabled = WDLMessages.enableAllMessages && 
 						WDLMessages.isGroupEnabled(category);
 
-				button.drawButton(mc, mouseX, mouseY);
+				LocalUtils.drawButton(this.button, mc, mouseX, mouseY);
 
 				if (button.isMouseOver()) {
 					hoveredButtonDescription = type.getDescription();

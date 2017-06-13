@@ -1,12 +1,24 @@
 package wdl.gui;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended.IGuiListEntry;
 
+class LocalUtils {
+	private LocalUtils() { throw new AssertionError(); }
+
+	/**
+	 * Draws the given button (for multi-version compatability, this is needed for lists)
+	 * @param button The button to draw.  Should already have been positioned.
+	 */
+	public static void drawButton(GuiButton button, Minecraft mc, int mouseX, int mouseY) {
+		button.func_191745_a(mc, mouseX, mouseY, 0 /* partialTicks */);
+	}
+}
 /**
  * Version-agnostic implementation of IGuiListEntry.
  */
 interface GuiListEntry extends IGuiListEntry {
-	// PartialTicks was added, but we don't support it
 	@Override
 	public default void func_192633_a(int p_192633_1_, int p_192633_2_,
 			int p_192633_3_, float p_192633_4_) {

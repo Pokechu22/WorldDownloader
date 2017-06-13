@@ -110,12 +110,12 @@ public class GuiWDLExtensions extends GuiScreen {
 					button.x = GuiWDLExtensions.this.width - 180;
 					button.y = y - 1;
 
-					button.drawButton(mc, mouseX, mouseY);
+					LocalUtils.drawButton(button, mc, mouseX, mouseY);
 				}
 
 				disableButton.x = GuiWDLExtensions.this.width - 92;
 				disableButton.y = y - 1;
-				disableButton.drawButton(mc, mouseX, mouseY);
+				LocalUtils.drawButton(disableButton, mc, mouseX, mouseY);
 
 				int centerY = y + slotHeight / 2
 						- fontRenderer.FONT_HEIGHT / 2;

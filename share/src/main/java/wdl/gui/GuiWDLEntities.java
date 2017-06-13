@@ -122,7 +122,7 @@ public class GuiWDLEntities extends GuiScreen {
 				this.enableGroupButton.y = y;
 				this.enableGroupButton.displayString = getButtonText();
 
-				this.enableGroupButton.drawButton(mc, mouseX, mouseY);
+				LocalUtils.drawButton(this.enableGroupButton, mc, mouseX, mouseY);
 			}
 
 			@Override
@@ -230,8 +230,8 @@ public class GuiWDLEntities extends GuiScreen {
 							.getEntityTrackDistance(entity));
 				}
 
-				this.onOffButton.drawButton(mc, mouseX, mouseY);
-				this.rangeSlider.drawButton(mc, mouseX, mouseY);
+				LocalUtils.drawButton(onOffButton, mc, mouseX, mouseY);
+				LocalUtils.drawButton(rangeSlider, mc, mouseX, mouseY);
 			}
 
 			@Override

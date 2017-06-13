@@ -60,7 +60,7 @@ public class GuiWDL extends GuiScreen {
 				button.x = GuiWDL.this.width / 2 - 100;
 				button.y = y;
 
-				button.drawButton(mc, mouseX, mouseY);
+				LocalUtils.drawButton(button, mc, mouseX, mouseY);
 
 				if (button.isMouseOver()) {
 					displayedTooltip = tooltip;

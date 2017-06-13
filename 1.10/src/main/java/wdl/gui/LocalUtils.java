@@ -1,6 +1,20 @@
 package wdl.gui;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended.IGuiListEntry;
+
+class LocalUtils {
+	private LocalUtils() { throw new AssertionError(); }
+
+	/**
+	 * Draws the given button (for multi-version compatability, this is needed for lists)
+	 * @param button The button to draw.  Should already have been positioned.
+	 */
+	public static void drawButton(GuiButton button, Minecraft mc, int mouseX, int mouseY) {
+		button.drawButton(mc, mouseX, mouseY);
+	}
+}
 
 /**
  * Version-agnostic implementation of IGuiListEntry.
