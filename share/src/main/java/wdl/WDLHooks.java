@@ -1,5 +1,7 @@
 package wdl;
 
+import io.netty.buffer.ByteBuf;
+
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -289,7 +291,9 @@ public class WDLHooks {
 				return;
 			}
 			String channel = packet.getChannelName();
-			byte[] payload = packet.getBufferData().array();
+			ByteBuf buf = packet.getBufferData();
+			byte[] payload = new byte[buf.capacity()];
+			buf.readBytes(payload);
 			
 			profiler.startSection("wdl.onPluginMessage");
 			profiler.startSection("Core");
