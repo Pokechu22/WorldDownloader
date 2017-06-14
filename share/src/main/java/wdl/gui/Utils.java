@@ -180,10 +180,7 @@ class Utils {
 		float textureSize = 32.0F;
 
 		Tessellator t = Tessellator.getInstance();
-		VertexBuffer b = t.getBuffer();
-
-		//wr.func_178991_c sets the color.
-		//wr.func_178974_a sets the color and the alpha.
+		BufferBuilder b = t.getBuffer();
 
 		//Box code is GuiSlot.overlayBackground
 		//Upper box
