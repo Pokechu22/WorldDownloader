@@ -367,7 +367,7 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 	/**
 	 * Button for a mode that displays the icon for the given mode.
 	 */
-	private class RequestModeButton extends GuiButton {
+	private class RequestModeButton extends ExtButton {
 		/**
 		 * The mode for this button.
 		 */
@@ -386,22 +386,23 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 		}
 
 		@Override
-		public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+		public void beforeDraw() {
 			if (GuiWDLChunkOverrides.this.mode == this.mode) {
 				// Mode is currently selected - draw a green outline.
 				drawRect(this.x - 2, this.y - 2,
 						this.x + width + 2, this.y + height + 2,
 						0xFF007F00);
 			}
-			
-			super.drawButton(mc, mouseX, mouseY);
+		}
 
+		@Override
+		public void afterDraw() {
 			// Reset the color, which gets set somewhere (probably when drawing text)
-			GlStateManager.color(1.0f, 1.0f, 1.0f);
-			mc.getTextureManager().bindTexture(WIDGET_TEXTURES);
+						GlStateManager.color(1.0f, 1.0f, 1.0f);
+						mc.getTextureManager().bindTexture(WIDGET_TEXTURES);
 
-			this.drawTexturedModalRect(this.x + 2, this.y + 2,
-					mode.overlayU, mode.overlayV, 16, 16);
+						this.drawTexturedModalRect(this.x + 2, this.y + 2,
+								mode.overlayU, mode.overlayV, 16, 16);
 		}
 	}
 }

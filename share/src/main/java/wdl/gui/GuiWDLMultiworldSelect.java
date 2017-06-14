@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
@@ -21,19 +20,14 @@ import wdl.WDL;
  * TODO: I might want to move the multiworld setup logic elsewhere.
  */
 public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
-	private class WorldGuiButton extends GuiButton {
+	private class WorldGuiButton extends ExtButton {
 		public WorldGuiButton(int offset, int x, int y, int width,
 				int height) {
 			super(offset, x, y, width, height, "");
 		}
 
-		public WorldGuiButton(int offset, int x, int y, String worldName,
-				String displayName) {
-			super(offset, x, y, "");
-		}
-		
 		@Override
-		public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+		public void beforeDraw() {
 			MultiworldInfo info = getWorldInfo();
 			if (info == null) {
 				displayString = "";
@@ -42,15 +36,17 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 				displayString = info.displayName;
 				enabled = true;
 			}
-			
+
 			if (info != null && info == selectedMultiWorld) {
 				drawRect(this.x - 2, this.y - 2,
 						this.x + width + 2, this.y + height + 2,
 						0xFF007F00);
 			}
-			super.drawButton(mc, mouseX, mouseY);
 		}
-		
+
+		@Override
+		public void afterDraw() { }
+
 		/**
 		 * Gets the world folder name marked by this button.
 		 * 
@@ -64,11 +60,11 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 			if (location >= linkedWorldsFiltered.size()) {
 				return null;
 			}
-			
+
 			return linkedWorldsFiltered.get(location);
 		}
 	}
-	
+
 	/**
 	 * Info for a Multiworld.
 	 * 
@@ -79,26 +75,26 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 			this.folderName = folderName;
 			this.displayName = displayName;
 		}
-		
+
 		public final String folderName;
 		public final String displayName;
-		
+
 		private List<String> description;
-		
+
 		/**
 		 * Gets some information about this info.
 		 */
 		public List<String> getDescription() {
 			if (description == null) {
 				description = new ArrayList<String>();
-				
+
 				// TODO: More info than just dimensions - EG if the
 				// chunk the player is in is added, etc.
 				description.add("Defined dimensions:");
 				File savesFolder = new File(WDL.minecraft.mcDataDir, "saves");
 				File world = new File(savesFolder, WDL.getWorldFolderName(folderName));
 				File[] subfolders = world.listFiles();
-				
+
 				if (subfolders != null) {
 					for (File subfolder : subfolders) {
 						if (subfolder.listFiles() == null) {
@@ -128,7 +124,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 			return description;
 		}
 	}
-	
+
 	/**
 	 * Interface for a listener when the "cancel" or "use this world" buttons
 	 * are clicked.
@@ -141,7 +137,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		 * Called when the cancel button is clicked.
 		 */
 		public abstract void onCancel();
-		
+
 		/**
 		 * Called when the "Use this world" button is clicked.
 		 * 
@@ -219,27 +215,27 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	public GuiWDLMultiworldSelect(String title, WorldSelectionCallback callback) {
 		this.title = title;
 		this.callback = callback;
-		
+
 		// Build a list of world names.
 		String[] worldNames = WDL.baseProps.getProperty("LinkedWorlds")
 				.split("\\|");
 		linkedWorlds = new ArrayList<MultiworldInfo>();
-		
+
 		for (String worldName : worldNames) {
 			if (worldName == null || worldName.isEmpty()) {
 				continue;
 			}
-			
+
 			Properties props = WDL.loadWorldProps(worldName);
 
 			if (!props.containsKey("WorldName")) {
 				continue;
 			}
-			
+
 			String displayName = props.getProperty("WorldName", worldName);
 			linkedWorlds.add(new MultiworldInfo(worldName, displayName));
 		}
-		
+
 		linkedWorldsFiltered = new ArrayList<MultiworldInfo>();
 		linkedWorldsFiltered.addAll(linkedWorlds);
 	}
@@ -247,44 +243,44 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	@Override
 	public void initGui() {
 		super.initGui();
-		
+
 		numWorldButtons = (this.width - 50) / 155;
 
 		if (numWorldButtons < 1) {
 			numWorldButtons = 1;
 		}
-		
+
 		int offset = (numWorldButtons * 155 + 45) / 2;
 		int y = this.height - 49;
-		
+
 		this.cancelBtn = new GuiButton(-1, this.width / 2 - 155, this.height - 25,
 				150, 20, I18n.format("gui.cancel"));
 		this.buttonList.add(this.cancelBtn);
-		
+
 		this.acceptBtn = new GuiButton(-2, this.width / 2 + 5, this.height - 25,
 				150, 20, I18n.format("wdl.gui.multiworldSelect.done"));
 		this.acceptBtn.enabled = (selectedMultiWorld != null);
 		this.buttonList.add(this.acceptBtn);
-		
+
 		prevButton = new GuiButton(-4, this.width / 2 - offset, y, 20, 20, "<");
 		this.buttonList.add(prevButton);
-		
+
 		for (int i = 0; i < numWorldButtons; i++) {
 			this.buttonList.add(new WorldGuiButton(i, this.width / 2 - offset
 					+ i * 155 + 25, y, 150, 20));
 		}
-		
+
 		nextButton = new GuiButton(-5, this.width / 2 - offset + 25
 				+ numWorldButtons * 155, y, 20, 20, ">");
 		this.buttonList.add(nextButton);
-		
+
 		this.newWorldButton = new GuiButton(-3, this.width / 2 - 155, 29, 150, 20,
 				I18n.format("wdl.gui.multiworldSelect.newName"));
 		this.buttonList.add(newWorldButton);
 
 		this.newNameField = new GuiTextField(40, this.fontRenderer,
 				this.width / 2 - 155, 29, 150, 20);
-		
+
 		this.searchField = new GuiTextField(41, this.fontRenderer,
 				this.width / 2 + 5, 29, 150, 20);
 		this.searchField.setText(searchText);
@@ -319,13 +315,13 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	 */
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
-	throws IOException {
+			throws IOException {
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 
 		if (this.showNewWorldTextBox) {
 			this.newNameField.mouseClicked(mouseX, mouseY, mouseButton);
 		}
-		
+
 		this.searchField.mouseClicked(mouseX, mouseY, mouseButton);
 	}
 
@@ -338,7 +334,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		if (keyCode == Keyboard.KEY_ESCAPE) {
 			callback.onCancel();
 		}
-		
+
 		super.keyTyped(typedChar, keyCode);
 
 		if (this.showNewWorldTextBox) {
@@ -390,16 +386,16 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		} else {
 			prevButton.enabled = true;
 		}
-		
+
 		Utils.drawBorder(53, 53, 0, 0, height, width);
-		
+
 		this.drawCenteredString(this.fontRenderer, title, this.width / 2, 8,
 				0xFFFFFF);
 
 		this.drawCenteredString(this.fontRenderer,
 				I18n.format("wdl.gui.multiworldSelect.subtitle"),
 				this.width / 2, 18, 0xFF0000);
-		
+
 		if (this.showNewWorldTextBox) {
 			this.newNameField.drawTextBox();
 		}
@@ -411,11 +407,11 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 					searchField.x + 4, searchField.y + 6,
 					0x909090);
 		}
-		
+
 		newWorldButton.visible = !showNewWorldTextBox;
 
 		super.drawScreen(mouseX, mouseY, partialTicks);
-		
+
 		drawMultiworldDescription();
 	}
 
@@ -425,7 +421,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	private void addMultiworld(String worldName) {
 		String folderName = worldName;
 		char[] unsafeChars = "\\/:*?\"<>|.".toCharArray();
-		
+
 		//TODO: ReplaceAll with a regular expression may be cleaner
 		for (char unsafeChar : unsafeChars) {
 			folderName = folderName.replace(unsafeChar, '_');
@@ -433,18 +429,18 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 
 		Properties worldProps = new Properties(WDL.baseProps);
 		worldProps.setProperty("WorldName", worldName);
-		
+
 		String linkedWorldsProp = WDL.baseProps.getProperty("LinkedWorlds");
 		linkedWorldsProp += "|" + folderName;
 
 		WDL.baseProps.setProperty("LinkedWorlds", linkedWorldsProp);
 		WDL.saveProps(folderName, worldProps);
-		
+
 		linkedWorlds.add(new MultiworldInfo(folderName, worldName));
-		
+
 		rebuildFilteredWorlds();
 	}
-	
+
 	/**
 	 * Rebuilds the {@link #linkedWorldsFiltered} list after a change
 	 * has occurred to the search or the {@link #linkedWorlds} list.
@@ -457,9 +453,9 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 				linkedWorldsFiltered.add(info);
 			}
 		}
-		
+
 	}
-	
+
 	/**
 	 * Draws info about the selected world.
 	 */
@@ -467,11 +463,11 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		if (selectedMultiWorld == null) {
 			return;
 		}
-		
+
 		String title = "Info about "
 				+ selectedMultiWorld.displayName;
 		List<String> description = selectedMultiWorld.getDescription();
-		
+
 		int maxWidth = fontRenderer.getStringWidth(title);
 		for (String line : description) {
 			int width = fontRenderer.getStringWidth(line);
@@ -479,11 +475,11 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 				maxWidth = width;
 			}
 		}
-		
+
 		drawRect(2, 61, 5 + maxWidth + 3, height - 61, 0x80000000);
-		
+
 		drawString(fontRenderer, title, 5, 64, 0xFFFFFF);
-		
+
 		int y = 64 + fontRenderer.FONT_HEIGHT;
 		for (String s : description) {
 			drawString(fontRenderer, s, 5, y, 0xFFFFFF);

@@ -51,15 +51,14 @@ public abstract class GuiTurningCameraBase extends GuiScreen {
 	 * Whether the camera has been set up.
 	 */
 	private boolean initializedCamera = false;
-	
+
 	/**
 	 * Adds the buttons (and other controls) to the screen in question.
 	 */
 	@Override
 	public void initGui() {
 		if (!initializedCamera) {
-			this.cam = new EntityPlayerSP(WDL.minecraft, WDL.worldClient,
-					WDL.thePlayer.connection, WDL.thePlayer.getStatFileWriter());
+			this.cam = LocalUtils.makePlayer();
 			this.cam.setLocationAndAngles(WDL.thePlayer.posX, WDL.thePlayer.posY
 					- WDL.thePlayer.getYOffset(), WDL.thePlayer.posZ,
 					WDL.thePlayer.rotationYaw, 0.0F);
@@ -73,10 +72,10 @@ public abstract class GuiTurningCameraBase extends GuiScreen {
 			WDL.minecraft.gameSettings.showDebugInfo = false;
 			WDL.minecraft.gameSettings.chatVisibility = EnumChatVisibility.HIDDEN;
 			this.oldRenderViewEntity = WDL.minecraft.getRenderViewEntity();
-			
+
 			initializedCamera = true;
 		}
-		
+
 		// Sets the render view entity for minecraft.
 		// When obfuscation changes, look in
 		// net.minecraft.client.renderer.EntityRenderer.updateRenderer() for
@@ -87,7 +86,7 @@ public abstract class GuiTurningCameraBase extends GuiScreen {
 		// }
 		WDL.minecraft.setRenderViewEntity(this.cam);
 	}
-	
+
 	/**
 	 * Speed for a rotation, as a rough scale, in degrees per frame.
 	 */
@@ -96,20 +95,20 @@ public abstract class GuiTurningCameraBase extends GuiScreen {
 	 * Change between the slowest speed and the average speed.
 	 */
 	private static final float ROTATION_VARIANCE = .7f;
-	
+
 	/**
 	 * Increment yaw to the yaw for the next tick.
 	 */
 	@Override
 	public void updateScreen() {
 		this.yaw = this.yawNextTick;
-		
+
 		// TODO: Rewrite this function as a function of time, rather than
 		// an incremental function, if it's possible to do so.
 		// Due to the fact that it refers to itself, I have no idea how to
 		// approach the problem - it's some kind of integration that would be
 		// needed, but it's really complex.
-		
+
 		// Yaw is in degrees, but Math.cos is in radians. The
 		// "(this.yaw + 45) / 45.0 * Math.PI)" portion basically makes cosine
 		// give the lowest values in each cardinal direction and the highest
@@ -121,7 +120,7 @@ public abstract class GuiTurningCameraBase extends GuiScreen {
 				* (float) (1 + ROTATION_VARIANCE
 						* Math.cos((this.yaw + 45) / 45.0 * Math.PI)));
 	}
-	
+
 	/**
 	 * Truncates the distance so that the camera does not clip into blocks.
 	 * Based off of {@link net.minecraft.client.renderer.EntityRenderer#orientCamera(float)}.
@@ -133,7 +132,7 @@ public abstract class GuiTurningCameraBase extends GuiScreen {
 	private double truncateDistanceIfBlockInWay(double camX, double camZ, double currentDistance) {
 		Vec3d playerPos = WDL.thePlayer.getPositionVector().addVector(0, WDL.thePlayer.getEyeHeight(), 0);
 		Vec3d offsetPos = new Vec3d(WDL.thePlayer.posX - currentDistance * camX, WDL.thePlayer.posY + WDL.thePlayer.getEyeHeight(), WDL.thePlayer.posZ + camZ);
-		
+
 		// NOTE: Vec3.addVector and Vec3.add return new vectors and leave the
 		// current vector unmodified.
 		for (int i = 0; i < 9; i++) {
@@ -141,18 +140,18 @@ public abstract class GuiTurningCameraBase extends GuiScreen {
 			float offsetX = ((i & 0x01) != 0) ? -.1f : .1f;
 			float offsetY = ((i & 0x02) != 0) ? -.1f : .1f;
 			float offsetZ = ((i & 0x04) != 0) ? -.1f : .1f;
-			
+
 			if (i == 8) {
 				offsetX = 0;
 				offsetY = 0;
 				offsetZ = 0;
 			}
-			
+
 			Vec3d from = playerPos.addVector(offsetX, offsetY, offsetZ);
 			Vec3d to = offsetPos.addVector(offsetX, offsetY, offsetZ);
-			
+
 			RayTraceResult pos = mc.world.rayTraceBlocks(from, to);
-	
+
 			if (pos != null) {
 				double distance = pos.hitVec.distanceTo(playerPos);
 				if (distance < currentDistance && distance > 0) {
@@ -160,21 +159,21 @@ public abstract class GuiTurningCameraBase extends GuiScreen {
 				}
 			}
 		}
-		
+
 		return currentDistance - .25;
 	}
-	
+
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		if (this.cam != null) {
 			float yaw = this.yaw + (this.yawNextTick - this.yaw) * partialTicks;
-			
+
 			this.cam.prevRotationPitch = this.cam.rotationPitch = 0.0F;
 			this.cam.prevRotationYaw = this.cam.rotationYaw = yaw;
-			
+
 			double x = Math.cos(yaw / 180.0D * Math.PI);
 			double z = Math.sin((yaw - 90) / 180.0D * Math.PI);
-			
+
 			double distance = truncateDistanceIfBlockInWay(x, z, .5);
 			this.cam.lastTickPosY = this.cam.prevPosY = this.cam.posY = WDL.thePlayer.posY;
 			this.cam.lastTickPosX = this.cam.prevPosX = this.cam.posX = WDL.thePlayer.posX
@@ -182,10 +181,10 @@ public abstract class GuiTurningCameraBase extends GuiScreen {
 			this.cam.lastTickPosZ = this.cam.prevPosZ = this.cam.posZ = WDL.thePlayer.posZ
 					+ distance * z;
 		}
-		
+
 		super.drawScreen(mouseX, mouseY, partialTicks);
 	}
-	
+
 	@Override
 	public void onGuiClosed() {
 		super.onGuiClosed();
