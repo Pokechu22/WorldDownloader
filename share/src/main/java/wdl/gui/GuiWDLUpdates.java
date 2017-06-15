@@ -35,7 +35,7 @@ public class GuiWDLUpdates extends GuiScreen {
 			this.showSelectionBox = true;
 		}
 
-		private class VersionEntry implements GuiListEntry {
+		private class VersionEntry extends GuiListEntry {
 			private final Release release;
 
 			private String title;

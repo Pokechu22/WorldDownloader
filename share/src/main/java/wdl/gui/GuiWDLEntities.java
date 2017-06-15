@@ -90,7 +90,7 @@ public class GuiWDLEntities extends GuiScreen {
 		 * Based off of 
 		 * {@link net.minecraft.client.gui.GuiKeyBindingList.CategoryEntry}.
 		 */
-		private class CategoryEntry implements GuiListEntry {
+		private class CategoryEntry extends GuiListEntry {
 			private final String group;
 			private final String displayGroup;
 			private final int labelWidth;
@@ -169,7 +169,7 @@ public class GuiWDLEntities extends GuiScreen {
 		 * Based off of 
 		 * {@link net.minecraft.client.gui.GuiKeyBindingList.KeyEntry}.
 		 */
-		private class EntityEntry implements GuiListEntry {
+		private class EntityEntry extends GuiListEntry {
 			private final CategoryEntry category;
 			private final String entity;
 			private final String displayEntity;

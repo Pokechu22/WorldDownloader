@@ -60,7 +60,7 @@ public class GuiWDLExtensions extends GuiScreen {
 			this.showSelectionBox = true;
 		}
 
-		private class ModEntry implements GuiListEntry {
+		private class ModEntry extends GuiListEntry {
 			public final ModInfo<?> mod;
 			/**
 			 * Constant information about the extension (name & version)

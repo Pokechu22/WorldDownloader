@@ -33,7 +33,7 @@ public class GuiWDLGameRules extends GuiScreen {
 	@Nullable
 	private String hoveredToolTip;
 
-	private static interface KeyboardEntry extends GuiListEntry {
+	private static interface KeyboardEntry extends IGuiListEntry {
 		public abstract void keyDown(char typedChar, int keyCode);
 		public abstract void onUpdate();
 	}
@@ -82,7 +82,7 @@ public class GuiWDLGameRules extends GuiScreen {
 			this.entries.add(new CustomRuleEntry(rule));
 		}
 
-		private class CreateCustomRuleEntry implements GuiListEntry, KeyboardEntry {
+		private class CreateCustomRuleEntry extends GuiListEntry implements KeyboardEntry {
 			private final String title;
 			private final GuiButton createButton;
 			private final GuiTextField nameField;
@@ -177,7 +177,7 @@ public class GuiWDLGameRules extends GuiScreen {
 			}
 		}
 
-		private abstract class RuleEntry implements GuiListEntry {
+		private abstract class RuleEntry extends GuiListEntry {
 			@Nonnull
 			protected final String ruleName;
 			private GuiButton resetButton;

@@ -29,7 +29,7 @@ public class GuiWDLMessages extends GuiScreen {
 					GuiWDLMessages.this.height - 32, 20);
 		}
 
-		private class CategoryEntry implements GuiListEntry {
+		private class CategoryEntry extends GuiListEntry {
 			private final GuiButton button;
 			private final MessageTypeCategory category;
 
@@ -76,7 +76,7 @@ public class GuiWDLMessages extends GuiScreen {
 			}
 		}
 
-		private class MessageTypeEntry implements GuiListEntry {
+		private class MessageTypeEntry extends GuiListEntry {
 			private final GuiButton button;
 			private final IWDLMessageType type;
 			private final MessageTypeCategory category;

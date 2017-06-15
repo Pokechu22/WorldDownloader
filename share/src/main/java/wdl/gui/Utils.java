@@ -569,7 +569,7 @@ class TextList extends GuiListExtended {
 /**
  * {@link GuiListEntry} that displays a single line of text.
  */
-class TextEntry implements GuiListEntry {
+class TextEntry extends GuiListEntry {
 	private final String text;
 	private final int color;
 	protected final Minecraft mc;

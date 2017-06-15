@@ -29,20 +29,20 @@ class LocalUtils {
 /**
  * Version-agnostic implementation of IGuiListEntry.
  */
-interface GuiListEntry extends IGuiListEntry {
+abstract class GuiListEntry implements IGuiListEntry {
 	@Override
-	public default void func_178011_a(int p_178011_1_, int p_178011_2_, int p_178011_3_) {
+	public void func_178011_a(int p_178011_1_, int p_178011_2_, int p_178011_3_) {
 		setSelected(p_178011_1_, p_178011_2_, p_178011_3_);
 	}
 
 	@Override
-	public default void func_180790_a(int p_180790_1_, int p_180790_2_,
+	public void func_180790_a(int p_180790_1_, int p_180790_2_,
 			int p_180790_3_, int p_180790_4_, int p_180790_5_, int p_180790_6_,
 			int p_180790_7_, boolean p_180790_8_) {
 		drawEntry(p_180790_1_, p_180790_2_, p_180790_3_, p_180790_4_, p_180790_5_, p_180790_6_, p_180790_7_, p_180790_8_);
 	}
 
-	public default void setSelected(int p_178011_1_, int p_178011_2_, int p_178011_3_) { }
+	public void setSelected(int p_178011_1_, int p_178011_2_, int p_178011_3_) { }
 	public abstract void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected);
 
 	@Override

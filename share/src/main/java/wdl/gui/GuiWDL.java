@@ -25,7 +25,7 @@ public class GuiWDL extends GuiScreen {
 					GuiWDL.this.height - 32, 20);
 		}
 
-		private class ButtonEntry implements GuiListEntry {
+		private class ButtonEntry extends GuiListEntry {
 			private final GuiButton button;
 			private final GuiScreen toOpen;
 
