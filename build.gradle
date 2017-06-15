@@ -32,3 +32,15 @@ project(':1.11').evaluationDependsOn(':share')
 project(':1.11-litemod').evaluationDependsOn(':1.11')
 project(':1.11.2').evaluationDependsOn(':share')
 project(':1.11.2-litemod').evaluationDependsOn(':1.11.2')
+
+subprojects { subproject ->
+    // Java 8 is required now
+    subproject.apply plugin: 'java' // needed to actually access java versions
+    subproject.sourceCompatibility = '1.8'
+    subproject.targetCompatibility = '1.8'
+
+    subproject.tasks.withType(JavaCompile) { javaTask ->
+        javaTask.sourceCompatibility = "1.8"
+        javaTask.targetCompatibility = "1.8"
+    }
+}

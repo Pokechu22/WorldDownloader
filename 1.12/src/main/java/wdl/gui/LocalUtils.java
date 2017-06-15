@@ -14,7 +14,7 @@ class LocalUtils {
 	 * @param button The button to draw.  Should already have been positioned.
 	 */
 	public static void drawButton(GuiButton button, Minecraft mc, int mouseX, int mouseY) {
-		button.func_191745_a(mc, mouseX, mouseY, 0 /* partialTicks */);
+		button.drawButton(mc, mouseX, mouseY, 0 /* partialTicks */);
 	}
 
 	/**
@@ -23,7 +23,7 @@ class LocalUtils {
 	public static EntityPlayerSP makePlayer() {
 		return new EntityPlayerSP(WDL.minecraft, WDL.worldClient,
 				WDL.thePlayer.connection, WDL.thePlayer.getStatFileWriter(),
-				WDL.thePlayer.func_192035_E());
+				WDL.thePlayer.getRecipeBook());
 	}
 }
 /**
@@ -37,10 +37,10 @@ interface GuiListEntry extends IGuiListEntry {
 	}
 
 	@Override
-	public default void func_192634_a(int p_192634_1_, int p_192634_2_,
-			int p_192634_3_, int p_192634_4_, int p_192634_5_, int p_192634_6_,
-			int p_192634_7_, boolean p_192634_8_, float p_192634_9_) {
-		drawEntry(p_192634_1_, p_192634_2_, p_192634_3_, p_192634_4_, p_192634_5_, p_192634_6_, p_192634_7_, p_192634_8_);
+	public default void drawEntry(int slotIndex, int x, int y, int listWidth,
+			int slotHeight, int mouseX, int mouseY, boolean isSelected,
+			float partialTicks) {
+		drawEntry(slotIndex, x, y, listWidth, slotHeight, mouseX, mouseY, isSelected);
 	}
 
 	public default void setSelected(int p_178011_1_, int p_178011_2_, int p_178011_3_) { }
@@ -67,10 +67,10 @@ abstract class ExtButton extends GuiButton {
 	public abstract void afterDraw();
 
 	@Override
-	public void func_191745_a(Minecraft p_191745_1_, int p_191745_2_,
-			int p_191745_3_, float p_191745_4_) {
+	public void drawButton(Minecraft mc, int mouseX, int mouseY,
+			float partialTicks) {
 		beforeDraw();
-		super.func_191745_a(p_191745_1_, p_191745_2_, p_191745_3_, p_191745_4_);
+		super.drawButton(mc, mouseX, mouseY, partialTicks);
 		afterDraw();
 	}
 }

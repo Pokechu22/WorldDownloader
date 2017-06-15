@@ -3,7 +3,7 @@
 @@ -794,6 +794,10 @@
  	public void handleChat(SPacketChat packetIn) {
  		PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.gameController);
- 		this.gameController.ingameGUI.func_191742_a(packetIn.func_192590_c(), packetIn.getChatComponent());
+ 		this.gameController.ingameGUI.addChatMessage(packetIn.getType(), packetIn.getChatComponent());
 +
 +		/* WDL >>> */
 +		wdl.WDLHooks.onNHPCHandleChat(this, packetIn);
