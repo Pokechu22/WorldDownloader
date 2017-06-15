@@ -46,21 +46,14 @@ extraSrgs {
 }
 
 sourceSets {
-    liteloader {
-        java {
-            srcDir "src/liteloader/java"
-        }
-        resources {
-            srcDir "src/liteloader/resources"
-        }
-        compileClasspath += main.output
-    }
     main {
         java {
+            srcDir "src/main/java"
             srcDir project(':1.10.2').file("src/main/java")
             srcDir project(':share').file("src/main/java")
         }
         resources {
+            srcDir "src/main/resources"
             srcDir project(':share').file("src/main/resources")
         }
         // Refmap declaration must match the refmap name specified in the json config
@@ -83,14 +76,8 @@ litemod {
     }
 }
 
-compileLiteloaderJava {
-    sourceCompatibility = "1.6"
-    targetCompatibility = "1.6"
-}
-
 jar {
     from litemod.outputs
-    from sourceSets.liteloader.output
 }
 
 // Use tabs instead of spaces
