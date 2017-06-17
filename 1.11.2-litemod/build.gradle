@@ -35,13 +35,12 @@ apply plugin: 'org.spongepowered.mixin'
 
 minecraft {
     version = "1.11.2"
-    mappings = "snapshot_20170615"
+    mappings = "snapshot_20170617"
     runDir = "run"
 }
 
 extraSrgs {
     add file('../srgs/AbstractHorseToEquineEntity.srg')
-    add file('../srgs/VertexBufferToBufferBuilder.srg')
 }
 
 sourceSets {
@@ -87,6 +86,5 @@ fixMcSources {
         def field = net.minecraftforge.gradle.tasks.PostDecompileTask.class.getDeclaredField('patchesMap')
         field.accessible = true
         field.get(fixMcSources).put('net.minecraft.entity.passive.EquineEntity.java', file('../srgs/EE_1.11.x.patch'))
-        field.get(fixMcSources).put('net.minecraft.client.renderer.WorldVertexBufferUploader.java', file('../srgs/WorldVertexBufferUploader.patch'))
     }
 }

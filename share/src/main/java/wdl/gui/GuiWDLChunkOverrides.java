@@ -223,7 +223,7 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 	
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		Utils.drawDarkBackground(0, 0, height, width);
+		LocalUtils.drawDarkBackground(0, 0, height, width);
 		
 		// Draw the current request range.
 		if (mode == Mode.REQUESTING) {

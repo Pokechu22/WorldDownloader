@@ -30,14 +30,13 @@ apply plugin: 'pokechu22.test.customsrg'
 minecraft {
     suppressMappingVersionWarnings = true
     version = "1.10.2"
-    mappings = "snapshot_20170615"
+    mappings = "snapshot_20170617"
     runDir = "run"
 }
 
 extraSrgs {
     add file('../srgs/EntityHorseToEquineEntity.srg')
     add file('../srgs/AnimalChestToContainerHorseChest.srg')
-    add file('../srgs/VertexBufferToBufferBuilder.srg')
 }
 
 sourceSets {
@@ -72,7 +71,6 @@ fixMcSources {
         def field = net.minecraftforge.gradle.tasks.PostDecompileTask.class.getDeclaredField('patchesMap')
         field.accessible = true
         field.get(fixMcSources).put('net.minecraft.entity.passive.EquineEntity.java', file('../srgs/EE_1.10.x.patch'))
-        field.get(fixMcSources).put('net.minecraft.client.renderer.WorldVertexBufferUploader.java', file('../srgs/WorldVertexBufferUploader.patch'))
     }
 }
 
