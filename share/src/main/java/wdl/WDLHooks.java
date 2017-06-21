@@ -290,12 +290,15 @@ public class WDLHooks {
 			if (!packet.getBufferData().isReadable()) {
 				return;
 			}
+			profiler.startSection("wdl.onPluginMessage");
+
+			profiler.startSection("Parse");
 			String channel = packet.getChannelName();
 			ByteBuf buf = packet.getBufferData();
-			byte[] payload = new byte[buf.capacity()];
+			byte[] payload = new byte[buf.readableBytes()];
 			buf.readBytes(payload);
-			
-			profiler.startSection("wdl.onPluginMessage");
+			profiler.endSection();  // "Parse"
+
 			profiler.startSection("Core");
 			WDLEvents.onPluginChannelPacket(channel, payload);
 			profiler.endSection();  // "Core"
