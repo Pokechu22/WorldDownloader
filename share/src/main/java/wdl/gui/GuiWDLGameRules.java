@@ -514,7 +514,10 @@ public class GuiWDLGameRules extends GuiScreen {
 	 *            The name of the rule.
 	 */
 	private void clearRule(@Nonnull String ruleName) {
+		// TODO: Handle this in a less-hacky way, so that the property's only
+		// deleted from the one it needs to be deleted from
 		WDL.worldProps.remove("GameRule." + ruleName);
+		WDL.baseProps.remove("GameRule." + ruleName);
 	}
 
 	/**
