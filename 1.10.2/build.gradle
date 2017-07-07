@@ -20,7 +20,7 @@ buildscript {
 
 apply plugin: 'java'
 
-version = "4.0.0.5"
+version = "4.0.0.6-SNAPSHOT"
 group = "wdl"
 archivesBaseName = "WorldDownloader"
 libsDirName = "../../libs"
