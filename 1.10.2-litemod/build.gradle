@@ -28,6 +28,7 @@ apply plugin: 'java'
 version = "4.0.0.5-SNAPSHOT"
 group = "wdl"
 archivesBaseName = "LiteModWDL"
+libsDirName = "../../libs"
 
 apply plugin: 'net.minecraftforge.gradle.liteloader'
 apply plugin: 'pokechu22.test.customsrg'

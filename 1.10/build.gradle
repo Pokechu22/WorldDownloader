@@ -23,6 +23,7 @@ apply plugin: 'java'
 version = "4.0.0.5-SNAPSHOT"
 group = "wdl"
 archivesBaseName = "WorldDownloader"
+libsDirName = "../../libs"
 
 apply plugin: 'pokechu22.test.begradle'
 apply plugin: 'pokechu22.test.customsrg'
