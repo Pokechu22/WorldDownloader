@@ -167,7 +167,7 @@ class LocalUtils {
  */
 abstract class GuiListEntry implements IGuiListEntry {
 	@Override
-	public void func_192633_a(int p_192633_1_, int p_192633_2_,
+	public void updatePosition(int p_192633_1_, int p_192633_2_,
 			int p_192633_3_, float p_192633_4_) {
 		setSelected(p_192633_1_, p_192633_2_, p_192633_3_);
 	}
