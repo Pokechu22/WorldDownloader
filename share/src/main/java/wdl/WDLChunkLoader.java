@@ -169,25 +169,6 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 
 		for (ExtendedBlockStorage blockStorage : blockStorageArray) {
 			if (blockStorage != null) {
-				// TEMPORARY debug logging:
-				for (int y = 0; y < 16; y++) {
-					for (int z = 0; z < 16; z++) {
-						for (int x = 0; x < 16; x++) {
-							IBlockState state = blockStorage.get(x, y, z);
-							int id = Block.getStateId(state);
-							// Convert to standard global palette form
-							id = (id & 0xFFF) << 4 | (id & 0xF000) >> 12;
-
-							if (state.getBlock() instanceof BlockTripWire) {
-								logger.info(String.format(
-"[WDL-debug] Tripwire in chunk @ %d, %d in section at y=%d: %d,%d,%d :: %s = %4X",
-										chunk.x, chunk.z,
-										blockStorage.getYLocation(),
-										x, y, z, state, id));
-							}
-						}
-					}
-				}
 				NBTTagCompound blockData = new NBTTagCompound();
 				blockData.setByte("Y",
 						(byte) (blockStorage.getYLocation() >> 4 & 255));
