@@ -1,6 +1,10 @@
 package wdl;
 
 import java.lang.reflect.Field;
+import java.util.Map;
+
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.Maps;
 
 /**
  * Reflection utilities, mainly to work with private fields.
@@ -17,6 +21,13 @@ import java.lang.reflect.Field;
 public class ReflectionUtils {
 
 	/**
+	 * A mapping of containing classes to mappings of field types to fields, used
+	 * to (slightly) boost performance.
+	 */
+	@VisibleForTesting
+	static final Map<Class<?>, Map<Class<?>, Field>> CACHE = Maps.newHashMap();
+
+	/**
 	 * Uses Java's reflection API to find an inaccessible field of the given
 	 * type in the given class.
 	 * <p>
@@ -30,12 +41,26 @@ public class ReflectionUtils {
 	 * @return The field, with {@link Field#setAccessible(boolean)} already called
 	 */
 	public static Field findField(Class<?> typeOfClass, Class<?> typeOfField) {
+		if (CACHE.containsKey(typeOfClass)) {
+			Map<Class<?>, Field> fields = CACHE.get(typeOfClass);
+			if (fields.containsKey(typeOfField)) {
+				return fields.get(typeOfField);
+			}
+		}
+
 		Field[] fields = typeOfClass.getDeclaredFields();
 
 		for (Field f : fields) {
 			if (f.getType().equals(typeOfField)) {
 				try {
 					f.setAccessible(true);
+
+					if (!CACHE.containsKey(typeOfClass)) {
+						CACHE.put(typeOfClass, Maps.<Class<?>, Field>newHashMap());
+					}
+
+					CACHE.get(typeOfClass).put(typeOfField, f);
+
 					return f;
 				} catch (Exception e) {
 					throw new RuntimeException(
