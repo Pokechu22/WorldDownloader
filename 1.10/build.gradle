@@ -22,6 +22,11 @@ buildscript {
 
 apply plugin: 'java'
 
+dependencies {
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.hamcrest:hamcrest-library:1.3'
+}
+
 version = "4.0.0.6-SNAPSHOT"
 group = "wdl"
 archivesBaseName = "WorldDownloader"
@@ -62,6 +67,12 @@ sourceSets {
                 "net.minecraft.client.ClientBrandRetriever",
                 "net.minecraft.client.resources.DefaultResourcePack"
             ]
+        }
+    }
+    test {
+        java {
+            srcDir "src/test/java"
+            srcDir project(':share').file("src/test/java")
         }
     }
 }

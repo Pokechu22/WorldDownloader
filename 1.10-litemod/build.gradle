@@ -27,6 +27,11 @@ buildscript {
 
 apply plugin: 'java'
 
+dependencies {
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.hamcrest:hamcrest-library:1.3'
+}
+
 version = "4.0.0.6-SNAPSHOT"
 group = "wdl"
 archivesBaseName = "LiteModWDL"
@@ -60,6 +65,12 @@ sourceSets {
         }
         // Refmap declaration must match the refmap name specified in the json config
         refMap = "mixins.LiteModWDL.refmap.json"
+    }
+    test {
+        java {
+            srcDir project(':1.10').file("src/test/java")
+            srcDir project(':share').file("src/test/java")
+        }
     }
 }
 
