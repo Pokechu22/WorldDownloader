@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiScreen;
@@ -26,6 +27,7 @@ import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.crash.ICrashReportDetail;
 import net.minecraft.entity.Entity;
+import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -66,6 +68,8 @@ import wdl.gui.GuiWDLSaveProgress;
 import wdl.update.GithubInfoGrabber;
 
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 /**
  * This is the main class that does most of the work.
@@ -409,6 +413,9 @@ public class WDL {
 				}
 			}
 		}
+
+		runSanityCheck();
+
 		WDL.minecraft.displayGuiScreen((GuiScreen) null);
 		WDL.minecraft.setIngameFocus();
 		chunkLoader = WDLChunkLoader.create(saveHandler, worldClient.provider);
@@ -1449,7 +1456,33 @@ public class WDL {
 		}
 		newTileEntities.get(chunkPos).put(pos, te);
 	}
-	
+
+	/**
+	 * Runs a sanity check. Even if the check fails, processing continues, but
+	 * the user is warned in chat.
+	 *
+	 * @see SanityCheck
+	 */
+	private static void runSanityCheck() {
+		Map<SanityCheck, Exception> failures = Maps.newEnumMap(SanityCheck.class);
+
+		for (SanityCheck check : SanityCheck.values()) {
+			try {
+				logger.trace("Running {}", check);
+				check.run();
+			} catch (Exception ex) {
+				logger.trace("{} failed", check, ex);
+				failures.put(check, ex);
+			}
+		}
+		if (!failures.isEmpty()) {
+			WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR, "wdl.sanity.failed");
+			for (Map.Entry<SanityCheck, Exception> failure : failures.entrySet()) {
+				WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR, failure.getKey().errorMessage, failure.getValue());
+			}
+		}
+	}
+
 	/**
 	 * Is the current server running spigot?
 	 * 

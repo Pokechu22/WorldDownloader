@@ -465,3 +465,8 @@ wdl.intro.warning=WARNING
 wdl.intro.illegally=ILLEGALLY
 wdl.intro.stolenBeware=Beware of such sites, as they can include malware.  %s
 wdl.intro.stopModReposts=More information: StopModReposts!
+
+# Sanity checks
+wdl.sanity.failed=----- SANITY CHECKS FAILED! -----
+# All sanity checks should have 1 format parameter, which is used for the exception
+wdl.sanity.tripwire=Tripwire is not being serialized correctly.  This is probably caused by a Forge bug (https://git.io/v7aEU); if running 1.12 or above, update Forge; if not, please restart Minecraft and then start downloading (do NOT relog; reloging causes the problem).  Otherwise, tripwire will not be saved (as the block doesn't load at all).  (%s)
