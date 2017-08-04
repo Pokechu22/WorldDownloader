@@ -32,7 +32,7 @@ dependencies {
     testCompile 'org.hamcrest:hamcrest-library:1.3'
 }
 
-version = "4.0.0.6-SNAPSHOT"
+version = "4.0.0.6"
 group = "wdl"
 archivesBaseName = "LiteModWDL"
 libsDirName = "../../libs"
