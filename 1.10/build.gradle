@@ -38,7 +38,7 @@ apply plugin: 'pokechu22.test.customsrg'
 minecraft {
     suppressMappingVersionWarnings = true
     version = "1.10"
-    mappings = "snapshot_20170707"
+    mappings = "snapshot_20170801"
     runDir = "run"
 }
 
