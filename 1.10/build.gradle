@@ -31,7 +31,7 @@ dependencies {
 version = "4.0.0.7-SNAPSHOT"
 group = "wdl"
 archivesBaseName = "WorldDownloader"
-libsDirName = "../../libs"
+libsDirName = "../../libs/${version}"
 
 apply plugin: 'pokechu22.test.begradle'
 apply plugin: 'pokechu22.test.customsrg'

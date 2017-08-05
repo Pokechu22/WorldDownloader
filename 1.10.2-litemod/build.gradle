@@ -36,7 +36,7 @@ dependencies {
 version = "4.0.0.7-SNAPSHOT"
 group = "wdl"
 archivesBaseName = "LiteModWDL"
-libsDirName = "../../libs"
+libsDirName = "../../libs/${version}"
 
 apply plugin: 'net.minecraftforge.gradle.liteloader'
 apply plugin: 'pokechu22.test.customsrg'
