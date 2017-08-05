@@ -97,3 +97,6 @@ jar {
 fixMcSources {
     astyleConfig = "../astyle.cfg"
 }
+
+// We don't currently want a source jar (doesn't work well for base edits, and the version info doesn't work yet)
+sourceJar.enabled = false

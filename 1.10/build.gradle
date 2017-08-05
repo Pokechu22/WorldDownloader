@@ -89,6 +89,9 @@ fixMcSources {
     }
 }
 
+// We don't currently want a source jar (doesn't work well for base edits, and the version info doesn't work yet)
+sourceJar.enabled = false
+
 // TEMPORARY, until this is moved to begradle
 processResources {
     rename { name ->

@@ -87,3 +87,6 @@ fixMcSources {
         field.get(fixMcSources).put('net.minecraft.entity.passive.EquineEntity.java', file('../srgs/EE_1.11.x.patch'))
     }
 }
+
+// We don't currently want a source jar (doesn't work well for base edits, and the version info doesn't work yet)
+sourceJar.enabled = false
