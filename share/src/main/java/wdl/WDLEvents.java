@@ -148,7 +148,13 @@ public class WDLEvents {
 	 */
 	public static boolean onItemGuiClosed() {
 		if (!WDL.downloading) { return true; }
-		
+
+		if (WDL.windowContainer == null ||
+				ReflectionUtils.isCreativeContainer(WDL.windowContainer.getClass())) {
+			// Can't do anything with null containers or the creative inventory
+			return true;
+		}
+
 		String saveName = "";
 
 		if (WDL.thePlayer.getRidingEntity() instanceof EquineEntity) {

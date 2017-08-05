@@ -3,6 +3,9 @@ package wdl;
 import java.lang.reflect.Field;
 import java.util.Map;
 
+import net.minecraft.client.gui.inventory.GuiContainerCreative;
+import net.minecraft.inventory.Container;
+
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
 
@@ -191,6 +194,32 @@ public class ReflectionUtils {
 				"WorldDownloader: Couldn't set Field of type \""
 				+ typeOfField + "\" from object \"" + object
 				+ "\" to " + value + "!", e);
+		}
+	}
+
+	/**
+	 * Checks if the given class is
+	 * {@link GuiContainerCreative.ContainerCreative}. In 1.12, this class is
+	 * public, but in older versions (e.g. 1.10) it isn't.
+	 * <p>
+	 * Note that this implementation checks whether it's an inner class of
+	 * {@link GuiContainerCreative}. This implementation works fine for versions
+	 * with <code>InnerClasses</code> data, but older versions of Minecraft
+	 * (1.8, but not 1.8.9) do not contain this data.  If 1.8 is eventually supported,
+	 * this method will not work for it.
+	 *
+	 * @param containerClass
+	 *            The class to check
+	 */
+	public static boolean isCreativeContainer(Class<? extends Container> containerClass) {
+		try {
+			return GuiContainerCreative.class.equals(containerClass.getEnclosingClass());
+		} catch (Exception e) {
+			// This one really should never happen (unless maybe an
+			// external mod does some stupid security manager stuff)
+			throw new RuntimeException(
+					"WorldDownloader: Couldn't check if \""
+					+ containerClass + "\" was the creative inventory!", e);
 		}
 	}
 
