@@ -29,14 +29,14 @@ import com.google.common.collect.ImmutableMap;
  */
 public class WDLApi {
 	private static Logger logger = LogManager.getLogger();
-	
+
 	private static Map<String, ModInfo<?>> wdlMods = new HashMap<String, ModInfo<?>>();
-	
+
 	private static boolean hasLegacyEntityHandler = false;
-	
+
 	/**
 	 * Saved a TileEntity to the given position.
-	 * 
+	 *
 	 * @param pos The position to save at.
 	 * @param te The TileEntity to save.
 	 */
@@ -47,13 +47,13 @@ public class WDLApi {
 					"saving TileEntities is not allowed!  Pos: " + pos +
 					", te: " + te + ".  StackTrace: ");
 			logStackTrace();
-			
+
 			return;
 		}
-		
+
 		WDL.saveTileEntity(pos, te);
 	}
-	
+
 	/**
 	 * Adds a mod to the list of the listened mods.
 	 */
@@ -92,16 +92,16 @@ public class WDLApi {
 						+ VersionConstants.getModVersion() + ".");
 			}
 		}
-		
+
 		wdlMods.put(id, info);
-		
+
 		// IMessageAdder doesn't seem possible to do dynamically
 		if (mod instanceof IMessageTypeAdder) {
-			Map<String, IWDLMessageType> types = 
+			Map<String, IWDLMessageType> types =
 					((IMessageTypeAdder) mod).getMessageTypes();
-			
+
 			ModMessageTypeCategory category = new ModMessageTypeCategory(info);
-			
+
 			for (Map.Entry<String, IWDLMessageType> e : types.entrySet()) {
 				WDLMessages.registerMessage(e.getKey(), e.getValue(), category);
 			}
@@ -112,11 +112,11 @@ public class WDLApi {
 			addWDLMod("LegacyEntitySupport", "1.0", new LegacyEntityManager());
 		}
 	}
-	
+
 	/**
 	 * Gets a list of all enabled {@link IWDLMod}s that implement the given
 	 * interface.
-	 * 
+	 *
 	 * @param clazz
 	 *            The class to check for implementation of.
 	 * @return A list of all implementing extensions.
@@ -127,12 +127,12 @@ public class WDLApi {
 			throw new IllegalArgumentException("clazz must not be null!");
 		}
 		List<ModInfo<T>> returned = new ArrayList<ModInfo<T>>();
-		
+
 		for (ModInfo<?> info : wdlMods.values()) {
 			if (!info.isEnabled()) {
 				continue;
 			}
-			
+
 			if (clazz.isAssignableFrom(info.mod.getClass())) {
 				// We know the actual type of the given mod is correct,
 				// so it's safe to do this cast.
@@ -141,14 +141,14 @@ public class WDLApi {
 				returned.add(infoCasted);
 			}
 		}
-		
+
 		return returned;
 	}
-	
+
 	/**
 	 * Gets a list of all {@link IWDLMod}s that implement the given
 	 * interface, regardless as to whether they are enabled or not.
-	 * 
+	 *
 	 * @param clazz
 	 *            The class to check for implementation of.
 	 * @return A list of all implementing extensions.
@@ -159,7 +159,7 @@ public class WDLApi {
 			throw new IllegalArgumentException("clazz must not be null!");
 		}
 		List<ModInfo<T>> returned = new ArrayList<ModInfo<T>>();
-		
+
 		for (ModInfo<?> info : wdlMods.values()) {
 			if (clazz.isAssignableFrom(info.mod.getClass())) {
 				// We know the actual type of the given mod is correct,
@@ -169,17 +169,17 @@ public class WDLApi {
 				returned.add(infoCasted);
 			}
 		}
-		
+
 		return returned;
 	}
-	
+
 	/**
 	 * Gets an immutable map of WDL mods.
 	 */
 	public static Map<String, ModInfo<?>> getWDLMods() {
 		return ImmutableMap.copyOf(wdlMods);
 	}
-	
+
 	/**
 	 * Gets detailed information on the given mod.
 	 * @param name Name of the mod.
@@ -189,7 +189,7 @@ public class WDLApi {
 		if (!wdlMods.containsKey(name)) {
 			return null;
 		}
-		
+
 		return wdlMods.get(name).getInfo();
 	}
 
@@ -202,17 +202,17 @@ public class WDLApi {
 			logger.warn(e.toString());
 		}
 	}
-	
+
 	/**
 	 * Implementation of {@link MessageTypeCategory} for {@link IWDLMod}s.
 	 */
 	private static class ModMessageTypeCategory extends MessageTypeCategory {
 		private ModInfo<?> mod;
-		
+
 		public ModMessageTypeCategory(ModInfo<?> mod) {
 			super(mod.id);
 		}
-		
+
 		@Override
 		public String getDisplayName() {
 			return mod.getDisplayName();
@@ -226,13 +226,13 @@ public class WDLApi {
 		public final String id;
 		public final String version;
 		public final T mod;
-		
+
 		private ModInfo(String id, String version, T mod) {
 			this.id = id;
 			this.version = version;
 			this.mod = mod;
 		}
-		
+
 		@Override
 		public String toString() {
 			return id + "v" + version + " (" + mod.toString() + "/"
@@ -252,24 +252,24 @@ public class WDLApi {
 			}
 			return id;
 		}
-		
+
 		/**
 		 * Gets detailed information about this extension.
 		 */
 		public String getInfo() {
 			StringBuilder info = new StringBuilder();
-			
+
 			info.append("Id: ").append(id).append('\n');
 			info.append("Version: ").append(version).append('\n');
 			if (mod instanceof IWDLModDescripted) {
 				IWDLModDescripted dmod = (IWDLModDescripted)mod;
-				
+
 				String displayName = dmod.getDisplayName();
 				String mainAuthor = dmod.getMainAuthor();
 				String[] authors = dmod.getAuthors();
 				String url = dmod.getURL();
 				String description = dmod.getDescription();
-				
+
 				if (displayName != null && !displayName.isEmpty()) {
 					info.append("Display name: ").append(displayName).append('\n');
 				}
@@ -278,12 +278,12 @@ public class WDLApi {
 				}
 				if (authors != null && authors.length > 0) {
 					info.append("Authors: ");
-					
+
 					for (int i = 0; i < authors.length; i++) {
 						if (authors[i].equals(mainAuthor)) {
 							continue;
 						}
-						
+
 						if (i <= authors.length - 2) {
 							info.append(", ");
 						} else if (i == authors.length - 1) {
@@ -293,7 +293,7 @@ public class WDLApi {
 						}
 					}
 				}
-				
+
 				if (url != null && !url.isEmpty()) {
 					info.append("URL: ").append(url).append('\n');
 				}
@@ -301,18 +301,18 @@ public class WDLApi {
 					info.append("Description: \n").append(description).append('\n');
 				}
 			}
-			
+
 			info.append("Main class: ").append(mod.getClass().getName()).append('\n');
 			info.append("Containing file: ");
 			try {
 				//http://stackoverflow.com/q/320542/3991344
 				String path = new File(mod.getClass().getProtectionDomain()
 						.getCodeSource().getLocation().toURI()).getPath();
-				
+
 				//Censor username.
 				String username = System.getProperty("user.name");
 				path = path.replace(username, "<USERNAME>");
-				
+
 				info.append(path);
 			} catch (Exception e) {
 				info.append("Unknown (").append(e.toString()).append(')');
@@ -320,13 +320,13 @@ public class WDLApi {
 			info.append('\n');
 			Class<?>[] interfaces = mod.getClass().getInterfaces();
 			info.append("Implemented interfaces (").append(interfaces.length)
-					.append(")\n");
+			.append(")\n");
 			for (int i = 0; i < interfaces.length; i++) {
 				info.append(i).append(": ").append(interfaces[i].getName())
-						.append('\n');
+				.append('\n');
 			}
 			info.append("Superclass: ")
-					.append(mod.getClass().getSuperclass().getName()).append('\n');
+			.append(mod.getClass().getSuperclass().getName()).append('\n');
 			ClassLoader loader = mod.getClass().getClassLoader();
 			info.append("Classloader: ").append(loader);
 			if (loader != null) {
@@ -335,17 +335,17 @@ public class WDLApi {
 			info.append('\n');
 			Annotation[] annotations = mod.getClass().getAnnotations();
 			info.append("Annotations (").append(annotations.length)
-					.append(")\n");
+			.append(")\n");
 			for (int i = 0; i < annotations.length; i++) {
 				info.append(i).append(": ").append(annotations[i].toString())
-						.append(" (")
-						.append(annotations[i].annotationType().getName())
-						.append(")\n");
+				.append(" (")
+				.append(annotations[i].annotationType().getName())
+				.append(")\n");
 			}
-			
+
 			return info.toString();
 		}
-		
+
 		/**
 		 * Checks whether this extension is enabled in the
 		 * {@linkplain WDL#globalProps global config file}.
@@ -354,7 +354,7 @@ public class WDLApi {
 			return WDL.globalProps.getProperty("Extensions." + id + ".enabled",
 					"true").equals("true");
 		}
-		
+
 		/**
 		 * Sets whether or not this extension is enabled in the
 		 * {@linkplain WDL#globalProps global config file}, and saves
@@ -365,7 +365,7 @@ public class WDLApi {
 					Boolean.toString(enabled));
 			WDL.saveGlobalProps();
 		}
-		
+
 		/**
 		 * Toggles whether or not this extension is enabled, and saves the
 		 * global config file afterwards.

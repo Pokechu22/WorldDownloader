@@ -18,7 +18,7 @@ import com.google.common.collect.Multimap;
 public interface ISpecialEntityHandler extends IWDLMod {
 	/**
 	 * Gets the special entities handled by this mod.
-	 * 
+	 *
 	 * @return A map of vanilla entity name to special entity names. Key is the
 	 *         vanilla entity, values are the overriding entities.
 	 */
@@ -30,7 +30,7 @@ public interface ISpecialEntityHandler extends IWDLMod {
 	 * The given entity will always have its name be one of the keys in the map
 	 * from {@link #getSpecialEntities()}, and the return value should be in the
 	 * list from the value of that map for said key (or <code>null</code>).
-	 * 
+	 *
 	 * @param entity
 	 *            The entity to use.
 	 * @return The special entity name, or null if it is not a special entity
@@ -43,18 +43,18 @@ public interface ISpecialEntityHandler extends IWDLMod {
 	 * The given name will always be in the list of values for one of the keys
 	 * of {@link #getSpecialEntities()}. <br/>
 	 * The category is used in the entities gui.
-	 * 
+	 *
 	 * @param name
 	 *            The name of the special entity.
 	 * @return The category.
 	 */
 	public abstract String getSpecialEntityCategory(String name);
-	
+
 	/**
 	 * Gets the default track distance for the given entity.<br/>
 	 * The given name will always be in the list of values for one of the keys
 	 * of {@link #getSpecialEntities()}.
-	 * 
+	 *
 	 * @param name The name of the entity.
 	 * @return The track distance, or -1 to use the default one.
 	 */

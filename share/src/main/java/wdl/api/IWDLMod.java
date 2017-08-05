@@ -18,20 +18,20 @@ public interface IWDLMod {
 	 * and the rest of the environment (e.g. other mods that it needs) are
 	 * correct. The extension will not be loaded if the environment isn't set up
 	 * correctly.
-	 * 
+	 *
 	 * This is intended to handle compatibility checks before the game crashes.
-	 * 
+	 *
 	 * @param version
 	 *            The version string for WDL, as found with
 	 *            {@link wdl.VersionConstants#getModVersion()}. It's recommended
 	 *            that you check against it.
 	 */
 	public abstract boolean isValidEnvironment(String version);
-	
+
 	/**
 	 * Gets info about why the current environment is not valid. Will only be
 	 * called if {@link #isValidEnvironment(String)} returned false.
-	 * 
+	 *
 	 * @param version
 	 *            The version string for WDL.
 	 * @return A (possibly translated) error message to display to the user

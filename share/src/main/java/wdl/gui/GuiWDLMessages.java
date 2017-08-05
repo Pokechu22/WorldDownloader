@@ -96,7 +96,7 @@ public class GuiWDLMessages extends GuiScreen {
 
 				button.displayString = I18n.format("wdl.gui.messages.message."
 						+ WDLMessages.isEnabled(type), type.getDisplayName());
-				button.enabled = WDLMessages.enableAllMessages && 
+				button.enabled = WDLMessages.enableAllMessages &&
 						WDLMessages.isGroupEnabled(category);
 
 				LocalUtils.drawButton(this.button, mc, mouseX, mouseY);
@@ -129,7 +129,7 @@ public class GuiWDLMessages extends GuiScreen {
 
 		@SuppressWarnings("serial")
 		private List<GuiListEntry> entries = new ArrayList<GuiListEntry>() {{
-			Map<MessageTypeCategory, Collection<IWDLMessageType>> map = 
+			Map<MessageTypeCategory, Collection<IWDLMessageType>> map =
 					WDLMessages.getTypes().asMap();
 			for (Map.Entry<MessageTypeCategory, Collection<IWDLMessageType>> e : map
 					.entrySet()) {

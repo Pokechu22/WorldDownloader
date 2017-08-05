@@ -16,23 +16,23 @@ public class GuiWDLAbout extends GuiScreen {
 	 * GUI to display afterwards.
 	 */
 	private final GuiScreen parent;
-	
+
 	private static final String FORUMS_THREAD = "http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465";
 	private static final String ALL_GITHUB = "https://github.com/Pokechu22/WorldDownloader";
-	
+
 	private TextList list;
-	
+
 	/**
 	 * Creates a GUI with the specified parent.
 	 */
 	public GuiWDLAbout(GuiScreen parent) {
-		
-		
-		
-		
+
+
+
+
 		this.parent = parent;
 	}
-	
+
 	@Override
 	public void initGui() {
 		buttonList.add(new GuiButton(0, (this.width / 2) - 155, 18, 150, 20,
@@ -41,18 +41,18 @@ public class GuiWDLAbout extends GuiScreen {
 				I18n.format("wdl.gui.about.debugInfo")));
 		buttonList.add(new GuiButton(2, (this.width / 2) - 100,
 				this.height - 29, I18n.format("gui.done")));
-		
+
 		String wdlVersion = VersionConstants.getModVersion();
-		
+
 		String mcVersion = VersionConstants.getMinecraftVersionInfo();
-		
+
 		list = new TextList(mc, width, height, 39, 32);
 		list.addLine(I18n.format("wdl.gui.about.blurb"));
 		list.addBlankLine();
 		list.addLine(I18n.format("wdl.gui.about.version", wdlVersion,
 				mcVersion));
 		list.addBlankLine();
-		
+
 		String currentLanguage = WDL.minecraft.getLanguageManager()
 				.getCurrentLanguage().toString();
 		String translatorCredit = I18n.format("wdl.translatorCredit",
@@ -61,12 +61,12 @@ public class GuiWDLAbout extends GuiScreen {
 			list.addLine(translatorCredit);
 			list.addBlankLine();
 		}
-		
+
 		list.addLinkLine(I18n.format("wdl.gui.about.forumThread"), FORUMS_THREAD);
 		list.addBlankLine();
 		list.addLinkLine(I18n.format("wdl.gui.about.allSrc"), ALL_GITHUB);
 	}
-	
+
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if (button.id == 0) {
@@ -83,17 +83,17 @@ public class GuiWDLAbout extends GuiScreen {
 			mc.displayGuiScreen(parent);
 		}
 	}
-	
+
 	/**
 	 * Called when the mouse is clicked.
 	 */
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
-	throws IOException {
+			throws IOException {
 		list.mouseClicked(mouseX, mouseY, mouseButton);
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 	}
-	
+
 	/**
 	 * Handles mouse input.
 	 */
@@ -102,7 +102,7 @@ public class GuiWDLAbout extends GuiScreen {
 		super.handleMouseInput();
 		this.list.handleMouseInput();
 	}
-	
+
 	@Override
 	protected void mouseReleased(int mouseX, int mouseY, int state) {
 		if (list.mouseReleased(mouseX, mouseY, state)) {
@@ -110,17 +110,17 @@ public class GuiWDLAbout extends GuiScreen {
 		}
 		super.mouseReleased(mouseX, mouseY, state);
 	}
-	
+
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		if (this.list == null) {
 			return;
 		}
-		
+
 		this.list.drawScreen(mouseX, mouseY, partialTicks);
-		
+
 		super.drawScreen(mouseX, mouseY, partialTicks);
-		
+
 		drawCenteredString(fontRenderer, I18n.format("wdl.gui.about.title"),
 				width / 2, 2, 0xFFFFFF);
 	}

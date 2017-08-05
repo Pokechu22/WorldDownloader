@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +55,7 @@ public class GithubInfoGrabber {
 
 	/**
 	 * Gets a list of all releases.
-	 * 
+	 *
 	 * @see https://developer.github.com/v3/repos/releases/#list-releases-for-a-repository
 	 */
 	@Nonnull
@@ -96,13 +97,13 @@ public class GithubInfoGrabber {
 
 			connection.connect();
 
-			if (connection.getResponseCode() == HttpsURLConnection.HTTP_NOT_MODIFIED) {
+			if (connection.getResponseCode() == HttpURLConnection.HTTP_NOT_MODIFIED) {
 				// 304 not modified; use the cached version.
 				WDLMessages.chatMessageTranslated(WDLMessageTypes.UPDATE_DEBUG,
 						"wdl.messages.updates.usingCachedUpdates");
 
 				stream = new FileInputStream(CACHED_RELEASES_FILE);
-			} else if (connection.getResponseCode() == HttpsURLConnection.HTTP_OK) {
+			} else if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
 				// 200 OK
 				WDLMessages.chatMessageTranslated(WDLMessageTypes.UPDATE_DEBUG,
 						"wdl.messages.updates.grabingUpdatesFromGithub");

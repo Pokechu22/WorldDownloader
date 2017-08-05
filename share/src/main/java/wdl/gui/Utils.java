@@ -1,10 +1,5 @@
 package wdl.gui;
 
-import static org.lwjgl.opengl.GL11.GL_FLAT;
-import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_SMOOTH;
-import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
-
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,11 +10,8 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiListExtended.IGuiListEntry;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.MathHelper;
 
@@ -32,7 +24,7 @@ class Utils {
 
 	/**
 	 * Draws a semitransparent description box.
-	 * 
+	 *
 	 * @param text
 	 *            Text to display. Takes \n into consideration.
 	 * @param guiWidth
@@ -49,7 +41,7 @@ class Utils {
 
 	/**
 	 * Draws a semitransparent description box.
-	 * 
+	 *
 	 * @param text
 	 *            Text to display. Takes \n into consideration.
 	 * @param infoBoxWidth
@@ -73,7 +65,7 @@ class Utils {
 		int infoY = guiHeight - bottomPadding - infoBoxHeight;
 		int y = infoY + 5;
 
-		GuiScreen.drawRect(infoX, infoY, infoX + infoBoxWidth, infoY
+		Gui.drawRect(infoX, infoY, infoX + infoBoxWidth, infoY
 				+ infoBoxHeight, 0x7F000000);
 
 		List<String> lines = wordWrap(text, infoBoxWidth - 10);
@@ -85,9 +77,9 @@ class Utils {
 	}
 
 	/**
-	 * Converts a string into a list of lines that are each shorter than the 
+	 * Converts a string into a list of lines that are each shorter than the
 	 * given width.  Takes \n into consideration.
-	 * 
+	 *
 	 * @param s The string to word wrap.
 	 * @param width The width to use.
 	 * @return A list of lines.
@@ -102,12 +94,12 @@ class Utils {
 
 	/**
 	 * Draws the background/border used by list GUIs.
-	 * <br/> 
+	 * <br/>
 	 * Based off of
 	 * {@link net.minecraft.client.gui.GuiSlot#drawScreen(int, int, float)}.
-	 * 
+	 *
 	 * Note that there is an additional 4-pixel padding on the margins for the gradient.
-	 * 
+	 *
 	 * @param topMargin Amount of space to give for the upper box.
 	 * @param bottomMargin Amount of space to give for the lower box.
 	 * @param top Where to start drawing (usually, 0)
@@ -122,12 +114,12 @@ class Utils {
 
 	/**
 	 * Draws the top and bottom borders found on gui lists (but no background).
-	 * <br/> 
+	 * <br/>
 	 * Based off of
 	 * {@link net.minecraft.client.gui.GuiSlot#overlayBackground(int, int, int, int)}.
-	 * 
+	 *
 	 * Note that there is an additional 4-pixel padding on the margins for the gradient.
-	 * 
+	 *
 	 * @param topMargin Amount of space to give for the upper box.
 	 * @param bottomMargin Amount of space to give for the lower box.
 	 * @param top Where to start drawing (usually, 0)
@@ -177,7 +169,7 @@ class Utils {
 
 	/**
 	 * Draws a string with a shadow.
-	 * 
+	 *
 	 * Needed because of obfuscation.
 	 */
 	public static void drawStringWithShadow(String s, int x, int y, int color) {
@@ -188,7 +180,7 @@ class Utils {
 
 /**
  * A slider that doesn't require a bunch of interfaces to work.
- * 
+ *
  * Based off of {@link net.minecraft.client.gui.GuiOptionSlider}.
  */
 class GuiSlider extends GuiButton {
@@ -203,7 +195,7 @@ class GuiSlider extends GuiButton {
 	 */
 	private final int max;
 
-	public GuiSlider(int id, int x, int y, int width, int height, 
+	public GuiSlider(int id, int x, int y, int width, int height,
 			String text, int value, int max) {
 		super(id, x, y, width, height, text);
 

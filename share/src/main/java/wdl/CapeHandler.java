@@ -23,15 +23,15 @@ import com.mojang.authlib.minecraft.MinecraftProfileTexture;
  */
 public class CapeHandler {
 	private static final Logger logger = LogManager.getLogger();
-	
+
 	/**
 	 * Map of player names to the skins to give the players.
-	 * 
-	 * You can convert a player name to a unique ID and vice versa using 
+	 *
+	 * You can convert a player name to a unique ID and vice versa using
 	 * <a href="https://namemc.com/">namemc.com</a>.
 	 */
 	private static final Map<UUID, ResourceLocation> capes = new HashMap<UUID, ResourceLocation>();
-	
+
 	private static final Set<EntityPlayer> handledPlayers = new HashSet<EntityPlayer>();
 	/**
 	 * Number of times a player's cape has failed; if they have failed too many times skip them.
@@ -50,9 +50,9 @@ public class CapeHandler {
 	 * exception was thrown during the tick).
 	 */
 	private static final int MAX_TOTAL_FAILURES = 40;
-	
+
 	/**
-	 * Set up the name list. 
+	 * Set up the name list.
 	 */
 	static {
 		//Pokechu22
@@ -63,20 +63,20 @@ public class CapeHandler {
 				new ResourceLocation("wdl", "textures/cape_dev.png"));
 		//TODO: find the rest of the needed usernames/uuids and set up capes.
 	}
-	
+
 	public static void onWorldTick(List<EntityPlayer> players) {
 		if (totalFailures > MAX_TOTAL_FAILURES) {
 			return;
 		}
-		
+
 		try {
 			handledPlayers.retainAll(players);
-			
+
 			for (EntityPlayer player : players) {
 				if (handledPlayers.contains(player)) {
 					continue;
 				}
-				
+
 				if (player instanceof AbstractClientPlayer) {
 					setupPlayer((AbstractClientPlayer)player);
 				}
@@ -84,48 +84,48 @@ public class CapeHandler {
 		} catch (Exception e) {
 			logger.warn("[WDL] Failed to tick cape setup", e);
 			totalFailures++;
-			
+
 			if (totalFailures > MAX_TOTAL_FAILURES) {
 				logger.warn("[WDL] Disabling cape system (too many failures)");
 			}
 		}
 	}
-	
+
 	private static void setupPlayer(AbstractClientPlayer player) {
 		try {
 			NetworkPlayerInfo info = ReflectionUtils
-					.findAndGetPrivateField((AbstractClientPlayer)player,
+					.findAndGetPrivateField(player,
 							AbstractClientPlayer.class,
 							NetworkPlayerInfo.class);
-			
+
 			if (info == null) {
 				incrementFailure(player);
 				return;
 			}
-			
+
 			GameProfile profile = info.getGameProfile();
-			
+
 			if (capes.containsKey(profile.getId())) {
 				setPlayerCape(info, capes.get(profile.getId()));
 			}
-			
+
 			handledPlayers.add(player);
 		} catch (Exception e) {
 			logger.warn("[WDL] Failed to perform cape set up for " + player, e);
 			incrementFailure(player);
 		}
 	}
-	
+
 	private static void setPlayerCape(NetworkPlayerInfo info,
 			ResourceLocation cape) throws Exception {
 		@SuppressWarnings("unchecked")
 		Map<MinecraftProfileTexture.Type, ResourceLocation> map = ReflectionUtils
-				.findAndGetPrivateField(info, Map.class);
+		.findAndGetPrivateField(info, Map.class);
 		if (!map.containsKey(MinecraftProfileTexture.Type.CAPE)) {
 			map.put(MinecraftProfileTexture.Type.CAPE, cape);
 		}
 	}
-	
+
 	/**
 	 * Increment the number of times a player has failed to get a cape.
 	 */
@@ -133,7 +133,7 @@ public class CapeHandler {
 		if (playerFailures.containsKey(player)) {
 			int numFailures = playerFailures.get(player) + 1;
 			playerFailures.put(player, numFailures);
-			
+
 			if (numFailures > MAX_PLAYER_FAILURES) {
 				handledPlayers.add(player);
 				playerFailures.remove(player);

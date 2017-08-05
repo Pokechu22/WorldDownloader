@@ -30,7 +30,7 @@ public class GuiWDLUpdates extends GuiScreen {
 		public UpdateList() {
 			super(GuiWDLUpdates.this.mc, GuiWDLUpdates.this.width,
 					GuiWDLUpdates.this.height, TOP_MARGIN,
-					GuiWDLUpdates.this.height - BOTTOM_MARGIN, 
+					GuiWDLUpdates.this.height - BOTTOM_MARGIN,
 					(fontRenderer.FONT_HEIGHT + 1) * 6 + 2);
 			this.showSelectionBox = true;
 		}
@@ -122,7 +122,7 @@ public class GuiWDLUpdates extends GuiScreen {
 
 		/**
 		 * Regenerates the {@linkplain #displayedVersions version list}.
-		 * 
+		 *
 		 * TODO: This is probably a bit laggy; cache this data?  Right now it's
 		 * being called each frame.
 		 */
@@ -185,7 +185,7 @@ public class GuiWDLUpdates extends GuiScreen {
 	public void initGui() {
 		this.list = new UpdateList();
 
-		this.buttonList.add(new GuiButton(100, this.width / 2 - 100, 
+		this.buttonList.add(new GuiButton(100, this.width / 2 - 100,
 				this.height - 29, I18n.format("gui.done")));
 	}
 
@@ -340,13 +340,13 @@ public class GuiWDLUpdates extends GuiScreen {
 
 		@Override
 		public void initGui() {
-			this.buttonList.add(new GuiButton(0, this.width / 2 - 155, 
+			this.buttonList.add(new GuiButton(0, this.width / 2 - 155,
 					18, 150, 20, I18n.format("wdl.gui.updates.update.viewOnline")));
 			if (release.hiddenInfo != null) {
-				this.buttonList.add(new GuiButton(1, this.width / 2 + 5, 
+				this.buttonList.add(new GuiButton(1, this.width / 2 + 5,
 						18, 150, 20, I18n.format("wdl.gui.updates.update.viewForumPost")));
 			}
-			this.buttonList.add(new GuiButton(100, this.width / 2 - 100, 
+			this.buttonList.add(new GuiButton(100, this.width / 2 - 100,
 					this.height - 29, I18n.format("gui.done")));
 
 			this.list = new TextList(mc, width, height, TOP_MARGIN, BOTTOM_MARGIN);

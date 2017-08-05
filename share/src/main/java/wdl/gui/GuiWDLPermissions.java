@@ -25,42 +25,42 @@ public class GuiWDLPermissions extends GuiScreen {
 	 * Margins for the top and the bottom of the list.
 	 */
 	private static final int TOP_MARGIN = 61, BOTTOM_MARGIN = 32;
-	
+
 	/**
 	 * Reload permissions button
 	 */
 	private GuiButton reloadButton;
-	
+
 	/**
 	 * Ticks (20ths of a second) until this UI needs to refresh.
-	 * 
+	 *
 	 * If -1, don't refresh.
 	 */
 	private int refreshTicks = -1;
-	
+
 	/**
 	 * Recalculates the {@link #globalEntries} list.
 	 */
 	private final GuiScreen parent;
-	
+
 	private TextList list;
-	
+
 	/**
 	 * Creates a new GUI with the given parent.
-	 * 
+	 *
 	 * @param parent
 	 */
 	public GuiWDLPermissions(GuiScreen parent) {
 		this.parent = parent;
 	}
-	
+
 	@Override
 	public void initGui() {
 		this.buttonList.clear();
-		
+
 		this.buttonList.add(new GuiButton(100, width / 2 - 100, height - 29,
 				I18n.format("gui.done")));
-		
+
 		this.buttonList.add(new GuiButton(200, this.width / 2 - 155, 39, 100, 20,
 				I18n.format("wdl.gui.permissions.current")));
 		if (WDLPluginChannels.canRequestPermissions()) {
@@ -69,19 +69,19 @@ public class GuiWDLPermissions extends GuiScreen {
 			this.buttonList.add(new GuiButton(202, this.width / 2 + 55, 39, 100, 20,
 					I18n.format("wdl.gui.permissions.overrides")));
 		}
-		
+
 		reloadButton = new GuiButton(1, (this.width / 2) + 5, 18, 150, 20,
 				"Reload permissions");
 		this.buttonList.add(reloadButton);
-		
+
 		this.list = new TextList(mc, width, height, TOP_MARGIN, BOTTOM_MARGIN);
-		
+
 		list.addLine("\u00A7c\u00A7lThis is a work in progress.");
-		
+
 		if (!WDLPluginChannels.hasPermissions()) {
 			return;
 		}
-		
+
 		list.addBlankLine();
 		if (!WDLPluginChannels.canRequestPermissions()) {
 			list.addLine("\u00A7cThe serverside permission plugin is out of date " +
@@ -89,13 +89,13 @@ public class GuiWDLPermissions extends GuiScreen {
 					"server administrator to update the plugin.");
 			list.addBlankLine();
 		}
-		
+
 		if (WDLPluginChannels.getRequestMessage() != null) {
 			list.addLine("Note from the server moderators: ");
 			list.addLine(WDLPluginChannels.getRequestMessage());
 			list.addBlankLine();
 		}
-		
+
 		list.addLine("These are your current permissions:");
 		// TODO: I'd like to return the description lines here, but can't yet.
 		// Of course, I'd need to put in some better lines than before.
@@ -116,7 +116,7 @@ public class GuiWDLPermissions extends GuiScreen {
 				+ WDLPluginChannels.hasServerEntityRange() + " ("
 				+ WDLPluginChannels.getEntityRanges().size() + " total)");
 	}
-	
+
 	@Override
 	public void updateScreen() {
 		if (refreshTicks > 0) {
@@ -126,22 +126,22 @@ public class GuiWDLPermissions extends GuiScreen {
 			refreshTicks = -1;
 		}
 	}
-	
+
 	@Override
 	public void onGuiClosed() {
 		WDL.saveProps();
 	}
-	
+
 	/**
 	 * Called when the mouse is clicked.
 	 */
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
-	throws IOException {
+			throws IOException {
 		list.mouseClicked(mouseX, mouseY, mouseButton);
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 	}
-	
+
 	/**
 	 * Handles mouse input.
 	 */
@@ -150,7 +150,7 @@ public class GuiWDLPermissions extends GuiScreen {
 		super.handleMouseInput();
 		this.list.handleMouseInput();
 	}
-	
+
 	@Override
 	protected void mouseReleased(int mouseX, int mouseY, int state) {
 		if (list.mouseReleased(mouseX, mouseY, state)) {
@@ -158,7 +158,7 @@ public class GuiWDLPermissions extends GuiScreen {
 		}
 		super.mouseReleased(mouseX, mouseY, state);
 	}
-	
+
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if (button.id == 1) {
@@ -178,10 +178,10 @@ public class GuiWDLPermissions extends GuiScreen {
 						new PacketBuffer(Unpooled.buffer()));
 			}
 			Minecraft.getMinecraft().getConnection().sendPacket(initPacket);
-			
+
 			button.enabled = false;
 			button.displayString = "Refreshing...";
-			
+
 			refreshTicks = 50; // 2.5 seconds
 		}
 		if (button.id == 100) {
@@ -197,25 +197,25 @@ public class GuiWDLPermissions extends GuiScreen {
 			this.mc.displayGuiScreen(new GuiWDLChunkOverrides(this.parent));
 		}
 	}
-	
+
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		if (this.list == null) {
 			return;
 		}
-		
+
 		this.list.drawScreen(mouseX, mouseY, partialTicks);
-		
+
 		this.drawCenteredString(this.fontRenderer, "Permission info",
 				this.width / 2, 8, 0xFFFFFF);
-		
+
 		if (!WDLPluginChannels.hasPermissions()) {
 			this.drawCenteredString(this.fontRenderer,
 					"No permissions received; defaulting to everything enabled.",
 					this.width / 2, (this.height - 32 - 23) / 2 + 23
-							- fontRenderer.FONT_HEIGHT / 2, 0xFFFFFF);
+					- fontRenderer.FONT_HEIGHT / 2, 0xFFFFFF);
 		}
-		
+
 		super.drawScreen(mouseX, mouseY, partialTicks);
 	}
 }

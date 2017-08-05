@@ -21,7 +21,7 @@ public class GuiWDLGenerator extends GuiScreen {
 	private GuiButton settingsPageBtn;
 
 	private String seedText;
-	
+
 	public GuiWDLGenerator(GuiScreen parent) {
 		this.parent = parent;
 	}
@@ -33,10 +33,10 @@ public class GuiWDLGenerator extends GuiScreen {
 	public void initGui() {
 		this.seedText = I18n.format("wdl.gui.generator.seed");
 		int seedWidth = fontRenderer.getStringWidth(seedText + " ");
-		
+
 		this.buttonList.clear();
 		this.title = I18n.format("wdl.gui.generator.title",
-				 WDL.baseFolderName.replace('@', ':'));
+				WDL.baseFolderName.replace('@', ':'));
 		int y = this.height / 4 - 15;
 		this.seedField = new GuiTextField(40, this.fontRenderer,
 				this.width / 2 - (100 - seedWidth), y, 200 - seedWidth, 18);
@@ -54,8 +54,8 @@ public class GuiWDLGenerator extends GuiScreen {
 				"");
 		updateSettingsButtonVisibility();
 		this.buttonList.add(this.settingsPageBtn);
-		
-		this.buttonList.add(new GuiButton(100, this.width / 2 - 100, height - 29, 
+
+		this.buttonList.add(new GuiButton(100, this.width / 2 - 100, height - 29,
 				I18n.format("gui.done")));
 	}
 
@@ -79,18 +79,18 @@ public class GuiWDLGenerator extends GuiScreen {
 						.equals("custom")) {
 					this.mc.displayGuiScreen(new GuiCustomizeWorldScreen(
 							new GuiCreateWorldProxy(), WDL.worldProps
-									.getProperty("GeneratorOptions", "")));
+							.getProperty("GeneratorOptions", "")));
 				}
 			} else if (button.id == 100) {
 				this.mc.displayGuiScreen(this.parent);
 			}
 		}
 	}
-	
+
 	@Override
 	public void onGuiClosed() {
 		WDL.worldProps.setProperty("RandomSeed", this.seedField.getText());
-		
+
 		WDL.saveProps();
 	}
 
@@ -99,7 +99,7 @@ public class GuiWDLGenerator extends GuiScreen {
 	 */
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
-	throws IOException {
+			throws IOException {
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 		this.seedField.mouseClicked(mouseX, mouseY, mouseButton);
 	}
@@ -129,17 +129,17 @@ public class GuiWDLGenerator extends GuiScreen {
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		Utils.drawListBackground(23, 32, 0, 0, height, width);
-		
+
 		this.drawCenteredString(this.fontRenderer, this.title,
 				this.width / 2, 8, 0xFFFFFF);
-		
+
 		this.drawString(this.fontRenderer, seedText, this.width / 2 - 100,
 				this.height / 4 - 10, 0xFFFFFF);
 		this.seedField.drawTextBox();
 		super.drawScreen(mouseX, mouseY, partialTicks);
-		
+
 		String tooltip = null;
-		
+
 		if (Utils.isMouseOverTextBox(mouseX, mouseY, seedField)) {
 			tooltip = I18n.format("wdl.gui.generator.seed.description");
 		} else if (generatorBtn.isMouseOver()) {
@@ -190,7 +190,7 @@ public class GuiWDLGenerator extends GuiScreen {
 			WDL.worldProps.setProperty("GeneratorVersion", "0");
 			WDL.worldProps.setProperty("GeneratorOptions", ";0"); //Single layer of air
 		}
-		
+
 		this.generatorBtn.displayString = getGeneratorText();
 		updateSettingsButtonVisibility();
 	}
@@ -201,12 +201,12 @@ public class GuiWDLGenerator extends GuiScreen {
 		} else {
 			WDL.worldProps.setProperty("MapFeatures", "true");
 		}
-		
+
 		this.generateStructuresBtn.displayString = getGenerateStructuresText();
 	}
-	
+
 	/**
-	 * Updates whether the {@link #settingsPageBtn} is shown or hidden, and 
+	 * Updates whether the {@link #settingsPageBtn} is shown or hidden, and
 	 * the text on it.
 	 */
 	private void updateSettingsButtonVisibility() {
@@ -220,17 +220,17 @@ public class GuiWDLGenerator extends GuiScreen {
 			settingsPageBtn.visible = false;
 		}
 	}
-	
+
 	private String getGeneratorText() {
-		return I18n.format("wdl.gui.generator.generator." + 
+		return I18n.format("wdl.gui.generator.generator." +
 				WDL.worldProps.getProperty("MapGenerator"));
 	}
-	
+
 	private String getGenerateStructuresText() {
 		return I18n.format("wdl.gui.generator.generateStructures." +
 				WDL.worldProps.getProperty("MapFeatures"));
 	}
-	
+
 	/**
 	 * Fake implementation of {@link GuiCreateFlatWorld} that allows use of
 	 * {@link GuiFlatPresets}.  Doesn't actually do anything; just passed in
@@ -241,22 +241,22 @@ public class GuiWDLGenerator extends GuiScreen {
 		public GuiCreateFlatWorldProxy() {
 			super(null, WDL.worldProps.getProperty("GeneratorOptions", ""));
 		}
-		
+
 		@Override
 		public void initGui() {
 			mc.displayGuiScreen(GuiWDLGenerator.this);
 		}
-		
+
 		@Override
 		protected void actionPerformed(GuiButton button) throws IOException {
 			// Do nothing
 		}
-		
+
 		@Override
 		public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 			// Do nothing
 		}
-		
+
 		/**
 		 * Gets the current flat preset.
 		 */
@@ -264,7 +264,7 @@ public class GuiWDLGenerator extends GuiScreen {
 		public String getPreset() {
 			return WDL.worldProps.getProperty("GeneratorOptions", "");
 		}
-		
+
 		/**
 		 * Sets the current flat preset.
 		 */
@@ -276,7 +276,7 @@ public class GuiWDLGenerator extends GuiScreen {
 			WDL.worldProps.setProperty("GeneratorOptions", preset);
 		}
 	}
-	
+
 	/**
 	 * Fake implementation of {@link GuiCreateWorld} that allows use of
 	 * {@link GuiCustomizeWorldScreen}.  Doesn't actually do anything; just passed in
@@ -286,7 +286,7 @@ public class GuiWDLGenerator extends GuiScreen {
 	private class GuiCreateWorldProxy extends GuiCreateWorld {
 		public GuiCreateWorldProxy() {
 			super(GuiWDLGenerator.this);
-			
+
 			this.chunkProviderSettingsJson = WDL.worldProps.getProperty("GeneratorOptions", "");
 		}
 
@@ -295,12 +295,12 @@ public class GuiWDLGenerator extends GuiScreen {
 			mc.displayGuiScreen(GuiWDLGenerator.this);
 			WDL.worldProps.setProperty("GeneratorOptions", this.chunkProviderSettingsJson);
 		}
-		
+
 		@Override
 		protected void actionPerformed(GuiButton button) throws IOException {
 			// Do nothing
 		}
-		
+
 		@Override
 		public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 			// Do nothing

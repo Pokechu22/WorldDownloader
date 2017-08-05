@@ -13,13 +13,13 @@ import com.google.gson.JsonParser;
  * An individual GitHub release.
  * <br/>
  * Does not contain all of the info, but the used info is included.
- * 
+ *
  * @see https://developer.github.com/v3/repos/releases/#get-a-release-by-tag-name
  */
 public class Release {
 	/**
 	 * Regular expression used to match the hidden metadata text.
-	 * 
+	 *
 	 * Basically, some hidden JSON is put in the body markdown, in the form of
 	 * <pre>[](# '{"someKey":"someValue"}')MainBodyText</pre>, which visually
 	 * only appears as "MainBodyText" since the link is 0 characters long.
@@ -28,7 +28,7 @@ public class Release {
 	private static final Pattern HIDDEN_JSON_REGEX = Pattern.compile(
 			"^\\[\\]\\(# '(.+?)'\\)");
 	private static final JsonParser PARSER = new JsonParser();
-	
+
 	/**
 	 * Further info hidden inside of the body.
 	 */
@@ -55,18 +55,18 @@ public class Release {
 		 * Hashes for each of the classes in this release.
 		 */
 		public final HashData[] hashes;
-		
+
 		private HiddenInfo(JsonObject object) {
 			this.mainMinecraftVersion = object.get("Minecraft").getAsString();
 			JsonArray compatibleVersions = object.get("MinecraftCompatible")
 					.getAsJsonArray();
 			this.supportedMinecraftVersions = new String[compatibleVersions
-					.size()];
+			                                             .size()];
 			for (int i = 0; i < compatibleVersions.size(); i++) {
 				this.supportedMinecraftVersions[i] = compatibleVersions.get(i)
 						.getAsString();
 			}
-			
+
 			this.loader = object.get("Loader").getAsString();
 			JsonElement post = object.get("Post");
 			if (post.isJsonNull()) {
@@ -74,7 +74,7 @@ public class Release {
 			} else {
 				this.post = post.getAsString();
 			}
-			
+
 			JsonArray hashes = object.get("Hashes").getAsJsonArray();
 			this.hashes = new HashData[hashes.size()];
 			for (int i = 0; i < hashes.size(); i++) {
@@ -91,7 +91,7 @@ public class Release {
 					+ Arrays.toString(hashes) + "]";
 		}
 	}
-	
+
 	public class HashData {
 		/**
 		 * Class name to check relative to. Used for
@@ -110,7 +110,7 @@ public class Release {
 		 * the Messages gui).
 		 */
 		public final String[] validHashes;
-		
+
 		public HashData(JsonObject object) {
 			this.relativeTo = object.get("RelativeTo").getAsString();
 			this.file = object.get("File").getAsString();
@@ -174,10 +174,10 @@ public class Release {
 			return Release.this;
 		}
 	}
-	
+
 	public Release(JsonObject object) {
 		this.object = object;
-		
+
 		this.markdownBody = object.get("body").getAsString();
 		Matcher hiddenJSONMatcher = HIDDEN_JSON_REGEX.matcher(markdownBody);
 		if (hiddenJSONMatcher.find()) {
@@ -191,7 +191,7 @@ public class Release {
 			// No hidden information.
 			this.hiddenInfo = null;
 		}
-		
+
 		this.URL = object.get("html_url").getAsString();
 		this.textOnlyBody = object.get("body_text").getAsString();
 		this.tag = object.get("tag_name").getAsString();
@@ -199,7 +199,7 @@ public class Release {
 		this.date = object.get("published_at").getAsString();
 		this.prerelease = object.get("prerelease").getAsBoolean();
 	}
-	
+
 	/**
 	 * {@link JsonObject} used to create this.
 	 */

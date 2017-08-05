@@ -13,14 +13,14 @@ public interface IWDLMessageType {
 	/**
 	 * Gets the <a href="http://minecraft.gamepedia.com/Formatting_codes">color
 	 * code</a> used for the "[WorldDL]" text before the message.
-	 * 
+	 *
 	 * @return The format code.
 	 */
 	public abstract TextFormatting getTitleColor();
 	/**
 	 * Gets the <a href="http://minecraft.gamepedia.com/Formatting_codes">color
 	 * code</a> used for the main message.
-	 * 
+	 *
 	 * @return The format code.
 	 */
 	public abstract TextFormatting getTextColor();

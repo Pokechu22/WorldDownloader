@@ -13,24 +13,24 @@ import net.minecraft.util.math.BlockPos;
 public interface ITileEntityEditor extends IWDLMod {
 	/**
 	 * Should the given tile entity be edited by this {@link ITileEntityEditor}?
-	 * 
+	 *
 	 * To get the type of the entity, look at the "id" String tag. See
 	 * {@link TileEntity}'s static initializer block for a list of tile entity
 	 * ids.
-	 * 
+	 *
 	 * Example:
-	 * 
+	 *
 	 * <pre>
-	 * String type = compound.{@link NBTTagCompound#getString(String) getString("id")} 
-	 * 
+	 * String type = compound.{@link NBTTagCompound#getString(String) getString("id")}
+	 *
 	 * // "Trap" is dispenser
 	 * if (type.equals("Trap") || type.equals("Dropper")) {
 	 *     return true;
 	 * }
-	 * 
+	 *
 	 * return false;
 	 * </pre>
-	 * 
+	 *
 	 * @param pos
 	 *            The location of the tile entity in the world.
 	 * @param compound
@@ -41,31 +41,31 @@ public interface ITileEntityEditor extends IWDLMod {
 	 */
 	public abstract boolean shouldEdit(BlockPos pos, NBTTagCompound compound,
 			TileEntityCreationMode creationMode);
-	
+
 	/**
 	 * Edit the given tile entity. Will only be called if
 	 * {@link #shouldEdit(NBTTagCompound, TileEntityCreationMode)} returned
 	 * true.
-	 * 
+	 *
 	 * The given NBT tag must be edited in-place.
-	 * 
+	 *
 	 * If you want to work with a TileEntity object instead of a
 	 * {@link NBTTagCompound}, you can serialize and deserialize it:
-	 * 
+	 *
 	 * <pre>
 	 * {@link TileEntity} te = {@link TileEntity#readFromNBT(NBTTagCompound) TileEntity.readFromNBT(compound)};
-	 * 
+	 *
 	 * if (te instanceof {@link TileEntityDispenser}) {
 	 *     TileEntityDispenser dispenser = (TileEntityDispenser)te;
-	 *     
+	 *
 	 *     for (int i = 0; i < dispenser.{@link TileEntityDispenser#getSizeInventory() getSizeInventory()}; i++) {
-	 *         dispenser.{@link TileEntityDispenser#setInventorySlotContents(int, net.minecraft.item.ItemStack) setInventorySlotContents}(i, new {@link ItemStack}({@link Blocks#tnt}, 64)); 
+	 *         dispenser.{@link TileEntityDispenser#setInventorySlotContents(int, net.minecraft.item.ItemStack) setInventorySlotContents}(i, new {@link ItemStack}({@link Blocks#tnt}, 64));
 	 *     }
-	 *     
+	 *
 	 *     dispenser.{@link TileEntity#writeToNBT(NBTTagCompound) writeToNBT(compound)};
 	 * }
 	 * </pre>
-	 * 
+	 *
 	 * @param pos
 	 *            The location of the tile entity in the world
 	 * @param compound
@@ -75,7 +75,7 @@ public interface ITileEntityEditor extends IWDLMod {
 	 */
 	public abstract void editTileEntity(BlockPos pos, NBTTagCompound compound,
 			TileEntityCreationMode creationMode);
-	
+
 	/**
 	 * Identifies how the tile entity was created/loaded.
 	 */

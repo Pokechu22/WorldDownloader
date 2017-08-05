@@ -9,7 +9,7 @@ import net.minecraft.world.World;
 public class VersionedProperties {
 	/**
 	 * Returns true if the given world has skylight data.
-	 * 
+	 *
 	 * @return a boolean
 	 */
 	public static boolean hasSkyLight(World world) {

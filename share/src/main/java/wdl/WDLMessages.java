@@ -41,7 +41,7 @@ public class WDLMessages {
 
 		/**
 		 * Creates a MessageRegistration.
-		 * 
+		 *
 		 * @param name The name to use.
 		 * @param type The type bound to this registration.
 		 * @param category The category.
@@ -149,7 +149,7 @@ public class WDLMessages {
 
 	/**
 	 * Adds registration for another type of message.
-	 * 
+	 *
 	 * @param name The programmatic name.
 	 * @param type The type.
 	 * @param category The category.
@@ -158,9 +158,9 @@ public class WDLMessages {
 			MessageTypeCategory category) {
 		registrations.add(new MessageRegistration(name, type, category));
 
-		WDL.defaultProps.setProperty("Messages." + name, 
+		WDL.defaultProps.setProperty("Messages." + name,
 				Boolean.toString(type.isEnabledByDefault()));
-		WDL.defaultProps.setProperty("MessageGroup." + category.internalName, 
+		WDL.defaultProps.setProperty("MessageGroup." + category.internalName,
 				"true");
 	}
 
@@ -231,7 +231,7 @@ public class WDLMessages {
 	}
 
 	/**
-	 * Gets all of the MessageTypes 
+	 * Gets all of the MessageTypes
 	 * @return All the types, ordered by the category.
 	 */
 	@Nonnull
@@ -286,7 +286,7 @@ public class WDLMessages {
 
 	/**
 	 * Prints the given message into the chat.
-	 * 
+	 *
 	 * @param type The type of the message.
 	 * @param message The message to display.
 	 */
@@ -296,7 +296,7 @@ public class WDLMessages {
 
 	/**
 	 * Prints a translated chat message into the chat.
-	 * 
+	 *
 	 * @param type
 	 *            The type of the message.
 	 * @param translationKey
@@ -337,7 +337,7 @@ public class WDLMessages {
 
 	/**
 	 * Prints the given message into the chat.
-	 * 
+	 *
 	 * @param type The type of the message.
 	 * @param message The message to display.
 	 */

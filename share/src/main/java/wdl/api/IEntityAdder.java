@@ -14,7 +14,7 @@ import java.util.List;
 public interface IEntityAdder extends IWDLMod {
 	/**
 	 * Gets a List of all entities that this mod handles.
-	 * 
+	 *
 	 * @return A list of all the names of entities that this mod handles. Entity
 	 *         names should be the ones that are registered with
 	 *         {@link net.minecraft.entity.EntityList}.
@@ -25,12 +25,12 @@ public interface IEntityAdder extends IWDLMod {
 	 * Gets the default track distance for the given entity. <br/>
 	 * This method will only ever be called with an entity in the list returned
 	 * by {@link #getModEntities()}.
-	 * 
+	 *
 	 * @param entity
 	 *            The name of the entity.
 	 * @return The default distance at which the entity is removed from the
 	 *         player's view.
-	 * 
+	 *
 	 */
 	public abstract int getDefaultEntityTrackDistance(String entity);
 
@@ -39,7 +39,7 @@ public interface IEntityAdder extends IWDLMod {
 	 * It's recommended to put the mod's name here, such as "More creepers". If
 	 * the mod contains a lot of entities, you can divide it into subcategories.
 	 * This data used for the Entity gui.
-	 * 
+	 *
 	 * @param entity The name of the entity.
 	 * @return The category.
 	 */

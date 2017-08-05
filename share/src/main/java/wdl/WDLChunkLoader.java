@@ -20,8 +20,6 @@ import net.minecraft.block.BlockDropper;
 import net.minecraft.block.BlockFurnace;
 import net.minecraft.block.BlockHopper;
 import net.minecraft.block.BlockNote;
-import net.minecraft.block.BlockTripWire;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.CompressedStreamTools;
@@ -118,13 +116,13 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 
 	/**
 	 * Saves the given chunk.
-	 * 
+	 *
 	 * Note that while the normal implementation swallows Exceptions, this
 	 * version does not.
 	 */
 	@Override
 	public void saveChunk(World world, Chunk chunk) throws MinecraftException,
-			IOException {
+	IOException {
 		world.checkSessionLock();
 
 		NBTTagCompound levelTag = writeChunkToNBT(chunk, world);
@@ -138,13 +136,13 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 
 	/**
 	 * Writes the given chunk, creating an NBT compound tag.
-	 * 
+	 *
 	 * Note that this does <b>not</b> override the private method
 	 * {@link AnvilChunkLoader#writeChunkToNBT(Chunk, World, NBTCompoundTag)}.
 	 * That method is private and cannot be overridden; plus, this version
 	 * returns a tag rather than modifying the one passed as an argument.
 	 * However, that method
-	 * 
+	 *
 	 * @param chunk
 	 *            The chunk to write
 	 * @param world
@@ -210,7 +208,7 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 		compound.setTag("Sections", blockStorageList);
 		compound.setByteArray("Biomes", chunk.getBiomeArray());
 		chunk.setHasEntities(false);
-		
+
 		NBTTagList entityList = getEntityList(chunk);
 		compound.setTag("Entities", entityList);
 
@@ -225,7 +223,7 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 
 			for (NextTickListEntry entry : updateList) {
 				NBTTagCompound entryTag = new NBTTagCompound();
-				ResourceLocation location = (ResourceLocation) Block.REGISTRY
+				ResourceLocation location = Block.REGISTRY
 						.getNameForObject(entry.getBlock());
 				entryTag.setString("i",
 						location == null ? "" : location.toString());
@@ -251,11 +249,11 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 	 */
 	public NBTTagList getEntityList(Chunk chunk) {
 		NBTTagList entityList = new NBTTagList();
-		
+
 		if (!WDLPluginChannels.canSaveEntities(chunk)) {
 			return entityList;
 		}
-		
+
 		// Build a list of all entities in the chunk.
 		List<Entity> entities = new ArrayList<Entity>();
 		// Add the entities already in the chunk.
@@ -268,18 +266,18 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 			e.isDead = false;
 			entities.add(e);
 		}
-		
+
 		for (Entity entity : entities) {
 			if (entity == null) {
 				logger.warn("[WDL] Null entity in chunk at "
 						+ chunk.getPos());
 				continue;
 			}
-			
+
 			if (!shouldSaveEntity(entity)) {
 				continue;
 			}
-			
+
 			// Apply any editors.
 			for (ModInfo<IEntityEditor> info : WDLApi
 					.getImplementingExtensions(IEntityEditor.class)) {
@@ -294,9 +292,9 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 							+ info, ex);
 				}
 			}
-			
+
 			NBTTagCompound entityData = new NBTTagCompound();
-	
+
 			try {
 				if (entity.writeToNBTOptional(entityData)) {
 					chunk.setHasEntities(true);
@@ -338,14 +336,14 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 				continue;
 			}
 		}
-		
+
 		return entityList;
 	}
-	
+
 	/**
 	 * Checks if the given entity should be saved, putting a message into the
 	 * chat if it can't.
-	 * 
+	 *
 	 * @param e
 	 *            The entity to check
 	 * @return True if the entity should be saved.
@@ -355,7 +353,7 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 			// Players shouldn't be saved, and it's dangerous to mess with them.
 			return false;
 		}
-		
+
 		if (!EntityUtils.isEntityEnabled(e)) {
 			WDLMessages.chatMessageTranslated(
 					WDLMessageTypes.REMOVE_ENTITY,
@@ -363,32 +361,32 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 					e);
 			return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	/**
 	 * Creates an NBT list of all tile entities in this chunk, importing tile
 	 * entities as needed.
 	 */
 	public NBTTagList getTileEntityList(Chunk chunk) {
 		NBTTagList tileEntityList = new NBTTagList();
-		
+
 		if (!WDLPluginChannels.canSaveTileEntities(chunk)) {
 			return tileEntityList;
 		}
-		
+
 		Map<BlockPos, TileEntity> chunkTEMap = chunk.getTileEntityMap();
 		Map<BlockPos, NBTTagCompound> oldTEMap = getOldTileEntities(chunk);
 		Map<BlockPos, TileEntity> newTEMap = WDL.newTileEntities.get(chunk.getPos());
 		if (newTEMap == null) {
 			newTEMap = new HashMap<BlockPos, TileEntity>();
 		}
-		
+
 		// All of the locations of tile entities in the chunk.
 		Set<BlockPos> allTELocations = new HashSet<BlockPos>();
 		allTELocations.addAll(chunkTEMap.keySet());
-		allTELocations.addAll(oldTEMap.keySet()); 
+		allTELocations.addAll(oldTEMap.keySet());
 		allTELocations.addAll(newTEMap.keySet());
 
 		for (BlockPos pos : allTELocations) {
@@ -396,7 +394,7 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 			// if it's in multiple.
 			if (newTEMap.containsKey(pos)) {
 				NBTTagCompound compound = new NBTTagCompound();
-				
+
 				TileEntity te = newTEMap.get(pos);
 				try {
 					te.writeToNBT(compound);
@@ -408,16 +406,16 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 					logger.warn("Compound: " + compound);
 					continue;
 				}
-				
+
 				String entityType = compound.getString("id") +
 						" (" + te.getClass().getCanonicalName() +")";
 				WDLMessages.chatMessageTranslated(
 						WDLMessageTypes.LOAD_TILE_ENTITY,
 						"wdl.messages.tileEntity.usingNew",
 						entityType, pos);
-				
+
 				editTileEntity(pos, compound, TileEntityCreationMode.NEW);
-				
+
 				tileEntityList.appendTag(compound);
 			} else if (oldTEMap.containsKey(pos)) {
 				NBTTagCompound compound = oldTEMap.get(pos);
@@ -426,9 +424,9 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 						WDLMessageTypes.LOAD_TILE_ENTITY,
 						"wdl.messages.tileEntity.usingOld",
 						entityType, pos);
-				
+
 				editTileEntity(pos, compound, TileEntityCreationMode.IMPORTED);
-				
+
 				tileEntityList.appendTag(compound);
 			} else if (chunkTEMap.containsKey(pos)) {
 				// TODO: Do we want a chat message for this?
@@ -445,13 +443,13 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 					logger.warn("Compound: " + compound);
 					continue;
 				}
-				
+
 				editTileEntity(pos, compound, TileEntityCreationMode.EXISTING);
-				
+
 				tileEntityList.appendTag(compound);
 			}
 		}
-		
+
 		return tileEntityList;
 	}
 
@@ -462,7 +460,7 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 	 * block at the tile entity's position must match the block normally used
 	 * with that tile entity). See
 	 * {@link #shouldImportTileEntity(String, BlockPos)} for details.
-	 * 
+	 *
 	 * @param chunk
 	 *            The chunk to import tile entities from.
 	 * @return A map of positions to tile entities.
@@ -528,7 +526,7 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 	 * those that require manual interaction such as chests) TileEntities will
 	 * be imported. Additionally, the block at the tile entity's coordinates
 	 * must be one that would normally be used with that tile entity.
-	 * 
+	 *
 	 * @param entityID
 	 *            The tile entity's ID, as found in the 'id' tag.
 	 * @param pos
@@ -564,7 +562,7 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 		} else if (block instanceof BlockBeacon && entityID.equals("Beacon")) {
 			return true;
 		}
-		
+
 		for (ModInfo<ITileEntityImportationIdentifier> info : WDLApi
 				.getImplementingExtensions(ITileEntityImportationIdentifier.class)) {
 			if (info.mod.shouldImportTileEntity(entityID, pos, block,
@@ -572,10 +570,10 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * Applies all registered {@link ITileEntityEditor}s to the given tile entity.
 	 */
@@ -586,10 +584,10 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 			try {
 				if (info.mod.shouldEdit(pos, compound, creationMode)) {
 					info.mod.editTileEntity(pos, compound, creationMode);
-					
+
 					WDLMessages.chatMessageTranslated(
 							WDLMessageTypes.LOAD_TILE_ENTITY,
-							"wdl.messages.tileEntity.edited", 
+							"wdl.messages.tileEntity.edited",
 							pos, info.getDisplayName());
 				}
 			} catch (Exception ex) {

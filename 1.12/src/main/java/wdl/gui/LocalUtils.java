@@ -1,17 +1,17 @@
 package wdl.gui;
 
 import static org.lwjgl.opengl.GL11.*;
-import wdl.WDL;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiListExtended.IGuiListEntry;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import wdl.WDL;
 
 class LocalUtils {
 	private static final Minecraft mc = Minecraft.getMinecraft();
@@ -37,8 +37,8 @@ class LocalUtils {
 
 	/**
 	 * Draws a dark background, similar to {@link GuiScreen#drawBackground(int)} but darker.
-	 * Same appearance as the background in lists. 
-	 * 
+	 * Same appearance as the background in lists.
+	 *
 	 * @param top Where to start drawing (usually, 0)
 	 * @param left Where to start drawing (usually, 0)
 	 * @param bottom Where to stop drawing (usually, height).
@@ -56,25 +56,25 @@ class LocalUtils {
 
 		float textureSize = 32.0F;
 		b.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-		b.pos(0, bottom, 0).tex(0 / textureSize, 
+		b.pos(0, bottom, 0).tex(0 / textureSize,
 				bottom / textureSize).color(32, 32, 32, 255).endVertex();
-		b.pos(right, bottom, 0).tex(right / textureSize, 
+		b.pos(right, bottom, 0).tex(right / textureSize,
 				bottom / textureSize).color(32, 32, 32, 255).endVertex();
-		b.pos(right, top, 0).tex(right / textureSize, 
+		b.pos(right, top, 0).tex(right / textureSize,
 				top / textureSize).color(32, 32, 32, 255).endVertex();
-		b.pos(left, top, 0).tex(left / textureSize, 
+		b.pos(left, top, 0).tex(left / textureSize,
 				top / textureSize).color(32, 32, 32, 255).endVertex();
 		t.draw();
 	}
 
 	/**
 	 * Draws the top and bottom borders found on gui lists (but no background).
-	 * <br/> 
+	 * <br/>
 	 * Based off of
 	 * {@link net.minecraft.client.gui.GuiSlot#overlayBackground(int, int, int, int)}.
-	 * 
+	 *
 	 * Note that there is an additional 4-pixel padding on the margins for the gradient.
-	 * 
+	 *
 	 * @param topMargin Amount of space to give for the upper box.
 	 * @param bottomMargin Amount of space to give for the lower box.
 	 * @param top Where to start drawing (usually, 0)

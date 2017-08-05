@@ -48,7 +48,7 @@ public class WDLUpdateChecker extends Thread {
 
 	/**
 	 * The release that is currently running.
-	 * 
+	 *
 	 * May be null.
 	 */
 	@Nullable
@@ -113,7 +113,7 @@ public class WDLUpdateChecker extends Thread {
 	 */
 	public static boolean hasNewVersion() {
 		if (releases == null || releases.isEmpty()) {
-			// Hasn't finished running yet. 
+			// Hasn't finished running yet.
 			return false;
 		}
 		Release recomendedRelease = getRecomendedRelease();
@@ -178,23 +178,23 @@ public class WDLUpdateChecker extends Thread {
 				TextComponentTranslation mcfThread = new TextComponentTranslation(
 						"wdl.intro.forumsLink");
 				mcfThread.getStyle().setColor(TextFormatting.BLUE).setUnderlined(true)
-						.setClickEvent(new ClickEvent(Action.OPEN_URL, FORUMS_THREAD_USAGE_LINK));
+				.setClickEvent(new ClickEvent(Action.OPEN_URL, FORUMS_THREAD_USAGE_LINK));
 				TextComponentTranslation wikiLink = new TextComponentTranslation(
 						"wdl.intro.wikiLink");
 				wikiLink.getStyle().setColor(TextFormatting.BLUE).setUnderlined(true)
-						.setClickEvent(new ClickEvent(Action.OPEN_URL, WIKI_LINK));
+				.setClickEvent(new ClickEvent(Action.OPEN_URL, WIKI_LINK));
 				TextComponentTranslation usage = new TextComponentTranslation(
 						"wdl.intro.usage", mcfThread, wikiLink);
 				TextComponentTranslation githubRepo = new TextComponentTranslation(
 						"wdl.intro.githubRepo");
 				githubRepo.getStyle().setColor(TextFormatting.BLUE).setUnderlined(true)
-						.setClickEvent(new ClickEvent(Action.OPEN_URL, GITHUB_LINK));
+				.setClickEvent(new ClickEvent(Action.OPEN_URL, GITHUB_LINK));
 				TextComponentTranslation contribute = new TextComponentTranslation(
 						"wdl.intro.contribute", githubRepo);
 				TextComponentTranslation redistributionList = new TextComponentTranslation(
 						"wdl.intro.redistributionList");
 				redistributionList.getStyle().setColor(TextFormatting.BLUE).setUnderlined(true)
-						.setClickEvent(new ClickEvent(Action.OPEN_URL, REDISTRIBUTION_LINK));
+				.setClickEvent(new ClickEvent(Action.OPEN_URL, REDISTRIBUTION_LINK));
 				TextComponentTranslation warning = new TextComponentTranslation(
 						"wdl.intro.warning");
 				warning.getStyle().setColor(TextFormatting.DARK_RED).setBold(true);
@@ -206,7 +206,7 @@ public class WDLUpdateChecker extends Thread {
 				TextComponentTranslation smr = new TextComponentTranslation(
 						"wdl.intro.stopModReposts");
 				smr.getStyle().setColor(TextFormatting.BLUE).setUnderlined(true)
-						.setClickEvent(new ClickEvent(Action.OPEN_URL, SMR_LINK));
+				.setClickEvent(new ClickEvent(Action.OPEN_URL, SMR_LINK));
 				TextComponentTranslation stolenBeware = new TextComponentTranslation(
 						"wdl.intro.stolenBeware", smr);
 

@@ -16,7 +16,7 @@ import wdl.WDL;
 
 /**
  * A GUI for selecting which world the player is currently in.
- * 
+ *
  * TODO: I might want to move the multiworld setup logic elsewhere.
  */
 public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
@@ -49,7 +49,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 
 		/**
 		 * Gets the world folder name marked by this button.
-		 * 
+		 *
 		 * @return the world info, or null if there isn't any.
 		 */
 		public MultiworldInfo getWorldInfo() {
@@ -67,7 +67,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 
 	/**
 	 * Info for a Multiworld.
-	 * 
+	 *
 	 * TODO: I may want to move this elsewhere.
 	 */
 	private static class MultiworldInfo {
@@ -128,7 +128,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	/**
 	 * Interface for a listener when the "cancel" or "use this world" buttons
 	 * are clicked.
-	 * 
+	 *
 	 * Note that implementations must <i>also</i> handle opening the correct
 	 * next GUI.
 	 */
@@ -140,7 +140,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 
 		/**
 		 * Called when the "Use this world" button is clicked.
-		 * 
+		 *
 		 * @param selectedWorld
 		 *            The folder name for the given world.
 		 */

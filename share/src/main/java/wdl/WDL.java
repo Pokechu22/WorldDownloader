@@ -74,19 +74,19 @@ import com.google.common.collect.Maps;
 public class WDL {
 	/**
 	 * Owning username for the github repository to check for updates against.
-	 * 
+	 *
 	 * For <code>https://github.com/Pokechu22/WorldDownloader</code>, this would
 	 * be <code>Pokechu22/WorldDownloader</code>.
-	 * 
+	 *
 	 * Note that WDL is licensed under the MMPLv2, which requires modified
 	 * versions to be open source if they are released (plus requires permission
 	 * for that - <a href="http://www.minecraftforum.net/private-messages/send?recipient=Pokechu22">
 	 * send Pokechu22 a message on the Minecraft Forums to get it</a>).
-	 * 
+	 *
 	 * @see GithubInfoGrabber
 	 */
 	public static final String GITHUB_REPO = "Pokechu22/WorldDownloader";
-	
+
 	// TODO: This class needs to be split into smaller classes. There is way too
 	// much different stuff in here.
 
@@ -140,18 +140,18 @@ public class WDL {
 	 * All tile entities that were saved manually, by chunk and then position.
 	 */
 	public static HashMap<ChunkPos, Map<BlockPos, TileEntity>> newTileEntities = new HashMap<ChunkPos, Map<BlockPos, TileEntity>>();
-	
+
 	/**
 	 * All entities that were downloaded, by chunk.
 	 */
 	public static HashMultimap<ChunkPos, Entity> newEntities = HashMultimap.create();
-	
+
 	/**
 	 * All of the {@link MapData}s that were sent to the client in the current
 	 * world.
 	 */
 	public static HashMap<Integer, MapData> newMapDatas = new HashMap<Integer, MapData>();
-	
+
 	// State variables:
 	/**
 	 * Whether the world is currently downloading.
@@ -183,7 +183,7 @@ public class WDL {
 	public static boolean saving = false;
 	/**
 	 * Has loading the world been delayed while the old one is being saved?
-	 * 
+	 *
 	 * Used when going thru portals or otherwise saving data.
 	 */
 	public static boolean worldLoadingDeferred = false;
@@ -217,9 +217,9 @@ public class WDL {
 	 * Default properties that are used to create the global properites.
 	 */
 	public static final Properties defaultProps;
-	
+
 	private static Logger logger = LogManager.getLogger();
-	
+
 	// Initialization:
 	static {
 		minecraft = Minecraft.getMinecraft();
@@ -249,30 +249,30 @@ public class WDL {
 		defaultProps.setProperty("PlayerZ", "8");
 		defaultProps.setProperty("PlayerHealth", "20");
 		defaultProps.setProperty("PlayerFood", "20");
-		
+
 		defaultProps.setProperty("Messages.enableAll", "true");
-		
+
 		//Set up entities.
 		defaultProps.setProperty("Entity.TrackDistanceMode", "server");
-		
+
 		//Don't save these entities by default -- they're problematic.
 		defaultProps.setProperty("Entity.FireworksRocketEntity.Enabled", "false");
 		defaultProps.setProperty("Entity.EnderDragon.Enabled", "false");
 		defaultProps.setProperty("Entity.WitherBoss.Enabled", "false");
 		defaultProps.setProperty("Entity.PrimedTnt.Enabled", "false");
 		defaultProps.setProperty("Entity.null.Enabled", "false"); // :(
-		
+
 		//Groups
 		defaultProps.setProperty("EntityGroup.Other.Enabled", "true");
 		defaultProps.setProperty("EntityGroup.Hostile.Enabled", "true");
 		defaultProps.setProperty("EntityGroup.Passive.Enabled", "true");
-		
+
 		//Last saved time, so that you can tell if the world was modified.
 		defaultProps.setProperty("LastSaved", "-1");
-		
+
 		// Whether the 1-time tutorial has been shown.
 		defaultProps.setProperty("TutorialShown", "false");
-		
+
 		globalProps = new Properties(defaultProps);
 		FileReader reader = null;
 		try {
@@ -309,22 +309,22 @@ public class WDL {
 			minecraft.displayGuiScreen(new GuiWDLMultiworldSelect(I18n
 					.format("wdl.gui.multiworldSelect.title.startDownload"),
 					new GuiWDLMultiworldSelect.WorldSelectionCallback() {
-						@Override
-						public void onWorldSelected(String selectedWorld) {
-							WDL.worldName = selectedWorld;
-							WDL.isMultiworld = true;
-							WDL.propsFound = true;
-							
-							minecraft.displayGuiScreen(null);
-							startDownload();
-						}
+				@Override
+				public void onWorldSelected(String selectedWorld) {
+					WDL.worldName = selectedWorld;
+					WDL.isMultiworld = true;
+					WDL.propsFound = true;
 
-						@Override
-						public void onCancel() {
-							minecraft.displayGuiScreen(null);
-							cancelDownload();
-						}
-					}));
+					minecraft.displayGuiScreen(null);
+					startDownload();
+				}
+
+				@Override
+				public void onCancel() {
+					minecraft.displayGuiScreen(null);
+					cancelDownload();
+				}
+			}));
 			return;
 		}
 
@@ -334,29 +334,29 @@ public class WDL {
 				@Override
 				public void onSelect(boolean enableMutliworld) {
 					isMultiworld = enableMutliworld;
-					
+
 					if (isMultiworld) {
 						// Ask the user which world is loaded
 						// TODO: Copy-pasted code from above -- suboptimal.
 						minecraft.displayGuiScreen(new GuiWDLMultiworldSelect(I18n
 								.format("wdl.gui.multiworldSelect.title.startDownload"),
 								new GuiWDLMultiworldSelect.WorldSelectionCallback() {
-									@Override
-									public void onWorldSelected(String selectedWorld) {
-										WDL.worldName = selectedWorld;
-										WDL.isMultiworld = true;
-										WDL.propsFound = true;
-										
-										minecraft.displayGuiScreen(null);
-										startDownload();
-									}
-	
-									@Override
-									public void onCancel() {
-										minecraft.displayGuiScreen(null);
-										cancelDownload();
-									}
-								}));
+							@Override
+							public void onWorldSelected(String selectedWorld) {
+								WDL.worldName = selectedWorld;
+								WDL.isMultiworld = true;
+								WDL.propsFound = true;
+
+								minecraft.displayGuiScreen(null);
+								startDownload();
+							}
+
+							@Override
+							public void onCancel() {
+								minecraft.displayGuiScreen(null);
+								cancelDownload();
+							}
+						}));
 					} else {
 						baseProps.setProperty("LinkedWorlds", "");
 						saveProps();
@@ -366,7 +366,7 @@ public class WDL {
 						WDL.startDownload();
 					}
 				}
-				
+
 				@Override
 				public void onCancel() {
 					minecraft.displayGuiScreen(null);
@@ -375,11 +375,11 @@ public class WDL {
 			}));
 			return;
 		}
-		
+
 		worldProps = loadWorldProps(worldName);
 		saveHandler = (SaveHandler) minecraft.getSaveLoader().getSaveLoader(
 				getWorldFolderName(worldName), true);
-		
+
 		FileInputStream worldDat = null;
 		try {
 			long lastSaved = Long.parseLong(worldProps.getProperty("LastSaved",
@@ -449,7 +449,7 @@ public class WDL {
 	 */
 	public static void cancelDownload() {
 		boolean wasDownloading = downloading;
-		
+
 		if (wasDownloading) {
 			minecraft.getSaveLoader().flushCache();
 			saveHandler.flush();
@@ -488,7 +488,7 @@ public class WDL {
 
 	/**
 	 * Called when the world has loaded.
-	 * 
+	 *
 	 * @return Whether on the same server.
 	 */
 	public static boolean loadWorld() {
@@ -497,26 +497,26 @@ public class WDL {
 		thePlayer = minecraft.player;
 		windowContainer = thePlayer.openContainer;
 		overrideLastModifiedCheck = false;
-		
+
 		NetworkManager newNM = thePlayer.connection.getNetworkManager();
-		
+
 		// Handle checking if the server changes here so that
 		// messages are loaded FIRST.
 		if (networkManager != newNM) {
 			loadBaseProps();
 			WDLMessages.onNewServer();
 		}
-		
+
 		WDLPluginChannels.onWorldLoad();
-		
+
 		// Is this a different server?
 		if (networkManager != newNM) {
 			// Different server, different world!
 			WDLMessages.chatMessageTranslated(WDLMessageTypes.ON_WORLD_LOAD,
 					"wdl.messages.onWorldLoad.differentServer");
-			
+
 			networkManager = newNM;
-			
+
 			if (isSpigot()) {
 				WDLMessages.chatMessageTranslated(
 						WDLMessageTypes.ON_WORLD_LOAD,
@@ -528,15 +528,15 @@ public class WDL {
 						"wdl.messages.onWorldLoad.vanilla",
 						thePlayer.getServerBrand());
 			}
-			
+
 			startOnChange = false;
-			
+
 			return true;
 		} else {
 			// Same server, different world!
 			WDLMessages.chatMessageTranslated(WDLMessageTypes.ON_WORLD_LOAD,
 					"wdl.messages.onWorldLoad.sameServer");
-			
+
 			if (isSpigot()) {
 				WDLMessages.chatMessageTranslated(
 						WDLMessageTypes.ON_WORLD_LOAD,
@@ -548,11 +548,11 @@ public class WDL {
 						"wdl.messages.onWorldLoad.vanilla",
 						thePlayer.getServerBrand());
 			}
-			
+
 			if (startOnChange) {
 				startDownload();
 			}
-			
+
 			return false;
 		}
 	}
@@ -589,40 +589,40 @@ public class WDL {
 					"wdl.messages.generalError.forbidden");
 			return;
 		}
-		
-		WorldBackupType backupType = 
+
+		WorldBackupType backupType =
 				WorldBackupType.match(baseProps.getProperty("Backup", "ZIP"));
-		
+
 		final GuiWDLSaveProgress progressScreen = new GuiWDLSaveProgress(
-				I18n.format("wdl.saveProgress.title"), 
+				I18n.format("wdl.saveProgress.title"),
 				(backupType != WorldBackupType.NONE ? 6 : 5)
-						+ WDLApi.getImplementingExtensions(ISaveListener.class).size());
-		
+				+ WDLApi.getImplementingExtensions(ISaveListener.class).size());
+
 		minecraft.addScheduledTask(new Runnable() {
 			@Override
 			public void run() {
 				minecraft.displayGuiScreen(progressScreen);
 			}
 		});
-		
+
 		saveProps();
 
 		try {
 			saveHandler.checkSessionLock();
 		} catch (MinecraftException e) {
 			throw new RuntimeException(
-				"WorldDownloader: Couldn't get session lock for saving the world!", e);
+					"WorldDownloader: Couldn't get session lock for saving the world!", e);
 		}
 
 		// Player NBT is stored both in a separate file and level.dat.
 		NBTTagCompound playerNBT = savePlayer(progressScreen);
 		saveWorldInfo(progressScreen, playerNBT);
-		
+
 		saveMapData(progressScreen);
 		saveChunks(progressScreen);
-		
+
 		saveProps();
-		
+
 		for (ModInfo<ISaveListener> info : WDLApi
 				.getImplementingExtensions(ISaveListener.class)) {
 			progressScreen.startMajorTask(
@@ -630,16 +630,16 @@ public class WDL {
 							info.getDisplayName()), 1);
 			info.mod.afterChunksSaved(saveHandler.getWorldDirectory());
 		}
-		
+
 		try {
 			WDLMessages.chatMessageTranslated(WDLMessageTypes.SAVING,
 					"wdl.messages.saving.flushingIO");
-			
+
 			progressScreen.startMajorTask(
 					I18n.format("wdl.saveProgress.flushingIO.title"), 1);
 			progressScreen.setMinorTaskProgress(
 					I18n.format("wdl.saveProgress.flushingIO.subtitle"), 1);
-			
+
 			// func_178779_a is a getter for the instance.
 			// Look inside of ThreadedFileIOBase.java for
 			// such a getter.
@@ -647,7 +647,7 @@ public class WDL {
 		} catch (Exception e) {
 			throw new RuntimeException("Threw exception waiting for asynchronous IO to finish. Hmmm.", e);
 		}
-		
+
 		if (backupType != WorldBackupType.NONE) {
 			WDLMessages.chatMessageTranslated(WDLMessageTypes.SAVING,
 					"wdl.messages.saving.backingUp");
@@ -655,59 +655,59 @@ public class WDL {
 					backupType.getTitle(), 1);
 			progressScreen.setMinorTaskProgress(
 					I18n.format("wdl.saveProgress.backingUp.preparing"), 1);
-			
+
 			try {
-				WorldBackup.backupWorld(saveHandler.getWorldDirectory(), 
+				WorldBackup.backupWorld(saveHandler.getWorldDirectory(),
 						getWorldFolderName(worldName), backupType, progressScreen);
 			} catch (IOException e) {
 				WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR,
 						"wdl.messages.generalError.failedToBackUp");
 			}
 		}
-		
+
 		progressScreen.setDoneWorking();
 	}
 
 	/**
 	 * Save the player (position, health, inventory, ...) into its own file in
 	 * the players directory, and applies needed overrides to the player info.
-	 * 
+	 *
 	 * @return The player NBT tag.  Needed for later use in the world info.
 	 */
 	public static NBTTagCompound savePlayer(GuiWDLSaveProgress progressScreen) {
 		if (!WDLPluginChannels.canDownloadAtAll()) { return new NBTTagCompound(); }
-		
+
 		progressScreen.startMajorTask(
 				I18n.format("wdl.saveProgress.playerData.title"),
 				3 + WDLApi.getImplementingExtensions(IPlayerInfoEditor.class).size());
 		WDLMessages.chatMessageTranslated(WDLMessageTypes.SAVING,
 				"wdl.messages.saving.savingPlayer");
-		
+
 		progressScreen.setMinorTaskProgress(
 				I18n.format("wdl.saveProgress.playerData.creatingNBT"), 1);
-		
+
 		NBTTagCompound playerNBT = new NBTTagCompound();
 		thePlayer.writeToNBT(playerNBT);
-		
+
 		progressScreen.setMinorTaskProgress(
 				I18n.format("wdl.saveProgress.playerData.editingNBT"), 2);
 		applyOverridesToPlayer(playerNBT);
-		
+
 		int taskNum = 3;
 		for (ModInfo<IPlayerInfoEditor> info : WDLApi
 				.getImplementingExtensions(IPlayerInfoEditor.class)) {
 			progressScreen.setMinorTaskProgress(
 					I18n.format("wdl.saveProgress.playerData.extension",
 							info.getDisplayName()), taskNum);
-			
+
 			info.mod.editPlayerInfo(thePlayer, saveHandler, playerNBT);
-			
+
 			taskNum++;
 		}
-		
+
 		progressScreen.setMinorTaskProgress(
 				I18n.format("wdl.saveProgress.playerData.writingNBT"), taskNum);
-		
+
 		FileOutputStream stream = null;
 		try {
 			File playersDirectory = new File(saveHandler.getWorldDirectory(),
@@ -716,9 +716,9 @@ public class WDL {
 					.getUniqueID().toString() + ".dat.tmp");
 			File playerFile = new File(playersDirectory, thePlayer
 					.getUniqueID().toString() + ".dat");
-			
+
 			stream = new FileOutputStream(playerFileTmp);
-			
+
 			CompressedStreamTools.writeCompressed(playerNBT, stream);
 
 			// Remove the old player file to make space for the new one.
@@ -741,13 +741,13 @@ public class WDL {
 
 		WDLMessages.chatMessageTranslated(WDLMessageTypes.SAVING,
 				"wdl.messages.saving.playerSaved");
-		
+
 		return playerNBT;
 	}
 
 	/**
 	 * Hardcoded, unchanging anvil save version ID.
-	 * 
+	 *
 	 * 19132: McRegion; 19133: Anvil.  If it's necessary to specify a new
 	 * version, many other parts of the mod will be broken anyways.
 	 */
@@ -760,16 +760,16 @@ public class WDL {
 	public static void saveWorldInfo(GuiWDLSaveProgress progressScreen,
 			NBTTagCompound playerInfoNBT) {
 		if (!WDLPluginChannels.canDownloadAtAll()) { return; }
-		
+
 		progressScreen.startMajorTask(
 				I18n.format("wdl.saveProgress.worldMetadata.title"),
 				3 + WDLApi.getImplementingExtensions(IWorldInfoEditor.class).size());
 		WDLMessages.chatMessageTranslated(WDLMessageTypes.SAVING,
 				"wdl.messages.saving.savingWorld");
-		
+
 		progressScreen.setMinorTaskProgress(
 				I18n.format("wdl.saveProgress.worldMetadata.creatingNBT"), 1);
-		
+
 		// Set the save version, which isn't done automatically for some
 		// strange reason.
 		worldClient.getWorldInfo().setSaveVersion(ANVIL_SAVE_VERSION);
@@ -794,17 +794,17 @@ public class WDL {
 			progressScreen.setMinorTaskProgress(
 					I18n.format("wdl.saveProgress.worldMetadata.extension",
 							info.getDisplayName()), taskNum);
-			
+
 			info.mod.editWorldInfo(worldClient, worldClient.getWorldInfo(),
 					saveHandler, worldInfoNBT);
-			
+
 			taskNum++;
 		}
-		
+
 		progressScreen.setMinorTaskProgress(
 				I18n.format("wdl.saveProgress.worldMetadata.writingNBT"), taskNum);
 		File saveDirectory = saveHandler.getWorldDirectory();
-		
+
 		worldProps.setProperty("LastSaved",
 				Long.toString(worldInfoNBT.getLong("LastPlayed")));
 
@@ -814,7 +814,7 @@ public class WDL {
 			File dataFileBackup = new File(saveDirectory, "level.dat_old");
 			File dataFileOld = new File(saveDirectory, "level.dat");
 			stream = new FileOutputStream(dataFile);
-			
+
 			CompressedStreamTools.writeCompressed(rootWorldInfoNBT, stream);
 
 			if (dataFileBackup.exists()) {
@@ -857,34 +857,34 @@ public class WDL {
 	public static void saveChunks(GuiWDLSaveProgress progressScreen)
 			throws IllegalArgumentException, IllegalAccessException {
 		if (!WDLPluginChannels.canDownloadAtAll()) { return; }
-		
+
 		WDLMessages.chatMessageTranslated(WDLMessageTypes.SAVING,
 				"wdl.messages.saving.savingChunks");
-		
+
 		// Get the ChunkProviderClient from WorldClient
-		ChunkProviderClient chunkProvider = (ChunkProviderClient) worldClient
+		ChunkProviderClient chunkProvider = worldClient
 				.getChunkProvider();
 		// Get the list of loaded chunks
 		@SuppressWarnings("unchecked")
-		Long2ObjectMap<Chunk> chunkMap = (Long2ObjectMap<Chunk>) ReflectionUtils
-				.findAndGetPrivateField(chunkProvider, Long2ObjectMap.class);
+		Long2ObjectMap<Chunk> chunkMap = ReflectionUtils
+		.findAndGetPrivateField(chunkProvider, Long2ObjectMap.class);
 		List<Chunk> chunks = new ArrayList<Chunk>(chunkMap.values());
-		
-		progressScreen.startMajorTask(I18n.format("wdl.saveProgress.chunk.title"), 
+
+		progressScreen.startMajorTask(I18n.format("wdl.saveProgress.chunk.title"),
 				chunks.size());
-		
+
 		for (int currentChunk = 0; currentChunk < chunks.size(); currentChunk++) {
-			Chunk c = (Chunk) chunks.get(currentChunk);
+			Chunk c = chunks.get(currentChunk);
 			if (c != null) {
 				//Serverside restrictions check
 				if (!WDLPluginChannels.canSaveChunk(c)) {
 					continue;
 				}
-				
+
 				progressScreen.setMinorTaskProgress(I18n.format(
 						"wdl.saveProgress.chunk.saving", c.x,
 						c.z), currentChunk);
-				
+
 				saveChunk(c);
 			}
 		}
@@ -897,7 +897,7 @@ public class WDL {
 	 */
 	public static void saveChunk(Chunk c) {
 		if (!WDLPluginChannels.canDownloadAtAll()) { return; }
-		
+
 		if (!WDLPluginChannels.canSaveChunk(c)) { return; }
 
 		try {
@@ -988,19 +988,19 @@ public class WDL {
 
 	/**
 	 * Loads the properties for the given world, and returns it.
-	 * 
+	 *
 	 * Returns an empty Properties that inherits from baseProps if the specific
 	 * world cannot be found.
 	 */
 	public static Properties loadWorldProps(String theWorldName) {
 		Properties ret = new Properties(baseProps);
-		
+
 		if (theWorldName.isEmpty()) {
 			return ret;
 		}
-		
+
 		File savesDir = new File(minecraft.mcDataDir, "saves");
-		
+
 		String folder = getWorldFolderName(theWorldName);
 		File worldFolder = new File(savesDir, folder);
 
@@ -1008,7 +1008,7 @@ public class WDL {
 		try {
 			ret.load(new FileReader(new File(worldFolder,
 					"WorldDownloader.txt")));
-			
+
 			return ret;
 		} catch (Exception e) {
 			logger.debug("Failed to load world props for " + worldName, e);
@@ -1019,7 +1019,7 @@ public class WDL {
 					reader.close();
 				} catch (Exception e) {
 					logger.warn("Failed to close world props reader for "
-							+ worldName, e);						
+							+ worldName, e);
 				}
 			}
 		}
@@ -1039,7 +1039,7 @@ public class WDL {
 	 */
 	public static void saveProps(String theWorldName, Properties theWorldProps) {
 		File savesDir = new File(minecraft.mcDataDir, "saves");
-		
+
 		if (theWorldName.length() > 0) {
 			String folder = getWorldFolderName(theWorldName);
 
@@ -1062,10 +1062,10 @@ public class WDL {
 					"WorldDownloader.txt")), I18n.format("wdl.props.base.title"));
 		} catch (Exception e) {
 		}
-		
+
 		saveGlobalProps();
 	}
-	
+
 	/**
 	 * Saves the global properties, which are used for all servers.
 	 */
@@ -1074,7 +1074,7 @@ public class WDL {
 			globalProps.store(new FileWriter(new File(minecraft.mcDataDir,
 					"WorldDownloader.txt")), I18n.format("wdl.props.global.title"));
 		} catch (Exception e) {
-			
+
 		}
 	}
 
@@ -1133,7 +1133,7 @@ public class WDL {
 			rotation.appendTag(new NBTTagFloat(0.0f));
 			playerNBT.setTag("Rotation", rotation);
 		}
-		
+
 		// If the player is able to fly, spawn them flying.
 		// Helps ensure they don't fall out of the world.
 		if (thePlayer.capabilities.allowFlying) {
@@ -1165,7 +1165,7 @@ public class WDL {
 		} else {
 			worldInfoNBT.setBoolean("allowCommands", false);
 		}
-		
+
 		// GameType
 		String gametypeOption = worldProps.getProperty("GameType");
 
@@ -1301,43 +1301,43 @@ public class WDL {
 			logger.info("Failed to call FML handleWorldDataSave", ex);
 		}
 	}
-	
+
 	/**
 	 * Saves existing map data.  Map data refering to the items
 	 * that contain pictures.
-	 * 
+	 *
 	 * TODO: Overwrite / create IDCounts.dat.
 	 */
 	public static void saveMapData(GuiWDLSaveProgress progressScreen) {
 		if (!WDLPluginChannels.canSaveMaps()) { return; }
-		
+
 		File dataDirectory = new File(saveHandler.getWorldDirectory(),
 				"data");
 		dataDirectory.mkdirs();
-		
+
 		progressScreen.startMajorTask(
 				I18n.format("wdl.saveProgress.map.title"), newMapDatas.size());
-		
+
 		WDLMessages.chatMessageTranslated(WDLMessageTypes.SAVING,
 				"wdl.messages.saving.savingMapItemData");
-		
+
 		int count = 0;
 		for (Map.Entry<Integer, MapData> e : newMapDatas.entrySet()) {
 			count++;
-			
+
 			progressScreen.setMinorTaskProgress(
 					I18n.format("wdl.saveProgress.map.saving", e.getKey()),
 					count);
-			
+
 			File mapFile = new File(dataDirectory, "map_" + e.getKey() + ".dat");
-			
+
 			NBTTagCompound mapNBT = new NBTTagCompound();
 			NBTTagCompound data = new NBTTagCompound();
-			
+
 			e.getValue().writeToNBT(data);
-			
+
 			mapNBT.setTag("data", data);
-			
+
 			try {
 				CompressedStreamTools.writeCompressed(mapNBT,
 						new FileOutputStream(mapFile));
@@ -1346,7 +1346,7 @@ public class WDL {
 						"map data for map " + e.getKey() + "!", ex);
 			}
 		}
-		
+
 		WDLMessages.chatMessageTranslated(WDLMessageTypes.SAVING,
 				"wdl.messages.saving.mapItemDataSaved");
 	}
@@ -1433,10 +1433,10 @@ public class WDL {
 			tileEntity.setField(i, inventory.getField(i));
 		}
 	}
-	
+
 	/**
 	 * Adds the given tile entity to {@link #newTileEntities}.
-	 * 
+	 *
 	 * @param pos
 	 *            The position of the tile entity
 	 * @param te
@@ -1445,9 +1445,9 @@ public class WDL {
 	public static void saveTileEntity(BlockPos pos, TileEntity te) {
 		int chunkX = pos.getX() / 16;
 		int chunkZ = pos.getZ() / 16;
-		
+
 		ChunkPos chunkPos = new ChunkPos(chunkX, chunkZ);
-		
+
 		if (!newTileEntities.containsKey(chunkPos)) {
 			newTileEntities.put(chunkPos, new HashMap<BlockPos, TileEntity>());
 		}
@@ -1482,7 +1482,7 @@ public class WDL {
 
 	/**
 	 * Is the current server running spigot?
-	 * 
+	 *
 	 * This is detected based off of the server brand.
 	 */
 	public static boolean isSpigot() {
@@ -1492,7 +1492,7 @@ public class WDL {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Gets the current setup information.
 	 */
@@ -1633,31 +1633,31 @@ public class WDL {
 			global.addCrashSection("-", "null");
 		}
 	}
-	
+
 	/**
 	 * Call to properly crash the game when an exception is caught in WDL code.
-	 * 
+	 *
 	 * @param category
 	 */
 	public static void crashed(Throwable t, String category) {
 		CrashReport report;
-		
+
 		if (t instanceof ReportedException) {
-			CrashReport oldReport = 
+			CrashReport oldReport =
 					((ReportedException) t).getCrashReport();
-			
+
 			report = CrashReport.makeCrashReport(oldReport.getCrashCause(),
 					category + " (" + oldReport.getCauseStackTraceOrString() + ")");
-			
+
 			try {
 				//Steal crashReportSections, and replace it.
 				@SuppressWarnings("unchecked")
 				List<CrashReportCategory> crashReportSectionsOld = ReflectionUtils
-						.findAndGetPrivateField(oldReport, List.class);
+				.findAndGetPrivateField(oldReport, List.class);
 				@SuppressWarnings("unchecked")
 				List<CrashReportCategory> crashReportSectionsNew = ReflectionUtils
-						.findAndGetPrivateField(report, List.class);
-				
+				.findAndGetPrivateField(report, List.class);
+
 				crashReportSectionsNew.addAll(crashReportSectionsOld);
 			} catch (Exception e) {
 				//Well... some kind of reflection error.

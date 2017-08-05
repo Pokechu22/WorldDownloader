@@ -69,7 +69,7 @@ public class EntityRealigner implements IEntityEditor, IWDLModDescripted {
 		e.posY = convertServerPos(e.serverPosY);
 		e.posZ = convertServerPos(e.serverPosZ);
 	}
-	
+
 	/**
 	 * Converts a position from the fixed-point version that a packet
 	 * (or {@link Entity#serverPosX} and the like use) into a double.

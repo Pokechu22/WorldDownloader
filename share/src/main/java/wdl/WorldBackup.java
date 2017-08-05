@@ -49,7 +49,7 @@ public class WorldBackup {
 			this.descriptionKey = descriptionKey;
 			this.titleKey = titleKey;
 		}
-		
+
 		/**
 		 * Gets the (translated) description for this backup type.
 		 * @return
@@ -57,7 +57,7 @@ public class WorldBackup {
 		public String getDescription() {
 			return I18n.format(descriptionKey);
 		}
-		
+
 		/**
 		 * Gets the (translated) title for this backup type.
 		 * @return
@@ -65,11 +65,11 @@ public class WorldBackup {
 		public String getTitle() {
 			return I18n.format(titleKey);
 		}
-		
+
 		/**
 		 * Attempts to parse the given string into a WorldBackupType.  This
 		 * is performed case-insensitively.
-		 * 
+		 *
 		 * @param name The name of the backup type.
 		 * @return The backup type corresponding to the name.
 		 */
@@ -79,7 +79,7 @@ public class WorldBackup {
 					return type;
 				}
 			}
-			
+
 			return WorldBackupType.NONE;
 		}
 	}
@@ -98,29 +98,29 @@ public class WorldBackup {
 		 */
 		public abstract void onNextFile(String name);
 	}
-	
+
 	/**
 	 * The format that is used for world date saving.
-	 * 
-	 * TODO: Allow modification ingame? 
+	 *
+	 * TODO: Allow modification ingame?
 	 */
-	private static final DateFormat DATE_FORMAT = 
+	private static final DateFormat DATE_FORMAT =
 			new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
 
 	/**
 	 * Backs up the given world with the selected type.
-	 * 
+	 *
 	 * @param worldFolder The folder that contains the world to backup.
 	 * @param worldName The name of the world.
 	 * @param type The type to backup with.
 	 * @param monitor A monitor.
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	public static void backupWorld(File worldFolder, String worldName,
 			WorldBackupType type, IBackupProgressMonitor monitor) throws IOException {
 		String newWorldName = worldName + "_" + DATE_FORMAT.format(new Date());
-		
+
 		switch (type) {
 		case NONE: {
 			return;
@@ -128,24 +128,24 @@ public class WorldBackup {
 		case FOLDER: {
 			File destination = new File(worldFolder.getParentFile(),
 					newWorldName);
-			
+
 			if (destination.exists()) {
-				throw new IOException("Backup folder (" + destination + 
+				throw new IOException("Backup folder (" + destination +
 						") already exists!");
 			}
-			
+
 			copyDirectory(worldFolder, destination, monitor);
 			return;
 		}
 		case ZIP: {
-			File destination = new File(worldFolder.getParentFile(), 
+			File destination = new File(worldFolder.getParentFile(),
 					newWorldName + ".zip");
-			
+
 			if (destination.exists()) {
-				throw new IOException("Backup file (" + destination + 
+				throw new IOException("Backup file (" + destination +
 						") already exists!");
 			}
-			
+
 			zipDirectory(worldFolder, destination, monitor);
 			return;
 		}
@@ -158,17 +158,17 @@ public class WorldBackup {
 	public static void copyDirectory(File src, File destination,
 			IBackupProgressMonitor monitor) throws IOException {
 		monitor.setNumberOfFiles(countFilesInFolder(src));
-		
+
 		copy(src, destination, src.getPath().length() + 1, monitor);
 	}
-	
+
 	/**
 	 * Zips a directory.
 	 */
 	public static void zipDirectory(File src, File destination,
 			IBackupProgressMonitor monitor) throws IOException {
 		monitor.setNumberOfFiles(countFilesInFolder(src));
-		
+
 		FileOutputStream outStream = null;
 		ZipOutputStream stream = null;
 		try {
@@ -187,15 +187,15 @@ public class WorldBackup {
 			}
 		}
 	}
-	
+
 	/**
 	 * Recursively adds a folder to a zip stream.
-	 * 
+	 *
 	 * @param folder The folder to zip.
 	 * @param stream The stream to write to.
 	 * @param pathStartIndex The start of the file path.
 	 * @param monitor A monitor.
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	private static void zipFolder(File folder, ZipOutputStream stream,
@@ -218,47 +218,47 @@ public class WorldBackup {
 			}
 		}
 	}
-	
+
 	/**
 	 * Copies a series of files from one folder to another.
-	 * 
+	 *
 	 * @param from The file to copy.
 	 * @param to The new location for the file.
 	 * @param pathStartIndex The start of the file path.
 	 * @param monitor A monitor.
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	private static void copy(File from, File to, int pathStartIndex,
 			IBackupProgressMonitor monitor) throws IOException {
 		if (from.isDirectory()) {
-            if (!to.exists()) {
-                to.mkdir();
-            }
+			if (!to.exists()) {
+				to.mkdir();
+			}
 
-            for (String fileName : from.list()) {
-            	copy(new File(from, fileName),
-                        new File(to, fileName), pathStartIndex, monitor);
-            }
-        } else {
-        	monitor.onNextFile(to.getPath().substring(pathStartIndex));
-        	//Yes, FileUtils#copyDirectory exists, but we can't monitor the
-        	//progress using it.
-        	FileUtils.copyFile(from, to, true);
-        }
+			for (String fileName : from.list()) {
+				copy(new File(from, fileName),
+						new File(to, fileName), pathStartIndex, monitor);
+			}
+		} else {
+			monitor.onNextFile(to.getPath().substring(pathStartIndex));
+			//Yes, FileUtils#copyDirectory exists, but we can't monitor the
+			//progress using it.
+			FileUtils.copyFile(from, to, true);
+		}
 	}
-	
+
 	/**
 	 * Recursively counts the number of files in the given folder.
 	 * Directories are not included in this count, but the files
 	 * contained within are.
-	 * 
+	 *
 	 * @param folder
 	 */
 	private static int countFilesInFolder(File folder) {
 		if (!folder.isDirectory()) {
 			return 0;
 		}
-		
+
 		int count = 0;
 		for (File file : folder.listFiles()) {
 			if (file.isDirectory()) {
@@ -267,9 +267,9 @@ public class WorldBackup {
 				count++;
 			}
 		}
-		
+
 		return count;
 	}
-	
+
 	private WorldBackup() { }
 }

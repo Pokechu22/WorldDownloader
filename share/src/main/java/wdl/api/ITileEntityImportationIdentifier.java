@@ -16,7 +16,7 @@ public interface ITileEntityImportationIdentifier extends IWDLMod {
 	 * those that require manual interaction such as chests) TileEntities will
 	 * be imported. Additionally, the block at the tile entity's coordinates
 	 * must be one that would normally be used with that tile entity.
-	 * 
+	 *
 	 * @param entityID
 	 *            The tile entity's ID, as found in the 'id' tag.
 	 * @param pos

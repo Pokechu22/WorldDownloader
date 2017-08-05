@@ -21,24 +21,24 @@ import wdl.WorldBackup.IBackupProgressMonitor;
  * GUI shown before possibly overwriting data in the world.
  */
 public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements
-		IBackupProgressMonitor {
+IBackupProgressMonitor {
 	private class BackupThread extends Thread {
-		private final DateFormat folderDateFormat = 
+		private final DateFormat folderDateFormat =
 				new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
-		
+
 		public BackupThread(boolean zip) {
 			this.zip = zip;
 		}
-		
+
 		private final boolean zip;
-		
+
 		@Override
 		public void run() {
 			try {
 				String backupName = WDL.getWorldFolderName(WDL.worldName) + "_"
 						+ folderDateFormat.format(new Date())
 						+ "_user" + (zip ? ".zip" : "");
-				
+
 				if (zip) {
 					backupData = I18n
 							.format("wdl.gui.overwriteChanges.backingUp.zip", backupName);
@@ -46,16 +46,16 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements
 					backupData = I18n
 							.format("wdl.gui.overwriteChanges.backingUp.folder", backupName);
 				}
-				
+
 				File fromFolder = WDL.saveHandler.getWorldDirectory();
 				File backupFile = new File(fromFolder.getParentFile(),
 						backupName);
-				
+
 				if (backupFile.exists()) {
 					throw new IOException("Backup target (" + backupFile
 							+ ") already exists!");
 				}
-				
+
 				if (zip) {
 					WorldBackup.zipDirectory(fromFolder, backupFile,
 							GuiWDLOverwriteChanges.this);
@@ -68,20 +68,20 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements
 						"wdl.messages.generalError.failedToSetUpEntityUI");
 			} finally {
 				backingUp = false;
-				
+
 				WDL.overrideLastModifiedCheck = true;
 				mc.displayGuiScreen(null);
-				
+
 				WDL.startDownload();
 			}
 		}
 	}
-	
+
 	public GuiWDLOverwriteChanges(long lastSaved, long lastPlayed) {
 		this.lastSaved = lastSaved;
 		this.lastPlayed = lastPlayed;
 	}
-	
+
 	/**
 	 * Whether a backup is actively occuring.
 	 */
@@ -102,31 +102,31 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements
 	 * Name of the current file being backed up.
 	 */
 	private volatile String backupFile = "";
-	
+
 	private int infoBoxX, infoBoxY;
 	private int infoBoxWidth, infoBoxHeight;
 	private GuiButton backupAsZipButton;
 	private GuiButton backupAsFolderButton;
 	private GuiButton downloadNowButton;
 	private GuiButton cancelButton;
-	
+
 	/**
 	 * Time when the world was last saved / last played.
 	 */
 	private final long lastSaved, lastPlayed;
-	
+
 	private String title;
 	private String footer;
 	private String captionTitle;
 	private String captionSubtitle;
 	private String overwriteWarning1, overwriteWarning2;
-	
+
 	private String backingUpTitle;
-	
+
 	@Override
 	public void initGui() {
 		backingUp = false;
-		
+
 		title = I18n.format("wdl.gui.overwriteChanges.title");
 		if (lastSaved != -1) {
 			footer = I18n.format("wdl.gui.overwriteChanges.footer", lastSaved, lastPlayed);
@@ -137,27 +137,27 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements
 		captionSubtitle = I18n.format("wdl.gui.overwriteChanges.captionSubtitle");
 		overwriteWarning1 = I18n.format("wdl.gui.overwriteChanges.overwriteWarning1");
 		overwriteWarning2 = I18n.format("wdl.gui.overwriteChanges.overwriteWarning2");
-		
+
 		backingUpTitle = I18n.format("wdl.gui.overwriteChanges.backingUp.title");
-		
+
 		// TODO: Figure out the widest between captionTitle, captionSubtitle,
 		// overwriteWarning1, and overwriteWarning2.
 		infoBoxWidth = fontRenderer.getStringWidth(overwriteWarning1);
 		infoBoxHeight = 22 * 6;
-		
+
 		// Ensure that the infobox is wide enough for the buttons.
 		// While the default caption title is short enough, a translation may
 		// make it too short (Chinese, for example).
 		if (infoBoxWidth < 200) {
 			infoBoxWidth = 200;
 		}
-		
+
 		infoBoxY = 48;
 		infoBoxX = (this.width / 2) - (infoBoxWidth / 2);
-		
+
 		int x = (this.width / 2) - 100;
 		int y = infoBoxY + 22;
-		
+
 		backupAsZipButton = new GuiButton(0, x, y,
 				I18n.format("wdl.gui.overwriteChanges.asZip.name"));
 		this.buttonList.add(backupAsZipButton);
@@ -173,51 +173,51 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements
 		cancelButton = new GuiButton(3, x, y,
 				I18n.format("wdl.gui.overwriteChanges.cancel.name"));
 		this.buttonList.add(cancelButton);
-		
+
 		super.initGui();
 	}
-	
+
 	@Override
 	protected void keyTyped(char typedChar, int keyCode) throws IOException {
 		if (keyCode == Keyboard.KEY_ESCAPE) {
-			//Don't allow closing at all. 
+			//Don't allow closing at all.
 			return;
 		}
 		super.keyTyped(typedChar, keyCode);
 	}
-	
+
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if (this.backingUp) {
 			return;
 		}
-		
+
 		if (button.id == 0) {
 			backingUp = true;
-			
+
 			new BackupThread(true).start();
 		}
 		if (button.id == 1) {
 			backingUp = true;
-			
+
 			new BackupThread(false).start();
 		}
 		if (button.id == 2) {
 			WDL.overrideLastModifiedCheck = true;
 			mc.displayGuiScreen(null);
-			
+
 			WDL.startDownload();
 		}
 		if (button.id == 3) {
 			mc.displayGuiScreen(null);
 		}
 	}
-	
+
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		if (this.backingUp) {
 			drawBackground(0);
-			
+
 			drawCenteredString(fontRenderer, backingUpTitle,
 					width / 2, height / 4 - 40, 0xFFFFFF);
 			drawCenteredString(fontRenderer, backupData,
@@ -232,14 +232,14 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements
 		} else {
 			drawDefaultBackground();
 			Utils.drawBorder(32, 22, 0, 0, height, width);
-			
+
 			drawCenteredString(fontRenderer, title, width / 2, 8, 0xFFFFFF);
 			drawCenteredString(fontRenderer, footer, width / 2, height - 8
 					- fontRenderer.FONT_HEIGHT, 0xFFFFFF);
-			
+
 			drawRect(infoBoxX - 5, infoBoxY - 5, infoBoxX + infoBoxWidth + 5,
 					infoBoxY + infoBoxHeight + 5, 0xB0000000);
-			
+
 			drawCenteredString(fontRenderer, captionTitle, width / 2,
 					infoBoxY, 0xFFFFFF);
 			drawCenteredString(fontRenderer, captionSubtitle, width / 2,
@@ -249,9 +249,9 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements
 					infoBoxY + 115, 0xFFFFFF);
 			drawCenteredString(fontRenderer, overwriteWarning2, width / 2,
 					infoBoxY + 115 + fontRenderer.FONT_HEIGHT, 0xFFFFFF);
-			
+
 			super.drawScreen(mouseX, mouseY, partialTicks);
-			
+
 			String tooltip = null;
 			if (backupAsZipButton.isMouseOver()) {
 				tooltip = I18n.format("wdl.gui.overwriteChanges.asZip.description");
@@ -262,7 +262,7 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements
 			} else if (cancelButton.isMouseOver()) {
 				tooltip = I18n.format("wdl.gui.overwriteChanges.cancel.description");
 			}
-			
+
 			Utils.drawGuiInfoBox(tooltip, width, height, 48);
 		}
 	}

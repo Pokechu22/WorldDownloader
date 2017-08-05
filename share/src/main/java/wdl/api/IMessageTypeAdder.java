@@ -8,8 +8,8 @@ import java.util.Map;
 public interface IMessageTypeAdder extends IWDLMod {
 	/**
 	 * Gets the various {@link IWDLMessageType}s to register.
-	 * 
-	 * @return A map of name to type.  
+	 *
+	 * @return A map of name to type.
 	 */
 	public Map<String, IWDLMessageType> getMessageTypes();
 }

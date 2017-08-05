@@ -150,5 +150,5 @@ public class LegacyEntityManager implements IEntityManager, IWDLModDescripted {
 	public boolean enabledByDefault(String identifier) {
 		return true;
 	}
-	
+
 }

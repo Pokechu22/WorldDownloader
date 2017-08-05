@@ -10,14 +10,14 @@ public abstract class MessageTypeCategory {
 	public MessageTypeCategory(String internalName) {
 		this.internalName = internalName;
 	}
-	
+
 	/**
 	 * The internal name.
-	 * 
+	 *
 	 * Used when saving.
 	 */
 	public final String internalName;
-	
+
 	/**
 	 * Gets the user-facing display name.
 	 */
@@ -59,14 +59,14 @@ public abstract class MessageTypeCategory {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Simple {@link MessageTypeCategory} that gets the display name from
 	 * an internationalization key.
 	 */
 	public static class I18nableMessageTypeCategory extends MessageTypeCategory {
 		public final String i18nKey;
-		
+
 		public I18nableMessageTypeCategory(String internalName, String i18nKey) {
 			super(internalName);
 			this.i18nKey = i18nKey;
@@ -77,25 +77,25 @@ public abstract class MessageTypeCategory {
 			// TODO Auto-generated method stub
 			return I18n.format(i18nKey);
 		}
-		
+
 	}
-	
+
 	/**
 	 * Core recommended category.
-	 * 
+	 *
 	 * Put in hear instead of {@link WDLMessageTypes} because of field load
 	 * orders.
 	 */
-	static final MessageTypeCategory CORE_RECOMMENDED = 
+	static final MessageTypeCategory CORE_RECOMMENDED =
 			new MessageTypeCategory.I18nableMessageTypeCategory("CORE_RECOMMENDED",
 					"wdl.messages.category.core_recommended");
 	/**
 	 * Core recommended category.
-	 * 
+	 *
 	 * Put in hear instead of {@link WDLMessageTypes} because of field load
 	 * orders.
 	 */
-	static final MessageTypeCategory CORE_DEBUG = 
+	static final MessageTypeCategory CORE_DEBUG =
 			new MessageTypeCategory.I18nableMessageTypeCategory("CORE_DEBUG",
 					"wdl.messages.category.core_debug");
 }

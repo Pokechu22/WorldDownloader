@@ -8,7 +8,7 @@ public interface IBlockEventListener extends IWDLMod {
 	/**
 	 * Called when a "Block Event" occurs. Some mods use this to send data. (In
 	 * vanilla, noteblocks use this to play a note).
-	 * 
+	 *
 	 * @param world
 	 *            The world in which the event occured.
 	 * @param pos

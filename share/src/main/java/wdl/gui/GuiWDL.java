@@ -33,7 +33,7 @@ public class GuiWDL extends GuiScreen {
 
 			/**
 			 * Constructor.
-			 * 
+			 *
 			 * @param key
 			 *            The I18n key, which will have the base for this GUI
 			 *            prepended.

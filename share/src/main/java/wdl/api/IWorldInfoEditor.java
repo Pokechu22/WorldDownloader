@@ -11,7 +11,7 @@ import net.minecraft.world.storage.WorldInfo;
 public interface IWorldInfoEditor extends IWDLMod {
 	/**
 	 * Edits the world info NBT before it is saved.
-	 * 
+	 *
 	 * @param world
 	 *            The world that is being saved ({@link wdl.WDL#worldClient})
 	 * @param info

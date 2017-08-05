@@ -8,10 +8,6 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 
-import com.google.common.base.Throwables;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAreaEffectCloud;
@@ -52,6 +48,10 @@ import net.minecraft.entity.projectile.EntitySmallFireball;
 import net.minecraft.entity.projectile.EntitySnowball;
 import wdl.EntityUtils.SpigotEntityType;
 import wdl.api.IEntityManager;
+
+import com.google.common.base.Throwables;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 
 public enum StandardEntityManagers implements IEntityManager {
 	SPIGOT {
@@ -259,7 +259,7 @@ public enum StandardEntityManagers implements IEntityManager {
 							&& item.getValue() instanceof Class<?>) {
 						@SuppressWarnings("unchecked")
 						Map<String, Class<? extends Entity>> temp =
-								(Map<String, Class<? extends Entity>>) map;
+						(Map<String, Class<? extends Entity>>) map;
 						result = temp;
 						break;
 					}

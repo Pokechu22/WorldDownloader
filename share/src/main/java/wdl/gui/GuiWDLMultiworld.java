@@ -19,12 +19,12 @@ public class GuiWDLMultiworld extends GuiScreen {
 	private int infoBoxX;
 	private int infoBoxY;
 	private List<String> infoBoxLines;
-	
+
 	public static interface MultiworldCallback {
 		public abstract void onCancel();
 		public abstract void onSelect(boolean enableMutliworld);
 	}
-	
+
 	public GuiWDLMultiworld(MultiworldCallback callback) {
 		this.callback = callback;
 	}
@@ -35,27 +35,27 @@ public class GuiWDLMultiworld extends GuiScreen {
 	@Override
 	public void initGui() {
 		this.buttonList.clear();
-		
+
 		String multiworldMessage = I18n
 				.format("wdl.gui.multiworld.descirption.requiredWhen")
 				+ "\n\n"
 				+ I18n.format("wdl.gui.multiworld.descirption.whatIs");
-		
+
 		infoBoxWidth = 320;
 		infoBoxLines = Utils.wordWrap(multiworldMessage, infoBoxWidth - 20);
 		infoBoxHeight = (fontRenderer.FONT_HEIGHT * (infoBoxLines.size() + 1)) + 40;
-		
+
 		infoBoxX = this.width / 2 - infoBoxWidth / 2;
 		infoBoxY = this.height / 2 - infoBoxHeight / 2;
-		
+
 		this.multiworldEnabledBtn = new GuiButton(1, this.width / 2 - 100,
-				infoBoxY + infoBoxHeight - 30, 
+				infoBoxY + infoBoxHeight - 30,
 				this.getMultiworldEnabledText());
 		this.buttonList.add(this.multiworldEnabledBtn);
-		
+
 		this.buttonList.add(new GuiButton(100, this.width / 2 - 155,
 				this.height - 29, 150, 20, I18n.format("gui.cancel")));
-		
+
 		this.buttonList.add(new GuiButton(101, this.width / 2 + 5,
 				this.height - 29, 150, 20, I18n.format("gui.done")));
 	}
@@ -80,7 +80,7 @@ public class GuiWDLMultiworld extends GuiScreen {
 	 */
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
-	throws IOException {
+			throws IOException {
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 	}
 
@@ -108,30 +108,30 @@ public class GuiWDLMultiworld extends GuiScreen {
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		this.drawDefaultBackground();
 		Utils.drawBorder(32, 32, 0, 0, height, width);
-		
-		this.drawCenteredString(this.fontRenderer, 
+
+		this.drawCenteredString(this.fontRenderer,
 				I18n.format("wdl.gui.multiworld.title"),
 				this.width / 2, 8, 0xFFFFFF);
-		
+
 		drawRect(infoBoxX, infoBoxY, infoBoxX + infoBoxWidth, infoBoxY
 				+ infoBoxHeight, 0xB0000000);
-		
+
 		int x = infoBoxX + 10;
 		int y = infoBoxY + 10;
-		
+
 		for (String s : infoBoxLines) {
 			this.drawString(fontRenderer, s, x, y, 0xFFFFFF);
 			y += fontRenderer.FONT_HEIGHT;
 		}
-		
+
 		//Red box around "multiworld support" button.
 		drawRect(
 				multiworldEnabledBtn.x - 2,
 				multiworldEnabledBtn.y - 2,
 				multiworldEnabledBtn.x
-						+ multiworldEnabledBtn.getButtonWidth() + 2,
+				+ multiworldEnabledBtn.getButtonWidth() + 2,
 				multiworldEnabledBtn.y + 20 + 2, 0xFFFF0000);
-		
+
 		super.drawScreen(mouseX, mouseY, partialTicks);
 	}
 
@@ -144,10 +144,10 @@ public class GuiWDLMultiworld extends GuiScreen {
 		} else {
 			this.enableMultiworld = true;
 		}
-		
+
 		this.multiworldEnabledBtn.displayString = getMultiworldEnabledText();
 	}
-	
+
 	/**
 	 * Gets the text to display on the multiworld enabled button.
 	 */

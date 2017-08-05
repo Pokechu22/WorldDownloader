@@ -104,7 +104,7 @@ public interface IEntityManager extends IWDLMod {
 	 * <p>
 	 * This method will be called when {@link #getProvidedEntities()} includes
 	 * the given identifier, even if this provider did not identify the entity.
-	 * 
+	 *
 	 * @param identifier
 	 *            The internal identifier for the entity.
 	 * @return The display version of the identifier, potentially translated, or
@@ -126,7 +126,7 @@ public interface IEntityManager extends IWDLMod {
 
 	/**
 	 * Is the given type of entity enabled by default?
-	 * 
+	 *
 	 * @param identifier
 	 *            The ID for the entity.
 	 * @return True if that type of entity should be saved by default.

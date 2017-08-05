@@ -19,12 +19,12 @@ import wdl.api.WDLApi.ModInfo;
 
 /**
  * GUI showing the currently enabled mods, and their information.
- * 
+ *
  * It's composed of two halves, one that lists enabled extensions that can
  * be clicked, and the other that shows the details on the selected extension.
  * The two halves can be dragged up and down (which is why the logic is so
  * complex here; {@link GuiListExtended} was not designed for that).
- * 
+ *
  * @author Pokechu22
  */
 public class GuiWDLExtensions extends GuiScreen {
@@ -39,7 +39,7 @@ public class GuiWDLExtensions extends GuiScreen {
 	private static final int TOP_HEIGHT = 23;
 	/**
 	 * Height of the middle section.
-	 * 
+	 *
 	 * Equal to <code>{@link FontRenderer#FONT_HEIGHT} + 10</code>.
 	 */
 	private static final int MIDDLE_HEIGHT = 19;
@@ -246,7 +246,7 @@ public class GuiWDLExtensions extends GuiScreen {
 
 		/**
 		 * Used by the drawing routine; edited to reduce weirdness.
-		 * 
+		 *
 		 * (Don't move the bottom with the size of the screen).
 		 */
 		@Override
@@ -375,7 +375,7 @@ public class GuiWDLExtensions extends GuiScreen {
 	protected void mouseClickMove(int mouseX, int mouseY,
 			int clickedMouseButton, long timeSinceLastClick) {
 		if (dragging) {
-			bottomLocation = mouseY - dragOffset; 
+			bottomLocation = mouseY - dragOffset;
 		}
 
 		//Clamp bottomLocation.

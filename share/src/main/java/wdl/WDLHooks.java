@@ -4,9 +4,6 @@ import io.netty.buffer.ByteBuf;
 
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -27,6 +24,10 @@ import net.minecraft.profiler.Profiler;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.storage.MapData;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import wdl.api.IBlockEventListener;
 import wdl.api.IChatMessageListener;
 import wdl.api.IGuiHooksListener;
@@ -47,7 +48,7 @@ import com.google.common.collect.ImmutableList;
 public class WDLHooks {
 	private static final Profiler profiler = Minecraft.getMinecraft().mcProfiler;
 	private static final Logger logger = LogManager.getLogger();
-	
+
 	/**
 	 * Called when {@link WorldClient#tick()} is called.
 	 * <br/>
@@ -56,15 +57,15 @@ public class WDLHooks {
 	public static void onWorldClientTick(WorldClient sender) {
 		try {
 			profiler.startSection("wdl");
-			
+
 			List<EntityPlayer> players = ImmutableList.copyOf(sender.playerEntities);
-			
+
 			if (sender != WDL.worldClient) {
 				profiler.startSection("onWorldLoad");
 				if (WDL.worldLoadingDeferred) {
 					return;
 				}
-				
+
 				WDLEvents.onWorldLoad(sender);
 				profiler.endSection();  // "onWorldLoad"
 			} else {
@@ -73,12 +74,12 @@ public class WDLHooks {
 					if (WDL.thePlayer.openContainer != WDL.windowContainer) {
 						if (WDL.thePlayer.openContainer == WDL.thePlayer.inventoryContainer) {
 							boolean handled;
-							
+
 							profiler.startSection("onItemGuiClosed");
 							profiler.startSection("Core");
 							handled = WDLEvents.onItemGuiClosed();
 							profiler.endSection();  // "Core"
-							
+
 							Container container = WDL.thePlayer.openContainer;
 							if (WDL.lastEntity != null) {
 								Entity entity = WDL.lastEntity;
@@ -94,7 +95,7 @@ public class WDLHooks {
 											sender, entity, container);
 									profiler.endSection();  // info.id
 								}
-								
+
 								if (!handled) {
 									WDLMessages.chatMessageTranslated(
 											WDLMessageTypes.ON_GUI_CLOSED_WARNING,
@@ -114,7 +115,7 @@ public class WDLHooks {
 											sender, pos, container);
 									profiler.endSection();  // info.id
 								}
-								
+
 								if (!handled) {
 									WDLMessages.chatMessageTranslated(
 											WDLMessageTypes.ON_GUI_CLOSED_WARNING,
@@ -122,7 +123,7 @@ public class WDLHooks {
 											pos, sender.getTileEntity(pos));
 								}
 							}
-							
+
 							profiler.endSection();  // onItemGuiClosed
 						} else {
 							profiler.startSection("onItemGuiOpened");
@@ -131,13 +132,13 @@ public class WDLHooks {
 							profiler.endSection();  // "Core"
 							profiler.endSection();  // "onItemGuiOpened"
 						}
-	
+
 						WDL.windowContainer = WDL.thePlayer.openContainer;
 					}
 				}
 				profiler.endSection();  // "inventoryCheck"
 			}
-			
+
 			profiler.startSection("capes");
 			CapeHandler.onWorldTick(players);
 			profiler.endSection();  // "capes"
@@ -156,22 +157,22 @@ public class WDLHooks {
 			int z, boolean loading) {
 		try {
 			if (!WDL.downloading) { return; }
-			
+
 			profiler.startSection("wdl");
-			
+
 			if (!loading) {
 				profiler.startSection("onChunkNoLongerNeeded");
-				Chunk c = sender.getChunkFromChunkCoords(x, z); 
-				
+				Chunk c = sender.getChunkFromChunkCoords(x, z);
+
 				profiler.startSection("Core");
 				wdl.WDLEvents.onChunkNoLongerNeeded(c);
 				profiler.endSection();  // "Core"
-				
+
 				profiler.endSection();  // "onChunkNoLongerNeeded"
 			} else {
 				logger.debug("Adding new empty chunk at " + x + ", " + z + " (already has: " + (sender.getChunkProvider().getLoadedChunk(x, z) != null) + ")");
 			}
-			
+
 			profiler.endSection();
 		} catch (Throwable e) {
 			WDL.crashed(e, "WDL mod: exception in onWorldDoPreChunk event");
@@ -182,7 +183,7 @@ public class WDLHooks {
 	 * Called when {@link WorldClient#removeEntityFromWorld(int)} is called.
 	 * <br/>
 	 * Should be at the start of the method.
-	 * 
+	 *
 	 * @param eid
 	 *            The entity's unique ID.
 	 */
@@ -190,15 +191,15 @@ public class WDLHooks {
 			int eid) {
 		try {
 			if (!WDL.downloading) { return; }
-			
+
 			profiler.startSection("wdl.onRemoveEntityFromWorld");
-			
+
 			Entity entity = sender.getEntityByID(eid);
-			
+
 			profiler.startSection("Core");
 			WDLEvents.onRemoveEntityFromWorld(entity);
 			profiler.endSection();  // "Core"
-			
+
 			profiler.endSection();  // "wdl.onRemoveEntityFromWorld"
 		} catch (Throwable e) {
 			WDL.crashed(e,
@@ -218,25 +219,25 @@ public class WDLHooks {
 			if (!Minecraft.getMinecraft().isCallingFromMinecraftThread()) {
 				return;
 			}
-			
+
 			if (!WDL.downloading) { return; }
-			
+
 			profiler.startSection("wdl.onChatMessage");
-			
+
 			//func_148915_c returns the ITextComponent.
 			String chatMessage = packet.getChatComponent().getUnformattedText();
-			
+
 			profiler.startSection("Core");
 			WDLEvents.onChatMessage(chatMessage);
 			profiler.endSection();  // "Core"
-			
+
 			for (ModInfo<IChatMessageListener> info : WDLApi
 					.getImplementingExtensions(IChatMessageListener.class)) {
 				profiler.startSection(info.id);
 				info.mod.onChat(WDL.worldClient, chatMessage);
 				profiler.endSection();  // info.id
 			}
-			
+
 			profiler.endSection();  // "wdl.onChatMessage"
 		} catch (Throwable e) {
 			WDL.crashed(e, "WDL mod: exception in onNHPCHandleChat event");
@@ -255,19 +256,19 @@ public class WDLHooks {
 			if (!Minecraft.getMinecraft().isCallingFromMinecraftThread()) {
 				return;
 			}
-			
+
 			if (!WDL.downloading) { return; }
-			
+
 			profiler.startSection("wdl.onMapDataLoaded");
-			
+
 			int id = packet.getMapId();
 			MapData mapData = ItemMap.loadMapData(packet.getMapId(),
 					WDL.worldClient);
-			
+
 			profiler.startSection("Core");
 			WDLEvents.onMapDataLoaded(id, mapData);
 			profiler.endSection();  // "Core"
-			
+
 			profiler.endSection();  // "wdl.onMapDataLoaded"
 		} catch (Throwable e) {
 			WDL.crashed(e, "WDL mod: exception in onNHPCHandleMaps event");
@@ -302,7 +303,7 @@ public class WDLHooks {
 			profiler.startSection("Core");
 			WDLEvents.onPluginChannelPacket(channel, payload);
 			profiler.endSection();  // "Core"
-			
+
 			for (ModInfo<IPluginChannelListener> info : WDLApi
 					.getImplementingExtensions(IPluginChannelListener.class)) {
 				profiler.startSection(info.id);
@@ -310,7 +311,7 @@ public class WDLHooks {
 						payload);
 				profiler.endSection();  // info.id
 			}
-			
+
 			profiler.endSection();  // "wdl.onPluginMessage"
 		} catch (Throwable e) {
 			WDL.crashed(e,
@@ -331,38 +332,38 @@ public class WDLHooks {
 			if (!Minecraft.getMinecraft().isCallingFromMinecraftThread()) {
 				return;
 			}
-			
+
 			if (!WDL.downloading) { return; }
-			
+
 			profiler.startSection("wdl.onBlockEvent");
-			
+
 			BlockPos pos = packet.getBlockPosition();
 			Block block = packet.getBlockType();
 			int data1 = packet.getData1();
 			int data2 = packet.getData2();
-			
+
 			profiler.startSection("Core");
 			WDLEvents.onBlockEvent(pos, block, data1, data2);
 			profiler.endSection();  // "Core"
-			
+
 			for (ModInfo<IBlockEventListener> info : WDLApi
 					.getImplementingExtensions(IBlockEventListener.class)) {
 				profiler.startSection(info.id);
-				info.mod.onBlockEvent(WDL.worldClient, pos, block, 
+				info.mod.onBlockEvent(WDL.worldClient, pos, block,
 						data1, data2);
 				profiler.endSection();  // info.id
 			}
-			
+
 			profiler.endSection();  // "wdl.onBlockEvent"
 		} catch (Throwable e) {
 			WDL.crashed(e,
 					"WDL mod: exception in onNHPCHandleBlockAction event");
 		}
 	}
-	
+
 	/**
 	 * Injects WDL information into a crash report.
-	 * 
+	 *
 	 * Called at the end of {@link CrashReport#populateEnvironment()}.
 	 * @param report
 	 */
@@ -380,43 +381,43 @@ public class WDLHooks {
 	 * Chosen to be unique.
 	 */
 	private static final int WDLo = 0x57444C6F;
-	
+
 	/**
 	 * Adds the "Download this world" button to the ingame pause GUI.
-	 * 
+	 *
 	 * @param gui
 	 * @param buttonList
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void injectWDLButtons(GuiIngameMenu gui, List buttonList) {
 		int insertAtYPos = 0;
-	
+
 		for (Object obj : buttonList) {
 			GuiButton btn = (GuiButton) obj;
-	
+
 			if (btn.id == 5) { // Button "Achievements"
 				insertAtYPos = btn.y + 24;
 				break;
 			}
 		}
-	
+
 		// Move other buttons down one slot (= 24 height units)
 		for (Object obj : buttonList) {
 			GuiButton btn = (GuiButton) obj;
-	
+
 			if (btn.y >= insertAtYPos) {
 				btn.y += 24;
 			}
 		}
-	
+
 		// Insert wdl buttons.
 		GuiButton wdlDownload = new GuiButton(WDLs, gui.width / 2 - 100,
 				insertAtYPos, 170, 20, null);
-		
+
 		GuiButton wdlOptions = new GuiButton(WDLo, gui.width / 2 + 71,
 				insertAtYPos, 28, 20,
 				I18n.format("wdl.gui.ingameMenu.settings"));
-		
+
 		if (WDL.minecraft.isIntegratedServerRunning()) {
 			wdlDownload.displayString = I18n
 					.format("wdl.gui.ingameMenu.downloadStatus.singlePlayer");
@@ -450,7 +451,7 @@ public class WDLHooks {
 
 	/**
 	 * Handle clicks in the ingame pause GUI.
-	 * 
+	 *
 	 * @param gui
 	 * @param button
 	 */
@@ -458,12 +459,12 @@ public class WDLHooks {
 		if (!button.enabled) {
 			return;
 		}
-	
+
 		if (button.id == WDLs) { // "Start/Stop Download"
 			if (WDL.minecraft.isIntegratedServerRunning()) {
 				return; // WDL not available if in singleplayer or LAN server mode
 			}
-			
+
 			if (WDL.downloading) {
 				WDL.stopDownload();
 			} else {
@@ -475,7 +476,7 @@ public class WDLHooks {
 					} else {
 						button.enabled = false;
 					}
-					
+
 					return;
 				} else if (WDLPluginChannels.hasChunkOverrides()
 						&& !WDLPluginChannels.canDownloadInGeneral()) {

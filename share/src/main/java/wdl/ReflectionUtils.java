@@ -67,17 +67,17 @@ public class ReflectionUtils {
 					return f;
 				} catch (Exception e) {
 					throw new RuntimeException(
-						"WorldDownloader: Couldn't get private Field of type \""
-						+ typeOfField + "\" from class \"" + typeOfClass
-						+ "\" !", e);
+							"WorldDownloader: Couldn't get private Field of type \""
+									+ typeOfField + "\" from class \"" + typeOfClass
+									+ "\" !", e);
 				}
 			}
 		}
 
 		throw new RuntimeException(
-			"WorldDownloader: Couldn't find any Field of type \""
-			+ typeOfField + "\" from class \"" + typeOfClass
-			+ "\" !");
+				"WorldDownloader: Couldn't find any Field of type \""
+						+ typeOfField + "\" from class \"" + typeOfClass
+						+ "\" !");
 	}
 
 	/**
@@ -105,9 +105,9 @@ public class ReflectionUtils {
 			return typeOfField.cast(f.get(object));
 		} catch (Exception e) {
 			throw new RuntimeException(
-				"WorldDownloader: Couldn't get Field of type \""
-				+ typeOfField + "\" from object \"" + object
-				+ "\" !", e);
+					"WorldDownloader: Couldn't get Field of type \""
+							+ typeOfField + "\" from object \"" + object
+							+ "\" !", e);
 		}
 	}
 
@@ -138,9 +138,9 @@ public class ReflectionUtils {
 			f.set(object, value);
 		} catch (Exception e) {
 			throw new RuntimeException(
-				"WorldDownloader: Couldn't set Field of type \""
-				+ typeOfField + "\" from object \"" + object
-				+ "\" to " + value + "!", e);
+					"WorldDownloader: Couldn't set Field of type \""
+							+ typeOfField + "\" from object \"" + object
+							+ "\" to " + value + "!", e);
 		}
 	}
 
@@ -164,9 +164,9 @@ public class ReflectionUtils {
 			return typeOfField.cast(f.get(object));
 		} catch (Exception e) {
 			throw new RuntimeException(
-				"WorldDownloader: Couldn't get Field of type \""
-				+ typeOfField + "\" from object \"" + object
-				+ "\" !", e);
+					"WorldDownloader: Couldn't get Field of type \""
+							+ typeOfField + "\" from object \"" + object
+							+ "\" !", e);
 		}
 	}
 
@@ -191,9 +191,9 @@ public class ReflectionUtils {
 			f.set(object, value);
 		} catch (Exception e) {
 			throw new RuntimeException(
-				"WorldDownloader: Couldn't set Field of type \""
-				+ typeOfField + "\" from object \"" + object
-				+ "\" to " + value + "!", e);
+					"WorldDownloader: Couldn't set Field of type \""
+							+ typeOfField + "\" from object \"" + object
+							+ "\" to " + value + "!", e);
 		}
 	}
 
@@ -219,7 +219,7 @@ public class ReflectionUtils {
 			// external mod does some stupid security manager stuff)
 			throw new RuntimeException(
 					"WorldDownloader: Couldn't check if \""
-					+ containerClass + "\" was the creative inventory!", e);
+							+ containerClass + "\" was the creative inventory!", e);
 		}
 	}
 

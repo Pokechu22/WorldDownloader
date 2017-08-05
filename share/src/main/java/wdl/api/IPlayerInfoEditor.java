@@ -10,7 +10,7 @@ import net.minecraft.world.storage.SaveHandler;
 public interface IPlayerInfoEditor extends IWDLMod {
 	/**
 	 * Edits the world info NBT before it is saved.
-	 * 
+	 *
 	 * @param player
 	 *            The player that is being saved ({@link wdl.WDL#thePlayer})
 	 * @param saveHandler

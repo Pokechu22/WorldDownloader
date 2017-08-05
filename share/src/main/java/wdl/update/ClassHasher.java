@@ -11,20 +11,20 @@ import java.security.MessageDigest;
 public class ClassHasher {
 	// http://stackoverflow.com/a/9855338/3991344
 	private static final char[] hexArray = "0123456789ABCDEF".toCharArray();
-	
+
 	public static String bytesToHex(byte[] bytes) {
-	    char[] hexChars = new char[bytes.length * 2];
-	    for ( int j = 0; j < bytes.length; j++ ) {
-	        int v = bytes[j] & 0xFF;
-	        hexChars[j * 2] = hexArray[v >>> 4];
-	        hexChars[j * 2 + 1] = hexArray[v & 0x0F];
-	    }
-	    return new String(hexChars);
+		char[] hexChars = new char[bytes.length * 2];
+		for ( int j = 0; j < bytes.length; j++ ) {
+			int v = bytes[j] & 0xFF;
+			hexChars[j * 2] = hexArray[v >>> 4];
+			hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+		}
+		return new String(hexChars);
 	}
-	
+
 	/**
 	 * Calculates the hash of the given file.
-	 * 
+	 *
 	 * @param relativeTo
 	 *            Name of class to use {@link Class#getResourceAsStream(String)}
 	 *            on.
@@ -43,7 +43,7 @@ public class ClassHasher {
 			throws ClassNotFoundException, FileNotFoundException, Exception {
 		Class<?> clazz = Class.forName(relativeTo);
 		MessageDigest digest = MessageDigest.getInstance("MD5");
-		
+
 		InputStream stream = null;
 		try {
 			stream = clazz.getResourceAsStream(file);
@@ -54,7 +54,7 @@ public class ClassHasher {
 			DigestInputStream digestStream = null;
 			try {
 				digestStream = new DigestInputStream(stream, digest);
-				
+
 				while (digestStream.read() != -1); //Read entire stream
 			} finally {
 				if (digestStream != null) {
@@ -66,7 +66,7 @@ public class ClassHasher {
 				stream.close();
 			}
 		}
-		
+
 		return bytesToHex(digest.digest());
 	}
 }

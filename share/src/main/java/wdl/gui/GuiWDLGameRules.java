@@ -19,10 +19,10 @@ import net.minecraft.world.GameRules.ValueType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import wdl.WDL;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-
-import wdl.WDL;
 
 public class GuiWDLGameRules extends GuiScreen {
 	private static final Logger LOGGER = LogManager.getLogger();

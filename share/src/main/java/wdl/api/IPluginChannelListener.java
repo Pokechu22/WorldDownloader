@@ -5,7 +5,7 @@ import net.minecraft.client.multiplayer.WorldClient;
 public interface IPluginChannelListener extends IWDLMod {
 	/**
 	 * Called when a Plugin channel packet is received.
-	 * 
+	 *
 	 * @param world
 	 *            The current world.
 	 * @param channel

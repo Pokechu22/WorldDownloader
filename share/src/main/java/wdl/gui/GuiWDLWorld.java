@@ -34,9 +34,9 @@ public class GuiWDLWorld extends GuiScreen {
 		this.buttonList.clear();
 		this.title = I18n.format("wdl.gui.world.title",
 				WDL.baseFolderName.replace('@', ':'));
-		
+
 		int y = this.height / 4 - 15;
-		
+
 		this.gamemodeBtn = new GuiButton(1, this.width / 2 - 100, y,
 				this.getGamemodeText());
 		this.buttonList.add(this.gamemodeBtn);
@@ -45,11 +45,11 @@ public class GuiWDLWorld extends GuiScreen {
 				this.getAllowCheatsText());
 		this.buttonList.add(this.allowCheatsBtn);
 		y += 22;
-		this.timeBtn = new GuiButton(2, this.width / 2 - 100, y, 
+		this.timeBtn = new GuiButton(2, this.width / 2 - 100, y,
 				this.getTimeText());
 		this.buttonList.add(this.timeBtn);
 		y += 22;
-		this.weatherBtn = new GuiButton(3, this.width / 2 - 100, y, 
+		this.weatherBtn = new GuiButton(3, this.width / 2 - 100, y,
 				this.getWeatherText());
 		this.buttonList.add(this.weatherBtn);
 		y += 22;
@@ -74,9 +74,9 @@ public class GuiWDLWorld extends GuiScreen {
 		this.pickSpawnBtn = new GuiButton(5, this.width / 2, y, 100, 20,
 				I18n.format("wdl.gui.world.setSpawnToCurrentPosition"));
 		this.buttonList.add(this.pickSpawnBtn);
-		
+
 		updateSpawnTextBoxVisibility();
-		
+
 		this.buttonList.add(new GuiButton(100, this.width / 2 - 100,
 				this.height - 29, I18n.format("gui.done")));
 	}
@@ -105,7 +105,7 @@ public class GuiWDLWorld extends GuiScreen {
 			}
 		}
 	}
-	
+
 	@Override
 	public void onGuiClosed() {
 		if (this.showSpawnFields) {
@@ -122,7 +122,7 @@ public class GuiWDLWorld extends GuiScreen {
 	 */
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
-	throws IOException {
+			throws IOException {
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 
 		if (this.showSpawnFields) {
@@ -161,7 +161,7 @@ public class GuiWDLWorld extends GuiScreen {
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		Utils.drawListBackground(23, 32, 0, 0, height, width);
-		
+
 		this.drawCenteredString(this.fontRenderer, this.title,
 				this.width / 2, 8, 0xFFFFFF);
 
@@ -178,9 +178,9 @@ public class GuiWDLWorld extends GuiScreen {
 		}
 
 		super.drawScreen(mouseX, mouseY, partialTicks);
-		
+
 		String tooltip = null;
-		
+
 		if (allowCheatsBtn.isMouseOver()) {
 			tooltip = I18n.format("wdl.gui.world.allowCheats.description");
 		} else if (gamemodeBtn.isMouseOver()) {
@@ -194,7 +194,7 @@ public class GuiWDLWorld extends GuiScreen {
 		} else if (pickSpawnBtn.isMouseOver()) {
 			tooltip = I18n.format("wdl.gui.world.setSpawnToCurrentPosition.description");
 		}
-		
+
 		if (showSpawnFields) {
 			if (Utils.isMouseOverTextBox(mouseX, mouseY, spawnX)) {
 				tooltip = I18n.format("wdl.gui.world.spawnPos.description", "X");
@@ -204,7 +204,7 @@ public class GuiWDLWorld extends GuiScreen {
 				tooltip = I18n.format("wdl.gui.world.spawnPos.description", "Z");
 			}
 		}
-		
+
 		Utils.drawGuiInfoBox(tooltip, width, height, 48);
 	}
 
@@ -214,10 +214,10 @@ public class GuiWDLWorld extends GuiScreen {
 		} else {
 			WDL.baseProps.setProperty("AllowCheats", "true");
 		}
-		
+
 		this.allowCheatsBtn.displayString = getAllowCheatsText();
 	}
-	
+
 	private void cycleGamemode() {
 		String prop = WDL.baseProps.getProperty("GameType");
 
@@ -230,7 +230,7 @@ public class GuiWDLWorld extends GuiScreen {
 		} else if (prop.equals("hardcore")) {
 			WDL.baseProps.setProperty("GameType", "keep");
 		}
-		
+
 		this.gamemodeBtn.displayString = getGamemodeText();
 	}
 
@@ -252,7 +252,7 @@ public class GuiWDLWorld extends GuiScreen {
 		} else { // prop.equals("18000")
 			WDL.baseProps.setProperty("Time", "keep");
 		}
-		
+
 		this.timeBtn.displayString = getTimeText();
 	}
 
@@ -268,13 +268,13 @@ public class GuiWDLWorld extends GuiScreen {
 		} else if (prop.equals("thunderstorm")) {
 			WDL.baseProps.setProperty("Weather", "keep");
 		}
-		
+
 		this.weatherBtn.displayString = getWeatherText();
 	}
 
 	private void cycleSpawn() {
 		String prop = WDL.worldProps.getProperty("Spawn");
-		
+
 		if (prop.equals("auto")) {
 			WDL.worldProps.setProperty("Spawn", "player");
 		} else if (prop.equals("player")) {
@@ -282,25 +282,25 @@ public class GuiWDLWorld extends GuiScreen {
 		} else if (prop.equals("xyz")) {
 			WDL.worldProps.setProperty("Spawn", "auto");
 		}
-		
+
 		this.spawnBtn.displayString = getSpawnText();
 		updateSpawnTextBoxVisibility();
 	}
-	
+
 	private String getAllowCheatsText() {
 		return I18n.format("wdl.gui.world.allowCheats."
 				+ WDL.baseProps.getProperty("AllowCheats"));
 	}
-	
+
 	private String getGamemodeText() {
 		return I18n.format("wdl.gui.world.gamemode."
 				+ WDL.baseProps.getProperty("GameType"));
 	}
-	
+
 	private String getTimeText() {
 		String result = I18n.format("wdl.gui.world.time."
 				+ WDL.baseProps.getProperty("Time"));
-		
+
 		if (result.startsWith("wdl.gui.world.time.")) {
 			// Unrecognized time -- not translated
 			// Only done with time because time can have a value that
@@ -308,26 +308,26 @@ public class GuiWDLWorld extends GuiScreen {
 			result = I18n.format("wdl.gui.world.time.custom",
 					WDL.baseProps.getProperty("Time"));
 		}
-		
+
 		return result;
 	}
-	
+
 	private String getWeatherText() {
 		return I18n.format("wdl.gui.world.weather."
 				+ WDL.baseProps.getProperty("Weather"));
 	}
-	
+
 	private String getSpawnText() {
 		return I18n.format("wdl.gui.world.spawn."
 				+ WDL.worldProps.getProperty("Spawn"));
 	}
-	
+
 	/**
 	 * Recalculates whether the spawn text boxes should be displayed.
 	 */
 	private void updateSpawnTextBoxVisibility() {
 		boolean show = WDL.worldProps.getProperty("Spawn").equals("xyz");
-		
+
 		this.showSpawnFields = show;
 		this.pickSpawnBtn.visible = show;
 	}

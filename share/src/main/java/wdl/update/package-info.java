@@ -1,4 +1,4 @@
 /**
- * Handles checking for updates. 
+ * Handles checking for updates.
  */
 package wdl.update;

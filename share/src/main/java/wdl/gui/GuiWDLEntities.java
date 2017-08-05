@@ -29,7 +29,7 @@ public class GuiWDLEntities extends GuiScreen {
 		private int largestWidth;
 		/**
 		 * Width of an entire entry.
-		 * 
+		 *
 		 * Equal to largestWidth + 255.
 		 */
 		private int totalWidth;
@@ -86,8 +86,8 @@ public class GuiWDLEntities extends GuiScreen {
 
 		/**
 		 * Provides a label.
-		 * 
-		 * Based off of 
+		 *
+		 * Based off of
 		 * {@link net.minecraft.client.gui.GuiKeyBindingList.CategoryEntry}.
 		 */
 		private class CategoryEntry extends GuiListEntry {
@@ -95,7 +95,7 @@ public class GuiWDLEntities extends GuiScreen {
 			private final String displayGroup;
 			private final int labelWidth;
 
-			private final GuiButton enableGroupButton; 
+			private final GuiButton enableGroupButton;
 
 			private boolean groupEnabled;
 
@@ -107,7 +107,7 @@ public class GuiWDLEntities extends GuiScreen {
 				this.groupEnabled = WDL.worldProps.getProperty("EntityGroup."
 						+ group + ".Enabled", "true").equals("true");
 
-				this.enableGroupButton = new GuiButton(0, 0, 0, 90, 18, 
+				this.enableGroupButton = new GuiButton(0, 0, 0, 90, 18,
 						getButtonText());
 			}
 
@@ -165,8 +165,8 @@ public class GuiWDLEntities extends GuiScreen {
 
 		/**
 		 * Contains an actual entity's data.
-		 * 
-		 * Based off of 
+		 *
+		 * Based off of
 		 * {@link net.minecraft.client.gui.GuiKeyBindingList.KeyEntry}.
 		 */
 		private class EntityEntry extends GuiListEntry {
@@ -187,7 +187,7 @@ public class GuiWDLEntities extends GuiScreen {
 				this.entity = entity;
 				this.displayEntity = EntityUtils.getDisplayType(entity);
 
-				entityEnabled = WDL.worldProps.getProperty("Entity." + entity + 
+				entityEnabled = WDL.worldProps.getProperty("Entity." + entity +
 						".Enabled", "true").equals("true");
 				range = EntityUtils.getEntityTrackDistance(entity);
 
@@ -211,7 +211,7 @@ public class GuiWDLEntities extends GuiScreen {
 						+ largestWidth + 10;
 
 				mc.fontRenderer.drawString(this.displayEntity,
-						center - largestWidth - 10, y + slotHeight / 2 - 
+						center - largestWidth - 10, y + slotHeight / 2 -
 						mc.fontRenderer.FONT_HEIGHT / 2, 0xFFFFFF);
 
 				this.onOffButton.x = center;
@@ -243,7 +243,7 @@ public class GuiWDLEntities extends GuiScreen {
 					onOffButton.playPressSound(mc.getSoundHandler());
 					onOffButton.displayString = getButtonText();
 
-					WDL.worldProps.setProperty("Entity." + entity + 
+					WDL.worldProps.setProperty("Entity." + entity +
 							".Enabled", Boolean.toString(entityEnabled));
 					return true;
 				}
@@ -332,7 +332,7 @@ public class GuiWDLEntities extends GuiScreen {
 
 		rangeModeButton = new GuiButton(100, this.width / 2 - 155, 18, 150,
 				20, getRangeModeText());
-		presetsButton = new GuiButton(101, this.width / 2 + 5, 18, 150, 20, 
+		presetsButton = new GuiButton(101, this.width / 2 + 5, 18, 150, 20,
 				I18n.format("wdl.gui.entities.rangePresets"));
 
 		this.mode = WDL.worldProps.getProperty("Entity.TrackDistanceMode");

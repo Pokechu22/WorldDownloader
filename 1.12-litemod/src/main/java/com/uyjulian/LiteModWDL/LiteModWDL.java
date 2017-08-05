@@ -1,8 +1,10 @@
 package com.uyjulian.LiteModWDL;
 
 import java.io.File;
-import com.mumfrey.liteloader.LiteMod;
+
 import wdl.VersionConstants;
+
+import com.mumfrey.liteloader.LiteMod;
 
 public class LiteModWDL implements LiteMod {
 
@@ -23,8 +25,8 @@ public class LiteModWDL implements LiteMod {
 
 	@Override
 	public void upgradeSettings(String version, File configPath, File oldConfigPath) {
-		
+
 	}
-	
+
 
 }

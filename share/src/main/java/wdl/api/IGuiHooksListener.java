@@ -12,7 +12,7 @@ public interface IGuiHooksListener extends IWDLMod {
 	 * the container. Double-check that it is. This can happen if there is lag
 	 * and the player looks away from the block before the GUI opens. It may
 	 * also be an entity's GUI that the player looked away from.
-	 * 
+	 *
 	 * @param world
 	 *            The world the block is in.
 	 * @param pos
@@ -21,7 +21,7 @@ public interface IGuiHooksListener extends IWDLMod {
 	 *            the actual location of the block.)
 	 * @param container
 	 *            The container that the closing player had open.
-	 * 
+	 *
 	 * @return Whether the given mod handled the event (if <code>false</code> is
 	 *         returned, it'll be passed on to the next mod).
 	 */
@@ -34,14 +34,14 @@ public interface IGuiHooksListener extends IWDLMod {
 	 * entity. Double-check that it is. This can happen if there is lag and the
 	 * player looks at an entity before the GUI opens (or if an entity walks in
 	 * the way).
-	 * 
+	 *
 	 * @param world
 	 *            The world the block is in.
 	 * @param entity
 	 *            The entity whose GUI was closed.
 	 * @param container
 	 *            The container that the closing player had open.
-	 * 
+	 *
 	 * @return Whether the given mod handled the event (if <code>false</code> is
 	 *         returned, it'll be passed on to the next mod).
 	 */

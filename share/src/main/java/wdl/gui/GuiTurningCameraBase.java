@@ -9,7 +9,7 @@ import net.minecraft.util.math.Vec3d;
 import wdl.WDL;
 
 /**
- * Base GUI with the player in the background turning slowly to show the 
+ * Base GUI with the player in the background turning slowly to show the
  * entire world.
  */
 public abstract class GuiTurningCameraBase extends GuiScreen {

@@ -7,8 +7,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.IMerchant;
 import net.minecraft.entity.item.EntityMinecartChest;
 import net.minecraft.entity.item.EntityMinecartHopper;
-import net.minecraft.entity.passive.EquineEntity;
 import net.minecraft.entity.passive.EntityVillager;
+import net.minecraft.entity.passive.EquineEntity;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.ContainerBeacon;
 import net.minecraft.inventory.ContainerBrewingStand;
@@ -46,7 +46,7 @@ import wdl.update.WDLUpdateChecker;
 
 /**
  * Handles all of the events for WDL.
- * 
+ *
  * These should be called regardless of whether downloading is
  * active; they handle that logic themselves.
  * <br/>
@@ -62,14 +62,14 @@ public class WDLEvents {
 	 */
 	public static void onWorldLoad(WorldClient world) {
 		profiler.startSection("Core");
-		
+
 		if (WDL.minecraft.isIntegratedServerRunning()) {
 			// Don't do anything else in single player
-			
+
 			profiler.endSection();  // "Core"
 			return;
 		}
-		
+
 		// If already downloading
 		if (WDL.downloading) {
 			// If not currently saving, stop the current download and start
@@ -80,17 +80,17 @@ public class WDLEvents {
 				WDL.worldLoadingDeferred = true;
 				WDL.startSaveThread();
 			}
-			
+
 			profiler.endSection();  // "Core"
 			return;
 		}
 
 		boolean sameServer = WDL.loadWorld();
-		
+
 		WDLUpdateChecker.startIfNeeded();  // TODO: Always check for updates, even in single player
-		
+
 		profiler.endSection();  // "Core"
-		
+
 		for (ModInfo<IWorldLoadListener> info : WDLApi
 				.getImplementingExtensions(IWorldLoadListener.class)) {
 			profiler.startSection(info.id);
@@ -104,7 +104,7 @@ public class WDLEvents {
 	 */
 	public static void onChunkNoLongerNeeded(Chunk unneededChunk) {
 		if (!WDL.downloading) { return; }
-		
+
 		if (unneededChunk == null) {
 			return;
 		}
@@ -129,7 +129,7 @@ public class WDLEvents {
 	 */
 	public static void onItemGuiOpened() {
 		if (!WDL.downloading) { return; }
-		
+
 		if (WDL.minecraft.objectMouseOver == null) {
 			return;
 		}
@@ -208,7 +208,7 @@ public class WDLEvents {
 						emcc.setInventorySlotContents(i, slot.getStack());
 					}
 				}
-				
+
 				saveName = "storageMinecart";
 			} else if (WDL.lastEntity instanceof EntityMinecartHopper
 					&& WDL.windowContainer instanceof ContainerHopper) {
@@ -220,7 +220,7 @@ public class WDLEvents {
 						emch.setInventorySlotContents(i, slot.getStack());
 					}
 				}
-				
+
 				saveName = "hopperMinecart";
 			} else if (WDL.lastEntity instanceof EntityVillager
 					&& WDL.windowContainer instanceof ContainerMerchant) {
@@ -229,13 +229,13 @@ public class WDLEvents {
 						WDL.windowContainer, IMerchant.class)).getRecipes(
 								WDL.thePlayer);
 				ReflectionUtils.findAndSetPrivateField(ev, MerchantRecipeList.class, list);
-				
+
 				saveName = "villager";
 			} else if (WDL.lastEntity instanceof EquineEntity
 					&& WDL.windowContainer instanceof ContainerHorseInventory) {
 				saveHorse((ContainerHorseInventory) WDL.windowContainer,
 						(EquineEntity) WDL.lastEntity);
-				
+
 				saveName = "horse";
 			} else {
 				return false;
@@ -247,10 +247,10 @@ public class WDLEvents {
 		}
 
 		// Else, the last thing clicked was a TILE ENTITY
-		
+
 		// Get the tile entity which we are going to update the inventory for
 		TileEntity te = WDL.worldClient.getTileEntity(WDL.lastClickedBlock);
-		
+
 		if (te == null) {
 			//TODO: Is this a good way to stop?  Is the event truely handled here?
 			WDLMessages.chatMessageTranslated(
@@ -259,7 +259,7 @@ public class WDLEvents {
 					WDL.lastClickedBlock);
 			return true;
 		}
-		
+
 		//Permissions check.
 		if (!WDLPluginChannels.canSaveContainers(te.getPos().getX() << 4, te
 				.getPos().getZ() << 4)) {
@@ -273,70 +273,70 @@ public class WDLEvents {
 			if (WDL.windowContainer.inventorySlots.size() > 63) {
 				// This is messy, but it needs to be like this because
 				// the left and right chests must be in the right positions.
-				
+
 				BlockPos pos1, pos2;
 				TileEntity te1, te2;
-				
+
 				pos1 = WDL.lastClickedBlock;
 				te1 = te;
-				
-				// We need seperate variables for the above reason -- 
+
+				// We need seperate variables for the above reason --
 				// pos1 isn't always the same as chestPos1 (and thus
 				// chest1 isn't always te1).
 				BlockPos chestPos1 = null, chestPos2 = null;
 				TileEntityChest chest1 = null, chest2 = null;
-				
+
 				pos2 = pos1.add(0, 0, 1);
 				te2 = WDL.worldClient.getTileEntity(pos2);
-				if (te2 instanceof TileEntityChest && 
-						((TileEntityChest) te2).getChestType() == 
+				if (te2 instanceof TileEntityChest &&
+						((TileEntityChest) te2).getChestType() ==
 						((TileEntityChest) te1).getChestType()) {
-					
+
 					chest1 = (TileEntityChest) te1;
 					chest2 = (TileEntityChest) te2;
-					
+
 					chestPos1 = pos1;
 					chestPos2 = pos2;
 				}
-				
+
 				pos2 = pos1.add(0, 0, -1);
 				te2 = WDL.worldClient.getTileEntity(pos2);
-				if (te2 instanceof TileEntityChest && 
-						((TileEntityChest) te2).getChestType() == 
+				if (te2 instanceof TileEntityChest &&
+						((TileEntityChest) te2).getChestType() ==
 						((TileEntityChest) te1).getChestType()) {
-					
+
 					chest1 = (TileEntityChest) te2;
 					chest2 = (TileEntityChest) te1;
-					
+
 					chestPos1 = pos2;
 					chestPos2 = pos1;
 				}
 
 				pos2 = pos1.add(1, 0, 0);
 				te2 = WDL.worldClient.getTileEntity(pos2);
-				if (te2 instanceof TileEntityChest && 
-						((TileEntityChest) te2).getChestType() == 
+				if (te2 instanceof TileEntityChest &&
+						((TileEntityChest) te2).getChestType() ==
 						((TileEntityChest) te1).getChestType()) {
 					chest1 = (TileEntityChest) te1;
 					chest2 = (TileEntityChest) te2;
-					
+
 					chestPos1 = pos1;
 					chestPos2 = pos2;
 				}
-				
+
 				pos2 = pos1.add(-1, 0, 0);
 				te2 = WDL.worldClient.getTileEntity(pos2);
-				if (te2 instanceof TileEntityChest && 
-						((TileEntityChest) te2).getChestType() == 
+				if (te2 instanceof TileEntityChest &&
+						((TileEntityChest) te2).getChestType() ==
 						((TileEntityChest) te1).getChestType()) {
 					chest1 = (TileEntityChest) te2;
 					chest2 = (TileEntityChest) te1;
-					
+
 					chestPos1 = pos2;
 					chestPos2 = pos1;
 				}
-				
-				if (chest1 == null || chest2 == null || 
+
+				if (chest1 == null || chest2 == null ||
 						chestPos1 == null || chestPos2 == null) {
 					WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR,
 							"wdl.messages.onGuiClosedWarning.failedToFindDoubleChest");
@@ -347,7 +347,7 @@ public class WDLEvents {
 				WDL.saveContainerItems(WDL.windowContainer, chest2, 27);
 				WDL.saveTileEntity(chestPos1, chest1);
 				WDL.saveTileEntity(chestPos2, chest2);
-				
+
 				saveName = "doubleChest";
 			}
 			// basic chest
@@ -422,7 +422,7 @@ public class WDLEvents {
 	public static void onBlockEvent(BlockPos pos, Block block, int event,
 			int param) {
 		if (!WDL.downloading) { return; }
-		
+
 		if (!WDLPluginChannels.canSaveTileEntities(pos.getX() << 4,
 				pos.getZ() << 4)) {
 			return;
@@ -441,10 +441,10 @@ public class WDLEvents {
 	 * Must be called when a Map Data packet is received, to store the image on
 	 * the map item.
 	 */
-	public static void onMapDataLoaded(int mapID, 
+	public static void onMapDataLoaded(int mapID,
 			MapData mapData) {
 		if (!WDL.downloading) { return; }
-		
+
 		if (!WDLPluginChannels.canSaveMaps()) {
 			return;
 		}
@@ -480,9 +480,9 @@ public class WDLEvents {
 						entity);
 				return;
 			}
-			
+
 			int threshold = EntityUtils.getEntityTrackDistance(entity);
-			
+
 			if (threshold < 0) {
 				WDLMessages.chatMessageTranslated(
 						WDLMessageTypes.REMOVE_ENTITY,
@@ -523,14 +523,14 @@ public class WDLEvents {
 		if (WDL.downloading && msg.startsWith("Seed: ")) {
 			String seed = msg.substring(6);
 			WDL.worldProps.setProperty("RandomSeed", seed);
-			
+
 			if (WDL.worldProps.getProperty("MapGenerator", "void").equals("void")) {
-				
+
 				WDL.worldProps.setProperty("MapGenerator", "default");
 				WDL.worldProps.setProperty("GeneratorName", "default");
 				WDL.worldProps.setProperty("GeneratorVersion", "1");
 				WDL.worldProps.setProperty("GeneratorOptions", "");
-				
+
 				WDLMessages.chatMessageTranslated(WDLMessageTypes.INFO,
 						"wdl.messages.generalInfo.seedAndGenSet", seed);
 			} else {
@@ -550,7 +550,7 @@ public class WDLEvents {
 		final int PLAYER_INVENTORY_SLOTS = 4 * 9;
 		ContainerHorseChest horseInventory = new ContainerHorseChest(
 				"HorseChest", container.inventorySlots.size()
-						- PLAYER_INVENTORY_SLOTS);
+				- PLAYER_INVENTORY_SLOTS);
 		for (int i = 0; i < horseInventory.getSizeInventory(); i++) {
 			Slot slot = container.getSlot(i);
 			if (slot.getHasStack()) {
