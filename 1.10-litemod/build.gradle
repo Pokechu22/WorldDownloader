@@ -73,6 +73,11 @@ sourceSets {
             srcDir project(':share').file("src/test/java")
         }
     }
+    api {
+        java {
+            srcDir project(':share').file("src/api/java")
+        }
+    }
 }
 
 mixin {
