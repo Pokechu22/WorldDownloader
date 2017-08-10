@@ -94,6 +94,11 @@ fixMcSources {
     }
 }
 
+// Ensure that the API code is in the jar
+jar {
+    from sourceSets.api.output
+}
+
 // We don't currently want a source jar (doesn't work well for base edits, and the version info doesn't work yet)
 sourceJar.enabled = false
 

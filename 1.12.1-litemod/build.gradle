@@ -94,13 +94,15 @@ litemod {
     }
 }
 
-jar {
-    from litemod.outputs
-}
-
 // Use tabs instead of spaces
 fixMcSources {
     astyleConfig = "../astyle.cfg"
+}
+
+// Ensure that the API code and litemod JSON in the jar
+jar {
+    from sourceSets.api.output
+    from litemod.outputs
 }
 
 // We don't currently want a source jar (doesn't work well for base edits, and the version info doesn't work yet)
