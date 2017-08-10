@@ -2,37 +2,28 @@ package wdl.api;
 
 import java.io.File;
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
+import javax.annotation.Nullable;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import wdl.EntityRealigner;
-import wdl.HologramHandler;
-import wdl.LegacyEntityManager;
-import wdl.MessageTypeCategory;
-import wdl.VersionConstants;
-import wdl.WDL;
-import wdl.WDLMessages;
-import wdl.WDLPluginChannels;
-
-import com.google.common.collect.ImmutableMap;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 
 /**
  * Tool to allow other mods to interact with WDL.
  */
 public class WDLApi {
-	private static Logger logger = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 
-	private static Map<String, ModInfo<?>> wdlMods = new HashMap<String, ModInfo<?>>();
-
-	private static boolean hasLegacyEntityHandler = false;
+	/**
+	 * The actual instance.  Null until registration.
+	 */
+	@Nullable
+	private static transient APIInstance INSTANCE;
 
 	/**
 	 * Saved a TileEntity to the given position.
@@ -41,76 +32,16 @@ public class WDLApi {
 	 * @param te The TileEntity to save.
 	 */
 	public static void saveTileEntity(BlockPos pos, TileEntity te) {
-		if (!WDLPluginChannels.canSaveTileEntities(pos.getX() << 16,
-				pos.getZ() << 16)) {
-			logger.warn("API attempted to call saveTileEntity when " +
-					"saving TileEntities is not allowed!  Pos: " + pos +
-					", te: " + te + ".  StackTrace: ");
-			logStackTrace();
-
-			return;
-		}
-
-		WDL.saveTileEntity(pos, te);
+		checkState();
+		INSTANCE.saveTileEntity(pos, te);
 	}
 
 	/**
 	 * Adds a mod to the list of the listened mods.
 	 */
-	@SuppressWarnings("deprecation")
 	public static void addWDLMod(String id, String version, IWDLMod mod) {
-		if (id == null) {
-			throw new IllegalArgumentException("id must not be null!  (mod="
-					+ mod + ", version=" + version + ")");
-		}
-		if (version == null) {
-			throw new IllegalArgumentException("version must not be null!  "
-					+ "(mod=" + mod + ", id=" + version + ")");
-		}
-		if (mod == null) {
-			throw new IllegalArgumentException("mod must not be null!  " +
-					"(id=" + id + ", version=" + version + ")");
-		}
-
-		ModInfo<IWDLMod> info = new ModInfo<IWDLMod>(id, version, mod);
-		if (wdlMods.containsKey(id)) {
-			throw new IllegalArgumentException("A mod by the name of '"
-					+ id + "' is already registered by "
-					+ wdlMods.get(id) + " (tried to register "
-					+ info + " over it)");
-		}
-		if (!mod.isValidEnvironment(VersionConstants.getModVersion())) {
-			String errorMessage = mod
-					.getEnvironmentErrorMessage(VersionConstants
-							.getModVersion());
-			if (errorMessage != null) {
-				throw new IllegalArgumentException(errorMessage);
-			} else {
-				throw new IllegalArgumentException("Environment for " + info
-						+ " is incorrect!  Perhaps it is for a different"
-						+ " version of WDL?  You are running "
-						+ VersionConstants.getModVersion() + ".");
-			}
-		}
-
-		wdlMods.put(id, info);
-
-		// IMessageAdder doesn't seem possible to do dynamically
-		if (mod instanceof IMessageTypeAdder) {
-			Map<String, IWDLMessageType> types =
-					((IMessageTypeAdder) mod).getMessageTypes();
-
-			ModMessageTypeCategory category = new ModMessageTypeCategory(info);
-
-			for (Map.Entry<String, IWDLMessageType> e : types.entrySet()) {
-				WDLMessages.registerMessage(e.getKey(), e.getValue(), category);
-			}
-		}
-		// Needs callback for legacy interfaces
-		if (!hasLegacyEntityHandler
-				&& (mod instanceof IEntityAdder || mod instanceof ISpecialEntityHandler)) {
-			addWDLMod("LegacyEntitySupport", "1.0", new LegacyEntityManager());
-		}
+		checkState();
+		INSTANCE.addWDLMod(id, version, mod);
 	}
 
 	/**
@@ -123,26 +54,8 @@ public class WDLApi {
 	 */
 	public static <T extends IWDLMod> List<ModInfo<T>> getImplementingExtensions(
 			Class<T> clazz) {
-		if (clazz == null) {
-			throw new IllegalArgumentException("clazz must not be null!");
-		}
-		List<ModInfo<T>> returned = new ArrayList<ModInfo<T>>();
-
-		for (ModInfo<?> info : wdlMods.values()) {
-			if (!info.isEnabled()) {
-				continue;
-			}
-
-			if (clazz.isAssignableFrom(info.mod.getClass())) {
-				// We know the actual type of the given mod is correct,
-				// so it's safe to do this cast.
-				@SuppressWarnings("unchecked")
-				ModInfo<T> infoCasted = (ModInfo<T>)info;
-				returned.add(infoCasted);
-			}
-		}
-
-		return returned;
+		checkState();
+		return INSTANCE.getImplementingExtensions(clazz);
 	}
 
 	/**
@@ -155,29 +68,16 @@ public class WDLApi {
 	 */
 	public static <T extends IWDLMod> List<ModInfo<T>> getAllImplementingExtensions(
 			Class<T> clazz) {
-		if (clazz == null) {
-			throw new IllegalArgumentException("clazz must not be null!");
-		}
-		List<ModInfo<T>> returned = new ArrayList<ModInfo<T>>();
-
-		for (ModInfo<?> info : wdlMods.values()) {
-			if (clazz.isAssignableFrom(info.mod.getClass())) {
-				// We know the actual type of the given mod is correct,
-				// so it's safe to do this cast.
-				@SuppressWarnings("unchecked")
-				ModInfo<T> infoCasted = (ModInfo<T>)info;
-				returned.add(infoCasted);
-			}
-		}
-
-		return returned;
+		checkState();
+		return INSTANCE.getAllImplementingExtensions(clazz);
 	}
 
 	/**
 	 * Gets an immutable map of WDL mods.
 	 */
 	public static Map<String, ModInfo<?>> getWDLMods() {
-		return ImmutableMap.copyOf(wdlMods);
+		checkState();
+		return INSTANCE.getWDLMods();
 	}
 
 	/**
@@ -186,48 +86,38 @@ public class WDLApi {
 	 * @return The details.
 	 */
 	public static String getModInfo(String name) {
-		if (!wdlMods.containsKey(name)) {
-			return null;
-		}
-
-		return wdlMods.get(name).getInfo();
+		checkState();
+		return INSTANCE.getModInfo(name);
 	}
 
 	/**
-	 * Writes out the current stacktrace to the logger in warn mode.
+	 * Sets the instance.
+	 *
+	 * Does not check if there is an existing instance.
 	 */
-	private static void logStackTrace() {
-		StackTraceElement[] elements = Thread.currentThread().getStackTrace();
-		for (StackTraceElement e : elements) {
-			logger.warn(e.toString());
-		}
+	static void setInstance(APIInstance instance) {
+		LOGGER.debug("Changing api instance from {} to {}", INSTANCE, instance);
+		INSTANCE = instance;
 	}
 
 	/**
-	 * Implementation of {@link MessageTypeCategory} for {@link IWDLMod}s.
+	 * Verifies that the instance has been set up.
 	 */
-	private static class ModMessageTypeCategory extends MessageTypeCategory {
-		private ModInfo<?> mod;
-
-		public ModMessageTypeCategory(ModInfo<?> mod) {
-			super(mod.id);
-		}
-
-		@Override
-		public String getDisplayName() {
-			return mod.getDisplayName();
+	private static void checkState() throws IllegalStateException {
+		if (INSTANCE == null) {
+			throw new IllegalStateException("API called before it has been initialized!");
 		}
 	}
 
 	/**
 	 * Information about a single extension.
 	 */
-	public static class ModInfo<T extends IWDLMod> {
+	public static final class ModInfo<T extends IWDLMod> {
 		public final String id;
 		public final String version;
 		public final T mod;
 
-		private ModInfo(String id, String version, T mod) {
+		ModInfo(String id, String version, T mod) {
 			this.id = id;
 			this.version = version;
 			this.mod = mod;
@@ -347,23 +237,20 @@ public class WDLApi {
 		}
 
 		/**
-		 * Checks whether this extension is enabled in the
-		 * {@linkplain WDL#globalProps global config file}.
+		 * Checks whether this extension is enabled in the global config file.
 		 */
 		public boolean isEnabled() {
-			return WDL.globalProps.getProperty("Extensions." + id + ".enabled",
-					"true").equals("true");
+			checkState();
+			return INSTANCE.isEnabled(this.id);
 		}
 
 		/**
-		 * Sets whether or not this extension is enabled in the
-		 * {@linkplain WDL#globalProps global config file}, and saves
-		 * the global config file afterwards.
+		 * Sets whether or not this extension is enabled in the global config
+		 * file, and saves the global config file afterwards.
 		 */
 		public void setEnabled(boolean enabled) {
-			WDL.globalProps.setProperty("Extensions." + id + ".enabled",
-					Boolean.toString(enabled));
-			WDL.saveGlobalProps();
+			checkState();
+			INSTANCE.setEnabled(this.id, enabled);
 		}
 
 		/**
@@ -375,9 +262,45 @@ public class WDLApi {
 		}
 	}
 
+	/**
+	 * Delegates API logic.
+	 */
+	static interface APIInstance {
+		/** @see {@link WDLApi#saveTileEntity(BlockPos, TileEntity)} */
+		abstract void saveTileEntity(BlockPos pos, TileEntity te);
+		/** @see {@link WDLApi#addWDLMod(String, String, IWDLMod)} */
+		abstract void addWDLMod(String id, String version, IWDLMod mod);
+		/** @see {@link WDLApi#getImplementingExtensions(Class)} */
+		abstract <T extends IWDLMod> List<ModInfo<T>> getImplementingExtensions(Class<T> clazz);
+		/** @see {@link WDLApi#getAllImplementingExtensions(Class)} */
+		abstract <T extends IWDLMod> List<ModInfo<T>> getAllImplementingExtensions(Class<T> clazz);
+		/** @see {@link WDLApi#getWDLMods()} */
+		abstract Map<String, ModInfo<?>> getWDLMods();
+		/** @see {@link WDLApi#getModInfo(String)} */
+		abstract String getModInfo(String name);
+
+		/** @see {@link ModInfo#isEnabled()} */
+		abstract boolean isEnabled(String modID);
+		/** @see {@link ModInfo#setEnabled(boolean)} */
+		abstract void setEnabled(String modID, boolean enabled);
+	}
+
+	// Can't directly access non-API code from API sourceset, and we don't have
+	// a direct mediator to call e.g. an event (unlike with forge mods)
+	// So indirectly initialize it through reflection
+	// NOTE: The class must call setInstance during static initialization!
+	private static final String IMPL = "wdl.api.APIImpl";
 	static {
-		logger.info("Loading default WDL extensions");
-		addWDLMod("Hologram", "2.0", new HologramHandler());
-		addWDLMod("EntityRealigner", "1.0", new EntityRealigner());
+		try {
+			Class.forName(IMPL);
+		} catch (ClassNotFoundException e) {
+			LOGGER.error("Failed to load API implementation class ({})!  Things will probably break!", IMPL, e);
+		}
+		try {
+			checkState();
+		} catch (IllegalStateException e) {
+			// Did it not call setInstance in a static block?
+			LOGGER.error("After loading the API implementation class ({}), state is still not valid!  Things will probably break!", IMPL, e);
+		}
 	}
 }
