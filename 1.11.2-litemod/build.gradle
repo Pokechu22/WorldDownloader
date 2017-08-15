@@ -55,13 +55,21 @@ extraSrgs {
 sourceSets {
     main {
         java {
-            srcDir "src/main/java"
             srcDir project(':1.11.2').file("src/main/java")
             srcDir project(':share').file("src/main/java")
         }
         resources {
             srcDir "src/main/resources"
             srcDir project(':share').file("src/main/resources")
+        }
+    }
+    mixin {
+        java {
+            srcDir "src/java6/java"
+            compileClasspath += sourceSets.main.output
+            compileClasspath += sourceSets.main.compileClasspath
+            runtimeClasspath += sourceSets.main.output
+            runtimeClasspath += sourceSets.main.runtimeClasspath
         }
         // Refmap declaration must match the refmap name specified in the json config
         refMap = "mixins.LiteModWDL.refmap.json"
@@ -77,6 +85,18 @@ sourceSets {
             srcDir project(':share').file("src/api/java")
         }
     }
+}
+
+// We want Java 8 where possible
+tasks.withType(JavaCompile) { javaTask ->
+    javaTask.sourceCompatibility = "1.8"
+    javaTask.targetCompatibility = "1.8"
+}
+
+// Mixins need to be in Java 6 for this version of MC
+compileMixinJava {
+    sourceCompatibility = "1.6"
+    targetCompatibility = "1.6"
 }
 
 mixin {
@@ -105,8 +125,9 @@ fixMcSources {
     }
 }
 
-// Ensure that the API code and litemod JSON in the jar
+// Ensure that the API code, Java 6 mixin code, and litemod JSON are in the jar
 jar {
+    from sourceSets.mixin.output
     from sourceSets.api.output
     from litemod.outputs
 }

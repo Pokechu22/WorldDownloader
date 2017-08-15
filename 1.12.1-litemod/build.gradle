@@ -99,6 +99,12 @@ fixMcSources {
     astyleConfig = "../astyle.cfg"
 }
 
+// We want Java 8 where possible
+tasks.withType(JavaCompile) { javaTask ->
+    javaTask.sourceCompatibility = "1.8"
+    javaTask.targetCompatibility = "1.8"
+}
+
 // Ensure that the API code and litemod JSON in the jar
 jar {
     from sourceSets.api.output

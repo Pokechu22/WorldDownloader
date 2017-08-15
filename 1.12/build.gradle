@@ -82,6 +82,12 @@ sourceSets {
     }
 }
 
+// We want Java 8 where possible
+tasks.withType(JavaCompile) { javaTask ->
+    javaTask.sourceCompatibility = "1.8"
+    javaTask.targetCompatibility = "1.8"
+}
+
 // Use tabs instead of spaces
 fixMcSources {
     astyleConfig = "../astyle.cfg"
