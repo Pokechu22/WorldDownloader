@@ -21,7 +21,7 @@ buildscript {
         classpath 'commons-io:commons-io:2.5'
         classpath 'com.googlecode.java-diff-utils:diffutils:1.3.0'
         classpath 'pokechu22.test.begradle:begradle:0.1.0@jar'
-        classpath 'org.spongepowered:mixingradle:0.4-SNAPSHOT'
+        classpath 'org.spongepowered:mixingradle:0.5-SNAPSHOT'
     }
 }
 
