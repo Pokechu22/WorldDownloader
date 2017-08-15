@@ -18,7 +18,7 @@
 # Translator name, preferably in the form of 'Translated to %s by <your name>'.
 # '%s' will be replaced with the language name automatically.
 # If left blank, it will not be displayed.
-wdl.translatorCredit=
+wdl.translatorCredit=Traduit en français par stoakes et Syst3ms.
 
 wdl.gui.wdl.title=Mod World Downloader : Options pour %s
 wdl.gui.wdl.worldname=Name:
