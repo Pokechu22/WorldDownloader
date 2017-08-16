@@ -24,7 +24,6 @@ import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
-import net.minecraft.crash.ICrashReportDetail;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
@@ -1526,36 +1525,25 @@ public class WDL {
 		core.addCrashSection("Expected version", VersionConstants.getExpectedVersion());
 		core.addCrashSection("Protocol version", VersionConstants.getProtocolVersion());
 		core.addCrashSection("Data version", VersionConstants.getDataVersion());
-		core.addDetail("File location", new ICrashReportDetail<String>() {
-			@Override
-			public String call() throws Exception {
-				//http://stackoverflow.com/q/320542/3991344
-				String path = new File(WDL.class.getProtectionDomain()
-						.getCodeSource().getLocation().toURI()).getPath();
+		core.addDetail("File location", () -> {
+			//http://stackoverflow.com/q/320542/3991344
+			String path = new File(WDL.class.getProtectionDomain()
+					.getCodeSource().getLocation().toURI()).getPath();
 
-				//Censor username.
-				String username = System.getProperty("user.name");
-				path = path.replace(username, "<USERNAME>");
+			//Censor username.
+			String username = System.getProperty("user.name");
+			path = path.replace(username, "<USERNAME>");
 
-				return path;
-			}
+			return path;
 		});
 
-		/*CrashReportCategory ext = report.makeCategoryDepth(
+		CrashReportCategory ext = report.makeCategoryDepth(
 				"World Downloader Mod - Extensions", stSize);
 		Map<String, ModInfo<?>> extensions = WDLApi.getWDLMods();
-		info.append(extensions.size()).append(" loaded\n");
+		ext.addCrashSection("Number loaded: ", extensions.size());
 		for (Map.Entry<String, ModInfo<?>> e : extensions.entrySet()) {
-			info.append("\n#### ").append(e.getKey()).append("\n\n");
-			try {
-				info.append(e.getValue().getInfo());
-			} catch (Exception ex) {
-				info.append("ERROR: ").append(ex).append('\n');
-				for (StackTraceElement elm : ex.getStackTrace()) {
-					info.append(elm).append('\n');
-				}
-			}
-		}*/
+			ext.addDetail(e.getKey(), e.getValue()::getInfo);
+		}
 
 		CrashReportCategory state = report.makeCategoryDepth(
 				"World Downloader Mod - State", stSize);
