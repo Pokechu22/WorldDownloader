@@ -3,6 +3,7 @@ package wdl.gui;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
@@ -27,7 +28,7 @@ public class GuiWDL extends GuiScreen {
 
 		private class ButtonEntry extends GuiListEntry {
 			private final GuiButton button;
-			private final GuiScreen toOpen;
+			private final Function<GuiScreen, GuiScreen> openFunc;
 
 			private final String tooltip;
 
@@ -37,16 +38,18 @@ public class GuiWDL extends GuiScreen {
 			 * @param key
 			 *            The I18n key, which will have the base for this GUI
 			 *            prepended.
-			 * @param toOpen
-			 *            The gui screen to open when the button is clicked.
+			 * @param openFunc
+			 *            Supplier that constructs a GuiScreen to open based off
+			 *            of this screen (the one to open when that screen is
+			 *            closed)
 			 * @param needsPerms
 			 *            Whether the player needs download permission to use
 			 *            this button.
 			 */
-			public ButtonEntry(String key, GuiScreen toOpen, boolean needsPerms) {
+			public ButtonEntry(String key, Function<GuiScreen, GuiScreen> openFunc, boolean needsPerms) {
 				this.button = new GuiButton(0, 0, 0, I18n.format("wdl.gui.wdl."
 						+ key + ".name"));
-				this.toOpen = toOpen;
+				this.openFunc = openFunc;
 				if (needsPerms) {
 					button.enabled = WDLPluginChannels.canDownloadAtAll();
 				}
@@ -71,7 +74,7 @@ public class GuiWDL extends GuiScreen {
 			public boolean mousePressed(int slotIndex, int x, int y,
 					int mouseEvent, int relativeX, int relativeY) {
 				if (button.mousePressed(mc, x, y)) {
-					mc.displayGuiScreen(toOpen);
+					mc.displayGuiScreen(openFunc.apply(GuiWDL.this));
 
 					button.playPressSound(mc.getSoundHandler());
 
@@ -88,36 +91,26 @@ public class GuiWDL extends GuiScreen {
 			}
 		}
 
-		@SuppressWarnings("serial")
-		private List<GuiListEntry> entries = new ArrayList<GuiListEntry>() {{
-			// TODO: This might be a performance bottleneck, as a bunch of
-			// GUI instances are created.  Although they aren't displayed.
+		private final List<GuiListEntry> entries;
+		{
+			entries = new ArrayList<GuiListEntry>();
 
-			add(new ButtonEntry("worldOverrides", new GuiWDLWorld(
-					GuiWDL.this), true));
-			add(new ButtonEntry("generatorOverrides", new GuiWDLGenerator(
-					GuiWDL.this), true));
-			add(new ButtonEntry("playerOverrides", new GuiWDLPlayer(
-					GuiWDL.this), true));
-			add(new ButtonEntry("entityOptions", new GuiWDLEntities(
-					GuiWDL.this), true));
-			add(new ButtonEntry("gameruleOptions", new GuiWDLGameRules(
-					GuiWDL.this), true));
-			add(new ButtonEntry("backupOptions", new GuiWDLBackup(
-					GuiWDL.this), true));
-			add(new ButtonEntry("messageOptions", new GuiWDLMessages(
-					GuiWDL.this), false));
-			add(new ButtonEntry("permissionsInfo", new GuiWDLPermissions(
-					GuiWDL.this), false));
-			add(new ButtonEntry("about", new GuiWDLAbout(GuiWDL.this), false));
+			entries.add(new ButtonEntry("worldOverrides", GuiWDLWorld::new, true));
+			entries.add(new ButtonEntry("generatorOverrides", GuiWDLGenerator::new, true));
+			entries.add(new ButtonEntry("playerOverrides", GuiWDLPlayer::new, true));
+			entries.add(new ButtonEntry("entityOptions", GuiWDLEntities::new, true));
+			entries.add(new ButtonEntry("gameruleOptions", GuiWDLGameRules::new, true));
+			entries.add(new ButtonEntry("backupOptions", GuiWDLBackup::new, true));
+			entries.add(new ButtonEntry("messageOptions", GuiWDLMessages::new, false));
+			entries.add(new ButtonEntry("permissionsInfo", GuiWDLPermissions::new, false));
+			entries.add(new ButtonEntry("about", GuiWDLAbout::new, false));
 			if (WDLUpdateChecker.hasNewVersion()) {
-				add(0, new ButtonEntry("updates.hasNew", new GuiWDLUpdates(
-						GuiWDL.this), false));
+				// Put at start
+				entries.add(0, new ButtonEntry("updates.hasNew", GuiWDLUpdates::new, false));
 			} else {
-				add(new ButtonEntry("updates", new GuiWDLUpdates(
-						GuiWDL.this), false));
+				entries.add(new ButtonEntry("updates", GuiWDLUpdates::new, false));
 			}
-		}};
+		}
 
 		@Override
 		public IGuiListEntry getListEntry(int index) {

@@ -34,8 +34,9 @@ public class GuiWDLEntities extends GuiScreen {
 		 */
 		private int totalWidth;
 
-		@SuppressWarnings("serial")
-		private List<GuiListEntry> entries = new ArrayList<GuiListEntry>() {{
+		private final List<GuiListEntry> entries;
+		{
+			entries = new ArrayList<>();
 			try {
 				int largestWidthSoFar = 0;
 
@@ -58,14 +59,14 @@ public class GuiWDLEntities extends GuiScreen {
 
 				for (String category : categories) {
 					CategoryEntry categoryEntry = new CategoryEntry(category);
-					add(categoryEntry);
+					entries.add(categoryEntry);
 
 					List<String> categoryEntities = new ArrayList<String>(
 							entities.get(category));
 					Collections.sort(categoryEntities);
 
 					for (String entity : categoryEntities) {
-						add(new EntityEntry(categoryEntry, entity));
+						entries.add(new EntityEntry(categoryEntry, entity));
 
 						int width = fontRenderer.getStringWidth(entity);
 						if (width > largestWidthSoFar) {
@@ -82,7 +83,7 @@ public class GuiWDLEntities extends GuiScreen {
 
 				Minecraft.getMinecraft().displayGuiScreen(null);
 			}
-		}};
+		}
 
 		/**
 		 * Provides a label.

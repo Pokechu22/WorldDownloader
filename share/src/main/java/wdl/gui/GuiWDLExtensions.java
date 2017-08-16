@@ -1,8 +1,8 @@
 package wdl.gui;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
@@ -175,11 +175,8 @@ public class GuiWDLExtensions extends GuiScreen {
 			}
 		}
 
-		private List<GuiListEntry> entries = new ArrayList<GuiListEntry>() {{
-			for (ModInfo<?> mod : WDLApi.getWDLMods().values()) {
-				add(new ModEntry(mod));
-			}
-		}};
+		private List<GuiListEntry> entries = WDLApi.getWDLMods().values()
+				.stream().map(ModEntry::new).collect(Collectors.toList());
 
 		@Override
 		public void drawScreen(int mouseX, int mouseY, float partialTicks) {

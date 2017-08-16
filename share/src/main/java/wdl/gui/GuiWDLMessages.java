@@ -1,10 +1,9 @@
 package wdl.gui;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
@@ -127,19 +126,14 @@ public class GuiWDLMessages extends GuiScreen {
 			}
 		}
 
-		@SuppressWarnings("serial")
-		private List<GuiListEntry> entries = new ArrayList<GuiListEntry>() {{
-			Map<MessageTypeCategory, Collection<IWDLMessageType>> map =
-					WDLMessages.getTypes().asMap();
-			for (Map.Entry<MessageTypeCategory, Collection<IWDLMessageType>> e : map
-					.entrySet()) {
-				add(new CategoryEntry(e.getKey()));
-
-				for (IWDLMessageType type : e.getValue()) {
-					add(new MessageTypeEntry(type, e.getKey()));
-				}
-			}
-		}};
+		// The call to Stream.concat is somewhat hacky, but hard to avoid
+		// (we want both a header an the items in it)
+		private List<GuiListEntry> entries = WDLMessages
+				.getTypes().asMap().entrySet().stream()
+				.flatMap(e -> Stream.concat(
+						Stream.of(new CategoryEntry(e.getKey())),
+						e.getValue().stream().map(t -> new MessageTypeEntry(t, e.getKey()))))
+				.collect(Collectors.toList());
 
 		@Override
 		public IGuiListEntry getListEntry(int index) {
