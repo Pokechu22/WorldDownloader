@@ -28,7 +28,7 @@ import wdl.api.WDLApi.ModInfo;
 class APIImpl implements WDLApi.APIInstance {
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	private static Map<String, ModInfo<?>> wdlMods = new HashMap<String, ModInfo<?>>();
+	private static Map<String, ModInfo<?>> wdlMods = new HashMap<>();
 
 	private static boolean hasLegacyEntityHandler = false;
 

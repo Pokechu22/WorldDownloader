@@ -30,13 +30,13 @@ public class CapeHandler {
 	 * You can convert a player name to a unique ID and vice versa using
 	 * <a href="https://namemc.com/">namemc.com</a>.
 	 */
-	private static final Map<UUID, ResourceLocation> capes = new HashMap<UUID, ResourceLocation>();
+	private static final Map<UUID, ResourceLocation> capes = new HashMap<>();
 
 	private static final Set<EntityPlayer> handledPlayers = new HashSet<>();
 	/**
 	 * Number of times a player's cape has failed; if they have failed too many times skip them.
 	 */
-	private static final Map<EntityPlayer, Integer> playerFailures = new HashMap<EntityPlayer, Integer>();
+	private static final Map<EntityPlayer, Integer> playerFailures = new HashMap<>();
 	/**
 	 * Number of times the cape system has broken in total.
 	 */

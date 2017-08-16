@@ -138,7 +138,7 @@ public class WDL {
 	/**
 	 * All tile entities that were saved manually, by chunk and then position.
 	 */
-	public static HashMap<ChunkPos, Map<BlockPos, TileEntity>> newTileEntities = new HashMap<ChunkPos, Map<BlockPos, TileEntity>>();
+	public static HashMap<ChunkPos, Map<BlockPos, TileEntity>> newTileEntities = new HashMap<>();
 
 	/**
 	 * All entities that were downloaded, by chunk.
@@ -149,7 +149,7 @@ public class WDL {
 	 * All of the {@link MapData}s that were sent to the client in the current
 	 * world.
 	 */
-	public static HashMap<Integer, MapData> newMapDatas = new HashMap<Integer, MapData>();
+	public static HashMap<Integer, MapData> newMapDatas = new HashMap<>();
 
 	// State variables:
 	/**
@@ -415,9 +415,9 @@ public class WDL {
 		WDL.minecraft.displayGuiScreen((GuiScreen) null);
 		WDL.minecraft.setIngameFocus();
 		chunkLoader = WDLChunkLoader.create(saveHandler, worldClient.provider);
-		newTileEntities = new HashMap<ChunkPos,Map<BlockPos,TileEntity>>();
+		newTileEntities = new HashMap<>();
 		newEntities = HashMultimap.create();
-		newMapDatas = new HashMap<Integer, MapData>();
+		newMapDatas = new HashMap<>();
 
 		if (baseProps.getProperty("ServerName").isEmpty()) {
 			baseProps.setProperty("ServerName", getServerName());

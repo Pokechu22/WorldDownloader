@@ -380,7 +380,7 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 		Map<BlockPos, NBTTagCompound> oldTEMap = getOldTileEntities(chunk);
 		Map<BlockPos, TileEntity> newTEMap = WDL.newTileEntities.get(chunk.getPos());
 		if (newTEMap == null) {
-			newTEMap = new HashMap<BlockPos, TileEntity>();
+			newTEMap = new HashMap<>();
 		}
 
 		// All of the locations of tile entities in the chunk.
@@ -467,7 +467,7 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 	 */
 	public Map<BlockPos, NBTTagCompound> getOldTileEntities(Chunk chunk) {
 		DataInputStream dis = null;
-		Map<BlockPos, NBTTagCompound> returned = new HashMap<BlockPos, NBTTagCompound>();
+		Map<BlockPos, NBTTagCompound> returned = new HashMap<>();
 
 		try {
 			dis = RegionFileCache.getChunkInputStream(chunkSaveLocation,

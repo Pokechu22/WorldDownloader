@@ -283,7 +283,7 @@ public class WDLUpdateChecker extends Thread {
 				return;
 			}
 			//Check the hashes, and list any failing ones.
-			Map<HashData, Object> failed = new HashMap<HashData, Object>();
+			Map<HashData, Object> failed = new HashMap<>();
 
 			hashLoop: for (HashData data : runningRelease.hiddenInfo.hashes) {
 				try {

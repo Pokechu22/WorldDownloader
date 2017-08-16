@@ -114,7 +114,7 @@ public class WDLPluginChannels {
 	 * Key is the entity string, int is the range.
 	 */
 	private static Map<String, Integer> entityRanges =
-			new HashMap<String, Integer>();
+			new HashMap<>();
 
 	/**
 	 * Whether players can request permissions.
@@ -134,12 +134,12 @@ public class WDLPluginChannels {
 	/**
 	 * Chunk overrides. Any chunk within a range is allowed to be downloaded in.
 	 */
-	private static Map<String, Multimap<String, ChunkRange>> chunkOverrides = new HashMap<String, Multimap<String, ChunkRange>>();
+	private static Map<String, Multimap<String, ChunkRange>> chunkOverrides = new HashMap<>();
 
 	/**
 	 * Active permission requests.
 	 */
-	private static Map<String, String> requests = new HashMap<String, String>();
+	private static Map<String, String> requests = new HashMap<>();
 
 	/**
 	 * Permission request fields that take boolean parameters.
@@ -405,7 +405,7 @@ public class WDLPluginChannels {
 	}
 
 	public static Map<String, Integer> getEntityRanges() {
-		return new HashMap<String, Integer>(entityRanges);
+		return new HashMap<>(entityRanges);
 	}
 
 	/**
@@ -488,7 +488,7 @@ public class WDLPluginChannels {
 	 */
 	public static Map<String, Multimap<String, ChunkRange>> getChunkOverrides() {
 		Map<String, Multimap<String, ChunkRange>> returned = new
-				HashMap<String, Multimap<String,ChunkRange>>();
+				HashMap<>();
 
 		for (Map.Entry<String, Multimap<String, ChunkRange>> e : chunkOverrides
 				.entrySet()) {
@@ -599,7 +599,7 @@ public class WDLPluginChannels {
 		Minecraft minecraft = Minecraft.getMinecraft();
 
 		receivedPackets = new HashSet<>();
-		requests = new HashMap<String, String>();
+		requests = new HashMap<>();
 		chunkOverrideRequests = new ArrayList<>();
 
 		canUseFunctionsUnknownToServer = true;
