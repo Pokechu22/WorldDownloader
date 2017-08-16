@@ -52,7 +52,6 @@ import net.minecraft.util.registry.RegistryNamespaced;
 import wdl.EntityUtils.SpigotEntityType;
 import wdl.api.IEntityManager;
 
-import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
@@ -315,7 +314,7 @@ public enum StandardEntityManagers implements IEntityManager {
 			PROVIDED_ENTITIES = builder.build();
 		} catch (Throwable ex) {
 			EntityUtils.logger.error("[WDL] Failed to load entity list: ", ex);
-			throw Throwables.propagate(ex);
+			throw new RuntimeException(ex);
 		}
 	}
 	@SuppressWarnings("unchecked")
