@@ -100,6 +100,9 @@ tasks.withType(JavaCompile) { javaTask ->
     javaTask.targetCompatibility = "1.8"
 }
 
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
+
 // Use tabs instead of spaces
 fixMcSources {
     astyleConfig = "../astyle.cfg"

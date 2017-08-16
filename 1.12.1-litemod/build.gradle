@@ -105,6 +105,9 @@ tasks.withType(JavaCompile) { javaTask ->
     javaTask.targetCompatibility = "1.8"
 }
 
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
+
 // Ensure that the API code and litemod JSON in the jar
 jar {
     from sourceSets.api.output

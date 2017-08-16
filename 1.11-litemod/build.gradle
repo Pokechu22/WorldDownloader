@@ -93,6 +93,9 @@ tasks.withType(JavaCompile) { javaTask ->
     javaTask.targetCompatibility = "1.8"
 }
 
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
+
 // Mixins need to be in Java 6 for this version of MC
 compileMixinJava {
     sourceCompatibility = "1.6"
