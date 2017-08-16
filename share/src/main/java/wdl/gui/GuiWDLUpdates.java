@@ -127,7 +127,7 @@ public class GuiWDLUpdates extends GuiScreen {
 		 * being called each frame.
 		 */
 		private void regenerateVersionList() {
-			displayedVersions = new ArrayList<VersionEntry>();
+			displayedVersions = new ArrayList<>();
 
 			if (WDLUpdateChecker.hasNewVersion()) {
 				recomendedRelease = WDLUpdateChecker.getRecomendedRelease();

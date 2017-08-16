@@ -53,7 +53,7 @@ public class GuiWDLGameRules extends GuiScreen {
 			super(GuiWDLGameRules.this.mc, GuiWDLGameRules.this.width,
 					GuiWDLGameRules.this.height, 39,
 					GuiWDLGameRules.this.height - 32, 24);
-			this.entries = new ArrayList<GuiListEntry>();
+			this.entries = new ArrayList<>();
 			for (String rule : vanillaGameRules) {
 				if (rules.areSameType(rule, ValueType.NUMERICAL_VALUE)) {
 					this.entries.add(new IntRuleEntry(rule));

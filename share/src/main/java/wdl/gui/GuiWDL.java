@@ -93,7 +93,7 @@ public class GuiWDL extends GuiScreen {
 
 		private final List<GuiListEntry> entries;
 		{
-			entries = new ArrayList<GuiListEntry>();
+			entries = new ArrayList<>();
 
 			entries.add(new ButtonEntry("worldOverrides", GuiWDLWorld::new, true));
 			entries.add(new ButtonEntry("generatorOverrides", GuiWDLGenerator::new, true));

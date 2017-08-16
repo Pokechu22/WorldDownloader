@@ -255,7 +255,7 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 		}
 
 		// Build a list of all entities in the chunk.
-		List<Entity> entities = new ArrayList<Entity>();
+		List<Entity> entities = new ArrayList<>();
 		// Add the entities already in the chunk.
 		for (ClassInheritanceMultiMap<Entity> map : chunk.getEntityLists()) {
 			entities.addAll(map);
@@ -384,7 +384,7 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 		}
 
 		// All of the locations of tile entities in the chunk.
-		Set<BlockPos> allTELocations = new HashSet<BlockPos>();
+		Set<BlockPos> allTELocations = new HashSet<>();
 		allTELocations.addAll(chunkTEMap.keySet());
 		allTELocations.addAll(oldTEMap.keySet());
 		allTELocations.addAll(newTEMap.keySet());

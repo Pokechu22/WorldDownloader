@@ -61,7 +61,7 @@ public class GithubInfoGrabber {
 	@Nonnull
 	public static List<Release> getReleases() throws Exception {
 		JsonArray array = query(RELEASE_LIST_LOCATION).getAsJsonArray();
-		List<Release> returned = new ArrayList<Release>();
+		List<Release> returned = new ArrayList<>();
 		for (JsonElement element : array) {
 			returned.add(new Release(element.getAsJsonObject()));
 		}

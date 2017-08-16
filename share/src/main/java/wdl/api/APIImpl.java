@@ -63,7 +63,7 @@ class APIImpl implements WDLApi.APIInstance {
 					"(id=" + id + ", version=" + version + ")");
 		}
 
-		ModInfo<IWDLMod> info = new ModInfo<IWDLMod>(id, version, mod);
+		ModInfo<IWDLMod> info = new ModInfo<>(id, version, mod);
 		if (wdlMods.containsKey(id)) {
 			throw new IllegalArgumentException("A mod by the name of '"
 					+ id + "' is already registered by "
@@ -110,7 +110,7 @@ class APIImpl implements WDLApi.APIInstance {
 		if (clazz == null) {
 			throw new IllegalArgumentException("clazz must not be null!");
 		}
-		List<ModInfo<T>> returned = new ArrayList<ModInfo<T>>();
+		List<ModInfo<T>> returned = new ArrayList<>();
 
 		for (ModInfo<?> info : wdlMods.values()) {
 			if (!info.isEnabled()) {
@@ -135,7 +135,7 @@ class APIImpl implements WDLApi.APIInstance {
 		if (clazz == null) {
 			throw new IllegalArgumentException("clazz must not be null!");
 		}
-		List<ModInfo<T>> returned = new ArrayList<ModInfo<T>>();
+		List<ModInfo<T>> returned = new ArrayList<>();
 
 		for (ModInfo<?> info : wdlMods.values()) {
 			if (clazz.isAssignableFrom(info.mod.getClass())) {

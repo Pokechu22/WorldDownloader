@@ -35,7 +35,7 @@ public class EntityUtils {
 	 * This value is calculated each time and is not cached.
 	 */
 	public static Set<String> getEntityTypes() {
-		Set<String> set = new HashSet<String>();
+		Set<String> set = new HashSet<>();
 		for (IEntityManager manager : getEntityManagers()) {
 			for (String type : manager.getProvidedEntities()) {
 				set.add(type);
@@ -48,7 +48,7 @@ public class EntityUtils {
 	 */
 	public static List<IEntityManager> getEntityManagers() {
 		// XXX This order isn't necessarily the one a user would want
-		List<IEntityManager> managers = new ArrayList<IEntityManager>();
+		List<IEntityManager> managers = new ArrayList<>();
 		for (ModInfo<IEntityManager> info : WDLApi.getImplementingExtensions(IEntityManager.class)) {
 			managers.add(info.mod);
 		}

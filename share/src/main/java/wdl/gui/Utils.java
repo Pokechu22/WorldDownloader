@@ -401,7 +401,7 @@ class TextList extends GuiListExtended {
 		this.topMargin = topMargin;
 		this.bottomMargin = bottomMargin;
 
-		this.entries = new ArrayList<IGuiListEntry>();
+		this.entries = new ArrayList<>();
 	}
 
 	private List<IGuiListEntry> entries;

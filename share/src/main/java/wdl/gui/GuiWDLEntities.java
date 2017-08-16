@@ -48,7 +48,7 @@ public class GuiWDLEntities extends GuiScreen {
 				// than just "Passive"/"Hostile"/"Other", which we want
 				// further down, but for Passive/Hostile/Other it's better
 				// to have it in consistent places.
-				List<String> categories = new ArrayList<String>(entities.keySet());
+				List<String> categories = new ArrayList<>(entities.keySet());
 				categories.remove("Passive");
 				categories.remove("Hostile");
 				categories.remove("Other");
@@ -61,7 +61,7 @@ public class GuiWDLEntities extends GuiScreen {
 					CategoryEntry categoryEntry = new CategoryEntry(category);
 					entries.add(categoryEntry);
 
-					List<String> categoryEntities = new ArrayList<String>(
+					List<String> categoryEntities = new ArrayList<>(
 							entities.get(category));
 					Collections.sort(categoryEntities);
 

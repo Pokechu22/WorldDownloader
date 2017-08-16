@@ -868,7 +868,7 @@ public class WDL {
 		@SuppressWarnings("unchecked")
 		Long2ObjectMap<Chunk> chunkMap = ReflectionUtils
 		.findAndGetPrivateField(chunkProvider, Long2ObjectMap.class);
-		List<Chunk> chunks = new ArrayList<Chunk>(chunkMap.values());
+		List<Chunk> chunks = new ArrayList<>(chunkMap.values());
 
 		progressScreen.startMajorTask(I18n.format("wdl.saveProgress.chunk.title"),
 				chunks.size());

@@ -67,7 +67,7 @@ public class WDLPluginChannels {
 	/**
 	 * Packets that have been received.
 	 */
-	private static HashSet<Integer> receivedPackets = new HashSet<Integer>();
+	private static HashSet<Integer> receivedPackets = new HashSet<>();
 
 	/**
 	 * Whether functions that the server is not aware of can be used.
@@ -156,7 +156,7 @@ public class WDLPluginChannels {
 	/**
 	 * List of new chunk override requests.
 	 */
-	private static List<ChunkRange> chunkOverrideRequests = new ArrayList<ChunkRange>();
+	private static List<ChunkRange> chunkOverrideRequests = new ArrayList<>();
 
 	/**
 	 * Checks whether players can use functions unknown to the server.
@@ -598,9 +598,9 @@ public class WDLPluginChannels {
 	static void onWorldLoad() {
 		Minecraft minecraft = Minecraft.getMinecraft();
 
-		receivedPackets = new HashSet<Integer>();
+		receivedPackets = new HashSet<>();
 		requests = new HashMap<String, String>();
-		chunkOverrideRequests = new ArrayList<ChunkRange>();
+		chunkOverrideRequests = new ArrayList<>();
 
 		canUseFunctionsUnknownToServer = true;
 

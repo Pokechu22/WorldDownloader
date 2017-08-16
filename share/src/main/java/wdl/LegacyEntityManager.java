@@ -67,7 +67,7 @@ public class LegacyEntityManager implements IEntityManager, IWDLModDescripted {
 
 	@Override
 	public Set<String> getProvidedEntities() {
-		Set<String> set = new HashSet<String>();
+		Set<String> set = new HashSet<>();
 		for (ModInfo<ISpecialEntityHandler> info : WDLApi
 				.getImplementingExtensions(ISpecialEntityHandler.class)) {
 			set.addAll(info.mod.getSpecialEntities().values());

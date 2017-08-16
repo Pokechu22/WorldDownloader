@@ -32,7 +32,7 @@ public class CapeHandler {
 	 */
 	private static final Map<UUID, ResourceLocation> capes = new HashMap<UUID, ResourceLocation>();
 
-	private static final Set<EntityPlayer> handledPlayers = new HashSet<EntityPlayer>();
+	private static final Set<EntityPlayer> handledPlayers = new HashSet<>();
 	/**
 	 * Number of times a player's cape has failed; if they have failed too many times skip them.
 	 */

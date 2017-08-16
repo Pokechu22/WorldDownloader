@@ -116,7 +116,7 @@ public class WDLMessages {
 	 * List of all registrations.
 	 */
 	private static List<MessageRegistration> registrations =
-			new ArrayList<MessageRegistration>();
+			new ArrayList<>();
 
 	/**
 	 * Gets the {@link MessageRegistration} for the given name.
@@ -309,7 +309,7 @@ public class WDLMessages {
 	 */
 	public static void chatMessageTranslated(@Nonnull IWDLMessageType type,
 			@Nonnull String translationKey, @Nonnull Object... args) {
-		List<Throwable> exceptionsToPrint = new ArrayList<Throwable>();
+		List<Throwable> exceptionsToPrint = new ArrayList<>();
 
 		for (int i = 0; i < args.length; i++) {
 			if (args[i] == null) {

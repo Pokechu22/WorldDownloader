@@ -86,7 +86,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		 */
 		public List<String> getDescription() {
 			if (description == null) {
-				description = new ArrayList<String>();
+				description = new ArrayList<>();
 
 				// TODO: More info than just dimensions - EG if the
 				// chunk the player is in is added, etc.
@@ -219,7 +219,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		// Build a list of world names.
 		String[] worldNames = WDL.baseProps.getProperty("LinkedWorlds")
 				.split("\\|");
-		linkedWorlds = new ArrayList<MultiworldInfo>();
+		linkedWorlds = new ArrayList<>();
 
 		for (String worldName : worldNames) {
 			if (worldName == null || worldName.isEmpty()) {
@@ -236,7 +236,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 			linkedWorlds.add(new MultiworldInfo(worldName, displayName));
 		}
 
-		linkedWorldsFiltered = new ArrayList<MultiworldInfo>();
+		linkedWorldsFiltered = new ArrayList<>();
 		linkedWorldsFiltered.addAll(linkedWorlds);
 	}
 
