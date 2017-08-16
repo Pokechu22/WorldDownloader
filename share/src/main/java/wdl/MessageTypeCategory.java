@@ -74,7 +74,6 @@ public abstract class MessageTypeCategory {
 
 		@Override
 		public String getDisplayName() {
-			// TODO Auto-generated method stub
 			return I18n.format(i18nKey);
 		}
 
@@ -83,7 +82,7 @@ public abstract class MessageTypeCategory {
 	/**
 	 * Core recommended category.
 	 *
-	 * Put in hear instead of {@link WDLMessageTypes} because of field load
+	 * Put in here instead of {@link WDLMessageTypes} because of field load
 	 * orders.
 	 */
 	static final MessageTypeCategory CORE_RECOMMENDED =
@@ -92,7 +91,7 @@ public abstract class MessageTypeCategory {
 	/**
 	 * Core recommended category.
 	 *
-	 * Put in hear instead of {@link WDLMessageTypes} because of field load
+	 * Put in here instead of {@link WDLMessageTypes} because of field load
 	 * orders.
 	 */
 	static final MessageTypeCategory CORE_DEBUG =
