@@ -54,19 +54,19 @@ import wdl.update.WDLUpdateChecker;
  * should be called directly from the source and does a bit of processing, while
  */
 public class WDLEvents {
-	private static final Profiler profiler = Minecraft.getMinecraft().mcProfiler;
+	private static final Profiler PROFILER = Minecraft.getMinecraft().mcProfiler;
 
 	/**
 	 * Must be called after the static World object in Minecraft has been
 	 * replaced.
 	 */
 	public static void onWorldLoad(WorldClient world) {
-		profiler.startSection("Core");
+		PROFILER.startSection("Core");
 
 		if (WDL.minecraft.isIntegratedServerRunning()) {
 			// Don't do anything else in single player
 
-			profiler.endSection();  // "Core"
+			PROFILER.endSection();  // "Core"
 			return;
 		}
 
@@ -81,7 +81,7 @@ public class WDLEvents {
 				WDL.startSaveThread();
 			}
 
-			profiler.endSection();  // "Core"
+			PROFILER.endSection();  // "Core"
 			return;
 		}
 
@@ -89,13 +89,13 @@ public class WDLEvents {
 
 		WDLUpdateChecker.startIfNeeded();  // TODO: Always check for updates, even in single player
 
-		profiler.endSection();  // "Core"
+		PROFILER.endSection();  // "Core"
 
 		for (ModInfo<IWorldLoadListener> info : WDLApi
 				.getImplementingExtensions(IWorldLoadListener.class)) {
-			profiler.startSection(info.id);
+			PROFILER.startSection(info.id);
 			info.mod.onWorldLoad(world, sameServer);
-			profiler.endSection();  // info.id
+			PROFILER.endSection();  // info.id
 		}
 	}
 
