@@ -375,12 +375,12 @@ public class WDLHooks {
 	 * Start button ID. Ascii-encoded 'WDLs' (World Downloader Start).
 	 * Chosen to be unique.
 	 */
-	private static final int WDLs = 0x57444C73;
+	private static final int WDLs = ('W' << 24) | ('D' << 16) | ('L' << 8) | ('s');
 	/**
 	 * Options button ID. Ascii-encoded 'WDLo' (World Downloader Options).
 	 * Chosen to be unique.
 	 */
-	private static final int WDLo = 0x57444C6F;
+	private static final int WDLo = ('W' << 24) | ('D' << 16) | ('L' << 8) | ('o');
 
 	/**
 	 * Adds the "Download this world" button to the ingame pause GUI.
