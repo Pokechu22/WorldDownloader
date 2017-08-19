@@ -26,7 +26,7 @@ import com.google.common.collect.Multimap;
  * Provides utility functions for recognizing entities.
  */
 public class EntityUtils {
-	static final Logger logger = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
 	 * Gets a collection of all types of entities, both basic ones and special
@@ -117,7 +117,7 @@ public class EntityUtils {
 					return distance;
 				}
 			}
-			logger.warn("Failed to get track distance for " + type + " (" + entity + ")");
+			LOGGER.warn("Failed to get track distance for " + type + " (" + entity + ")");
 			return -1;
 		} else if ("server".equals(mode)) {
 			int serverDistance = WDLPluginChannels
@@ -161,7 +161,7 @@ public class EntityUtils {
 				return group;
 			}
 		}
-		logger.warn("Failed to find entity group for " + identifier);
+		LOGGER.warn("Failed to find entity group for " + identifier);
 		return "Unknown";
 	}
 
@@ -209,7 +209,7 @@ public class EntityUtils {
 			return null;
 		}
 		if (e == null) {
-			logger.warn("Can't get type for null entity", new Exception());
+			LOGGER.warn("Can't get type for null entity", new Exception());
 			return null;
 		}
 
@@ -219,7 +219,7 @@ public class EntityUtils {
 				return type;
 			}
 		}
-		logger.warn("Failed to classify entity " + e);
+		LOGGER.warn("Failed to classify entity " + e);
 		return null;
 	}
 	/**
@@ -244,7 +244,7 @@ public class EntityUtils {
 				return displayIdentifier;
 			}
 		}
-		logger.debug("Failed to get display name for " + identifier);
+		LOGGER.debug("Failed to get display name for " + identifier);
 		return identifier;
 	}
 	/**
@@ -259,7 +259,7 @@ public class EntityUtils {
 				return displayGroup;
 			}
 		}
-		logger.debug("Failed to get display name for group " + group);
+		LOGGER.debug("Failed to get display name for group " + group);
 		return group;
 	}
 

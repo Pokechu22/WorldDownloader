@@ -7,6 +7,9 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAreaEffectCloud;
@@ -268,6 +271,8 @@ public enum StandardEntityManagers implements IEntityManager {
 		return c;
 	}
 
+	private static final Logger LOGGER = LogManager.getLogger();
+
 	/**
 	 * Reference to {@link EntityList#REGISTRY}. May be null under forge. If
 	 * null, indicates that the fallback method needs to be used.
@@ -298,7 +303,7 @@ public enum StandardEntityManagers implements IEntityManager {
 				forgeMethod = null;
 			} catch (NoSuchFieldError ex) {
 				// Yay, incompatible changes!
-				EntityUtils.logger.info("[WDL] NoSuchFieldException due to forge; switching to fallback. This is (sadly) expected: ", ex);
+				LOGGER.info("[WDL] NoSuchFieldException due to forge; switching to fallback. This is (sadly) expected: ", ex);
 				registry = null;
 				forgeMethod = EntityList.class.getMethod("getClass", ResourceLocation.class);
 			}
@@ -313,7 +318,7 @@ public enum StandardEntityManagers implements IEntityManager {
 			}
 			PROVIDED_ENTITIES = builder.build();
 		} catch (Throwable ex) {
-			EntityUtils.logger.error("[WDL] Failed to load entity list: ", ex);
+			LOGGER.error("[WDL] Failed to load entity list: ", ex);
 			throw new RuntimeException(ex);
 		}
 	}
@@ -322,7 +327,7 @@ public enum StandardEntityManagers implements IEntityManager {
 		try {
 			return (Class<? extends Entity>) FORGE_FALLBACK_METHOD.invoke(null, key);
 		} catch (Exception ex) {
-			EntityUtils.logger.error("[WDL] Exception calling forge fallback method: ", ex);
+			LOGGER.error("[WDL] Exception calling forge fallback method: ", ex);
 			throw new RuntimeException(ex);
 		}
 	}

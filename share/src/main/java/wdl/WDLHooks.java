@@ -47,7 +47,7 @@ import com.google.common.collect.ImmutableList;
  */
 public class WDLHooks {
 	private static final Profiler profiler = Minecraft.getMinecraft().mcProfiler;
-	private static final Logger logger = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
 	 * Called when {@link WorldClient#tick()} is called.
@@ -170,7 +170,7 @@ public class WDLHooks {
 
 				profiler.endSection();  // "onChunkNoLongerNeeded"
 			} else {
-				logger.debug("Adding new empty chunk at " + x + ", " + z + " (already has: " + (sender.getChunkProvider().getLoadedChunk(x, z) != null) + ")");
+				LOGGER.debug("Adding new empty chunk at " + x + ", " + z + " (already has: " + (sender.getChunkProvider().getLoadedChunk(x, z) != null) + ")");
 			}
 
 			profiler.endSection();

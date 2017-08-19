@@ -29,7 +29,7 @@ import com.google.common.collect.ListMultimap;
  * Handles enabling and disabling of all of the messages.
  */
 public class WDLMessages {
-	private static Logger logger = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
 	 * Information about an individual message type.
@@ -331,7 +331,7 @@ public class WDLMessages {
 		chatMessage(type, new TextComponentTranslation(translationKey, args));
 
 		for (int i = 0; i < exceptionsToPrint.size(); i++) {
-			logger.warn("Exception #" + (i + 1) + ": ", exceptionsToPrint.get(i));
+			LOGGER.warn("Exception #" + (i + 1) + ": ", exceptionsToPrint.get(i));
 		}
 	}
 
@@ -366,7 +366,7 @@ public class WDLMessages {
 			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(
 					text);
 		} else {
-			logger.info(text.getUnformattedText());
+			LOGGER.info(text.getUnformattedText());
 		}
 	}
 
@@ -392,13 +392,13 @@ public class WDLMessages {
 				wdlName.getStyle().setHoverEvent(new HoverEvent(Action.SHOW_TEXT, hoverText));
 			}
 		} catch (Exception ex) {
-			logger.warn("[WDL] Exception in entity name!", ex);
+			LOGGER.warn("[WDL] Exception in entity name!", ex);
 			wdlName = convertThrowableToComponent(ex);
 		}
 		try {
 			displayName = e.getDisplayName();
 		} catch (Exception ex) {
-			logger.warn("[WDL] Exception in entity display name!", ex);
+			LOGGER.warn("[WDL] Exception in entity display name!", ex);
 			displayName = convertThrowableToComponent(ex);
 		}
 

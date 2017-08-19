@@ -22,7 +22,7 @@ import com.mojang.authlib.minecraft.MinecraftProfileTexture;
  * Handles giving players capes.
  */
 public class CapeHandler {
-	private static final Logger logger = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
 	 * Map of player names to the skins to give the players.
@@ -82,11 +82,11 @@ public class CapeHandler {
 				}
 			}
 		} catch (Exception e) {
-			logger.warn("[WDL] Failed to tick cape setup", e);
+			LOGGER.warn("[WDL] Failed to tick cape setup", e);
 			totalFailures++;
 
 			if (totalFailures > MAX_TOTAL_FAILURES) {
-				logger.warn("[WDL] Disabling cape system (too many failures)");
+				LOGGER.warn("[WDL] Disabling cape system (too many failures)");
 			}
 		}
 	}
@@ -111,7 +111,7 @@ public class CapeHandler {
 
 			handledPlayers.add(player);
 		} catch (Exception e) {
-			logger.warn("[WDL] Failed to perform cape set up for " + player, e);
+			LOGGER.warn("[WDL] Failed to perform cape set up for " + player, e);
 			incrementFailure(player);
 		}
 	}
@@ -137,7 +137,7 @@ public class CapeHandler {
 			if (numFailures > MAX_PLAYER_FAILURES) {
 				handledPlayers.add(player);
 				playerFailures.remove(player);
-				logger.warn("[WDL] Failed to set up cape for " + player
+				LOGGER.warn("[WDL] Failed to set up cape for " + player
 						+ " too many times (" + numFailures + "); skipping them");
 			}
 		} else {

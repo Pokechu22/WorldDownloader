@@ -46,6 +46,10 @@ import net.minecraft.entity.projectile.EntityPotion;
 import net.minecraft.entity.projectile.EntityShulkerBullet;
 import net.minecraft.entity.projectile.EntitySmallFireball;
 import net.minecraft.entity.projectile.EntitySnowball;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import wdl.EntityUtils.SpigotEntityType;
 import wdl.api.IEntityManager;
 
@@ -237,6 +241,8 @@ public enum StandardEntityManagers implements IEntityManager {
 		return null;
 	}
 
+	private static final Logger LOGGER = LogManager.getLogger();
+
 	/**
 	 * @see EntityList#field_75625_b
 	 */
@@ -270,7 +276,7 @@ public enum StandardEntityManagers implements IEntityManager {
 				typeToClassMap = result;
 			}
 		} catch (Throwable ex) {
-			EntityUtils.logger.error("[WDL] Failed to set up entity mappings: ", ex);
+			LOGGER.error("[WDL] Failed to set up entity mappings: ", ex);
 			throw new RuntimeException(ex);
 		}
 	}
@@ -304,7 +310,7 @@ public enum StandardEntityManagers implements IEntityManager {
 			}
 			PROVIDED_ENTITIES = builder.build();
 		} catch (Throwable ex) {
-			EntityUtils.logger.error("[WDL] Failed to load entity list: ", ex);
+			LOGGER.error("[WDL] Failed to load entity list: ", ex);
 			throw new RuntimeException(ex);
 		}
 	}

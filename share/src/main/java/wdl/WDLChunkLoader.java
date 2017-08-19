@@ -58,7 +58,7 @@ import wdl.api.WDLApi.ModInfo;
  * WDL-specific properties of chunks as they are being saved.
  */
 public class WDLChunkLoader extends AnvilChunkLoader {
-	private static Logger logger = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	public static WDLChunkLoader create(SaveHandler handler,
 			WorldProvider provider) {
@@ -191,7 +191,7 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 						blockData.setByteArray("SkyLight", skylightArray.getData());
 					} else {
 						// Shouldn't happen, but if it does, handle it smoothly.
-						logger.error("[WDL] Skylight array for chunk at " +
+						LOGGER.error("[WDL] Skylight array for chunk at " +
 								chunk.x + ", " + chunk.z +
 								" is null despite VersionedProperties " +
 								"saying it shouldn't be!");
@@ -269,7 +269,7 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 
 		for (Entity entity : entities) {
 			if (entity == null) {
-				logger.warn("[WDL] Null entity in chunk at "
+				LOGGER.warn("[WDL] Null entity in chunk at "
 						+ chunk.getPos());
 				continue;
 			}
@@ -305,18 +305,18 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 						WDLMessageTypes.ERROR,
 						"wdl.messages.generalError.failedToSaveEntity",
 						entity, chunk.x, chunk.z, e);
-				logger.warn("Compound: " + entityData);
-				logger.warn("Entity metadata dump:");
+				LOGGER.warn("Compound: " + entityData);
+				LOGGER.warn("Entity metadata dump:");
 				try {
 					List<EntityDataManager.DataEntry<?>> objects = entity
 							.getDataManager().getAll();
 					if (objects == null) {
-						logger.warn("No entries (getAllWatched() returned null)");
+						LOGGER.warn("No entries (getAllWatched() returned null)");
 					} else {
-						logger.warn(objects);
+						LOGGER.warn(objects);
 						for (EntityDataManager.DataEntry<?> obj : objects) {
 							if (obj != null) {
-								logger.warn("DataEntry [getValue()="
+								LOGGER.warn("DataEntry [getValue()="
 										+ obj.getValue()
 										+ ", isDirty()="
 										+ obj.isDirty()
@@ -330,9 +330,9 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 						}
 					}
 				} catch (Exception e2) {
-					logger.warn("Failed to complete dump: ", e);
+					LOGGER.warn("Failed to complete dump: ", e);
 				}
-				logger.warn("End entity metadata dump");
+				LOGGER.warn("End entity metadata dump");
 				continue;
 			}
 		}
@@ -403,7 +403,7 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 							WDLMessageTypes.ERROR,
 							"wdl.messages.generalError.failedToSaveTE",
 							te, pos, chunk.x, chunk.z, e);
-					logger.warn("Compound: " + compound);
+					LOGGER.warn("Compound: " + compound);
 					continue;
 				}
 
@@ -440,7 +440,7 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 							WDLMessageTypes.ERROR,
 							"wdl.messages.generalError.failedToSaveTE",
 							te, pos, chunk.x, chunk.z, e);
-					logger.warn("Compound: " + compound);
+					LOGGER.warn("Compound: " + compound);
 					continue;
 				}
 

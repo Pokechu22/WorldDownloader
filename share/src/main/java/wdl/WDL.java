@@ -217,7 +217,7 @@ public class WDL {
 	 */
 	public static final Properties defaultProps;
 
-	private static Logger logger = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	// Initialization:
 	static {
@@ -279,13 +279,13 @@ public class WDL {
 					"WorldDownloader.txt"));
 			globalProps.load(reader);
 		} catch (Exception e) {
-			logger.debug("Failed to load global properties", e);
+			LOGGER.debug("Failed to load global properties", e);
 		} finally {
 			if (reader != null) {
 				try {
 					reader.close();
 				} catch (Exception e) {
-					logger.warn("Failed to close global properties reader", e);
+					LOGGER.warn("Failed to close global properties reader", e);
 				}
 			}
 		}
@@ -397,7 +397,7 @@ public class WDL {
 				return;
 			}
 		} catch (Exception e) {
-			logger.warn("Error while checking if the map has been played and " +
+			LOGGER.warn("Error while checking if the map has been played and " +
 					"needs to be backed up (this is normal if this world " +
 					"has not been saved before): ", e);
 		} finally {
@@ -901,7 +901,7 @@ public class WDL {
 
 		try {
 			if (isEmpty(c)) {
-				logger.warn("[WDL] Tried to save empty chunk! (" + c + "@" + c.x + "," + c.z + ")");
+				LOGGER.warn("[WDL] Tried to save empty chunk! (" + c + "@" + c.x + "," + c.z + ")");
 				return;
 			}
 			chunkLoader.saveChunk(worldClient, c);
@@ -940,10 +940,10 @@ public class WDL {
 				}
 			}
 			// Only composed of airoids; treat as empty
-			logger.warn("[WDL] Skipping airoid empty chunk at " + c.x + ", " + c.z);
+			LOGGER.warn("[WDL] Skipping airoid empty chunk at " + c.x + ", " + c.z);
 		} else {
 			// Definitely empty
-			logger.warn("[WDL] Skipping chunk with all null sections at " + c.x + ", " + c.z);
+			LOGGER.warn("[WDL] Skipping chunk with all null sections at " + c.x + ", " + c.z);
 		}
 		return true;
 	}
@@ -966,13 +966,13 @@ public class WDL {
 			propsFound = true;
 		} catch (Exception e) {
 			propsFound = false;
-			logger.debug("Failed to load base properties", e);
+			LOGGER.debug("Failed to load base properties", e);
 		} finally {
 			if (reader != null) {
 				try {
 					reader.close();
 				} catch (Exception e) {
-					logger.warn("Failed to close base properties reader", e);
+					LOGGER.warn("Failed to close base properties reader", e);
 				}
 			}
 		}
@@ -1010,14 +1010,14 @@ public class WDL {
 
 			return ret;
 		} catch (Exception e) {
-			logger.debug("Failed to load world props for " + worldName, e);
+			LOGGER.debug("Failed to load world props for " + worldName, e);
 			return ret;
 		} finally {
 			if (reader != null) {
 				try {
 					reader.close();
 				} catch (Exception e) {
-					logger.warn("Failed to close world props reader for "
+					LOGGER.warn("Failed to close world props reader for "
 							+ worldName, e);
 				}
 			}
@@ -1271,7 +1271,7 @@ public class WDL {
 
 		// Forge (TODO: move this elsewhere!)
 		try {
-			logger.debug("Trying to call FML writeVersionData");
+			LOGGER.debug("Trying to call FML writeVersionData");
 			NBTTagCompound versionInfo = worldInfoNBT.getCompoundTag("Version");
 
 			Class<?> fmlCommonHandler = Class.forName("net.minecraftforge.fml.common.FMLCommonHandler");
@@ -1281,13 +1281,13 @@ public class WDL {
 					.getMethod("writeVersionData", NBTTagCompound.class);
 			writeVersionData.invoke(dataFixer, versionInfo);
 
-			logger.debug("Called FML writeVersionData");
+			LOGGER.debug("Called FML writeVersionData");
 		} catch (Throwable ex) {
-			logger.info("Failed to call FML writeVersionData", ex);
+			LOGGER.info("Failed to call FML writeVersionData", ex);
 		}
 
 		try {
-			logger.debug("Trying to call FML handleWorldDataSave");
+			LOGGER.debug("Trying to call FML handleWorldDataSave");
 
 			Class<?> fmlCommonHandler = Class.forName("net.minecraftforge.fml.common.FMLCommonHandler");
 			Object instance = fmlCommonHandler.getMethod("instance").invoke(null);
@@ -1295,9 +1295,9 @@ public class WDL {
 					SaveHandler.class, WorldInfo.class, NBTTagCompound.class);
 			handleWorldDataSave.invoke(instance, WDL.saveHandler, WDL.worldClient.getWorldInfo(), rootWorldInfoNBT);
 
-			logger.debug("Called FML handleWorldDataSave!  Keys are now " + rootWorldInfoNBT.getKeySet());
+			LOGGER.debug("Called FML handleWorldDataSave!  Keys are now " + rootWorldInfoNBT.getKeySet());
 		} catch (Throwable ex) {
-			logger.info("Failed to call FML handleWorldDataSave", ex);
+			LOGGER.info("Failed to call FML handleWorldDataSave", ex);
 		}
 	}
 
@@ -1367,7 +1367,7 @@ public class WDL {
 				return name;
 			}
 		} catch (Exception e) {
-			logger.warn("Exception while getting server name: ", e);
+			LOGGER.warn("Exception while getting server name: ", e);
 		}
 
 		return "Unidentified Server";
@@ -1464,10 +1464,10 @@ public class WDL {
 
 		for (SanityCheck check : SanityCheck.values()) {
 			try {
-				logger.trace("Running {}", check);
+				LOGGER.trace("Running {}", check);
 				check.run();
 			} catch (Exception ex) {
-				logger.trace("{} failed", check, ex);
+				LOGGER.trace("{} failed", check, ex);
 				failures.put(check, ex);
 			}
 		}
@@ -1575,7 +1575,7 @@ public class WDL {
 			if (!baseProps.isEmpty()) {
 				for (Map.Entry<Object, Object> e : baseProps.entrySet()) {
 					if (!(e.getKey() instanceof String)) {
-						logger.warn("Non-string key " + e.getKey() + " in baseProps");
+						LOGGER.warn("Non-string key " + e.getKey() + " in baseProps");
 						continue;
 					}
 					base.addCrashSection((String)e.getKey(), e.getValue());
@@ -1592,7 +1592,7 @@ public class WDL {
 			if (!worldProps.isEmpty()) {
 				for (Map.Entry<Object, Object> e : worldProps.entrySet()) {
 					if (!(e.getKey() instanceof String)) {
-						logger.warn("Non-string key " + e.getKey() + " in worldProps");
+						LOGGER.warn("Non-string key " + e.getKey() + " in worldProps");
 						continue;
 					}
 					world.addCrashSection((String)e.getKey(), e.getValue());
@@ -1609,7 +1609,7 @@ public class WDL {
 			if (!globalProps.isEmpty()) {
 				for (Map.Entry<Object, Object> e : globalProps.entrySet()) {
 					if (!(e.getKey() instanceof String)) {
-						logger.warn("Non-string key " + e.getKey() + " in globalProps");
+						LOGGER.warn("Non-string key " + e.getKey() + " in globalProps");
 						continue;
 					}
 					global.addCrashSection((String)e.getKey(), e.getValue());

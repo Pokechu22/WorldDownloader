@@ -20,7 +20,7 @@ import org.apache.logging.log4j.Logger;
 
 class Utils {
 	private static final Minecraft mc = Minecraft.getMinecraft();
-	private static final Logger logger = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
 	 * Draws a semitransparent description box.
@@ -163,7 +163,7 @@ class Utils {
 			desktopClass.getMethod("browse", URI.class).invoke(desktop,
 					new URI(path));
 		} catch (Throwable e) {
-			logger.error("Couldn\'t open link", e);
+			LOGGER.error("Couldn\'t open link", e);
 		}
 	}
 

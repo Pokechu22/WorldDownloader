@@ -63,7 +63,7 @@ import com.google.common.io.ByteStreams;
  * documentation is on wiki.vg</a>, if you're interested.
  */
 public class WDLPluginChannels {
-	private static Logger logger = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 	/**
 	 * Packets that have been received.
 	 */
@@ -818,7 +818,7 @@ public class WDLPluginChannels {
 					messageBuilder.append(b).append(' ');
 				}
 
-				logger.info(messageBuilder.toString());
+				LOGGER.info(messageBuilder.toString());
 			}
 		}
 	}

@@ -8,6 +8,9 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAreaEffectCloud;
@@ -238,6 +241,8 @@ public enum StandardEntityManagers implements IEntityManager {
 		return null;
 	}
 
+	private static final Logger LOGGER = LogManager.getLogger();
+
 	/**
 	 * @see EntityList#field_75625_b
 	 */
@@ -271,7 +276,7 @@ public enum StandardEntityManagers implements IEntityManager {
 				typeToClassMap = result;
 			}
 		} catch (Throwable ex) {
-			EntityUtils.logger.error("[WDL] Failed to set up entity mappings: ", ex);
+			LOGGER.error("[WDL] Failed to set up entity mappings: ", ex);
 			throw Throwables.propagate(ex);
 		}
 	}
@@ -305,7 +310,7 @@ public enum StandardEntityManagers implements IEntityManager {
 			}
 			PROVIDED_ENTITIES = builder.build();
 		} catch (Throwable ex) {
-			EntityUtils.logger.error("[WDL] Failed to load entity list: ", ex);
+			LOGGER.error("[WDL] Failed to load entity list: ", ex);
 			throw Throwables.propagate(ex);
 		}
 	}
