@@ -1476,6 +1476,15 @@ public class WDL {
 			for (Map.Entry<SanityCheck, Exception> failure : failures.entrySet()) {
 				WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR, failure.getKey().errorMessage, failure.getValue());
 			}
+			if (failures.containsKey(SanityCheck.TRANSLATION)) {
+				// Err, we can't put translated stuff into chat.  So redo those messages, without translation.
+				// For obvious reasons these messages aren't translated.
+				WDLMessages.chatMessage(WDLMessageTypes.ERROR, "----- SANITY CHECKS FAILED! -----");
+				for (Map.Entry<SanityCheck, Exception> failure : failures.entrySet()) {
+					WDLMessages.chatMessage(WDLMessageTypes.ERROR, failure.getKey() + ": " + failure.getValue());
+				}
+				WDLMessages.chatMessage(WDLMessageTypes.ERROR, "Please check the log for more info.");
+			}
 		}
 	}
 

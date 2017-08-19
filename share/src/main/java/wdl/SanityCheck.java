@@ -2,6 +2,7 @@ package wdl;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
 
 import org.apache.logging.log4j.LogManager;
@@ -53,6 +54,15 @@ enum SanityCheck {
 			}
 			if (!expected.equals(actual)) {
 				throw new Exception("Unexpected version mismatch - expected to be running on `" + expected + "' but was running on `" + actual + "'!");
+			}
+		}
+	},
+	TRANSLATION("wdl.sanity.translation") {
+		@Override
+		public void run() throws Exception {
+			if (!I18n.hasKey(this.errorMessage)) {
+				// Verbose, because obviously the normal string will not be translated.
+				throw new Exception("Translation strings are not present!  All messages will be the untranslated keys (e.g. `wdl.sanity.translation').  Please redownload the mod.  If this problem persists, file a bug report.");
 			}
 		}
 	}
