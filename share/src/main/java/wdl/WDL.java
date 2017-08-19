@@ -470,18 +470,15 @@ public class WDL {
 		WDLMessages.chatMessageTranslated(WDLMessageTypes.INFO,
 				"wdl.messages.generalInfo.saveStarted");
 		WDL.saving = true;
-		Thread thread = new Thread("WDL Save Thread") {
-			@Override
-			public void run() {
-				try {
-					WDL.saveEverything();
-					WDL.saving = false;
-					WDL.onSaveComplete();
-				} catch (Throwable e) {
-					WDL.crashed(e, "World Downloader Mod: Saving world");
-				}
+		Thread thread = new Thread(() -> {
+			try {
+				WDL.saveEverything();
+				WDL.saving = false;
+				WDL.onSaveComplete();
+			} catch (Throwable e) {
+				WDL.crashed(e, "World Downloader Mod: Saving world");
 			}
-		};
+		}, "WDL Save Thread");
 		thread.start();
 	}
 
@@ -597,12 +594,10 @@ public class WDL {
 				(backupType != WorldBackupType.NONE ? 6 : 5)
 				+ WDLApi.getImplementingExtensions(ISaveListener.class).size());
 
-		minecraft.addScheduledTask(new Runnable() {
-			@Override
-			public void run() {
-				minecraft.displayGuiScreen(progressScreen);
-			}
-		});
+		// Schedule this as a task to avoid threading issues.
+		// If directly displayed, in some rare cases the GUI will be drawn before it has been
+		// initialized, causing a crash.  Using a task stops that.
+		minecraft.addScheduledTask(() -> { minecraft.displayGuiScreen(progressScreen); });
 
 		saveProps();
 
