@@ -22,7 +22,8 @@ gradle.buildFinished { buildResult ->
     } else if (buildResult.failure.cause.cause instanceof groovy.lang.MissingPropertyException) {
         println '----------------------------------------'
         println 'Build evaluation (most likely) failed.'
-        println 'If this was due to the `refMap` property not existing, you may need to downgrade gradle to version 2.14.1.'
+        println 'If this was due to the `refMap` property not existing, this should not be happening (see https://github.com/SpongePowered/MixinGradle/issues/3).'
+        println 'Unfortunately I have no advice at this time.  You may need to downgrade gradle to version 2.14.1, but that should not be required.'
     }
   }
 }

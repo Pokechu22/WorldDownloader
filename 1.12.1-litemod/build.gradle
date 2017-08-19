@@ -64,7 +64,7 @@ sourceSets {
             srcDir project(':share').file("src/main/resources")
         }
         // Refmap declaration must match the refmap name specified in the json config
-        refMap = "mixins.LiteModWDL.refmap.json"
+        ext.refMap = "mixins.LiteModWDL.refmap.json"
     }
     test {
         java {

@@ -73,7 +73,7 @@ sourceSets {
             runtimeClasspath += sourceSets.main.runtimeClasspath
         }
         // Refmap declaration must match the refmap name specified in the json config
-        refMap = "mixins.LiteModWDL.refmap.json"
+        ext.refMap = "mixins.LiteModWDL.refmap.json"
     }
     test {
         java {
