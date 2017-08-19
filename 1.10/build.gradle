@@ -41,6 +41,9 @@ minecraft {
     version = "1.10"
     mappings = "snapshot_20170801"
     runDir = "run"
+
+    // We don't currently want a source jar (doesn't work well for base edits, and the version info doesn't work yet)
+    makeObfSourceJar = false
 }
 
 extraSrgs {
@@ -107,9 +110,6 @@ fixMcSources {
 jar {
     from sourceSets.api.output
 }
-
-// We don't currently want a source jar (doesn't work well for base edits, and the version info doesn't work yet)
-sourceJar.enabled = false
 
 // TEMPORARY, until this is moved to begradle
 processResources {
