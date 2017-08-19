@@ -39,6 +39,22 @@ enum SanityCheck {
 				}
 			}
 		}
+	},
+	VERSION("wdl.sanity.version") {
+		@Override
+		public void run() throws Exception {
+			String expected = VersionConstants.getExpectedVersion();
+			String actual = VersionConstants.getMinecraftVersion();
+			if (expected == null) {
+				throw new Exception("Unexpected null expected version!");
+			}
+			if (actual == null) {
+				throw new Exception("Unexpected null running version!");
+			}
+			if (!expected.equals(actual)) {
+				throw new Exception("Unexpected version mismatch - expected to be running on `" + expected + "' but was running on `" + actual + "'!");
+			}
+		}
 	}
 	;
 	/** Translation key for the general message */

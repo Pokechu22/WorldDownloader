@@ -470,3 +470,4 @@ wdl.intro.stopModReposts=More information: StopModReposts!
 wdl.sanity.failed=----- SANITY CHECKS FAILED! -----
 # All sanity checks should have 1 format parameter, which is used for the exception
 wdl.sanity.tripwire=Tripwire is not being serialized correctly.  This is probably caused by a Forge bug (https://git.io/v7aEU); if running 1.12 or above, update Forge; if not, please restart Minecraft and then start downloading (do NOT relog; reloging causes the problem).  Otherwise, tripwire will not be saved (as the block doesn't load at all).  (%s)
+wdl.sanity.version=Version mismatch!  You have installed a version of the mod on a version of Minecraft it was not intended for.  In the best case, data will be saved inaccurately; in the worst case, expect crashes.  Please redownload for the correct Minecraft version.  (%s)
