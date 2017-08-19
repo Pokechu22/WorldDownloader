@@ -328,7 +328,28 @@ public class WDLMessages {
 			}
 		}
 
-		chatMessage(type, new TextComponentTranslation(translationKey, args));
+		final ITextComponent component;
+		if (I18n.hasKey(translationKey)) {
+			component = new TextComponentTranslation(translationKey, args);
+		} else {
+			// Oh boy, no translation text.  Manually apply parameters.
+			String message = translationKey;
+			component = new TextComponentString(message);
+			component.appendText("[");
+			for (int i = 0; i < args.length; i++) {
+				if (args[i] instanceof ITextComponent) {
+					component.appendSibling((ITextComponent) args[i]);
+				} else {
+					component.appendText(String.valueOf(args[i]));
+				}
+				if (i != args.length - 1) {
+					component.appendText(", ");
+				}
+			}
+			component.appendText("]");
+		}
+
+		chatMessage(type, component);
 
 		for (int i = 0; i < exceptionsToPrint.size(); i++) {
 			LOGGER.warn("Exception #" + (i + 1) + ": ", exceptionsToPrint.get(i));
