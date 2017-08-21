@@ -55,8 +55,9 @@ minecraft {
 }
 
 extraSrgs {
-    add file('../srgs/EntityHorseToEquineEntity.srg')
-    add file('../srgs/AnimalChestToContainerHorseChest.srg')
+    addSrg file('../srgs/EntityHorseToEquineEntity.srg')
+    addSrg file('../srgs/AnimalChestToContainerHorseChest.srg')
+    addPatch('net.minecraft.entity.passive.EquineEntity.java', file('../srgs/EE_1.10.x.patch'))
 }
 
 sourceSets {
@@ -127,12 +128,6 @@ litemod {
 // Use tabs instead of spaces
 fixMcSources {
     astyleConfig = "../astyle.cfg"
-    // TEMPORARY, until I can figure out an automatic patch system.
-    doFirst {
-        def field = net.minecraftforge.gradle.tasks.PostDecompileTask.class.getDeclaredField('patchesMap')
-        field.accessible = true
-        field.get(fixMcSources).put('net.minecraft.entity.passive.EquineEntity.java', file('../srgs/EE_1.10.x.patch'))
-    }
 }
 
 // Ensure that the API code, Java 6 mixin code, and litemod JSON are in the jar

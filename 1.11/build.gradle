@@ -47,7 +47,8 @@ minecraft {
 }
 
 extraSrgs {
-    add file('../srgs/AbstractHorseToEquineEntity.srg')
+    addSrg file('../srgs/AbstractHorseToEquineEntity.srg')
+    addPatch('net.minecraft.entity.passive.EquineEntity.java', file('../srgs/EE_1.11.x.patch'))
 }
 
 sourceSets {
@@ -97,12 +98,6 @@ targetCompatibility = "1.8"
 // Use tabs instead of spaces
 fixMcSources {
     astyleConfig = "../astyle.cfg"
-    // TEMPORARY, until I can figure out an automatic patch system.
-    doFirst {
-        def field = net.minecraftforge.gradle.tasks.PostDecompileTask.class.getDeclaredField('patchesMap')
-        field.accessible = true
-        field.get(fixMcSources).put('net.minecraft.entity.passive.EquineEntity.java', file('../srgs/EE_1.11.x.patch'))
-    }
 }
 
 // Ensure that the API code is in the jar

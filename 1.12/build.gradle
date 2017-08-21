@@ -47,7 +47,7 @@ minecraft {
 }
 
 extraSrgs {
-    add file('../srgs/AbstractHorseToEquineEntity.srg')
+    addSrg file('../srgs/AbstractHorseToEquineEntity.srg')
 }
 
 sourceSets {
