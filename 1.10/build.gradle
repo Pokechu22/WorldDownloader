@@ -35,6 +35,7 @@ libsDirName = "../../libs/${version}"
 
 apply plugin: 'pokechu22.test.begradle'
 apply plugin: 'pokechu22.test.customsrg'
+apply plugin: 'pokechu22.test.langrenamer'
 
 minecraft {
     suppressMappingVersionWarnings = true
@@ -44,6 +45,8 @@ minecraft {
 
     // We don't currently want a source jar (doesn't work well for base edits, and the version info doesn't work yet)
     makeObfSourceJar = false
+    // en_us.lang to en_US.lang
+    ext.renameLangFiles = true
 }
 
 extraSrgs {
@@ -109,14 +112,4 @@ fixMcSources {
 // Ensure that the API code is in the jar
 jar {
     from sourceSets.api.output
-}
-
-// TEMPORARY, until this is moved to begradle
-processResources {
-    rename { name ->
-        if (name.endsWith(".lang")) {
-            def index = name.indexOf("_")
-            return name.substring(0, index) + name.substring(index, index + 3).toUpperCase() + ".lang"
-        }
-    }
 }
