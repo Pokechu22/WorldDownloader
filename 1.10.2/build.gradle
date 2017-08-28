@@ -28,7 +28,7 @@ dependencies {
     testCompile 'org.mockito:mockito-core:2.8.47'
 }
 
-version = "4.0.1.0"
+version = "4.0.1.1-SNAPSHOT"
 group = "wdl"
 archivesBaseName = "WorldDownloader"
 libsDirName = "../../libs/${version}"
@@ -40,7 +40,7 @@ apply plugin: 'pokechu22.test.langrenamer'
 minecraft {
     suppressMappingVersionWarnings = true
     version = "1.10.2"
-    mappings = "snapshot_20170821"
+    mappings = "snapshot_20170828"
     runDir = "run"
 
     // We don't currently want a source jar (doesn't work well for base edits, and the version info doesn't work yet)
