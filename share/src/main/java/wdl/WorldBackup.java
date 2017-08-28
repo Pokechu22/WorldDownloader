@@ -169,21 +169,9 @@ public class WorldBackup {
 			IBackupProgressMonitor monitor) throws IOException {
 		monitor.setNumberOfFiles(countFilesInFolder(src));
 
-		FileOutputStream outStream = null;
-		ZipOutputStream stream = null;
-		try {
-			outStream = new FileOutputStream(destination);
-			try {
-				stream = new ZipOutputStream(outStream);
+		try (FileOutputStream outStream = new FileOutputStream(destination)) {
+			try (ZipOutputStream stream = new ZipOutputStream(outStream)) {
 				zipFolder(src, stream, src.getPath().length() + 1, monitor);
-			} finally {
-				if (stream != null) {
-					stream.close();
-				}
-			}
-		} finally {
-			if (outStream != null) {
-				outStream.close();
 			}
 		}
 	}
@@ -206,11 +194,8 @@ public class WorldBackup {
 				monitor.onNextFile(name);
 				ZipEntry zipEntry = new ZipEntry(name);
 				stream.putNextEntry(zipEntry);
-				FileInputStream inputStream = new FileInputStream(file);
-				try {
+				try (FileInputStream inputStream = new FileInputStream(file)) {
 					IOUtils.copy(inputStream, stream);
-				} finally {
-					inputStream.close();
 				}
 				stream.closeEntry();
 			} else if (file.isDirectory()) {

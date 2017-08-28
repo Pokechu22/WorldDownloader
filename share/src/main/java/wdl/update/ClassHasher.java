@@ -44,26 +44,13 @@ public class ClassHasher {
 		Class<?> clazz = Class.forName(relativeTo);
 		MessageDigest digest = MessageDigest.getInstance("MD5");
 
-		InputStream stream = null;
-		try {
-			stream = clazz.getResourceAsStream(file);
+		try (InputStream stream = clazz.getResourceAsStream(file)) {
 			if (stream == null) {
 				throw new FileNotFoundException(file + " relative to "
 						+ relativeTo);
 			}
-			DigestInputStream digestStream = null;
-			try {
-				digestStream = new DigestInputStream(stream, digest);
-
+			try (DigestInputStream digestStream = new DigestInputStream(stream, digest)) {
 				while (digestStream.read() != -1); //Read entire stream
-			} finally {
-				if (digestStream != null) {
-					digestStream.close();
-				}
-			}
-		} finally {
-			if (stream != null) {
-				stream.close();
 			}
 		}
 

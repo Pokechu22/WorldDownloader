@@ -115,18 +115,13 @@ public class GithubInfoGrabber {
 						+ connection.getResponseMessage());
 			}
 
-			InputStreamReader reader = null;
-
-			try {
-				reader = new InputStreamReader(stream);
+			try (InputStreamReader reader = new InputStreamReader(stream)) {
 				JsonElement element = PARSER.parse(reader);
 
 				// Write that cached version to disk, and save the ETAG.
-				PrintStream output = null;
 				String etag = null;
-				try {
-					output = new PrintStream(CACHED_RELEASES_FILE);
-					output.println(element.toString());
+				try (PrintStream output = new PrintStream(CACHED_RELEASES_FILE)) {
+					output.println(element.toString()); // Write to file
 
 					etag = connection.getHeaderField("ETag");
 				} catch (Exception e) {
@@ -134,10 +129,6 @@ public class GithubInfoGrabber {
 					etag = null;
 					throw e;
 				} finally {
-					if (output != null) {
-						output.close();
-					}
-
 					if (etag != null) {
 						WDL.globalProps.setProperty("UpdateETag", etag);
 					} else {
@@ -148,10 +139,6 @@ public class GithubInfoGrabber {
 				}
 
 				return element;
-			} finally {
-				if (reader != null) {
-					reader.close();
-				}
 			}
 		} finally {
 			if (stream != null) {

@@ -466,12 +466,10 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 	 * @return A map of positions to tile entities.
 	 */
 	public Map<BlockPos, NBTTagCompound> getOldTileEntities(Chunk chunk) {
-		DataInputStream dis = null;
 		Map<BlockPos, NBTTagCompound> returned = new HashMap<>();
 
-		try {
-			dis = RegionFileCache.getChunkInputStream(chunkSaveLocation,
-					chunk.x, chunk.z);
+		try (DataInputStream dis = RegionFileCache.getChunkInputStream(chunkSaveLocation,
+				chunk.x, chunk.z)) {
 
 			if (dis == null) {
 				// This happens whenever the chunk hasn't been saved before.
@@ -509,14 +507,6 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 			WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR,
 					"wdl.messages.generalError.failedToImportTE",
 					chunk.x, chunk.z, e);
-		} finally {
-			if (dis != null) {
-				try {
-					dis.close();
-				} catch (Exception e) {
-					throw new RuntimeException(e);
-				}
-			}
 		}
 		return returned;
 	}

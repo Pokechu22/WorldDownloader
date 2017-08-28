@@ -273,21 +273,12 @@ public class WDL {
 		defaultProps.setProperty("TutorialShown", "false");
 
 		globalProps = new Properties(defaultProps);
-		FileReader reader = null;
-		try {
-			reader = new FileReader(new File(minecraft.mcDataDir,
-					"WorldDownloader.txt"));
+
+		File dataFile = new File(minecraft.mcDataDir, "WorldDownloader.txt");
+		try (FileReader reader = new FileReader(dataFile)) {
 			globalProps.load(reader);
 		} catch (Exception e) {
 			LOGGER.debug("Failed to load global properties", e);
-		} finally {
-			if (reader != null) {
-				try {
-					reader.close();
-				} catch (Exception e) {
-					LOGGER.warn("Failed to close global properties reader", e);
-				}
-			}
 		}
 		baseProps = new Properties(globalProps);
 		worldProps = new Properties(baseProps);
@@ -379,35 +370,27 @@ public class WDL {
 		saveHandler = (SaveHandler) minecraft.getSaveLoader().getSaveLoader(
 				getWorldFolderName(worldName), true);
 
-		FileInputStream worldDat = null;
-		try {
-			long lastSaved = Long.parseLong(worldProps.getProperty("LastSaved",
-					"-1"));
-			//Can't directly use worldClient.getWorldInfo, as that doesn't use
-			//the saved version.
-			worldDat = new FileInputStream(new File(
-					saveHandler.getWorldDirectory(), "level.dat"));
-			long lastPlayed = CompressedStreamTools.readCompressed(worldDat)
-					.getCompoundTag("Data").getLong("LastPlayed");
-			if (!overrideLastModifiedCheck && lastPlayed > lastSaved) {
-				// The world was played later than it was saved; confirm that the
-				// user is willing for possible changes they made to be overwritten.
-				minecraft.displayGuiScreen(new GuiWDLOverwriteChanges(
-						lastSaved, lastPlayed));
-				return;
-			}
+		long lastSaved = Long.parseLong(worldProps.getProperty("LastSaved",
+				"-1"));
+		long lastPlayed;
+		// Can't directly use worldClient.getWorldInfo, as that doesn't use
+		// the saved version.
+		File levelDatFile = new File(saveHandler.getWorldDirectory(), "level.dat");
+		try (FileInputStream stream = new FileInputStream(levelDatFile)) {
+			NBTTagCompound compound = CompressedStreamTools.readCompressed(stream);
+			lastPlayed = compound.getCompoundTag("Data").getLong("LastPlayed");
 		} catch (Exception e) {
 			LOGGER.warn("Error while checking if the map has been played and " +
 					"needs to be backed up (this is normal if this world " +
 					"has not been saved before): ", e);
-		} finally {
-			if (worldDat != null) {
-				try {
-					worldDat.close();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
+			lastPlayed = -1;
+		}
+		if (!overrideLastModifiedCheck && lastPlayed > lastSaved) {
+			// The world was played later than it was saved; confirm that the
+			// user is willing for possible changes they made to be overwritten.
+			minecraft.displayGuiScreen(new GuiWDLOverwriteChanges(
+					lastSaved, lastPlayed));
+			return;
 		}
 
 		runSanityCheck();
@@ -702,16 +685,14 @@ public class WDL {
 		progressScreen.setMinorTaskProgress(
 				I18n.format("wdl.saveProgress.playerData.writingNBT"), taskNum);
 
-		FileOutputStream stream = null;
-		try {
-			File playersDirectory = new File(saveHandler.getWorldDirectory(),
-					"playerdata");
-			File playerFileTmp = new File(playersDirectory, thePlayer
-					.getUniqueID().toString() + ".dat.tmp");
-			File playerFile = new File(playersDirectory, thePlayer
-					.getUniqueID().toString() + ".dat");
+		File playersDirectory = new File(saveHandler.getWorldDirectory(),
+				"playerdata");
+		File playerFileTmp = new File(playersDirectory, thePlayer
+				.getUniqueID().toString() + ".dat.tmp");
+		File playerFile = new File(playersDirectory, thePlayer
+				.getUniqueID().toString() + ".dat");
 
-			stream = new FileOutputStream(playerFileTmp);
+		try (FileOutputStream stream = new FileOutputStream(playerFileTmp)) {
 
 			CompressedStreamTools.writeCompressed(playerNBT, stream);
 
@@ -723,14 +704,6 @@ public class WDL {
 			playerFileTmp.renameTo(playerFile);
 		} catch (Exception e) {
 			throw new RuntimeException("Couldn't save the player!", e);
-		} finally {
-			if (stream != null) {
-				try {
-					stream.close();
-				} catch (IOException e) {
-					throw new RuntimeException(e);
-				}
-			}
 		}
 
 		WDLMessages.chatMessageTranslated(WDLMessageTypes.SAVING,
@@ -802,13 +775,11 @@ public class WDL {
 		worldProps.setProperty("LastSaved",
 				Long.toString(worldInfoNBT.getLong("LastPlayed")));
 
-		FileOutputStream stream = null;
-		try {
-			File dataFile = new File(saveDirectory, "level.dat_new");
-			File dataFileBackup = new File(saveDirectory, "level.dat_old");
-			File dataFileOld = new File(saveDirectory, "level.dat");
-			stream = new FileOutputStream(dataFile);
+		File dataFile = new File(saveDirectory, "level.dat_new");
+		File dataFileBackup = new File(saveDirectory, "level.dat_old");
+		File dataFileOld = new File(saveDirectory, "level.dat");
 
+		try (FileOutputStream stream = new FileOutputStream(dataFile)) {
 			CompressedStreamTools.writeCompressed(rootWorldInfoNBT, stream);
 
 			if (dataFileBackup.exists()) {
@@ -828,14 +799,6 @@ public class WDL {
 			}
 		} catch (Exception e) {
 			throw new RuntimeException("Couldn't save the world metadata!", e);
-		} finally {
-			if (stream != null) {
-				try {
-					stream.close();
-				} catch (IOException e) {
-					throw new RuntimeException(e);
-				}
-			}
 		}
 
 		WDLMessages.chatMessageTranslated(WDLMessageTypes.SAVING,
@@ -951,25 +914,15 @@ public class WDL {
 		baseFolderName = getBaseFolderName();
 		baseProps = new Properties(globalProps);
 
-		FileReader reader = null;
-		try {
-			File savesFolder = new File(minecraft.mcDataDir, "saves");
-			File baseFolder = new File(savesFolder, baseFolderName);
-			reader = new FileReader(new File(baseFolder,
-					"WorldDownloader.txt"));
+		File savesFolder = new File(minecraft.mcDataDir, "saves");
+		File baseFolder = new File(savesFolder, baseFolderName);
+		File dataFile = new File(baseFolder, "WorldDownloader.txt");
+		try (FileReader reader = new FileReader(dataFile)) {
 			baseProps.load(reader);
 			propsFound = true;
 		} catch (Exception e) {
 			propsFound = false;
 			LOGGER.debug("Failed to load base properties", e);
-		} finally {
-			if (reader != null) {
-				try {
-					reader.close();
-				} catch (Exception e) {
-					LOGGER.warn("Failed to close base properties reader", e);
-				}
-			}
 		}
 
 		if (baseProps.getProperty("LinkedWorlds").isEmpty()) {
@@ -997,25 +950,15 @@ public class WDL {
 
 		String folder = getWorldFolderName(theWorldName);
 		File worldFolder = new File(savesDir, folder);
+		File dataFile = new File(worldFolder, "WorldDownloader.txt");
 
-		FileReader reader = null;
-		try {
-			ret.load(new FileReader(new File(worldFolder,
-					"WorldDownloader.txt")));
+		try (FileReader reader = new FileReader(dataFile)) {
+			ret.load(reader);
 
 			return ret;
 		} catch (Exception e) {
 			LOGGER.debug("Failed to load world props for " + worldName, e);
 			return ret;
-		} finally {
-			if (reader != null) {
-				try {
-					reader.close();
-				} catch (Exception e) {
-					LOGGER.warn("Failed to close world props reader for "
-							+ worldName, e);
-				}
-			}
 		}
 	}
 
@@ -1039,10 +982,11 @@ public class WDL {
 
 			File worldFolder = new File(savesDir, folder);
 			worldFolder.mkdirs();
-			try {
-				theWorldProps.store(new FileWriter(new File(worldFolder,
-						"WorldDownloader.txt")), I18n.format("wdl.props.world.title"));
+			File worldPropsFile = new File(worldFolder, "WorldDownloader.txt");
+			try (FileWriter writer = new FileWriter(worldPropsFile)) {
+				theWorldProps.store(writer, I18n.format("wdl.props.world.title"));
 			} catch (Exception e) {
+				LOGGER.warn("Failed to write world props!", e);
 			}
 		} else if (!isMultiworld) {
 			baseProps.putAll(theWorldProps);
@@ -1051,10 +995,11 @@ public class WDL {
 		File baseFolder = new File(savesDir, baseFolderName);
 		baseFolder.mkdirs();
 
-		try {
-			baseProps.store(new FileWriter(new File(baseFolder,
-					"WorldDownloader.txt")), I18n.format("wdl.props.base.title"));
+		File basePropsFile = new File(baseFolder, "WorldDownloader.txt");
+		try (FileWriter writer = new FileWriter(basePropsFile)) {
+			baseProps.store(writer, I18n.format("wdl.props.base.title"));
 		} catch (Exception e) {
+			LOGGER.warn("Failed to write base props!", e);
 		}
 
 		saveGlobalProps();
@@ -1064,11 +1009,11 @@ public class WDL {
 	 * Saves the global properties, which are used for all servers.
 	 */
 	public static void saveGlobalProps() {
-		try {
-			globalProps.store(new FileWriter(new File(minecraft.mcDataDir,
-					"WorldDownloader.txt")), I18n.format("wdl.props.global.title"));
+		File globalPropsFile = new File(minecraft.mcDataDir, "WorldDownloader.txt");
+		try (FileWriter writer = new FileWriter(globalPropsFile)) {
+			globalProps.store(writer, I18n.format("wdl.props.global.title"));
 		} catch (Exception e) {
-
+			LOGGER.warn("Failed to write globalprops!", e);
 		}
 	}
 
@@ -1332,9 +1277,8 @@ public class WDL {
 
 			mapNBT.setTag("data", data);
 
-			try {
-				CompressedStreamTools.writeCompressed(mapNBT,
-						new FileOutputStream(mapFile));
+			try (FileOutputStream stream = new FileOutputStream(mapFile)) {
+				CompressedStreamTools.writeCompressed(mapNBT, stream);
 			} catch (IOException ex) {
 				throw new RuntimeException("WDL: Exception while writing " +
 						"map data for map " + e.getKey() + "!", ex);
