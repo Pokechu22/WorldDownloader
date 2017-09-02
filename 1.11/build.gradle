@@ -28,7 +28,7 @@ dependencies {
     testCompile 'org.mockito:mockito-core:2.8.47'
 }
 
-version = "4.0.1.1"
+version = "4.0.1.2-SNAPSHOT"
 group = "wdl"
 archivesBaseName = "WorldDownloader"
 libsDirName = "../../libs/${version}"
@@ -39,7 +39,7 @@ apply plugin: 'pokechu22.test.customsrg'
 minecraft {
     suppressMappingVersionWarnings = true
     version = "1.11"
-    mappings = "snapshot_20170831"
+    mappings = "snapshot_20170902"
     runDir = "run"
 
     // We don't currently want a source jar (doesn't work well for base edits, and the version info doesn't work yet)
