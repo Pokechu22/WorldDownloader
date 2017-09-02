@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBeacon;
 import net.minecraft.block.BlockBrewingStand;
@@ -27,6 +30,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityBeacon;
+import net.minecraft.tileentity.TileEntityBrewingStand;
+import net.minecraft.tileentity.TileEntityChest;
+import net.minecraft.tileentity.TileEntityDispenser;
+import net.minecraft.tileentity.TileEntityDropper;
+import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraft.tileentity.TileEntityHopper;
+import net.minecraft.tileentity.TileEntityNote;
 import net.minecraft.util.ClassInheritanceMultiMap;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -42,9 +53,6 @@ import net.minecraft.world.chunk.storage.AnvilChunkLoader;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraft.world.chunk.storage.RegionFileCache;
 import net.minecraft.world.storage.SaveHandler;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import wdl.api.IEntityEditor;
 import wdl.api.ITileEntityEditor;
@@ -534,22 +542,21 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 	 */
 	public boolean shouldImportTileEntity(String entityID, BlockPos pos,
 			Block block, NBTTagCompound tileEntityNBT, Chunk chunk) {
-		if (block instanceof BlockChest && entityID.equals("Chest")) {
+		if (block instanceof BlockChest && entityID.equals(VersionedProperties.getBlockEntityID(TileEntityChest.class))) {
 			return true;
-		} else if (block instanceof BlockDispenser && entityID.equals("Trap")) {
+		} else if (block instanceof BlockDispenser && entityID.equals(VersionedProperties.getBlockEntityID(TileEntityDispenser.class))) {
 			return true;
-		} else if (block instanceof BlockDropper && entityID.equals("Dropper")) {
+		} else if (block instanceof BlockDropper && entityID.equals(VersionedProperties.getBlockEntityID(TileEntityDropper.class))) {
 			return true;
-		} else if (block instanceof BlockFurnace && entityID.equals("Furnace")) {
+		} else if (block instanceof BlockFurnace && entityID.equals(VersionedProperties.getBlockEntityID(TileEntityFurnace.class))) {
 			return true;
-		} else if (block instanceof BlockNote && entityID.equals("Music")) {
+		} else if (block instanceof BlockNote && entityID.equals(VersionedProperties.getBlockEntityID(TileEntityNote.class))) {
 			return true;
-		} else if (block instanceof BlockBrewingStand
-				&& entityID.equals("Cauldron")) {
+		} else if (block instanceof BlockBrewingStand && entityID.equals(VersionedProperties.getBlockEntityID(TileEntityBrewingStand.class))) {
 			return true;
-		} else if (block instanceof BlockHopper && entityID.equals("Hopper")) {
+		} else if (block instanceof BlockHopper && entityID.equals(VersionedProperties.getBlockEntityID(TileEntityHopper.class))) {
 			return true;
-		} else if (block instanceof BlockBeacon && entityID.equals("Beacon")) {
+		} else if (block instanceof BlockBeacon && entityID.equals(VersionedProperties.getBlockEntityID(TileEntityBeacon.class))) {
 			return true;
 		}
 
