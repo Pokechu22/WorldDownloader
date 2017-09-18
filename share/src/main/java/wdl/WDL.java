@@ -628,9 +628,22 @@ public class WDL {
 			progressScreen.setMinorTaskProgress(
 					I18n.format("wdl.saveProgress.backingUp.preparing"), 1);
 
+			class BackupState implements WorldBackup.IBackupProgressMonitor {
+				int curFile = 0;
+				@Override
+				public void setNumberOfFiles(int num) {
+					progressScreen.setMinorTaskCount(num);
+				}
+				@Override
+				public void onNextFile(String name) {
+					progressScreen.setMinorTaskProgress(
+							I18n.format("wdl.saveProgress.backingUp.file", name), curFile++);
+				}
+			}
+
 			try {
 				WorldBackup.backupWorld(saveHandler.getWorldDirectory(),
-						getWorldFolderName(worldName), backupType, progressScreen);
+						getWorldFolderName(worldName), backupType, new BackupState());
 			} catch (IOException e) {
 				WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR,
 						"wdl.messages.generalError.failedToBackUp");

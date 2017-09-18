@@ -609,7 +609,7 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 	 *
 	 * @return The number of chunks that still need to be written to disk
 	 */
-	public int getNumPendingChunks() {
+	public synchronized int getNumPendingChunks() {
 		return this.chunksToSave.size();
 	}
 }

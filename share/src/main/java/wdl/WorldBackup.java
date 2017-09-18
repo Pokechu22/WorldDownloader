@@ -85,7 +85,7 @@ public class WorldBackup {
 	}
 
 	/**
-	 * Something (usually a GUI) that listens to backup progress.
+	 * Something that listens to backup progress.
 	 */
 	public static interface IBackupProgressMonitor {
 		/**

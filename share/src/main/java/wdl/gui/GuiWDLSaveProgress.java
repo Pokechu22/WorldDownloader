@@ -6,7 +6,6 @@ import java.util.function.Supplier;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
-import wdl.WorldBackup.IBackupProgressMonitor;
 
 /**
  * GUI screen shown while the world is being saved.
@@ -14,12 +13,10 @@ import wdl.WorldBackup.IBackupProgressMonitor;
  * Based off of vanilla minecraft's
  * {@link net.minecraft.client.gui.GuiScreenWorking GuiScreenWorking}.
  */
-public class GuiWDLSaveProgress extends GuiTurningCameraBase implements
-IBackupProgressMonitor {
+public class GuiWDLSaveProgress extends GuiTurningCameraBase {
 	private final String title;
 	private volatile String majorTaskMessage = "";
-	private volatile String minorTaskMessage = "";
-	private volatile Supplier<String> minorTaskMessageProvider = minorTaskMessage::toString;
+	private volatile Supplier<String> minorTaskMessageProvider = () -> "";
 	private volatile int majorTaskNumber;
 	private final int majorTaskCount;
 	private volatile int minorTaskProgress;
@@ -42,12 +39,11 @@ IBackupProgressMonitor {
 	/**
 	 * Starts a new major task with the given message.
 	 */
-	public synchronized void startMajorTask(String message, int minorTaskMaximum) {
+	public void startMajorTask(String message, int minorTaskMaximum) {
 		this.majorTaskMessage = message;
 		this.majorTaskNumber++;
 
-		this.minorTaskMessage = "";
-		this.minorTaskMessageProvider = minorTaskMessage::toString;
+		this.minorTaskMessageProvider = () -> message;
 		this.minorTaskProgress = 0;
 		this.minorTaskMaximum = minorTaskMaximum;
 	}
@@ -60,9 +56,8 @@ IBackupProgressMonitor {
 	 *            the current position and maximum and the percent are
 	 *            automatically appended after it.
 	 */
-	public synchronized void setMinorTaskProgress(String message, int progress) {
-		this.minorTaskMessage = message;
-		this.minorTaskMessageProvider = minorTaskMessage::toString;
+	public void setMinorTaskProgress(String message, int progress) {
+		this.minorTaskMessageProvider = () -> message;
 		this.minorTaskProgress = progress;
 	}
 
@@ -72,8 +67,7 @@ IBackupProgressMonitor {
 	 * @param messageProvider
 	 *            Provides the message to be displayed.
 	 */
-	public synchronized void setMinorTaskProgress(Supplier<String> messageProvider, int progress) {
-		this.minorTaskMessage = messageProvider.get();
+	public void setMinorTaskProgress(Supplier<String> messageProvider, int progress) {
 		this.minorTaskMessageProvider = messageProvider;
 		this.minorTaskProgress = progress;
 	}
@@ -81,21 +75,22 @@ IBackupProgressMonitor {
 	/**
 	 * Updates the progress on the minor task.
 	 */
-	public synchronized void setMinorTaskProgress(int progress) {
+	public void setMinorTaskProgress(int progress) {
 		this.minorTaskProgress = progress;
+	}
+
+	/**
+	 * Updates the number of minor tasks.
+	 */
+	public void setMinorTaskCount(int count) {
+		this.minorTaskMaximum = count;
 	}
 
 	/**
 	 * Sets the GUI as done working, meaning it will be closed next tick.
 	 */
-	public synchronized void setDoneWorking() {
+	public void setDoneWorking() {
 		this.doneWorking = true;
-	}
-
-	@Override
-	public void updateScreen() {
-		this.minorTaskMessage = this.minorTaskMessageProvider.get();
-		super.updateScreen();
 	}
 
 	/**
@@ -115,10 +110,10 @@ IBackupProgressMonitor {
 						"wdl.gui.saveProgress.progressInfo", majorTaskMessage,
 						majorTaskNumber, majorTaskCount);
 			}
-			String minorTaskInfo = minorTaskMessage;
+			String minorTaskInfo = minorTaskMessageProvider.get();
 			if (minorTaskMaximum > 1) {
-				majorTaskInfo = I18n.format(
-						"wdl.gui.saveProgress.progressInfo", minorTaskMessage,
+				minorTaskInfo = I18n.format(
+						"wdl.gui.saveProgress.progressInfo", minorTaskInfo,
 						minorTaskProgress, minorTaskMaximum);
 			}
 
@@ -186,16 +181,5 @@ IBackupProgressMonitor {
 	protected void keyTyped(char typedChar, int keyCode) throws IOException {
 		//Don't call the super method, as that causes the UI to close if escape
 		//is pressed.
-	}
-
-	// IBackupProgressMonitor
-	@Override
-	public void setNumberOfFiles(int num) {
-		setMinorTaskProgress(num);
-	}
-
-	@Override
-	public void onNextFile(String name) {
-		setMinorTaskProgress(I18n.format("wdl.saveProgress.backingUp.file", name), minorTaskProgress + 1);
 	}
 }
