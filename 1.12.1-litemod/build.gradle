@@ -44,7 +44,7 @@ apply plugin: 'org.spongepowered.mixin'
 
 minecraft {
     version = "1.12.1"
-    mappings = "snapshot_20170907"
+    mappings = "snapshot_20170918"
     runDir = "run"
 
     // We don't currently want a source jar (doesn't work well for base edits, and the version info doesn't work yet)
