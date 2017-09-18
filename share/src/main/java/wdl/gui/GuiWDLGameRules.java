@@ -550,6 +550,7 @@ public class GuiWDLGameRules extends GuiScreen {
 	@Override
 	public void updateScreen() {
 		this.list.update();
+		super.updateScreen();
 	}
 
 	@Override

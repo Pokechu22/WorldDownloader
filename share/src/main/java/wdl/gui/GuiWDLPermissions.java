@@ -125,6 +125,7 @@ public class GuiWDLPermissions extends GuiScreen {
 			initGui();
 			refreshTicks = -1;
 		}
+		super.updateScreen();
 	}
 
 	@Override

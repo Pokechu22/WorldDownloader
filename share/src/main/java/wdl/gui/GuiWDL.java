@@ -290,7 +290,7 @@ public class GuiWDL extends GuiScreen {
 	 */
 	@Override
 	public void updateScreen() {
-		this.worldname.updateCursorCounter(); // updateCursorCounter
+		this.worldname.updateCursorCounter();
 		super.updateScreen();
 	}
 

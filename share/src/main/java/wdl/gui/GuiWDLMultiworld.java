@@ -94,14 +94,6 @@ public class GuiWDLMultiworld extends GuiScreen {
 	}
 
 	/**
-	 * Called from the main game loop to update the screen.
-	 */
-	@Override
-	public void updateScreen() {
-		super.updateScreen();
-	}
-
-	/**
 	 * Draws the screen and all the components in it.
 	 */
 	@Override
