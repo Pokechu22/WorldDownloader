@@ -18,11 +18,6 @@ public abstract class GuiTurningCameraBase extends GuiScreen {
 	 */
 	private float yaw;
 	/**
-	 * The yaw for the next tick.  Lineraly interpolated between
-	 * this and {@link #yaw}.
-	 */
-	private float yawNextTick;
-	/**
 	 * The previous mode for the camera (First person, 3rd person, ect)
 	 */
 	private int oldCameraMode;
@@ -59,10 +54,9 @@ public abstract class GuiTurningCameraBase extends GuiScreen {
 	public void initGui() {
 		if (!initializedCamera) {
 			this.cam = LocalUtils.makePlayer();
-			this.cam.setLocationAndAngles(WDL.thePlayer.posX, WDL.thePlayer.posY
-					- WDL.thePlayer.getYOffset(), WDL.thePlayer.posZ,
-					WDL.thePlayer.rotationYaw, 0.0F);
-			this.yaw = this.yawNextTick = WDL.thePlayer.rotationYaw;
+			this.cam.setLocationAndAngles(WDL.thePlayer.posX, WDL.thePlayer.posY,
+					WDL.thePlayer.posZ, WDL.thePlayer.rotationYaw, 0.0F);
+			this.yaw = WDL.thePlayer.rotationYaw;
 			this.oldCameraMode = WDL.minecraft.gameSettings.thirdPersonView;
 			this.oldHideHud = WDL.minecraft.gameSettings.hideGUI;
 			this.oldShowDebug = WDL.minecraft.gameSettings.showDebugInfo;
@@ -76,14 +70,6 @@ public abstract class GuiTurningCameraBase extends GuiScreen {
 			initializedCamera = true;
 		}
 
-		// Sets the render view entity for minecraft.
-		// When obfuscation changes, look in
-		// net.minecraft.client.renderer.EntityRenderer.updateRenderer() for
-		// code that looks something like this:
-		//
-		// if (this.mc.renderViewEntity == null) {
-		//     this.mc.renderViewEntity = this.mc.thePlayer;
-		// }
 		WDL.minecraft.setRenderViewEntity(this.cam);
 	}
 
@@ -101,7 +87,11 @@ public abstract class GuiTurningCameraBase extends GuiScreen {
 	 */
 	@Override
 	public void updateScreen() {
-		this.yaw = this.yawNextTick;
+		this.cam.prevRotationPitch = this.cam.rotationPitch = 0.0F;
+		this.cam.prevRotationYaw = this.yaw;
+		this.cam.lastTickPosY = this.cam.prevPosY = this.cam.posY;
+		this.cam.lastTickPosX = this.cam.prevPosX = this.cam.posX;
+		this.cam.lastTickPosZ = this.cam.prevPosZ = this.cam.posZ;
 
 		// TODO: Rewrite this function as a function of time, rather than
 		// an incremental function, if it's possible to do so.
@@ -116,9 +106,21 @@ public abstract class GuiTurningCameraBase extends GuiScreen {
 		// to 1, which creates a speed varying from .3 to 1.7.  This causes it
 		// to speed through diagonals and go slow in cardinal directions, which
 		// is the behavior we want.
-		this.yawNextTick = (this.yaw + ROTATION_SPEED
+		this.yaw = (this.yaw + ROTATION_SPEED
 				* (float) (1 + ROTATION_VARIANCE
 						* Math.cos((this.yaw + 45) / 45.0 * Math.PI)));
+
+		this.cam.rotationYaw = this.yaw;
+
+		double x = Math.cos(yaw / 180.0D * Math.PI);
+		double z = Math.sin((yaw - 90) / 180.0D * Math.PI);
+
+		double distance = truncateDistanceIfBlockInWay(x, z, .5);
+		this.cam.posY = WDL.thePlayer.posY;
+		this.cam.posX = WDL.thePlayer.posX - distance * x;
+		this.cam.posZ = WDL.thePlayer.posZ + distance * z;
+
+		super.updateScreen();
 	}
 
 	/**
@@ -161,28 +163,6 @@ public abstract class GuiTurningCameraBase extends GuiScreen {
 		}
 
 		return currentDistance - .25;
-	}
-
-	@Override
-	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		if (this.cam != null) {
-			float yaw = this.yaw + (this.yawNextTick - this.yaw) * partialTicks;
-
-			this.cam.prevRotationPitch = this.cam.rotationPitch = 0.0F;
-			this.cam.prevRotationYaw = this.cam.rotationYaw = yaw;
-
-			double x = Math.cos(yaw / 180.0D * Math.PI);
-			double z = Math.sin((yaw - 90) / 180.0D * Math.PI);
-
-			double distance = truncateDistanceIfBlockInWay(x, z, .5);
-			this.cam.lastTickPosY = this.cam.prevPosY = this.cam.posY = WDL.thePlayer.posY;
-			this.cam.lastTickPosX = this.cam.prevPosX = this.cam.posX = WDL.thePlayer.posX
-					- distance * x;
-			this.cam.lastTickPosZ = this.cam.prevPosZ = this.cam.posZ = WDL.thePlayer.posZ
-					+ distance * z;
-		}
-
-		super.drawScreen(mouseX, mouseY, partialTicks);
 	}
 
 	@Override
