@@ -40,7 +40,7 @@ IBackupProgressMonitor {
 	/**
 	 * Starts a new major task with the given message.
 	 */
-	public void startMajorTask(String message, int minorTaskMaximum) {
+	public synchronized void startMajorTask(String message, int minorTaskMaximum) {
 		this.majorTaskMessage = message;
 		this.majorTaskNumber++;
 
@@ -57,7 +57,7 @@ IBackupProgressMonitor {
 	 *            the current position and maximum and the percent are
 	 *            automatically appended after it.
 	 */
-	public void setMinorTaskProgress(String message, int progress) {
+	public synchronized void setMinorTaskProgress(String message, int progress) {
 		this.minorTaskMessage = message;
 		this.minorTaskProgress = progress;
 	}
@@ -65,14 +65,14 @@ IBackupProgressMonitor {
 	/**
 	 * Updates the progress on the minor task.
 	 */
-	public void setMinorTaskProgress(int progress) {
+	public synchronized void setMinorTaskProgress(int progress) {
 		this.minorTaskProgress = progress;
 	}
 
 	/**
 	 * Sets the GUI as done working, meaning it will be closed next tick.
 	 */
-	public void setDoneWorking() {
+	public synchronized void setDoneWorking() {
 		this.doneWorking = true;
 	}
 
@@ -169,12 +169,11 @@ IBackupProgressMonitor {
 	// IBackupProgressMonitor
 	@Override
 	public void setNumberOfFiles(int num) {
-		minorTaskMaximum = num;
+		setMinorTaskProgress(num);
 	}
 
 	@Override
 	public void onNextFile(String name) {
-		minorTaskProgress++;
-		minorTaskMessage = I18n.format("wdl.saveProgress.backingUp.file", name);
+		setMinorTaskProgress(I18n.format("wdl.saveProgress.backingUp.file", name), minorTaskProgress + 1);
 	}
 }

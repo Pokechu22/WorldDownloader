@@ -443,6 +443,8 @@ wdl.saveProgress.worldMetadata.writingNBT=Writing world info NBT
 wdl.saveProgress.extension.title=Extension: %s
 wdl.saveProgress.flushingIO.title=Procrastinating...
 wdl.saveProgress.flushingIO.subtitle=(Waiting for ThreadedFileIOBase to finish)
+# Arg is the number of queued tasks, which counts down to 0 (actual values are more or less arbitrary)
+wdl.saveProgress.flushingIO.subtitle.tasks=(Waiting for ThreadedFileIOBase to finish: %d task(s) left)
 wdl.saveProgress.backingUp.title.zip=Backing up the world (creating zip)
 wdl.saveProgress.backingUp.title.folder=Backing up the world (copying folder)
 wdl.saveProgress.backingUp.preparing=Preparing...

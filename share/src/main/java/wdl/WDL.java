@@ -1,7 +1,5 @@
 package wdl;
 
-import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -15,6 +13,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Maps;
+
+import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -46,12 +51,7 @@ import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraft.world.chunk.storage.IChunkLoader;
 import net.minecraft.world.storage.MapData;
 import net.minecraft.world.storage.SaveHandler;
-import net.minecraft.world.storage.ThreadedFileIOBase;
 import net.minecraft.world.storage.WorldInfo;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import wdl.WorldBackup.WorldBackupType;
 import wdl.api.IPlayerInfoEditor;
 import wdl.api.ISaveListener;
@@ -63,9 +63,6 @@ import wdl.gui.GuiWDLMultiworldSelect;
 import wdl.gui.GuiWDLOverwriteChanges;
 import wdl.gui.GuiWDLSaveProgress;
 import wdl.update.GithubInfoGrabber;
-
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Maps;
 
 /**
  * This is the main class that does most of the work.
@@ -617,10 +614,8 @@ public class WDL {
 			progressScreen.setMinorTaskProgress(
 					I18n.format("wdl.saveProgress.flushingIO.subtitle"), 1);
 
-			// func_178779_a is a getter for the instance.
-			// Look inside of ThreadedFileIOBase.java for
-			// such a getter.
-			ThreadedFileIOBase.getThreadedIOInstance().waitForFinish();
+			IOUtils.waitForFinishAndUpdateProgress((i) -> progressScreen.setMinorTaskProgress(
+					I18n.format("wdl.saveProgress.flushingIO.subtitle.tasks", i), 1));
 		} catch (Exception e) {
 			throw new RuntimeException("Threw exception waiting for asynchronous IO to finish. Hmmm.", e);
 		}
