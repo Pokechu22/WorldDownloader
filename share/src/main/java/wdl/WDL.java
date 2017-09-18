@@ -48,9 +48,9 @@ import net.minecraft.world.MinecraftException;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.EmptyChunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
-import net.minecraft.world.chunk.storage.IChunkLoader;
 import net.minecraft.world.storage.MapData;
 import net.minecraft.world.storage.SaveHandler;
+import net.minecraft.world.storage.ThreadedFileIOBase;
 import net.minecraft.world.storage.WorldInfo;
 import wdl.WorldBackup.WorldBackupType;
 import wdl.api.IPlayerInfoEditor;
@@ -130,7 +130,7 @@ public class WDL {
 	/**
 	 * For the chunks (despite the name it does also SAVE chunks)
 	 */
-	public static IChunkLoader chunkLoader;
+	public static WDLChunkLoader chunkLoader;
 
 	/**
 	 * All tile entities that were saved manually, by chunk and then position.
@@ -611,11 +611,11 @@ public class WDL {
 
 			progressScreen.startMajorTask(
 					I18n.format("wdl.saveProgress.flushingIO.title"), 1);
-			progressScreen.setMinorTaskProgress(
-					I18n.format("wdl.saveProgress.flushingIO.subtitle"), 1);
+			progressScreen.setMinorTaskProgress(() -> {
+				return I18n.format("wdl.saveProgress.flushingIO.subtitle", chunkLoader.getNumPendingChunks());
+			}, 1);
 
-			IOUtils.waitForFinishAndUpdateProgress((i) -> progressScreen.setMinorTaskProgress(
-					I18n.format("wdl.saveProgress.flushingIO.subtitle.tasks", i), 1));
+			ThreadedFileIOBase.getThreadedIOInstance().waitForFinish();
 		} catch (Exception e) {
 			throw new RuntimeException("Threw exception waiting for asynchronous IO to finish. Hmmm.", e);
 		}

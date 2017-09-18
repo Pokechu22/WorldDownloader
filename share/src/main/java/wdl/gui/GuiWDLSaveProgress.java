@@ -1,6 +1,7 @@
 package wdl.gui;
 
 import java.io.IOException;
+import java.util.function.Supplier;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
@@ -18,6 +19,7 @@ IBackupProgressMonitor {
 	private final String title;
 	private volatile String majorTaskMessage = "";
 	private volatile String minorTaskMessage = "";
+	private volatile Supplier<String> minorTaskMessageProvider = minorTaskMessage::toString;
 	private volatile int majorTaskNumber;
 	private final int majorTaskCount;
 	private volatile int minorTaskProgress;
@@ -45,6 +47,7 @@ IBackupProgressMonitor {
 		this.majorTaskNumber++;
 
 		this.minorTaskMessage = "";
+		this.minorTaskMessageProvider = minorTaskMessage::toString;
 		this.minorTaskProgress = 0;
 		this.minorTaskMaximum = minorTaskMaximum;
 	}
@@ -59,6 +62,19 @@ IBackupProgressMonitor {
 	 */
 	public synchronized void setMinorTaskProgress(String message, int progress) {
 		this.minorTaskMessage = message;
+		this.minorTaskMessageProvider = minorTaskMessage::toString;
+		this.minorTaskProgress = progress;
+	}
+
+	/**
+	 * Updates the progress on the current minor task.
+	 *
+	 * @param messageProvider
+	 *            Provides the message to be displayed.
+	 */
+	public synchronized void setMinorTaskProgress(Supplier<String> messageProvider, int progress) {
+		this.minorTaskMessage = messageProvider.get();
+		this.minorTaskMessageProvider = messageProvider;
 		this.minorTaskProgress = progress;
 	}
 
@@ -74,6 +90,12 @@ IBackupProgressMonitor {
 	 */
 	public synchronized void setDoneWorking() {
 		this.doneWorking = true;
+	}
+
+	@Override
+	public void updateScreen() {
+		this.minorTaskMessage = this.minorTaskMessageProvider.get();
+		super.updateScreen();
 	}
 
 	/**

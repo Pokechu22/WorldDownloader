@@ -41,6 +41,7 @@ import net.minecraft.tileentity.TileEntityNote;
 import net.minecraft.util.ClassInheritanceMultiMap;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.MinecraftException;
 import net.minecraft.world.NextTickListEntry;
 import net.minecraft.world.World;
@@ -115,10 +116,15 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 		}
 	}
 
+	private final Map<ChunkPos, NBTTagCompound> chunksToSave;
 	private final File chunkSaveLocation;
 
 	public WDLChunkLoader(File file) {
 		super(file, null);
+		@SuppressWarnings("unchecked")
+		Map<ChunkPos, NBTTagCompound> chunksToSave = (Map<ChunkPos, NBTTagCompound>)
+				ReflectionUtils.findAndGetPrivateField(this, AnvilChunkLoader.class, Map.class);
+		this.chunksToSave = chunksToSave;
 		this.chunkSaveLocation = file;
 	}
 
@@ -595,5 +601,15 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 						+ "edited value)", ex);
 			}
 		}
+	}
+
+	/**
+	 * Gets a count of how many chunks there are that still need to be written to
+	 * disk. (Does not include any chunk that is currently being written to disk)
+	 *
+	 * @return The number of chunks that still need to be written to disk
+	 */
+	public int getNumPendingChunks() {
+		return this.chunksToSave.size();
 	}
 }
