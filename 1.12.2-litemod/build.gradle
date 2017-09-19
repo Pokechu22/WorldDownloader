@@ -33,7 +33,7 @@ dependencies {
     testCompile 'org.mockito:mockito-core:2.8.47'
 }
 
-version = "4.0.1.2-SNAPSHOT"
+version = "4.0.1.2"
 group = "wdl"
 archivesBaseName = "LiteModWDL"
 libsDirName = "../../libs/${version}"
