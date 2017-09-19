@@ -37,7 +37,7 @@ public class VersionConstants {
 	 */
 	public static int getDataVersion() {
 		// As per AnvilChunkLoader
-		return 1241;
+		return 1343;
 	}
 
 	/**
