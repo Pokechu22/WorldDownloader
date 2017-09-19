@@ -36,6 +36,7 @@ project(':1.12').evaluationDependsOn(':share')
 project(':1.12-litemod').evaluationDependsOn(':1.12')
 project(':1.12.1').evaluationDependsOn(':share')
 project(':1.12.1-litemod').evaluationDependsOn(':1.12.1')
+project(':1.12.2').evaluationDependsOn(':share')
 
 /*subprojects { subproject ->
     // Java 8 is required now
