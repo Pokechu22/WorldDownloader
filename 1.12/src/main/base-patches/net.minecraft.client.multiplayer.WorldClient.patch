@@ -33,14 +33,3 @@
  		Entity entity = this.entitiesById.removeObject(entityID);
  
  		if (entity != null) {
-@@ -433,8 +445,8 @@
- 		}
- 	}
- 
--	public void makeFireworks(double x, double y, double z, double motionX, double motionY, double motionZ, @Nullable NBTTagCompound compound) {
--		this.mc.effectRenderer.addEffect(new ParticleFirework.Starter(this, x, y, z, motionX, motionY, motionZ, this.mc.effectRenderer, compound));
-+	public void makeFireworks(double x, double y, double z, double motionX, double motionY, double motionZ, @Nullable NBTTagCompound compund) {
-+		this.mc.effectRenderer.addEffect(new ParticleFirework.Starter(this, x, y, z, motionX, motionY, motionZ, this.mc.effectRenderer, compund));
- 	}
- 
- 	public void sendPacketToServer(Packet<?> packetIn) {
