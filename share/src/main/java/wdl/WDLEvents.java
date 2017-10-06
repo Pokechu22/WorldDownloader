@@ -1,8 +1,11 @@
 package wdl;
 
+import java.lang.reflect.Field;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.command.CommandException;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.IMerchant;
 import net.minecraft.entity.item.EntityMinecartChest;
@@ -36,6 +39,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.storage.MapData;
@@ -225,10 +232,55 @@ public class WDLEvents {
 			} else if (WDL.lastEntity instanceof EntityVillager
 					&& WDL.windowContainer instanceof ContainerMerchant) {
 				EntityVillager ev = (EntityVillager) WDL.lastEntity;
-				MerchantRecipeList list = (ReflectionUtils.findAndGetPrivateField(
-						WDL.windowContainer, IMerchant.class)).getRecipes(
-								WDL.thePlayer);
+
+				IMerchant merchant = ReflectionUtils.findAndGetPrivateField(
+						WDL.windowContainer, IMerchant.class);
+				MerchantRecipeList list = merchant.getRecipes(WDL.thePlayer);
 				ReflectionUtils.findAndSetPrivateField(ev, MerchantRecipeList.class, list);
+
+				try {
+					ITextComponent displayName = merchant.getDisplayName();
+					if (!(displayName instanceof TextComponentTranslation)) {
+						// Taking the toString to reflect JSON structure
+						String componentDesc= String.valueOf(displayName);
+						throw new CommandException("wdl.messages.onGuiClosedWarning.villagerCareer.notAComponent", componentDesc);
+					}
+
+					TextComponentTranslation displayNameTranslation = ((TextComponentTranslation) displayName);
+					String key = displayNameTranslation.getKey();
+
+					int career = EntityUtils.getCareer(key, ev.getProfession());
+
+					// XXX Iteration order of fields is undefined, and this is generally sloppy
+					// careerId is the 4th field
+					int fieldIndex = 0;
+					Field careerIdField = null;
+					for (Field field : EntityVillager.class.getDeclaredFields()) {
+						if (field.getType().equals(int.class)) {
+							fieldIndex++;
+							if (fieldIndex == 4) {
+								careerIdField = field;
+								break;
+							}
+						}
+					}
+					if (careerIdField == null) {
+						throw new CommandException("wdl.messages.onGuiClosedWarning.villagerCareer.professionField");
+					}
+
+					careerIdField.setAccessible(true);
+					careerIdField.setInt(ev, career);
+
+					// Re-create this component rather than modifying the old one
+					ITextComponent dispCareer = new TextComponentTranslation(key, displayNameTranslation.getFormatArgs());
+					dispCareer.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(key)));
+
+					WDLMessages.chatMessageTranslated(WDLMessageTypes.ON_GUI_CLOSED_INFO, "wdl.messages.onGuiClosedInfo.savedEntity.villager.career", dispCareer, career);
+				} catch (CommandException ex) {
+					WDLMessages.chatMessageTranslated(WDLMessageTypes.ON_GUI_CLOSED_WARNING, ex.getMessage(), ex.getErrorObjects());
+				} catch (Throwable ex) {
+					WDLMessages.chatMessageTranslated(WDLMessageTypes.ON_GUI_CLOSED_WARNING, "wdl.messages.onGuiClosedWarning.villagerCareer.exception", ex);
+				}
 
 				saveName = "villager";
 			} else if (WDL.lastEntity instanceof EquineEntity
