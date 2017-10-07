@@ -1312,6 +1312,11 @@ public class WDL {
 				}
 
 				return name;
+			} else {
+				String realmName = getRealmName();
+				if (realmName != null) {
+					return realmName;
+				}
 			}
 		} catch (Exception e) {
 			LOGGER.warn("Exception while getting server name: ", e);
@@ -1319,6 +1324,61 @@ public class WDL {
 
 		return "Unidentified Server";
 	}
+
+	/**
+	 * Does not work right now.
+	 *
+	 * @return
+	 */
+	public static String getRealmName()
+	{
+	   return "RealmsIsNotSupportedYet";
+	   /*
+		// Is this the only way to get the name of the Realms server? Really Mojang?
+		// If this function turns out to be a pain to update, just remove Realms support completely.
+		// I doubt anyone will need this anyway since Realms support downloading the world out of the box.
+
+		// Try to get the value of mc.getNetHandler().guiScreenServer:
+		GuiScreen screen = (GuiScreen) stealAndGetField(mc.getNetHandler(), GuiScreen.class);
+
+		// If it is not a GuiScreenRealmsProxy we are not using a Realms server
+		if(!(screen instanceof GuiScreenRealmsProxy)) return null;
+
+		// Get the proxy's RealmsScreen object
+		GuiScreenRealmsProxy screenProxy = (GuiScreenRealmsProxy) screen;
+		RealmsScreen rs = screenProxy.func_154321_a();
+
+		// It needs to be of type RealmsMainScreen (this should always be the case)
+		if(!(rs instanceof RealmsMainScreen)) return null;
+
+		RealmsMainScreen rms = (RealmsMainScreen) rs;
+		McoServer mcos = null;
+		try
+		{
+			// Find the ID of the selected Realms server. Fortunately unobfuscated names!
+			Field selectedServerId = rms.getClass().getDeclaredField("selectedServerId");
+			selectedServerId.setAccessible(true);
+			Object obj = selectedServerId.get(rms);
+			if(!(obj instanceof Long)) return null;
+			long id = ((Long)obj).longValue();
+
+			// Get the McoServer instance that was selected
+			Method findServer = rms.getClass().getDeclaredMethod("findServer", long.class);
+			findServer.setAccessible(true);
+			obj = findServer.invoke(rms, id);
+			if(!(obj instanceof McoServer)) return null;
+			mcos = (McoServer)obj;
+		}
+		catch (Exception e)
+		{
+			return null;
+		}
+
+		// Return its name. Not sure if this is the best naming scheme...
+		return mcos.name;*/
+	}
+
+
 
 	/**
 	 * Get the base folder name for the server we are connected to.
