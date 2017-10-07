@@ -105,7 +105,7 @@ wdl.gui.generator.generateStructures.true=Generate Structures: ON
 wdl.gui.generator.generateStructures.false=Generate Structures: OFF
 wdl.gui.generator.seed.description=Set the seed used for generating new chunks in the downloaded world.
 wdl.gui.generator.generator.description=The world generator used when generating new chunks.
-wdl.gui.generator.generateStructures.description=Whether structures (villages, strongholds, etc) should be generated in new chunks.
+wdl.gui.generator.generateStructures.description=Whether structures (villages, strongholds, etc) should be generated in new chunks.%n%n§c§lWARNING§r: Enabling this option can damage downloaded worlds due to structure regeneration.  See https://git.io/vdunS (case-sensitive) for more information.
 wdl.gui.generator.flatSettings=Superflat options...
 wdl.gui.generator.customSettings=Customized options...
 
