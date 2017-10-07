@@ -145,6 +145,8 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 		rootTag.setTag("Level", levelTag);
 		rootTag.setInteger("DataVersion", VersionConstants.getDataVersion());
 
+		// XXX temporary debug check
+		LOGGER.info("Calling addChunkToPending for the chunk at {} at time {}", chunk.getPos(), System.nanoTime());
 		addChunkToPending(chunk.getPos(), rootTag);
 	}
 
@@ -482,16 +484,26 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 	public Map<BlockPos, NBTTagCompound> getOldTileEntities(Chunk chunk) {
 		Map<BlockPos, NBTTagCompound> returned = new HashMap<>();
 
-		try (DataInputStream dis = RegionFileCache.getChunkInputStream(chunkSaveLocation,
-				chunk.x, chunk.z)) {
+		try {
+			NBTTagCompound chunkNBT;
 
-			if (dis == null) {
-				// This happens whenever the chunk hasn't been saved before.
-				// It's a normal case.
-				return returned;
+			// The reason for the weird syntax here rather than containsKey is because
+			// chunksToSave can be accessed from multiple threads.  Note that this still
+			// doesn't handle the MC-119971-like case of the chunk being in chunksBeingSaved
+			// (but that should be rare, and this condition should not happen in the first place)
+			if ((chunkNBT = chunksToSave.get(chunk.getPos())) != null) {
+				LOGGER.warn("getOldTileEntities (and thus saveChunk) was called while a chunk was already in chunksToSave!  (location: {})", chunk.getPos(), new Exception());
+			} else try (DataInputStream dis = RegionFileCache.getChunkInputStream(
+					chunkSaveLocation, chunk.x, chunk.z)) {
+				if (dis == null) {
+					// This happens whenever the chunk hasn't been saved before.
+					// It's a normal case.
+					return returned;
+				}
+
+				chunkNBT = CompressedStreamTools.read(dis);
 			}
 
-			NBTTagCompound chunkNBT = CompressedStreamTools.read(dis);
 			NBTTagCompound levelNBT = chunkNBT.getCompoundTag("Level");
 			NBTTagList oldList = levelNBT.getTagList("TileEntities", 10);
 
