@@ -8,10 +8,10 @@
 # with one of the other format types).
 # Precision can be specified like %.2f, giving 2 decimal points of accuracy.
 # Everything after a '#' is a comment.
-#  
+#
 # Note that in all of the things put into chat (under wdl.messages) you can
 # ONLY use '%s', '%d', and '%f'.
-# 
+#
 # Additionally, Minecraft's §-based color codes may be used.  See
 # http://minecraft.gamepedia.com/Formatting_codes for more info.
 
@@ -27,7 +27,7 @@ wdl.gui.wdl.worldOverrides.description=Control specific metadata about the saved
 wdl.gui.wdl.generatorOverrides.name=World Generator Overrides...
 wdl.gui.wdl.generatorOverrides.description=Control specific info about how the world is generated, such as the seed.
 wdl.gui.wdl.playerOverrides.name=Player Overrides...
-wdl.gui.wdl.playerOverrides.description=Control specific options about the saved player, such as their health and position. 
+wdl.gui.wdl.playerOverrides.description=Control specific options about the saved player, such as their health and position.
 wdl.gui.wdl.entityOptions.name=Entity options...
 wdl.gui.wdl.entityOptions.description=Control what types of entities to save, and the track distances of those entities.
 wdl.gui.wdl.gameruleOptions.name=Game rule options...
@@ -326,7 +326,7 @@ wdl.messages.removeEntity.notSavingUserPreference=saveChunk: Not saving %s (User
 
 wdl.messages.tileEntity.usingOld=Using old TE from saved file: %s at %s
 wdl.messages.tileEntity.usingNew=Using new TE: %s at %s
-wdl.messages.tileEntity.notImporting=Old TE does not need importing: %s at %s 
+wdl.messages.tileEntity.notImporting=Old TE does not need importing: %s at %s
 wdl.messages.tileEntity.edited=Edited TE at %s using %s
 
 # MC = Minecraft; this is used to display what WDL and MC think of an entity
@@ -429,7 +429,7 @@ wdl.messages.permissions.packet5.added=Received settings packet #5: Added %d Chu
 wdl.messages.permissions.packet5.set=Received settings packet #5: Changed list of ChunkRanges to %d total in %s.
 wdl.messages.permissions.packet6=Received settings packet #6: Removed %d ChunkRanges from %s with tags matching %s.
 wdl.messages.permissions.packet7=Received settings packet #7: Replaced %d ChunkRanges in %s that had a tag of %s with %d new ranges.
-wdl.messages.permissions.unknownPacket=Received unknown settings packet #%d.  See log for binary contents.  
+wdl.messages.permissions.unknownPacket=Received unknown settings packet #%d.  See log for binary contents.
 
 wdl.saveProgress.title=Saving downloaded world
 wdl.saveProgress.chunk.title=Saving chunks
