@@ -7,23 +7,23 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.google.common.collect.ImmutableListMultimap;
+import com.google.common.collect.LinkedListMultimap;
+import com.google.common.collect.ListMultimap;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.util.text.event.HoverEvent.Action;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import wdl.api.IWDLMessageType;
-
-import com.google.common.collect.ImmutableListMultimap;
-import com.google.common.collect.LinkedListMultimap;
-import com.google.common.collect.ListMultimap;
 
 /**
  * Handles enabling and disabling of all of the messages.
@@ -325,6 +325,10 @@ public class WDLMessages {
 
 				args[i] = convertThrowableToComponent(t);
 				exceptionsToPrint.add(t);
+			} else if (args[i] instanceof BlockPos) {
+				// Manually toString BlockPos instances to deal with obfuscation
+				BlockPos pos = (BlockPos) args[i];
+				args[i] = String.format("Pos[x=%d, y=%d z=%d]", pos.getX(), pos.getY(), pos.getZ());
 			}
 		}
 
