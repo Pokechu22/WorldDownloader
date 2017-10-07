@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,17 +14,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.annotation.Nullable;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Maps;
+import com.mojang.realmsclient.RealmsMainScreen;
+import com.mojang.realmsclient.dto.RealmsServer;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiScreenRealmsProxy;
 import net.minecraft.client.multiplayer.ChunkProviderClient;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.resources.I18n;
@@ -39,6 +45,7 @@ import net.minecraft.nbt.NBTTagDouble;
 import net.minecraft.nbt.NBTTagFloat;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
+import net.minecraft.realms.RealmsScreen;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ReportedException;
 import net.minecraft.util.math.BlockPos;
@@ -1312,11 +1319,15 @@ public class WDL {
 				}
 
 				return name;
-			} else {
+			} else if (minecraft.isConnectedToRealms()) {
 				String realmName = getRealmName();
 				if (realmName != null) {
 					return realmName;
+				} else {
+					LOGGER.warn("getServerName: getRealmName returned null!");
 				}
+			} else {
+				LOGGER.warn("getServerName: Not connected to either a real server or realms!");
 			}
 		} catch (Exception e) {
 			LOGGER.warn("Exception while getting server name: ", e);
@@ -1326,56 +1337,66 @@ public class WDL {
 	}
 
 	/**
-	 * Does not work right now.
+	 * Gets the name of the realm that the player is currently connected to, or <code>null</code> if they are not connected to a realm.
 	 *
-	 * @return
+	 * @return The name of the connected realm, or null.
 	 */
-	public static String getRealmName()
-	{
-	   return "RealmsIsNotSupportedYet";
-	   /*
+	@Nullable
+	public static String getRealmName() {
+		if (!minecraft.isConnectedToRealms()) {
+			LOGGER.warn("getRealmName: Not currently connected to realms!");
+		}
 		// Is this the only way to get the name of the Realms server? Really Mojang?
 		// If this function turns out to be a pain to update, just remove Realms support completely.
 		// I doubt anyone will need this anyway since Realms support downloading the world out of the box.
 
-		// Try to get the value of mc.getNetHandler().guiScreenServer:
-		GuiScreen screen = (GuiScreen) stealAndGetField(mc.getNetHandler(), GuiScreen.class);
+		// Try to get the value of NetHandlerPlayClient.guiScreenServer:
+		GuiScreen screen = ReflectionUtils.findAndGetPrivateField(minecraft.getConnection(), GuiScreen.class);
 
 		// If it is not a GuiScreenRealmsProxy we are not using a Realms server
-		if(!(screen instanceof GuiScreenRealmsProxy)) return null;
+		if (!(screen instanceof GuiScreenRealmsProxy)) {
+			LOGGER.warn("getRealmName: screen {} is not an instance of GuiScreenRealmsProxy", screen);
+			return null;
+		}
 
 		// Get the proxy's RealmsScreen object
 		GuiScreenRealmsProxy screenProxy = (GuiScreenRealmsProxy) screen;
-		RealmsScreen rs = screenProxy.func_154321_a();
+		RealmsScreen rs = screenProxy.getProxy();
 
 		// It needs to be of type RealmsMainScreen (this should always be the case)
-		if(!(rs instanceof RealmsMainScreen)) return null;
+		if (!(rs instanceof RealmsMainScreen)) {
+			LOGGER.warn("getRealmName: realms screen {} (instance of {}) not an instance of RealmsMainScreen!", rs, (rs != null ? rs.getClass() : null));
+			return null;
+		}
 
 		RealmsMainScreen rms = (RealmsMainScreen) rs;
-		McoServer mcos = null;
-		try
-		{
+		RealmsServer mcos = null;
+		try {
 			// Find the ID of the selected Realms server. Fortunately unobfuscated names!
 			Field selectedServerId = rms.getClass().getDeclaredField("selectedServerId");
 			selectedServerId.setAccessible(true);
-			Object obj = selectedServerId.get(rms);
-			if(!(obj instanceof Long)) return null;
-			long id = ((Long)obj).longValue();
+			if (!selectedServerId.getType().equals(long.class)) {
+				LOGGER.warn("getRealmName: RealmsMainScreen selectedServerId field ({}) is not of type `long` ({})!", selectedServerId, selectedServerId.getType());
+				return null;
+			}
+			long id = selectedServerId.getLong(rms);
 
 			// Get the McoServer instance that was selected
 			Method findServer = rms.getClass().getDeclaredMethod("findServer", long.class);
 			findServer.setAccessible(true);
-			obj = findServer.invoke(rms, id);
-			if(!(obj instanceof McoServer)) return null;
-			mcos = (McoServer)obj;
-		}
-		catch (Exception e)
-		{
+			Object obj = findServer.invoke(rms, id);
+			if (!(obj instanceof RealmsServer)) {
+				LOGGER.warn("getRealmName: RealmsMainScreen findServer method ({}) returned something other than a RealmsServer! ({})", findServer, obj);
+				return null;
+			}
+			mcos = (RealmsServer) obj;
+		} catch (Exception e) {
+			LOGGER.warn("getRealmName: Unexpected exception!", e);
 			return null;
 		}
 
 		// Return its name. Not sure if this is the best naming scheme...
-		return mcos.name;*/
+		return mcos.name;
 	}
 
 
