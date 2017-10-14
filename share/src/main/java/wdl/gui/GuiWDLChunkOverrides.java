@@ -265,8 +265,8 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 		}
 
 		// Player position.
-		int playerPosX = (int)(((WDL.thePlayer.posX / 16) - scrollX) * SCALE + (width / 2));
-		int playerPosZ = (int)(((WDL.thePlayer.posZ / 16) - scrollZ) * SCALE + (height / 2));
+		int playerPosX = (int)(((WDL.thePlayer.posX / 16.0D) - scrollX) * SCALE + (width / 2));
+		int playerPosZ = (int)(((WDL.thePlayer.posZ / 16.0D) - scrollZ) * SCALE + (height / 2));
 
 		drawHorizontalLine(playerPosX - 3, playerPosX + 3, playerPosZ, 0xFFFFFFFF);
 		// Vertical is 1px taller because it seems to be needed to make it proportional

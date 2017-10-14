@@ -313,8 +313,8 @@ public class WDLEvents {
 		}
 
 		//Permissions check.
-		if (!WDLPluginChannels.canSaveContainers(te.getPos().getX() << 4, te
-				.getPos().getZ() << 4)) {
+		if (!WDLPluginChannels.canSaveContainers(te.getPos().getX() >> 4, te
+				.getPos().getZ() >> 4)) {
 			WDLMessages.chatMessageTranslated(WDLMessageTypes.ON_GUI_CLOSED_INFO,
 					"wdl.messages.onGuiClosedInfo.cannotSaveTileEntities");
 			return true;
@@ -475,8 +475,8 @@ public class WDLEvents {
 			int param) {
 		if (!WDL.downloading) { return; }
 
-		if (!WDLPluginChannels.canSaveTileEntities(pos.getX() << 4,
-				pos.getZ() << 4)) {
+		if (!WDLPluginChannels.canSaveTileEntities(pos.getX() >> 4,
+				pos.getZ() >> 4)) {
 			return;
 		}
 		if (block == Blocks.NOTEBLOCK) {

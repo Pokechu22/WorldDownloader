@@ -34,8 +34,8 @@ class APIImpl implements WDLApi.APIInstance {
 
 	@Override
 	public void saveTileEntity(BlockPos pos, TileEntity te) {
-		if (!WDLPluginChannels.canSaveTileEntities(pos.getX() << 16,
-				pos.getZ() << 16)) {
+		if (!WDLPluginChannels.canSaveTileEntities(pos.getX() >> 4,
+				pos.getZ() >> 4)) {
 			LOGGER.warn("API attempted to call saveTileEntity when " +
 					"saving TileEntities is not allowed!  Pos: " + pos +
 					", te: " + te + ".  StackTrace: ");
