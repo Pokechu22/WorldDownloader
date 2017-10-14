@@ -328,7 +328,7 @@ public class WDLMessages {
 			} else if (args[i] instanceof BlockPos) {
 				// Manually toString BlockPos instances to deal with obfuscation
 				BlockPos pos = (BlockPos) args[i];
-				args[i] = String.format("Pos[x=%d, y=%d z=%d]", pos.getX(), pos.getY(), pos.getZ());
+				args[i] = String.format("Pos[x=%d, y=%d, z=%d]", pos.getX(), pos.getY(), pos.getZ());
 			}
 		}
 
