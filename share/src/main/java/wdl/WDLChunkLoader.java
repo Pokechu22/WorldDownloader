@@ -145,8 +145,6 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 		rootTag.setTag("Level", levelTag);
 		rootTag.setInteger("DataVersion", VersionConstants.getDataVersion());
 
-		// XXX temporary debug check
-		LOGGER.info("Calling addChunkToPending for the chunk at {} at time {}", chunk.getPos(), System.nanoTime());
 		addChunkToPending(chunk.getPos(), rootTag);
 	}
 

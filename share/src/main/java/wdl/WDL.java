@@ -1470,8 +1470,8 @@ public class WDL {
 	 *            The tile entity to add
 	 */
 	public static void saveTileEntity(BlockPos pos, TileEntity te) {
-		int chunkX = pos.getX() / 16;
-		int chunkZ = pos.getZ() / 16;
+		int chunkX = pos.getX() >> 4;
+		int chunkZ = pos.getZ() >> 4;
 
 		ChunkPos chunkPos = new ChunkPos(chunkX, chunkZ);
 
