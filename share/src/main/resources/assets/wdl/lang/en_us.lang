@@ -376,6 +376,7 @@ wdl.messages.onGuiClosedInfo.savedTileEntity.dispenser=Saved dispenser contents.
 wdl.messages.onGuiClosedInfo.savedTileEntity.furnace=Saved furnace contents.
 wdl.messages.onGuiClosedInfo.savedTileEntity.hopper=Saved hopper contents.
 wdl.messages.onGuiClosedInfo.savedTileEntity.beacon=Saved beacon effects.
+wdl.messages.onGuiClosedInfo.savedTileEntity.shulkerBox=Saved shulker box contents.
 
 wdl.messages.onGuiClosedWarning.couldNotGetTE=onItemGuiClosed could not get TE at %s.
 wdl.messages.onGuiClosedWarning.unhandledEntity=onItemGuiClosed: Unrecognised entity could not be saved: %s

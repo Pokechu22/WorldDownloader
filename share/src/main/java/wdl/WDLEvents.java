@@ -458,6 +458,8 @@ public class WDLEvents {
 			WDL.saveInventoryFields(beaconInventory, savedBeacon);
 			WDL.saveTileEntity(WDL.lastClickedBlock, te);
 			saveName = "beacon";
+		} else if (VersionedProperties.handleShulkerGuiClosed(te)) {
+			saveName = "shulkerBox";
 		} else {
 			return false;
 		}

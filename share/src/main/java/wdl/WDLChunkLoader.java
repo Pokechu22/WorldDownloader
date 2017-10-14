@@ -574,6 +574,8 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 			return true;
 		} else if (block instanceof BlockBeacon && entityID.equals(VersionedProperties.getBlockEntityID(TileEntityBeacon.class))) {
 			return true;
+		} else if (VersionedProperties.isImportableShulkerBox(entityID, block)) {
+			return true;
 		}
 
 		for (ModInfo<ITileEntityImportationIdentifier> info : WDLApi

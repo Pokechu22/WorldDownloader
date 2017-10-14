@@ -3,6 +3,7 @@ package wdl;
 import java.lang.reflect.Field;
 import java.util.Map;
 
+import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.world.World;
@@ -61,5 +62,20 @@ public class VersionedProperties {
 	public static String getBlockEntityID(Class<? extends TileEntity> clazz) {
 		// 1.10-: There is no nice way to get the ID; use reflection
 		return TE_REVERSE_MAP.getOrDefault(clazz, "");
+	}
+
+	/**
+	 * Called when any GUI is closed, to handle shulker boxes.
+	 *
+	 * XXX This is not a good approach to version specific block entities.
+	 */
+	public static boolean handleShulkerGuiClosed(TileEntity te) {
+		return false;
+	}
+	/**
+	 * Checks if the given block is a shulker box, and the block entity ID matches.
+	 */
+	public static boolean isImportableShulkerBox(String entityID, Block block) {
+		return false;
 	}
 }
