@@ -1,0 +1,13 @@
+--- net/minecraft/crash/CrashReport.java
++++ net/minecraft/crash/CrashReport.java
+@@ -102,6 +102,10 @@
+ 				return IntCache.getCacheSizes();
+ 			}
+ 		});
++
++		/* WDL >>> */
++		wdl.WDLHooks.onCrashReportPopulateEnvironment(this);
++		/* <<< WDL */
+ 	}
+ 
+ 	/**
