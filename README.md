@@ -1,6 +1,6 @@
 # World Downloader v4
 
-World Downloader is a mod that allows making backups of Minecraft worlds.  You can view the [Minecraft forum thread](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465-1-11-1-10-1-9-4-1-8-9-world-downloader-mod-create) here.  [Project wiki](https://github.com/pokechu22/WorldDownloader/wiki); [issue tracker](https://github.com/Pokechu22/WorldDownloader/issues).
+World Downloader is a mod that allows making backups of Minecraft worlds.  You can view the [Minecraft forum thread](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465) here.  [Project wiki](https://github.com/pokechu22/WorldDownloader/wiki); [issue tracker](https://github.com/Pokechu22/WorldDownloader/issues).
 
 This is a continuation [dslake's original version](https://github.com/dslake/WorldDownloader).
 
