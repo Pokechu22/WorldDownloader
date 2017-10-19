@@ -481,6 +481,8 @@ public class WDLHooks {
 
 			if (WDL.downloading) {
 				WDL.stopDownload();
+				// Disable the button to prevent double-clicks
+				button.enabled = false;
 			} else {
 				if (!WDLPluginChannels.canDownloadAtAll()) {
 					// If they don't have any permissions, let the player
@@ -499,6 +501,8 @@ public class WDLHooks {
 					WDL.minecraft.displayGuiScreen(new GuiWDLChunkOverrides(gui));
 				} else {
 					WDL.startDownload();
+					// Disable the button to prevent double-clicks
+					button.enabled = false;
 				}
 			}
 		} else if (button.id == WDLo) { // "..." (options)
@@ -509,6 +513,8 @@ public class WDLHooks {
 			}
 		} else if (button.id == 1) { // "Disconnect"
 			WDL.stopDownload();
+			// Disable the button to prevent double-clicks
+			button.enabled = false;
 		}
 	}
 }
