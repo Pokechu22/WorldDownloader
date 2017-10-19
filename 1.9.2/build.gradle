@@ -22,7 +22,13 @@ buildscript {
 
 apply plugin: 'java'
 
+configurations {
+    shade
+    compile.extendsFrom(shade)
+}
+
 dependencies {
+    shade 'it.unimi.dsi:fastutil:7.0.12_mojang'
     testCompile 'junit:junit:4.12'
     testCompile 'org.hamcrest:hamcrest-library:1.3'
     testCompile 'org.mockito:mockito-core:2.8.47'
@@ -112,4 +118,5 @@ fixMcSources {
 // Ensure that the API code is in the jar
 jar {
     from sourceSets.api.output
+    from configurations.shade.collect { it.isDirectory() ? it : zipTree(it) }
 }
