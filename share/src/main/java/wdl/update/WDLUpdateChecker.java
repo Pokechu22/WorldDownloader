@@ -258,11 +258,11 @@ public class WDLUpdateChecker extends Thread {
 
 			if (runningRelease == null) {
 				if (!isSnapshot(version)) {
-					WDLMessages.chatMessageTranslated(WDLMessageTypes.UPDATE_DEBUG,
+					WDLMessages.chatMessageTranslated(WDLMessageTypes.UPDATES,
 							"wdl.messages.updates.failedToFindMatchingRelease",
 							currentTag);
 				} else {
-					WDLMessages.chatMessageTranslated(WDLMessageTypes.UPDATE_DEBUG,
+					WDLMessages.chatMessageTranslated(WDLMessageTypes.UPDATES,
 							"wdl.messages.updates.failedToFindMatchingRelease.snapshot",
 							currentTag, getRealVersion(version));
 				}
