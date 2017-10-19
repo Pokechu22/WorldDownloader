@@ -20,7 +20,6 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.ChunkProviderClient;
@@ -74,7 +73,7 @@ public class ReflectionUtilsUsageTest {
 	/** Handles {@link WDL#saveChunks(GuiWDLSaveProgress)} */
 	@Test
 	public void testWDLSaveChunks() {
-		ReflectionUtils.findField(ChunkProviderClient.class, Long2ObjectMap.class);
+		ReflectionUtils.findField(ChunkProviderClient.class, VersionedProperties.getChunkListClass());
 	}
 
 	/** Handles {@link WDLChunkLoader#WDLChunkLoader(File)} */

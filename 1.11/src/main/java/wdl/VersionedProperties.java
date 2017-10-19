@@ -14,6 +14,7 @@
  */
 package wdl;
 
+import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockShulkerBox;
 import net.minecraft.inventory.ContainerShulkerBox;
@@ -67,5 +68,13 @@ public class VersionedProperties {
 	 */
 	public static boolean isImportableShulkerBox(String entityID, Block block) {
 		return block instanceof BlockShulkerBox && entityID.equals(getBlockEntityID(TileEntityShulkerBox.class));
+	}
+
+	/**
+	 * Gets the class used to store the list of chunks in ChunkProviderClient.
+	 */
+	@SuppressWarnings("rawtypes")
+	public static Class<Long2ObjectMap> getChunkListClass() {
+		return Long2ObjectMap.class;
 	}
 }

@@ -17,6 +17,7 @@ package wdl;
 import java.lang.reflect.Field;
 import java.util.Map;
 
+import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
@@ -91,5 +92,13 @@ public class VersionedProperties {
 	 */
 	public static boolean isImportableShulkerBox(String entityID, Block block) {
 		return false;
+	}
+
+	/**
+	 * Gets the class used to store the list of chunks in ChunkProviderClient.
+	 */
+	@SuppressWarnings("rawtypes")
+	public static Class<Long2ObjectMap> getChunkListClass() {
+		return Long2ObjectMap.class;
 	}
 }

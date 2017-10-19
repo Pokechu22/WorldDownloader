@@ -15,6 +15,7 @@
 package wdl;
 
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.Map;
 
 import net.minecraft.block.Block;
@@ -91,5 +92,13 @@ public class VersionedProperties {
 	 */
 	public static boolean isImportableShulkerBox(String entityID, Block block) {
 		return false;
+	}
+
+	/**
+	 * Gets the class used to store the list of chunks in ChunkProviderClient.
+	 */
+	@SuppressWarnings("rawtypes")
+	public static Class<List> getChunkListClass() {
+		return List.class;
 	}
 }

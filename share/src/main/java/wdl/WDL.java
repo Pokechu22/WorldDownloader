@@ -38,7 +38,6 @@ import com.google.common.collect.Maps;
 import com.mojang.realmsclient.RealmsMainScreen;
 import com.mojang.realmsclient.dto.RealmsServer;
 
-import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -851,10 +850,20 @@ public class WDL {
 		ChunkProviderClient chunkProvider = worldClient
 				.getChunkProvider();
 		// Get the list of loaded chunks
-		@SuppressWarnings("unchecked")
-		Long2ObjectMap<Chunk> chunkMap = ReflectionUtils
-		.findAndGetPrivateField(chunkProvider, Long2ObjectMap.class);
-		List<Chunk> chunks = new ArrayList<>(chunkMap.values());
+		Object obj = ReflectionUtils.findAndGetPrivateField(chunkProvider, VersionedProperties.getChunkListClass());
+		List<Chunk> chunks;
+		if (obj instanceof List<?>) {
+			@SuppressWarnings("unchecked")
+			List<Chunk> chunkList = (List<Chunk>)obj;
+			chunks = new ArrayList<>(chunkList);
+		} else if (obj instanceof Map<?, ?>) {
+			@SuppressWarnings("unchecked")
+			Map<?, Chunk> chunkMap = (Map<?, Chunk>)obj;
+			chunks = new ArrayList<>(chunkMap.values());
+		} else {
+			// Shouldn't ever happen
+			throw new RuntimeException("Could not get ChunkProviderClient's chunk list: unexpected type for object " + obj);
+		}
 
 		progressScreen.startMajorTask(I18n.format("wdl.saveProgress.chunk.title"),
 				chunks.size());
