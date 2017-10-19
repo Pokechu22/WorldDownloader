@@ -46,7 +46,7 @@ apply plugin: 'pokechu22.test.langrenamer'
 minecraft {
     suppressMappingVersionWarnings = true
     version = "1.9.2"
-    mappings = "snapshot_20171014"
+    mappings = "snapshot_20171018"
     runDir = "run"
 
     // We don't currently want a source jar (doesn't work well for base edits, and the version info doesn't work yet)
@@ -62,6 +62,7 @@ extraSrgs {
     addSrg file('../srgs/ChunkCoordIntPairToChunkPos.srg')
     addMethods file('../srgs/liteloader_1.9_methods.csv')
     addMethods file('../srgs/1.9.2_methods.csv')
+    addFields file('../srgs/1.9.2_fields.csv')
     addPatch('net.minecraft.entity.passive.EquineEntity.java', file('../srgs/EE_1.9_1.9.2.patch'))
     addPatch('net.minecraft.server.management.PlayerManager.java', file('../srgs/PlayerManager_1.9.patch'))
 }
