@@ -88,4 +88,13 @@ public class VersionConstants {
 		// TODO: Automatically generate this somehow
 		return "4.0.1.5-SNAPSHOT";
 	}
+
+	/**
+	 * Checks if this version is one of the older, untested versions.
+	 *
+	 * @return true if this version is not tested and a disclaimer should be printed on startup
+	 */
+	public static boolean isUntestedVersion() {
+		return false;
+	}
 }

@@ -419,6 +419,7 @@ wdl.messages.updates.badHashesFound=Some files have invalid hashes!  Your instal
 wdl.messages.updates.updateCheckError=Failed to perform update check: %s.
 wdl.messages.updates.usingCachedUpdates=Using cached version list.
 wdl.messages.updates.grabingUpdatesFromGithub=Loading verison list from GitHub releases.
+wdl.messages.updates.untestedVersion=Minecraft version %s is old and is not completely tested.  If you encounter issues, report them at the %s.  If possible, please update to the newest Minecraft version.
 
 wdl.messages.permissions.init=Sending plugin channel registration.
 wdl.messages.permissions.packet0=Received settings packet #0: [canUseFunctionsUnknownToServer=%s]
