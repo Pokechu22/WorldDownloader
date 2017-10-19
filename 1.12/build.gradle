@@ -28,7 +28,7 @@ dependencies {
     testCompile 'org.mockito:mockito-core:2.8.47'
 }
 
-version = "4.0.1.5"
+version = "4.0.1.6-SNAPSHOT"
 group = "wdl"
 archivesBaseName = "WorldDownloader"
 libsDirName = "../../libs/${version}"
