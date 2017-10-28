@@ -1600,7 +1600,7 @@ public class WDL {
 		CrashReportCategory ext = report.makeCategoryDepth(
 				"World Downloader Mod - Extensions", stSize);
 		Map<String, ModInfo<?>> extensions = WDLApi.getWDLMods();
-		ext.addCrashSection("Number loaded: ", extensions.size());
+		ext.addCrashSection("Number loaded", extensions.size());
 		for (Map.Entry<String, ModInfo<?>> e : extensions.entrySet()) {
 			ext.addDetail(e.getKey(), e.getValue()::getInfo);
 		}
