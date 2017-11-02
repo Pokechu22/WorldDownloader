@@ -24,9 +24,9 @@ buildscript {
     }
 }
 
-project(':1.9').evaluationDependsOn(':share')
-project(':1.9-litemod').evaluationDependsOn(':1.9')
-project(':1.9.2').evaluationDependsOn(':share')
+// project(':1.9').evaluationDependsOn(':share')
+// project(':1.9-litemod').evaluationDependsOn(':1.9')
+// project(':1.9.2').evaluationDependsOn(':share')
 project(':1.9.4').evaluationDependsOn(':share')
 project(':1.9.4-litemod').evaluationDependsOn(':1.9.4')
 project(':1.10').evaluationDependsOn(':1.10.2')
