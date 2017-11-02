@@ -97,4 +97,14 @@ public class VersionConstants {
 	public static boolean isUntestedVersion() {
 		return false;
 	}
+
+	/**
+	 * True if this version shades the FastUtil library; false if it's included
+	 * with Minecraft directly.
+	 *
+	 * @return true if FastUtil is shaded
+	 */
+	public static boolean shadesFastUtil() {
+		return false;
+	}
 }

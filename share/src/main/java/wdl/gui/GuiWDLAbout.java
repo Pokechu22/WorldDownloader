@@ -33,6 +33,10 @@ public class GuiWDLAbout extends GuiScreen {
 
 	private static final String FORUMS_THREAD = "http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465";
 	private static final String ALL_GITHUB = "https://github.com/Pokechu22/WorldDownloader";
+	private static final String MMPLV2 = "https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md";
+
+	private static final String FASTUTIL_PAGE = "http://fastutil.di.unimi.it/";
+	private static final String APACHE_LICENSE_2_0 = "http://www.apache.org/licenses/LICENSE-2.0.html";
 
 	private TextList list;
 
@@ -40,10 +44,6 @@ public class GuiWDLAbout extends GuiScreen {
 	 * Creates a GUI with the specified parent.
 	 */
 	public GuiWDLAbout(GuiScreen parent) {
-
-
-
-
 		this.parent = parent;
 	}
 
@@ -79,6 +79,16 @@ public class GuiWDLAbout extends GuiScreen {
 		list.addLinkLine(I18n.format("wdl.gui.about.forumThread"), FORUMS_THREAD);
 		list.addBlankLine();
 		list.addLinkLine(I18n.format("wdl.gui.about.allSrc"), ALL_GITHUB);
+		list.addBlankLine();
+		list.addLinkLine(I18n.format("wdl.gui.about.license"), MMPLV2);
+
+		if (VersionConstants.shadesFastUtil()) {
+			list.addBlankLine();
+			list.addLine(I18n.format("wdl.gui.about.fastutil.blurb"));
+			list.addBlankLine();
+			list.addLinkLine(I18n.format("wdl.gui.about.fastutil.website"), FASTUTIL_PAGE);
+			list.addLinkLine(I18n.format("wdl.gui.about.fastutil.license"), APACHE_LICENSE_2_0);
+		}
 	}
 
 	@Override
