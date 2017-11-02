@@ -16,6 +16,8 @@ package com.uyjulian.LiteModWDL.mixin;
 
 import net.minecraft.crash.CrashReport;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -25,6 +27,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class MixinCrashReport {
 	@Inject(method="populateEnvironment", at=@At("RETURN"))
 	private void onCrashReportPopulateEnvironment(CallbackInfo ci) {
-		wdl.WDLHooks.onCrashReportPopulateEnvironment((CrashReport)(Object)this);
+		try {
+			wdl.WDLHooks.onCrashReportPopulateEnvironment((CrashReport)(Object)this);
+		} catch (Throwable t) {
+			try {
+				final Logger LOGGER = LogManager.getLogger();
+				LOGGER.fatal("World Downloader: Failed to add crash info", t);
+				((CrashReport)(Object)this).getCategory().addCrashSectionThrowable("World Downloader - Fatal error in crash handler (see log)", t);
+			} catch (Throwable t2) {
+				System.err.println("WDL: Double failure adding info to crash report!");
+				t.printStackTrace();
+				t2.printStackTrace();
+			}
+		}
 	}
 }
