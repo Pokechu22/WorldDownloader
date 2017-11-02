@@ -159,7 +159,7 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 		rootTag.setTag("Level", levelTag);
 		rootTag.setInteger("DataVersion", VersionConstants.getDataVersion());
 
-		addChunkToPending(chunk.getPos(), rootTag);
+		addChunkToPending(new ChunkPos(chunk.x, chunk.z), rootTag);
 	}
 
 	/**
@@ -289,7 +289,7 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 			entities.addAll(map);
 		}
 		// Add the manually saved entities.
-		for (Entity e : WDL.newEntities.get(chunk.getPos())) {
+		for (Entity e : WDL.newEntities.get(new ChunkPos(chunk.x, chunk.z))) {
 			// "Unkill" the entity, since it is killed when it is unloaded.
 			e.isDead = false;
 			entities.add(e);
@@ -298,7 +298,7 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 		for (Entity entity : entities) {
 			if (entity == null) {
 				LOGGER.warn("[WDL] Null entity in chunk at "
-						+ chunk.getPos());
+						+ new ChunkPos(chunk.x, chunk.z));
 				continue;
 			}
 
@@ -316,7 +316,7 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 				} catch (Exception ex) {
 					throw new RuntimeException("Failed to edit entity "
 							+ entity + " for chunk at "
-							+ chunk.getPos() + " with extension "
+							+ new ChunkPos(chunk.x, chunk.z) + " with extension "
 							+ info, ex);
 				}
 			}
@@ -406,7 +406,7 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 
 		Map<BlockPos, TileEntity> chunkTEMap = chunk.getTileEntityMap();
 		Map<BlockPos, NBTTagCompound> oldTEMap = getOldTileEntities(chunk);
-		Map<BlockPos, TileEntity> newTEMap = WDL.newTileEntities.get(chunk.getPos());
+		Map<BlockPos, TileEntity> newTEMap = WDL.newTileEntities.get(new ChunkPos(chunk.x, chunk.z));
 		if (newTEMap == null) {
 			newTEMap = new HashMap<>();
 		}
@@ -503,8 +503,8 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 			// chunksToSave can be accessed from multiple threads.  Note that this still
 			// doesn't handle the MC-119971-like case of the chunk being in chunksBeingSaved
 			// (but that should be rare, and this condition should not happen in the first place)
-			if ((chunkNBT = chunksToSave.get(chunk.getPos())) != null) {
-				LOGGER.warn("getOldTileEntities (and thus saveChunk) was called while a chunk was already in chunksToSave!  (location: {})", chunk.getPos(), new Exception());
+			if ((chunkNBT = chunksToSave.get(new ChunkPos(chunk.x, chunk.z))) != null) {
+				LOGGER.warn("getOldTileEntities (and thus saveChunk) was called while a chunk was already in chunksToSave!  (location: {})", new ChunkPos(chunk.x, chunk.z), new Exception());
 			} else try (DataInputStream dis = RegionFileCache.getChunkInputStream(
 					chunkSaveLocation, chunk.x, chunk.z)) {
 				if (dis == null) {
