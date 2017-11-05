@@ -1,3 +1,2 @@
-CL: net/minecraft/entity/passive/HorseType net/minecraft/entity/passive/HorseArmorType_tmp
+CL: net/minecraft/entity/passive/HorseType net/minecraft/entity/passive/HorseArmorType
 CL: net/minecraft/entity/passive/HorseArmorType net/minecraft/entity/passive/HorseType
-CL: net/minecraft/entity/passive/HorseArmorType_tmp net/minecraft/entity/passive/HorseArmorType
