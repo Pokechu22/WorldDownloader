@@ -15,6 +15,9 @@
 package wdl;
 
 import java.lang.reflect.Field;
+import java.util.function.BiConsumer;
+
+import com.google.common.annotations.VisibleForTesting;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -59,6 +62,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.village.MerchantRecipeList;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.storage.MapData;
 import wdl.api.IWorldLoadListener;
@@ -338,82 +342,13 @@ public class WDLEvents {
 		if (WDL.windowContainer instanceof ContainerChest
 				&& te instanceof TileEntityChest) {
 			if (WDL.windowContainer.inventorySlots.size() > 63) {
-				// This is messy, but it needs to be like this because
-				// the left and right chests must be in the right positions.
-
-				BlockPos pos1, pos2;
-				TileEntity te1, te2;
-
-				pos1 = WDL.lastClickedBlock;
-				te1 = te;
-
-				// We need seperate variables for the above reason --
-				// pos1 isn't always the same as chestPos1 (and thus
-				// chest1 isn't always te1).
-				BlockPos chestPos1 = null, chestPos2 = null;
-				TileEntityChest chest1 = null, chest2 = null;
-
-				pos2 = pos1.add(0, 0, 1);
-				te2 = WDL.worldClient.getTileEntity(pos2);
-				if (te2 instanceof TileEntityChest &&
-						((TileEntityChest) te2).getChestType() ==
-						((TileEntityChest) te1).getChestType()) {
-
-					chest1 = (TileEntityChest) te1;
-					chest2 = (TileEntityChest) te2;
-
-					chestPos1 = pos1;
-					chestPos2 = pos2;
-				}
-
-				pos2 = pos1.add(0, 0, -1);
-				te2 = WDL.worldClient.getTileEntity(pos2);
-				if (te2 instanceof TileEntityChest &&
-						((TileEntityChest) te2).getChestType() ==
-						((TileEntityChest) te1).getChestType()) {
-
-					chest1 = (TileEntityChest) te2;
-					chest2 = (TileEntityChest) te1;
-
-					chestPos1 = pos2;
-					chestPos2 = pos1;
-				}
-
-				pos2 = pos1.add(1, 0, 0);
-				te2 = WDL.worldClient.getTileEntity(pos2);
-				if (te2 instanceof TileEntityChest &&
-						((TileEntityChest) te2).getChestType() ==
-						((TileEntityChest) te1).getChestType()) {
-					chest1 = (TileEntityChest) te1;
-					chest2 = (TileEntityChest) te2;
-
-					chestPos1 = pos1;
-					chestPos2 = pos2;
-				}
-
-				pos2 = pos1.add(-1, 0, 0);
-				te2 = WDL.worldClient.getTileEntity(pos2);
-				if (te2 instanceof TileEntityChest &&
-						((TileEntityChest) te2).getChestType() ==
-						((TileEntityChest) te1).getChestType()) {
-					chest1 = (TileEntityChest) te2;
-					chest2 = (TileEntityChest) te1;
-
-					chestPos1 = pos2;
-					chestPos2 = pos1;
-				}
-
-				if (chest1 == null || chest2 == null ||
-						chestPos1 == null || chestPos2 == null) {
+				if (!saveDoubleChest(WDL.lastClickedBlock, (ContainerChest) WDL.windowContainer,
+						WDL.worldClient, WDL::saveTileEntity)) {
 					WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR,
 							"wdl.messages.onGuiClosedWarning.failedToFindDoubleChest");
+					// Was handled, even though there was an error.
 					return true;
 				}
-
-				saveContainerItems(WDL.windowContainer, chest1, 0);
-				saveContainerItems(WDL.windowContainer, chest2, 27);
-				WDL.saveTileEntity(chestPos1, chest1);
-				WDL.saveTileEntity(chestPos2, chest2);
 
 				saveName = "doubleChest";
 			}
@@ -607,6 +542,104 @@ public class WDLEvents {
 						"wdl.messages.generalInfo.seedSet", seed);
 			}
 		}
+	}
+
+	/**
+	 * Saves the contents of a double-chest, first identifying the location of both
+	 * chests. This method does not handle triple/quadruple/quintuple chests.
+	 *
+	 * @param clickedPos
+	 *            The position that the clicked chest is at. There must be a TE
+	 *            here.
+	 * @param container
+	 *            The container to grab items from.
+	 * @param world
+	 *            The world to query (will use {@link IBlockAccess#getTileEntity}
+	 *            and {@link IBlockAccess#getBlockState})
+	 * @param saveMethod
+	 *            The method to call to save the found chests.
+	 * @return true if successful, false if this is not a valid double-chest.
+	 */
+	@VisibleForTesting
+	static boolean saveDoubleChest(BlockPos clickedPos, ContainerChest container,
+			IBlockAccess world, BiConsumer<BlockPos, TileEntityChest> saveMethod) {
+		// This is messy, but it needs to be like this because
+		// the left and right chests must be in the right positions.
+
+		BlockPos pos1, pos2;
+		TileEntity te1, te2;
+
+		pos1 = clickedPos;
+		te1 = world.getTileEntity(clickedPos);
+		assert te1 instanceof TileEntityChest;
+
+		// We need seperate variables for the above reason --
+		// pos1 isn't always the same as chestPos1 (and thus
+		// chest1 isn't always te1).
+		BlockPos chestPos1 = null, chestPos2 = null;
+		TileEntityChest chest1 = null, chest2 = null;
+
+		pos2 = pos1.add(0, 0, 1);
+		te2 = world.getTileEntity(pos2);
+		if (te2 instanceof TileEntityChest &&
+				((TileEntityChest) te2).getChestType() ==
+				((TileEntityChest) te1).getChestType()) {
+
+			chest1 = (TileEntityChest) te1;
+			chest2 = (TileEntityChest) te2;
+
+			chestPos1 = pos1;
+			chestPos2 = pos2;
+		}
+
+		pos2 = pos1.add(0, 0, -1);
+		te2 = world.getTileEntity(pos2);
+		if (te2 instanceof TileEntityChest &&
+				((TileEntityChest) te2).getChestType() ==
+				((TileEntityChest) te1).getChestType()) {
+
+			chest1 = (TileEntityChest) te2;
+			chest2 = (TileEntityChest) te1;
+
+			chestPos1 = pos2;
+			chestPos2 = pos1;
+		}
+
+		pos2 = pos1.add(1, 0, 0);
+		te2 = world.getTileEntity(pos2);
+		if (te2 instanceof TileEntityChest &&
+				((TileEntityChest) te2).getChestType() ==
+				((TileEntityChest) te1).getChestType()) {
+			chest1 = (TileEntityChest) te1;
+			chest2 = (TileEntityChest) te2;
+
+			chestPos1 = pos1;
+			chestPos2 = pos2;
+		}
+
+		pos2 = pos1.add(-1, 0, 0);
+		te2 = world.getTileEntity(pos2);
+		if (te2 instanceof TileEntityChest &&
+				((TileEntityChest) te2).getChestType() ==
+				((TileEntityChest) te1).getChestType()) {
+			chest1 = (TileEntityChest) te2;
+			chest2 = (TileEntityChest) te1;
+
+			chestPos1 = pos2;
+			chestPos2 = pos1;
+		}
+
+		if (chest1 == null || chest2 == null ||
+				chestPos1 == null || chestPos2 == null) {
+			return false;
+		}
+
+		saveContainerItems(container, chest1, 0);
+		saveContainerItems(container, chest2, 27);
+		saveMethod.accept(chestPos1, chest1);
+		saveMethod.accept(chestPos2, chest2);
+
+		return true;
 	}
 
 	/**
