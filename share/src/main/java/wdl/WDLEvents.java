@@ -27,6 +27,7 @@ import net.minecraft.entity.item.EntityMinecartHopper;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.passive.EquineEntity;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ContainerBeacon;
 import net.minecraft.inventory.ContainerBrewingStand;
 import net.minecraft.inventory.ContainerChest;
@@ -409,8 +410,8 @@ public class WDLEvents {
 					return true;
 				}
 
-				WDL.saveContainerItems(WDL.windowContainer, chest1, 0);
-				WDL.saveContainerItems(WDL.windowContainer, chest2, 27);
+				saveContainerItems(WDL.windowContainer, chest1, 0);
+				saveContainerItems(WDL.windowContainer, chest2, 27);
 				WDL.saveTileEntity(chestPos1, chest1);
 				WDL.saveTileEntity(chestPos2, chest2);
 
@@ -418,7 +419,7 @@ public class WDLEvents {
 			}
 			// basic chest
 			else {
-				WDL.saveContainerItems(WDL.windowContainer, (TileEntityChest) te, 0);
+				saveContainerItems(WDL.windowContainer, (TileEntityChest) te, 0);
 				WDL.saveTileEntity(WDL.lastClickedBlock, te);
 				saveName = "singleChest";
 			}
@@ -441,26 +442,26 @@ public class WDLEvents {
 				&& te instanceof TileEntityBrewingStand) {
 			IInventory brewingInventory = ReflectionUtils.findAndGetPrivateField(
 					WDL.windowContainer, IInventory.class);
-			WDL.saveContainerItems(WDL.windowContainer, (TileEntityBrewingStand) te, 0);
-			WDL.saveInventoryFields(brewingInventory, (TileEntityBrewingStand) te);
+			saveContainerItems(WDL.windowContainer, (TileEntityBrewingStand) te, 0);
+			saveInventoryFields(brewingInventory, (TileEntityBrewingStand) te);
 			WDL.saveTileEntity(WDL.lastClickedBlock, te);
 			saveName = "brewingStand";
 		} else if (WDL.windowContainer instanceof ContainerDispenser
 				&& te instanceof TileEntityDispenser) {
-			WDL.saveContainerItems(WDL.windowContainer, (TileEntityDispenser) te, 0);
+			saveContainerItems(WDL.windowContainer, (TileEntityDispenser) te, 0);
 			WDL.saveTileEntity(WDL.lastClickedBlock, te);
 			saveName = "dispenser";
 		} else if (WDL.windowContainer instanceof ContainerFurnace
 				&& te instanceof TileEntityFurnace) {
 			IInventory furnaceInventory = ReflectionUtils.findAndGetPrivateField(
 					WDL.windowContainer, IInventory.class);
-			WDL.saveContainerItems(WDL.windowContainer, (TileEntityFurnace) te, 0);
-			WDL.saveInventoryFields(furnaceInventory, (TileEntityFurnace) te);
+			saveContainerItems(WDL.windowContainer, (TileEntityFurnace) te, 0);
+			saveInventoryFields(furnaceInventory, (TileEntityFurnace) te);
 			WDL.saveTileEntity(WDL.lastClickedBlock, te);
 			saveName = "furnace";
 		} else if (WDL.windowContainer instanceof ContainerHopper
 				&& te instanceof TileEntityHopper) {
-			WDL.saveContainerItems(WDL.windowContainer, (TileEntityHopper) te, 0);
+			saveContainerItems(WDL.windowContainer, (TileEntityHopper) te, 0);
 			WDL.saveTileEntity(WDL.lastClickedBlock, te);
 			saveName = "hopper";
 		} else if (WDL.windowContainer instanceof ContainerBeacon
@@ -468,8 +469,8 @@ public class WDLEvents {
 			IInventory beaconInventory =
 					((ContainerBeacon)WDL.windowContainer).getTileEntity();
 			TileEntityBeacon savedBeacon = (TileEntityBeacon)te;
-			WDL.saveContainerItems(WDL.windowContainer, savedBeacon, 0);
-			WDL.saveInventoryFields(beaconInventory, savedBeacon);
+			saveContainerItems(WDL.windowContainer, savedBeacon, 0);
+			saveInventoryFields(beaconInventory, savedBeacon);
 			WDL.saveTileEntity(WDL.lastClickedBlock, te);
 			saveName = "beacon";
 		} else if (VersionedProperties.handleShulkerGuiClosed(te)) {
@@ -627,5 +628,47 @@ public class WDLEvents {
 		}
 
 		ReflectionUtils.findAndSetPrivateField(horse, EquineEntity.class, ContainerHorseChest.class, horseInventory);
+	}
+
+	/**
+	 * Saves the items of a container to the given TileEntity.
+	 *
+	 * @param container
+	 *            The container to save from, usually {@link WDL#windowContainer} .
+	 * @param tileEntity
+	 *            The TileEntity to save to.
+	 * @param containerStartIndex
+	 *            The index in the container to start copying items from.
+	 */
+	public static void saveContainerItems(Container container,
+			IInventory tileEntity, int containerStartIndex) {
+		int containerSize = container.inventorySlots.size();
+		int inventorySize = tileEntity.getSizeInventory();
+		int containerIndex = containerStartIndex;
+		int inventoryIndex = 0;
+
+		while ((containerIndex < containerSize) && (inventoryIndex < inventorySize)) {
+			Slot slot = container.getSlot(containerIndex);
+			if (slot.getHasStack()) {
+				tileEntity.setInventorySlotContents(inventoryIndex, slot.getStack());
+			}
+			inventoryIndex++;
+			containerIndex++;
+		}
+	}
+
+	/**
+	 * Saves the fields of an inventory.
+	 * Fields are pieces of data such as furnace smelt time and
+	 * beacon effects.
+	 *
+	 * @param inventory The inventory to save from.
+	 * @param tileEntity The inventory to save to.
+	 */
+	public static void saveInventoryFields(IInventory inventory,
+			IInventory tileEntity) {
+		for (int i = 0; i < inventory.getFieldCount(); i++) {
+			tileEntity.setField(i, inventory.getField(i));
+		}
 	}
 }

@@ -57,7 +57,7 @@ public class VersionedProperties {
 	public static boolean handleShulkerGuiClosed(TileEntity te) {
 		if (WDL.windowContainer instanceof ContainerShulkerBox
 				&& te instanceof TileEntityShulkerBox) {
-			WDL.saveContainerItems(WDL.windowContainer, (TileEntityShulkerBox) te, 0);
+			WDLEvents.saveContainerItems(WDL.windowContainer, (TileEntityShulkerBox) te, 0);
 			WDL.saveTileEntity(WDL.lastClickedBlock, te);
 			return true;
 		}
