@@ -83,8 +83,6 @@ public abstract class AbstractWorldBehaviorTest {
 
 	/**
 	 * Creates a mock world, returning air for blocks and null for TEs.
-	 *
-	 * @return A mock world, with default behavior.
 	 */
 	protected void makeMockWorld() {
 		clientWorld = mock(World.class);
@@ -101,28 +99,20 @@ public abstract class AbstractWorldBehaviorTest {
 	/**
 	 * Puts the given block into the mock worlds at the given position.
 	 *
-	 * @param world A mock world
-	 * @param x x-coordinate
-	 * @param y y-coordinate
-	 * @param z z-coordinate
+	 * @param pos The position
 	 * @param block The block to put
 	 */
-	protected void placeBlockAt(int x, int y, int z, Block block) {
-		placeBlockAt(x, y, z, block.getDefaultState());
+	protected void placeBlockAt(BlockPos pos, Block block) {
+		placeBlockAt(pos, block.getDefaultState());
 	}
 
 	/**
 	 * Puts the given block into the mock worlds at the given position.
 	 *
-	 * @param world A mock world
-	 * @param x x-coordinate
-	 * @param y y-coordinate
-	 * @param z z-coordinate
+	 * @param pos The position
 	 * @param block The block to put
 	 */
-	protected void placeBlockAt(int x, int y, int z, IBlockState state) {
-		BlockPos pos = new BlockPos(x, y, z);
-
+	protected void placeBlockAt(BlockPos pos, IBlockState state) {
 		when(clientWorld.getBlockState(pos)).thenReturn(state);
 		when(serverWorld.getBlockState(pos)).thenReturn(state);
 	}
@@ -131,15 +121,10 @@ public abstract class AbstractWorldBehaviorTest {
 	 * Puts the given block entity into the mock worlds at the given position.
 	 * The server world gets the exact block entity; the client gets a default one.
 	 *
-	 * @param world A mock world
-	 * @param x x-coordinate
-	 * @param y y-coordinate
-	 * @param z z-coordinate
+	 * @param pos The position
 	 * @param te The block entity to put
 	 */
-	protected void placeTEAt(int x, int y, int z, TileEntity te) {
-		BlockPos pos = new BlockPos(x, y, z);
-
+	protected void placeTEAt(BlockPos pos, TileEntity te) {
 		origTEPoses.add(pos);
 
 		IBlockState curState = clientWorld.getBlockState(pos);
@@ -154,12 +139,9 @@ public abstract class AbstractWorldBehaviorTest {
 	/**
 	 * Makes a container as the client would have.
 	 *
-	 * @param x x-coordinate of the block to open
-	 * @param y y-coordinate of the block to open
-	 * @param z z-coordinate of the block to open
+	 * @param pos Position of the container to open
 	 */
-	protected Container makeClientContainer(int x, int y, int z) {
-		BlockPos pos = new BlockPos(x, y, z);
+	protected Container makeClientContainer(BlockPos pos) {
 		// This is a bit of a mess, but inventories are a bit of a mess.
 		// First, prepare an IInventory as the server would see it:
 		TileEntity serverTE = serverWorld.getTileEntity(pos);

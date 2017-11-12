@@ -23,6 +23,7 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityChest;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 
 public class DoubleChestTest extends AbstractWorldBehaviorTest {
@@ -32,22 +33,29 @@ public class DoubleChestTest extends AbstractWorldBehaviorTest {
 		// TODO: Handle orientation of chests
 		// Not important in this version, but will matter later
 
-		makeMockWorld();
+		// TODO: Maybe vary this, might help with +/- issues
+		BlockPos center = new BlockPos(0, 0, 0);
 
-		placeBlockAt(0, 0, 0, Blocks.CHEST);
-		placeBlockAt(0, 0, 1, Blocks.CHEST);
-		TileEntityChest te1 = new TileEntityChest();
-		te1.setInventorySlotContents(2, new ItemStack(Items.BEEF));
-		TileEntityChest te2 = new TileEntityChest();
-		te1.setInventorySlotContents(8, new ItemStack(Items.COOKED_BEEF));
-		placeTEAt(0, 0, 0, te1);
-		placeTEAt(0, 0, 1, te2);
+		for (EnumFacing direction : EnumFacing.Plane.HORIZONTAL) {
+			makeMockWorld();
 
-		ContainerChest container = (ContainerChest) makeClientContainer(0, 0, 0);
+			BlockPos offset = center.offset(direction);
 
-		assertTrue(WDLEvents.saveDoubleChest(new BlockPos(0, 0, 0), container, clientWorld, tileEntities::put));
+			placeBlockAt(center, Blocks.CHEST);
+			placeBlockAt(offset, Blocks.CHEST);
+			TileEntityChest te1 = new TileEntityChest();
+			te1.setInventorySlotContents(2, new ItemStack(Items.BEEF));
+			TileEntityChest te2 = new TileEntityChest();
+			te1.setInventorySlotContents(8, new ItemStack(Items.COOKED_BEEF));
+			placeTEAt(center, te1);
+			placeTEAt(offset, te2);
 
-		checkWorld();
+			ContainerChest container = (ContainerChest) makeClientContainer(center);
+
+			assertTrue(WDLEvents.saveDoubleChest(center, container, clientWorld, tileEntities::put));
+
+			checkWorld();
+		}
 	}
 
 }
