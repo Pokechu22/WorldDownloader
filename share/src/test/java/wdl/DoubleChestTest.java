@@ -15,6 +15,7 @@
 package wdl;
 
 import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.*;
 
 import org.junit.Test;
 
@@ -46,7 +47,7 @@ public class DoubleChestTest extends AbstractWorldBehaviorTest {
 			TileEntityChest te1 = new TileEntityChest();
 			te1.setInventorySlotContents(2, new ItemStack(Items.BEEF));
 			TileEntityChest te2 = new TileEntityChest();
-			te1.setInventorySlotContents(8, new ItemStack(Items.COOKED_BEEF));
+			te2.setInventorySlotContents(8, new ItemStack(Items.COOKED_BEEF));
 			placeTEAt(center, te1);
 			placeTEAt(offset, te2);
 
@@ -54,8 +55,49 @@ public class DoubleChestTest extends AbstractWorldBehaviorTest {
 
 			assertTrue(WDLEvents.saveDoubleChest(center, container, clientWorld, tileEntities::put));
 
-			checkWorld();
+			checkAllTEs();
 		}
 	}
 
+	@Test
+	public void testRegularAndTrappedChest() {
+		// TODO: As with before, orientation
+
+		// TODO: Maybe vary this, might help with +/- issues
+		BlockPos center = new BlockPos(0, 0, 0);
+
+		for (EnumFacing direction : EnumFacing.Plane.HORIZONTAL) {
+			makeMockWorld();
+
+			BlockPos offset = center.offset(direction);
+
+			placeBlockAt(center, Blocks.CHEST);
+			placeBlockAt(offset, Blocks.CHEST);
+			TileEntityChest te1 = new TileEntityChest();
+			te1.setInventorySlotContents(2, new ItemStack(Items.BEEF));
+			TileEntityChest te2 = new TileEntityChest();
+			te2.setInventorySlotContents(8, new ItemStack(Items.COOKED_BEEF));
+			placeTEAt(center, te1);
+			placeTEAt(offset, te2);
+
+			for (EnumFacing direction2 : EnumFacing.Plane.HORIZONTAL) {
+				if (direction2 == direction) continue;
+				BlockPos offset2 = center.offset(direction2);
+				placeBlockAt(offset2, Blocks.TRAPPED_CHEST);
+				TileEntityChest badTE = new TileEntityChest();
+				badTE.setInventorySlotContents(0, new ItemStack(Blocks.TNT));
+				placeTEAt(offset2, badTE);
+			}
+
+			ContainerChest container = (ContainerChest) makeClientContainer(center);
+
+			assertTrue(WDLEvents.saveDoubleChest(center, container, clientWorld, tileEntities::put));
+
+			// Only those two were saved
+			assertThat(tileEntities.keySet(), containsInAnyOrder(center, offset));
+
+			assertThat(tileEntities.get(center), hasSameNBTAs(te1));
+			assertThat(tileEntities.get(offset), hasSameNBTAs(te2));
+		}
+	}
 }

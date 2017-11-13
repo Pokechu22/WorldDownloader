@@ -24,8 +24,13 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
 
 import net.minecraft.block.Block;
@@ -64,7 +69,7 @@ public abstract class AbstractWorldBehaviorTest {
 	/** A player entity.  Has a valid inventory. */
 	protected EntityPlayer player = mock(EntityPlayer.class);
 	/** A set containing all original TEs. */
-	protected Set<BlockPos> origTEPoses;
+	private Set<BlockPos> origTEPoses;
 	/** A map of block entities for the user to save into. */
 	protected Map<BlockPos, TileEntity> tileEntities;
 
@@ -130,10 +135,13 @@ public abstract class AbstractWorldBehaviorTest {
 		IBlockState curState = clientWorld.getBlockState(pos);
 		BlockContainer curBlock = (BlockContainer)(curState.getBlock());
 		TileEntity defaultAtPos = curBlock.createNewTileEntity(clientWorld, curBlock.getMetaFromState(curState));
+		defaultAtPos.setWorld(clientWorld);
+		defaultAtPos.setPos(pos);
 
 		when(clientWorld.getTileEntity(pos)).thenReturn(defaultAtPos);
 		when(serverWorld.getTileEntity(pos)).thenReturn(te);
 		te.setWorld(serverWorld);
+		te.setPos(pos);
 	}
 
 	/**
@@ -206,19 +214,50 @@ public abstract class AbstractWorldBehaviorTest {
 	/**
 	 * Checks that the saved world matches the original.
 	 */
-	protected void checkWorld() {
+	protected void checkAllTEs() {
 		assertThat("Must save all TEs", tileEntities.keySet(), is(origTEPoses));
 
 		for (BlockPos pos : origTEPoses) {
-			TileEntity server = serverWorld.getTileEntity(pos);
-			TileEntity saved = tileEntities.get(pos);
+			TileEntity serverTE = serverWorld.getTileEntity(pos);
+			TileEntity savedTE = tileEntities.get(pos);
 
-			NBTTagCompound serverNBT = new NBTTagCompound();
-			server.writeToNBT(serverNBT);
-			NBTTagCompound savedNBT = new NBTTagCompound();
-			saved.writeToNBT(savedNBT);
-
-			assertThat(savedNBT, is(serverNBT));
+			assertThat(savedTE, hasSameNBTAs(serverTE));
 		}
+	}
+
+	protected static class HasSameNBT extends TypeSafeMatcher<TileEntity> {
+		private final TileEntity serverTE;
+
+		public HasSameNBT(TileEntity serverTE) {
+			this.serverTE = serverTE;
+		}
+
+		@Override
+		protected boolean matchesSafely(@Nonnull TileEntity te) {
+			return getNBT(serverTE).equals(getNBT(te));
+		}
+
+		@Override
+		public void describeTo(@Nonnull Description description) {
+			description.appendText("a block entity that was equal to ").appendValue(serverTE)
+					.appendText(" with this NBT ").appendValue(getNBT(serverTE));
+		}
+
+		@Override
+		protected void describeMismatchSafely(@Nonnull TileEntity te,
+				@Nonnull Description mismatchDescription) {
+			mismatchDescription.appendText("was ").appendValue(getNBT(te))
+					.appendText(" (te: ").appendValue(te).appendText(")");
+		}
+
+		private NBTTagCompound getNBT(TileEntity te) {
+			NBTTagCompound tag = new NBTTagCompound();
+			te.writeToNBT(tag);
+			return tag;
+		}
+	}
+
+	protected static Matcher<TileEntity> hasSameNBTAs(TileEntity serverTE) {
+		return new HasSameNBT(serverTE);
 	}
 }
