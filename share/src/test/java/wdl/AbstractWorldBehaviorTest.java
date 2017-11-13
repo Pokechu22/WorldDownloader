@@ -50,6 +50,7 @@ import net.minecraft.inventory.ContainerFurnace;
 import net.minecraft.inventory.ContainerHopper;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryBasic;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -180,7 +181,12 @@ public abstract class AbstractWorldBehaviorTest {
 		}
 		// Copy items and fields (this normally happens later, but whatever)
 		for (int i = 0; i < serverInv.getSizeInventory(); i++) {
-			clientInv.setInventorySlotContents(i, serverInv.getStackInSlot(i).copy());
+			ItemStack serverItem = serverInv.getStackInSlot(i);
+			if (serverItem == null) {
+				// In older versions with nullable items
+				continue;
+			}
+			clientInv.setInventorySlotContents(i, serverItem.copy());
 		}
 		for (int i = 0; i < serverInv.getFieldCount(); i++) {
 			clientInv.setField(i, serverInv.getField(i));
