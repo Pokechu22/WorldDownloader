@@ -31,7 +31,7 @@ import org.apache.logging.log4j.Logger;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
-import org.junit.Before;
+import org.junit.BeforeClass;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
@@ -74,13 +74,13 @@ public abstract class AbstractWorldBehaviorTest {
 	/** A map of block entities for the user to save into. */
 	protected Map<BlockPos, TileEntity> tileEntities;
 
-	@Before
-	public void initBootstarp() {
+	@BeforeClass
+	public static void initBootstarp() {
 		if (Bootstrap.isRegistered()) {
-			LOGGER.debug("Bootstrap already initialized. ({})", this.getClass());
+			LOGGER.warn("Bootstrap already initialized.");
 			return;
 		}
-		LOGGER.debug("Initializing bootstrap... ({})", this.getClass());
+		LOGGER.debug("Initializing bootstrap...");
 		Bootstrap.register();
 		LOGGER.debug("Initialized bootstrap.");
 		// Note: not checking Bootstrap.hasErrored as that didn't exist in older
