@@ -22,6 +22,7 @@ import com.google.common.annotations.VisibleForTesting;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.command.CommandException;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.IMerchant;
@@ -363,7 +364,17 @@ public class WDLEvents {
 			}
 			// basic chest
 			else {
+				// Note: It would look like getDisplayName should work
+				// and that you'd be able to identify an ITextComponent as either
+				// a translation component or a text component, but that'd be wrong
+				// due to strange server/client stuff that I haven't fully explored.
+				String title = ((ContainerChest) WDL.windowContainer).getLowerChestInventory().getName();
+
 				saveContainerItems(WDL.windowContainer, (TileEntityChest) te, 0);
+				if (!title.equals(I18n.format("container.chest"))) {
+					// Custom name set
+					((TileEntityChest)te).setCustomName(title);
+				}
 				WDL.saveTileEntity(WDL.lastClickedBlock, te);
 				saveName = "singleChest";
 			}
@@ -645,6 +656,22 @@ public class WDLEvents {
 
 		saveContainerItems(container, chest1, 0);
 		saveContainerItems(container, chest2, 27);
+
+		// Custom name stuff:
+		// Note: It would look like getDisplayName should work
+		// and that you'd be able to identify an ITextComponent as either
+		// a translation component or a text component, but that'd be wrong
+		// due to strange server/client stuff that I haven't fully explored.
+		String title = container.getLowerChestInventory().getName();
+		// Due to normal I18n not being available in unit tests
+		String expected = new TextComponentTranslation("container.chestDouble").getUnformattedText();
+		if (!title.equals(expected)) {
+			// This is NOT server-accurate.  But making it correct is not easy.
+			// Only one of the chests needs to have the name.
+			chest1.setCustomName(title);
+			chest2.setCustomName(title);
+		}
+
 		saveMethod.accept(chestPos1, chest1);
 		saveMethod.accept(chestPos2, chest2);
 
