@@ -120,5 +120,9 @@ fixMcSources {
 // Ensure that the API code is in the jar
 jar {
     from sourceSets.api.output
-    from configurations.shade.collect { it.isDirectory() ? it : zipTree(it) }
+    configurations.shade.each {
+        from(zipTree(it)) {
+            exclude 'META-INF', 'META-INF/**'
+        }
+    }
 }

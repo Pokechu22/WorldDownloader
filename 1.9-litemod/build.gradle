@@ -148,5 +148,9 @@ jar {
     from sourceSets.mixin.output
     from sourceSets.api.output
     from litemod.outputs
-    from configurations.shade.collect { it.isDirectory() ? it : zipTree(it) }
+    configurations.shade.each {
+        from(zipTree(it)) {
+            exclude 'META-INF', 'META-INF/**'
+        }
+    }
 }
