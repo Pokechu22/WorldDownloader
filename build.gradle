@@ -20,7 +20,7 @@ buildscript {
         // NOTE: must be compiled manually, not currently in any repos
         // Download https://github.com/Pokechu22/ForgeGradle-extensions and
         // then run 'gradlew install'
-        // classpath 'pokechu22.test.begradle:begradle:0.1.2@jar'
+        // classpath 'pokechu22.test.begradle:begradle:0.1.3-SNAPSHOT@jar'
     }
 }
 
@@ -48,6 +48,7 @@ project(':1.12.2-litemod').evaluationDependsOn(':1.12.2')
     // Java 8 is required now
     subproject.apply plugin: 'java' // needed to actually access java versions
     subproject.sourceCompatibility = '1.8'
+apply plugin: 'pokechu22.test.noinplacereobf'
     subproject.targetCompatibility = '1.8'
 
     subproject.tasks.withType(JavaCompile) { javaTask ->

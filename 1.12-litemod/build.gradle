@@ -20,7 +20,7 @@ buildscript {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
         classpath 'commons-io:commons-io:2.5'
         classpath 'com.googlecode.java-diff-utils:diffutils:1.3.0'
-        classpath 'pokechu22.test.begradle:begradle:0.1.2@jar'
+        classpath 'pokechu22.test.begradle:begradle:0.1.3-SNAPSHOT@jar'
         classpath 'org.spongepowered:mixingradle:0.6-SNAPSHOT'
     }
 }
@@ -41,6 +41,7 @@ libsDirName = "../../libs/${version}"
 apply plugin: 'net.minecraftforge.gradle.liteloader'
 apply plugin: 'pokechu22.test.customsrg'
 apply plugin: 'org.spongepowered.mixin'
+apply plugin: 'pokechu22.test.noinplacereobf'
 
 minecraft {
     version = "1.12"
