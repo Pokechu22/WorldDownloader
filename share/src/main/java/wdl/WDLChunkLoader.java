@@ -32,6 +32,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockBeacon;
 import net.minecraft.block.BlockBrewingStand;
 import net.minecraft.block.BlockChest;
+import net.minecraft.block.BlockCommandBlock;
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.block.BlockDropper;
 import net.minecraft.block.BlockFurnace;
@@ -47,6 +48,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityBeacon;
 import net.minecraft.tileentity.TileEntityBrewingStand;
 import net.minecraft.tileentity.TileEntityChest;
+import net.minecraft.tileentity.TileEntityCommandBlock;
 import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.tileentity.TileEntityDropper;
 import net.minecraft.tileentity.TileEntityFurnace;
@@ -587,6 +589,8 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 		} else if (block instanceof BlockHopper && entityID.equals(VersionedProperties.getBlockEntityID(TileEntityHopper.class))) {
 			return true;
 		} else if (block instanceof BlockBeacon && entityID.equals(VersionedProperties.getBlockEntityID(TileEntityBeacon.class))) {
+			return true;
+		} else if (block instanceof BlockCommandBlock && entityID.equals(VersionedProperties.getBlockEntityID(TileEntityCommandBlock.class))) {
 			return true;
 		} else if (VersionedProperties.isImportableShulkerBox(entityID, block)) {
 			return true;
