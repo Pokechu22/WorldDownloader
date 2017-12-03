@@ -377,6 +377,7 @@ wdl.messages.onGuiClosedInfo.savedTileEntity.doubleChest=Saved double chest cont
 wdl.messages.onGuiClosedInfo.savedTileEntity.enderChest=Saved ender chest contents.
 wdl.messages.onGuiClosedInfo.savedTileEntity.brewingStand=Saved brewing stand contents.
 wdl.messages.onGuiClosedInfo.savedTileEntity.dispenser=Saved dispenser contents.
+wdl.messages.onGuiClosedInfo.savedTileEntity.dropper=Saved dropper contents.
 wdl.messages.onGuiClosedInfo.savedTileEntity.furnace=Saved furnace contents.
 wdl.messages.onGuiClosedInfo.savedTileEntity.hopper=Saved hopper contents.
 wdl.messages.onGuiClosedInfo.savedTileEntity.beacon=Saved beacon effects.

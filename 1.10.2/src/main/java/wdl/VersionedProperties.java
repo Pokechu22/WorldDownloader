@@ -32,6 +32,7 @@ import wdl.handler.block.BlockHandler;
 import wdl.handler.block.BrewingStandHandler;
 import wdl.handler.block.ChestHandler;
 import wdl.handler.block.DispenserHandler;
+import wdl.handler.block.DropperHandler;
 import wdl.handler.block.FurnaceHandler;
 import wdl.handler.block.HopperHandler;
 
@@ -99,6 +100,7 @@ public class VersionedProperties {
 			new BrewingStandHandler(),
 			new ChestHandler(),
 			new DispenserHandler(),
+			new DropperHandler(),
 			new FurnaceHandler(),
 			new HopperHandler()
 	);
