@@ -492,7 +492,7 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 	 * {@link #shouldImportTileEntity(String, BlockPos)} for details.
 	 *
 	 * @param chunk
-	 *            The chunk to import tile entities from.
+	 *            The chunk that currently exists in that location
 	 * @return A map of positions to tile entities.
 	 */
 	public Map<BlockPos, NBTTagCompound> getOldTileEntities(Chunk chunk) {
@@ -563,13 +563,13 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 	 *            The location of the tile entity, as created by its 'x', 'y',
 	 *            and 'z' tags.
 	 * @param block
-	 *            The block at the given position.
+	 *            The block in the current world at the given position.
 	 * @param tileEntityNBT
 	 *            The full NBT tag of the existing tile entity. May be used if
 	 *            further identification is needed.
 	 * @param chunk
-	 *            The chunk for which entities are being imported. May be used
-	 *            if further identification is needed (eg nearby blocks).
+	 *            The (current) chunk for which entities are being imported. May be used
+	 *            if further identification is needed (e.g. nearby blocks).
 	 * @return <code>true</code> if that tile entity should be imported.
 	 */
 	public boolean shouldImportTileEntity(String entityID, BlockPos pos,
@@ -591,7 +591,18 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 		} else if (block instanceof BlockBeacon && entityID.equals(VersionedProperties.getBlockEntityID(TileEntityBeacon.class))) {
 			return true;
 		} else if (block instanceof BlockCommandBlock && entityID.equals(VersionedProperties.getBlockEntityID(TileEntityCommandBlock.class))) {
-			return true;
+			// Only import command blocks if the current world doesn't have a command set
+			// for the one there, as WDL doesn't explicitly save them so we need to use the
+			// one currently present in the world.
+			TileEntity temp = chunk.getTileEntity(pos, Chunk.EnumCreateEntityType.CHECK);
+			if (temp == null || !(temp instanceof TileEntityCommandBlock)) {
+				// Bad/missing data currently there, import the old data
+				return true;
+			}
+			TileEntityCommandBlock te = (TileEntityCommandBlock) temp;
+			boolean currentBlockHasCommand = !te.getCommandBlockLogic().getCommand().isEmpty();
+			// Only import if the current command block has no command.
+			return !currentBlockHasCommand;
 		} else if (VersionedProperties.isImportableShulkerBox(entityID, block)) {
 			return true;
 		}
