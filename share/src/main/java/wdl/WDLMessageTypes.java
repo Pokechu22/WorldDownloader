@@ -65,8 +65,7 @@ public enum WDLMessageTypes implements IWDLMessageType {
 		this.textColor = textColor;
 		this.descriptionKey = i18nKey + ".description";
 		this.enabledByDefault = enabledByDefault;
-
-		WDLMessages.registerMessage(this.name(), this, category);
+		this.category = category;
 	}
 
 	/**
@@ -89,6 +88,10 @@ public enum WDLMessageTypes implements IWDLMessageType {
 	 * Whether this type of message is enabled by default.
 	 */
 	private final boolean enabledByDefault;
+	/**
+	 * The category of this type.  Field is only used for registration.
+	 */
+	final MessageTypeCategory category;
 
 	@Override
 	public String getDisplayName() {

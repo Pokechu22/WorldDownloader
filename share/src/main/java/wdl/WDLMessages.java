@@ -463,4 +463,10 @@ public class WDLMessages {
 
 		return component;
 	}
+
+	static {
+		for (WDLMessageTypes type : WDLMessageTypes.values()) {
+			registerMessage(type.name(), type, type.category);
+		}
+	}
 }
