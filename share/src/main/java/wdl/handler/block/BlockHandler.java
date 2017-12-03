@@ -60,6 +60,37 @@ public abstract class BlockHandler<B extends TileEntity, C extends Container> {
 	}
 
 	/**
+	 * Saves the contents of a block entity from the container. This method casts
+	 * its parameters to combat type erasure.
+	 *
+	 * @param clickedPos
+	 *            The position that the clicked block is at. It is assumed that
+	 *            blockEntity is at that position.
+	 * @param container
+	 *            The container to grab items from. Must be an instance of
+	 *            <code>B</code>.
+	 * @param blockEntity
+	 *            The block entity at the given position. Must be an instance of
+	 *            <code>C</code>.
+	 * @param world
+	 *            The world to query if more information is needed.
+	 * @param saveMethod
+	 *            The method to call to save block entities.
+	 * @return A translation key to put into chat describing what was saved.
+	 * @throws HandlerException
+	 *             When something is handled wrong.
+	 * @throws ClassCastException
+	 *             If container or blockEntity are not instances of the handled class.
+	 */
+	public final @Nonnull String handleCasting(@Nonnull BlockPos clickedPos, @Nonnull Container container,
+			@Nonnull TileEntity blockEntity, @Nonnull IBlockAccess world,
+			@Nonnull BiConsumer<BlockPos, B> saveMethod) throws HandlerException, ClassCastException {
+		B b = blockEntityClass.cast(blockEntity);
+		C c = containerClass.cast(container);
+		return handle(clickedPos, c, b, world, saveMethod);
+	}
+
+	/**
 	 * Saves the contents of a block entity from the container.
 	 *
 	 * @param clickedPos

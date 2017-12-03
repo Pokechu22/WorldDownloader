@@ -44,7 +44,6 @@ import net.minecraft.profiler.Profiler;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityBeacon;
 import net.minecraft.tileentity.TileEntityBrewingStand;
-import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.tileentity.TileEntityEnderChest;
 import net.minecraft.tileentity.TileEntityFurnace;
@@ -64,8 +63,8 @@ import net.minecraft.world.storage.MapData;
 import wdl.api.IWorldLoadListener;
 import wdl.api.WDLApi;
 import wdl.api.WDLApi.ModInfo;
+import wdl.handler.block.BlockHandler;
 import wdl.handler.block.BlockHandler.HandlerException;
-import wdl.handler.block.ChestHandler;
 import wdl.update.WDLUpdateChecker;
 
 /**
@@ -346,13 +345,17 @@ public class WDLEvents {
 			return true;
 		}
 
-		if (WDL.windowContainer instanceof ContainerChest
-				&& te instanceof TileEntityChest) {
+		BlockHandler<? extends TileEntity, ? extends Container> handler =
+				VersionedProperties.getHandler(te.getClass(), WDL.windowContainer.getClass());
+		if (handler != null) {
 			try {
-				new ChestHandler().handle(WDL.lastClickedBlock, (ContainerChest) WDL.windowContainer,
-						(TileEntityChest) te, WDL.worldClient, WDL::saveTileEntity);
+				String msg = handler.handleCasting(WDL.lastClickedBlock, WDL.windowContainer,
+						te, WDL.worldClient, WDL::saveTileEntity);
+				WDLMessages.chatMessageTranslated(WDLMessageTypes.ON_GUI_CLOSED_INFO, msg);
+				return true;
 			} catch (HandlerException e) {
 				WDLMessages.chatMessageTranslated(e.messageType, e.translationKey, e.args);
+				return false;
 			}
 		} else if (WDL.windowContainer instanceof ContainerChest
 				&& te instanceof TileEntityEnderChest) {

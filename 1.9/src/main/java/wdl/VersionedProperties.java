@@ -14,14 +14,21 @@
  */
 package wdl;
 
+import javax.annotation.Nullable;
+
+import com.google.common.collect.ImmutableList;
+
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
 import net.minecraft.block.Block;
+import net.minecraft.inventory.Container;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.world.World;
+import wdl.handler.block.BlockHandler;
+import wdl.handler.block.ChestHandler;
 
 /**
  * Helper that determines version-specific information about things, such
@@ -77,6 +84,33 @@ public class VersionedProperties {
 	public static String getBlockEntityID(Class<? extends TileEntity> clazz) {
 		// 1.10-: There is no nice way to get the ID; use reflection
 		return TE_REVERSE_MAP.getOrDefault(clazz, "");
+	}
+
+	/**
+	 * All supported {@link BlockHandler}s.  Each type will only be represented once.
+	 */
+	public static final ImmutableList<BlockHandler<?, ?>> BLOCK_HANDLERS = ImmutableList.of(
+			new ChestHandler()
+	);
+
+	/**
+	 * Looks up the handler that handles the given block entity/container combo.
+	 *
+	 * @param blockEntityClass The type for the block entity.
+	 * @param containerClass The type for the container.
+	 * @return The handler, or null if none is found.
+	 */
+	@SuppressWarnings("unchecked")
+	@Nullable
+	public static <B extends TileEntity, C extends Container> BlockHandler<B, C> getHandler(Class<B> blockEntityClass, Class<C> containerClass) {
+		for (BlockHandler<?, ?> h : VersionedProperties.BLOCK_HANDLERS) {
+			if (h.getBlockEntityClass().equals(blockEntityClass) &&
+					h.getContainerClass().equals(containerClass)) {
+				return (BlockHandler<B, C>)h;
+			}
+		}
+
+		return null;
 	}
 
 	/**
