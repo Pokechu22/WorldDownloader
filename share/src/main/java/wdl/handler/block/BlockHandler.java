@@ -31,31 +31,31 @@ import wdl.api.IWDLMessageType;
 public abstract class BlockHandler<B extends TileEntity, C extends Container> {
 	@SuppressWarnings("serial")
 	public static class HandlerException extends Exception {
-		public HandlerException(@Nonnull String translationKey, Object... args) {
+		public HandlerException(@Nonnull String translationKey, @Nonnull Object... args) {
 			this(WDLMessageTypes.ON_GUI_CLOSED_WARNING, translationKey);
 		}
-		public HandlerException(@Nonnull IWDLMessageType messageType, @Nonnull String translationKey, Object... args) {
+		public HandlerException(@Nonnull IWDLMessageType messageType, @Nonnull String translationKey, @Nonnull Object... args) {
 			this.translationKey = translationKey;
 			this.messageType = messageType;
 			this.args = args;
 		}
-		public final String translationKey;
-		public final IWDLMessageType messageType;
-		public final Object[] args;
+		public final @Nonnull String translationKey;
+		public final @Nonnull IWDLMessageType messageType;
+		public final @Nonnull Object[] args;
 	}
 
-	protected BlockHandler(Class<B> blockEntityClass, Class<C> containerClass) {
+	protected BlockHandler(@Nonnull Class<B> blockEntityClass, @Nonnull Class<C> containerClass) {
 		this.blockEntityClass = blockEntityClass;
 		this.containerClass = containerClass;
 	}
-	protected final Class<B> blockEntityClass;
-	protected final Class<C> containerClass;
+	protected final @Nonnull Class<B> blockEntityClass;
+	protected final @Nonnull Class<C> containerClass;
 	/** Gets the type of block entity handled by this. */
-	public final Class<B> getBlockEntityClass() {
+	public final @Nonnull Class<B> getBlockEntityClass() {
 		return blockEntityClass;
 	}
 	/** Gets the type of container handled by this. */
-	public final Class<C> getContainerClass() {
+	public final @Nonnull Class<C> getContainerClass() {
 		return containerClass;
 	}
 
@@ -73,12 +73,13 @@ public abstract class BlockHandler<B extends TileEntity, C extends Container> {
 	 *            The world to query if more information is needed.
 	 * @param saveMethod
 	 *            The method to call to save block entities.
-	 * @return A translation key to put into chat.
+	 * @return A translation key to put into chat describing what was saved.
 	 * @throws HandlerException
 	 *             When something is handled wrong.
 	 */
-	public abstract String handle(BlockPos clickedPos, C container, B blockEntity,
-			IBlockAccess world, BiConsumer<BlockPos, B> saveMethod) throws HandlerException;
+	public abstract @Nonnull String handle(@Nonnull BlockPos clickedPos, @Nonnull C container,
+			@Nonnull B blockEntity, @Nonnull IBlockAccess world,
+			@Nonnull BiConsumer<BlockPos, B> saveMethod) throws HandlerException;
 
 	/**
 	 * Saves the items of a container to the given TileEntity.
@@ -90,8 +91,8 @@ public abstract class BlockHandler<B extends TileEntity, C extends Container> {
 	 * @param containerStartIndex
 	 *            The index in the container to start copying items from.
 	 */
-	protected static void saveContainerItems(Container container,
-			IInventory tileEntity, int containerStartIndex) {
+	protected static void saveContainerItems(@Nonnull Container container,
+			@Nonnull IInventory tileEntity, int containerStartIndex) {
 		int containerSize = container.inventorySlots.size();
 		int inventorySize = tileEntity.getSizeInventory();
 		int containerIndex = containerStartIndex;
@@ -115,8 +116,8 @@ public abstract class BlockHandler<B extends TileEntity, C extends Container> {
 	 * @param inventory The inventory to save from.
 	 * @param tileEntity The inventory to save to.
 	 */
-	protected static void saveInventoryFields(IInventory inventory,
-			IInventory tileEntity) {
+	protected static void saveInventoryFields(@Nonnull IInventory inventory,
+			@Nonnull IInventory tileEntity) {
 		for (int i = 0; i < inventory.getFieldCount(); i++) {
 			tileEntity.setField(i, inventory.getField(i));
 		}

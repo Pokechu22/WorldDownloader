@@ -16,6 +16,8 @@ package wdl.handler.block;
 
 import java.util.function.BiConsumer;
 
+import javax.annotation.Nonnull;
+
 import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.tileentity.TileEntity;
@@ -31,8 +33,9 @@ public class ChestHandler extends BlockHandler<TileEntityChest, ContainerChest> 
 	}
 
 	@Override
-	public String handle(BlockPos clickedPos, ContainerChest container, TileEntityChest blockEntity,
-			IBlockAccess world, BiConsumer<BlockPos, TileEntityChest> saveMethod) throws HandlerException {
+	public @Nonnull String handle(@Nonnull BlockPos clickedPos, @Nonnull ContainerChest container,
+			@Nonnull TileEntityChest blockEntity, @Nonnull IBlockAccess world,
+			@Nonnull BiConsumer<BlockPos, TileEntityChest> saveMethod) throws HandlerException {
 		if (container.inventorySlots.size() > 63) {
 			return saveDoubleChest(clickedPos, container, blockEntity, world, saveMethod);
 		} else {
@@ -42,8 +45,9 @@ public class ChestHandler extends BlockHandler<TileEntityChest, ContainerChest> 
 	/**
 	 * Saves the contents of a single chest.
 	 */
-	private String saveSingleChest(BlockPos clickedPos, ContainerChest container, TileEntityChest blockEntity,
-			IBlockAccess world, BiConsumer<BlockPos, TileEntityChest> saveMethod) throws HandlerException {
+	private @Nonnull String saveSingleChest(@Nonnull BlockPos clickedPos, @Nonnull ContainerChest container,
+			@Nonnull TileEntityChest blockEntity, @Nonnull IBlockAccess world,
+			@Nonnull BiConsumer<BlockPos, TileEntityChest> saveMethod) throws HandlerException {
 		// Note: It would look like getDisplayName should work
 		// and that you'd be able to identify an ITextComponent as either
 		// a translation component or a text component, but that'd be wrong
@@ -62,8 +66,9 @@ public class ChestHandler extends BlockHandler<TileEntityChest, ContainerChest> 
 	 * Saves the contents of a double-chest, first identifying the location of both
 	 * chests. This method does not handle triple/quadruple/quintuple chests.
 	 */
-	private String saveDoubleChest(BlockPos clickedPos, ContainerChest container, TileEntityChest blockEntity,
-			IBlockAccess world, BiConsumer<BlockPos, TileEntityChest> saveMethod) throws HandlerException {
+	private @Nonnull String saveDoubleChest(@Nonnull BlockPos clickedPos, @Nonnull ContainerChest container,
+			@Nonnull TileEntityChest blockEntity, @Nonnull IBlockAccess world,
+			@Nonnull BiConsumer<BlockPos, TileEntityChest> saveMethod) throws HandlerException {
 		// This is messy, but it needs to be like this because
 		// the left and right chests must be in the right positions.
 
