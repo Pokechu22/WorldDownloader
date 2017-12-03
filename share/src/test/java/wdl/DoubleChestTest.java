@@ -14,9 +14,10 @@
  */
 package wdl;
 
-import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
 
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -27,11 +28,19 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import wdl.handler.block.BlockHandler.HandlerException;
+import wdl.handler.block.ChestHandler;
 
 public class DoubleChestTest extends AbstractWorldBehaviorTest {
 
+	protected ChestHandler handler;
+	@Before
+	public void prepare() {
+		this.handler = new ChestHandler();
+	}
+
 	@Test
-	public void testSimpleDoubleChest() {
+	public void testSimpleDoubleChest() throws HandlerException {
 		// TODO: Handle orientation of chests
 		// Not important in this version, but will matter later
 
@@ -54,14 +63,14 @@ public class DoubleChestTest extends AbstractWorldBehaviorTest {
 
 			ContainerChest container = (ContainerChest) makeClientContainer(center);
 
-			assertTrue(WDLEvents.saveDoubleChest(center, container, clientWorld, tileEntities::put));
+			handler.handle(center, container, te1, clientWorld, tileEntities::put);
 
 			checkAllTEs();
 		}
 	}
 
 	@Test
-	public void testRegularAndTrappedChest() {
+	public void testRegularAndTrappedChest() throws HandlerException {
 		// TODO: As with before, orientation
 
 		// TODO: Maybe vary this, might help with +/- issues
@@ -92,7 +101,7 @@ public class DoubleChestTest extends AbstractWorldBehaviorTest {
 
 			ContainerChest container = (ContainerChest) makeClientContainer(center);
 
-			assertTrue(WDLEvents.saveDoubleChest(center, container, clientWorld, tileEntities::put));
+			handler.handle(center, container, te1, clientWorld, tileEntities::put);
 
 			// Only those two were saved
 			assertThat(tileEntities.keySet(), containsInAnyOrder(center, offset));
@@ -107,7 +116,7 @@ public class DoubleChestTest extends AbstractWorldBehaviorTest {
 	 * chest being named (or two chests with different names).
 	 */
 	@Test
-	public void testCustomNameNaive() {
+	public void testCustomNameNaive() throws HandlerException {
 		makeMockWorld();
 
 		BlockPos center = new BlockPos(0, 0, 0);
@@ -125,7 +134,7 @@ public class DoubleChestTest extends AbstractWorldBehaviorTest {
 		placeTEAt(offset, te2);
 
 		ContainerChest container = (ContainerChest) makeClientContainer(center);
-		assertTrue(WDLEvents.saveDoubleChest(center, container, clientWorld, tileEntities::put));
+		handler.handle(center, container, te1, clientWorld, tileEntities::put);
 		checkAllTEs();
 	}
 
@@ -134,7 +143,7 @@ public class DoubleChestTest extends AbstractWorldBehaviorTest {
 	 */
 	@Test
 	@Ignore
-	public void testCustomNameConflict() {
+	public void testCustomNameConflict() throws HandlerException {
 		makeMockWorld();
 
 		BlockPos center = new BlockPos(0, 0, 0);
@@ -152,7 +161,7 @@ public class DoubleChestTest extends AbstractWorldBehaviorTest {
 		placeTEAt(offset, te2);
 
 		ContainerChest container = (ContainerChest) makeClientContainer(center);
-		assertTrue(WDLEvents.saveDoubleChest(center, container, clientWorld, tileEntities::put));
+		handler.handle(center, container, te1, clientWorld, tileEntities::put);
 		// Fails as both chests are named "Name 1"
 		checkAllTEs();
 	}
@@ -162,7 +171,7 @@ public class DoubleChestTest extends AbstractWorldBehaviorTest {
 	 */
 	@Test
 	@Ignore
-	public void testCustomNameSingle() {
+	public void testCustomNameSingle() throws HandlerException {
 		makeMockWorld();
 
 		BlockPos center = new BlockPos(0, 0, 0);
@@ -179,7 +188,7 @@ public class DoubleChestTest extends AbstractWorldBehaviorTest {
 		placeTEAt(offset, te2);
 
 		ContainerChest container = (ContainerChest) makeClientContainer(center);
-		assertTrue(WDLEvents.saveDoubleChest(center, container, clientWorld, tileEntities::put));
+		handler.handle(center, container, te1, clientWorld, tileEntities::put);
 		// Fails as both chests are named "Name 1" even though one should be unnamed
 		checkAllTEs();
 	}
@@ -189,7 +198,7 @@ public class DoubleChestTest extends AbstractWorldBehaviorTest {
 	 */
 	@Test
 	@Ignore
-	public void testQuintupleChest() {
+	public void testQuintupleChest() throws HandlerException {
 		makeMockWorld();
 
 		BlockPos center = new BlockPos(0, 0, 0);
@@ -207,7 +216,7 @@ public class DoubleChestTest extends AbstractWorldBehaviorTest {
 		}
 
 		ContainerChest container = (ContainerChest) makeClientContainer(center);
-		assertTrue(WDLEvents.saveDoubleChest(center, container, clientWorld, tileEntities::put));
+		handler.handle(center, container, te, clientWorld, tileEntities::put);
 		// Fails due to only handling 2 of the chests
 		checkAllTEs();
 	}

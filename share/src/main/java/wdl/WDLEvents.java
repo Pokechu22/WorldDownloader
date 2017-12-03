@@ -15,14 +15,10 @@
 package wdl;
 
 import java.lang.reflect.Field;
-import java.util.function.BiConsumer;
-
-import com.google.common.annotations.VisibleForTesting;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.command.CommandException;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.IMerchant;
@@ -63,12 +59,13 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.village.MerchantRecipeList;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.storage.MapData;
 import wdl.api.IWorldLoadListener;
 import wdl.api.WDLApi;
 import wdl.api.WDLApi.ModInfo;
+import wdl.handler.block.BlockHandler.HandlerException;
+import wdl.handler.block.ChestHandler;
 import wdl.update.WDLUpdateChecker;
 
 /**
@@ -351,32 +348,11 @@ public class WDLEvents {
 
 		if (WDL.windowContainer instanceof ContainerChest
 				&& te instanceof TileEntityChest) {
-			if (WDL.windowContainer.inventorySlots.size() > 63) {
-				if (!saveDoubleChest(WDL.lastClickedBlock, (ContainerChest) WDL.windowContainer,
-						WDL.worldClient, WDL::saveTileEntity)) {
-					WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR,
-							"wdl.messages.onGuiClosedWarning.failedToFindDoubleChest");
-					// Was handled, even though there was an error.
-					return true;
-				}
-
-				saveName = "doubleChest";
-			}
-			// basic chest
-			else {
-				// Note: It would look like getDisplayName should work
-				// and that you'd be able to identify an ITextComponent as either
-				// a translation component or a text component, but that'd be wrong
-				// due to strange server/client stuff that I haven't fully explored.
-				String title = ((ContainerChest) WDL.windowContainer).getLowerChestInventory().getName();
-
-				saveContainerItems(WDL.windowContainer, (TileEntityChest) te, 0);
-				if (!title.equals(I18n.format("container.chest"))) {
-					// Custom name set
-					((TileEntityChest)te).setCustomName(title);
-				}
-				WDL.saveTileEntity(WDL.lastClickedBlock, te);
-				saveName = "singleChest";
+			try {
+				new ChestHandler().handle(WDL.lastClickedBlock, (ContainerChest) WDL.windowContainer,
+						(TileEntityChest) te, WDL.worldClient, WDL::saveTileEntity);
+			} catch (HandlerException e) {
+				WDLMessages.chatMessageTranslated(e.messageType, e.translationKey, e.args);
 			}
 		} else if (WDL.windowContainer instanceof ContainerChest
 				&& te instanceof TileEntityEnderChest) {
@@ -562,120 +538,6 @@ public class WDLEvents {
 						"wdl.messages.generalInfo.seedSet", seed);
 			}
 		}
-	}
-
-	/**
-	 * Saves the contents of a double-chest, first identifying the location of both
-	 * chests. This method does not handle triple/quadruple/quintuple chests.
-	 *
-	 * @param clickedPos
-	 *            The position that the clicked chest is at. There must be a TE
-	 *            here.
-	 * @param container
-	 *            The container to grab items from.
-	 * @param world
-	 *            The world to query (will use {@link IBlockAccess#getTileEntity}
-	 *            and {@link IBlockAccess#getBlockState})
-	 * @param saveMethod
-	 *            The method to call to save the found chests.
-	 * @return true if successful, false if this is not a valid double-chest.
-	 */
-	@VisibleForTesting
-	static boolean saveDoubleChest(BlockPos clickedPos, ContainerChest container,
-			IBlockAccess world, BiConsumer<BlockPos, TileEntityChest> saveMethod) {
-		// This is messy, but it needs to be like this because
-		// the left and right chests must be in the right positions.
-
-		BlockPos pos1, pos2;
-		TileEntity te1, te2;
-
-		pos1 = clickedPos;
-		te1 = world.getTileEntity(clickedPos);
-		assert te1 instanceof TileEntityChest;
-
-		// We need seperate variables for the above reason --
-		// pos1 isn't always the same as chestPos1 (and thus
-		// chest1 isn't always te1).
-		BlockPos chestPos1 = null, chestPos2 = null;
-		TileEntityChest chest1 = null, chest2 = null;
-
-		pos2 = pos1.add(0, 0, 1);
-		te2 = world.getTileEntity(pos2);
-		if (te2 instanceof TileEntityChest &&
-				((TileEntityChest) te2).getChestType() ==
-				((TileEntityChest) te1).getChestType()) {
-
-			chest1 = (TileEntityChest) te1;
-			chest2 = (TileEntityChest) te2;
-
-			chestPos1 = pos1;
-			chestPos2 = pos2;
-		}
-
-		pos2 = pos1.add(0, 0, -1);
-		te2 = world.getTileEntity(pos2);
-		if (te2 instanceof TileEntityChest &&
-				((TileEntityChest) te2).getChestType() ==
-				((TileEntityChest) te1).getChestType()) {
-
-			chest1 = (TileEntityChest) te2;
-			chest2 = (TileEntityChest) te1;
-
-			chestPos1 = pos2;
-			chestPos2 = pos1;
-		}
-
-		pos2 = pos1.add(1, 0, 0);
-		te2 = world.getTileEntity(pos2);
-		if (te2 instanceof TileEntityChest &&
-				((TileEntityChest) te2).getChestType() ==
-				((TileEntityChest) te1).getChestType()) {
-			chest1 = (TileEntityChest) te1;
-			chest2 = (TileEntityChest) te2;
-
-			chestPos1 = pos1;
-			chestPos2 = pos2;
-		}
-
-		pos2 = pos1.add(-1, 0, 0);
-		te2 = world.getTileEntity(pos2);
-		if (te2 instanceof TileEntityChest &&
-				((TileEntityChest) te2).getChestType() ==
-				((TileEntityChest) te1).getChestType()) {
-			chest1 = (TileEntityChest) te2;
-			chest2 = (TileEntityChest) te1;
-
-			chestPos1 = pos2;
-			chestPos2 = pos1;
-		}
-
-		if (chest1 == null || chest2 == null ||
-				chestPos1 == null || chestPos2 == null) {
-			return false;
-		}
-
-		saveContainerItems(container, chest1, 0);
-		saveContainerItems(container, chest2, 27);
-
-		// Custom name stuff:
-		// Note: It would look like getDisplayName should work
-		// and that you'd be able to identify an ITextComponent as either
-		// a translation component or a text component, but that'd be wrong
-		// due to strange server/client stuff that I haven't fully explored.
-		String title = container.getLowerChestInventory().getName();
-		// Due to normal I18n not being available in unit tests
-		String expected = new TextComponentTranslation("container.chestDouble").getUnformattedText();
-		if (!title.equals(expected)) {
-			// This is NOT server-accurate.  But making it correct is not easy.
-			// Only one of the chests needs to have the name.
-			chest1.setCustomName(title);
-			chest2.setCustomName(title);
-		}
-
-		saveMethod.accept(chestPos1, chest1);
-		saveMethod.accept(chestPos2, chest2);
-
-		return true;
 	}
 
 	/**
