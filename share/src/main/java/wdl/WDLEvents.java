@@ -33,7 +33,6 @@ import net.minecraft.inventory.ContainerHopper;
 import net.minecraft.inventory.ContainerHorseChest;
 import net.minecraft.inventory.ContainerHorseInventory;
 import net.minecraft.inventory.ContainerMerchant;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryEnderChest;
 import net.minecraft.inventory.Slot;
 import net.minecraft.profiler.Profiler;
@@ -516,47 +515,5 @@ public class WDLEvents {
 		}
 
 		ReflectionUtils.findAndSetPrivateField(horse, EquineEntity.class, ContainerHorseChest.class, horseInventory);
-	}
-
-	/**
-	 * Saves the items of a container to the given TileEntity.
-	 *
-	 * @param container
-	 *            The container to save from, usually {@link WDL#windowContainer} .
-	 * @param tileEntity
-	 *            The TileEntity to save to.
-	 * @param containerStartIndex
-	 *            The index in the container to start copying items from.
-	 */
-	public static void saveContainerItems(Container container,
-			IInventory tileEntity, int containerStartIndex) {
-		int containerSize = container.inventorySlots.size();
-		int inventorySize = tileEntity.getSizeInventory();
-		int containerIndex = containerStartIndex;
-		int inventoryIndex = 0;
-
-		while ((containerIndex < containerSize) && (inventoryIndex < inventorySize)) {
-			Slot slot = container.getSlot(containerIndex);
-			if (slot.getHasStack()) {
-				tileEntity.setInventorySlotContents(inventoryIndex, slot.getStack());
-			}
-			inventoryIndex++;
-			containerIndex++;
-		}
-	}
-
-	/**
-	 * Saves the fields of an inventory.
-	 * Fields are pieces of data such as furnace smelt time and
-	 * beacon effects.
-	 *
-	 * @param inventory The inventory to save from.
-	 * @param tileEntity The inventory to save to.
-	 */
-	public static void saveInventoryFields(IInventory inventory,
-			IInventory tileEntity) {
-		for (int i = 0; i < inventory.getFieldCount(); i++) {
-			tileEntity.setField(i, inventory.getField(i));
-		}
 	}
 }
