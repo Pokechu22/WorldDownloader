@@ -17,6 +17,7 @@ package wdl.handler.block;
 import java.util.function.BiConsumer;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.ContainerChest;
@@ -35,39 +36,63 @@ public class ChestHandler extends BlockHandler<TileEntityChest, ContainerChest> 
 	public @Nonnull String handle(@Nonnull BlockPos clickedPos, @Nonnull ContainerChest container,
 			@Nonnull TileEntityChest blockEntity, @Nonnull IBlockAccess world,
 			@Nonnull BiConsumer<BlockPos, TileEntityChest> saveMethod) throws HandlerException {
-		if (container.inventorySlots.size() > 63) {
-			return saveDoubleChest(clickedPos, container, blockEntity, world, saveMethod);
-		} else {
-			return saveSingleChest(clickedPos, container, blockEntity, world, saveMethod);
-		}
-	}
-	/**
-	 * Saves the contents of a single chest.
-	 */
-	private @Nonnull String saveSingleChest(@Nonnull BlockPos clickedPos, @Nonnull ContainerChest container,
-			@Nonnull TileEntityChest blockEntity, @Nonnull IBlockAccess world,
-			@Nonnull BiConsumer<BlockPos, TileEntityChest> saveMethod) throws HandlerException {
 		// Note: It would look like getDisplayName should work
 		// and that you'd be able to identify an ITextComponent as either
 		// a translation component or a text component, but that'd be wrong
 		// due to strange server/client stuff that I haven't fully explored.
 		String title = container.getLowerChestInventory().getName();
 
+		if (container.inventorySlots.size() > 63) {
+			if (title.equals(I18n.format("container.chestDouble"))) {
+				title = null;
+			}
+			saveDoubleChest(clickedPos, container, blockEntity, world, saveMethod, title);
+			return "wdl.messages.onGuiClosedInfo.savedTileEntity.doubleChest";
+		} else {
+			if (title.equals(I18n.format("container.chest"))) {
+				title = null;
+			}
+			saveSingleChest(clickedPos, container, blockEntity, world, saveMethod, title);
+			return "wdl.messages.onGuiClosedInfo.savedTileEntity.singleChest";
+		}
+	}
+	/**
+	 * Saves the contents of a single chest.
+	 *
+	 * @param clickedPos As per {@link #handle}
+	 * @param container As per {@link #handle}
+	 * @param blockEntity As per {@link #handle}
+	 * @param world As per {@link #handle}
+	 * @param saveMethod As per {@link #handle}
+	 * @param displayName The custom name of the chest, or <code>null</code> if none is set.
+	 * @throws HandlerException As per {@link #handle}
+	 */
+	private void saveSingleChest(@Nonnull BlockPos clickedPos, @Nonnull ContainerChest container,
+			@Nonnull TileEntityChest blockEntity, @Nonnull IBlockAccess world,
+			@Nonnull BiConsumer<BlockPos, TileEntityChest> saveMethod,
+			@Nullable String displayName) throws HandlerException {
 		saveContainerItems(container, blockEntity, 0);
-		if (!title.equals(I18n.format("container.chest"))) {
-			// Custom name set
-			blockEntity.setCustomName(title);
+		if (displayName != null) {
+			blockEntity.setCustomName(displayName);
 		}
 		saveMethod.accept(clickedPos, blockEntity);
-		return "wdl.messages.onGuiClosedInfo.savedTileEntity.singleChest";
 	}
 	/**
 	 * Saves the contents of a double-chest, first identifying the location of both
 	 * chests. This method does not handle triple/quadruple/quintuple chests.
+	 *
+	 * @param clickedPos As per {@link #handle}
+	 * @param container As per {@link #handle}
+	 * @param blockEntity As per {@link #handle}
+	 * @param world As per {@link #handle}
+	 * @param saveMethod As per {@link #handle}
+	 * @param displayName The custom name of the chest, or <code>null</code> if none is set.
+	 * @throws HandlerException As per {@link #handle}
 	 */
-	private @Nonnull String saveDoubleChest(@Nonnull BlockPos clickedPos, @Nonnull ContainerChest container,
+	private void saveDoubleChest(@Nonnull BlockPos clickedPos, @Nonnull ContainerChest container,
 			@Nonnull TileEntityChest blockEntity, @Nonnull IBlockAccess world,
-			@Nonnull BiConsumer<BlockPos, TileEntityChest> saveMethod) throws HandlerException {
+			@Nonnull BiConsumer<BlockPos, TileEntityChest> saveMethod,
+			@Nullable String displayName) throws HandlerException {
 		// This is messy, but it needs to be like this because
 		// the left and right chests must be in the right positions.
 
@@ -142,23 +167,14 @@ public class ChestHandler extends BlockHandler<TileEntityChest, ContainerChest> 
 		saveContainerItems(container, chest1, 0);
 		saveContainerItems(container, chest2, 27);
 
-		// Custom name stuff:
-		// Note: It would look like getDisplayName should work
-		// and that you'd be able to identify an ITextComponent as either
-		// a translation component or a text component, but that'd be wrong
-		// due to strange server/client stuff that I haven't fully explored.
-		String title = container.getLowerChestInventory().getName();
-		String expected = I18n.format("container.chestDouble");
-		if (!title.equals(expected)) {
+		if (displayName != null) {
 			// This is NOT server-accurate.  But making it correct is not easy.
 			// Only one of the chests needs to have the name.
-			chest1.setCustomName(title);
-			chest2.setCustomName(title);
+			chest1.setCustomName(displayName);
+			chest2.setCustomName(displayName);
 		}
 
 		saveMethod.accept(chestPos1, chest1);
 		saveMethod.accept(chestPos2, chest2);
-
-		return "wdl.messages.onGuiClosedInfo.savedTileEntity.doubleChest";
 	}
 }
