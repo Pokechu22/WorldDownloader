@@ -23,7 +23,6 @@ import net.minecraft.inventory.ContainerChest;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IBlockAccess;
 import wdl.WDLMessageTypes;
 
@@ -149,8 +148,7 @@ public class ChestHandler extends BlockHandler<TileEntityChest, ContainerChest> 
 		// a translation component or a text component, but that'd be wrong
 		// due to strange server/client stuff that I haven't fully explored.
 		String title = container.getLowerChestInventory().getName();
-		// Due to normal I18n not being available in unit tests
-		String expected = new TextComponentTranslation("container.chestDouble").getUnformattedText();
+		String expected = I18n.format("container.chestDouble");
 		if (!title.equals(expected)) {
 			// This is NOT server-accurate.  But making it correct is not easy.
 			// Only one of the chests needs to have the name.

@@ -38,6 +38,8 @@ import net.minecraft.block.BlockChest;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.player.inventory.ContainerLocalMenu;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.client.resources.Locale;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Bootstrap;
@@ -85,6 +87,28 @@ public abstract class AbstractWorldBehaviorTest {
 		LOGGER.debug("Initialized bootstrap.");
 		// Note: not checking Bootstrap.hasErrored as that didn't exist in older
 		// versions
+
+		LOGGER.debug("Setting up I18n...");
+		initI18n();
+		LOGGER.debug("Set up I18n.");
+	}
+
+	/**
+	 * Prepares a fake Locale instance for I18n.
+	 */
+	private static void initI18n() {
+		@SuppressWarnings("deprecation")
+		class FakeLocale extends Locale {
+			@Override
+			public String formatMessage(String translateKey, Object[] parameters) {
+				return net.minecraft.util.text.translation.I18n.translateToLocalFormatted(translateKey, parameters);
+			}
+			@Override
+			public boolean hasKey(String key) {
+				return net.minecraft.util.text.translation.I18n.canTranslate(key);
+			}
+		}
+		ReflectionUtils.findAndSetPrivateField(I18n.class, Locale.class, new FakeLocale());
 	}
 
 	/**
