@@ -28,11 +28,7 @@ import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.passive.EquineEntity;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ContainerBeacon;
-import net.minecraft.inventory.ContainerBrewingStand;
 import net.minecraft.inventory.ContainerChest;
-import net.minecraft.inventory.ContainerDispenser;
-import net.minecraft.inventory.ContainerFurnace;
 import net.minecraft.inventory.ContainerHopper;
 import net.minecraft.inventory.ContainerHorseChest;
 import net.minecraft.inventory.ContainerHorseInventory;
@@ -42,12 +38,7 @@ import net.minecraft.inventory.InventoryEnderChest;
 import net.minecraft.inventory.Slot;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityBeacon;
-import net.minecraft.tileentity.TileEntityBrewingStand;
-import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.tileentity.TileEntityEnderChest;
-import net.minecraft.tileentity.TileEntityFurnace;
-import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.tileentity.TileEntityNote;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -372,43 +363,6 @@ public class WDLEvents {
 			}
 
 			saveName = "enderChest";
-		} else if (WDL.windowContainer instanceof ContainerBrewingStand
-				&& te instanceof TileEntityBrewingStand) {
-			IInventory brewingInventory = ReflectionUtils.findAndGetPrivateField(
-					WDL.windowContainer, IInventory.class);
-			saveContainerItems(WDL.windowContainer, (TileEntityBrewingStand) te, 0);
-			saveInventoryFields(brewingInventory, (TileEntityBrewingStand) te);
-			WDL.saveTileEntity(WDL.lastClickedBlock, te);
-			saveName = "brewingStand";
-		} else if (WDL.windowContainer instanceof ContainerDispenser
-				&& te instanceof TileEntityDispenser) {
-			saveContainerItems(WDL.windowContainer, (TileEntityDispenser) te, 0);
-			WDL.saveTileEntity(WDL.lastClickedBlock, te);
-			saveName = "dispenser";
-		} else if (WDL.windowContainer instanceof ContainerFurnace
-				&& te instanceof TileEntityFurnace) {
-			IInventory furnaceInventory = ReflectionUtils.findAndGetPrivateField(
-					WDL.windowContainer, IInventory.class);
-			saveContainerItems(WDL.windowContainer, (TileEntityFurnace) te, 0);
-			saveInventoryFields(furnaceInventory, (TileEntityFurnace) te);
-			WDL.saveTileEntity(WDL.lastClickedBlock, te);
-			saveName = "furnace";
-		} else if (WDL.windowContainer instanceof ContainerHopper
-				&& te instanceof TileEntityHopper) {
-			saveContainerItems(WDL.windowContainer, (TileEntityHopper) te, 0);
-			WDL.saveTileEntity(WDL.lastClickedBlock, te);
-			saveName = "hopper";
-		} else if (WDL.windowContainer instanceof ContainerBeacon
-				&& te instanceof TileEntityBeacon) {
-			IInventory beaconInventory =
-					((ContainerBeacon)WDL.windowContainer).getTileEntity();
-			TileEntityBeacon savedBeacon = (TileEntityBeacon)te;
-			saveContainerItems(WDL.windowContainer, savedBeacon, 0);
-			saveInventoryFields(beaconInventory, savedBeacon);
-			WDL.saveTileEntity(WDL.lastClickedBlock, te);
-			saveName = "beacon";
-		} else if (VersionedProperties.handleShulkerGuiClosed(te)) {
-			saveName = "shulkerBox";
 		} else {
 			return false;
 		}

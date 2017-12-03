@@ -27,8 +27,13 @@ import net.minecraft.inventory.Container;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.world.World;
+import wdl.handler.block.BeaconHandler;
 import wdl.handler.block.BlockHandler;
+import wdl.handler.block.BrewingStandHandler;
 import wdl.handler.block.ChestHandler;
+import wdl.handler.block.DispenserHandler;
+import wdl.handler.block.FurnaceHandler;
+import wdl.handler.block.HopperHandler;
 
 /**
  * Helper that determines version-specific information about things, such
@@ -90,7 +95,12 @@ public class VersionedProperties {
 	 * All supported {@link BlockHandler}s.  Each type will only be represented once.
 	 */
 	public static final ImmutableList<BlockHandler<?, ?>> BLOCK_HANDLERS = ImmutableList.of(
-			new ChestHandler()
+			new BeaconHandler(),
+			new BrewingStandHandler(),
+			new ChestHandler(),
+			new DispenserHandler(),
+			new FurnaceHandler(),
+			new HopperHandler()
 	);
 
 	/**
@@ -113,14 +123,6 @@ public class VersionedProperties {
 		return null;
 	}
 
-	/**
-	 * Called when any GUI is closed, to handle shulker boxes.
-	 *
-	 * XXX This is not a good approach to version specific block entities.
-	 */
-	public static boolean handleShulkerGuiClosed(TileEntity te) {
-		return false;
-	}
 	/**
 	 * Checks if the given block is a shulker box, and the block entity ID matches.
 	 */
