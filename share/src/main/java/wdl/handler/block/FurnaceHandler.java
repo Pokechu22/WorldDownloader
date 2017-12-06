@@ -16,8 +16,6 @@ package wdl.handler.block;
 
 import java.util.function.BiConsumer;
 
-import javax.annotation.Nonnull;
-
 import net.minecraft.inventory.ContainerFurnace;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntityFurnace;
@@ -31,9 +29,9 @@ public class FurnaceHandler extends BlockHandler<TileEntityFurnace, ContainerFur
 	}
 
 	@Override
-	public @Nonnull String handle(@Nonnull BlockPos clickedPos, @Nonnull ContainerFurnace container,
-			@Nonnull TileEntityFurnace blockEntity, @Nonnull IBlockAccess world,
-			@Nonnull BiConsumer<BlockPos, TileEntityFurnace> saveMethod) throws HandlerException {
+	public String handle(BlockPos clickedPos, ContainerFurnace container,
+			TileEntityFurnace blockEntity, IBlockAccess world,
+			BiConsumer<BlockPos, TileEntityFurnace> saveMethod) throws HandlerException {
 		IInventory furnaceInventory = ReflectionUtils.findAndGetPrivateField(
 				container, IInventory.class);
 		saveContainerItems(container, blockEntity, 0);

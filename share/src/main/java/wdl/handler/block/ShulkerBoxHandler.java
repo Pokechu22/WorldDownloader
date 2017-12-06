@@ -16,8 +16,6 @@ package wdl.handler.block;
 
 import java.util.function.BiConsumer;
 
-import javax.annotation.Nonnull;
-
 import net.minecraft.inventory.ContainerShulkerBox;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntityShulkerBox;
@@ -31,9 +29,9 @@ public class ShulkerBoxHandler extends BlockHandler<TileEntityShulkerBox, Contai
 	}
 
 	@Override
-	public @Nonnull String handle(@Nonnull BlockPos clickedPos, @Nonnull ContainerShulkerBox container,
-			@Nonnull TileEntityShulkerBox blockEntity, @Nonnull IBlockAccess world,
-			@Nonnull BiConsumer<BlockPos, TileEntityShulkerBox> saveMethod) throws HandlerException {
+	public String handle(BlockPos clickedPos, ContainerShulkerBox container,
+			TileEntityShulkerBox blockEntity, IBlockAccess world,
+			BiConsumer<BlockPos, TileEntityShulkerBox> saveMethod) throws HandlerException {
 		IInventory brewingInventory = ReflectionUtils.findAndGetPrivateField(
 				container, IInventory.class);
 		saveContainerItems(container, blockEntity, 0);

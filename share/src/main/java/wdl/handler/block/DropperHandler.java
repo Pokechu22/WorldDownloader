@@ -16,8 +16,6 @@ package wdl.handler.block;
 
 import java.util.function.BiConsumer;
 
-import javax.annotation.Nonnull;
-
 import net.minecraft.inventory.ContainerDispenser;
 import net.minecraft.tileentity.TileEntityDropper;
 import net.minecraft.util.math.BlockPos;
@@ -29,9 +27,9 @@ public class DropperHandler extends BlockHandler<TileEntityDropper, ContainerDis
 	}
 
 	@Override
-	public @Nonnull String handle(@Nonnull BlockPos clickedPos, @Nonnull ContainerDispenser container,
-			@Nonnull TileEntityDropper blockEntity, @Nonnull IBlockAccess world,
-			@Nonnull BiConsumer<BlockPos, TileEntityDropper> saveMethod) throws HandlerException {
+	public String handle(BlockPos clickedPos, ContainerDispenser container,
+			TileEntityDropper blockEntity, IBlockAccess world,
+			BiConsumer<BlockPos, TileEntityDropper> saveMethod) throws HandlerException {
 		saveContainerItems(container, blockEntity, 0);
 		saveMethod.accept(clickedPos, blockEntity);
 		return "wdl.messages.onGuiClosedInfo.savedTileEntity.dropper";

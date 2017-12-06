@@ -16,8 +16,6 @@ package wdl.handler.block;
 
 import java.util.function.BiConsumer;
 
-import javax.annotation.Nonnull;
-
 import net.minecraft.inventory.ContainerBeacon;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntityBeacon;
@@ -30,9 +28,9 @@ public class BeaconHandler extends BlockHandler<TileEntityBeacon, ContainerBeaco
 	}
 
 	@Override
-	public @Nonnull String handle(@Nonnull BlockPos clickedPos, @Nonnull ContainerBeacon container,
-			@Nonnull TileEntityBeacon blockEntity, @Nonnull IBlockAccess world,
-			@Nonnull BiConsumer<BlockPos, TileEntityBeacon> saveMethod) throws HandlerException {
+	public String handle(BlockPos clickedPos, ContainerBeacon container,
+			TileEntityBeacon blockEntity, IBlockAccess world,
+			BiConsumer<BlockPos, TileEntityBeacon> saveMethod) throws HandlerException {
 		IInventory beaconInventory = container.getTileEntity();
 		saveContainerItems(container, blockEntity, 0);
 		saveInventoryFields(beaconInventory, blockEntity);

@@ -16,8 +16,6 @@ package wdl.handler.block;
 
 import java.util.function.BiConsumer;
 
-import javax.annotation.Nonnull;
-
 import net.minecraft.inventory.ContainerBrewingStand;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntityBrewingStand;
@@ -31,9 +29,9 @@ public class BrewingStandHandler extends BlockHandler<TileEntityBrewingStand, Co
 	}
 
 	@Override
-	public @Nonnull String handle(@Nonnull BlockPos clickedPos, @Nonnull ContainerBrewingStand container,
-			@Nonnull TileEntityBrewingStand blockEntity, @Nonnull IBlockAccess world,
-			@Nonnull BiConsumer<BlockPos, TileEntityBrewingStand> saveMethod) throws HandlerException {
+	public String handle(BlockPos clickedPos, ContainerBrewingStand container,
+			TileEntityBrewingStand blockEntity, IBlockAccess world,
+			BiConsumer<BlockPos, TileEntityBrewingStand> saveMethod) throws HandlerException {
 		IInventory brewingInventory = ReflectionUtils.findAndGetPrivateField(
 				container, IInventory.class);
 		saveContainerItems(container, blockEntity, 0);

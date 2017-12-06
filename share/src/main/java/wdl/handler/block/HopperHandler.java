@@ -16,8 +16,6 @@ package wdl.handler.block;
 
 import java.util.function.BiConsumer;
 
-import javax.annotation.Nonnull;
-
 import net.minecraft.inventory.ContainerHopper;
 import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.util.math.BlockPos;
@@ -29,9 +27,9 @@ public class HopperHandler extends BlockHandler<TileEntityHopper, ContainerHoppe
 	}
 
 	@Override
-	public @Nonnull String handle(@Nonnull BlockPos clickedPos, @Nonnull ContainerHopper container,
-			@Nonnull TileEntityHopper blockEntity, @Nonnull IBlockAccess world,
-			@Nonnull BiConsumer<BlockPos, TileEntityHopper> saveMethod) throws HandlerException {
+	public String handle(BlockPos clickedPos, ContainerHopper container,
+			TileEntityHopper blockEntity, IBlockAccess world,
+			BiConsumer<BlockPos, TileEntityHopper> saveMethod) throws HandlerException {
 		saveContainerItems(container, blockEntity, 0);
 		saveMethod.accept(clickedPos, blockEntity);
 		return "wdl.messages.onGuiClosedInfo.savedTileEntity.hopper";

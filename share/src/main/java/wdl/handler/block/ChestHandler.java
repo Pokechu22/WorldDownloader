@@ -16,7 +16,6 @@ package wdl.handler.block;
 
 import java.util.function.BiConsumer;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.minecraft.client.resources.I18n;
@@ -33,9 +32,9 @@ public class ChestHandler extends BlockHandler<TileEntityChest, ContainerChest> 
 	}
 
 	@Override
-	public @Nonnull String handle(@Nonnull BlockPos clickedPos, @Nonnull ContainerChest container,
-			@Nonnull TileEntityChest blockEntity, @Nonnull IBlockAccess world,
-			@Nonnull BiConsumer<BlockPos, TileEntityChest> saveMethod) throws HandlerException {
+	public String handle(BlockPos clickedPos, ContainerChest container,
+			TileEntityChest blockEntity, IBlockAccess world,
+			BiConsumer<BlockPos, TileEntityChest> saveMethod) throws HandlerException {
 		// Note: It would look like getDisplayName should work
 		// and that you'd be able to identify an ITextComponent as either
 		// a translation component or a text component, but that'd be wrong
@@ -67,9 +66,9 @@ public class ChestHandler extends BlockHandler<TileEntityChest, ContainerChest> 
 	 * @param displayName The custom name of the chest, or <code>null</code> if none is set.
 	 * @throws HandlerException As per {@link #handle}
 	 */
-	private void saveSingleChest(@Nonnull BlockPos clickedPos, @Nonnull ContainerChest container,
-			@Nonnull TileEntityChest blockEntity, @Nonnull IBlockAccess world,
-			@Nonnull BiConsumer<BlockPos, TileEntityChest> saveMethod,
+	private void saveSingleChest(BlockPos clickedPos, ContainerChest container,
+			TileEntityChest blockEntity, IBlockAccess world,
+			BiConsumer<BlockPos, TileEntityChest> saveMethod,
 			@Nullable String displayName) throws HandlerException {
 		saveContainerItems(container, blockEntity, 0);
 		if (displayName != null) {
@@ -89,9 +88,9 @@ public class ChestHandler extends BlockHandler<TileEntityChest, ContainerChest> 
 	 * @param displayName The custom name of the chest, or <code>null</code> if none is set.
 	 * @throws HandlerException As per {@link #handle}
 	 */
-	private void saveDoubleChest(@Nonnull BlockPos clickedPos, @Nonnull ContainerChest container,
-			@Nonnull TileEntityChest blockEntity, @Nonnull IBlockAccess world,
-			@Nonnull BiConsumer<BlockPos, TileEntityChest> saveMethod,
+	private void saveDoubleChest(BlockPos clickedPos, ContainerChest container,
+			TileEntityChest blockEntity, IBlockAccess world,
+			BiConsumer<BlockPos, TileEntityChest> saveMethod,
 			@Nullable String displayName) throws HandlerException {
 		// This is messy, but it needs to be like this because
 		// the left and right chests must be in the right positions.
