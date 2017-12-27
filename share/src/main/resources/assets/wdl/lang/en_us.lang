@@ -254,10 +254,6 @@ wdl.gui.permissions.overrides=Chunk Overrides
 
 wdl.gui.gamerules.title=World Downloader mod: Game rules
 wdl.gui.gamerules.resetRule=Reset
-wdl.gui.gamerules.custom=Custom rules
-wdl.gui.gamerules.deleteRule=Delete
-wdl.gui.gamerules.addCustom.name=Add custom rule
-wdl.gui.gamerules.addCustom.description=Add a additional custom game rule.%n%nMinecraft supports custom gamerules in the /gamerule command, but these generally are only used on custom maps.  Only use this feature if you know what you're doing.
 
 # Descriptions of individual rules, using their (case-sensitive) name.  Based off of the wiki article: https://minecraft.gamepedia.com/Commands#gamerule
 wdl.gui.gamerules.rules.announceAdvancements=Should advancements should be announced?
@@ -278,13 +274,13 @@ wdl.gui.gamerules.rules.maxEntityCramming=How many entities can be put into a si
 wdl.gui.gamerules.rules.mobGriefing=Can mobs can damage terrain?  (creeper explosions, endermen, etc)
 wdl.gui.gamerules.rules.naturalRegeneration=Can players naturally regenerate help when at full hunger?  (Sometimes known as "ultrahardcore" mode)
 wdl.gui.gamerules.rules.randomTickSpeed=How many random ticks (eg, for crop growth) should occur each game tick?  0 disables random ticks; higher numbers mean more ticks.
-wdl.gui.gamerules.rules.reducedDebugInfo=Should players be forced to use a limited F3 display?  (This display can also manually be enabled in chat settings; not recomended)
+wdl.gui.gamerules.rules.reducedDebugInfo=Should players be forced to use a limited F3 display?  (This display can also manually be enabled in chat settings; not recommended)
 wdl.gui.gamerules.rules.sendCommandFeedback=Should players get feedback on command usage?
 wdl.gui.gamerules.rules.showDeathMessages=Should death messages appear in chat?  (Both from players and their pets)
 wdl.gui.gamerules.rules.spawnRadius=How far from the central spawn (in blocks) should players be spread when spawning?
 wdl.gui.gamerules.rules.spectatorsGenerateChunks=Should players in spectator mode generate new chunks?
 # This is a special case, since it doesn't seem to actually be on the list:
-wdl.gui.gamerules.rules.gameLoopFunction=The name of the function to call each tick.
+wdl.gui.gamerules.rules.gameLoopFunction=The name of the function to call each tick.  (Deprecated, will be removed in 1.13 and functions are not saved by the mod so this is not useful)
 
 wdl.backup.none=No backup
 wdl.backup.folder=Copy world folder
