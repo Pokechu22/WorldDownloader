@@ -12,7 +12,7 @@
  *
  * Do not redistribute (in modified or unmodified form) without prior permission.
  */
-package wdl;
+package wdl.handler;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
@@ -58,6 +58,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IInteractionObject;
 import net.minecraft.world.World;
+import wdl.ReflectionUtils;
 
 /**
  * Base logic shared between all tests that use blocks.

@@ -12,7 +12,7 @@
  *
  * Do not redistribute (in modified or unmodified form) without prior permission.
  */
-package wdl;
+package wdl.handler.block;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
@@ -29,6 +29,7 @@ import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import wdl.handler.block.BlockHandler.HandlerException;
+import wdl.handler.AbstractWorldBehaviorTest;
 import wdl.handler.block.ChestHandler;
 
 public class DoubleChestTest extends AbstractWorldBehaviorTest {
