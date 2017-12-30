@@ -195,6 +195,35 @@ public class DoubleChestTest extends AbstractWorldBehaviorTest {
 	}
 
 	/**
+	 * Test that is known to fail: two chests with a name that matches the vanilla
+	 * name (this matters because translation)
+	 */
+	@Test
+	@Ignore
+	public void testCustomNameMatchesRealName() throws HandlerException {
+		makeMockWorld();
+
+		BlockPos center = new BlockPos(0, 0, 0);
+		BlockPos offset = new BlockPos(0, 0, 1);
+
+		placeBlockAt(center, Blocks.CHEST);
+		placeBlockAt(offset, Blocks.CHEST);
+		TileEntityChest te1 = new TileEntityChest();
+		te1.setInventorySlotContents(2, new ItemStack(Items.BEEF));
+		te1.setCustomName("Large Chest");
+		TileEntityChest te2 = new TileEntityChest();
+		te2.setInventorySlotContents(8, new ItemStack(Items.COOKED_BEEF));
+		te2.setCustomName("Large Chest");
+		placeTEAt(center, te1);
+		placeTEAt(offset, te2);
+
+		ContainerChest container = (ContainerChest) makeClientContainer(center);
+		handler.handle(center, container, te1, clientWorld, tileEntities::put);
+		// Fails as the custom name is lost
+		checkAllTEs();
+	}
+
+	/**
 	 * Real-world tests, that is known to fail. A quintuple chest system.
 	 */
 	@Test
