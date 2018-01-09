@@ -40,7 +40,7 @@ apply plugin: 'pokechu22.test.noinplacereobf'
 minecraft {
     suppressMappingVersionWarnings = true
     version = "1.11"
-    mappings = "snapshot_20171228"
+    mappings = "snapshot_20180108"
     runDir = "run"
 
     // We don't currently want a source jar (doesn't work well for base edits, and the version info doesn't work yet)
