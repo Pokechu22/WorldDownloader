@@ -32,12 +32,31 @@ import wdl.handler.block.BlockHandler.HandlerException;
 import wdl.handler.AbstractWorldBehaviorTest;
 import wdl.handler.block.ChestHandler;
 
-public class DoubleChestTest extends AbstractWorldBehaviorTest {
+/**
+ * Tests single and double chests.
+ */
+public class ChestTest extends AbstractWorldBehaviorTest {
 
 	protected ChestHandler handler;
 	@Before
 	public void prepare() {
 		this.handler = new ChestHandler();
+	}
+
+	@Test
+	public void testSingleChest() throws HandlerException {
+		BlockPos center = new BlockPos(0, 0, 0);
+		makeMockWorld();
+		placeBlockAt(center, Blocks.CHEST);
+		TileEntityChest te = new TileEntityChest();
+		te.setInventorySlotContents(2, new ItemStack(Items.BEEF));
+		placeTEAt(center, te);
+
+		ContainerChest container = (ContainerChest) makeClientContainer(center);
+
+		handler.handle(center, container, te, clientWorld, tileEntities::put);
+
+		checkAllTEs();
 	}
 
 	@Test
