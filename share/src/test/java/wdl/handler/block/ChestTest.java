@@ -241,6 +241,48 @@ public class ChestTest extends AbstractWorldBehaviorTest {
 	}
 
 	/**
+	 * Tests a single chest with a custom name.
+	 */
+	@Test
+	public void testSingleChestCustomName() throws HandlerException {
+		BlockPos center = new BlockPos(0, 0, 0);
+		makeMockWorld();
+		placeBlockAt(center, Blocks.CHEST);
+		TileEntityChest te = new TileEntityChest();
+		te.setCustomName("A chest");
+		te.setInventorySlotContents(2, new ItemStack(Items.BEEF));
+		placeTEAt(center, te);
+
+		ContainerChest container = (ContainerChest) makeClientContainer(center);
+
+		runHandler(center, container);
+
+		checkAllTEs();
+	}
+
+	/**
+	 * Test that is known to fail: a single chest with a name that matches the vanilla
+	 * name (this matters because translation) 
+	 */
+	@Test
+	@Ignore
+	public void testSingleChestCustomNameMatchesRealName() throws HandlerException {
+		BlockPos center = new BlockPos(0, 0, 0);
+		makeMockWorld();
+		placeBlockAt(center, Blocks.CHEST);
+		TileEntityChest te = new TileEntityChest();
+		te.setCustomName("Chest");
+		te.setInventorySlotContents(2, new ItemStack(Items.BEEF));
+		placeTEAt(center, te);
+
+		ContainerChest container = (ContainerChest) makeClientContainer(center);
+
+		runHandler(center, container);
+
+		checkAllTEs();
+	}
+
+	/**
 	 * Real-world tests, that is known to fail. A quintuple chest system.
 	 */
 	@Test
