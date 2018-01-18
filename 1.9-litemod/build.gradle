@@ -105,6 +105,7 @@ sourceSets {
         java {
             srcDir project(':1.9').file("src/test/java")
             srcDir project(':share').file("src/test/java")
+            exclude "wdl/handler/block/ShulkerBoxTest.java"
         }
     }
     api {

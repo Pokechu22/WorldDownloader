@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -239,29 +240,45 @@ public abstract class AbstractWorldBehaviorTest {
 			clientInv.setField(i, serverInv.getField(i));
 		}
 
-		// EntityPlayerSP.displayGUIChest(IInventory) found in handleOpenWindow
-		// melded with the container code in each GUI
-		Container container;
-		if ("minecraft:chest".equals(guiID)) {
-			container = new ContainerChest(player.inventory, clientInv, player);
-		} else if ("minecraft:hopper".equals(guiID)) {
-			container = new ContainerHopper(player.inventory, clientInv, player);
-		} else if ("minecraft:furnace".equals(guiID)) {
-			container = new ContainerFurnace(player.inventory, clientInv);
-		} else if ("minecraft:brewing_stand".equals(guiID)) {
-			container = new ContainerBrewingStand(player.inventory, clientInv);
-		} else if ("minecraft:beacon".equals(guiID)) {
-			container = new ContainerBeacon(player.inventory, clientInv);
-		} else if ("minecraft:dispenser".equals(guiID) || "minecraft:dropper".equals(guiID)) {
-			container = new ContainerDispenser(player.inventory, clientInv);
-		// } else if ("minecraft:shulker_box".equals(guiID)) {
-		//     container = new ContainerShulkerBox(player.inventory, clientInv, player);
-		} else {
+		Container container = makeContainer(guiID, player, clientInv);
+		if (container == null) {
 			// Unknown -- i.e. minecraft:container
-			container = new ContainerChest(player.inventory, clientInv, player);
+			LOGGER.warn("Unknown container type {} for {} at {}", guiID, serverTE, pos);
+			return new ContainerChest(player.inventory, clientInv, player);
+		} else {
+			return container;
 		}
+	}
 
-		return container;
+	/**
+	 * Creates a container with the given GUI ID. This method is needed to implement
+	 * shulker boxes (as we can't reference them in older versions), but is a fairly
+	 * ugly hack.
+	 *
+	 * @param guiID
+	 *            The ID
+	 * @param player
+	 *            The player for the GUI
+	 * @param clientInv
+	 *            The other inventory
+	 * @return the container, or null if it can't be figured out
+	 */
+	@Nullable
+	protected Container makeContainer(String guiID, EntityPlayer player, IInventory clientInv) {
+		if ("minecraft:chest".equals(guiID)) {
+			return new ContainerChest(player.inventory, clientInv, player);
+		} else if ("minecraft:hopper".equals(guiID)) {
+			return new ContainerHopper(player.inventory, clientInv, player);
+		} else if ("minecraft:furnace".equals(guiID)) {
+			return new ContainerFurnace(player.inventory, clientInv);
+		} else if ("minecraft:brewing_stand".equals(guiID)) {
+			return new ContainerBrewingStand(player.inventory, clientInv);
+		} else if ("minecraft:beacon".equals(guiID)) {
+			return new ContainerBeacon(player.inventory, clientInv);
+		} else if ("minecraft:dispenser".equals(guiID) || "minecraft:dropper".equals(guiID)) {
+			return new ContainerDispenser(player.inventory, clientInv);
+		}
+		return null;
 	}
 
 	/**
