@@ -42,6 +42,7 @@ import net.minecraft.client.player.inventory.ContainerLocalMenu;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.resources.Locale;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Bootstrap;
 import net.minecraft.inventory.Container;
@@ -77,6 +78,9 @@ public abstract class AbstractWorldBehaviorTest {
 	protected World serverWorld, clientWorld;
 	/** A player entity.  Has a valid inventory. */
 	protected EntityPlayer player = mock(EntityPlayer.class);
+	{
+		player.inventory = new InventoryPlayer(player);
+	}
 	/** A set containing all original TEs. */
 	private Set<BlockPos> origTEPoses;
 	/** A map of block entities for the user to save into. */
