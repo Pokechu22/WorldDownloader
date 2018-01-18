@@ -31,6 +31,7 @@ public class BeaconHandler extends BlockHandler<TileEntityBeacon, ContainerBeaco
 	public String handle(BlockPos clickedPos, ContainerBeacon container,
 			TileEntityBeacon blockEntity, IBlockAccess world,
 			BiConsumer<BlockPos, TileEntityBeacon> saveMethod) throws HandlerException {
+		// NOTE: beacons do not have custom names, see https://bugs.mojang.com/browse/MC-124395
 		IInventory beaconInventory = container.getTileEntity();
 		saveContainerItems(container, blockEntity, 0);
 		saveInventoryFields(beaconInventory, blockEntity);
