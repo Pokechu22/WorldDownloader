@@ -17,7 +17,6 @@ package wdl.handler.block;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -37,10 +36,9 @@ import wdl.handler.block.ChestHandler;
  */
 public class ChestTest extends AbstractWorldBehaviorTest {
 
-	protected ChestHandler handler;
-	@Before
-	public void prepare() {
-		this.handler = new ChestHandler();
+	@Override
+	protected BlockHandler<?, ?> makeHandler() {
+		return new ChestHandler();
 	}
 
 	@Test
@@ -54,7 +52,7 @@ public class ChestTest extends AbstractWorldBehaviorTest {
 
 		ContainerChest container = (ContainerChest) makeClientContainer(center);
 
-		handler.handle(center, container, te, clientWorld, tileEntities::put);
+		runHandler(center, container);
 
 		checkAllTEs();
 	}
@@ -83,7 +81,7 @@ public class ChestTest extends AbstractWorldBehaviorTest {
 
 			ContainerChest container = (ContainerChest) makeClientContainer(center);
 
-			handler.handle(center, container, te1, clientWorld, tileEntities::put);
+			runHandler(center, container);
 
 			checkAllTEs();
 		}
@@ -121,7 +119,7 @@ public class ChestTest extends AbstractWorldBehaviorTest {
 
 			ContainerChest container = (ContainerChest) makeClientContainer(center);
 
-			handler.handle(center, container, te1, clientWorld, tileEntities::put);
+			runHandler(center, container);
 
 			// Only those two were saved
 			assertThat(tileEntities.keySet(), containsInAnyOrder(center, offset));
@@ -154,7 +152,7 @@ public class ChestTest extends AbstractWorldBehaviorTest {
 		placeTEAt(offset, te2);
 
 		ContainerChest container = (ContainerChest) makeClientContainer(center);
-		handler.handle(center, container, te1, clientWorld, tileEntities::put);
+		runHandler(center, container);
 		checkAllTEs();
 	}
 
@@ -181,7 +179,7 @@ public class ChestTest extends AbstractWorldBehaviorTest {
 		placeTEAt(offset, te2);
 
 		ContainerChest container = (ContainerChest) makeClientContainer(center);
-		handler.handle(center, container, te1, clientWorld, tileEntities::put);
+		runHandler(center, container);
 		// Fails as both chests are named "Name 1"
 		checkAllTEs();
 	}
@@ -208,7 +206,7 @@ public class ChestTest extends AbstractWorldBehaviorTest {
 		placeTEAt(offset, te2);
 
 		ContainerChest container = (ContainerChest) makeClientContainer(center);
-		handler.handle(center, container, te1, clientWorld, tileEntities::put);
+		runHandler(center, container);
 		// Fails as both chests are named "Name 1" even though one should be unnamed
 		checkAllTEs();
 	}
@@ -237,7 +235,7 @@ public class ChestTest extends AbstractWorldBehaviorTest {
 		placeTEAt(offset, te2);
 
 		ContainerChest container = (ContainerChest) makeClientContainer(center);
-		handler.handle(center, container, te1, clientWorld, tileEntities::put);
+		runHandler(center, container);
 		// Fails as the custom name is lost
 		checkAllTEs();
 	}
@@ -265,7 +263,7 @@ public class ChestTest extends AbstractWorldBehaviorTest {
 		}
 
 		ContainerChest container = (ContainerChest) makeClientContainer(center);
-		handler.handle(center, container, te, clientWorld, tileEntities::put);
+		runHandler(center, container);
 		// Fails due to only handling 2 of the chests
 		checkAllTEs();
 	}

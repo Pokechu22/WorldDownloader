@@ -31,6 +31,7 @@ import org.apache.logging.log4j.Logger;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.Before;
 import org.junit.BeforeClass;
 
 import net.minecraft.block.Block;
@@ -59,6 +60,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IInteractionObject;
 import net.minecraft.world.World;
 import wdl.ReflectionUtils;
+import wdl.handler.block.BlockHandler;
+import wdl.handler.block.BlockHandler.HandlerException;
 
 /**
  * Base logic shared between all tests that use blocks.
@@ -68,6 +71,8 @@ import wdl.ReflectionUtils;
  */
 public abstract class AbstractWorldBehaviorTest {
 	private static final Logger LOGGER = LogManager.getLogger();
+	/** Handler under test */
+	protected BlockHandler<?, ?> handler;
 	/** Worlds corresponding to what the server and client know */
 	protected World serverWorld, clientWorld;
 	/** A player entity.  Has a valid inventory. */
@@ -93,6 +98,19 @@ public abstract class AbstractWorldBehaviorTest {
 		initI18n();
 		LOGGER.debug("Set up I18n.");
 	}
+
+	/**
+	 * Called by JUnit; sets {@link #handler}.
+	 */
+	@Before
+	public final void prepareHandler() {
+		this.handler = makeHandler();
+	}
+
+	/**
+	 * Creates a handler instance.
+	 */
+	protected abstract BlockHandler<?, ?> makeHandler();
 
 	/**
 	 * Prepares a fake Locale instance for I18n.
@@ -240,6 +258,18 @@ public abstract class AbstractWorldBehaviorTest {
 		}
 
 		return container;
+	}
+
+	/**
+	 * Runs the handler, performing tile entity lookup and casting.
+	 *
+	 * @param pos The position to check
+	 * @param container The container to use
+	 * @throws HandlerException when the handler does
+	 */
+	protected void runHandler(BlockPos pos, Container container) throws HandlerException {
+		TileEntity te = clientWorld.getTileEntity(pos);
+		handler.handleCasting(pos, container, te, clientWorld, tileEntities::put);
 	}
 
 	/**
