@@ -248,7 +248,7 @@ public abstract class AbstractWorldBehaviorTest {
 			container = new ContainerBrewingStand(player.inventory, clientInv);
 		} else if ("minecraft:beacon".equals(guiID)) {
 			container = new ContainerBeacon(player.inventory, clientInv);
-		} else if ("minecraft:dispenser".equals(guiID) && "minecraft:dropper".equals(guiID)) {
+		} else if ("minecraft:dispenser".equals(guiID) || "minecraft:dropper".equals(guiID)) {
 			container = new ContainerDispenser(player.inventory, clientInv);
 		// } else if ("minecraft:shulker_box".equals(guiID)) {
 		//     container = new ContainerShulkerBox(player.inventory, clientInv, player);
