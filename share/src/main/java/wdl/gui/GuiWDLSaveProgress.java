@@ -113,6 +113,8 @@ public class GuiWDLSaveProgress extends GuiTurningCameraBase {
 	 */
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		this.drawDefaultBackground();
+
 		if (this.doneWorking) {
 			this.mc.displayGuiScreen((GuiScreen) null);
 		} else {

@@ -388,6 +388,8 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	 */
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		this.drawDefaultBackground();
+
 		if (index >= linkedWorlds.size() - numWorldButtons) {
 			index = linkedWorlds.size() - numWorldButtons;
 			nextButton.enabled = false;

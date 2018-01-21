@@ -176,4 +176,16 @@ public abstract class GuiTurningCameraBase extends GuiScreen {
 		WDL.minecraft.gameSettings.chatVisibility = oldChatVisibility;
 		WDL.minecraft.setRenderViewEntity(this.oldRenderViewEntity);
 	}
+
+	/**
+	 * Draws a dirt background if there is no world.  Subclasses must call this,
+	 * to prevent <a href="https://user-images.githubusercontent.com/8334194/35199077-95ed2e84-fef0-11e7-83d7-bd6088169c84.png">
+	 * graphical issues</a> when there is no world.
+	 */
+	@Override
+	public void drawDefaultBackground() {
+		if (mc.world == null) {
+			this.drawBackground(0);
+		}
+	}
 }

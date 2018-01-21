@@ -229,6 +229,8 @@ IBackupProgressMonitor {
 
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		this.drawDefaultBackground();
+
 		if (this.backingUp) {
 			drawBackground(0);
 
