@@ -87,38 +87,40 @@ public abstract class GuiTurningCameraBase extends GuiScreen {
 	 */
 	@Override
 	public void updateScreen() {
-		this.cam.prevRotationPitch = this.cam.rotationPitch = 0.0F;
-		this.cam.prevRotationYaw = this.yaw;
-		this.cam.lastTickPosY = this.cam.prevPosY = this.cam.posY;
-		this.cam.lastTickPosX = this.cam.prevPosX = this.cam.posX;
-		this.cam.lastTickPosZ = this.cam.prevPosZ = this.cam.posZ;
+		if (mc.world != null) {
+			this.cam.prevRotationPitch = this.cam.rotationPitch = 0.0F;
+			this.cam.prevRotationYaw = this.yaw;
+			this.cam.lastTickPosY = this.cam.prevPosY = this.cam.posY;
+			this.cam.lastTickPosX = this.cam.prevPosX = this.cam.posX;
+			this.cam.lastTickPosZ = this.cam.prevPosZ = this.cam.posZ;
 
-		// TODO: Rewrite this function as a function of time, rather than
-		// an incremental function, if it's possible to do so.
-		// Due to the fact that it refers to itself, I have no idea how to
-		// approach the problem - it's some kind of integration that would be
-		// needed, but it's really complex.
+			// TODO: Rewrite this function as a function of time, rather than
+			// an incremental function, if it's possible to do so.
+			// Due to the fact that it refers to itself, I have no idea how to
+			// approach the problem - it's some kind of integration that would be
+			// needed, but it's really complex.
 
-		// Yaw is in degrees, but Math.cos is in radians. The
-		// "(this.yaw + 45) / 45.0 * Math.PI)" portion basically makes cosine
-		// give the lowest values in each cardinal direction and the highest
-		// while looking diagonally.  These are then multiplied by .7 and added
-		// to 1, which creates a speed varying from .3 to 1.7.  This causes it
-		// to speed through diagonals and go slow in cardinal directions, which
-		// is the behavior we want.
-		this.yaw = (this.yaw + ROTATION_SPEED
-				* (float) (1 + ROTATION_VARIANCE
-						* Math.cos((this.yaw + 45) / 45.0 * Math.PI)));
+			// Yaw is in degrees, but Math.cos is in radians. The
+			// "(this.yaw + 45) / 45.0 * Math.PI)" portion basically makes cosine
+			// give the lowest values in each cardinal direction and the highest
+			// while looking diagonally.  These are then multiplied by .7 and added
+			// to 1, which creates a speed varying from .3 to 1.7.  This causes it
+			// to speed through diagonals and go slow in cardinal directions, which
+			// is the behavior we want.
+			this.yaw = (this.yaw + ROTATION_SPEED
+					* (float) (1 + ROTATION_VARIANCE
+							* Math.cos((this.yaw + 45) / 45.0 * Math.PI)));
 
-		this.cam.rotationYaw = this.yaw;
+			this.cam.rotationYaw = this.yaw;
 
-		double x = Math.cos(yaw / 180.0D * Math.PI);
-		double z = Math.sin((yaw - 90) / 180.0D * Math.PI);
+			double x = Math.cos(yaw / 180.0D * Math.PI);
+			double z = Math.sin((yaw - 90) / 180.0D * Math.PI);
 
-		double distance = truncateDistanceIfBlockInWay(x, z, .5);
-		this.cam.posY = WDL.thePlayer.posY;
-		this.cam.posX = WDL.thePlayer.posX - distance * x;
-		this.cam.posZ = WDL.thePlayer.posZ + distance * z;
+			double distance = truncateDistanceIfBlockInWay(x, z, .5);
+			this.cam.posY = WDL.thePlayer.posY;
+			this.cam.posX = WDL.thePlayer.posX - distance * x;
+			this.cam.posZ = WDL.thePlayer.posZ + distance * z;
+		}
 
 		super.updateScreen();
 	}
