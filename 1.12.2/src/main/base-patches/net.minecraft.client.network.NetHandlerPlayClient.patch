@@ -2,8 +2,8 @@
 +++ net/minecraft/client/network/NetHandlerPlayClient.java
 @@ -796,6 +796,10 @@
  	public void handleChat(SPacketChat packetIn) {
- 		PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.gameController);
- 		this.gameController.ingameGUI.addChatMessage(packetIn.getType(), packetIn.getChatComponent());
+ 		PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.client);
+ 		this.client.ingameGUI.addChatMessage(packetIn.getType(), packetIn.getChatComponent());
 +
 +		/* WDL >>> */
 +		wdl.WDLHooks.onNHPCHandleChat(this, packetIn);
@@ -13,8 +13,8 @@
  	/**
 @@ -1175,6 +1179,10 @@
  	public void handleBlockAction(SPacketBlockAction packetIn) {
- 		PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.gameController);
- 		this.gameController.world.addBlockEvent(packetIn.getBlockPosition(), packetIn.getBlockType(), packetIn.getData1(), packetIn.getData2());
+ 		PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.client);
+ 		this.client.world.addBlockEvent(packetIn.getBlockPosition(), packetIn.getBlockType(), packetIn.getData1(), packetIn.getData2());
 +
 +		/* WDL >>> */
 +		wdl.WDLHooks.onNHPCHandleBlockAction(this, packetIn);
@@ -35,7 +35,7 @@
  	public void handleEffect(SPacketEffect packetIn) {
 @@ -1685,6 +1697,10 @@
  			String s1 = packetbuffer3.readString(256);
- 			this.gameController.getSoundHandler().stop(s1, SoundCategory.getByName(s));
+ 			this.client.getSoundHandler().stop(s1, SoundCategory.getByName(s));
  		}
 +
 +		/* WDL >>> */
