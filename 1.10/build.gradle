@@ -55,6 +55,7 @@ extraSrgs {
     addSrg file('../srgs/AnimalChestToContainerHorseChest.srg')
     addMethods file('../srgs/liteloader_1.10_methods.csv')
     addMethods file('../srgs/old_inventory_methods.csv')
+    addMethods file('../srgs/1.11_gui_methods.csv')
     addFields file('../srgs/old_inventory_fields.csv')
     addPatch('net.minecraft.entity.passive.EquineEntity.java', file('../srgs/EE_1.10.x.patch'))
 }

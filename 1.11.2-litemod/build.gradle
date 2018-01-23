@@ -54,6 +54,7 @@ minecraft {
 
 extraSrgs {
     addSrg file('../srgs/AbstractHorseToEquineEntity.srg')
+    addMethods file('../srgs/1.11_gui_methods.csv')
     addPatch('net.minecraft.entity.passive.EquineEntity.java', file('../srgs/EE_1.11.x.patch'))
 }
 

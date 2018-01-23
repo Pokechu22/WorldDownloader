@@ -238,7 +238,6 @@ public class WDLHooks {
 
 			PROFILER.startSection("wdl.onChatMessage");
 
-			//func_148915_c returns the ITextComponent.
 			String chatMessage = packet.getChatComponent().getUnformattedText();
 
 			PROFILER.startSection("Core");
