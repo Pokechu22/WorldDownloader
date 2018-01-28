@@ -33,15 +33,14 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.runner.RunWith;
+import org.spongepowered.lwts.runner.LaunchWrapperTestRunner;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.player.inventory.ContainerLocalMenu;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.resources.Locale;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
@@ -61,7 +60,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IInteractionObject;
 import net.minecraft.world.World;
-import wdl.ReflectionUtils;
 import wdl.handler.block.BlockHandler;
 import wdl.handler.block.BlockHandler.HandlerException;
 
@@ -71,6 +69,7 @@ import wdl.handler.block.BlockHandler.HandlerException;
  * Ensures that the {@link Bootstrap} is initialized, so that classes such as
  * {@link Blocks} can be used.
  */
+@RunWith(LaunchWrapperTestRunner.class)
 public abstract class AbstractWorldBehaviorTest {
 	private static final Logger LOGGER = LogManager.getLogger();
 	/** Handler under test */
@@ -87,23 +86,6 @@ public abstract class AbstractWorldBehaviorTest {
 	/** A map of block entities for the user to save into. */
 	protected Map<BlockPos, TileEntity> tileEntities;
 
-	@BeforeClass
-	public static void initBootstarp() {
-		if (Bootstrap.isRegistered()) {
-			LOGGER.warn("Bootstrap already initialized.");
-			return;
-		}
-		LOGGER.debug("Initializing bootstrap...");
-		Bootstrap.register();
-		LOGGER.debug("Initialized bootstrap.");
-		// Note: not checking Bootstrap.hasErrored as that didn't exist in older
-		// versions
-
-		LOGGER.debug("Setting up I18n...");
-		initI18n();
-		LOGGER.debug("Set up I18n.");
-	}
-
 	/**
 	 * Called by JUnit; sets {@link #handler}.
 	 */
@@ -116,24 +98,6 @@ public abstract class AbstractWorldBehaviorTest {
 	 * Creates a handler instance.
 	 */
 	protected abstract BlockHandler<?, ?> makeHandler();
-
-	/**
-	 * Prepares a fake Locale instance for I18n.
-	 */
-	private static void initI18n() {
-		@SuppressWarnings("deprecation")
-		class FakeLocale extends Locale {
-			@Override
-			public String formatMessage(String translateKey, Object[] parameters) {
-				return net.minecraft.util.text.translation.I18n.translateToLocalFormatted(translateKey, parameters);
-			}
-			@Override
-			public boolean hasKey(String key) {
-				return net.minecraft.util.text.translation.I18n.canTranslate(key);
-			}
-		}
-		ReflectionUtils.findAndSetPrivateField(I18n.class, Locale.class, new FakeLocale());
-	}
 
 	/**
 	 * Creates a mock world, returning air for blocks and null for TEs.

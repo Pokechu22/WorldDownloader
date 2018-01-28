@@ -29,7 +29,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import wdl.handler.block.BlockHandler.HandlerException;
 import wdl.handler.AbstractWorldBehaviorTest;
-import wdl.handler.block.ChestHandler;
 
 /**
  * Tests single and double chests.
