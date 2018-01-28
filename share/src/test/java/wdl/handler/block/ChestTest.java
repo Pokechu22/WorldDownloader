@@ -160,7 +160,7 @@ public class ChestTest extends AbstractWorldBehaviorTest {
 	 * Real-world tests, that is known to fail. Two chests with conflicting names.
 	 */
 	@Test
-	@Ignore
+	@Ignore("Known failure")
 	public void testCustomNameConflict() throws HandlerException {
 		makeMockWorld();
 
@@ -188,7 +188,7 @@ public class ChestTest extends AbstractWorldBehaviorTest {
 	 * Real-world tests, that is known to fail. Only one of two chests is named.
 	 */
 	@Test
-	@Ignore
+	@Ignore("Known failure")
 	public void testCustomNameSingle() throws HandlerException {
 		makeMockWorld();
 
@@ -212,11 +212,10 @@ public class ChestTest extends AbstractWorldBehaviorTest {
 	}
 
 	/**
-	 * Test that is known to fail: two chests with a name that matches the vanilla
-	 * name (this matters because translation)
+	 * Two chests with a name that matches the vanilla name (this matters because
+	 * translation)
 	 */
 	@Test
-	@Ignore
 	public void testCustomNameMatchesRealName() throws HandlerException {
 		makeMockWorld();
 
@@ -261,11 +260,10 @@ public class ChestTest extends AbstractWorldBehaviorTest {
 	}
 
 	/**
-	 * Test that is known to fail: a single chest with a name that matches the vanilla
-	 * name (this matters because translation) 
+	 * A single chest with a name that matches the vanilla name (this matters
+	 * because translation)
 	 */
 	@Test
-	@Ignore
 	public void testSingleChestCustomNameMatchesRealName() throws HandlerException {
 		BlockPos center = new BlockPos(0, 0, 0);
 		makeMockWorld();
@@ -286,7 +284,7 @@ public class ChestTest extends AbstractWorldBehaviorTest {
 	 * Real-world tests, that is known to fail. A quintuple chest system.
 	 */
 	@Test
-	@Ignore
+	@Ignore("Known failure")
 	public void testQuintupleChest() throws HandlerException {
 		makeMockWorld();
 

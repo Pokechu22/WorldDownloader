@@ -18,13 +18,13 @@ import java.util.function.BiConsumer;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import wdl.WDLMessageTypes;
+import wdl.ducks.INetworkNameable;
 
 public class ChestHandler extends BlockHandler<TileEntityChest, ContainerChest> {
 	public ChestHandler() {
@@ -35,22 +35,12 @@ public class ChestHandler extends BlockHandler<TileEntityChest, ContainerChest> 
 	public String handle(BlockPos clickedPos, ContainerChest container,
 			TileEntityChest blockEntity, IBlockAccess world,
 			BiConsumer<BlockPos, TileEntityChest> saveMethod) throws HandlerException {
-		// Note: It would look like getDisplayName should work
-		// and that you'd be able to identify an ITextComponent as either
-		// a translation component or a text component, but that'd be wrong
-		// due to strange server/client stuff that I haven't fully explored.
-		String title = container.getLowerChestInventory().getName();
+		String title = ((INetworkNameable) container.getLowerChestInventory()).getCustomDisplayName();
 
 		if (container.inventorySlots.size() > 63) {
-			if (title.equals(I18n.format("container.chestDouble"))) {
-				title = null;
-			}
 			saveDoubleChest(clickedPos, container, blockEntity, world, saveMethod, title);
 			return "wdl.messages.onGuiClosedInfo.savedTileEntity.doubleChest";
 		} else {
-			if (title.equals(I18n.format("container.chest"))) {
-				title = null;
-			}
 			saveSingleChest(clickedPos, container, blockEntity, world, saveMethod, title);
 			return "wdl.messages.onGuiClosedInfo.savedTileEntity.singleChest";
 		}

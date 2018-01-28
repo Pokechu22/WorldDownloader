@@ -76,6 +76,7 @@ sourceSets {
                 "net.minecraft.client.gui.GuiIngameMenu",
                 "net.minecraft.client.multiplayer.WorldClient",
                 "net.minecraft.client.network.NetHandlerPlayClient",
+                "net.minecraft.inventory.InventoryBasic",
                 // Auxiliary hooks, only needed for the base edit
                 "net.minecraft.crash.CrashReport",
                 "net.minecraft.client.ClientBrandRetriever",
