@@ -33,8 +33,6 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
-import org.junit.runner.RunWith;
-import org.spongepowered.lwts.runner.LaunchWrapperTestRunner;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
@@ -60,6 +58,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IInteractionObject;
 import net.minecraft.world.World;
+import wdl.MaybeMixinTest;
 import wdl.handler.block.BlockHandler;
 import wdl.handler.block.BlockHandler.HandlerException;
 
@@ -69,8 +68,7 @@ import wdl.handler.block.BlockHandler.HandlerException;
  * Ensures that the {@link Bootstrap} is initialized, so that classes such as
  * {@link Blocks} can be used.
  */
-@RunWith(LaunchWrapperTestRunner.class)
-public abstract class AbstractWorldBehaviorTest {
+public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 	private static final Logger LOGGER = LogManager.getLogger();
 	/** Handler under test */
 	protected BlockHandler<?, ?> handler;

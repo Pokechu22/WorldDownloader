@@ -1,14 +1,11 @@
 /*
  * This file is from the documentation for LaunchWrapperTestSuite:
  * https://github.com/SpongePowered/LaunchWrapperTestSuite.
- *
- * Redistribution is not restricted in any way.
  */
 package wdl;
 
 import org.spongepowered.asm.launch.MixinBootstrap;
 import org.spongepowered.asm.mixin.MixinEnvironment;
-import org.spongepowered.asm.mixin.Mixins;
 import org.spongepowered.lwts.AbstractTestTweaker;
 
 import net.minecraft.launchwrapper.LaunchClassLoader;
@@ -22,7 +19,7 @@ public class WDLTestTweaker extends AbstractTestTweaker {
 
 		// Mixin environment
 		MixinBootstrap.init();
-		Mixins.addConfiguration("mixins.LiteModWDL.json");
+		MixinEnvironment.getDefaultEnvironment().addConfiguration("mixins.LiteModWDL.json");
 		// Set Mixin side, otherwise you get a warning when running the tests
 		MixinEnvironment.getDefaultEnvironment().setSide(MixinEnvironment.Side.CLIENT);
 	}

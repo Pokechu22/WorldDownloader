@@ -92,7 +92,7 @@ sourceSets {
     }
     test {
         java {
-            srcDir project(':1.11.2').file("src/test/java")
+            srcDir "src/test/java"
             srcDir project(':share').file("src/test/java")
         }
     }
