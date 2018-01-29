@@ -22,6 +22,7 @@ import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import wdl.ReflectionUtils;
+import wdl.ducks.INetworkNameable;
 
 public class FurnaceHandler extends BlockHandler<TileEntityFurnace, ContainerFurnace> {
 	public FurnaceHandler() {
@@ -34,8 +35,12 @@ public class FurnaceHandler extends BlockHandler<TileEntityFurnace, ContainerFur
 			BiConsumer<BlockPos, TileEntityFurnace> saveMethod) throws HandlerException {
 		IInventory furnaceInventory = ReflectionUtils.findAndGetPrivateField(
 				container, IInventory.class);
+		String title = ((INetworkNameable) furnaceInventory).getCustomDisplayName();
 		saveContainerItems(container, blockEntity, 0);
 		saveInventoryFields(furnaceInventory, blockEntity);
+		if (title != null) {
+			blockEntity.setCustomInventoryName(title);
+		}
 		saveMethod.accept(clickedPos, blockEntity);
 		return "wdl.messages.onGuiClosedInfo.savedTileEntity.furnace";
 	}

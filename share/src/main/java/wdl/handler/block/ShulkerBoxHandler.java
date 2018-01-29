@@ -22,6 +22,7 @@ import net.minecraft.tileentity.TileEntityShulkerBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import wdl.ReflectionUtils;
+import wdl.ducks.INetworkNameable;
 
 public class ShulkerBoxHandler extends BlockHandler<TileEntityShulkerBox, ContainerShulkerBox> {
 	public ShulkerBoxHandler() {
@@ -32,10 +33,14 @@ public class ShulkerBoxHandler extends BlockHandler<TileEntityShulkerBox, Contai
 	public String handle(BlockPos clickedPos, ContainerShulkerBox container,
 			TileEntityShulkerBox blockEntity, IBlockAccess world,
 			BiConsumer<BlockPos, TileEntityShulkerBox> saveMethod) throws HandlerException {
-		IInventory brewingInventory = ReflectionUtils.findAndGetPrivateField(
+		IInventory shulkerInventory = ReflectionUtils.findAndGetPrivateField(
 				container, IInventory.class);
+		String title = ((INetworkNameable) shulkerInventory).getCustomDisplayName();
 		saveContainerItems(container, blockEntity, 0);
-		saveInventoryFields(brewingInventory, blockEntity);
+		saveInventoryFields(shulkerInventory, blockEntity);
+		if (title != null) {
+			blockEntity.setCustomName(title);
+		}
 		saveMethod.accept(clickedPos, blockEntity);
 		return "wdl.messages.onGuiClosedInfo.savedTileEntity.shulkerBox";
 	}

@@ -14,7 +14,6 @@
  */
 package wdl.handler.block;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import net.minecraft.init.Blocks;
@@ -73,7 +72,6 @@ public class BrewingStandTest extends AbstractWorldBehaviorTest {
 	 * Test a normal custom name
 	 */
 	@Test
-	@Ignore("Not yet implemented")
 	public void testCustomName() throws HandlerException {
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
@@ -90,7 +88,6 @@ public class BrewingStandTest extends AbstractWorldBehaviorTest {
 	 * Test a normal custom name matching the vanilla name
 	 */
 	@Test
-	@Ignore("Known to fail")
 	public void testCustomNameVanilla() throws HandlerException {
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();

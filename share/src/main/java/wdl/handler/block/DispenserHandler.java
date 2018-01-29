@@ -17,9 +17,12 @@ package wdl.handler.block;
 import java.util.function.BiConsumer;
 
 import net.minecraft.inventory.ContainerDispenser;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
+import wdl.ReflectionUtils;
+import wdl.ducks.INetworkNameable;
 
 public class DispenserHandler extends BlockHandler<TileEntityDispenser, ContainerDispenser> {
 	public DispenserHandler() {
@@ -30,8 +33,14 @@ public class DispenserHandler extends BlockHandler<TileEntityDispenser, Containe
 	public String handle(BlockPos clickedPos, ContainerDispenser container,
 			TileEntityDispenser blockEntity, IBlockAccess world,
 			BiConsumer<BlockPos, TileEntityDispenser> saveMethod) throws HandlerException {
+		IInventory dispenserInventory = ReflectionUtils.findAndGetPrivateField(
+				container, IInventory.class);
+		String title = ((INetworkNameable) dispenserInventory).getCustomDisplayName();
 		saveContainerItems(container, blockEntity, 0);
 		saveMethod.accept(clickedPos, blockEntity);
+		if (title != null) {
+			blockEntity.setCustomName(title);
+		}
 		return "wdl.messages.onGuiClosedInfo.savedTileEntity.dispenser";
 	}
 }

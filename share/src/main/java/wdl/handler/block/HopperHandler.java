@@ -17,9 +17,12 @@ package wdl.handler.block;
 import java.util.function.BiConsumer;
 
 import net.minecraft.inventory.ContainerHopper;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
+import wdl.ReflectionUtils;
+import wdl.ducks.INetworkNameable;
 
 public class HopperHandler extends BlockHandler<TileEntityHopper, ContainerHopper> {
 	public HopperHandler() {
@@ -30,8 +33,14 @@ public class HopperHandler extends BlockHandler<TileEntityHopper, ContainerHoppe
 	public String handle(BlockPos clickedPos, ContainerHopper container,
 			TileEntityHopper blockEntity, IBlockAccess world,
 			BiConsumer<BlockPos, TileEntityHopper> saveMethod) throws HandlerException {
+		IInventory hopperInventory = ReflectionUtils.findAndGetPrivateField(
+				container, IInventory.class);
+		String title = ((INetworkNameable) hopperInventory).getCustomDisplayName();
 		saveContainerItems(container, blockEntity, 0);
 		saveMethod.accept(clickedPos, blockEntity);
+		if (title != null) {
+			blockEntity.setCustomName(title);
+		}
 		return "wdl.messages.onGuiClosedInfo.savedTileEntity.hopper";
 	}
 }

@@ -14,7 +14,6 @@
  */
 package wdl.handler.block;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -58,7 +57,6 @@ public class ShulkerBoxTest extends AbstractWorldBehaviorTest {
 	}
 
 	@Test
-	@Ignore("Not yet implemented")
 	public void testCustomName() throws HandlerException {
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
@@ -73,7 +71,6 @@ public class ShulkerBoxTest extends AbstractWorldBehaviorTest {
 	}
 
 	@Test
-	@Ignore("Known to fail")
 	public void testCustomNameVanila() throws HandlerException {
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();

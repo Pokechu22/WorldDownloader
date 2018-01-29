@@ -14,7 +14,6 @@
  */
 package wdl.handler.block;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import net.minecraft.init.Blocks;
@@ -45,7 +44,6 @@ public class DispenserTest extends AbstractWorldBehaviorTest {
 	}
 
 	@Test
-	@Ignore("Not yet implemented")
 	public void testCustomName() throws HandlerException {
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
@@ -59,7 +57,6 @@ public class DispenserTest extends AbstractWorldBehaviorTest {
 	}
 
 	@Test
-	@Ignore("Not yet functional")
 	public void testCustomNameVanilla() throws HandlerException {
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
