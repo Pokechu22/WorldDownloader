@@ -43,6 +43,13 @@ apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'pokechu22.test.langrenamer'
 apply plugin: 'pokechu22.test.noinplacereobf'
 
+repositories {
+    maven {
+        name = 'sponge'
+        url = 'http://repo.spongepowered.org/maven'
+    }
+}
+
 dependencies {
     shade 'it.unimi.dsi:fastutil:7.0.12_mojang'
     testCompile 'junit:junit:4.12'
