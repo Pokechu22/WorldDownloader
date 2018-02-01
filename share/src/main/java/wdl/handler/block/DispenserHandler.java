@@ -22,11 +22,10 @@ import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import wdl.ReflectionUtils;
-import wdl.ducks.INetworkNameable;
 
 public class DispenserHandler extends BlockHandler<TileEntityDispenser, ContainerDispenser> {
 	public DispenserHandler() {
-		super(TileEntityDispenser.class, ContainerDispenser.class);
+		super(TileEntityDispenser.class, ContainerDispenser.class, "container.dispenser");
 	}
 
 	@Override
@@ -35,7 +34,7 @@ public class DispenserHandler extends BlockHandler<TileEntityDispenser, Containe
 			BiConsumer<BlockPos, TileEntityDispenser> saveMethod) throws HandlerException {
 		IInventory dispenserInventory = ReflectionUtils.findAndGetPrivateField(
 				container, IInventory.class);
-		String title = ((INetworkNameable) dispenserInventory).getCustomDisplayName();
+		String title = getCustomDisplayName(dispenserInventory);
 		saveContainerItems(container, blockEntity, 0);
 		saveMethod.accept(clickedPos, blockEntity);
 		if (title != null) {

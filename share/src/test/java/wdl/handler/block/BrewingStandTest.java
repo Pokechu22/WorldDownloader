@@ -89,6 +89,8 @@ public class BrewingStandTest extends AbstractWorldBehaviorTest {
 	 */
 	@Test
 	public void testCustomNameVanilla() throws HandlerException {
+		assumeMixinsApplied();
+
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.BREWING_STAND);

@@ -16,6 +16,7 @@ package wdl.handler;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
+import static org.junit.Assume.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -59,6 +60,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IInteractionObject;
 import net.minecraft.world.World;
 import wdl.MaybeMixinTest;
+import wdl.ducks.INetworkNameable;
 import wdl.handler.block.BlockHandler;
 import wdl.handler.block.BlockHandler.HandlerException;
 
@@ -303,5 +305,15 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 
 	protected static Matcher<TileEntity> hasSameNBTAs(TileEntity serverTE) {
 		return new HasSameNBT(serverTE);
+	}
+
+	/**
+	 * Checks that mixins were applied, and if not, then the test will be ignored
+	 * (not failed).
+	 *
+	 * @see org.junit.Assume
+	 */
+	protected static void assumeMixinsApplied() {
+		assumeTrue("Expected mixins to be applied", INetworkNameable.class.isAssignableFrom(InventoryBasic.class));
 	}
 }

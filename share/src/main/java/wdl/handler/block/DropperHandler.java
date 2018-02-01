@@ -22,11 +22,10 @@ import net.minecraft.tileentity.TileEntityDropper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import wdl.ReflectionUtils;
-import wdl.ducks.INetworkNameable;
 
 public class DropperHandler extends BlockHandler<TileEntityDropper, ContainerDispenser> {
 	public DropperHandler() {
-		super(TileEntityDropper.class, ContainerDispenser.class);
+		super(TileEntityDropper.class, ContainerDispenser.class, "container.dropper");
 	}
 
 	@Override
@@ -35,7 +34,7 @@ public class DropperHandler extends BlockHandler<TileEntityDropper, ContainerDis
 			BiConsumer<BlockPos, TileEntityDropper> saveMethod) throws HandlerException {
 		IInventory dropperInventory = ReflectionUtils.findAndGetPrivateField(
 				container, IInventory.class);
-		String title = ((INetworkNameable) dropperInventory).getCustomDisplayName();
+		String title = getCustomDisplayName(dropperInventory);
 		saveContainerItems(container, blockEntity, 0);
 		saveMethod.accept(clickedPos, blockEntity);
 		if (title != null) {

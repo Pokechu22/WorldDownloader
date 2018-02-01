@@ -22,11 +22,10 @@ import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import wdl.ReflectionUtils;
-import wdl.ducks.INetworkNameable;
 
 public class HopperHandler extends BlockHandler<TileEntityHopper, ContainerHopper> {
 	public HopperHandler() {
-		super(TileEntityHopper.class, ContainerHopper.class);
+		super(TileEntityHopper.class, ContainerHopper.class, "container.hopper");
 	}
 
 	@Override
@@ -35,7 +34,7 @@ public class HopperHandler extends BlockHandler<TileEntityHopper, ContainerHoppe
 			BiConsumer<BlockPos, TileEntityHopper> saveMethod) throws HandlerException {
 		IInventory hopperInventory = ReflectionUtils.findAndGetPrivateField(
 				container, IInventory.class);
-		String title = ((INetworkNameable) hopperInventory).getCustomDisplayName();
+		String title = getCustomDisplayName(hopperInventory);
 		saveContainerItems(container, blockEntity, 0);
 		saveMethod.accept(clickedPos, blockEntity);
 		if (title != null) {

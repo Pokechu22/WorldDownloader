@@ -71,7 +71,9 @@ public class ShulkerBoxTest extends AbstractWorldBehaviorTest {
 	}
 
 	@Test
-	public void testCustomNameVanila() throws HandlerException {
+	public void testCustomNameVanilla() throws HandlerException {
+		assumeMixinsApplied();
+
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.PURPLE_SHULKER_BOX);

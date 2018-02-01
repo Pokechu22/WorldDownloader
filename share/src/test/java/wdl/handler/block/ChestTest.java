@@ -216,6 +216,8 @@ public class ChestTest extends AbstractWorldBehaviorTest {
 	 */
 	@Test
 	public void testCustomNameMatchesRealName() throws HandlerException {
+		assumeMixinsApplied();
+
 		makeMockWorld();
 
 		BlockPos center = new BlockPos(0, 0, 0);
@@ -264,6 +266,8 @@ public class ChestTest extends AbstractWorldBehaviorTest {
 	 */
 	@Test
 	public void testSingleChestCustomNameMatchesRealName() throws HandlerException {
+		assumeMixinsApplied();
+
 		BlockPos center = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(center, Blocks.CHEST);

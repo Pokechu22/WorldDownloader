@@ -24,18 +24,17 @@ import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import wdl.WDLMessageTypes;
-import wdl.ducks.INetworkNameable;
 
 public class ChestHandler extends BlockHandler<TileEntityChest, ContainerChest> {
 	public ChestHandler() {
-		super(TileEntityChest.class, ContainerChest.class);
+		super(TileEntityChest.class, ContainerChest.class, "container.chest", "container.chestDouble");
 	}
 
 	@Override
 	public String handle(BlockPos clickedPos, ContainerChest container,
 			TileEntityChest blockEntity, IBlockAccess world,
 			BiConsumer<BlockPos, TileEntityChest> saveMethod) throws HandlerException {
-		String title = ((INetworkNameable) container.getLowerChestInventory()).getCustomDisplayName();
+		String title = getCustomDisplayName(container.getLowerChestInventory());
 
 		if (container.inventorySlots.size() > 63) {
 			saveDoubleChest(clickedPos, container, blockEntity, world, saveMethod, title);

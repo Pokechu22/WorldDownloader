@@ -22,11 +22,10 @@ import net.minecraft.tileentity.TileEntityBrewingStand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import wdl.ReflectionUtils;
-import wdl.ducks.INetworkNameable;
 
 public class BrewingStandHandler extends BlockHandler<TileEntityBrewingStand, ContainerBrewingStand> {
 	public BrewingStandHandler() {
-		super(TileEntityBrewingStand.class, ContainerBrewingStand.class);
+		super(TileEntityBrewingStand.class, ContainerBrewingStand.class, "container.brewing");
 	}
 
 	@Override
@@ -35,7 +34,7 @@ public class BrewingStandHandler extends BlockHandler<TileEntityBrewingStand, Co
 			BiConsumer<BlockPos, TileEntityBrewingStand> saveMethod) throws HandlerException {
 		IInventory brewingInventory = ReflectionUtils.findAndGetPrivateField(
 				container, IInventory.class);
-		String title = ((INetworkNameable) brewingInventory).getCustomDisplayName();
+		String title = getCustomDisplayName(brewingInventory);
 		saveContainerItems(container, blockEntity, 0);
 		saveInventoryFields(brewingInventory, blockEntity);
 		if (title != null) {

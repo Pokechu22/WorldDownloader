@@ -14,10 +14,13 @@
  */
 package wdl.handler.block;
 
+import java.util.Arrays;
 import java.util.function.BiConsumer;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
+import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -27,7 +30,14 @@ import net.minecraft.world.IBlockAccess;
 import wdl.WDL;
 import wdl.WDLMessageTypes;
 import wdl.api.IWDLMessageType;
+import wdl.ducks.INetworkNameable;
 
+/**
+ * A handler for an arbitrary block entity.
+ *
+ * @param <B> The type of block entity to handle.
+ * @param <C> The type of container associated with that block entity.
+ */
 public abstract class BlockHandler<B extends TileEntity, C extends Container> {
 	@SuppressWarnings("serial")
 	public static class HandlerException extends Exception {
@@ -44,12 +54,27 @@ public abstract class BlockHandler<B extends TileEntity, C extends Container> {
 		public final @Nonnull Object[] args;
 	}
 
-	protected BlockHandler(Class<B> blockEntityClass, Class<C> containerClass) {
+	/**
+	 * Constructor.
+	 *
+	 * @param blockEntityClass
+	 *            A strong reference to the block entity class this handles.
+	 * @param containerClass
+	 *            A strong reference to the container class this handles.
+	 * @param defaultNames
+	 *            A (potentially empty) list of the I18n keys for the default names,
+	 *            which is used if {@link INetworkNameable} is not available.
+	 */
+	protected BlockHandler(Class<B> blockEntityClass, Class<C> containerClass, String... defaultNames) {
 		this.blockEntityClass = blockEntityClass;
 		this.containerClass = containerClass;
+		this.defaultNames = defaultNames;
+		Arrays.sort(defaultNames);
 	}
 	protected final @Nonnull Class<B> blockEntityClass;
 	protected final @Nonnull Class<C> containerClass;
+	/** Translation strings for the default name(s) */
+	private final String[] defaultNames;
 	/** Gets the type of block entity handled by this. */
 	public final Class<B> getBlockEntityClass() {
 		return blockEntityClass;
@@ -152,5 +177,35 @@ public abstract class BlockHandler<B extends TileEntity, C extends Container> {
 		for (int i = 0; i < inventory.getFieldCount(); i++) {
 			tileEntity.setField(i, inventory.getField(i));
 		}
+	}
+
+	/**
+	 * Gets the "true" custom display name of this item. For instance, a furnace
+	 * that has not been renamed will return null, but a furnace that has been named
+	 * "smelter" will return "smelter", and a furnace that has been renamed to
+	 * "Furnace" will return "Furnace" (and not null).
+	 *
+	 * <p>Note that this method will attempt to use the {@link INetworkNameable}
+	 * implementation, but if the given inventory does not implement that,
+	 * then it will ignore it.  This may happen if mixins failed to apply,
+	 * for instance.
+	 *
+	 * @param inventory the inventory to check
+	 * @return The actual name from the network, or null if no custom name was set.
+	 */
+	@Nullable
+	protected String getCustomDisplayName(IInventory inventory) {
+		if (inventory instanceof INetworkNameable) {
+			return ((INetworkNameable) inventory).getCustomDisplayName();
+		}
+		// Fallback, will fail for situations where the custom name
+		// is the vanilla name
+		String name = inventory.getDisplayName().getUnformattedText();
+		for (String key : defaultNames) {
+			if (I18n.format(key).equals(name)) {
+				return null;
+			}
+		}
+		return name;
 	}
 }

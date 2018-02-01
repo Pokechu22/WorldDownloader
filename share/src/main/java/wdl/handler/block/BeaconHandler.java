@@ -24,7 +24,7 @@ import net.minecraft.world.IBlockAccess;
 
 public class BeaconHandler extends BlockHandler<TileEntityBeacon, ContainerBeacon> {
 	public BeaconHandler() {
-		super(TileEntityBeacon.class, ContainerBeacon.class);
+		super(TileEntityBeacon.class, ContainerBeacon.class, "container.beacon");
 	}
 
 	@Override

@@ -22,11 +22,10 @@ import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import wdl.ReflectionUtils;
-import wdl.ducks.INetworkNameable;
 
 public class FurnaceHandler extends BlockHandler<TileEntityFurnace, ContainerFurnace> {
 	public FurnaceHandler() {
-		super(TileEntityFurnace.class, ContainerFurnace.class);
+		super(TileEntityFurnace.class, ContainerFurnace.class, "container.furnace");
 	}
 
 	@Override
@@ -35,7 +34,7 @@ public class FurnaceHandler extends BlockHandler<TileEntityFurnace, ContainerFur
 			BiConsumer<BlockPos, TileEntityFurnace> saveMethod) throws HandlerException {
 		IInventory furnaceInventory = ReflectionUtils.findAndGetPrivateField(
 				container, IInventory.class);
-		String title = ((INetworkNameable) furnaceInventory).getCustomDisplayName();
+		String title = getCustomDisplayName(furnaceInventory);
 		saveContainerItems(container, blockEntity, 0);
 		saveInventoryFields(furnaceInventory, blockEntity);
 		if (title != null) {
