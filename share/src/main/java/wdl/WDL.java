@@ -461,7 +461,7 @@ public class WDL {
 	}
 
 	/**
-	 * Starts the asnchronous save thread.
+	 * Starts the asynchronous save thread.
 	 */
 	static void startSaveThread() {
 		// Indicate that we are saving
@@ -471,8 +471,10 @@ public class WDL {
 		Thread thread = new Thread(() -> {
 			try {
 				WDL.saveEverything();
-				WDL.saving = false;
-				WDL.onSaveComplete();
+				WDL.minecraft.addScheduledTask(() -> {
+					WDL.saving = false;
+					WDL.onSaveComplete();
+				});
 			} catch (Throwable e) {
 				WDL.crashed(e, "World Downloader Mod: Saving world");
 			}
