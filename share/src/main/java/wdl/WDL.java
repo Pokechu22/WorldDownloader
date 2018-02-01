@@ -1501,9 +1501,9 @@ public class WDL {
 	 * This is detected based off of the server brand.
 	 */
 	public static boolean isSpigot() {
-		//getClientBrand() returns the server brand; blame MCP.
 		if (thePlayer != null && thePlayer.getServerBrand() != null) {
-			return thePlayer.getServerBrand().toLowerCase().contains("spigot");
+			String brand = thePlayer.getServerBrand().toLowerCase();
+			return brand.contains("spigot") || brand.contains("paper");
 		}
 		return false;
 	}
