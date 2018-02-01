@@ -17,6 +17,8 @@ package wdl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import net.minecraft.client.resources.I18n;
+import net.minecraft.client.resources.Locale;
 import net.minecraft.init.Bootstrap;
 
 public class WDLTestMain {
@@ -33,6 +35,27 @@ public class WDLTestMain {
 		LOGGER.debug("Initialized bootstrap.");
 		if (Bootstrap.hasErrored) {
 			LOGGER.warn("Bootstrap errored!");
+		}
+
+		LOGGER.debug("Setting up I18n...");
+		// Needed to prepare a valid Locale instance for certain tests that depend upon it
+		ReflectionUtils.findAndSetPrivateField(I18n.class, Locale.class, new FakeLocale());
+		LOGGER.debug("Set up I18n.");
+	}
+
+	/**
+	 * A Locale class that delegates to the other, deprecated I18n class,
+	 * which works during testing for some reason (not depending on other assets?)
+	 */
+	@SuppressWarnings("deprecation")
+	private static class FakeLocale extends Locale {
+		@Override
+		public String formatMessage(String translateKey, Object[] parameters) {
+			return net.minecraft.util.text.translation.I18n.translateToLocalFormatted(translateKey, parameters);
+		}
+		@Override
+		public boolean hasKey(String key) {
+			return net.minecraft.util.text.translation.I18n.canTranslate(key);
 		}
 	}
 
