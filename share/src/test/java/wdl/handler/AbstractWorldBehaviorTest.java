@@ -62,7 +62,6 @@ import net.minecraft.world.World;
 import wdl.MaybeMixinTest;
 import wdl.ducks.INetworkNameable;
 import wdl.handler.block.BlockHandler;
-import wdl.handler.block.BlockHandler.HandlerException;
 
 /**
  * Base logic shared between all tests that use blocks.

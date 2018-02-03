@@ -22,7 +22,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.util.math.BlockPos;
 import wdl.handler.AbstractWorldBehaviorTest;
-import wdl.handler.block.BlockHandler.HandlerException;
+import wdl.handler.HandlerException;
 
 public class HopperTest extends AbstractWorldBehaviorTest {
 	@Override

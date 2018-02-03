@@ -80,6 +80,7 @@ sourceSets {
         java {
             srcDir "src/main/java"
             srcDir project(':share').file("src/main/java")
+            exclude "wdl/handler/package-info.java"
             exclude "wdl/handler/block/package-info.java"
             exclude "wdl/handler/block/ShulkerBoxHandler.java"
         }

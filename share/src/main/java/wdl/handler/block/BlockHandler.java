@@ -28,9 +28,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import wdl.WDL;
-import wdl.WDLMessageTypes;
-import wdl.api.IWDLMessageType;
 import wdl.ducks.INetworkNameable;
+import wdl.handler.HandlerException;
 
 /**
  * A handler for an arbitrary block entity.
@@ -39,21 +38,6 @@ import wdl.ducks.INetworkNameable;
  * @param <C> The type of container associated with that block entity.
  */
 public abstract class BlockHandler<B extends TileEntity, C extends Container> {
-	@SuppressWarnings("serial")
-	public static class HandlerException extends Exception {
-		public HandlerException(String translationKey, Object... args) {
-			this(WDLMessageTypes.ON_GUI_CLOSED_WARNING, translationKey);
-		}
-		public HandlerException(IWDLMessageType messageType, String translationKey, Object... args) {
-			this.translationKey = translationKey;
-			this.messageType = messageType;
-			this.args = args;
-		}
-		public final @Nonnull String translationKey;
-		public final @Nonnull IWDLMessageType messageType;
-		public final @Nonnull Object[] args;
-	}
-
 	/**
 	 * Constructor.
 	 *

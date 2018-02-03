@@ -22,7 +22,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.tileentity.TileEntityBeacon;
 import net.minecraft.util.math.BlockPos;
 import wdl.handler.AbstractWorldBehaviorTest;
-import wdl.handler.block.BlockHandler.HandlerException;
+import wdl.handler.HandlerException;
 
 /**
  * Tests beacons.

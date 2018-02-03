@@ -27,8 +27,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import wdl.handler.block.BlockHandler.HandlerException;
 import wdl.handler.AbstractWorldBehaviorTest;
+import wdl.handler.HandlerException;
 
 /**
  * Tests single and double chests.

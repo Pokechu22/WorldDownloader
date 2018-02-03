@@ -21,7 +21,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.util.math.BlockPos;
 import wdl.handler.AbstractWorldBehaviorTest;
-import wdl.handler.block.BlockHandler.HandlerException;
+import wdl.handler.HandlerException;
 
 public class DispenserTest extends AbstractWorldBehaviorTest {
 	@Override

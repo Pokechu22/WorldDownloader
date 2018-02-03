@@ -53,8 +53,8 @@ import net.minecraft.world.storage.MapData;
 import wdl.api.IWorldLoadListener;
 import wdl.api.WDLApi;
 import wdl.api.WDLApi.ModInfo;
+import wdl.handler.HandlerException;
 import wdl.handler.block.BlockHandler;
-import wdl.handler.block.BlockHandler.HandlerException;
 import wdl.update.WDLUpdateChecker;
 
 /**
