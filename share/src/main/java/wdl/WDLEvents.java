@@ -67,16 +67,7 @@ import wdl.update.WDLUpdateChecker;
  * should be called directly from the source and does a bit of processing, while
  */
 public class WDLEvents {
-	private static final Profiler PROFILER;
-	static {
-		// XXX This is a hack, probably should move tested code out of here
-		Minecraft minecraft = Minecraft.getMinecraft();
-		if (minecraft != null) {
-			PROFILER = minecraft.mcProfiler;
-		} else {
-			PROFILER = new Profiler();
-		}
-	}
+	private static final Profiler PROFILER = Minecraft.getMinecraft().mcProfiler;
 
 	/**
 	 * Must be called after the static World object in Minecraft has been
