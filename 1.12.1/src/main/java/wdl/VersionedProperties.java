@@ -32,6 +32,11 @@ import wdl.handler.block.DropperHandler;
 import wdl.handler.block.FurnaceHandler;
 import wdl.handler.block.HopperHandler;
 import wdl.handler.block.ShulkerBoxHandler;
+import wdl.handler.entity.EntityHandler;
+import wdl.handler.entity.HopperMinecartHandler;
+import wdl.handler.entity.HorseHandler;
+import wdl.handler.entity.StorageMinecartHandler;
+import wdl.handler.entity.VillagerHandler;
 
 /**
  * Helper that determines version-specific information about things, such
@@ -71,6 +76,16 @@ public class VersionedProperties {
 			new FurnaceHandler(),
 			new HopperHandler(),
 			new ShulkerBoxHandler()
+	);
+
+	/**
+	 * All supported {@link EntityHandler}s.  There will be no ambiguities.
+	 */
+	public static final ImmutableList<EntityHandler<?, ?>> ENTITY_HANDLERS = ImmutableList.of(
+			new HopperMinecartHandler(),
+			new HorseHandler(),
+			new StorageMinecartHandler(),
+			new VillagerHandler()
 	);
 
 	/**

@@ -14,25 +14,13 @@
  */
 package wdl;
 
-import java.lang.reflect.Field;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
-import net.minecraft.command.CommandException;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.IMerchant;
-import net.minecraft.entity.item.EntityMinecartChest;
-import net.minecraft.entity.item.EntityMinecartHopper;
-import net.minecraft.entity.passive.EntityVillager;
-import net.minecraft.entity.passive.EquineEntity;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ContainerChest;
-import net.minecraft.inventory.ContainerHopper;
-import net.minecraft.inventory.ContainerHorseChest;
-import net.minecraft.inventory.ContainerHorseInventory;
-import net.minecraft.inventory.ContainerMerchant;
 import net.minecraft.inventory.InventoryEnderChest;
 import net.minecraft.inventory.Slot;
 import net.minecraft.profiler.Profiler;
@@ -43,11 +31,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.event.HoverEvent;
-import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.storage.MapData;
 import wdl.api.IWorldLoadListener;
@@ -55,6 +38,7 @@ import wdl.api.WDLApi;
 import wdl.api.WDLApi.ModInfo;
 import wdl.handler.HandlerException;
 import wdl.handler.block.BlockHandler;
+import wdl.handler.entity.EntityHandler;
 import wdl.update.WDLUpdateChecker;
 
 /**
@@ -162,146 +146,69 @@ public class WDLEvents {
 	public static boolean onItemGuiClosed() {
 		if (!WDL.downloading) { return true; }
 
-		if (WDL.windowContainer == null ||
-				ReflectionUtils.isCreativeContainer(WDL.windowContainer.getClass())) {
+		Container windowContainer = WDL.windowContainer;
+
+		if (windowContainer == null ||
+				ReflectionUtils.isCreativeContainer(windowContainer.getClass())) {
 			// Can't do anything with null containers or the creative inventory
 			return true;
 		}
 
-		String saveName = "";
-
-		if (WDL.thePlayer.getRidingEntity() instanceof EquineEntity) {
-			//If the player is on a horse, check if they are opening the
-			//inventory of the horse they are on.  If so, use that,
-			//rather than the entity being looked at.
-			if (WDL.windowContainer instanceof ContainerHorseInventory) {
-				EquineEntity horseInContainer = ReflectionUtils
-						.findAndGetPrivateField(WDL.windowContainer,
-								EquineEntity.class);
-
-				//Intentional reference equals
-				if (horseInContainer == WDL.thePlayer.getRidingEntity()) {
+		Entity ridingEntity = WDL.thePlayer.getRidingEntity();
+		if (ridingEntity != null) {
+			// Check for ridden entities.  See EntityHandler.checkRiding for
+			// more info about why this is useful.
+			EntityHandler<?, ?> handler = EntityHandler.getHandler(ridingEntity.getClass(), windowContainer.getClass());
+			if (handler != null) {
+				if (handler.checkRidingCasting(windowContainer, ridingEntity)) {
 					if (!WDLPluginChannels.canSaveEntities(
-							horseInContainer.chunkCoordX,
-							horseInContainer.chunkCoordZ)) {
-						//I'm not 100% sure the chunkCoord stuff will have been
-						//set up at this point.  Might cause bugs.
+							ridingEntity.chunkCoordX,
+							ridingEntity.chunkCoordZ)) {
+						// Run this check now that we've confirmed that we're saving
+						// the entity being ridden. If we're riding a pig but opening
+						// a chest in another chunk, that should go to the other check.
 						WDLMessages.chatMessageTranslated(WDLMessageTypes.ON_GUI_CLOSED_INFO,
 								"wdl.messages.onGuiClosedInfo.cannotSaveEntities");
 						return true;
 					}
 
-					EquineEntity entityHorse = (EquineEntity)
-							WDL.thePlayer.getRidingEntity();
-					saveHorse((ContainerHorseInventory)WDL.windowContainer, entityHorse);
-
-					WDLMessages.chatMessageTranslated(WDLMessageTypes.ON_GUI_CLOSED_INFO,
-							"wdl.messages.onGuiClosedInfo.savedRiddenHorse");
-					return true;
+					try {
+						String msg = handler.copyDataCasting(windowContainer, ridingEntity, true);
+						WDLMessages.chatMessageTranslated(WDLMessageTypes.ON_GUI_CLOSED_INFO, msg);
+						return true;
+					} catch (HandlerException e) {
+						WDLMessages.chatMessageTranslated(e.messageType, e.translationKey, e.args);
+						return false;
+					}
 				}
+			} else {
+				// A null handler is perfectly normal -- consider a player
+				// riding a pig and then opening a chest
 			}
 		}
 
 		// If the last thing clicked was an ENTITY
-		if (WDL.lastEntity != null) {
-			if (!WDLPluginChannels.canSaveEntities(WDL.lastEntity.chunkCoordX,
-					WDL.lastEntity.chunkCoordZ)) {
+		Entity entity = WDL.lastEntity;
+		if (entity != null) {
+			if (!WDLPluginChannels.canSaveEntities(entity.chunkCoordX, entity.chunkCoordZ)) {
 				WDLMessages.chatMessageTranslated(WDLMessageTypes.ON_GUI_CLOSED_INFO,
 						"wdl.messages.onGuiClosedInfo.cannotSaveEntities");
 				return true;
 			}
 
-			if (WDL.lastEntity instanceof EntityMinecartChest
-					&& WDL.windowContainer instanceof ContainerChest) {
-				EntityMinecartChest emcc = (EntityMinecartChest) WDL.lastEntity;
-
-				for (int i = 0; i < emcc.getSizeInventory(); i++) {
-					Slot slot = WDL.windowContainer.getSlot(i);
-					if (slot.getHasStack()) {
-						emcc.setInventorySlotContents(i, slot.getStack());
-					}
-				}
-
-				saveName = "storageMinecart";
-			} else if (WDL.lastEntity instanceof EntityMinecartHopper
-					&& WDL.windowContainer instanceof ContainerHopper) {
-				EntityMinecartHopper emch = (EntityMinecartHopper) WDL.lastEntity;
-
-				for (int i = 0; i < emch.getSizeInventory(); i++) {
-					Slot slot = WDL.windowContainer.getSlot(i);
-					if (slot.getHasStack()) {
-						emch.setInventorySlotContents(i, slot.getStack());
-					}
-				}
-
-				saveName = "hopperMinecart";
-			} else if (WDL.lastEntity instanceof EntityVillager
-					&& WDL.windowContainer instanceof ContainerMerchant) {
-				EntityVillager ev = (EntityVillager) WDL.lastEntity;
-
-				IMerchant merchant = ReflectionUtils.findAndGetPrivateField(
-						WDL.windowContainer, IMerchant.class);
-				MerchantRecipeList list = merchant.getRecipes(WDL.thePlayer);
-				ReflectionUtils.findAndSetPrivateField(ev, MerchantRecipeList.class, list);
-
+			EntityHandler<?, ?> handler = EntityHandler.getHandler(entity.getClass(), windowContainer.getClass());
+			if (handler != null) {
 				try {
-					ITextComponent displayName = merchant.getDisplayName();
-					if (!(displayName instanceof TextComponentTranslation)) {
-						// Taking the toString to reflect JSON structure
-						String componentDesc= String.valueOf(displayName);
-						throw new CommandException("wdl.messages.onGuiClosedWarning.villagerCareer.notAComponent", componentDesc);
-					}
-
-					TextComponentTranslation displayNameTranslation = ((TextComponentTranslation) displayName);
-					String key = displayNameTranslation.getKey();
-
-					int career = EntityUtils.getCareer(key, ev.getProfession());
-
-					// XXX Iteration order of fields is undefined, and this is generally sloppy
-					// careerId is the 4th field
-					int fieldIndex = 0;
-					Field careerIdField = null;
-					for (Field field : EntityVillager.class.getDeclaredFields()) {
-						if (field.getType().equals(int.class)) {
-							fieldIndex++;
-							if (fieldIndex == 4) {
-								careerIdField = field;
-								break;
-							}
-						}
-					}
-					if (careerIdField == null) {
-						throw new CommandException("wdl.messages.onGuiClosedWarning.villagerCareer.professionField");
-					}
-
-					careerIdField.setAccessible(true);
-					careerIdField.setInt(ev, career);
-
-					// Re-create this component rather than modifying the old one
-					ITextComponent dispCareer = new TextComponentTranslation(key, displayNameTranslation.getFormatArgs());
-					dispCareer.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(key)));
-
-					WDLMessages.chatMessageTranslated(WDLMessageTypes.ON_GUI_CLOSED_INFO, "wdl.messages.onGuiClosedInfo.savedEntity.villager.career", dispCareer, career);
-				} catch (CommandException ex) {
-					WDLMessages.chatMessageTranslated(WDLMessageTypes.ON_GUI_CLOSED_WARNING, ex.getMessage(), ex.getErrorObjects());
-				} catch (Throwable ex) {
-					WDLMessages.chatMessageTranslated(WDLMessageTypes.ON_GUI_CLOSED_WARNING, "wdl.messages.onGuiClosedWarning.villagerCareer.exception", ex);
+					String msg = handler.copyDataCasting(windowContainer, entity, true);
+					WDLMessages.chatMessageTranslated(WDLMessageTypes.ON_GUI_CLOSED_INFO, msg);
+					return true;
+				} catch (HandlerException e) {
+					WDLMessages.chatMessageTranslated(e.messageType, e.translationKey, e.args);
+					return false;
 				}
-
-				saveName = "villager";
-			} else if (WDL.lastEntity instanceof EquineEntity
-					&& WDL.windowContainer instanceof ContainerHorseInventory) {
-				saveHorse((ContainerHorseInventory) WDL.windowContainer,
-						(EquineEntity) WDL.lastEntity);
-
-				saveName = "horse";
 			} else {
 				return false;
 			}
-
-			WDLMessages.chatMessageTranslated(WDLMessageTypes.ON_GUI_CLOSED_INFO,
-					"wdl.messages.onGuiClosedInfo.savedEntity." + saveName);
-			return true;
 		}
 
 		// Else, the last thing clicked was a TILE ENTITY
@@ -352,13 +259,12 @@ public class WDLEvents {
 				}
 			}
 
-			saveName = "enderChest";
+			WDLMessages.chatMessageTranslated(WDLMessageTypes.ON_GUI_CLOSED_INFO,
+					"wdl.messages.onGuiClosedInfo.savedTileEntity.enderChest");
 		} else {
 			return false;
 		}
 
-		WDLMessages.chatMessageTranslated(WDLMessageTypes.ON_GUI_CLOSED_INFO,
-				"wdl.messages.onGuiClosedInfo.savedTileEntity." + saveName);
 		return true;
 	}
 
@@ -485,26 +391,5 @@ public class WDLEvents {
 						"wdl.messages.generalInfo.seedSet", seed);
 			}
 		}
-	}
-
-	/**
-	 * Saves all data for a horse into its inventory.
-	 *
-	 * @param container
-	 * @param horse
-	 */
-	private static void saveHorse(ContainerHorseInventory container, EquineEntity horse) {
-		final int PLAYER_INVENTORY_SLOTS = 4 * 9;
-		ContainerHorseChest horseInventory = new ContainerHorseChest(
-				"HorseChest", container.inventorySlots.size()
-				- PLAYER_INVENTORY_SLOTS);
-		for (int i = 0; i < horseInventory.getSizeInventory(); i++) {
-			Slot slot = container.getSlot(i);
-			if (slot.getHasStack()) {
-				horseInventory.setInventorySlotContents(i, slot.getStack());
-			}
-		}
-
-		ReflectionUtils.findAndSetPrivateField(horse, EquineEntity.class, ContainerHorseChest.class, horseInventory);
 	}
 }

@@ -323,7 +323,7 @@ wdl.messages.onChunkNoLongerNeeded.didNotSave.noPermission=onChunkNoLongerNeeded
 
 wdl.messages.onGuiClosedInfo.cannotSaveEntities=La configuration du serveur interdit l'enregistrement d'entités!
 wdl.messages.onGuiClosedInfo.cannotSaveTileEntities=La configuration du serveur interdit l'enregistrement de Tiles!
-wdl.messages.onGuiClosedInfo.savedRiddenHorse=Inventaire du cheval monté sauvegardé.
+wdl.messages.onGuiClosedInfo.savedRiddenEntity.horse=Inventaire du cheval monté sauvegardé.
 wdl.messages.onGuiClosedInfo.savedEntity.storageMinecart=Contenu du wagonnet de stockage sauvegardé.
 wdl.messages.onGuiClosedInfo.savedEntity.hopperMinecart=Contenu du wagonnet à entonnoir sauvegardé.
 wdl.messages.onGuiClosedInfo.savedEntity.villager=Echanges villageois sauvegardé.

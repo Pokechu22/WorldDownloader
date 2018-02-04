@@ -25,17 +25,11 @@ import javax.annotation.Nullable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
-import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import net.minecraft.command.CommandException;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.EntityLightningBolt;
-import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import wdl.api.IEntityManager;
 import wdl.api.WDLApi;
@@ -309,69 +303,5 @@ public class EntityUtils {
 			// XXX this should be translated
 			return descriptionKey;
 		}
-	}
-
-	/**
-	 * A map mapping villager professions to a map from each career's I18n name to
-	 * the career's ID.
-	 *
-	 * @see https://minecraft.gamepedia.com/Villager#Professions_and_careers
-	 * @see EntityVillager#getDisplayName
-	 */
-	private static final Int2ObjectMap<BiMap<String, Integer>> VANILLA_VILLAGER_CAREERS = new Int2ObjectArrayMap<>();
-	static {
-		BiMap<String, Integer> farmer = HashBiMap.create(4);
-		farmer.put("entity.Villager.farmer", 1);
-		farmer.put("entity.Villager.fisherman", 2);
-		farmer.put("entity.Villager.shepherd", 3);
-		farmer.put("entity.Villager.fletcher", 4);
-		BiMap<String, Integer> librarian = HashBiMap.create(2);
-		librarian.put("entity.Villager.librarian", 1);
-		// Since 1.11, but safe to include in 1.10 as the actual name won't appear then
-		librarian.put("entity.Villager.cartographer", 2);
-		BiMap<String, Integer> priest = HashBiMap.create(1);
-		priest.put("entity.Villager.cleric", 1);
-		BiMap<String, Integer> blacksmith = HashBiMap.create(3);
-		blacksmith.put("entity.Villager.armor", 1);
-		blacksmith.put("entity.Villager.weapon", 2);
-		blacksmith.put("entity.Villager.tool", 3);
-		BiMap<String, Integer> butcher = HashBiMap.create(2);
-		butcher.put("entity.Villager.butcher", 1);
-		butcher.put("entity.Villager.leather", 2);
-		BiMap<String, Integer> nitwit = HashBiMap.create(1);
-		nitwit.put("entity.Villager.nitwit", 1);
-
-		VANILLA_VILLAGER_CAREERS.put(0, farmer);
-		VANILLA_VILLAGER_CAREERS.put(1, librarian);
-		VANILLA_VILLAGER_CAREERS.put(2, priest);
-		VANILLA_VILLAGER_CAREERS.put(3, blacksmith);
-		VANILLA_VILLAGER_CAREERS.put(4, butcher);
-		VANILLA_VILLAGER_CAREERS.put(5, nitwit);
-	}
-
-	/**
-	 * Gets the career ID associated with the given translation name and villager
-	 * profession ID.
-	 *
-	 * @implNote Does not handle forge
-	 * @param profession
-	 *            The current profession of the villager
-	 * @param i18nKey
-	 *            The i18n key used in the villager GUI
-	 * @throws CommandException when a known issue occurs (bad data).  Contains translation info.
-	 */
-	public static int getCareer(String i18nKey, int profession) throws CommandException {
-		// '%s' is not a translation key that corresponds with a known villager career.
-		if (!VANILLA_VILLAGER_CAREERS.containsKey(profession)) {
-			throw new CommandException("wdl.messages.onGuiClosedWarning.villagerCareer.unknownProfession", profession);
-		}
-
-		BiMap<String, Integer> careerData = VANILLA_VILLAGER_CAREERS.get(profession);
-
-		if (!careerData.containsKey(i18nKey)) {
-			throw new CommandException("wdl.messages.onGuiClosedWarning.villagerCareer.unknownTitle", i18nKey, profession);
-		}
-
-		return careerData.get(i18nKey);
 	}
 }

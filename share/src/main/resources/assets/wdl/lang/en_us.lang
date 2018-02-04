@@ -362,7 +362,7 @@ wdl.messages.onChunkNoLongerNeeded.didNotSave=onChunkNoLongerNeeded: Could not s
 
 wdl.messages.onGuiClosedInfo.cannotSaveEntities=Server configuration forbids saving of Entities!
 wdl.messages.onGuiClosedInfo.cannotSaveTileEntities=Server configuration forbids saving of TileEntities!
-wdl.messages.onGuiClosedInfo.savedRiddenHorse=Saved ridden horse inventory.
+wdl.messages.onGuiClosedInfo.savedRiddenEntity.horse=Saved ridden horse inventory.
 wdl.messages.onGuiClosedInfo.savedEntity.storageMinecart=Saved storage minecart contents.
 wdl.messages.onGuiClosedInfo.savedEntity.hopperMinecart=Saved hopper minecart contents.
 wdl.messages.onGuiClosedInfo.savedEntity.villager=Saved villager trades.

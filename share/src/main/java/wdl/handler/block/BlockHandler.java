@@ -23,13 +23,12 @@ import javax.annotation.Nullable;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import wdl.VersionedProperties;
-import wdl.WDL;
 import wdl.ducks.INetworkNameable;
+import wdl.handler.BaseHandler;
 import wdl.handler.HandlerException;
 
 /**
@@ -38,7 +37,7 @@ import wdl.handler.HandlerException;
  * @param <B> The type of block entity to handle.
  * @param <C> The type of container associated with that block entity.
  */
-public abstract class BlockHandler<B extends TileEntity, C extends Container> {
+public abstract class BlockHandler<B extends TileEntity, C extends Container> extends BaseHandler {
 	/**
 	 * Constructor.
 	 *
@@ -121,33 +120,6 @@ public abstract class BlockHandler<B extends TileEntity, C extends Container> {
 	public abstract String handle(BlockPos clickedPos, C container,
 			B blockEntity, IBlockAccess world,
 			BiConsumer<BlockPos, B> saveMethod) throws HandlerException;
-
-	/**
-	 * Saves the items of a container to the given TileEntity.
-	 *
-	 * @param container
-	 *            The container to save from, usually {@link WDL#windowContainer} .
-	 * @param tileEntity
-	 *            The TileEntity to save to.
-	 * @param containerStartIndex
-	 *            The index in the container to start copying items from.
-	 */
-	protected static void saveContainerItems(Container container,
-			IInventory tileEntity, int containerStartIndex) {
-		int containerSize = container.inventorySlots.size();
-		int inventorySize = tileEntity.getSizeInventory();
-		int containerIndex = containerStartIndex;
-		int inventoryIndex = 0;
-
-		while ((containerIndex < containerSize) && (inventoryIndex < inventorySize)) {
-			Slot slot = container.getSlot(containerIndex);
-			if (slot.getHasStack()) {
-				tileEntity.setInventorySlotContents(inventoryIndex, slot.getStack());
-			}
-			inventoryIndex++;
-			containerIndex++;
-		}
-	}
 
 	/**
 	 * Saves the fields of an inventory.

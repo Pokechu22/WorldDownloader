@@ -96,6 +96,7 @@ sourceSets {
             exclude "wdl/handler/package-info.java"
             exclude "wdl/handler/block/package-info.java"
             exclude "wdl/handler/block/ShulkerBoxHandler.java"
+            exclude "wdl/handler/entity/package-info.java"
         }
         resources {
             srcDir "src/main/resources"
