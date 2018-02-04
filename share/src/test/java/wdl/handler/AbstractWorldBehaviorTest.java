@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017 Pokechu22, julialy
+ * Copyright (c) 2017-2018 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -33,7 +33,6 @@ import org.apache.logging.log4j.Logger;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
-import org.junit.Before;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
@@ -61,7 +60,6 @@ import net.minecraft.world.IInteractionObject;
 import net.minecraft.world.World;
 import wdl.MaybeMixinTest;
 import wdl.ducks.INetworkNameable;
-import wdl.handler.block.BlockHandler;
 
 /**
  * Base logic shared between all tests that use blocks.
@@ -71,8 +69,6 @@ import wdl.handler.block.BlockHandler;
  */
 public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 	private static final Logger LOGGER = LogManager.getLogger();
-	/** Handler under test */
-	protected BlockHandler<?, ?> handler;
 	/** Worlds corresponding to what the server and client know */
 	protected World serverWorld, clientWorld;
 	/** A player entity.  Has a valid inventory. */
@@ -84,19 +80,6 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 	private Set<BlockPos> origTEPoses;
 	/** A map of block entities for the user to save into. */
 	protected Map<BlockPos, TileEntity> tileEntities;
-
-	/**
-	 * Called by JUnit; sets {@link #handler}.
-	 */
-	@Before
-	public final void prepareHandler() {
-		this.handler = makeHandler();
-	}
-
-	/**
-	 * Creates a handler instance.
-	 */
-	protected abstract BlockHandler<?, ?> makeHandler();
 
 	/**
 	 * Creates a mock world, returning air for blocks and null for TEs.
@@ -242,18 +225,6 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 			return new ContainerDispenser(player.inventory, clientInv);
 		}
 		return null;
-	}
-
-	/**
-	 * Runs the handler, performing tile entity lookup and casting.
-	 *
-	 * @param pos The position to check
-	 * @param container The container to use
-	 * @throws HandlerException when the handler does
-	 */
-	protected void runHandler(BlockPos pos, Container container) throws HandlerException {
-		TileEntity te = clientWorld.getTileEntity(pos);
-		handler.handleCasting(pos, container, te, clientWorld, tileEntities::put);
 	}
 
 	/**

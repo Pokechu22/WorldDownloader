@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017 Pokechu22, julialy
+ * Copyright (c) 2017-2018 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -27,17 +27,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import wdl.handler.AbstractWorldBehaviorTest;
 import wdl.handler.HandlerException;
 
 /**
  * Tests single and double chests.
  */
-public class ChestTest extends AbstractWorldBehaviorTest {
+public class ChestTest extends AbstractBlockHandlerTest<TileEntityChest, ContainerChest, ChestHandler> {
 
-	@Override
-	protected BlockHandler<?, ?> makeHandler() {
-		return new ChestHandler();
+	public ChestTest() {
+		super(TileEntityChest.class, ContainerChest.class, ChestHandler.class);
 	}
 
 	@Test

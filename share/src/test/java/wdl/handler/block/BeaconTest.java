@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017 Pokechu22, julialy
+ * Copyright (c) 2017-2018 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -18,20 +18,19 @@ import org.junit.Test;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.init.MobEffects;
+import net.minecraft.inventory.ContainerBeacon;
 import net.minecraft.potion.Potion;
 import net.minecraft.tileentity.TileEntityBeacon;
 import net.minecraft.util.math.BlockPos;
-import wdl.handler.AbstractWorldBehaviorTest;
 import wdl.handler.HandlerException;
 
 /**
  * Tests beacons.
  */
-public class BeaconTest extends AbstractWorldBehaviorTest {
+public class BeaconTest extends AbstractBlockHandlerTest<TileEntityBeacon, ContainerBeacon, BeaconHandler> {
 
-	@Override
-	protected BlockHandler<?, ?> makeHandler() {
-		return new BeaconHandler();
+	public BeaconTest() {
+		super(TileEntityBeacon.class, ContainerBeacon.class, BeaconHandler.class);
 	}
 
 	/**
