@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017 Pokechu22, julialy
+ * Copyright (c) 2017-2018 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -14,8 +14,6 @@
  */
 package wdl;
 
-import javax.annotation.Nullable;
-
 import com.google.common.collect.ImmutableList;
 
 import java.lang.reflect.Field;
@@ -23,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 
 import net.minecraft.block.Block;
-import net.minecraft.inventory.Container;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.world.World;
@@ -104,26 +101,6 @@ public class VersionedProperties {
 			new FurnaceHandler(),
 			new HopperHandler()
 	);
-
-	/**
-	 * Looks up the handler that handles the given block entity/container combo.
-	 *
-	 * @param blockEntityClass The type for the block entity.
-	 * @param containerClass The type for the container.
-	 * @return The handler, or null if none is found.
-	 */
-	@SuppressWarnings("unchecked")
-	@Nullable
-	public static <B extends TileEntity, C extends Container> BlockHandler<B, C> getHandler(Class<B> blockEntityClass, Class<C> containerClass) {
-		for (BlockHandler<?, ?> h : VersionedProperties.BLOCK_HANDLERS) {
-			if (h.getBlockEntityClass().equals(blockEntityClass) &&
-					h.getContainerClass().equals(containerClass)) {
-				return (BlockHandler<B, C>)h;
-			}
-		}
-
-		return null;
-	}
 
 	/**
 	 * Checks if the given block is a shulker box, and the block entity ID matches.

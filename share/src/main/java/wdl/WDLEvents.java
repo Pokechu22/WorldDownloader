@@ -327,7 +327,7 @@ public class WDLEvents {
 		}
 
 		BlockHandler<? extends TileEntity, ? extends Container> handler =
-				VersionedProperties.getHandler(te.getClass(), WDL.windowContainer.getClass());
+				BlockHandler.getHandler(te.getClass(), WDL.windowContainer.getClass());
 		if (handler != null) {
 			try {
 				String msg = handler.handleCasting(WDL.lastClickedBlock, WDL.windowContainer,

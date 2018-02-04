@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017 Pokechu22, julialy
+ * Copyright (c) 2017-2018 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -27,6 +27,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
+import wdl.VersionedProperties;
 import wdl.WDL;
 import wdl.ducks.INetworkNameable;
 import wdl.handler.HandlerException;
@@ -191,5 +192,26 @@ public abstract class BlockHandler<B extends TileEntity, C extends Container> {
 			}
 		}
 		return name;
+	}
+
+	/**
+	 * Looks up the handler that handles the given block entity/container combo,
+	 * from {@link VersionedProperties#BLOCK_HANDLERS}.
+	 *
+	 * @param blockEntityClass The type for the block entity.
+	 * @param containerClass The type for the container.
+	 * @return The handler, or null if none is found.
+	 */
+	@SuppressWarnings("unchecked")
+	@Nullable
+	public static <B extends TileEntity, C extends Container> BlockHandler<B, C> getHandler(Class<B> blockEntityClass, Class<C> containerClass) {
+		for (BlockHandler<?, ?> h : VersionedProperties.BLOCK_HANDLERS) {
+			if (h.getBlockEntityClass().equals(blockEntityClass) &&
+					h.getContainerClass().equals(containerClass)) {
+				return (BlockHandler<B, C>)h;
+			}
+		}
+
+		return null;
 	}
 }
