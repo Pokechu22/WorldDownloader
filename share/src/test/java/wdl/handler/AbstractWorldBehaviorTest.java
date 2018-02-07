@@ -41,7 +41,9 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldProvider;
 import wdl.MaybeMixinTest;
 import wdl.ducks.INetworkNameable;
 
@@ -69,6 +71,12 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 
 		when(clientWorld.getBlockState(any())).thenReturn(Blocks.AIR.getDefaultState());
 		when(serverWorld.getBlockState(any())).thenReturn(Blocks.AIR.getDefaultState());
+
+		WorldProvider fakeProvider = mock(WorldProvider.class);
+		when(fakeProvider.getDimensionType()).thenReturn(DimensionType.OVERWORLD);
+		// ugh
+		clientWorld.provider = fakeProvider;
+		serverWorld.provider = fakeProvider;
 
 		clientPlayer.inventory = new InventoryPlayer(clientPlayer);
 		serverPlayer.inventory = new InventoryPlayer(serverPlayer);

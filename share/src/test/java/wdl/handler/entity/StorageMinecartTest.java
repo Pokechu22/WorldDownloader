@@ -14,6 +14,29 @@
  */
 package wdl.handler.entity;
 
-public class StorageMinecartTest extends AbstractEntityHandlerTest {
+import org.junit.Test;
 
+import net.minecraft.entity.item.EntityMinecartChest;
+import net.minecraft.init.Items;
+import net.minecraft.inventory.ContainerChest;
+import net.minecraft.item.ItemStack;
+import wdl.handler.HandlerException;
+
+public class StorageMinecartTest extends AbstractEntityHandlerTest<EntityMinecartChest, ContainerChest, StorageMinecartHandler> {
+
+	public StorageMinecartTest() {
+		super(EntityMinecartChest.class, ContainerChest.class, StorageMinecartHandler.class);
+	}
+
+	@Test
+	public void testStorageMinecart() throws HandlerException {
+		makeMockWorld();
+		EntityMinecartChest minecart = new EntityMinecartChest(serverWorld);
+		minecart.setInventorySlotContents(2, new ItemStack(Items.BEEF));
+		addEntity(minecart);
+
+		runHandler(minecart, createClientContainer(minecart));
+
+		checkAllEntities();
+	}
 }

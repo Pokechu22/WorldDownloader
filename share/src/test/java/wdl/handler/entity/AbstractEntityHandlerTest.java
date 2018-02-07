@@ -22,6 +22,7 @@ import static org.mockito.Mockito.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hamcrest.Matcher;
+import org.junit.Test;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -40,16 +41,76 @@ import net.minecraft.inventory.ContainerMerchant;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.village.MerchantRecipeList;
+import net.minecraft.world.World;
 import wdl.ReflectionUtils;
+import wdl.VersionedProperties;
 import wdl.handler.AbstractWorldBehaviorTest;
 import wdl.handler.HandlerException;
 
-public abstract class AbstractEntityHandlerTest extends AbstractWorldBehaviorTest {
+/**
+ * Test for entity handlers.
+ *
+ * @param <E> The type of entity to handle.
+ * @param <C> The type of container associated with that block entity.
+ * @param <H> The block handler that handles both of those things.
+ */
+public abstract class AbstractEntityHandlerTest<E extends Entity, C extends Container, H extends EntityHandler<? super E, ? super C>>
+		extends AbstractWorldBehaviorTest {
 
 	private static final Logger LOGGER = LogManager.getLogger();
+
+	/**
+	 * Constructor.
+	 *
+	 * @param blockentityClass
+	 *            A strong reference to the entity class that is handled by
+	 *            the handler.
+	 * @param containerClass
+	 *            A strong reference to the container class that is handled by the
+	 *            handler.
+	 * @param handlerClass
+	 *            A strong reference to the handler's class.
+	 */
+	protected AbstractEntityHandlerTest(Class<E> entityClass, Class<C> containerClass, Class<H> handlerClass) {
+		this.entityClass = entityClass;
+		this.containerClass = containerClass;
+		this.handlerClass = handlerClass;
+
+		try {
+			// TODO: may in the future want to have other constructors, which
+			// wouldn't work with this
+			this.handler = handlerClass.newInstance();
+		} catch (InstantiationException | IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	protected final Class<E> entityClass;
+	protected final Class<C> containerClass;
+	protected final Class<H> handlerClass;
+
+	/**
+	 * Handler under test.  Will be a new object, not the handler registered in
+	 * {@link VersionedProperties}.
+	 */
+	protected final H handler;
+
+	/**
+	 * Verifies that the handler is registered.
+	 *
+	 * Note that this does not actually use the {@link #handler} instance.
+	 */
+	@Test
+	public final void testHandlerExists() {
+		EntityHandler<? super E, ? super C> handler = EntityHandler.getHandler(entityClass, containerClass);
+
+		assertThat(handler, is(notNullValue()));
+		assertThat(handler, is(instanceOf(handlerClass)));
+		assertTrue(handler.getEntityClass().isAssignableFrom(entityClass));
+		assertThat(handler.getContainerClass(), is(equalTo(containerClass)));
+	}
 
 	/**
 	 * An incremental entity ID, or alternatively the number of entities created.
@@ -67,6 +128,9 @@ public abstract class AbstractEntityHandlerTest extends AbstractWorldBehaviorTes
 		nextEID = 0;
 		serverEntities = new Int2ObjectArrayMap<>(4);
 		clientEntities = new Int2ObjectArrayMap<>(4);
+
+		when(clientWorld.getEntityByID(anyInt())).thenReturn(null);
+		when(serverWorld.getEntityByID(anyInt())).thenReturn(null);
 	}
 
 	protected void addEntity(Entity serverEntity) {
@@ -77,7 +141,7 @@ public abstract class AbstractEntityHandlerTest extends AbstractWorldBehaviorTes
 			when(this.serverWorld.getEntityByID(eid)).thenReturn(serverEntity);
 
 			// Create the client copy
-			Entity clientEntity = serverEntity.getClass().newInstance();
+			Entity clientEntity = serverEntity.getClass().getConstructor(World.class).newInstance((World)clientWorld);
 			clientEntity.setEntityId(nextEID);
 			// Copy the standard entity metadata
 			clientEntity.getDataManager().setEntryValues(serverEntity.getDataManager().getAll());
@@ -100,7 +164,7 @@ public abstract class AbstractEntityHandlerTest extends AbstractWorldBehaviorTes
 		// Precondition for this to make sense
 		int eid = serverEntity.getEntityId();
 		assertThat("Entity is not known to the server!", serverWorld.getEntityByID(eid), is(serverEntity));
-		assertThat("Entity is not known to the client!", clientWorld.getEntityByID(eid), isNotNull());
+		assertThat("Entity is not known to the client!", clientWorld.getEntityByID(eid), is(notNullValue()));
 
 		// This is a bit of a mess, but entities are a bit of a mess.
 		// First, check if this is a villager, because they're a whole different
@@ -207,7 +271,7 @@ public abstract class AbstractEntityHandlerTest extends AbstractWorldBehaviorTes
 	 * @param container The container to use
 	 * @throws HandlerException when the handler does
 	 */
-	protected void runHandler(BlockPos pos, Container container) throws HandlerException {
+	protected void runHandler(Entity entity, Container container) throws HandlerException {
 		// TODO
 	}
 

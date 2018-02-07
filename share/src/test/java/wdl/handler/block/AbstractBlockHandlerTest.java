@@ -47,7 +47,7 @@ import wdl.handler.AbstractWorldBehaviorTest;
 import wdl.handler.HandlerException;
 
 /**
- * A handler for an arbitrary block entity.
+ * Test for block entity handlers.
  *
  * @param <B> The type of block entity to handle.
  * @param <C> The type of container associated with that block entity.
