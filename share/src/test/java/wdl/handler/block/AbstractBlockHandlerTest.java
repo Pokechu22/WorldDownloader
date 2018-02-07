@@ -193,11 +193,11 @@ public abstract class AbstractBlockHandlerTest<B extends TileEntity, C extends C
 			clientInv.setField(i, serverInv.getField(i));
 		}
 
-		Container container = makeContainer(guiID, player, clientInv);
+		Container container = makeContainer(guiID, clientPlayer, clientInv);
 		if (container == null) {
 			// Unknown -- i.e. minecraft:container
 			LOGGER.warn("Unknown container type {} for {} at {}", guiID, serverTE, pos);
-			return new ContainerChest(player.inventory, clientInv, player);
+			return new ContainerChest(clientPlayer.inventory, clientInv, clientPlayer);
 		} else {
 			return container;
 		}

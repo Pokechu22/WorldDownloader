@@ -54,11 +54,8 @@ import wdl.ducks.INetworkNameable;
 public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 	/** Worlds corresponding to what the server and client know */
 	protected World serverWorld, clientWorld;
-	/** A player entity.  Has a valid inventory. */
-	protected EntityPlayer player = mock(EntityPlayer.class);
-	{
-		player.inventory = new InventoryPlayer(player);
-	}
+	/** Player entities.  Both have valid, empty inventories. */
+	protected EntityPlayer clientPlayer, serverPlayer;
 
 	/**
 	 * Creates a mock world, returning air for blocks and null for TEs.
@@ -67,8 +64,14 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 		clientWorld = mock(World.class);
 		serverWorld = mock(World.class);
 
+		clientPlayer = mock(EntityPlayer.class);
+		serverPlayer = mock(EntityPlayer.class);
+
 		when(clientWorld.getBlockState(any())).thenReturn(Blocks.AIR.getDefaultState());
 		when(serverWorld.getBlockState(any())).thenReturn(Blocks.AIR.getDefaultState());
+
+		clientPlayer.inventory = new InventoryPlayer(clientPlayer);
+		serverPlayer.inventory = new InventoryPlayer(serverPlayer);
 	}
 
 	/**
