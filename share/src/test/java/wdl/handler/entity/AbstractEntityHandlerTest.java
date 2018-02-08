@@ -19,6 +19,8 @@ import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+import java.util.UUID;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hamcrest.Matcher;
@@ -137,16 +139,18 @@ public abstract class AbstractEntityHandlerTest<E extends Entity, C extends Cont
 		try {
 			int eid = nextEID++;
 			serverEntity.setEntityId(eid);
+			serverEntity.setUniqueId(new UUID(0, eid));
 			this.serverEntities.put(eid, serverEntity);
 			when(this.serverWorld.getEntityByID(eid)).thenReturn(serverEntity);
 
 			// Create the client copy
 			Entity clientEntity = serverEntity.getClass().getConstructor(World.class).newInstance((World)clientWorld);
-			clientEntity.setEntityId(nextEID);
+			clientEntity.setEntityId(eid);
+			clientEntity.setUniqueId(serverEntity.getUniqueID());
 			// Copy the standard entity metadata
 			clientEntity.getDataManager().setEntryValues(serverEntity.getDataManager().getAll());
 			// Now add it
-			this.clientEntities.put(clientEntity.getEntityId(), clientEntity);
+			this.clientEntities.put(eid, clientEntity);
 			when(this.clientWorld.getEntityByID(eid)).thenReturn(clientEntity);
 
 			nextEID++;
@@ -267,12 +271,12 @@ public abstract class AbstractEntityHandlerTest<E extends Entity, C extends Cont
 	/**
 	 * Runs the handler
 	 *
-	 * @param entity The client entity
+	 * @param entity The entity ID
 	 * @param container The container to use
 	 * @throws HandlerException when the handler does
 	 */
-	protected void runHandler(Entity entity, Container container) throws HandlerException {
-		// TODO
+	protected void runHandler(int eid, Container container) throws HandlerException {
+		handler.copyDataCasting(container, clientEntities.get(eid), false);
 	}
 
 	/**

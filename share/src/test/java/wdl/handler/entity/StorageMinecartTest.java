@@ -35,7 +35,7 @@ public class StorageMinecartTest extends AbstractEntityHandlerTest<EntityMinecar
 		minecart.setInventorySlotContents(2, new ItemStack(Items.BEEF));
 		addEntity(minecart);
 
-		runHandler(minecart, createClientContainer(minecart));
+		runHandler(minecart.getEntityId(), createClientContainer(minecart));
 
 		checkAllEntities();
 	}

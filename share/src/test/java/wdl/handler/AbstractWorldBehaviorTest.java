@@ -18,6 +18,9 @@ import static org.junit.Assume.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -40,11 +43,13 @@ import net.minecraft.inventory.ContainerHopper;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
 import wdl.MaybeMixinTest;
+import wdl.ReflectionUtils;
 import wdl.ducks.INetworkNameable;
 
 /**
@@ -60,6 +65,25 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 	protected EntityPlayer clientPlayer, serverPlayer;
 
 	/**
+	 * https://stackoverflow.com/a/3301720/3991344
+	 *
+	 * Needed because the world provider must be set for entities
+	 * for things not to explode :/
+	 */
+	private static final Field worldProviderField;
+	static {
+		try {
+			worldProviderField = ReflectionUtils.findField(World.class, WorldProvider.class);
+	
+			Field modifiersField = Field.class.getDeclaredField("modifiers");
+			modifiersField.setAccessible(true);
+			modifiersField.setInt(worldProviderField, worldProviderField.getModifiers() & ~Modifier.FINAL);
+		} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	/**
 	 * Creates a mock world, returning air for blocks and null for TEs.
 	 */
 	protected void makeMockWorld() {
@@ -72,14 +96,27 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 		when(clientWorld.getBlockState(any())).thenReturn(Blocks.AIR.getDefaultState());
 		when(serverWorld.getBlockState(any())).thenReturn(Blocks.AIR.getDefaultState());
 
-		WorldProvider fakeProvider = mock(WorldProvider.class);
-		when(fakeProvider.getDimensionType()).thenReturn(DimensionType.OVERWORLD);
-		// ugh
-		clientWorld.provider = fakeProvider;
-		serverWorld.provider = fakeProvider;
+		when(clientWorld.getScoreboard()).thenReturn(mock(Scoreboard.class));
+		when(serverWorld.getScoreboard()).thenReturn(mock(Scoreboard.class));
+
+		populateProviderEvily(clientWorld);
+		populateProviderEvily(serverWorld);
 
 		clientPlayer.inventory = new InventoryPlayer(clientPlayer);
 		serverPlayer.inventory = new InventoryPlayer(serverPlayer);
+	}
+
+	/**
+	 * Sets the <em>final</em> {@link World#provider} field to a new mock provider.
+	 */
+	private void populateProviderEvily(World world) {
+		WorldProvider fakeProvider = mock(WorldProvider.class);
+		when(fakeProvider.getDimensionType()).thenReturn(DimensionType.OVERWORLD);
+		try {
+			worldProviderField.set(world, fakeProvider);
+		} catch (IllegalArgumentException | IllegalAccessException e) {
+			throw new AssertionError(e);
+		}
 	}
 
 	/**
