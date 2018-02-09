@@ -16,6 +16,9 @@ package wdl.handler.entity;
 
 import java.lang.reflect.Field;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
@@ -30,12 +33,10 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.village.MerchantRecipeList;
 import wdl.ReflectionUtils;
-import wdl.WDL;
-import wdl.WDLMessageTypes;
-import wdl.WDLMessages;
 import wdl.handler.HandlerException;
 
 public class VillagerHandler extends EntityHandler<EntityVillager, ContainerMerchant> {
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	public VillagerHandler() {
 		super(EntityVillager.class, ContainerMerchant.class);
@@ -45,7 +46,7 @@ public class VillagerHandler extends EntityHandler<EntityVillager, ContainerMerc
 	public String copyData(ContainerMerchant container, EntityVillager villager, boolean riding) throws HandlerException {
 		IMerchant merchant = ReflectionUtils.findAndGetPrivateField(
 				container, IMerchant.class);
-		MerchantRecipeList recipes = merchant.getRecipes(WDL.thePlayer);
+		MerchantRecipeList recipes = merchant.getRecipes(merchant.getCustomer()); // note: parameter is ignored by all implementations
 		ReflectionUtils.findAndSetPrivateField(villager, MerchantRecipeList.class, recipes);
 
 		ITextComponent displayName = merchant.getDisplayName();
@@ -85,7 +86,7 @@ public class VillagerHandler extends EntityHandler<EntityVillager, ContainerMerc
 			ITextComponent dispCareer = new TextComponentTranslation(key, displayNameTranslation.getFormatArgs());
 			dispCareer.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(key)));
 	
-			WDLMessages.chatMessageTranslated(WDLMessageTypes.ON_GUI_CLOSED_INFO, "wdl.messages.onGuiClosedInfo.savedEntity.villager.career", dispCareer, career);
+			LOGGER.debug("Saved villager career ({} -> {}).", dispCareer, career);
 		} catch (IllegalArgumentException | IllegalAccessException e) {
 			throw new HandlerException("wdl.messages.onGuiClosedWarning.villagerCareer.exception", e);
 		}

@@ -366,7 +366,6 @@ wdl.messages.onGuiClosedInfo.savedRiddenEntity.horse=Saved ridden horse inventor
 wdl.messages.onGuiClosedInfo.savedEntity.storageMinecart=Saved storage minecart contents.
 wdl.messages.onGuiClosedInfo.savedEntity.hopperMinecart=Saved hopper minecart contents.
 wdl.messages.onGuiClosedInfo.savedEntity.villager=Saved villager trades.
-wdl.messages.onGuiClosedInfo.savedEntity.villager.career=Saved villager career (%s -> %d).
 wdl.messages.onGuiClosedInfo.savedEntity.horse=Saved horse inventory.
 wdl.messages.onGuiClosedInfo.savedTileEntity.singleChest=Saved chest contents.
 wdl.messages.onGuiClosedInfo.savedTileEntity.doubleChest=Saved double chest contents.
