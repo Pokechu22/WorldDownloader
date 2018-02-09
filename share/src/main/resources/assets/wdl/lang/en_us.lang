@@ -481,3 +481,4 @@ wdl.sanity.tripwire=Tripwire is not being serialized correctly.  This is probabl
 wdl.sanity.version=Version mismatch!  You have installed a version of the mod on a version of Minecraft it was not intended for.  In the best case, data will be saved inaccurately; in the worst case, expect crashes.  Please redownload for the correct Minecraft version.  (%s)
 # For obvious reasons this message will not be displayed translated in game
 wdl.sanity.translation=Translation strings are not present!  All messages will be the untranslated keys (e.g. `wdl.sanity.translation'), including this one.  Please redownload the mod.  If this problem persists, file a bug report.  (%s)
+wdl.sanity.mixin=Mixins/base changes do not appear to have applied!  Many parts of the mod may be broken!  (%s)

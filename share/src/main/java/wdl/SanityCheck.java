@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017 Pokechu22, julialy
+ * Copyright (c) 2017-2018 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -18,6 +18,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.InventoryBasic;
+import wdl.ducks.INetworkNameable;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -77,6 +79,14 @@ enum SanityCheck {
 			if (!I18n.hasKey(this.errorMessage)) {
 				// Verbose, because obviously the normal string will not be translated.
 				throw new Exception("Translation strings are not present!  All messages will be the untranslated keys (e.g. `wdl.sanity.translation').  Please redownload the mod.  If this problem persists, file a bug report.");
+			}
+		}
+	},
+	MIXIN("wdl.sanity.mixin") {
+		@Override
+		public void run() throws Exception {
+			if (!INetworkNameable.class.isAssignableFrom(InventoryBasic.class)) {
+				throw new Exception("InventoryBasic does not implement INetworkNameable!");
 			}
 		}
 	}
