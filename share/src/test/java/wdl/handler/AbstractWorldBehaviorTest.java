@@ -21,12 +21,9 @@ import static org.mockito.Mockito.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.hamcrest.Description;
-import org.hamcrest.TypeSafeMatcher;
-
+import junit.framework.ComparisonFailure;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -171,35 +168,18 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 		return null;
 	}
 
-	protected static abstract class HasSameNBT<T> extends TypeSafeMatcher<T> {
-		protected final T serverObject;
-		/** Name used for T */
-		protected final String name;
-
-		public HasSameNBT(T serverObject, String name) {
-			this.serverObject = serverObject;
-			this.name = name;
+	/**
+	 * Compares the two compounds, raising an assertion error if they do not match.
+	 *
+	 * @param expected The expected NBT
+	 * @param actual The actual NBT
+	 */
+	protected void assertSameNBT(NBTTagCompound expected, NBTTagCompound actual) {
+		// Don't use real AssertionError, but instead use a special JUnit one,
+		// which has an interactive comparison tool
+		if (!expected.equals(actual)) {
+			throw new ComparisonFailure("Mismatched NBT!", expected.toString(), actual.toString());
 		}
-
-		@Override
-		protected boolean matchesSafely(@Nonnull T obj) {
-			return getNBT(serverObject).equals(getNBT(obj));
-		}
-
-		@Override
-		public void describeTo(@Nonnull Description description) {
-			description.appendText("a " + name + " that was equal to ").appendValue(serverObject)
-					.appendText(" with this NBT ").appendValue(getNBT(serverObject));
-		}
-
-		@Override
-		protected void describeMismatchSafely(@Nonnull T obj,
-				@Nonnull Description mismatchDescription) {
-			mismatchDescription.appendText("was ").appendValue(getNBT(obj))
-					.appendText(" (" + name + ": ").appendValue(obj).appendText(")");
-		}
-
-		protected abstract NBTTagCompound getNBT(T obj);
 	}
 
 	/**

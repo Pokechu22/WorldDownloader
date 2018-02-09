@@ -121,8 +121,8 @@ public class ChestTest extends AbstractBlockHandlerTest<TileEntityChest, Contain
 			// Only those two were saved
 			assertThat(tileEntities.keySet(), containsInAnyOrder(center, offset));
 
-			assertThat(tileEntities.get(center), hasSameNBTAs(te1));
-			assertThat(tileEntities.get(offset), hasSameNBTAs(te2));
+			assertSameNBT(tileEntities.get(center), te1);
+			assertSameNBT(tileEntities.get(offset), te2);
 		}
 	}
 

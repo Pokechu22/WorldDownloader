@@ -26,7 +26,6 @@ import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hamcrest.Matcher;
 import org.junit.Test;
 
 import net.minecraft.block.BlockChest;
@@ -225,24 +224,22 @@ public abstract class AbstractBlockHandlerTest<B extends TileEntity, C extends C
 			TileEntity serverTE = serverWorld.getTileEntity(pos);
 			TileEntity savedTE = tileEntities.get(pos);
 
-			assertThat(savedTE, hasSameNBTAs(serverTE));
+			assertSameNBT(serverTE, savedTE);
 		}
 	}
 
-	protected static class HasSameBlockEntityNBT extends HasSameNBT<TileEntity> {
-		public HasSameBlockEntityNBT(TileEntity te) {
-			super(te, "block entity");
-		}
-
-		@Override
-		protected NBTTagCompound getNBT(TileEntity te) {
-			NBTTagCompound tag = new NBTTagCompound();
-			te.writeToNBT(tag);
-			return tag;
-		}
-	}
-
-	protected static Matcher<TileEntity> hasSameNBTAs(TileEntity serverTE) {
-		return new HasSameBlockEntityNBT(serverTE);
+	/**
+	 * Helper to call {@link #assertSameNBT(NBTTagCompound, NBTTagCompound)
+	 *
+	 * @param expected Block entity with expected NBT (the server entity)
+	 * @param actual Block entity with the actual NBT (the client entity)
+	 */
+	protected void assertSameNBT(TileEntity expected, TileEntity actual) {
+		// Can't call these methods directly because writeToNBT returns void in 1.9
+		NBTTagCompound expectedNBT = new NBTTagCompound();
+		expected.writeToNBT(expectedNBT);
+		NBTTagCompound actualNBT = new NBTTagCompound();
+		actual.writeToNBT(actualNBT);
+		assertSameNBT(expectedNBT, actualNBT);
 	}
 }

@@ -23,7 +23,6 @@ import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hamcrest.Matcher;
 import org.junit.Test;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
@@ -287,25 +286,22 @@ public abstract class AbstractEntityHandlerTest<E extends Entity, C extends Cont
 			Entity serverEntity = e.getValue();
 			Entity clientEntity = clientEntities.get(e.getIntKey());
 
-			assertThat(clientEntity, hasSameNBTAs(serverEntity));
+			assertSameNBT(serverEntity, clientEntity);
 		}
 	}
 
-	protected static class HasSameEntityNBT extends HasSameNBT<Entity> {
-		public HasSameEntityNBT(Entity e) {
-			super(e, "entity");
-		}
-
-		@Override
-		protected NBTTagCompound getNBT(Entity e) {
-			NBTTagCompound tag = new NBTTagCompound();
-			e.writeToNBT(tag);
-			return tag;
-		}
+	/**
+	 * Helper to call {@link #assertSameNBT(NBTTagCompound, NBTTagCompound)
+	 *
+	 * @param expected Entity with expected NBT (the server entity)
+	 * @param actual Entity with the actual NBT (the client entity)
+	 */
+	protected void assertSameNBT(Entity expected, Entity actual) {
+		// Can't call these methods directly because writeToNBT returns void in 1.9
+		NBTTagCompound expectedNBT = new NBTTagCompound();
+		expected.writeToNBT(expectedNBT);
+		NBTTagCompound actualNBT = new NBTTagCompound();
+		actual.writeToNBT(actualNBT);
+		assertSameNBT(expectedNBT, actualNBT);
 	}
-
-	protected static Matcher<Entity> hasSameNBTAs(Entity serverEntity) {
-		return new HasSameEntityNBT(serverEntity);
-	}
-
 }
