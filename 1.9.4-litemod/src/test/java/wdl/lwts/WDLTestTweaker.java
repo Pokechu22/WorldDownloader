@@ -2,7 +2,8 @@
  * This file is from the documentation for LaunchWrapperTestSuite:
  * https://github.com/SpongePowered/LaunchWrapperTestSuite.
  */
-package wdl;
+// NOTE: the package for the tweaker is excluded from tweaks, so it must be in a different one
+package wdl.lwts;
 
 import org.spongepowered.asm.launch.MixinBootstrap;
 import org.spongepowered.asm.mixin.MixinEnvironment;

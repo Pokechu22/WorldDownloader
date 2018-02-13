@@ -116,6 +116,8 @@ sourceSets {
     }
     test {
         java {
+            compileClasspath += sourceSets.mixin.output
+            runtimeClasspath += sourceSets.mixin.output
             srcDir "src/test/java"
             srcDir project(':share').file("src/test/java")
             exclude "wdl/handler/block/ShulkerBoxTest.java"
@@ -176,7 +178,7 @@ jar {
 }
 
 test {
-    systemProperty 'lwts.tweaker', 'wdl.WDLTestTweaker'
+    systemProperty 'lwts.tweaker', 'wdl.lwts.WDLTestTweaker'
 
     // Run tests in a temporary directory
     workingDir = { test.temporaryDir }

@@ -23,6 +23,9 @@ import java.lang.reflect.Modifier;
 
 import javax.annotation.Nullable;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import junit.framework.ComparisonFailure;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -56,6 +59,8 @@ import wdl.ducks.INetworkNameable;
  * {@link Blocks} can be used.
  */
 public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
+	private static final Logger LOGGER = LogManager.getLogger();
+
 	/** Worlds corresponding to what the server and client know */
 	protected World serverWorld, clientWorld;
 	/** Player entities.  Both have valid, empty inventories. */
@@ -189,6 +194,10 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 	 * @see org.junit.Assume
 	 */
 	protected static void assumeMixinsApplied() {
-		assumeTrue("Expected mixins to be applied", INetworkNameable.class.isAssignableFrom(InventoryBasic.class));
+		boolean applied = INetworkNameable.class.isAssignableFrom(InventoryBasic.class);
+		if (!applied) {
+			LOGGER.warn("Mixins were not applied; skipping this test");
+		}
+		assumeTrue("Expected mixins to be applied", applied);
 	}
 }

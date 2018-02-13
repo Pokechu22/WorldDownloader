@@ -129,7 +129,7 @@ jar {
 }
 
 test {
-    systemProperty 'lwts.tweaker', 'wdl.WDLTestTweaker'
+    systemProperty 'lwts.tweaker', 'wdl.lwts.WDLTestTweaker'
 
     // Run tests in a temporary directory
     workingDir = { test.temporaryDir }

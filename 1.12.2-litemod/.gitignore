@@ -3,6 +3,7 @@
 /build/
 /logs/
 /run/
+/.mixin.out/
 build.number
 
 # Eclipse
