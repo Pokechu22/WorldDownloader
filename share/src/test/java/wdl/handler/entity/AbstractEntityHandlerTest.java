@@ -29,6 +29,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.client.player.inventory.ContainerLocalMenu;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IMerchant;
 import net.minecraft.entity.NpcMerchant;
 import net.minecraft.entity.item.EntityMinecartContainer;
@@ -39,6 +40,7 @@ import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.ContainerHorseChest;
 import net.minecraft.inventory.ContainerHorseInventory;
 import net.minecraft.inventory.ContainerMerchant;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -146,7 +148,18 @@ public abstract class AbstractEntityHandlerTest<E extends Entity, C extends Cont
 			Entity clientEntity = serverEntity.getClass().getConstructor(World.class).newInstance((World)clientWorld);
 			clientEntity.setEntityId(eid);
 			clientEntity.setUniqueId(serverEntity.getUniqueID());
-			// Copy the standard entity metadata
+			// Copy the standard entity data
+			clientEntity.posX = serverEntity.posX;
+			clientEntity.posY = serverEntity.posY;
+			clientEntity.posZ = serverEntity.posZ;
+			clientEntity.rotationPitch = serverEntity.rotationPitch;
+			clientEntity.rotationYaw = serverEntity.rotationYaw;
+			if (clientEntity instanceof EntityLivingBase) {
+				for (EntityEquipmentSlot slot : EntityEquipmentSlot.values()) {
+					ItemStack item = ((EntityLivingBase) serverEntity).getItemStackFromSlot(slot);
+					((EntityLivingBase) clientEntity).setItemStackToSlot(slot, item);
+				}
+			}
 			clientEntity.getDataManager().setEntryValues(serverEntity.getDataManager().getAll());
 			// Now add it
 			this.clientEntities.put(eid, clientEntity);
