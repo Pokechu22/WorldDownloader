@@ -14,7 +14,11 @@
  */
 package wdl.handler.entity;
 
+import java.util.List;
+
 import org.junit.Test;
+
+import com.google.common.collect.ImmutableList;
 
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.init.Items;
@@ -44,4 +48,9 @@ public class VillagerTest extends AbstractEntityHandlerTest<EntityVillager, Cont
 		checkAllEntities();
 	}
 
+	@Override
+	protected List<String> getIgnoreTags() {
+		// We have no way to get this value, and it's not useful anyways.
+		return ImmutableList.of("CareerLevel");
+	}
 }

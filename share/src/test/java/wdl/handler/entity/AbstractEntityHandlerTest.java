@@ -19,6 +19,8 @@ import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
@@ -315,6 +317,17 @@ public abstract class AbstractEntityHandlerTest<E extends Entity, C extends Cont
 		expected.writeToNBT(expectedNBT);
 		NBTTagCompound actualNBT = new NBTTagCompound();
 		actual.writeToNBT(actualNBT);
+		for (String key : getIgnoreTags()) {
+			expectedNBT.removeTag(key);
+			actualNBT.removeTag(key);
+		}
 		assertSameNBT(expectedNBT, actualNBT);
+	}
+
+	/**
+	 * A list of tags to ignore for entity NBT.
+	 */
+	protected List<String> getIgnoreTags() {
+		return Collections.emptyList();
 	}
 }
