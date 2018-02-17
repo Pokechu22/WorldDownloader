@@ -43,7 +43,6 @@ import net.minecraft.inventory.ContainerHopper;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
@@ -89,17 +88,14 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 	 * Creates a mock world, returning air for blocks and null for TEs.
 	 */
 	protected void makeMockWorld() {
-		clientWorld = mock(World.class);
-		serverWorld = mock(World.class);
+		clientWorld = mock(World.class, withSettings().name("Client world").defaultAnswer(RETURNS_MOCKS));
+		serverWorld = mock(World.class, withSettings().name("Server world").defaultAnswer(RETURNS_MOCKS));
 
 		clientPlayer = mock(EntityPlayer.class);
 		serverPlayer = mock(EntityPlayer.class);
 
 		when(clientWorld.getBlockState(any())).thenReturn(Blocks.AIR.getDefaultState());
 		when(serverWorld.getBlockState(any())).thenReturn(Blocks.AIR.getDefaultState());
-
-		when(clientWorld.getScoreboard()).thenReturn(mock(Scoreboard.class));
-		when(serverWorld.getScoreboard()).thenReturn(mock(Scoreboard.class));
 
 		populateProviderEvily(clientWorld);
 		populateProviderEvily(serverWorld);
