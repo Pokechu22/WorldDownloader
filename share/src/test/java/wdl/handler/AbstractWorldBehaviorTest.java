@@ -43,10 +43,13 @@ import net.minecraft.inventory.ContainerHopper;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.profiler.Profiler;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
+import net.minecraft.world.storage.ISaveHandler;
+import net.minecraft.world.storage.WorldInfo;
 import wdl.MaybeMixinTest;
 import wdl.ReflectionUtils;
 import wdl.ducks.INetworkNameable;
@@ -88,33 +91,28 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 	 * Creates a mock world, returning air for blocks and null for TEs.
 	 */
 	protected void makeMockWorld() {
-		clientWorld = mock(World.class, withSettings().name("Client world").defaultAnswer(RETURNS_MOCKS));
-		serverWorld = mock(World.class, withSettings().name("Server world").defaultAnswer(RETURNS_MOCKS));
+		clientWorld = makeMockWorld(true);
+		serverWorld = makeMockWorld(false);
 
-		clientPlayer = mock(EntityPlayer.class);
-		serverPlayer = mock(EntityPlayer.class);
+		clientPlayer = mock(EntityPlayer.class, "Client player");
+		serverPlayer = mock(EntityPlayer.class, "Server player");
 
 		when(clientWorld.getBlockState(any())).thenReturn(Blocks.AIR.getDefaultState());
 		when(serverWorld.getBlockState(any())).thenReturn(Blocks.AIR.getDefaultState());
-
-		populateProviderEvily(clientWorld);
-		populateProviderEvily(serverWorld);
 
 		clientPlayer.inventory = new InventoryPlayer(clientPlayer);
 		serverPlayer.inventory = new InventoryPlayer(serverPlayer);
 	}
 
 	/**
-	 * Sets the <em>final</em> {@link World#provider} field to a new mock provider.
+	 * Creates a World instance.
 	 */
-	private void populateProviderEvily(World world) {
-		WorldProvider fakeProvider = mock(WorldProvider.class);
-		when(fakeProvider.getDimensionType()).thenReturn(DimensionType.OVERWORLD);
-		try {
-			worldProviderField.set(world, fakeProvider);
-		} catch (IllegalArgumentException | IllegalAccessException e) {
-			throw new AssertionError(e);
-		}
+	private World makeMockWorld(boolean client) {
+		String name = client ? "Client world" : "Server world";
+		WorldProvider provider = mock(WorldProvider.class);
+		when(provider.getDimensionType()).thenReturn(DimensionType.OVERWORLD);
+		return mock(World.class, withSettings().name(name).defaultAnswer(RETURNS_MOCKS)
+				.useConstructor(mock(ISaveHandler.class), mock(WorldInfo.class), provider, mock(Profiler.class), client));
 	}
 
 	/**
