@@ -89,7 +89,7 @@ sourceSets {
     }
     mixin {
         java {
-            srcDir project(':1.10.2-litemod').file("src/java6/java") // Re-use 1.10.2
+            srcDir "src/java6/java"
             compileClasspath += sourceSets.main.output
             compileClasspath += sourceSets.main.compileClasspath
             runtimeClasspath += sourceSets.main.output
