@@ -385,7 +385,6 @@ wdl.messages.onGuiClosedWarning.failedToFindDoubleChest=Could not save this doub
 wdl.messages.onGuiClosedWarning.villagerCareer.notAComponent=Failed to recognize villager career: '%s' is not a translation component.
 wdl.messages.onGuiClosedWarning.villagerCareer.unknownProfession=Failed to recognize villager career: profession ID %s is not a known vanilla profession
 wdl.messages.onGuiClosedWarning.villagerCareer.unknownTitle=Failed to recognize villager career: '%s' is not a translation key that corresponds with a known vanilla career for profession ID %s
-wdl.messages.onGuiClosedWarning.villagerCareer.professionField=Failed to find profession field
 wdl.messages.onGuiClosedWarning.villagerCareer.exception=Failed to recognize villager career: Unexpected exception %s
 
 wdl.messages.generalInfo.downloadStarted=Download started

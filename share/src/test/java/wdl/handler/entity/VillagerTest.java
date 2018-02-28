@@ -14,6 +14,10 @@
  */
 package wdl.handler.entity;
 
+import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.*;
+
+import java.lang.reflect.Field;
 import java.util.List;
 
 import org.junit.Test;
@@ -52,5 +56,45 @@ public class VillagerTest extends AbstractEntityHandlerTest<EntityVillager, Cont
 	protected List<String> getIgnoreTags() {
 		// We have no way to get this value, and it's not useful anyways.
 		return ImmutableList.of("CareerLevel");
+	}
+
+	/**
+	 * Verifies that all villager careers are stored in {@link VillagerHandler#VANILLA_VILLAGER_CAREERS}.
+	 */
+	@Test
+	public void testCareerIdentification() throws Exception {
+		// Figure out how many professions and careers there are
+		Field field = EntityVillager.class.getDeclaredField("DEFAULT_TRADE_LIST_MAP");
+		field.setAccessible(true);
+		Object[][][][] tradesByProf = (Object[][][][]) field.get(null);
+		int numProfessions = tradesByProf.length;
+		for (int prof = 0; prof < numProfessions; prof++) {
+			int numCareers = tradesByProf[prof].length;
+			for (int career = 1; career <= numCareers; career++) { // careers start at 1
+				makeMockWorld();
+
+				EntityVillager villager = new EntityVillager(clientWorld, prof);
+				VillagerHandler.CAREER_ID_FIELD.setInt(villager, career);
+				// Needed to avoid the entity recalculating the career when it gets the display name name
+				VillagerHandler.CAREER_LEVEL_FIELD.setInt(villager, 1);
+				addEntity(villager);
+
+				runHandler(villager.getEntityId(), createClientContainer(villager));
+
+				checkAllEntities();
+				// Verify the career was also saved correctly.
+				Object clientVillager = clientWorld.getEntityByID(villager.getEntityId());
+				assertThat(VillagerHandler.CAREER_ID_FIELD.getInt(clientVillager), is(career));
+			}
+		}
+	}
+
+	/**
+	 * Verifies that the villager career field was identified correctly.
+	 */
+	@Test
+	public void checkCareerField() {
+		assertThat(VillagerHandler.CAREER_ID_FIELD.getName(), is("careerId"));
+		assertThat(VillagerHandler.CAREER_LEVEL_FIELD.getName(), is("careerLevel"));
 	}
 }

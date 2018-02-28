@@ -16,9 +16,12 @@ package wdl.handler.entity;
 
 import java.lang.reflect.Field;
 
+import javax.annotation.Nullable;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
@@ -28,9 +31,7 @@ import net.minecraft.entity.IMerchant;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.inventory.ContainerMerchant;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.village.MerchantRecipeList;
 import wdl.ReflectionUtils;
 import wdl.handler.HandlerException;
@@ -59,36 +60,16 @@ public class VillagerHandler extends EntityHandler<EntityVillager, ContainerMerc
 		TextComponentTranslation displayNameTranslation = ((TextComponentTranslation) displayName);
 		String key = displayNameTranslation.getKey();
 
-		try {
-			int career = getCareer(key, villager.getProfession());
-	
-			// XXX Iteration order of fields is undefined, and this is generally sloppy
-			// careerId is the 4th field
-			int fieldIndex = 0;
-			Field careerIdField = null;
-			for (Field field : EntityVillager.class.getDeclaredFields()) {
-				if (field.getType().equals(int.class)) {
-					fieldIndex++;
-					if (fieldIndex == 4) {
-						careerIdField = field;
-						break;
-					}
-				}
+		if (CAREER_ID_FIELD != null) {
+			try {
+				int career = getCareer(key, villager.getProfession());
+
+				CAREER_ID_FIELD.setInt(villager, career);
+
+				LOGGER.debug("Saved villager career ({} -> {}).", key, career);
+			} catch (IllegalArgumentException | IllegalAccessException e) {
+				throw new HandlerException("wdl.messages.onGuiClosedWarning.villagerCareer.exception", e);
 			}
-			if (careerIdField == null) {
-				throw new HandlerException("wdl.messages.onGuiClosedWarning.villagerCareer.professionField");
-			}
-	
-			careerIdField.setAccessible(true);
-			careerIdField.setInt(villager, career);
-	
-			// Re-create this component rather than modifying the old one
-			ITextComponent dispCareer = new TextComponentTranslation(key, displayNameTranslation.getFormatArgs());
-			dispCareer.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(key)));
-	
-			LOGGER.debug("Saved villager career ({} -> {}).", dispCareer, career);
-		} catch (IllegalArgumentException | IllegalAccessException e) {
-			throw new HandlerException("wdl.messages.onGuiClosedWarning.villagerCareer.exception", e);
 		}
 
 		return "wdl.messages.onGuiClosedInfo.savedEntity.villager";
@@ -132,6 +113,45 @@ public class VillagerHandler extends EntityHandler<EntityVillager, ContainerMerc
 		VANILLA_VILLAGER_CAREERS.put(5, nitwit);
 	}
 
+	/**
+	 * A reference to {@link EntityVillager#careerId}.  May be null if it can't be found.
+	 */
+	@Nullable
+	@VisibleForTesting
+	static final Field CAREER_ID_FIELD;
+	/**
+	 * A reference to {@link EntityVillager#careerLevel}.  May be null if it can't be found.
+	 */
+	@Nullable
+	@VisibleForTesting
+	static final Field CAREER_LEVEL_FIELD;
+
+	static {
+		// XXX Iteration order of fields is undefined, and this is generally sloppy
+		// careerId is the 4th field
+		int fieldIndex = 0;
+		Field careerLevelField = null;
+		Field careerIdField = null;
+		for (Field field : EntityVillager.class.getDeclaredFields()) {
+			if (field.getType().equals(int.class)) {
+				fieldIndex++;
+				if (fieldIndex == 4) {
+					careerIdField = field;
+				} else if (fieldIndex == 5) {
+					careerLevelField = field;
+					break;
+				}
+			}
+		}
+		CAREER_ID_FIELD = careerIdField;
+		CAREER_LEVEL_FIELD = careerLevelField;
+		if (CAREER_ID_FIELD != null) {
+			CAREER_ID_FIELD.setAccessible(true);
+		}
+		if (CAREER_LEVEL_FIELD != null) {
+			CAREER_LEVEL_FIELD.setAccessible(true);
+		}
+	}
 	/**
 	 * Gets the career ID associated with the given translation name and villager
 	 * profession ID.
