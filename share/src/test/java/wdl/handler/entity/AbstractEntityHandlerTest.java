@@ -19,13 +19,14 @@ import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Test;
+
+import com.google.common.collect.ImmutableList;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -45,6 +46,8 @@ import net.minecraft.inventory.ContainerMerchant;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.nbt.NBTException;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.village.MerchantRecipeList;
@@ -250,7 +253,7 @@ public abstract class AbstractEntityHandlerTest<E extends Entity, C extends Cont
 		assertThat(clientHorse_, is(instanceOf(EquineEntity.class)));
 		EquineEntity clientHorse = (EquineEntity) clientHorse_;
 		// GuiScreenHorseInventory
-		return new ContainerHorseInventory(clientInv, clientPlayer.inventory, clientHorse, clientPlayer);
+		return new ContainerHorseInventory(clientPlayer.inventory, clientInv, clientHorse, clientPlayer);
 	}
 
 	private Container createMinecartContainer(EntityMinecartContainer minecart) {
@@ -328,6 +331,27 @@ public abstract class AbstractEntityHandlerTest<E extends Entity, C extends Cont
 	 * A list of tags to ignore for entity NBT.
 	 */
 	protected List<String> getIgnoreTags() {
-		return Collections.emptyList();
+		return ImmutableList.of("Age"); // unstable
+	}
+
+	/**
+	 * Applies the given JSON-NBT data to the entity.
+	 */
+	protected void applyNBT(Entity entity, String nbt) {
+		try {
+			applyNBT(entity, JsonToNBT.getTagFromJson(nbt));
+		} catch (NBTException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+
+	/**
+	 * Applies the given NBT data to the entity.
+	 */
+	protected void applyNBT(Entity entity, NBTTagCompound update) {
+		NBTTagCompound tag = new NBTTagCompound();
+		entity.writeToNBT(tag);
+		tag.merge(update);
+		entity.readFromNBT(tag);
 	}
 }
