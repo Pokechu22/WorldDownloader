@@ -331,7 +331,7 @@ public abstract class AbstractEntityHandlerTest<E extends Entity, C extends Cont
 	 * A list of tags to ignore for entity NBT.
 	 */
 	protected List<String> getIgnoreTags() {
-		return ImmutableList.of("Age"); // unstable
+		return ImmutableList.of("Age", "Attributes"); // unstable
 	}
 
 	/**
