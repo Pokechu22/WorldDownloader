@@ -177,8 +177,18 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 		// Don't use real AssertionError, but instead use a special JUnit one,
 		// which has an interactive comparison tool
 		if (!expected.equals(actual)) {
-			throw new ComparisonFailure("Mismatched NBT!", expected.toString(), actual.toString());
+			throw new ComparisonFailure("Mismatched NBT!", nbtString(expected), nbtString(actual));
 		}
+	}
+
+	/**
+	 * Produces a formatted NBT string.
+	 */
+	private String nbtString(NBTTagCompound tag) {
+		String result = tag.toString();
+		result = result.replaceAll("\\{", "\\{\n");
+		result = result.replaceAll("\\}", "\n\\}");
+		return result;
 	}
 
 	/**
