@@ -75,16 +75,10 @@ public abstract class GuiTurningCameraBase extends GuiScreen {
 			this.oldHideHud = WDL.minecraft.gameSettings.hideGUI;
 			this.oldShowDebug = WDL.minecraft.gameSettings.showDebugInfo;
 			this.oldChatVisibility = WDL.minecraft.gameSettings.chatVisibility;
-			WDL.minecraft.gameSettings.thirdPersonView = 0;
-			WDL.minecraft.gameSettings.hideGUI = true;
-			WDL.minecraft.gameSettings.showDebugInfo = false;
-			WDL.minecraft.gameSettings.chatVisibility = EnumChatVisibility.HIDDEN;
 			this.oldRenderViewEntity = WDL.minecraft.getRenderViewEntity();
 
 			initializedCamera = true;
 		}
-
-		WDL.minecraft.setRenderViewEntity(this.cam);
 	}
 
 	/**
@@ -101,7 +95,7 @@ public abstract class GuiTurningCameraBase extends GuiScreen {
 	 */
 	@Override
 	public void updateScreen() {
-		if (mc.world != null) {
+		if (mc.world != null && this.initializedCamera) {
 			this.cam.prevRotationPitch = this.cam.rotationPitch = 0.0F;
 			this.cam.prevRotationYaw = this.yaw;
 			this.cam.lastTickPosY = this.cam.prevPosY = this.cam.posY;
@@ -135,6 +129,8 @@ public abstract class GuiTurningCameraBase extends GuiScreen {
 			this.cam.posX = WDL.thePlayer.posX - distance * x;
 			this.cam.posZ = WDL.thePlayer.posZ + distance * z;
 		}
+
+		this.deactivateRenderViewEntity();
 
 		super.updateScreen();
 	}
@@ -184,11 +180,7 @@ public abstract class GuiTurningCameraBase extends GuiScreen {
 	@Override
 	public void onGuiClosed() {
 		super.onGuiClosed();
-		WDL.minecraft.gameSettings.thirdPersonView = this.oldCameraMode;
-		WDL.minecraft.gameSettings.hideGUI = oldHideHud;
-		WDL.minecraft.gameSettings.showDebugInfo = oldShowDebug;
-		WDL.minecraft.gameSettings.chatVisibility = oldChatVisibility;
-		WDL.minecraft.setRenderViewEntity(this.oldRenderViewEntity);
+		this.deactivateRenderViewEntity();
 	}
 
 	/**
@@ -201,5 +193,52 @@ public abstract class GuiTurningCameraBase extends GuiScreen {
 		if (mc.world == null) {
 			this.drawBackground(0);
 		}
+	}
+
+	/**
+	 * Called when the client world ticks, from a static context.
+	 */
+	public static void onWorldTick() {
+		GuiScreen screen = WDL.minecraft.currentScreen;
+		if (screen instanceof GuiTurningCameraBase) {
+			((GuiTurningCameraBase) screen).onWorldTick0();
+		}
+	}
+
+	/**
+	 * Called when the world ticks.
+	 * Note that we do this in the world tick instead of the normal GUI tick,
+	 * because the GUI tick happens before the world ticks entities while this happens
+	 * after entities have been ticked.  We don't want the camera to be active when
+	 * entities are being ticked, because that causes some subtle issues.
+	 */
+	private void onWorldTick0() {
+		this.activateRenderViewEntity();
+	}
+
+	/**
+	 * Sets the render view entity to the custom camera.
+	 */
+	private void activateRenderViewEntity() {
+		if (!this.initializedCamera) return;
+
+		WDL.minecraft.gameSettings.thirdPersonView = 0;
+		WDL.minecraft.gameSettings.hideGUI = true;
+		WDL.minecraft.gameSettings.showDebugInfo = false;
+		WDL.minecraft.gameSettings.chatVisibility = EnumChatVisibility.HIDDEN;
+		WDL.minecraft.setRenderViewEntity(this.cam);
+	}
+
+	/**
+	 * Returns the render view entity to the normal player.
+	 */
+	private void deactivateRenderViewEntity() {
+		if (!this.initializedCamera) return;
+
+		WDL.minecraft.gameSettings.thirdPersonView = this.oldCameraMode;
+		WDL.minecraft.gameSettings.hideGUI = oldHideHud;
+		WDL.minecraft.gameSettings.showDebugInfo = oldShowDebug;
+		WDL.minecraft.gameSettings.chatVisibility = oldChatVisibility;
+		WDL.minecraft.setRenderViewEntity(this.oldRenderViewEntity);
 	}
 }

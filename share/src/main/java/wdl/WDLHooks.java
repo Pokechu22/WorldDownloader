@@ -48,6 +48,7 @@ import wdl.api.IGuiHooksListener;
 import wdl.api.IPluginChannelListener;
 import wdl.api.WDLApi;
 import wdl.api.WDLApi.ModInfo;
+import wdl.gui.GuiTurningCameraBase;
 import wdl.gui.GuiWDL;
 import wdl.gui.GuiWDLAbout;
 import wdl.gui.GuiWDLChunkOverrides;
@@ -156,6 +157,9 @@ public class WDLHooks {
 			PROFILER.startSection("capes");
 			CapeHandler.onWorldTick(players);
 			PROFILER.endSection();  // "capes"
+			PROFILER.startSection("camera");
+			GuiTurningCameraBase.onWorldTick();
+			PROFILER.endSection();  // "camera"
 			PROFILER.endSection();  // "wdl"
 		} catch (Throwable e) {
 			WDL.crashed(e, "WDL mod: exception in onWorldClientTick event");
