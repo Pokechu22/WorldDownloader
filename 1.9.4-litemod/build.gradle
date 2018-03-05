@@ -20,14 +20,14 @@ buildscript {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
         classpath 'commons-io:commons-io:2.5'
         classpath 'com.googlecode.java-diff-utils:diffutils:1.3.0'
-        classpath 'pokechu22.test.begradle:begradle:0.1.3-SNAPSHOT@jar'
+        classpath 'pokechu22.test.begradle:begradle:0.1.3@jar'
         classpath 'org.spongepowered:mixingradle:0.6-SNAPSHOT'
     }
 }
 
 apply plugin: 'java'
 
-version = "4.0.1.8-SNAPSHOT"
+version = "4.0.2.0"
 group = "wdl"
 archivesBaseName = "LiteModWDL"
 libsDirName = "../../libs/${version}"
