@@ -14,10 +14,12 @@
  */
 package wdl;
 
-import io.netty.buffer.ByteBuf;
-
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -27,7 +29,6 @@ import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemMap;
 import net.minecraft.network.play.server.SPacketBlockAction;
@@ -38,10 +39,6 @@ import net.minecraft.profiler.Profiler;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.storage.MapData;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import wdl.api.IBlockEventListener;
 import wdl.api.IChatMessageListener;
 import wdl.api.IGuiHooksListener;
@@ -53,8 +50,6 @@ import wdl.gui.GuiWDL;
 import wdl.gui.GuiWDLAbout;
 import wdl.gui.GuiWDLChunkOverrides;
 import wdl.gui.GuiWDLPermissions;
-
-import com.google.common.collect.ImmutableList;
 
 /**
  * The various hooks for WDL. <br/>
@@ -72,8 +67,6 @@ public class WDLHooks {
 	public static void onWorldClientTick(WorldClient sender) {
 		try {
 			PROFILER.startSection("wdl");
-
-			List<EntityPlayer> players = ImmutableList.copyOf(sender.playerEntities);
 
 			if (sender != WDL.worldClient) {
 				PROFILER.startSection("onWorldLoad");
@@ -154,9 +147,6 @@ public class WDLHooks {
 				PROFILER.endSection();  // "inventoryCheck"
 			}
 
-			PROFILER.startSection("capes");
-			CapeHandler.onWorldTick(players);
-			PROFILER.endSection();  // "capes"
 			PROFILER.startSection("camera");
 			GuiTurningCameraBase.onWorldTick();
 			PROFILER.endSection();  // "camera"
