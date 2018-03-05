@@ -26,7 +26,8 @@ import net.minecraft.init.Bootstrap;
 
 /**
  * This is a more or less empty class that is used to specify the runner that
- * JUnit should use, for tests that rely upon mixins or base changes.
+ * JUnit should use, for tests that rely upon mixins or base changes.  It also
+ * initializes the bootstrap, and sets up language stuff.
  *
  * The only purpose is to make use of the {@link RunWith @RunWith} annotation,
  * which is inherited into subclasses.

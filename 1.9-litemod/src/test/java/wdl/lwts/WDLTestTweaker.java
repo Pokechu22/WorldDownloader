@@ -25,9 +25,4 @@ public class WDLTestTweaker extends AbstractTestTweaker {
 		MixinEnvironment.getDefaultEnvironment().setSide(MixinEnvironment.Side.CLIENT);
 	}
 
-	@Override
-	public String getLaunchTarget() {
-		return "wdl.WDLTestMain";
-	}
-
 }
