@@ -413,9 +413,12 @@ public class WDL {
 		WDL.minecraft.displayGuiScreen((GuiScreen) null);
 		WDL.minecraft.setIngameFocus();
 		chunkLoader = WDLChunkLoader.create(saveHandler, worldClient.provider);
-		newTileEntities = new HashMap<>();
-		newEntities = HashMultimap.create();
-		newMapDatas = new HashMap<>();
+		newTileEntities.values().forEach((m) -> {
+			m.clear();
+		});
+		newTileEntities.clear();
+		newEntities.clear();
+		newMapDatas.clear();
 
 		if (baseProps.getProperty("ServerName").isEmpty()) {
 			baseProps.setProperty("ServerName", getServerName());
@@ -897,7 +900,7 @@ public class WDL {
 
 		try {
 			if (isEmpty(c)) {
-				LOGGER.warn("[WDL] Tried to save empty chunk! (" + c + "@" + c.x + "," + c.z + ")");
+				//LOGGER.warn("[WDL] Tried to save empty chunk! (" + c + "@" + c.x + "," + c.z + ")");
 				return;
 			}
 			chunkLoader.saveChunk(worldClient, c);
@@ -1460,6 +1463,15 @@ public class WDL {
 			newTileEntities.put(chunkPos, new HashMap<BlockPos, TileEntity>());
 		}
 		newTileEntities.get(chunkPos).put(pos, te);
+	}
+	
+	public static void unloadChunk(ChunkPos pos) {
+		Map m = newTileEntities.get(pos);
+		if(m != null) {
+			m.clear();
+		}
+		newTileEntities.remove(pos);
+		newEntities.removeAll(pos);
 	}
 
 	/**
