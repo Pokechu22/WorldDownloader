@@ -18,6 +18,7 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer.EnumChatVisibility;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import wdl.WDL;
@@ -128,6 +129,10 @@ public abstract class GuiTurningCameraBase extends GuiScreen {
 			this.cam.posY = WDL.thePlayer.posY;
 			this.cam.posX = WDL.thePlayer.posX - distance * x;
 			this.cam.posZ = WDL.thePlayer.posZ + distance * z;
+
+			this.cam.chunkCoordX = MathHelper.floor(this.cam.posX / 16.0D);
+			this.cam.chunkCoordY = MathHelper.floor(this.cam.posY / 16.0D);
+			this.cam.chunkCoordZ = MathHelper.floor(this.cam.posZ / 16.0D);
 		}
 
 		this.deactivateRenderViewEntity();
