@@ -1464,9 +1464,14 @@ public class WDL {
 		}
 		newTileEntities.get(chunkPos).put(pos, te);
 	}
-	
+
+	/**
+	 * Called when the given chunk is unloaded, to free memory.
+	 *
+	 * @param pos Location of the chunk
+	 */
 	public static void unloadChunk(ChunkPos pos) {
-		Map m = newTileEntities.get(pos);
+		Map<BlockPos, TileEntity> m = newTileEntities.get(pos);
 		if(m != null) {
 			m.clear();
 		}

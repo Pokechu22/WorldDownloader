@@ -162,7 +162,7 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 		rootTag.setInteger("DataVersion", VersionConstants.getDataVersion());
 
 		addChunkToPending(chunk.getPos(), rootTag);
-		
+
 		WDL.unloadChunk(chunk.getPos());
 	}
 
