@@ -346,15 +346,24 @@ public class WDLEvents {
 				return;
 			}
 
-			// Entity track distance is a square
-			double distance = Math.max(Math.abs(entity.posX - WDL.thePlayer.posX),
-					Math.abs(entity.posZ - WDL.thePlayer.posZ));
+			int serverViewDistance = 10; // XXX hardcoded for now
+			// Ref EntityTracker.setViewDistance and PlayerList.getFurthestViewableBlock
+			// (note that PlayerChunkMap.getFurthestViewableBlock is a misleading name)
+			int maxThreshold = (serverViewDistance - 1) * 16;
 
-			if (distance > threshold) {
+			int range = Math.min(threshold, maxThreshold);
+
+			// Entity track distance is a square, see EntityTrackerEntry.isVisibleTo
+			double dx = Math.abs(entity.posX - WDL.thePlayer.posX);
+			double dz = Math.abs(entity.posZ - WDL.thePlayer.posZ);
+
+			double distance = Math.max(dx, dz);
+
+			if (distance > range) {
 				WDLMessages.chatMessageTranslated(
 						WDLMessageTypes.REMOVE_ENTITY,
 						"wdl.messages.removeEntity.savingDistance",
-						entity, distance, threshold);
+						entity, distance, range);
 				entity.chunkCoordX = MathHelper
 						.floor(entity.posX / 16.0D);
 				entity.chunkCoordZ = MathHelper
@@ -368,7 +377,7 @@ public class WDLEvents {
 			WDLMessages.chatMessageTranslated(
 					WDLMessageTypes.REMOVE_ENTITY,
 					"wdl.messages.removeEntity.allowingRemoveDistance",
-					entity, distance, threshold);
+					entity, distance, range);
 		}
 	}
 
