@@ -346,8 +346,9 @@ public class WDLEvents {
 				return;
 			}
 
-			double distance = entity.getDistance(WDL.thePlayer.posX,
-					entity.posY, WDL.thePlayer.posZ);
+			// Entity track distance is a square
+			double distance = Math.max(Math.abs(entity.posX - WDL.thePlayer.posX),
+					Math.abs(entity.posZ - WDL.thePlayer.posZ));
 
 			if (distance > threshold) {
 				WDLMessages.chatMessageTranslated(
