@@ -14,6 +14,9 @@
  */
 package wdl;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
@@ -29,7 +32,6 @@ import net.minecraft.tileentity.TileEntityEnderChest;
 import net.minecraft.tileentity.TileEntityNote;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.storage.MapData;
@@ -54,6 +56,8 @@ public class WDLEvents {
 	/** @see WDLHooks#ENABLE_PROFILER */
 	private static final boolean ENABLE_PROFILER = WDLHooks.ENABLE_PROFILER;
 	private static final Profiler PROFILER = ENABLE_PROFILER ? Minecraft.getMinecraft().mcProfiler : null;
+
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
 	 * Must be called after the static World object in Minecraft has been
@@ -358,26 +362,24 @@ public class WDLEvents {
 			double dz = Math.abs(entity.posZ - WDL.thePlayer.posZ);
 
 			double distance = Math.max(dx, dz);
+			LOGGER.info("removeEntity: {} is at distance {} from {} (dx {}, dz {}); configured track distance is {}"
+					+ " and server distance for view distance {} is {}.  Entity kept: {}",
+					entity, distance, WDL.thePlayer, dx, dz, threshold, serverViewDistance, maxThreshold, (distance > range));
 
 			if (distance > range) {
 				WDLMessages.chatMessageTranslated(
 						WDLMessageTypes.REMOVE_ENTITY,
 						"wdl.messages.removeEntity.savingDistance",
 						entity, distance, range);
-				entity.chunkCoordX = MathHelper
-						.floor(entity.posX / 16.0D);
-				entity.chunkCoordZ = MathHelper
-						.floor(entity.posZ / 16.0D);
 
 				WDL.newEntities.put(new ChunkPos(entity.chunkCoordX,
 						entity.chunkCoordZ), entity);
-				return;
+			} else {
+				WDLMessages.chatMessageTranslated(
+						WDLMessageTypes.REMOVE_ENTITY,
+						"wdl.messages.removeEntity.allowingRemoveDistance",
+						entity, distance, range);
 			}
-
-			WDLMessages.chatMessageTranslated(
-					WDLMessageTypes.REMOVE_ENTITY,
-					"wdl.messages.removeEntity.allowingRemoveDistance",
-					entity, distance, range);
 		}
 	}
 

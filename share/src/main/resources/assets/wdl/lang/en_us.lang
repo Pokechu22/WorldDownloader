@@ -330,7 +330,7 @@ wdl.messages.tileEntity.notImporting=Old TE does not need importing: %s at %s
 wdl.messages.tileEntity.edited=Edited TE at %s using %s
 
 # MC = Minecraft; this is used to display what WDL and MC think of an entity
-# First arg is the display identifier, or the raw identifier if none availible
+# First arg is the display identifier, or the raw identifier if none available
 # The second arg is MC's display entity component
 wdl.messages.entityData=%s (MC %s)
 wdl.messages.entityData.noKnownName=unidentified entity
