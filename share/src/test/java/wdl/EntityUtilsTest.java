@@ -31,6 +31,9 @@ import org.mockito.AdditionalAnswers;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityTracker;
+import net.minecraft.entity.item.EntityArmorStand;
+import net.minecraft.entity.monster.EntityCreeper;
+import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.NetHandlerPlayServer;
@@ -47,20 +50,52 @@ import net.minecraft.world.storage.WorldInfo;
  */
 public class EntityUtilsTest extends MaybeMixinTest {
 
+	/**
+	 * Some basic tests, with varying paths but no entity removal.
+	 */
 	@Test
-	public void simpleTrackerTest() {
-		runTrackerTest(EntityPig::new, 80, 10,
+	public void testTrackerSimple() {
+		runTrackerTest(EntityPig::new, 80, 10, 300,
 				(tick, entity) -> true,
+				(tick) -> new Vec3d(-150 + tick, tick, -150 + tick));
+		runTrackerTest(EntityArmorStand::new, 160, 10, 300,
+				(tick, entity) -> true,
+				(tick) -> new Vec3d(150 * Math.sin(tick * 300 / (2 * Math.PI)), tick,
+						150 * Math.cos(tick * 300 / (2 * Math.PI))));
+	}
+
+	/**
+	 * Tracker test, where some entities are removed.
+	 */
+	@Test
+	public void testTrackerRemove() {
+		runTrackerTest(EntityZombie::new, 80, 10, 110,
+				(tick, entity) -> tick <= 100,
+				(tick) -> new Vec3d(-150 + tick, tick, -150 + tick));
+		runTrackerTest(EntityCreeper::new, 80, 10, 110,
+				(tick, entity) -> tick <= 100 || entity.posX <= (-150 + tick),
 				(tick) -> new Vec3d(-150 + tick, tick, -150 + tick));
 	}
 
+	/**
+	 * A generalized test for the entity tracker.
+	 *
+	 * @param entitySupplier     Produces entities.
+	 * @param threshold          The track distance for the produced entities.
+	 * @param serverViewDistance The view distance (in chunks) that is used.
+	 * @param numTicks           Number of ticks to simulate.
+	 * @param keepEntity         Predicate taking the tick and the entity, to see if
+	 *                           it should be "killed" on a tick.
+	 * @param posFunc            Function providing player position by tick.
+	 */
 	protected void runTrackerTest(Function<World, ? extends Entity> entitySupplier, int threshold,
-			int serverViewDistance, BiPredicate<Integer, Entity> keepEntity, IntFunction<Vec3d> posFunc) {
+			int serverViewDistance, int numTicks, BiPredicate<Integer, Entity> keepEntity, IntFunction<Vec3d> posFunc) {
 		WorldServer world = mock(WorldServer.class, withSettings().defaultAnswer(RETURNS_MOCKS)
 				.useConstructor(mock(MinecraftServer.class, RETURNS_MOCKS), mock(ISaveHandler.class), mock(WorldInfo.class), 0, mock(Profiler.class)));
 
 		EntityPlayerMP player = mock(EntityPlayerMP.class, RETURNS_DEEP_STUBS);
 		List<Entity> trackedEntities = new ArrayList<>();
+		when(player.toString()).thenCallRealMethod();
 		doAnswer(AdditionalAnswers.<Entity>answerVoid(trackedEntities::add)).when(player).addEntity(any());
 		doAnswer(AdditionalAnswers.<Entity>answerVoid(trackedEntities::remove)).when(player).removeEntity(any());
 		when(player.getServerWorld().getPlayerChunkMap().isPlayerWatchingChunk(eq(player), anyInt(), anyInt())).thenReturn(true);
@@ -77,8 +112,12 @@ public class EntityUtilsTest extends MaybeMixinTest {
 			assertThat("Tried to untrack an entity that was not tracked", tracked, hasItem(e));
 			tracked.remove(e);
 
-			boolean isPresent = (entities.contains(e));
-			assertEquals(EntityUtils.isWithinSavingDistance(e, player, threshold, serverViewDistance), isPresent);
+			boolean keep = EntityUtils.isWithinSavingDistance(e, player, threshold, serverViewDistance);
+			if (entities.contains(e)) {
+				assertTrue(e + " should have been saved for " + player + " @ " + threshold, keep);
+			} else {
+				assertFalse(e + " should not have been saved for " + player + " @ " + threshold, keep);
+			}
 		})).when(player).removeEntity(any());
 
 		world.playerEntities.add(player);
@@ -100,14 +139,16 @@ public class EntityUtilsTest extends MaybeMixinTest {
 			}
 		}
 
-		for (int tick = 0; tick <= 300; tick++) {
+		for (int tick = 0; tick <= numTicks; tick++) {
 			Vec3d pos = posFunc.apply(tick);
 			player.posX = pos.x;
 			player.posY = pos.y;
 			player.posZ = pos.z;
 			for (Iterator<Entity> itr = entities.iterator(); itr.hasNext();) {
-				if (!keepEntity.test(tick, itr.next())) {
+				Entity e = itr.next();
+				if (!keepEntity.test(tick, e)) {
 					itr.remove();
+					tracker.untrack(e);
 				}
 			}
 			tracker.tick();
