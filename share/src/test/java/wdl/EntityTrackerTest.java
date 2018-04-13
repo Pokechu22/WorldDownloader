@@ -63,23 +63,12 @@ public class EntityTrackerTest extends MaybeMixinTest {
 				if (!list.contains(e)) {
 					throw new RuntimeException("Tried to remove an entity that was not already present: " + e);
 				}
-				// XXX this is a direct copy from WDLEvents
+
 				int threshold = 80; // XXX can't even get the threshold because EntityUtils doesn't work in tests
 				int serverViewDistance = 10; // XXX hardcoded for now
-				// Ref EntityTracker.setViewDistance and PlayerList.getFurthestViewableBlock
-				// (note that PlayerChunkMap.getFurthestViewableBlock is a misleading name)
-				int maxThreshold = (serverViewDistance - 1) * 16;
 
-				int range = Math.min(threshold, maxThreshold);
-
-				// Entity track distance is a square, see EntityTrackerEntry.isVisibleTo
-				double dx = Math.abs(e.posX - player.posX);
-				double dz = Math.abs(e.posZ - player.posZ);
-
-				double distance = Math.max(dx, dz);
-
-				if (distance < range) {
-					throw new RuntimeException("Unexpected removal of " + e + " at distance " + distance);
+				if (!EntityUtils.isWithinSavingDistance(e, player, threshold, serverViewDistance)) {
+					throw new RuntimeException("Unexpected removal of " + e);
 				}
 				System.out.println("-" + e);
 				list.remove(e);

@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017 Pokechu22, julialy
+ * Copyright (c) 2017-2018 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -29,6 +29,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityTrackerEntry;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.player.EntityPlayer;
 import wdl.api.IEntityManager;
@@ -274,6 +275,48 @@ public class EntityUtils {
 		}
 		LOGGER.debug("Failed to get display name for group " + group);
 		return group;
+	}
+
+	/**
+	 * Checks if an entity should be saved, after it was removed clientside. An
+	 * entity is untracked in two cases: when it dies, and when it moves too far
+	 * away from the player. We only want to save the entity in the latter case. The
+	 * case can be determined by the distance.
+	 *
+	 * Note that the distance case is <em>not</em> related to rendering; generally
+	 * the client knows about entities slightly further away than it renders them,
+	 * and entities are not untracked for vertical distance differences but only x/z
+	 * differences (and in fact, it isn't a spherical or circular distance, but
+	 * instead a square one).
+	 *
+	 * @param entity        The entity to test with.
+	 * @param player        The player (used for position checks).
+	 * @param trackDistance The track distance for the entity, probably from
+	 *                      {@link #getEntityTrackDistance(Entity)}.
+	 * @param viewDistance  The server's view-distance value, in chunks.
+	 * @return True if the entity should be saved, false if it should be removed.
+	 * @see EntityTrackerEntry#isVisibleTo EntityTrackerEntry.isVisibleTo (source of
+	 *      this logic)
+	 */
+	public static boolean isWithinSavingDistance(Entity entity, Entity player,
+			int trackDistance, int viewDistance) {
+		// Ref EntityTracker.setViewDistance and PlayerList.getFurthestViewableBlock
+		// (note that PlayerChunkMap.getFurthestViewableBlock is a misleading name)
+		int maxRange = (viewDistance - 1) * 16;
+
+		int threshold = Math.min(trackDistance, maxRange);
+
+		// Entity track distance is a square, see EntityTrackerEntry.isVisibleTo
+		double dx = Math.abs(entity.posX - player.posX);
+		double dz = Math.abs(entity.posZ - player.posZ);
+
+		double distance = Math.max(dx, dz);
+
+		LOGGER.info("removeEntity: {} is at distance {} from {} (dx {}, dz {}); configured track distance is {}"
+				+ " and server distance for view distance {} is {}.  Entity kept: {}",
+				entity, distance, player, dx, dz, trackDistance, viewDistance, maxRange, (distance > threshold));
+
+		return distance > threshold;
 	}
 
 	/**

@@ -320,8 +320,8 @@ wdl.messages.category.core_debug=Core (debug)
 
 wdl.messages.removeEntity.allowingRemoveUserPref=removeEntityFromWorld: Allowing removal of %s (user pref)
 wdl.messages.removeEntity.allowingRemoveUnrecognizedDistance=removeEntityFromWorld: Allowing removal of %s (unrecognized distance)
-wdl.messages.removeEntity.allowingRemoveDistance=removeEntityFromWorld: Allowing removal of %s at distance %.2f (<= %d)
-wdl.messages.removeEntity.savingDistance=removeEntityFromWorld: Saving %s at distance %.2f (> %d)
+wdl.messages.removeEntity.allowingRemoveDistance=removeEntityFromWorld: Allowing removal of %s at %s (player %s, track %d, server %d)
+wdl.messages.removeEntity.savingDistance=removeEntityFromWorld: Saving %s at %s (player %s, track %d, server %d)
 wdl.messages.removeEntity.notSavingUserPreference=saveChunk: Not saving %s (User preference)
 
 wdl.messages.tileEntity.usingOld=Using old TE from saved file: %s at %s

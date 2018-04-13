@@ -14,9 +14,6 @@
  */
 package wdl;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
@@ -56,8 +53,6 @@ public class WDLEvents {
 	/** @see WDLHooks#ENABLE_PROFILER */
 	private static final boolean ENABLE_PROFILER = WDLHooks.ENABLE_PROFILER;
 	private static final Profiler PROFILER = ENABLE_PROFILER ? Minecraft.getMinecraft().mcProfiler : null;
-
-	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
 	 * Must be called after the static World object in Minecraft has been
@@ -351,34 +346,22 @@ public class WDLEvents {
 			}
 
 			int serverViewDistance = 10; // XXX hardcoded for now
-			// Ref EntityTracker.setViewDistance and PlayerList.getFurthestViewableBlock
-			// (note that PlayerChunkMap.getFurthestViewableBlock is a misleading name)
-			int maxThreshold = (serverViewDistance - 1) * 16;
 
-			int range = Math.min(threshold, maxThreshold);
-
-			// Entity track distance is a square, see EntityTrackerEntry.isVisibleTo
-			double dx = Math.abs(entity.posX - WDL.thePlayer.posX);
-			double dz = Math.abs(entity.posZ - WDL.thePlayer.posZ);
-
-			double distance = Math.max(dx, dz);
-			LOGGER.info("removeEntity: {} is at distance {} from {} (dx {}, dz {}); configured track distance is {}"
-					+ " and server distance for view distance {} is {}.  Entity kept: {}",
-					entity, distance, WDL.thePlayer, dx, dz, threshold, serverViewDistance, maxThreshold, (distance > range));
-
-			if (distance > range) {
+			if (EntityUtils.isWithinSavingDistance(entity, WDL.thePlayer,
+					threshold, serverViewDistance)) {
 				WDLMessages.chatMessageTranslated(
 						WDLMessageTypes.REMOVE_ENTITY,
 						"wdl.messages.removeEntity.savingDistance",
-						entity, distance, range);
-
+						entity, entity.getPositionVector().toString(),
+						WDL.thePlayer.getPositionVector(), threshold, serverViewDistance);
 				WDL.newEntities.put(new ChunkPos(entity.chunkCoordX,
 						entity.chunkCoordZ), entity);
 			} else {
 				WDLMessages.chatMessageTranslated(
 						WDLMessageTypes.REMOVE_ENTITY,
 						"wdl.messages.removeEntity.allowingRemoveDistance",
-						entity, distance, range);
+						entity, entity.getPositionVector().toString(),
+						WDL.thePlayer.getPositionVector(), threshold, serverViewDistance);
 			}
 		}
 	}
