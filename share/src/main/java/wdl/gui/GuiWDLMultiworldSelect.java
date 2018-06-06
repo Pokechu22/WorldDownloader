@@ -18,7 +18,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
@@ -27,6 +26,7 @@ import net.minecraft.client.resources.I18n;
 import org.lwjgl.input.Keyboard;
 
 import wdl.WDL;
+import wdl.settings.Configuration;
 
 /**
  * A GUI for selecting which world the player is currently in.
@@ -240,7 +240,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 				continue;
 			}
 
-			Properties props = WDL.loadWorldProps(worldName);
+			Configuration props = WDL.loadWorldProps(worldName);
 
 			if (!props.containsKey("WorldName")) {
 				continue;
@@ -443,7 +443,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 			folderName = folderName.replace(unsafeChar, '_');
 		}
 
-		Properties worldProps = new Properties(WDL.baseProps);
+		Configuration worldProps = new Configuration(WDL.baseProps);
 		worldProps.setProperty("WorldName", worldName);
 
 		String linkedWorldsProp = WDL.baseProps.getProperty("LinkedWorlds");

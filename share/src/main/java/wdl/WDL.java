@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.annotation.Nullable;
 
@@ -80,6 +79,7 @@ import wdl.gui.GuiWDLMultiworld;
 import wdl.gui.GuiWDLMultiworldSelect;
 import wdl.gui.GuiWDLOverwriteChanges;
 import wdl.gui.GuiWDLSaveProgress;
+import wdl.settings.Configuration;
 import wdl.update.GithubInfoGrabber;
 
 /**
@@ -216,21 +216,21 @@ public class WDL {
 	/**
 	 * Base properties, shared between each world on a multiworld server.
 	 */
-	public static Properties baseProps;
+	public static Configuration baseProps;
 	/**
 	 * Properties for a single world on a multiworld server, or all worlds
 	 * on a single world server.
 	 */
-	public static Properties worldProps;
+	public static Configuration worldProps;
 	/**
 	 * Default properties used for creating baseProps.  Saved and loaded;
 	 * shared between all servers.
 	 */
-	public static final Properties globalProps;
+	public static final Configuration globalProps;
 	/**
 	 * Default properties that are used to create the global properites.
 	 */
-	public static final Properties defaultProps;
+	public static final Configuration defaultProps;
 
 	private static final Logger LOGGER = LogManager.getLogger();
 
@@ -238,7 +238,7 @@ public class WDL {
 	static {
 		minecraft = Minecraft.getMinecraft();
 		// Initialize the Properties template:
-		defaultProps = new Properties();
+		defaultProps = new Configuration();
 		defaultProps.setProperty("ServerName", "");
 		defaultProps.setProperty("WorldName", "");
 		defaultProps.setProperty("LinkedWorlds", "");
@@ -287,7 +287,7 @@ public class WDL {
 		// Whether the 1-time tutorial has been shown.
 		defaultProps.setProperty("TutorialShown", "false");
 
-		globalProps = new Properties(defaultProps);
+		globalProps = new Configuration(defaultProps);
 
 		File dataFile = new File(minecraft.mcDataDir, "WorldDownloader.txt");
 		try (FileReader reader = new FileReader(dataFile)) {
@@ -295,8 +295,8 @@ public class WDL {
 		} catch (Exception e) {
 			LOGGER.debug("Failed to load global properties", e);
 		}
-		baseProps = new Properties(globalProps);
-		worldProps = new Properties(baseProps);
+		baseProps = new Configuration(globalProps);
+		worldProps = new Configuration(baseProps);
 	}
 
 	/**
@@ -953,7 +953,7 @@ public class WDL {
 	 */
 	public static void loadBaseProps() {
 		baseFolderName = getBaseFolderName();
-		baseProps = new Properties(globalProps);
+		baseProps = new Configuration(globalProps);
 
 		File savesFolder = new File(minecraft.mcDataDir, "saves");
 		File baseFolder = new File(savesFolder, baseFolderName);
@@ -968,7 +968,7 @@ public class WDL {
 
 		if (baseProps.getProperty("LinkedWorlds").isEmpty()) {
 			isMultiworld = false;
-			worldProps = new Properties(baseProps);
+			worldProps = new Configuration(baseProps);
 		} else {
 			isMultiworld = true;
 		}
@@ -977,11 +977,11 @@ public class WDL {
 	/**
 	 * Loads the properties for the given world, and returns it.
 	 *
-	 * Returns an empty Properties that inherits from baseProps if the specific
+	 * Returns an empty Configuration that inherits from baseProps if the specific
 	 * world cannot be found.
 	 */
-	public static Properties loadWorldProps(String theWorldName) {
-		Properties ret = new Properties(baseProps);
+	public static Configuration loadWorldProps(String theWorldName) {
+		Configuration ret = new Configuration(baseProps);
 
 		if (theWorldName.isEmpty()) {
 			return ret;
@@ -1015,7 +1015,7 @@ public class WDL {
 	 * Saves the specified world properties, and the base properties, in their
 	 * corresponding folders.
 	 */
-	public static void saveProps(String theWorldName, Properties theWorldProps) {
+	public static void saveProps(String theWorldName, Configuration theWorldProps) {
 		File savesDir = new File(minecraft.mcDataDir, "saves");
 
 		if (theWorldName.length() > 0) {
