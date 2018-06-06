@@ -1030,6 +1030,7 @@ public class WDL {
 				LOGGER.warn("Failed to write world props!", e);
 			}
 		} else if (!isMultiworld) {
+			// XXX should there be any info in worldProps in this case?
 			baseProps.putAll(theWorldProps);
 		}
 
@@ -1242,12 +1243,8 @@ public class WDL {
 
 		// Gamerules (most of these are already populated)
 		NBTTagCompound gamerules = worldInfoNBT.getCompoundTag("GameRules");
-		for (String prop : worldProps.stringPropertyNames()) {
-			if (!prop.startsWith("GameRule.")) {
-				continue;
-			}
-			String rule = prop.substring("GameRule.".length());
-			gamerules.setString(rule, worldProps.getProperty(prop));
+		for (Map.Entry<String, String> e : worldProps.getGameRules().entrySet()) {
+			gamerules.setString(e.getKey(), e.getValue());
 		}
 
 		// Forge (TODO: move this elsewhere!)
@@ -1607,51 +1604,21 @@ public class WDL {
 		CrashReportCategory base = report.makeCategoryDepth(
 				"World Downloader Mod - Base properties", stSize);
 		if (baseProps != null) {
-			if (!baseProps.isEmpty()) {
-				for (Map.Entry<Object, Object> e : baseProps.entrySet()) {
-					if (!(e.getKey() instanceof String)) {
-						LOGGER.warn("Non-string key " + e.getKey() + " in baseProps");
-						continue;
-					}
-					base.addCrashSection((String)e.getKey(), e.getValue());
-				}
-			} else {
-				base.addCrashSection("-", "empty");
-			}
+			baseProps.addToCrashReport(base, "baseProps");
 		} else {
 			base.addCrashSection("-", "null");
 		}
 		CrashReportCategory world = report.makeCategoryDepth(
 				"World Downloader Mod - World properties", stSize);
 		if (worldProps != null) {
-			if (!worldProps.isEmpty()) {
-				for (Map.Entry<Object, Object> e : worldProps.entrySet()) {
-					if (!(e.getKey() instanceof String)) {
-						LOGGER.warn("Non-string key " + e.getKey() + " in worldProps");
-						continue;
-					}
-					world.addCrashSection((String)e.getKey(), e.getValue());
-				}
-			} else {
-				world.addCrashSection("-", "empty");
-			}
+			baseProps.addToCrashReport(base, "worldProps");
 		} else {
 			world.addCrashSection("-", "null");
 		}
 		CrashReportCategory global = report.makeCategoryDepth(
 				"World Downloader Mod - Global properties", stSize);
 		if (globalProps != null) {
-			if (!globalProps.isEmpty()) {
-				for (Map.Entry<Object, Object> e : globalProps.entrySet()) {
-					if (!(e.getKey() instanceof String)) {
-						LOGGER.warn("Non-string key " + e.getKey() + " in globalProps");
-						continue;
-					}
-					global.addCrashSection((String)e.getKey(), e.getValue());
-				}
-			} else {
-				global.addCrashSection("-", "empty");
-			}
+			baseProps.addToCrashReport(base, "globalProps");
 		} else {
 			global.addCrashSection("-", "null");
 		}

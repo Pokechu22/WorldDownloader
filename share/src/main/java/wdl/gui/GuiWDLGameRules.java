@@ -340,7 +340,7 @@ public class GuiWDLGameRules extends GuiScreen {
 	 *         no such rule exists).
 	 */
 	private boolean isRuleSet(@Nonnull String ruleName) {
-		return WDL.worldProps.stringPropertyNames().contains("GameRule." + ruleName);
+		return WDL.worldProps.containsKey("GameRule." + ruleName);
 	}
 
 	public GuiWDLGameRules(@Nullable GuiScreen parent) {

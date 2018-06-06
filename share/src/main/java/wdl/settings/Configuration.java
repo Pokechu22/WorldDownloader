@@ -19,15 +19,21 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import net.minecraft.crash.CrashReportCategory;
 
 /**
  * WDL configuration.  Right now, just a thin wrapper around {@link Properties}.
  */
 public class Configuration {
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	@Nullable
 	private final Configuration parent;
@@ -56,6 +62,35 @@ public class Configuration {
 		this.properties.store(writer, comments);
 	}
 
+	/**
+	 * Gets a map of gamerules to values set in this configuration. This includes ones
+	 * inherited from the parent.
+	 */
+	public Map<String, String> getGameRules() {
+		return this.properties.stringPropertyNames().stream()
+				.filter(s -> s.startsWith("GameRule."))
+				.collect(Collectors.toMap(
+						s -> s.substring("GameRule.".length()),
+						s -> getProperty(s)));
+	}
+
+	/**
+	 * Puts the contents of this configuration into the given crash report category.
+	 */
+	public void addToCrashReport(CrashReportCategory category, String name) {
+		if (!properties.isEmpty()) {
+			for (Map.Entry<Object, Object> e : properties.entrySet()) {
+				if (!(e.getKey() instanceof String)) {
+					LOGGER.warn("Non-string key " + e.getKey() + " in " + name);
+					continue;
+				}
+				category.addCrashSection((String)e.getKey(), e.getValue());
+			}
+		} else {
+			category.addCrashSection("-", "empty");
+		}
+	}
+
 	// Keep but rename
 
 	public void setProperty(String key, String value) {
@@ -81,18 +116,6 @@ public class Configuration {
 	}
 
 	// Things to definitely get rid of - smelly
-
-	public Set<String> stringPropertyNames() {
-		return this.properties.stringPropertyNames();
-	}
-
-	public boolean isEmpty() {
-		return this.properties.isEmpty();
-	}
-
-	public Set<Map.Entry<Object, Object>> entrySet() {
-		return this.properties.entrySet();
-	}
 
 	public void putAll(Configuration conf) {
 		this.properties.putAll(conf.properties);
