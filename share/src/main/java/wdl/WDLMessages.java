@@ -198,14 +198,8 @@ public class WDLMessages {
 		}
 
 		if (!WDL.baseProps.containsKey("Messages." + r.name)) {
-			if (WDL.baseProps.containsKey("Debug." + r.name)) {
-				//Updating from older version
-				WDL.baseProps.put("Messages." + r.name,
-						WDL.baseProps.remove("Debug." + r.name));
-			} else {
-				WDL.baseProps.setProperty("Messages." + r.name,
-						Boolean.toString(r.type.isEnabledByDefault()));
-			}
+			WDL.baseProps.setProperty("Messages." + r.name,
+					Boolean.toString(r.type.isEnabledByDefault()));
 		}
 		return WDL.baseProps.getProperty("Messages." + r.name).equals("true");
 	}
@@ -284,14 +278,8 @@ public class WDLMessages {
 	 */
 	public static void onNewServer() {
 		if (!WDL.baseProps.containsKey("Messages.enableAll")) {
-			if (WDL.baseProps.containsKey("Debug.globalDebugEnabled")) {
-				//Port from old version.
-				WDL.baseProps.put("Messages.enableAll",
-						WDL.baseProps.remove("Debug.globalDebugEnabled"));
-			} else {
-				WDL.baseProps.setProperty("Messages.enableAll",
-						WDL.globalProps.getProperty("Messages.enableAll", "true"));
-			}
+			WDL.baseProps.setProperty("Messages.enableAll",
+					WDL.globalProps.getProperty("Messages.enableAll", "true"));
 		}
 
 		enableAllMessages = WDL.baseProps.getProperty("Messages.enableAll")

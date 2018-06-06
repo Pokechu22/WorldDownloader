@@ -84,10 +84,6 @@ public class Configuration {
 
 	// Things to definitely get rid of - smelly
 
-	public Object put(Object key, Object value) {
-		return this.properties.put(key, value);
-	}
-
 	public Set<String> stringPropertyNames() {
 		return this.properties.stringPropertyNames();
 	}
