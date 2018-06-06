@@ -72,14 +72,12 @@ public class Configuration {
 		return this.properties.getProperty(key, defaultValue);
 	}
 
-	// Slightly smelly, but the purpose is needed; just the signature is bad
-
-	public boolean containsKey(Object key) {
-		return this.properties.contains(key);
+	public boolean containsKey(String key) {
+		return this.properties.containsKey(key);
 	}
 
-	public Object remove(String key) {
-		return this.properties.remove(key);
+	public void remove(String key) {
+		this.properties.remove(key);
 	}
 
 	// Things to definitely get rid of - smelly
