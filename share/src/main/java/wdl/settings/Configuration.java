@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017 Pokechu22, julialy
+ * Copyright (c) 2018 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -19,6 +19,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.Map;
 import java.util.Properties;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
@@ -36,8 +37,19 @@ public class Configuration {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	@Nullable
-	private final Configuration parent;
+	final Configuration parent;
 	private final Properties properties;
+
+	public final Setting<Boolean> allowCheats = makeSetting(
+			"AllowCheats", "true", c -> c.allowCheats);
+	public final Setting<String> gameMode = makeSetting(
+			"GameType", "keep", c->c.gameMode);
+	public final Setting<String> time = makeSetting(
+			"Time", "keep", c->c.time);
+	public final Setting<String> weather = makeSetting(
+			"Weather", "keep", c -> c.weather);
+	public final Setting<String> spawn = makeSetting(
+			"Spawn", "auto", c -> c.spawn);
 
 	public Configuration() {
 		this(null);
@@ -50,6 +62,37 @@ public class Configuration {
 		} else {
 			this.properties = new Properties();
 		}
+	}
+
+	/**
+	 * If this implementation is the base default configuration, this method should
+	 * be overridden to return true.
+	 *
+	 * This is written because overwriting a method can be done before a constructor
+	 * runs, while a field cannot be used (ugly hack).
+	 *
+	 * @return true if this is the default implementation
+	 */
+	protected boolean assignDefaultValues() {
+		return false;
+	}
+
+	/**
+	 * Creates a setting, assigning the right value if needed.
+	 *
+	 * @param name         The name of the setting, as used in the configuration.
+	 * @param defaultValue The default value that should be used for the field.
+	 * @param fieldGetter  A reference to the field, from the configuration.
+	 * @return The new setting.
+	 */
+	protected <T> Setting<T> makeSetting(String name, String defaultValue, Function<Configuration, Setting<T>> fieldGetter) {
+		String value;
+		if (this.assignDefaultValues()) {
+			value = defaultValue;
+		} else {
+			value = null;
+		}
+		return new Setting<>(name, value, this, fieldGetter);
 	}
 
 	// Rework slightly, and maybe rename

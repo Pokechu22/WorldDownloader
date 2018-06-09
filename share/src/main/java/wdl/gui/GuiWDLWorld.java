@@ -223,79 +223,87 @@ public class GuiWDLWorld extends GuiScreen {
 	}
 
 	private void cycleAllowCheats() {
-		if (WDL.baseProps.getProperty("AllowCheats").equals("true")) {
-			WDL.baseProps.setProperty("AllowCheats", "false");
+		if (WDL.baseProps.allowCheats.get().equals("true")) {
+			WDL.baseProps.allowCheats.set("false");
 		} else {
-			WDL.baseProps.setProperty("AllowCheats", "true");
+			WDL.baseProps.allowCheats.set("true");
 		}
 
 		this.allowCheatsBtn.displayString = getAllowCheatsText();
 	}
 
 	private void cycleGamemode() {
-		String prop = WDL.baseProps.getProperty("GameType");
+		String prop = WDL.baseProps.gameMode.get();
+		String newValue;
 
 		if (prop.equals("keep")) {
-			WDL.baseProps.setProperty("GameType", "creative");
+			newValue = "creative";
 		} else if (prop.equals("creative")) {
-			WDL.baseProps.setProperty("GameType", "survival");
+			newValue = "survival";
 		} else if (prop.equals("survival")) {
-			WDL.baseProps.setProperty("GameType", "hardcore");
-		} else if (prop.equals("hardcore")) {
-			WDL.baseProps.setProperty("GameType", "keep");
+			newValue = "hardcore";
+		} else { // prop.equals("hardcore")
+			newValue = "keep";
 		}
+		WDL.baseProps.gameMode.set(newValue);
 
 		this.gamemodeBtn.displayString = getGamemodeText();
 	}
 
 	private void cycleTime() {
-		String prop = WDL.baseProps.getProperty("Time");
+		String prop = WDL.baseProps.time.get();
+		String newValue;
 
 		if (prop.equals("keep")) {
-			WDL.baseProps.setProperty("Time", "23000");
+			newValue = "23000";
 		} else if (prop.equals("23000")) {
-			WDL.baseProps.setProperty("Time", "0");
+			newValue = "0";
 		} else if (prop.equals("0")) {
-			WDL.baseProps.setProperty("Time", "6000");
+			newValue = "6000";
 		} else if (prop.equals("6000")) {
-			WDL.baseProps.setProperty("Time", "11500");
+			newValue = "11500";
 		} else if (prop.equals("11500")) {
-			WDL.baseProps.setProperty("Time", "12500");
+			newValue = "12500";
 		} else if (prop.equals("12500")) {
-			WDL.baseProps.setProperty("Time", "18000");
+			newValue = "18000";
 		} else { // prop.equals("18000")
-			WDL.baseProps.setProperty("Time", "keep");
+			newValue = "keep";
 		}
+		WDL.baseProps.time.set(newValue);
 
 		this.timeBtn.displayString = getTimeText();
 	}
 
 	private void cycleWeather() {
-		String prop = WDL.baseProps.getProperty("Weather");
+		String prop = WDL.baseProps.weather.get();
+		String newValue;
 
 		if (prop.equals("keep")) {
-			WDL.baseProps.setProperty("Weather", "sunny");
+			newValue = "sunny";
 		} else if (prop.equals("sunny")) {
-			WDL.baseProps.setProperty("Weather", "rain");
+			newValue = "rain";
 		} else if (prop.equals("rain")) {
-			WDL.baseProps.setProperty("Weather", "thunderstorm");
-		} else if (prop.equals("thunderstorm")) {
-			WDL.baseProps.setProperty("Weather", "keep");
+			newValue = "thunderstorm";
+		} else { // prop.equals("thunderstorm")
+			newValue = "keep";
 		}
+		WDL.baseProps.weather.set(newValue);
 
 		this.weatherBtn.displayString = getWeatherText();
 	}
 
 	private void cycleSpawn() {
-		String prop = WDL.worldProps.getProperty("Spawn");
+		String prop = WDL.worldProps.spawn.get();
+		String newValue;
 
 		if (prop.equals("auto")) {
-			WDL.worldProps.setProperty("Spawn", "player");
+			newValue = "player";
 		} else if (prop.equals("player")) {
-			WDL.worldProps.setProperty("Spawn", "xyz");
-		} else if (prop.equals("xyz")) {
-			WDL.worldProps.setProperty("Spawn", "auto");
+			newValue = "xyz";
+		} else { // prop.equals("xyz")
+			newValue = "auto";
 		}
+		WDL.worldProps.spawn.set(newValue);
 
 		this.spawnBtn.displayString = getSpawnText();
 		updateSpawnTextBoxVisibility();
@@ -303,37 +311,36 @@ public class GuiWDLWorld extends GuiScreen {
 
 	private String getAllowCheatsText() {
 		return I18n.format("wdl.gui.world.allowCheats."
-				+ WDL.baseProps.getProperty("AllowCheats"));
+				+ WDL.baseProps.allowCheats.get());
 	}
 
 	private String getGamemodeText() {
 		return I18n.format("wdl.gui.world.gamemode."
-				+ WDL.baseProps.getProperty("GameType"));
+				+ WDL.baseProps.gameMode.get());
 	}
 
 	private String getTimeText() {
-		String result = I18n.format("wdl.gui.world.time."
-				+ WDL.baseProps.getProperty("Time"));
+		String key = "wdl.gui.world.time." + WDL.baseProps.time.get();
 
-		if (result.startsWith("wdl.gui.world.time.")) {
+		if (I18n.hasKey(key)) {
+			return I18n.format(key);
+		} else {
 			// Unrecognized time -- not translated
 			// Only done with time because time can have a value that
 			// isn't on the normal list but still can be parsed
-			result = I18n.format("wdl.gui.world.time.custom",
-					WDL.baseProps.getProperty("Time"));
+			return I18n.format("wdl.gui.world.time.custom",
+					WDL.baseProps.time.get());
 		}
-
-		return result;
 	}
 
 	private String getWeatherText() {
 		return I18n.format("wdl.gui.world.weather."
-				+ WDL.baseProps.getProperty("Weather"));
+				+ WDL.baseProps.weather.get());
 	}
 
 	private String getSpawnText() {
 		return I18n.format("wdl.gui.world.spawn."
-				+ WDL.worldProps.getProperty("Spawn"));
+				+ WDL.worldProps.spawn.get());
 	}
 
 	/**
