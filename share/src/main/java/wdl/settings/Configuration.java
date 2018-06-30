@@ -40,15 +40,15 @@ public class Configuration {
 	final Configuration parent;
 	private final Properties properties;
 
-	public final Setting<Boolean> allowCheats = makeSetting(
+	public final BaseSetting<Boolean> allowCheats = makeSetting(
 			"AllowCheats", "true", c -> c.allowCheats);
-	public final Setting<String> gameMode = makeSetting(
+	public final BaseSetting<String> gameMode = makeSetting(
 			"GameType", "keep", c->c.gameMode);
-	public final Setting<String> time = makeSetting(
+	public final BaseSetting<String> time = makeSetting(
 			"Time", "keep", c->c.time);
-	public final Setting<String> weather = makeSetting(
+	public final BaseSetting<String> weather = makeSetting(
 			"Weather", "keep", c -> c.weather);
-	public final Setting<String> spawn = makeSetting(
+	public final BaseSetting<String> spawn = makeSetting(
 			"Spawn", "auto", c -> c.spawn);
 
 	public Configuration() {
@@ -85,14 +85,14 @@ public class Configuration {
 	 * @param fieldGetter  A reference to the field, from the configuration.
 	 * @return The new setting.
 	 */
-	protected <T> Setting<T> makeSetting(String name, String defaultValue, Function<Configuration, Setting<T>> fieldGetter) {
+	protected <T> BaseSetting<T> makeSetting(String name, String defaultValue, Function<Configuration, BaseSetting<T>> fieldGetter) {
 		String value;
 		if (this.assignDefaultValues()) {
 			value = defaultValue;
 		} else {
 			value = null;
 		}
-		return new Setting<>(name, value, this, fieldGetter);
+		return new BaseSetting<>(name, value, this, fieldGetter);
 	}
 
 	// Rework slightly, and maybe rename

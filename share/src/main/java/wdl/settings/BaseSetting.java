@@ -21,18 +21,26 @@ import javax.annotation.Nullable;
 
 /**
  * A wrapper from a setting to the property represented by it.
- *
- * @param <T> Type for this setting.  Currently unused (!)
  */
-public class Setting<T> {
+public abstract class BaseSetting<T> implements ISetting<T> {
 
 	public final String name;
 	@Nullable
-	private String value;
+	private T value;
+	@Nullable
 	private final Configuration owner;
-	private final Function<Configuration, Setting<T>> fieldGetter;
+	private final Function<Configuration, ISetting<T>> fieldGetter;
 
-	public Setting(String name, String value, Configuration owner, Function<Configuration, Setting<T>> fieldGetter) {
+	/**
+	 * Constructor.
+	 *
+	 * @param name The name as used in the configuration.
+	 * @param value The value to currently use.
+	 * @param owner The parent configuration.  May be null.
+	 * @param fieldGetter A function to access the field for this setting.
+	 */
+	public BaseSetting(String name, @Nullable T value, @Nullable Configuration owner,
+			Function<Configuration, ISetting<T>> fieldGetter) {
 		this.name = name;
 		this.value = value;
 		this.owner = owner;
@@ -40,15 +48,15 @@ public class Setting<T> {
 	}
 
 	/**
-	 * Gets the value matched by this setting.
+	 * Gets a string value for this setting.
 	 */
 	@Nonnull
-	public String get() {
+	protected String getString() {
 		if (owner.containsKey(name)) {
 			return owner.getProperty(name);
 		} else {
 			if (owner.parent != null) {
-				return fieldGetter.apply(owner.parent).get();
+				return ((BaseSetting<T>)fieldGetter.apply(owner.parent)).getString(); // XXX cast is a hack
 			} else {
 				throw new IllegalStateException("No value was set even on the default value");
 			}
@@ -56,17 +64,9 @@ public class Setting<T> {
 	}
 
 	/**
-	 * Sets the value matched by this setting.
+	 * Sets a string value for this setting.
 	 */
-	public void set(String value) {
-		if (owner.containsKey(name)) {
-			owner.setProperty(name, value);
-		} else {
-			if (owner.parent != null) {
-				fieldGetter.apply(owner.parent).set(value);
-			} else {
-				throw new IllegalStateException("No value was set even on the default value");
-			}
-		}
+	protected void set(String value) {
+		owner.setProperty(name, value);
 	}
 }
