@@ -19,7 +19,6 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.Map;
 import java.util.Properties;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
@@ -40,17 +39,6 @@ public class Configuration {
 	final Configuration parent;
 	private final Properties properties;
 
-	public final BaseSetting<Boolean> allowCheats = makeSetting(
-			"AllowCheats", "true", c -> c.allowCheats);
-	public final BaseSetting<String> gameMode = makeSetting(
-			"GameType", "keep", c->c.gameMode);
-	public final BaseSetting<String> time = makeSetting(
-			"Time", "keep", c->c.time);
-	public final BaseSetting<String> weather = makeSetting(
-			"Weather", "keep", c -> c.weather);
-	public final BaseSetting<String> spawn = makeSetting(
-			"Spawn", "auto", c -> c.spawn);
-
 	public Configuration() {
 		this(null);
 	}
@@ -64,35 +52,47 @@ public class Configuration {
 		}
 	}
 
+	// XXX neither of these handle inheritance
 	/**
-	 * If this implementation is the base default configuration, this method should
-	 * be overridden to return true.
+	 * Sets the value for a setting.
 	 *
-	 * This is written because overwriting a method can be done before a constructor
-	 * runs, while a field cannot be used (ugly hack).
-	 *
-	 * @return true if this is the default implementation
+	 * @param setting The setting to change.
+	 * @param value The new value.
 	 */
-	protected boolean assignDefaultValues() {
-		return false;
+	public <T> void setValue(Setting<T> setting, T value) {
+		this.properties.setProperty(setting.name, setting.toString.apply(value));
+	}
+	/**
+	 * Gets the value for a setting.
+	 *
+	 * @param setting The setting to change.
+	 * @param value The new value.
+	 */
+	public <T> T getValue(Setting<T> setting) {
+		return setting.fromString.apply(this.properties.getProperty(setting.name));
+	}
+
+	// These methods exist partially because they can change a Setting<?> to a
+	// Setting<T> so that the type from getValue is still the type of the setting
+	// (useful for e.g. SettingButton)
+	/**
+	 * Cycles the value of a setting.
+	 *
+	 * @param setting The setting to cycle
+	 * @see CyclableSetting#cycle
+	 */
+	public <T> void cycle(CyclableSetting<T> setting) {
+		this.setValue(setting, setting.cycle(this.getValue(setting)));
 	}
 
 	/**
-	 * Creates a setting, assigning the right value if needed.
+	 * Gets the text for a setting.
 	 *
-	 * @param name         The name of the setting, as used in the configuration.
-	 * @param defaultValue The default value that should be used for the field.
-	 * @param fieldGetter  A reference to the field, from the configuration.
-	 * @return The new setting.
+	 * @param setting The setting to use
+	 * @see CyclableSetting#getButtonText
 	 */
-	protected <T> BaseSetting<T> makeSetting(String name, String defaultValue, Function<Configuration, BaseSetting<T>> fieldGetter) {
-		String value;
-		if (this.assignDefaultValues()) {
-			value = defaultValue;
-		} else {
-			value = null;
-		}
-		return new BaseSetting<>(name, value, this, fieldGetter);
+	public <T> String getButtonText(CyclableSetting<T> setting) {
+		return setting.getButtonText(this.getValue(setting));
 	}
 
 	// Rework slightly, and maybe rename

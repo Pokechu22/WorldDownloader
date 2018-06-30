@@ -59,7 +59,6 @@ wdl.gui.world.time.6000=Time: Noon
 wdl.gui.world.time.11500=Time: Evening
 wdl.gui.world.time.12500=Time: Sunset
 wdl.gui.world.time.18000=Time: Midnight
-wdl.gui.world.time.custom=Time: Other (%s)
 wdl.gui.world.weather.keep=Weather: Don't change
 wdl.gui.world.weather.sunny=Weather: Sunny
 wdl.gui.world.weather.rain=Weather: Rain

@@ -39,7 +39,6 @@ wdl.gui.world.time.6000=Hora: Mediodía
 wdl.gui.world.time.11500=Hora: Tarde
 wdl.gui.world.time.12500=Hora: Atardecer
 wdl.gui.world.time.18000=Hora: Medianoche
-wdl.gui.world.time.custom=Hora: Otro (%s)
 wdl.gui.world.weather.keep=Tiempo: Dejar sin cambios
 wdl.gui.world.weather.sunny=Tiempo: Soleado
 wdl.gui.world.weather.rain=Tiempo: Lluvia

@@ -16,11 +16,60 @@ package wdl.settings;
 
 import java.util.function.Function;
 
-import javax.annotation.Nullable;
+/**
+ * A cyclable setting is a setting that can be cycled via a button through a
+ * fixed set of values.
+ */
+public abstract class CyclableSetting<T> extends Setting<T> {
+	private String key;
 
-public abstract class CyclableSetting<T> extends BaseSetting<T> implements ICyclableSetting<T> {
-	public CyclableSetting(String name, @Nullable T value, Configuration owner,
-			Function<Configuration, ISetting<T>> fieldGetter) {
-		super(name, value, owner, fieldGetter);
+	/**
+	 * Constructor.
+	 *
+	 * @param name The name as used in a properties file.
+	 * @param def The default value.
+	 * @param key The translation key.
+	 * @param fromString A function that converts a String into a T.
+	 */
+	public CyclableSetting(String name, T def, String key, Function<String, T> fromString) {
+		this(name, def, key, fromString, T::toString);
+	}
+
+	/**
+	 * Constructor.
+	 *
+	 * @param name The name as used in a properties file.
+	 * @param def The default value.
+	 * @param key The translation key.
+	 * @param fromString A function that converts a String into a T.
+	 * @param toString A function that converts a T back into a String.
+	 */
+	public CyclableSetting(String name, T def, String key, Function<String, T> fromString, Function<T, String> toString) {
+		super(name, def, fromString, toString);
+	}
+
+	/**
+	 * Cycles into the next value.
+	 *
+	 * @param value Current value
+	 * @return Next value
+	 */
+	public abstract T cycle(T value);
+
+	/**
+	 * Gets a translation string that describes this setting.
+	 *
+	 * @return A translation string.
+	 */
+	public String getDescription() {
+		return key + ".description";
+	}
+	/**
+	 * Gets a translation string that describes this setting's current value.
+	 *
+	 * @return A translation string.
+	 */
+	public String getButtonText(T curValue) {
+		return key + "." + toString.apply(curValue);
 	}
 }

@@ -57,7 +57,6 @@ wdl.gui.world.time.6000=Heure : Midi
 wdl.gui.world.time.11500=Heure : Soir
 wdl.gui.world.time.12500=Heure : Crépuscule
 wdl.gui.world.time.18000=Heure : Minuit
-wdl.gui.world.time.custom=Heure : Autre (%s)
 wdl.gui.world.weather.keep=Météo : Ne pas changer
 wdl.gui.world.weather.sunny=Météo : Ensoleillé
 wdl.gui.world.weather.rain=Météo : Pluie
