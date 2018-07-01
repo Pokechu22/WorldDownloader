@@ -17,7 +17,7 @@ package wdl.gui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
-import wdl.settings.Configuration;
+import wdl.settings.IConfiguration;
 import wdl.settings.CyclableSetting;
 
 /**
@@ -25,13 +25,13 @@ import wdl.settings.CyclableSetting;
  */
 public class SettingButton extends GuiButton {
 	private final CyclableSetting<?> setting;
-	private final Configuration config;
+	private final IConfiguration config;
 
-	public SettingButton(int id, CyclableSetting<?> setting, Configuration config, int x, int y) {
+	public SettingButton(int id, CyclableSetting<?> setting, IConfiguration config, int x, int y) {
 		this(id, setting, config, x, y, 200, 20);
 	}
 
-	public SettingButton(int id, CyclableSetting<?> setting, Configuration config, int x, int y, int width, int height) {
+	public SettingButton(int id, CyclableSetting<?> setting, IConfiguration config, int x, int y, int width, int height) {
 		super(id, x, y, width, height, "");
 		this.setting = setting;
 		this.config = config;

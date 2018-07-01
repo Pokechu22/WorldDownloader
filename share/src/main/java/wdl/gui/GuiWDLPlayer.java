@@ -20,13 +20,13 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import wdl.WDL;
-import wdl.settings.Configuration;
+import wdl.settings.IConfiguration;
 import wdl.settings.PlayerSettings;
 
 public class GuiWDLPlayer extends GuiScreen {
 	private String title;
 	private final GuiScreen parent;
-	private final Configuration config;
+	private final IConfiguration config;
 	private SettingButton healthBtn;
 	private SettingButton hungerBtn;
 	private SettingButton playerPosBtn;
