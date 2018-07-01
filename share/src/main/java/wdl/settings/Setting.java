@@ -25,7 +25,7 @@ public abstract class Setting<T> {
 	/**
 	 * The default value.
 	 */
-	public final T def;
+	public final T defaultValue;
 
 	// Configuration stuff
 	/**
@@ -52,8 +52,13 @@ public abstract class Setting<T> {
 	public Setting(String name, T def, Function<String, T> fromString,
 			Function<T, String> toString) {
 		this.name = name;
-		this.def = def;
+		this.defaultValue = def;
 		this.fromString = fromString;
 		this.toString = toString;
+	}
+
+	@Override
+	public String toString() {
+		return getClass().getSimpleName() + " " + this.name + " (defaults to " + defaultValue + ")";
 	}
 }

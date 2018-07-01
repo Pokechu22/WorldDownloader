@@ -32,7 +32,7 @@ import net.minecraft.crash.CrashReportCategory;
 /**
  * WDL configuration.  Right now, just a thin wrapper around {@link Properties}.
  */
-public class Configuration {
+public class Configuration implements IConfiguration {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	@Nullable
@@ -59,6 +59,7 @@ public class Configuration {
 	 * @param setting The setting to change.
 	 * @param value The new value.
 	 */
+	@Override
 	public <T> void setValue(Setting<T> setting, T value) {
 		this.properties.setProperty(setting.name, setting.toString.apply(value));
 	}
@@ -68,31 +69,9 @@ public class Configuration {
 	 * @param setting The setting to change.
 	 * @param value The new value.
 	 */
+	@Override
 	public <T> T getValue(Setting<T> setting) {
 		return setting.fromString.apply(this.properties.getProperty(setting.name));
-	}
-
-	// These methods exist partially because they can change a Setting<?> to a
-	// Setting<T> so that the type from getValue is still the type of the setting
-	// (useful for e.g. SettingButton)
-	/**
-	 * Cycles the value of a setting.
-	 *
-	 * @param setting The setting to cycle
-	 * @see CyclableSetting#cycle
-	 */
-	public <T> void cycle(CyclableSetting<T> setting) {
-		this.setValue(setting, setting.cycle(this.getValue(setting)));
-	}
-
-	/**
-	 * Gets the text for a setting.
-	 *
-	 * @param setting The setting to use
-	 * @see CyclableSetting#getButtonText
-	 */
-	public <T> String getButtonText(CyclableSetting<T> setting) {
-		return setting.getButtonText(this.getValue(setting));
 	}
 
 	// Rework slightly, and maybe rename
@@ -109,6 +88,7 @@ public class Configuration {
 	 * Gets a map of gamerules to values set in this configuration. This includes ones
 	 * inherited from the parent.
 	 */
+	@Override
 	public Map<String, String> getGameRules() {
 		return this.properties.stringPropertyNames().stream()
 				.filter(s -> s.startsWith("GameRule."))
@@ -120,6 +100,7 @@ public class Configuration {
 	/**
 	 * Puts the contents of this configuration into the given crash report category.
 	 */
+	@Override
 	public void addToCrashReport(CrashReportCategory category, String name) {
 		if (!properties.isEmpty()) {
 			for (Map.Entry<Object, Object> e : properties.entrySet()) {
