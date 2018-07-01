@@ -14,15 +14,14 @@
  */
 package wdl.settings;
 
-import java.util.Map;
-import java.util.function.Function;
+import static wdl.settings.Utils.*;
 
-import com.google.common.collect.ImmutableMap;
+import java.util.Map;
 
 import net.minecraft.util.IStringSerializable;
 
 /**
- * Contains various settings and enums enums for world settings.
+ * Contains various settings and enums for world settings.
  */
 public final class WorldSettings {
 	private WorldSettings() { throw new AssertionError(); }
@@ -130,14 +129,5 @@ public final class WorldSettings {
 		public String getName() {
 			return confName;
 		}
-	}
-
-	// Can't use streams and toImmutableMap because of older versions
-	private static <T> ImmutableMap<String, T> makeFromString(T[] values, Function<T, String> keyFunc) {
-		ImmutableMap.Builder<String, T> b = ImmutableMap.builder();
-		for (T t : values) {
-			b.put(keyFunc.apply(t), t);
-		}
-		return b.build();
 	}
 }
