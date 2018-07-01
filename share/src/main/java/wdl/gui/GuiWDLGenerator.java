@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017 Pokechu22, julialy
+ * Copyright (c) 2017-2018 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -16,6 +16,9 @@ package wdl.gui;
 
 import java.io.IOException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiCreateFlatWorld;
 import net.minecraft.client.gui.GuiCreateWorld;
@@ -25,19 +28,24 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 import wdl.WDL;
+import wdl.settings.GeneratorSettings;
+import wdl.settings.IConfiguration;
 
 public class GuiWDLGenerator extends GuiScreen {
+	private static final Logger LOGGER = LogManager.getLogger();
 	private String title;
-	private GuiScreen parent;
+	private final GuiScreen parent;
+	private final IConfiguration config;
 	private GuiTextField seedField;
-	private GuiButton generatorBtn;
-	private GuiButton generateStructuresBtn;
+	private SettingButton generatorBtn;
+	private SettingButton generateStructuresBtn;
 	private GuiButton settingsPageBtn;
 
 	private String seedText;
 
 	public GuiWDLGenerator(GuiScreen parent) {
 		this.parent = parent;
+		this.config = WDL.worldProps;
 	}
 
 	/**
@@ -56,12 +64,10 @@ public class GuiWDLGenerator extends GuiScreen {
 				this.width / 2 - (100 - seedWidth), y, 200 - seedWidth, 18);
 		this.seedField.setText(WDL.worldProps.getProperty("RandomSeed"));
 		y += 22;
-		this.generatorBtn = new GuiButton(1, this.width / 2 - 100, y,
-				getGeneratorText());
+		this.generatorBtn = new SettingButton(1, GeneratorSettings.GENERATOR, this.config, this.width / 2 - 100, y);
 		this.buttonList.add(this.generatorBtn);
 		y += 22;
-		this.generateStructuresBtn = new GuiButton(2, this.width / 2 - 100, y,
-				getGenerateStructuresText());
+		this.generateStructuresBtn = new SettingButton(2, GeneratorSettings.GENERATE_STRUCTURES, this.config, this.width / 2 - 100, y);
 		this.buttonList.add(this.generateStructuresBtn);
 		y += 22;
 		this.settingsPageBtn = new GuiButton(3, this.width / 2 - 100, y,
@@ -82,18 +88,20 @@ public class GuiWDLGenerator extends GuiScreen {
 		if (button.enabled) {
 			if (button.id == 1) {
 				this.cycleGenerator();
-			} else if (button.id == 2) {
-				this.cycleGenerateStructures();
 			} else if (button.id == 3) {
-				if (WDL.worldProps.getProperty("MapGenerator", "").equals(
-						"flat")) {
+				GeneratorSettings.Generator generator = config.getValue(GeneratorSettings.GENERATOR);
+				switch (generator) {
+				case FLAT:
 					this.mc.displayGuiScreen(new GuiFlatPresets(
 							new GuiCreateFlatWorldProxy()));
-				} else if (WDL.worldProps.getProperty("MapGenerator", "")
-						.equals("custom")) {
+					break;
+				case CUSTOMIZED:
 					this.mc.displayGuiScreen(new GuiCustomizeWorldScreen(
 							new GuiCreateWorldProxy(), WDL.worldProps
 							.getProperty("GeneratorOptions", "")));
+					break;
+				default:
+					LOGGER.warn("Generator lacks extra settings; this button should not be usable: " + generator);
 				}
 			} else if (button.id == 100) {
 				this.mc.displayGuiScreen(this.parent);
@@ -157,66 +165,56 @@ public class GuiWDLGenerator extends GuiScreen {
 		if (Utils.isMouseOverTextBox(mouseX, mouseY, seedField)) {
 			tooltip = I18n.format("wdl.gui.generator.seed.description");
 		} else if (generatorBtn.isMouseOver()) {
-			tooltip = I18n.format("wdl.gui.generator.generator.description");
+			tooltip = generatorBtn.getTooltip();
 		} else if (generateStructuresBtn.isMouseOver()) {
-			tooltip = I18n.format("wdl.gui.generator.generateStructures.description");
+			tooltip = generatorBtn.getTooltip();
 		}
 		Utils.drawGuiInfoBox(tooltip, width, height, 48);
 	}
 
+	// XXX This method probably shouldn't still exist
 	private void cycleGenerator() {
-		String prop = WDL.worldProps.getProperty("MapGenerator");
-		if (prop.equals("void")) {
-			WDL.worldProps.setProperty("MapGenerator", "default");
+		switch (config.getValue(GeneratorSettings.GENERATOR)) {
+		case VOID:
+			WDL.worldProps.setProperty("GeneratorName", "flat");
+			WDL.worldProps.setProperty("GeneratorVersion", "0");
+			WDL.worldProps.setProperty("GeneratorOptions", ";0"); //Single layer of air
+			break;
+		case DEFAULT:
 			WDL.worldProps.setProperty("GeneratorName", "default");
 			WDL.worldProps.setProperty("GeneratorVersion", "1");
 			WDL.worldProps.setProperty("GeneratorOptions", "");
-		} else if (prop.equals("default")) {
-			WDL.worldProps.setProperty("MapGenerator", "flat");
+			break;
+		case FLAT:
 			WDL.worldProps.setProperty("GeneratorName", "flat");
 			WDL.worldProps.setProperty("GeneratorVersion", "0");
 			//Empty options for superflat gives the default superflat.
 			WDL.worldProps.setProperty("GeneratorOptions", "");
-		} else if (prop.equals("flat")) {
-			WDL.worldProps.setProperty("MapGenerator", "largeBiomes");
+			break;
+		case LARGE_BIOMES:
 			WDL.worldProps.setProperty("GeneratorName", "largeBiomes");
 			WDL.worldProps.setProperty("GeneratorVersion", "0");
 			WDL.worldProps.setProperty("GeneratorOptions", "");
-		} else if (prop.equals("largeBiomes")) {
-			WDL.worldProps.setProperty("MapGenerator", "amplified");
+			break;
+		case AMPLIFIED:
 			WDL.worldProps.setProperty("GeneratorName", "amplified");
 			WDL.worldProps.setProperty("GeneratorVersion", "0");
 			WDL.worldProps.setProperty("GeneratorOptions", "");
-		} else if (prop.equals("amplified")) {
-			WDL.worldProps.setProperty("MapGenerator", "custom");
+			break;
+		case CUSTOMIZED:
 			WDL.worldProps.setProperty("GeneratorName", "custom");
 			WDL.worldProps.setProperty("GeneratorVersion", "0");
 			WDL.worldProps.setProperty("GeneratorOptions", "");
-		} else if (prop.equals("custom")) {
+			break;
+		case LEGACY:
 			// Legacy (1.1) world generator
-			WDL.worldProps.setProperty("MapGenerator", "legacy");
 			WDL.worldProps.setProperty("GeneratorName", "default_1_1");
 			WDL.worldProps.setProperty("GeneratorVersion", "0");
 			WDL.worldProps.setProperty("GeneratorOptions", "");
-		} else {
-			WDL.worldProps.setProperty("MapGenerator", "void");
-			WDL.worldProps.setProperty("GeneratorName", "flat");
-			WDL.worldProps.setProperty("GeneratorVersion", "0");
-			WDL.worldProps.setProperty("GeneratorOptions", ";0"); //Single layer of air
+			break;
 		}
 
-		this.generatorBtn.displayString = getGeneratorText();
 		updateSettingsButtonVisibility();
-	}
-
-	private void cycleGenerateStructures() {
-		if (WDL.worldProps.getProperty("MapFeatures").equals("true")) {
-			WDL.worldProps.setProperty("MapFeatures", "false");
-		} else {
-			WDL.worldProps.setProperty("MapFeatures", "true");
-		}
-
-		this.generateStructuresBtn.displayString = getGenerateStructuresText();
 	}
 
 	/**
@@ -224,25 +222,18 @@ public class GuiWDLGenerator extends GuiScreen {
 	 * the text on it.
 	 */
 	private void updateSettingsButtonVisibility() {
-		if (WDL.worldProps.getProperty("MapGenerator", "").equals("flat")) {
+		switch (this.config.getValue(GeneratorSettings.GENERATOR)) {
+		case FLAT:
 			settingsPageBtn.visible = true;
 			settingsPageBtn.displayString = I18n.format("wdl.gui.generator.flatSettings");
-		} else if (WDL.worldProps.getProperty("MapGenerator", "").equals("custom")) {
+			break;
+		case CUSTOMIZED:
 			settingsPageBtn.visible = true;
 			settingsPageBtn.displayString = I18n.format("wdl.gui.generator.customSettings");
-		} else {
+		break;
+		default:
 			settingsPageBtn.visible = false;
 		}
-	}
-
-	private String getGeneratorText() {
-		return I18n.format("wdl.gui.generator.generator." +
-				WDL.worldProps.getProperty("MapGenerator"));
-	}
-
-	private String getGenerateStructuresText() {
-		return I18n.format("wdl.gui.generator.generateStructures." +
-				WDL.worldProps.getProperty("MapFeatures"));
 	}
 
 	/**
