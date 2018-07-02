@@ -38,6 +38,8 @@ public interface Setting<T> {
 	/**
 	 * Gets the default value of this setting, given the configuration file as
 	 * context.
+	 *
+	 * WARNING: Use caution when referencing the parameter, to avoid infinite loops.
 	 */
 	public abstract T getDefault(IConfiguration context);
 }

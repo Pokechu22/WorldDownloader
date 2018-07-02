@@ -50,6 +50,14 @@ public interface IConfiguration {
 	 */
 	public abstract <T> T getValue(Setting<T> setting, IConfiguration config);
 
+	/**
+	 * Clears the value of the given setting, at the current configuration level only.
+	 * Does nothing if no value is set for that setting.
+	 *
+	 * @param setting The setting to clear.
+	 */
+	public abstract <T> void clearValue(Setting<T> setting);
+
 	// These methods exist partially because they can change a Setting<?> to a
 	// Setting<T> so that the type from getValue is still the type of the setting
 	// (useful for e.g. SettingButton)

@@ -63,6 +63,11 @@ public class Configuration implements IConfiguration {
 		return setting.deserializeFromString(this.properties.getProperty(setting.getConfigurationKey()));
 	}
 
+	@Override
+	public <T> void clearValue(Setting<T> setting) {
+		this.remove(setting.getConfigurationKey());
+	}
+
 	// Rework slightly, and maybe rename
 
 	public void load(Reader reader) throws IOException {

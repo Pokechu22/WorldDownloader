@@ -87,7 +87,11 @@ public class GuiWDLGenerator extends GuiScreen {
 	protected void actionPerformed(GuiButton button) {
 		if (button.enabled) {
 			if (button.id == 1) {
-				this.cycleGenerator();
+				this.updateSettingsButtonVisibility();
+				// Clear any existing custom values, as they don't apply to another generator.
+				this.config.clearValue(GeneratorSettings.GENERATOR_NAME);
+				this.config.clearValue(GeneratorSettings.GENERATOR_VERSION);
+				this.config.clearValue(GeneratorSettings.GENERATOR_OPTIONS);
 			} else if (button.id == 3) {
 				GeneratorSettings.Generator generator = config.getValue(GeneratorSettings.GENERATOR);
 				switch (generator) {
@@ -170,51 +174,6 @@ public class GuiWDLGenerator extends GuiScreen {
 			tooltip = generatorBtn.getTooltip();
 		}
 		Utils.drawGuiInfoBox(tooltip, width, height, 48);
-	}
-
-	// XXX This method probably shouldn't still exist
-	private void cycleGenerator() {
-		switch (config.getValue(GeneratorSettings.GENERATOR)) {
-		case VOID:
-			this.config.setValue(GeneratorSettings.GENERATOR_NAME, "flat");
-			this.config.setValue(GeneratorSettings.GENERATOR_VERSION, 0);
-			this.config.setValue(GeneratorSettings.GENERATOR_OPTIONS, ";0"); //Single layer of air
-			break;
-		case DEFAULT:
-			this.config.setValue(GeneratorSettings.GENERATOR_NAME, "default");
-			this.config.setValue(GeneratorSettings.GENERATOR_VERSION, 1);
-			this.config.setValue(GeneratorSettings.GENERATOR_OPTIONS, "");
-			break;
-		case FLAT:
-			this.config.setValue(GeneratorSettings.GENERATOR_NAME, "flat");
-			this.config.setValue(GeneratorSettings.GENERATOR_VERSION, 0);
-			//Empty options for superflat gives the default superflat.
-			this.config.setValue(GeneratorSettings.GENERATOR_OPTIONS, "");
-			break;
-		case LARGE_BIOMES:
-			this.config.setValue(GeneratorSettings.GENERATOR_NAME, "largeBiomes");
-			this.config.setValue(GeneratorSettings.GENERATOR_VERSION, 0);
-			this.config.setValue(GeneratorSettings.GENERATOR_OPTIONS, "");
-			break;
-		case AMPLIFIED:
-			this.config.setValue(GeneratorSettings.GENERATOR_NAME, "amplified");
-			this.config.setValue(GeneratorSettings.GENERATOR_VERSION, 0);
-			this.config.setValue(GeneratorSettings.GENERATOR_OPTIONS, "");
-			break;
-		case CUSTOMIZED:
-			this.config.setValue(GeneratorSettings.GENERATOR_NAME, "custom");
-			this.config.setValue(GeneratorSettings.GENERATOR_VERSION, 0);
-			this.config.setValue(GeneratorSettings.GENERATOR_OPTIONS, "");
-			break;
-		case LEGACY:
-			// Legacy (1.1) world generator
-			this.config.setValue(GeneratorSettings.GENERATOR_NAME, "default_1_1");
-			this.config.setValue(GeneratorSettings.GENERATOR_VERSION, 0);
-			this.config.setValue(GeneratorSettings.GENERATOR_OPTIONS, "");
-			break;
-		}
-
-		updateSettingsButtonVisibility();
 	}
 
 	/**

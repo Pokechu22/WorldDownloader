@@ -36,6 +36,12 @@ public class DefaultConfiguration implements IConfiguration {
 	}
 
 	@Override
+	@Deprecated
+	public <T> void clearValue(Setting<T> setting) {
+		throw new UnsupportedOperationException("Cannot clear settings on the default configuration (" + setting + ")");
+	}
+
+	@Override
 	public Map<String, String> getGameRules() {
 		return Collections.emptyMap();
 	}

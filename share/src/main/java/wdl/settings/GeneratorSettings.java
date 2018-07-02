@@ -17,6 +17,7 @@ package wdl.settings;
 import static wdl.settings.Utils.*;
 
 import java.util.Map;
+import java.util.function.Function;
 
 import net.minecraft.util.IStringSerializable;
 
@@ -34,27 +35,31 @@ public final class GeneratorSettings {
 	public static final EnumSetting<Generator> GENERATOR =
 			new EnumSetting<>("MapGenerator", Generator.VOID, "wdl.gui.generator.generator", Generator.values(), Generator::fromString);
 	// Actual generator properties
-	public static final StringSetting GENERATOR_NAME =
-			new StringSetting("GeneratorName", "flat");
-	public static final IntSetting GENERATOR_VERSION =
-			new IntSetting("GeneratorVersion", 0);
-	public static final StringSetting GENERATOR_OPTIONS =
-			new StringSetting("GeneratorOptions", ";0");
+	public static final Setting<String> GENERATOR_NAME = new NameSetting("GeneratorName");
+	public static final Setting<Integer> GENERATOR_VERSION = new VersionSetting("GeneratorVersion");
+	public static final Setting<String> GENERATOR_OPTIONS = new OptionSetting("GeneratorOptions");
 
 	public enum Generator implements IStringSerializable {
-		VOID("void"),
-		DEFAULT("default"),
-		FLAT("flat"),
-		LARGE_BIOMES("largeBiomes"),
-		AMPLIFIED("amplified"),
-		CUSTOMIZED("custom"),
-		LEGACY("legacy"); // XXX do we really need this?
+		VOID("void", "flat", 0, ";0"), // XXX ;0 for air format will break in 1.13
+		DEFAULT("default", "default", 1, ""),
+		FLAT("flat", "flat", 0, ""),
+		LARGE_BIOMES("largeBiomes", "largeBiomes", 0, ""),
+		AMPLIFIED("amplified", "amplified", 0, ""),
+		CUSTOMIZED("custom", "custom", 0, ""),
+		LEGACY("legacy", "default_1_1", 0, ""); // XXX do we really need this?
 
 		private final String confName;
 		private static final Map<String, Generator> FROM_STRING = makeFromString(values(), t -> t.confName);
 
-		private Generator(String confName) {
+		final String generatorName;
+		final int generatorVersion;
+		final String defaultOption;
+
+		private Generator(String confName, String generatorName, int generatorVersion, String defaultOption) {
 			this.confName = confName;
+			this.generatorName = generatorName;
+			this.generatorVersion = generatorVersion;
+			this.defaultOption = defaultOption;
 		}
 
 		public static Generator fromString(String confName) {
@@ -64,6 +69,76 @@ public final class GeneratorSettings {
 		@Override
 		public String getName() {
 			return confName;
+		}
+	}
+
+	// Note: this is an abstract class instead of taking a parameter, such that
+	// the class name for each subclass is identified in stack traces
+	private static abstract class GeneratorSetting<T> implements Setting<T> {
+		private final String name;
+		private final Function<String, T> fromString;
+		private final Function<T, String> toString;
+
+		protected GeneratorSetting(String name, Function<String, T> fromString, Function<T, String> toString) {
+			this.name = name;
+			this.fromString = fromString;
+			this.toString = toString;
+		}
+
+		@Override
+		public T deserializeFromString(String text) {
+			return fromString.apply(text);
+		}
+
+		@Override
+		public String serializeToString(T value) {
+			return toString.apply(value);
+		}
+
+		@Override
+		public String getConfigurationKey() {
+			return name;
+		}
+
+		@Override
+		public T getDefault(IConfiguration context) {
+			return getDefault(context.getValue(GENERATOR));
+		}
+
+		protected abstract T getDefault(Generator generator);
+	}
+
+	// These take a name value for clarity above
+	private static class NameSetting extends GeneratorSetting<String> {
+		public NameSetting(String name) {
+			super(name, Function.identity(), Function.identity());
+		}
+
+		@Override
+		protected String getDefault(Generator generator) {
+			return generator.generatorName;
+		}
+	}
+
+	private static class VersionSetting extends GeneratorSetting<Integer> {
+		public VersionSetting(String name) {
+			super(name, Integer::parseInt, Object::toString);
+		}
+
+		@Override
+		protected Integer getDefault(Generator generator) {
+			return generator.generatorVersion;
+		}
+	}
+
+	private static class OptionSetting extends GeneratorSetting<String> {
+		public OptionSetting(String name) {
+			super(name, Function.identity(), Function.identity());
+		}
+
+		@Override
+		protected String getDefault(Generator generator) {
+			return generator.defaultOption;
 		}
 	}
 }
