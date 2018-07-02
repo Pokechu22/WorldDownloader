@@ -62,7 +62,7 @@ public class GuiWDLGenerator extends GuiScreen {
 		int y = this.height / 4 - 15;
 		this.seedField = new GuiTextField(40, this.fontRenderer,
 				this.width / 2 - (100 - seedWidth), y, 200 - seedWidth, 18);
-		this.seedField.setText(WDL.worldProps.getProperty("RandomSeed"));
+		this.seedField.setText(config.getValue(GeneratorSettings.SEED));
 		y += 22;
 		this.generatorBtn = new SettingButton(1, GeneratorSettings.GENERATOR, this.config, this.width / 2 - 100, y);
 		this.buttonList.add(this.generatorBtn);
@@ -97,8 +97,8 @@ public class GuiWDLGenerator extends GuiScreen {
 					break;
 				case CUSTOMIZED:
 					this.mc.displayGuiScreen(new GuiCustomizeWorldScreen(
-							new GuiCreateWorldProxy(), WDL.worldProps
-							.getProperty("GeneratorOptions", "")));
+							new GuiCreateWorldProxy(),
+							config.getValue(GeneratorSettings.GENERATOR_OPTIONS)));
 					break;
 				default:
 					LOGGER.warn("Generator lacks extra settings; this button should not be usable: " + generator);
@@ -111,7 +111,7 @@ public class GuiWDLGenerator extends GuiScreen {
 
 	@Override
 	public void onGuiClosed() {
-		WDL.worldProps.setProperty("RandomSeed", this.seedField.getText());
+		config.setValue(GeneratorSettings.SEED, this.seedField.getText());
 
 		WDL.saveProps();
 	}
@@ -176,41 +176,41 @@ public class GuiWDLGenerator extends GuiScreen {
 	private void cycleGenerator() {
 		switch (config.getValue(GeneratorSettings.GENERATOR)) {
 		case VOID:
-			WDL.worldProps.setProperty("GeneratorName", "flat");
-			WDL.worldProps.setProperty("GeneratorVersion", "0");
-			WDL.worldProps.setProperty("GeneratorOptions", ";0"); //Single layer of air
+			this.config.setValue(GeneratorSettings.GENERATOR_NAME, "flat");
+			this.config.setValue(GeneratorSettings.GENERATOR_VERSION, 0);
+			this.config.setValue(GeneratorSettings.GENERATOR_OPTIONS, ";0"); //Single layer of air
 			break;
 		case DEFAULT:
-			WDL.worldProps.setProperty("GeneratorName", "default");
-			WDL.worldProps.setProperty("GeneratorVersion", "1");
-			WDL.worldProps.setProperty("GeneratorOptions", "");
+			this.config.setValue(GeneratorSettings.GENERATOR_NAME, "default");
+			this.config.setValue(GeneratorSettings.GENERATOR_VERSION, 1);
+			this.config.setValue(GeneratorSettings.GENERATOR_OPTIONS, "");
 			break;
 		case FLAT:
-			WDL.worldProps.setProperty("GeneratorName", "flat");
-			WDL.worldProps.setProperty("GeneratorVersion", "0");
+			this.config.setValue(GeneratorSettings.GENERATOR_NAME, "flat");
+			this.config.setValue(GeneratorSettings.GENERATOR_VERSION, 0);
 			//Empty options for superflat gives the default superflat.
-			WDL.worldProps.setProperty("GeneratorOptions", "");
+			this.config.setValue(GeneratorSettings.GENERATOR_OPTIONS, "");
 			break;
 		case LARGE_BIOMES:
-			WDL.worldProps.setProperty("GeneratorName", "largeBiomes");
-			WDL.worldProps.setProperty("GeneratorVersion", "0");
-			WDL.worldProps.setProperty("GeneratorOptions", "");
+			this.config.setValue(GeneratorSettings.GENERATOR_NAME, "largeBiomes");
+			this.config.setValue(GeneratorSettings.GENERATOR_VERSION, 0);
+			this.config.setValue(GeneratorSettings.GENERATOR_OPTIONS, "");
 			break;
 		case AMPLIFIED:
-			WDL.worldProps.setProperty("GeneratorName", "amplified");
-			WDL.worldProps.setProperty("GeneratorVersion", "0");
-			WDL.worldProps.setProperty("GeneratorOptions", "");
+			this.config.setValue(GeneratorSettings.GENERATOR_NAME, "amplified");
+			this.config.setValue(GeneratorSettings.GENERATOR_VERSION, 0);
+			this.config.setValue(GeneratorSettings.GENERATOR_OPTIONS, "");
 			break;
 		case CUSTOMIZED:
-			WDL.worldProps.setProperty("GeneratorName", "custom");
-			WDL.worldProps.setProperty("GeneratorVersion", "0");
-			WDL.worldProps.setProperty("GeneratorOptions", "");
+			this.config.setValue(GeneratorSettings.GENERATOR_NAME, "custom");
+			this.config.setValue(GeneratorSettings.GENERATOR_VERSION, 0);
+			this.config.setValue(GeneratorSettings.GENERATOR_OPTIONS, "");
 			break;
 		case LEGACY:
 			// Legacy (1.1) world generator
-			WDL.worldProps.setProperty("GeneratorName", "default_1_1");
-			WDL.worldProps.setProperty("GeneratorVersion", "0");
-			WDL.worldProps.setProperty("GeneratorOptions", "");
+			this.config.setValue(GeneratorSettings.GENERATOR_NAME, "default_1_1");
+			this.config.setValue(GeneratorSettings.GENERATOR_VERSION, 0);
+			this.config.setValue(GeneratorSettings.GENERATOR_OPTIONS, "");
 			break;
 		}
 
@@ -244,7 +244,7 @@ public class GuiWDLGenerator extends GuiScreen {
 	 */
 	private class GuiCreateFlatWorldProxy extends GuiCreateFlatWorld {
 		public GuiCreateFlatWorldProxy() {
-			super(null, WDL.worldProps.getProperty("GeneratorOptions", ""));
+			super(null, config.getValue(GeneratorSettings.GENERATOR_OPTIONS));
 		}
 
 		@Override
@@ -267,7 +267,7 @@ public class GuiWDLGenerator extends GuiScreen {
 		 */
 		@Override
 		public String getPreset() {
-			return WDL.worldProps.getProperty("GeneratorOptions", "");
+			return config.getValue(GeneratorSettings.GENERATOR_OPTIONS);
 		}
 
 		/**
@@ -278,7 +278,7 @@ public class GuiWDLGenerator extends GuiScreen {
 			if (preset == null) {
 				preset = "";
 			}
-			WDL.worldProps.setProperty("GeneratorOptions", preset);
+			config.setValue(GeneratorSettings.GENERATOR_OPTIONS, preset);
 		}
 	}
 
@@ -292,13 +292,13 @@ public class GuiWDLGenerator extends GuiScreen {
 		public GuiCreateWorldProxy() {
 			super(GuiWDLGenerator.this);
 
-			this.chunkProviderSettingsJson = WDL.worldProps.getProperty("GeneratorOptions", "");
+			this.chunkProviderSettingsJson = config.getValue(GeneratorSettings.GENERATOR_OPTIONS);
 		}
 
 		@Override
 		public void initGui() {
 			mc.displayGuiScreen(GuiWDLGenerator.this);
-			WDL.worldProps.setProperty("GeneratorOptions", this.chunkProviderSettingsJson);
+			config.setValue(GeneratorSettings.GENERATOR_OPTIONS, this.chunkProviderSettingsJson);
 		}
 
 		@Override
