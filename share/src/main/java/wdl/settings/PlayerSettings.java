@@ -32,6 +32,10 @@ public final class PlayerSettings {
 			new EnumSetting<>("PlayerFood", Hunger.KEEP, "wdl.gui.player.hunger", Hunger.values(), Hunger::fromString);
 	public static final EnumSetting<PlayerPos> PLAYER_POSITION =
 			new EnumSetting<>("PlayerPos", PlayerPos.KEEP, "wdl.gui.player.position", PlayerPos.values(), PlayerPos::fromString);
+	// Used when PLAYER_POSITION is XYZ
+	public static final IntSetting PLAYER_X = new IntSetting("PlayerX", 0);
+	public static final IntSetting PLAYER_Y = new IntSetting("PlayerY", 0);
+	public static final IntSetting PLAYER_Z = new IntSetting("PlayerZ", 0);
 
 	public enum Health implements IStringSerializable {
 		KEEP("keep"),

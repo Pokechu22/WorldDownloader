@@ -67,9 +67,9 @@ public class GuiWDLPlayer extends GuiScreen {
 				this.width / 2 - 19, y, 50, 16);
 		this.posZ = new GuiNumericTextField(42, this.fontRenderer,
 				this.width / 2 + 48, y, 50, 16);
-		this.posX.setText(WDL.worldProps.getProperty("PlayerX"));
-		this.posY.setText(WDL.worldProps.getProperty("PlayerY"));
-		this.posZ.setText(WDL.worldProps.getProperty("PlayerZ"));
+		this.posX.setValue(config.getValue(PlayerSettings.PLAYER_X));
+		this.posY.setValue(config.getValue(PlayerSettings.PLAYER_Y));
+		this.posZ.setValue(config.getValue(PlayerSettings.PLAYER_Z));
 		this.posX.setMaxStringLength(7);
 		this.posY.setMaxStringLength(7);
 		this.posZ.setMaxStringLength(7);
@@ -102,9 +102,9 @@ public class GuiWDLPlayer extends GuiScreen {
 	@Override
 	public void onGuiClosed() {
 		if (this.showPosFields) {
-			WDL.worldProps.setProperty("PlayerX", posX.getText());
-			WDL.worldProps.setProperty("PlayerY", posY.getText());
-			WDL.worldProps.setProperty("PlayerZ", posZ.getText());
+			this.config.setValue(PlayerSettings.PLAYER_X, posX.getValue());
+			this.config.setValue(PlayerSettings.PLAYER_Y, posY.getValue());
+			this.config.setValue(PlayerSettings.PLAYER_Z, posZ.getValue());
 		}
 
 		WDL.saveProps();

@@ -36,6 +36,9 @@ public final class WorldSettings {
 			new EnumSetting<>("Weather", Weather.KEEP, "wdl.gui.world.weather", Weather.values(), Weather::fromString);
 	public static final EnumSetting<SpawnMode> SPAWN =
 			new EnumSetting<>("Spawn", SpawnMode.AUTO, "wdl.gui.world.spawn", SpawnMode.values(), SpawnMode::fromString);
+	public static final IntSetting SPAWN_X = new IntSetting("SpawnX", 0);
+	public static final IntSetting SPAWN_Y = new IntSetting("SpawnY", 0);
+	public static final IntSetting SPAWN_Z = new IntSetting("SpawnZ", 0);
 
 	public enum GameMode implements IStringSerializable {
 		KEEP("keep"),

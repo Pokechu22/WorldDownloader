@@ -77,9 +77,9 @@ public class GuiWDLWorld extends GuiScreen {
 				y, 50, 16);
 		this.spawnZ = new GuiNumericTextField(42, this.fontRenderer, this.width / 2 + 48,
 				y, 50, 16);
-		spawnX.setText(WDL.worldProps.getProperty("SpawnX"));
-		spawnY.setText(WDL.worldProps.getProperty("SpawnY"));
-		spawnZ.setText(WDL.worldProps.getProperty("SpawnZ"));
+		spawnX.setValue(config.getValue(WorldSettings.SPAWN_X));
+		spawnY.setValue(config.getValue(WorldSettings.SPAWN_Y));
+		spawnZ.setValue(config.getValue(WorldSettings.SPAWN_Z));
 		this.spawnX.setMaxStringLength(7);
 		this.spawnY.setMaxStringLength(7);
 		this.spawnZ.setMaxStringLength(7);
@@ -114,9 +114,9 @@ public class GuiWDLWorld extends GuiScreen {
 	@Override
 	public void onGuiClosed() {
 		if (this.showSpawnFields) {
-			WDL.worldProps.setProperty("SpawnX", spawnX.getText());
-			WDL.worldProps.setProperty("SpawnY", spawnY.getText());
-			WDL.worldProps.setProperty("SpawnZ", spawnZ.getText());
+			this.config.setValue(WorldSettings.SPAWN_X, spawnX.getValue());
+			this.config.setValue(WorldSettings.SPAWN_Y, spawnY.getValue());
+			this.config.setValue(WorldSettings.SPAWN_Z, spawnZ.getValue());
 		}
 
 		WDL.saveProps();
