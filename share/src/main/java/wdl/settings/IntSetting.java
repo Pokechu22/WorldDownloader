@@ -17,7 +17,7 @@ package wdl.settings;
 /**
  * A numeric setting.
  */
-public final class IntSetting extends Setting<Integer> {
+public final class IntSetting extends BaseSetting<Integer> {
 	/**
 	 * Constructor.
 	 *

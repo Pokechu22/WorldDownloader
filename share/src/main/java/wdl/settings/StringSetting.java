@@ -19,7 +19,7 @@ import java.util.function.Function;
 /**
  * A textual setting.
  */
-public final class StringSetting extends Setting<String> {
+public final class StringSetting extends BaseSetting<String> {
 	/**
 	 * Constructor.
 	 *

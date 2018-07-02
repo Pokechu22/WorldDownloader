@@ -20,7 +20,7 @@ import java.util.function.Function;
  * A cyclable setting is a setting that can be cycled via a button through a
  * fixed set of values.
  */
-public abstract class CyclableSetting<T> extends Setting<T> {
+public abstract class CyclableSetting<T> extends BaseSetting<T> {
 	private String key;
 
 	/**
@@ -70,6 +70,6 @@ public abstract class CyclableSetting<T> extends Setting<T> {
 	 * @return A translation string.
 	 */
 	public String getButtonText(T curValue) {
-		return key + "." + toString.apply(curValue);
+		return key + "." + serializeToString(curValue);
 	}
 }

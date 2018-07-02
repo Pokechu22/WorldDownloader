@@ -14,51 +14,30 @@
  */
 package wdl.settings;
 
-import java.util.function.Function;
-
 /**
  * A wrapper from a setting to the property represented by it.
  *
  * @param <T> The type of value.
  */
-public abstract class Setting<T> {
+public interface Setting<T> {
 	/**
-	 * The default value.
+	 * Deserializes a String back into a T instance.
 	 */
-	public final T defaultValue;
-
-	// Configuration stuff
-	/**
-	 * The name of the setting as used in a configuration.
-	 */
-	public final String name;
-	/**
-	 * A function that converts a String into a T.
-	 */
-	public final Function<String, T> fromString;
-	/**
-	 * A function that converts a T back into a String.
-	 */
-	public final Function<T, String> toString;
+	public abstract T deserializeFromString(String text);
 
 	/**
-	 * Constructor.
-	 *
-	 * @param name The name as used in the configuration.
-	 * @param def The default value.
-	 * @param fromString A function that converts a String into a T.
-	 * @param toString A function that converts a T back into a String.
+	 * Serializes a T instance into a String.
 	 */
-	public Setting(String name, T def, Function<String, T> fromString,
-			Function<T, String> toString) {
-		this.name = name;
-		this.defaultValue = def;
-		this.fromString = fromString;
-		this.toString = toString;
-	}
+	public abstract String serializeToString(T value);
 
-	@Override
-	public String toString() {
-		return getClass().getSimpleName() + " " + this.name + " (defaults to " + defaultValue + ")";
-	}
+	/**
+	 * Gets the key as used in a Properties file.
+	 */
+	public abstract String getConfigurationKey();
+
+	/**
+	 * Gets the default value of this setting, given the configuration file as
+	 * context.
+	 */
+	public abstract T getDefault(IConfiguration context);
 }

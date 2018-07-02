@@ -53,25 +53,14 @@ public class Configuration implements IConfiguration {
 	}
 
 	// XXX neither of these handle inheritance
-	/**
-	 * Sets the value for a setting.
-	 *
-	 * @param setting The setting to change.
-	 * @param value The new value.
-	 */
 	@Override
 	public <T> void setValue(Setting<T> setting, T value) {
-		this.properties.setProperty(setting.name, setting.toString.apply(value));
+		this.properties.setProperty(setting.getConfigurationKey(), setting.serializeToString(value));
 	}
-	/**
-	 * Gets the value for a setting.
-	 *
-	 * @param setting The setting to change.
-	 * @param value The new value.
-	 */
+
 	@Override
-	public <T> T getValue(Setting<T> setting) {
-		return setting.fromString.apply(this.properties.getProperty(setting.name));
+	public <T> T getValue(Setting<T> setting, IConfiguration config) {
+		return setting.deserializeFromString(this.properties.getProperty(setting.getConfigurationKey()));
 	}
 
 	// Rework slightly, and maybe rename

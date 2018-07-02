@@ -31,10 +31,24 @@ public interface IConfiguration {
 	/**
 	 * Gets the value for a setting.
 	 *
-	 * @param setting The setting to change.
-	 * @param value The new value.
+	 * @param setting The setting to query
 	 */
-	public abstract <T> T getValue(Setting<T> setting);
+	public default <T> T getValue(Setting<T> setting) {
+		return getValue(setting, this);
+	}
+
+	/**
+	 * Gets the value for a setting.
+	 *
+	 * Note: This method is mainly intended for internal use (it would be protected,
+	 * if that were possible on interfaces). Generally, {@link #getValue(Setting)}
+	 * should be used.
+	 *
+	 * @param setting The setting to query.
+	 * @param config  The configuration that this check was initiated on, which may
+	 *                be passed to {@link Setting#getDefault}.
+	 */
+	public abstract <T> T getValue(Setting<T> setting, IConfiguration config);
 
 	// These methods exist partially because they can change a Setting<?> to a
 	// Setting<T> so that the type from getValue is still the type of the setting
