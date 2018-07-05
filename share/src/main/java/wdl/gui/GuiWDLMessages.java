@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
@@ -27,7 +29,7 @@ import net.minecraft.client.resources.I18n;
 import wdl.MessageTypeCategory;
 import wdl.WDL;
 import wdl.WDLMessages;
-import wdl.api.IWDLMessageType;
+import wdl.WDLMessages.MessageRegistration;
 import wdl.settings.IConfiguration;
 import wdl.settings.MessageSettings;
 
@@ -35,7 +37,8 @@ public class GuiWDLMessages extends GuiScreen {
 	/**
 	 * Set from inner classes; this is the text to draw.
 	 */
-	private String hoveredButtonDescription = null;
+	@Nullable
+	private String hoveredButtonTooltip = null;
 
 	private class GuiMessageTypeList extends GuiListExtended {
 		public GuiMessageTypeList() {
@@ -45,12 +48,12 @@ public class GuiWDLMessages extends GuiScreen {
 		}
 
 		private class CategoryEntry extends GuiListEntry {
-			private final GuiButton button;
+			private final SettingButton button;
 			private final MessageTypeCategory category;
 
 			public CategoryEntry(MessageTypeCategory category) {
 				this.category = category;
-				this.button = new GuiButton(0, 0, 0, 80, 20, "");
+				this.button = new SettingButton(0, category.setting, config, 0, 0, 80, 20);
 			}
 
 			@Override
@@ -63,19 +66,19 @@ public class GuiWDLMessages extends GuiScreen {
 				button.x = GuiWDLMessages.this.width / 2 + 20;
 				button.y = y;
 
-				button.displayString = I18n.format("wdl.gui.messages.group."
-						+ WDLMessages.isGroupEnabled(category));
 				button.enabled = config.getValue(MessageSettings.ENABLE_ALL_MESSAGES);
 
 				LocalUtils.drawButton(this.button, mc, mouseX, mouseY);
+
+				if (button.isMouseOver()) {
+					hoveredButtonTooltip = button.getTooltip();
+				}
 			}
 
 			@Override
 			public boolean mousePressed(int slotIndex, int x, int y,
 					int mouseEvent, int relativeX, int relativeY) {
 				if (button.mousePressed(mc, x, y)) {
-					WDLMessages.toggleGroupEnabled(category);
-
 					button.playPressSound(mc.getSoundHandler());
 
 					return true;
@@ -92,15 +95,12 @@ public class GuiWDLMessages extends GuiScreen {
 		}
 
 		private class MessageTypeEntry extends GuiListEntry {
-			private final GuiButton button;
-			private final IWDLMessageType type;
-			private final MessageTypeCategory category;
+			private final SettingButton button;
+			private final MessageRegistration typeRegistration;
 
-			public MessageTypeEntry(IWDLMessageType type,
-					MessageTypeCategory category) {
-				this.type = type;
-				this.button = new GuiButton(0, 0, 0, type.toString());
-				this.category = category;
+			public MessageTypeEntry(MessageRegistration registration) {
+				this.typeRegistration = registration;
+				this.button = new SettingButton(0, registration.setting, config, 0, 0);
 			}
 
 			@Override
@@ -109,14 +109,12 @@ public class GuiWDLMessages extends GuiScreen {
 				button.x = GuiWDLMessages.this.width / 2 - 100;
 				button.y = y;
 
-				button.displayString = I18n.format("wdl.gui.messages.message."
-						+ WDLMessages.isEnabled(type), type.getDisplayName());
-				button.enabled = WDLMessages.isGroupEnabled(category);
+				button.enabled = WDLMessages.isGroupEnabled(typeRegistration.category);
 
 				LocalUtils.drawButton(this.button, mc, mouseX, mouseY);
 
 				if (button.isMouseOver()) {
-					hoveredButtonDescription = type.getDescription();
+					hoveredButtonTooltip = button.getTooltip();
 				}
 			}
 
@@ -124,8 +122,6 @@ public class GuiWDLMessages extends GuiScreen {
 			public boolean mousePressed(int slotIndex, int x, int y,
 					int mouseEvent, int relativeX, int relativeY) {
 				if (button.mousePressed(mc, x, y)) {
-					WDLMessages.toggleEnabled(type);
-
 					button.playPressSound(mc.getSoundHandler());
 
 					return true;
@@ -147,7 +143,7 @@ public class GuiWDLMessages extends GuiScreen {
 				.getTypes().asMap().entrySet().stream()
 				.flatMap(e -> Stream.concat(
 						Stream.of(new CategoryEntry(e.getKey())),
-						e.getValue().stream().map(t -> new MessageTypeEntry(t, e.getKey()))))
+						e.getValue().stream().map(WDLMessages::getRegistration).map(MessageTypeEntry::new)))
 				.collect(Collectors.toList());
 
 		@Override
@@ -248,7 +244,7 @@ public class GuiWDLMessages extends GuiScreen {
 
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		hoveredButtonDescription = null;
+		hoveredButtonTooltip = null;
 
 		this.drawDefaultBackground();
 		this.list.drawScreen(mouseX, mouseY, partialTicks);
@@ -260,8 +256,8 @@ public class GuiWDLMessages extends GuiScreen {
 		super.drawScreen(mouseX, mouseY, partialTicks);
 
 		String tooltip = null;
-		if (hoveredButtonDescription != null) {
-			tooltip = hoveredButtonDescription;
+		if (hoveredButtonTooltip != null) {
+			tooltip = hoveredButtonTooltip;
 		} else if (enableAllButton.isMouseOver()) {
 			tooltip = enableAllButton.getTooltip();
 		} else if (resetButton.isMouseOver()) {

@@ -140,7 +140,7 @@ public class WDLMessages {
 	 * @throws IllegalArgumentException for unknown names
 	 */
 	@Nonnull
-	static MessageRegistration getRegistration(String name) {
+	public static MessageRegistration getRegistration(String name) {
 		for (MessageRegistration r : registrations.values()) {
 			if (r.name.equals(name)) {
 				return r;
@@ -156,7 +156,7 @@ public class WDLMessages {
 	 * @throws IllegalArgumentException for unknown names
 	 */
 	@Nonnull
-	static MessageRegistration getRegistration(IWDLMessageType type) {
+	public static MessageRegistration getRegistration(IWDLMessageType type) {
 		for (MessageRegistration r : registrations.values()) {
 			if (r.type.equals(type)) {
 				return r;
@@ -186,26 +186,10 @@ public class WDLMessages {
 	}
 
 	/**
-	 * Toggles whether the given type is enabled.
-	 * @param type
-	 */
-	public static void toggleEnabled(IWDLMessageType type) {
-		MessageRegistration r = getRegistration(type);
-		configuration.cycle(r.setting);
-	}
-
-	/**
 	 * Gets whether the given group is enabled.
 	 */
 	public static boolean isGroupEnabled(MessageTypeCategory group) {
 		return configuration.getValue(group.setting);
-	}
-
-	/**
-	 * Toggles whether a group is enabled or not.
-	 */
-	public static void toggleGroupEnabled(MessageTypeCategory group) {
-		configuration.cycle(group.setting);
 	}
 
 	/**
