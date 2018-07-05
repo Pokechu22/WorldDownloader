@@ -17,7 +17,7 @@ package wdl.settings;
 /**
  * A setting that is simply true or false.
  */
-public final class BooleanSetting extends CyclableSetting<Boolean> {
+public final class BooleanSetting extends BaseCyclableSetting<Boolean> {
 	/**
 	 * Constructor.
 	 *

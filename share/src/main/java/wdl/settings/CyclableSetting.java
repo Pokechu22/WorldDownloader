@@ -14,43 +14,13 @@
  */
 package wdl.settings;
 
-import java.util.function.Function;
-
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
 
 /**
  * A cyclable setting is a setting that can be cycled via a button through a
  * fixed set of values.
  */
-public abstract class CyclableSetting<T> extends BaseSetting<T> {
-	private String key;
-
-	/**
-	 * Constructor.
-	 *
-	 * @param name The name as used in a properties file.
-	 * @param def The default value.
-	 * @param key The translation key.
-	 * @param fromString A function that converts a String into a T.
-	 */
-	public CyclableSetting(String name, T def, String key, Function<String, T> fromString) {
-		this(name, def, key, fromString, T::toString);
-	}
-
-	/**
-	 * Constructor.
-	 *
-	 * @param name The name as used in a properties file.
-	 * @param def The default value.
-	 * @param key The translation key.
-	 * @param fromString A function that converts a String into a T.
-	 * @param toString A function that converts a T back into a String.
-	 */
-	public CyclableSetting(String name, T def, String key, Function<String, T> fromString, Function<T, String> toString) {
-		super(name, def, fromString, toString);
-	}
-
+public interface CyclableSetting<T> extends Setting<T> {
 	/**
 	 * Cycles into the next value.
 	 *
@@ -60,19 +30,17 @@ public abstract class CyclableSetting<T> extends BaseSetting<T> {
 	public abstract T cycle(T value);
 
 	/**
-	 * Gets a translation string that describes this setting.
+	 * Gets a text component that describes this setting.
 	 *
-	 * @return A translation string.
+	 * @return A text component.
 	 */
-	public ITextComponent getDescription() {
-		return new TextComponentTranslation(key + ".description");
-	}
+	public abstract ITextComponent getDescription();
+
 	/**
-	 * Gets a translation string that describes this setting's current value.
+	 * Gets a text component that describes this setting's current value.
 	 *
+	 * @param curValue The current value.
 	 * @return A translation string.
 	 */
-	public ITextComponent getButtonText(T curValue) {
-		return new TextComponentTranslation(key + "." + serializeToString(curValue));
-	}
+	public ITextComponent getButtonText(T curValue);
 }

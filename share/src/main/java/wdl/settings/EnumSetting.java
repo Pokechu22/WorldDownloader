@@ -21,7 +21,7 @@ import net.minecraft.util.IStringSerializable;
 /**
  * A setting that uses an enum.
  */
-public final class EnumSetting<T extends Enum<T> & IStringSerializable> extends CyclableSetting<T> {
+public final class EnumSetting<T extends Enum<T> & IStringSerializable> extends BaseCyclableSetting<T> {
 
 	private T[] values;
 
