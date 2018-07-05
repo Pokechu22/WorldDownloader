@@ -37,7 +37,7 @@ public abstract class MessageTypeCategory {
 	/**
 	 * The setting associated with this category.
 	 */
-	final CyclableSetting<Boolean> setting;
+	public final CyclableSetting<Boolean> setting;
 
 	/**
 	 * Gets the user-facing display name.

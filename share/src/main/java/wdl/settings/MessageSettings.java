@@ -14,10 +14,13 @@
  */
 package wdl.settings;
 
+import java.util.Optional;
+
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import wdl.MessageTypeCategory;
+import wdl.WDLMessages.MessageRegistration;
 import wdl.api.IWDLMessageType;
 
 /**
@@ -64,6 +67,15 @@ public class MessageSettings {
 		}
 
 		@Override
+		public Optional<Boolean> overrideFromContext(IConfiguration context) {
+			if (!context.getValue(ENABLE_ALL_MESSAGES)) {
+				return Optional.of(false);
+			} else {
+				return Optional.empty();
+			}
+		}
+
+		@Override
 		public Boolean cycle(Boolean value) {
 			return !value;
 		}
@@ -83,17 +95,17 @@ public class MessageSettings {
 	 * A setting that controls whether or not an {@link IWDLMessageType} is enabled.
 	 */
 	public static class MessageTypeSetting implements CyclableSetting<Boolean> {
-		private final IWDLMessageType type;
+		private final MessageRegistration registration;
 		private final String configKey;
 
 		/**
 		 * Constructor.
-		 * @param type The message type
+		 * @param typeRegistration The message type registration
 		 * @param name The name used for the message type at registration
 		 */
-		public MessageTypeSetting(IWDLMessageType type, String name) {
-			this.type = type;
-			this.configKey = "Messages." + name;
+		public MessageTypeSetting(MessageRegistration typeRegistration) {
+			this.registration = typeRegistration;
+			this.configKey = "Messages." + typeRegistration.name;
 		}
 
 		@Override
@@ -113,7 +125,16 @@ public class MessageSettings {
 
 		@Override
 		public Boolean getDefault(IConfiguration context) {
-			return type.isEnabledByDefault();
+			return registration.type.isEnabledByDefault();
+		}
+
+		@Override
+		public Optional<Boolean> overrideFromContext(IConfiguration context) {
+			if (!context.getValue(registration.category.setting)) {
+				return Optional.of(false);
+			} else {
+				return Optional.empty();
+			}
 		}
 
 		@Override
@@ -123,12 +144,12 @@ public class MessageSettings {
 
 		@Override
 		public ITextComponent getButtonText(Boolean curValue) {
-			return new TextComponentTranslation("wdl.gui.messages.message." + curValue, type.getDisplayName());
+			return new TextComponentTranslation("wdl.gui.messages.message." + curValue, registration.type.getDisplayName());
 		}
 
 		@Override
 		public ITextComponent getDescription() {
-			return new TextComponentString(type.getDescription());
+			return new TextComponentString(registration.type.getDescription());
 		}
 	}
 }

@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
@@ -60,6 +61,10 @@ public class Configuration implements IConfiguration {
 
 	@Override
 	public <T> T getValue(Setting<T> setting, IConfiguration config) {
+		Optional<T> override = setting.overrideFromContext(config);
+		if (override.isPresent()) {
+			return override.get();
+		}
 		return setting.deserializeFromString(this.properties.getProperty(setting.getConfigurationKey()));
 	}
 

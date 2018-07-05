@@ -54,7 +54,7 @@ public class WDLMessages {
 	/**
 	 * Information about an individual message type.
 	 */
-	private static class MessageRegistration {
+	public static class MessageRegistration {
 		public final String name;
 		public final IWDLMessageType type;
 		public final MessageTypeCategory category;
@@ -72,7 +72,7 @@ public class WDLMessages {
 			this.name = name;
 			this.type = type;
 			this.category = category;
-			this.setting = new MessageSettings.MessageTypeSetting(type, name);
+			this.setting = new MessageSettings.MessageTypeSetting(this);
 		}
 
 		@Override
@@ -135,31 +135,34 @@ public class WDLMessages {
 
 	/**
 	 * Gets the {@link MessageRegistration} for the given name.
-	 * @param name
-	 * @return The registration or null if none is found.
+	 * @param name The name to look for
+	 * @return The registration
+	 * @throws IllegalArgumentException for unknown names
 	 */
-	@SuppressWarnings("unused")
-	private static MessageRegistration getRegistration(String name) {
+	@Nonnull
+	static MessageRegistration getRegistration(String name) {
 		for (MessageRegistration r : registrations.values()) {
 			if (r.name.equals(name)) {
 				return r;
 			}
 		}
-		return null;
+		throw new IllegalArgumentException("Asked for the registration for " + name + ", but there is no registration for that!");
 	}
 
 	/**
 	 * Gets the {@link MessageRegistration} for the given {@link IWDLMessageType}.
-	 * @param name
-	 * @return The registration or null if none is found.
+	 * @param type The type to look for
+	 * @return The registration
+	 * @throws IllegalArgumentException for unknown names
 	 */
-	private static MessageRegistration getRegistration(IWDLMessageType type) {
+	@Nonnull
+	static MessageRegistration getRegistration(IWDLMessageType type) {
 		for (MessageRegistration r : registrations.values()) {
 			if (r.type.equals(type)) {
 				return r;
 			}
 		}
-		return null;
+		throw new IllegalArgumentException("Asked for the registration for " + type + ", but there is no registration for that!");
 	}
 
 	/**
@@ -178,21 +181,7 @@ public class WDLMessages {
 	 * Is the specified type enabled?
 	 */
 	public static boolean isEnabled(IWDLMessageType type) {
-		if (type == null) {
-			return false;
-		}
-		if (!configuration.getValue(MessageSettings.ENABLE_ALL_MESSAGES)) {
-			return false;
-		}
 		MessageRegistration r = getRegistration(type);
-		if (r == null) {
-			return false;
-		}
-
-		if (!isGroupEnabled(r.category)) {
-			return false;
-		}
-
 		return configuration.getValue(r.setting);
 	}
 
@@ -202,20 +191,13 @@ public class WDLMessages {
 	 */
 	public static void toggleEnabled(IWDLMessageType type) {
 		MessageRegistration r = getRegistration(type);
-
-		if (r != null) {
-			configuration.setValue(r.setting, !configuration.getValue(r.setting));
-		}
+		configuration.cycle(r.setting);
 	}
 
 	/**
 	 * Gets whether the given group is enabled.
 	 */
 	public static boolean isGroupEnabled(MessageTypeCategory group) {
-		if (!configuration.getValue(MessageSettings.ENABLE_ALL_MESSAGES)) {
-			return false;
-		}
-
 		return configuration.getValue(group.setting);
 	}
 
@@ -223,7 +205,7 @@ public class WDLMessages {
 	 * Toggles whether a group is enabled or not.
 	 */
 	public static void toggleGroupEnabled(MessageTypeCategory group) {
-		configuration.setValue(group.setting, !isGroupEnabled(group));
+		configuration.cycle(group.setting);
 	}
 
 	/**

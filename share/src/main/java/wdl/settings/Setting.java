@@ -14,6 +14,8 @@
  */
 package wdl.settings;
 
+import java.util.Optional;
+
 /**
  * A wrapper from a setting to the property represented by it.
  *
@@ -42,4 +44,16 @@ public interface Setting<T> {
 	 * WARNING: Use caution when referencing the parameter, to avoid infinite loops.
 	 */
 	public abstract T getDefault(IConfiguration context);
+
+	/**
+	 * Overrides the value of this setting, based on the configuration context.
+	 *
+	 * WARNING: Use caution when referencing the parameter, to avoid infinite loops.
+	 *
+	 * @return A value that, if present, is used instead of the value set directly
+	 *         in the config.
+	 */
+	public default Optional<T> overrideFromContext(IConfiguration context) {
+		return Optional.empty();
+	}
 }
