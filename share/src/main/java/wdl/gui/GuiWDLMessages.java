@@ -259,16 +259,17 @@ public class GuiWDLMessages extends GuiScreen {
 
 		super.drawScreen(mouseX, mouseY, partialTicks);
 
+		String tooltip = null;
 		if (hoveredButtonDescription != null) {
-			Utils.drawGuiInfoBox(hoveredButtonDescription, width, height, 48);
+			tooltip = hoveredButtonDescription;
 		} else if (enableAllButton.isMouseOver()) {
-			Utils.drawGuiInfoBox(
-					I18n.format("wdl.gui.messages.all.description"), width,
-					height, 48);
+			tooltip = enableAllButton.getTooltip();
 		} else if (resetButton.isMouseOver()) {
-			Utils.drawGuiInfoBox(
-					I18n.format("wdl.gui.messages.reset.description"), width,
-					height, 48);
+			tooltip = I18n.format("wdl.gui.messages.reset.description");
+		}
+
+		if (tooltip != null) {
+			Utils.drawGuiInfoBox(tooltip, width, height, 48);
 		}
 	}
 }

@@ -202,6 +202,11 @@ class APIImpl implements WDLApi.APIInstance {
 		public String getDisplayName() {
 			return mod.getDisplayName();
 		}
+
+		@Override
+		public String getDescription() {
+			return "Messages for " + mod.getDisplayName(); // XXX Not translated
+		}
 	}
 
 	@Override

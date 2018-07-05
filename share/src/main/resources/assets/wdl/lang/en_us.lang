@@ -314,6 +314,8 @@ wdl.messages.message.pluginChannel.description=Information about the serverside 
 wdl.messages.message.updateDebug.description=Debug information from the update checker, including network status information.
 wdl.messages.category.core_recommended=Core (recommended)
 wdl.messages.category.core_debug=Core (debug)
+wdl.messages.category.core_recommended.description=General information that should usually be enabled.
+wdl.messages.category.core_debug.description=More verbose information that is sometimes useful, but not always necessary.
 
 wdl.messages.removeEntity.allowingRemoveUserPref=removeEntityFromWorld: Allowing removal of %s (user pref)
 wdl.messages.removeEntity.allowingRemoveUnrecognizedDistance=removeEntityFromWorld: Allowing removal of %s (unrecognized distance)

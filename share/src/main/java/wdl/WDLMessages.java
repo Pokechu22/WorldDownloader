@@ -38,10 +38,9 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.util.text.event.HoverEvent.Action;
 import wdl.api.IWDLMessageType;
-import wdl.settings.BaseSetting;
+import wdl.settings.CyclableSetting;
 import wdl.settings.IConfiguration;
 import wdl.settings.MessageSettings;
-import wdl.settings.Setting;
 
 /**
  * Responsible for displaying messages in chat or the log, depending on whether
@@ -59,7 +58,7 @@ public class WDLMessages {
 		public final String name;
 		public final IWDLMessageType type;
 		public final MessageTypeCategory category;
-		public final Setting<Boolean> setting;
+		public final CyclableSetting<Boolean> setting;
 
 		/**
 		 * Creates a MessageRegistration.
@@ -73,7 +72,7 @@ public class WDLMessages {
 			this.name = name;
 			this.type = type;
 			this.category = category;
-			this.setting = new BaseSetting<>("Messages." + name, type.isEnabledByDefault(), Boolean::valueOf, Object::toString);
+			this.setting = new MessageSettings.MessageTypeSetting(type, name);
 		}
 
 		@Override

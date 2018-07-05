@@ -16,8 +16,8 @@ package wdl;
 
 import net.minecraft.client.resources.I18n;
 import wdl.api.IWDLMessageType;
-import wdl.settings.BaseSetting;
-import wdl.settings.Setting;
+import wdl.settings.CyclableSetting;
+import wdl.settings.MessageSettings;
 
 /**
  * Category / collection of {@link IWDLMessageType}s.
@@ -25,7 +25,7 @@ import wdl.settings.Setting;
 public abstract class MessageTypeCategory {
 	public MessageTypeCategory(String internalName) {
 		this.internalName = internalName;
-		this.setting = new BaseSetting<>("MessageGroup." + internalName, true, Boolean::valueOf, Object::toString);
+		this.setting = new MessageSettings.MessageCategorySetting(this);
 	}
 
 	/**
@@ -37,12 +37,17 @@ public abstract class MessageTypeCategory {
 	/**
 	 * The setting associated with this category.
 	 */
-	final Setting<Boolean> setting;
+	final CyclableSetting<Boolean> setting;
 
 	/**
 	 * Gets the user-facing display name.
 	 */
 	public abstract String getDisplayName();
+
+	/**
+	 * Gets the user-facing description.
+	 */
+	public abstract String getDescription();
 
 	@Override
 	public String toString() {
@@ -86,16 +91,23 @@ public abstract class MessageTypeCategory {
 	 * an internationalization key.
 	 */
 	public static class I18nableMessageTypeCategory extends MessageTypeCategory {
-		public final String i18nKey;
+		private final String titleKey;
+		private final String descKey;
 
 		public I18nableMessageTypeCategory(String internalName, String i18nKey) {
 			super(internalName);
-			this.i18nKey = i18nKey;
+			this.titleKey = i18nKey;
+			this.descKey = i18nKey + ".description";
 		}
 
 		@Override
 		public String getDisplayName() {
-			return I18n.format(i18nKey);
+			return I18n.format(titleKey);
+		}
+
+		@Override
+		public String getDescription() {
+			return I18n.format(descKey);
 		}
 
 	}
