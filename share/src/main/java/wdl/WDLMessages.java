@@ -40,10 +40,12 @@ import net.minecraft.util.text.event.HoverEvent.Action;
 import wdl.api.IWDLMessageType;
 import wdl.settings.BaseSetting;
 import wdl.settings.IConfiguration;
+import wdl.settings.MessageSettings;
 import wdl.settings.Setting;
 
 /**
- * Handles enabling and disabling of all of the messages.
+ * Responsible for displaying messages in chat or the log, depending on whether
+ * they are enabled.
  */
 public class WDLMessages {
 	private static final Logger LOGGER = LogManager.getLogger();
@@ -128,12 +130,6 @@ public class WDLMessages {
 	}
 
 	/**
-	 * If <code>false</code>, all messages are disabled.  Otherwise, per-
-	 * message settings are used.
-	 */
-	private static final Setting<Boolean> ENABLE_ALL_MESSAGES = new BaseSetting<>("Messages.enableAll", true, Boolean::valueOf, Object::toString);
-
-	/**
 	 * List of all registrations, by category.
 	 */
 	private static ListMultimap<MessageTypeCategory, MessageRegistration> registrations = LinkedListMultimap.create();
@@ -180,27 +176,13 @@ public class WDLMessages {
 	}
 
 	/**
-	 * Is the global messages enable value set to true?
-	 */
-	public static boolean areAllEnabled() {
-		return configuration.getValue(ENABLE_ALL_MESSAGES);
-	}
-
-	/**
-	 * Toggles whether all messages are enabled.
-	 */
-	public static void toggleAllEnabled() {
-		configuration.setValue(ENABLE_ALL_MESSAGES, !areAllEnabled());
-	}
-
-	/**
 	 * Is the specified type enabled?
 	 */
 	public static boolean isEnabled(IWDLMessageType type) {
 		if (type == null) {
 			return false;
 		}
-		if (!configuration.getValue(ENABLE_ALL_MESSAGES)) {
+		if (!configuration.getValue(MessageSettings.ENABLE_ALL_MESSAGES)) {
 			return false;
 		}
 		MessageRegistration r = getRegistration(type);
@@ -231,7 +213,7 @@ public class WDLMessages {
 	 * Gets whether the given group is enabled.
 	 */
 	public static boolean isGroupEnabled(MessageTypeCategory group) {
-		if (!configuration.getValue(ENABLE_ALL_MESSAGES)) {
+		if (!configuration.getValue(MessageSettings.ENABLE_ALL_MESSAGES)) {
 			return false;
 		}
 
@@ -264,7 +246,7 @@ public class WDLMessages {
 	 * Reset all settings to default.
 	 */
 	public static void resetEnabledToDefaults() {
-		configuration.clearValue(ENABLE_ALL_MESSAGES);
+		configuration.clearValue(MessageSettings.ENABLE_ALL_MESSAGES);
 
 		for (MessageTypeCategory cat : registrations.keySet()) {
 			configuration.clearValue(cat.setting);

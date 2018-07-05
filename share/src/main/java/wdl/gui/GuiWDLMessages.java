@@ -28,6 +28,8 @@ import wdl.MessageTypeCategory;
 import wdl.WDL;
 import wdl.WDLMessages;
 import wdl.api.IWDLMessageType;
+import wdl.settings.IConfiguration;
+import wdl.settings.MessageSettings;
 
 public class GuiWDLMessages extends GuiScreen {
 	/**
@@ -63,7 +65,7 @@ public class GuiWDLMessages extends GuiScreen {
 
 				button.displayString = I18n.format("wdl.gui.messages.group."
 						+ WDLMessages.isGroupEnabled(category));
-				button.enabled = WDLMessages.areAllEnabled();
+				button.enabled = config.getValue(MessageSettings.ENABLE_ALL_MESSAGES);
 
 				LocalUtils.drawButton(this.button, mc, mouseX, mouseY);
 			}
@@ -160,20 +162,21 @@ public class GuiWDLMessages extends GuiScreen {
 
 	}
 
-	private GuiScreen parent;
+	private final GuiScreen parent;
+	private final IConfiguration config;
 	private GuiMessageTypeList list;
 
 	public GuiWDLMessages(GuiScreen parent) {
 		this.parent = parent;
+		this.config = WDL.baseProps;
 	}
 
-	private GuiButton enableAllButton;
+	private SettingButton enableAllButton;
 	private GuiButton resetButton;
 
 	@Override
 	public void initGui() {
-		enableAllButton = new GuiButton(100, (this.width / 2) - 155, 18, 150,
-				20, getAllEnabledText());
+		enableAllButton = new SettingButton(100, MessageSettings.ENABLE_ALL_MESSAGES, this.config, (this.width / 2) - 155, 18, 150, 20);
 		this.buttonList.add(enableAllButton);
 		resetButton = new GuiButton(101, (this.width / 2) + 5, 18, 150, 20,
 				I18n.format("wdl.gui.messages.reset"));
@@ -191,12 +194,7 @@ public class GuiWDLMessages extends GuiScreen {
 			return;
 		}
 
-		if (button.id == 100) {
-			//"Master switch"
-			WDLMessages.toggleAllEnabled();
-
-			button.displayString = getAllEnabledText();
-		} else if (button.id == 101) {
+		if (button.id == 101) {
 			this.mc.displayGuiScreen(new GuiYesNo(this,
 					I18n.format("wdl.gui.messages.reset.confirm.title"),
 					I18n.format("wdl.gui.messages.reset.confirm.subtitle"),
@@ -272,13 +270,5 @@ public class GuiWDLMessages extends GuiScreen {
 					I18n.format("wdl.gui.messages.reset.description"), width,
 					height, 48);
 		}
-	}
-
-	/**
-	 * Gets the text for the "Enable all" button.
-	 */
-	private String getAllEnabledText() {
-		return I18n.format("wdl.gui.messages.all."
-				+ WDLMessages.areAllEnabled());
 	}
 }
