@@ -17,6 +17,7 @@ package wdl.settings;
 import java.util.Map;
 
 import net.minecraft.crash.CrashReportCategory;
+import net.minecraft.util.text.ITextComponent;
 
 public interface IConfiguration {
 
@@ -77,7 +78,7 @@ public interface IConfiguration {
 	 * @param setting The setting to use
 	 * @see CyclableSetting#getButtonText
 	 */
-	public default <T> String getButtonText(CyclableSetting<T> setting) {
+	public default <T> ITextComponent getButtonText(CyclableSetting<T> setting) {
 		return setting.getButtonText(this.getValue(setting));
 	}
 

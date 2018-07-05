@@ -16,7 +16,6 @@ package wdl.gui;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.resources.I18n;
 import wdl.settings.IConfiguration;
 import wdl.settings.CyclableSetting;
 
@@ -39,7 +38,7 @@ public class SettingButton extends GuiButton {
 	}
 
 	private void updateDisplayString() {
-		this.displayString = I18n.format(config.getButtonText(setting));
+		this.displayString = config.getButtonText(setting).getFormattedText();
 	}
 
 	@Override
@@ -57,6 +56,6 @@ public class SettingButton extends GuiButton {
 	 * Gets a translated tooltip for this button.
 	 */
 	public String getTooltip() {
-		return I18n.format(setting.getDescription());
+		return setting.getDescription().getFormattedText();
 	}
 }
