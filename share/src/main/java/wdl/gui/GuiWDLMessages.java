@@ -21,6 +21,8 @@ import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 
+import com.google.common.collect.ListMultimap;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
@@ -109,7 +111,7 @@ public class GuiWDLMessages extends GuiScreen {
 				button.x = GuiWDLMessages.this.width / 2 - 100;
 				button.y = y;
 
-				button.enabled = WDLMessages.isGroupEnabled(typeRegistration.category);
+				button.enabled = config.getValue(typeRegistration.category.setting);
 
 				LocalUtils.drawButton(this.button, mc, mouseX, mouseY);
 
@@ -140,10 +142,10 @@ public class GuiWDLMessages extends GuiScreen {
 		// The call to Stream.concat is somewhat hacky, but hard to avoid
 		// (we want both a header an the items in it)
 		private List<GuiListEntry> entries = WDLMessages
-				.getTypes().asMap().entrySet().stream()
+				.getRegistrations().asMap().entrySet().stream()
 				.flatMap(e -> Stream.concat(
 						Stream.of(new CategoryEntry(e.getKey())),
-						e.getValue().stream().map(WDLMessages::getRegistration).map(MessageTypeEntry::new)))
+						e.getValue().stream().map(MessageTypeEntry::new)))
 				.collect(Collectors.toList());
 
 		@Override
@@ -204,7 +206,15 @@ public class GuiWDLMessages extends GuiScreen {
 	public void confirmClicked(boolean result, int id) {
 		if (result) {
 			if (id == 101) {
-				WDLMessages.resetEnabledToDefaults();
+				ListMultimap<MessageTypeCategory, MessageRegistration> registrations = WDLMessages.getRegistrations();
+				config.clearValue(MessageSettings.ENABLE_ALL_MESSAGES);
+
+				for (MessageTypeCategory cat : registrations.keySet()) {
+					config.clearValue(cat.setting);
+				}
+				for (MessageRegistration r : registrations.values()) {
+					config.clearValue(r.setting);
+				}
 			}
 		}
 

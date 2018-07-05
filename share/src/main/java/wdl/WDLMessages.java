@@ -178,47 +178,12 @@ public class WDLMessages {
 	}
 
 	/**
-	 * Is the specified type enabled?
-	 */
-	public static boolean isEnabled(IWDLMessageType type) {
-		MessageRegistration r = getRegistration(type);
-		return configuration.getValue(r.setting);
-	}
-
-	/**
-	 * Gets whether the given group is enabled.
-	 */
-	public static boolean isGroupEnabled(MessageTypeCategory group) {
-		return configuration.getValue(group.setting);
-	}
-
-	/**
 	 * Gets all of the MessageTypes
 	 * @return All the types, ordered by the category.
 	 */
 	@Nonnull
-	public static ListMultimap<MessageTypeCategory, IWDLMessageType> getTypes() {
-		ImmutableListMultimap.Builder<MessageTypeCategory, IWDLMessageType> returned = ImmutableListMultimap.builder();
-
-		for (MessageRegistration r : registrations.values()) {
-			returned.put(r.category, r.type);
-		}
-
-		return returned.build();
-	}
-
-	/**
-	 * Reset all settings to default.
-	 */
-	public static void resetEnabledToDefaults() {
-		configuration.clearValue(MessageSettings.ENABLE_ALL_MESSAGES);
-
-		for (MessageTypeCategory cat : registrations.keySet()) {
-			configuration.clearValue(cat.setting);
-		}
-		for (MessageRegistration r : registrations.values()) {
-			configuration.clearValue(r.setting);
-		}
+	public static ListMultimap<MessageTypeCategory, MessageRegistration> getRegistrations() {
+		return ImmutableListMultimap.copyOf(registrations);
 	}
 
 	/**
@@ -311,6 +276,15 @@ public class WDLMessages {
 	 * @param message The message to display.
 	 */
 	public static void chatMessage(@Nonnull IWDLMessageType type, @Nonnull ITextComponent message) {
+		boolean enabled;
+		try {
+			MessageRegistration registration = getRegistration(type);
+			enabled = configuration.getValue(registration.setting);
+		} catch (Exception ex) {
+			enabled = false;
+			LOGGER.error("Failed to check if type was enabled: " + type, ex);
+		}
+
 		// Can't use a TextComponentTranslation here because it doesn't like new lines.
 		String tooltipText = I18n.format("wdl.messages.tooltip",
 				type.getDisplayName()).replace("\r", "");
@@ -331,7 +305,7 @@ public class WDLMessages {
 		messageFormat.appendSibling(message);
 		text.appendSibling(header);
 		text.appendSibling(messageFormat);
-		if (isEnabled(type)) {
+		if (enabled) {
 			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(
 					text);
 		} else {
