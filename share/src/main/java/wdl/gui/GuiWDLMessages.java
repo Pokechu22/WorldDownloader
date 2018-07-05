@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017 Pokechu22, julialy
+ * Copyright (c) 2017-2018 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -63,7 +63,7 @@ public class GuiWDLMessages extends GuiScreen {
 
 				button.displayString = I18n.format("wdl.gui.messages.group."
 						+ WDLMessages.isGroupEnabled(category));
-				button.enabled = WDLMessages.enableAllMessages;
+				button.enabled = WDLMessages.areAllEnabled();
 
 				LocalUtils.drawButton(this.button, mc, mouseX, mouseY);
 			}
@@ -109,8 +109,7 @@ public class GuiWDLMessages extends GuiScreen {
 
 				button.displayString = I18n.format("wdl.gui.messages.message."
 						+ WDLMessages.isEnabled(type), type.getDisplayName());
-				button.enabled = WDLMessages.enableAllMessages &&
-						WDLMessages.isGroupEnabled(category);
+				button.enabled = WDLMessages.isGroupEnabled(category);
 
 				LocalUtils.drawButton(this.button, mc, mouseX, mouseY);
 
@@ -194,10 +193,7 @@ public class GuiWDLMessages extends GuiScreen {
 
 		if (button.id == 100) {
 			//"Master switch"
-			WDLMessages.enableAllMessages ^= true;
-
-			WDL.baseProps.setProperty("Messages.enableAll",
-					Boolean.toString(WDLMessages.enableAllMessages));
+			WDLMessages.toggleAllEnabled();
 
 			button.displayString = getAllEnabledText();
 		} else if (button.id == 101) {
@@ -283,6 +279,6 @@ public class GuiWDLMessages extends GuiScreen {
 	 */
 	private String getAllEnabledText() {
 		return I18n.format("wdl.gui.messages.all."
-				+ WDLMessages.enableAllMessages);
+				+ WDLMessages.areAllEnabled());
 	}
 }

@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017 Pokechu22, julialy
+ * Copyright (c) 2017-2018 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -38,12 +38,17 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.util.text.event.HoverEvent.Action;
 import wdl.api.IWDLMessageType;
+import wdl.settings.BaseSetting;
+import wdl.settings.IConfiguration;
+import wdl.settings.Setting;
 
 /**
  * Handles enabling and disabling of all of the messages.
  */
 public class WDLMessages {
 	private static final Logger LOGGER = LogManager.getLogger();
+	// XXX This shouldn't be kept here...  Also, is directly referencing it correct?
+	private static IConfiguration configuration = WDL.baseProps;
 
 	/**
 	 * Information about an individual message type.
@@ -52,6 +57,7 @@ public class WDLMessages {
 		public final String name;
 		public final IWDLMessageType type;
 		public final MessageTypeCategory category;
+		public final Setting<Boolean> setting;
 
 		/**
 		 * Creates a MessageRegistration.
@@ -65,6 +71,7 @@ public class WDLMessages {
 			this.name = name;
 			this.type = type;
 			this.category = category;
+			this.setting = new BaseSetting<>("Messages." + name, type.isEnabledByDefault(), Boolean::valueOf, Object::toString);
 		}
 
 		@Override
@@ -124,13 +131,12 @@ public class WDLMessages {
 	 * If <code>false</code>, all messages are disabled.  Otherwise, per-
 	 * message settings are used.
 	 */
-	public static boolean enableAllMessages = true;
+	private static final Setting<Boolean> ENABLE_ALL_MESSAGES = new BaseSetting<>("Messages.enableAll", true, Boolean::valueOf, Object::toString);
 
 	/**
-	 * List of all registrations.
+	 * List of all registrations, by category.
 	 */
-	private static List<MessageRegistration> registrations =
-			new ArrayList<>();
+	private static ListMultimap<MessageTypeCategory, MessageRegistration> registrations = LinkedListMultimap.create();
 
 	/**
 	 * Gets the {@link MessageRegistration} for the given name.
@@ -139,7 +145,7 @@ public class WDLMessages {
 	 */
 	@SuppressWarnings("unused")
 	private static MessageRegistration getRegistration(String name) {
-		for (MessageRegistration r : registrations) {
+		for (MessageRegistration r : registrations.values()) {
 			if (r.name.equals(name)) {
 				return r;
 			}
@@ -153,7 +159,7 @@ public class WDLMessages {
 	 * @return The registration or null if none is found.
 	 */
 	private static MessageRegistration getRegistration(IWDLMessageType type) {
-		for (MessageRegistration r : registrations) {
+		for (MessageRegistration r : registrations.values()) {
 			if (r.type.equals(type)) {
 				return r;
 			}
@@ -170,12 +176,21 @@ public class WDLMessages {
 	 */
 	public static void registerMessage(String name, IWDLMessageType type,
 			MessageTypeCategory category) {
-		registrations.add(new MessageRegistration(name, type, category));
+		registrations.put(category, new MessageRegistration(name, type, category));
+	}
 
-		WDL.defaultProps.setProperty("Messages." + name,
-				Boolean.toString(type.isEnabledByDefault()));
-		WDL.defaultProps.setProperty("MessageGroup." + category.internalName,
-				"true");
+	/**
+	 * Is the global messages enable value set to true?
+	 */
+	public static boolean areAllEnabled() {
+		return configuration.getValue(ENABLE_ALL_MESSAGES);
+	}
+
+	/**
+	 * Toggles whether all messages are enabled.
+	 */
+	public static void toggleAllEnabled() {
+		configuration.setValue(ENABLE_ALL_MESSAGES, !areAllEnabled());
 	}
 
 	/**
@@ -185,7 +200,7 @@ public class WDLMessages {
 		if (type == null) {
 			return false;
 		}
-		if (!enableAllMessages) {
+		if (!configuration.getValue(ENABLE_ALL_MESSAGES)) {
 			return false;
 		}
 		MessageRegistration r = getRegistration(type);
@@ -197,11 +212,7 @@ public class WDLMessages {
 			return false;
 		}
 
-		if (!WDL.baseProps.containsKey("Messages." + r.name)) {
-			WDL.baseProps.setProperty("Messages." + r.name,
-					Boolean.toString(r.type.isEnabledByDefault()));
-		}
-		return WDL.baseProps.getProperty("Messages." + r.name).equals("true");
+		return configuration.getValue(r.setting);
 	}
 
 	/**
@@ -212,8 +223,7 @@ public class WDLMessages {
 		MessageRegistration r = getRegistration(type);
 
 		if (r != null) {
-			WDL.baseProps.setProperty("Messages." + r.name,
-					Boolean.toString(!isEnabled(type)));
+			configuration.setValue(r.setting, !configuration.getValue(r.setting));
 		}
 	}
 
@@ -221,21 +231,18 @@ public class WDLMessages {
 	 * Gets whether the given group is enabled.
 	 */
 	public static boolean isGroupEnabled(MessageTypeCategory group) {
-		if (!enableAllMessages) {
+		if (!configuration.getValue(ENABLE_ALL_MESSAGES)) {
 			return false;
 		}
 
-		return WDL.baseProps.getProperty(
-				"MessageGroup." + group.internalName, "true").equals(
-						"true");
+		return configuration.getValue(group.setting);
 	}
 
 	/**
 	 * Toggles whether a group is enabled or not.
 	 */
 	public static void toggleGroupEnabled(MessageTypeCategory group) {
-		WDL.baseProps.setProperty("MessageGroup." + group.internalName,
-				Boolean.toString(!isGroupEnabled(group)));
+		configuration.setValue(group.setting, !isGroupEnabled(group));
 	}
 
 	/**
@@ -244,32 +251,26 @@ public class WDLMessages {
 	 */
 	@Nonnull
 	public static ListMultimap<MessageTypeCategory, IWDLMessageType> getTypes() {
-		ListMultimap<MessageTypeCategory, IWDLMessageType> returned = LinkedListMultimap
-				.create();
+		ImmutableListMultimap.Builder<MessageTypeCategory, IWDLMessageType> returned = ImmutableListMultimap.builder();
 
-		for (MessageRegistration r : registrations) {
+		for (MessageRegistration r : registrations.values()) {
 			returned.put(r.category, r.type);
 		}
 
-		return ImmutableListMultimap.copyOf(returned);
+		return returned.build();
 	}
 
 	/**
 	 * Reset all settings to default.
 	 */
 	public static void resetEnabledToDefaults() {
-		WDL.baseProps.setProperty("Messages.enableAll", "true");
-		enableAllMessages = WDL.globalProps.getProperty("Messages.enableAll",
-				"true").equals("true");
+		configuration.clearValue(ENABLE_ALL_MESSAGES);
 
-		for (MessageRegistration r : registrations) {
-			WDL.baseProps.setProperty(
-					"MessageGroup." + r.category.internalName,
-					WDL.globalProps.getProperty("MessageGroup."
-							+ r.category.internalName, "true"));
-			WDL.baseProps.setProperty(
-					"Messages." + r.name,
-					WDL.globalProps.getProperty("Messages." + r.name));
+		for (MessageTypeCategory cat : registrations.keySet()) {
+			configuration.clearValue(cat.setting);
+		}
+		for (MessageRegistration r : registrations.values()) {
+			configuration.clearValue(r.setting);
 		}
 	}
 
@@ -277,13 +278,7 @@ public class WDLMessages {
 	 * Should be called when the server has changed.
 	 */
 	public static void onNewServer() {
-		if (!WDL.baseProps.containsKey("Messages.enableAll")) {
-			WDL.baseProps.setProperty("Messages.enableAll",
-					WDL.globalProps.getProperty("Messages.enableAll", "true"));
-		}
-
-		enableAllMessages = WDL.baseProps.getProperty("Messages.enableAll")
-				.equals("true");
+		configuration = WDL.baseProps; // XXX
 	}
 
 	/**

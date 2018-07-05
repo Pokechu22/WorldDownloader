@@ -503,7 +503,6 @@ public class WDL {
 		// messages are loaded FIRST.
 		if (networkManager != newNM) {
 			loadBaseProps();
-			WDLMessages.onNewServer();
 		}
 
 		WDLPluginChannels.onWorldLoad();

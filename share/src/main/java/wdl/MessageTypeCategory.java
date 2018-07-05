@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017 Pokechu22, julialy
+ * Copyright (c) 2017-2018 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -16,6 +16,8 @@ package wdl;
 
 import net.minecraft.client.resources.I18n;
 import wdl.api.IWDLMessageType;
+import wdl.settings.BaseSetting;
+import wdl.settings.Setting;
 
 /**
  * Category / collection of {@link IWDLMessageType}s.
@@ -23,6 +25,7 @@ import wdl.api.IWDLMessageType;
 public abstract class MessageTypeCategory {
 	public MessageTypeCategory(String internalName) {
 		this.internalName = internalName;
+		this.setting = new BaseSetting<>("MessageGroup." + internalName, true, Boolean::valueOf, Object::toString);
 	}
 
 	/**
@@ -31,6 +34,10 @@ public abstract class MessageTypeCategory {
 	 * Used when saving.
 	 */
 	public final String internalName;
+	/**
+	 * The setting associated with this category.
+	 */
+	final Setting<Boolean> setting;
 
 	/**
 	 * Gets the user-facing display name.
