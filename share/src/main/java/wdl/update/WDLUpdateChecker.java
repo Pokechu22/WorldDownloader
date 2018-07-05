@@ -225,11 +225,11 @@ public class WDLUpdateChecker extends Thread {
 				TextComponentTranslation stolenBeware = new TextComponentTranslation(
 						"wdl.intro.stolenBeware", smr);
 
-				WDLMessages.chatMessage(WDLMessageTypes.UPDATES, success);
-				WDLMessages.chatMessage(WDLMessageTypes.UPDATES, usage);
-				WDLMessages.chatMessage(WDLMessageTypes.UPDATES, contribute);
-				WDLMessages.chatMessage(WDLMessageTypes.UPDATES, stolen);
-				WDLMessages.chatMessage(WDLMessageTypes.UPDATES, stolenBeware);
+				WDLMessages.chatMessage(WDL.baseProps, WDLMessageTypes.UPDATES, success);
+				WDLMessages.chatMessage(WDL.baseProps, WDLMessageTypes.UPDATES, usage);
+				WDLMessages.chatMessage(WDL.baseProps, WDLMessageTypes.UPDATES, contribute);
+				WDLMessages.chatMessage(WDL.baseProps, WDLMessageTypes.UPDATES, stolen);
+				WDLMessages.chatMessage(WDL.baseProps, WDLMessageTypes.UPDATES, stolenBeware);
 
 				WDL.globalProps.setProperty("TutorialShown", "true");
 				WDL.saveGlobalProps();
@@ -238,8 +238,8 @@ public class WDLUpdateChecker extends Thread {
 			sleep(5000);
 
 			releases = GithubInfoGrabber.getReleases();
-			WDLMessages.chatMessageTranslated(WDLMessageTypes.UPDATE_DEBUG,
-					"wdl.messages.updates.releaseCount", releases.size());
+			WDLMessages.chatMessageTranslated(WDL.baseProps,
+					WDLMessageTypes.UPDATE_DEBUG, "wdl.messages.updates.releaseCount", releases.size());
 
 			if (releases.isEmpty()) {
 				failed = true;
@@ -259,13 +259,13 @@ public class WDLUpdateChecker extends Thread {
 
 			if (runningRelease == null) {
 				if (!isSnapshot(version)) {
-					WDLMessages.chatMessageTranslated(WDLMessageTypes.UPDATES,
-							"wdl.messages.updates.failedToFindMatchingRelease",
-							currentTag);
+					WDLMessages.chatMessageTranslated(WDL.baseProps,
+							WDLMessageTypes.UPDATES,
+							"wdl.messages.updates.failedToFindMatchingRelease", currentTag);
 				} else {
-					WDLMessages.chatMessageTranslated(WDLMessageTypes.UPDATES,
-							"wdl.messages.updates.failedToFindMatchingRelease.snapshot",
-							currentTag, getRealVersion(version));
+					WDLMessages.chatMessageTranslated(WDL.baseProps,
+							WDLMessageTypes.UPDATES,
+							"wdl.messages.updates.failedToFindMatchingRelease.snapshot", currentTag, getRealVersion(version));
 				}
 				// Wait until the new version check finishes before returning.
 			}
@@ -281,9 +281,9 @@ public class WDLUpdateChecker extends Thread {
 								recomendedRelease.URL));
 
 				// Show the new version available message, and give a link.
-				WDLMessages.chatMessageTranslated(WDLMessageTypes.UPDATES,
-						"wdl.messages.updates.newRelease", currentTag,
-						recomendedRelease.tag, updateLink);
+				WDLMessages.chatMessageTranslated(WDL.baseProps,
+						WDLMessageTypes.UPDATES, "wdl.messages.updates.newRelease",
+						currentTag, recomendedRelease.tag, updateLink);
 			}
 
 			// Next up: Check if the version is untested.
@@ -292,9 +292,9 @@ public class WDLUpdateChecker extends Thread {
 						"wdl.intro.githubRepo");
 				githubIssues.getStyle().setColor(TextFormatting.BLUE).setUnderlined(true)
 						.setClickEvent(new ClickEvent(Action.OPEN_URL, GITHUB_ISSUES_LINK));
-				WDLMessages.chatMessageTranslated(WDLMessageTypes.UPDATES,
-						"wdl.messages.updates.untestedVersion", VersionConstants.getMinecraftVersion(),
-						githubIssues);
+				WDLMessages.chatMessageTranslated(WDL.baseProps,
+						WDLMessageTypes.UPDATES, "wdl.messages.updates.untestedVersion",
+						VersionConstants.getMinecraftVersion(), githubIssues);
 			}
 
 			if (runningRelease == null) {
@@ -303,9 +303,9 @@ public class WDLUpdateChecker extends Thread {
 			}
 
 			if (runningRelease.hiddenInfo == null) {
-				WDLMessages.chatMessageTranslated(WDLMessageTypes.UPDATE_DEBUG,
-						"wdl.messages.updates.failedToFindMetadata",
-						currentTag);
+				WDLMessages.chatMessageTranslated(WDL.baseProps,
+						WDLMessageTypes.UPDATE_DEBUG,
+						"wdl.messages.updates.failedToFindMetadata", currentTag);
 				return;
 			}
 			//Check the hashes, and list any failing ones.
@@ -324,19 +324,19 @@ public class WDLUpdateChecker extends Thread {
 					}
 
 					WDLMessages.chatMessageTranslated(
-							WDLMessageTypes.UPDATE_DEBUG,
-							"wdl.messages.updates.incorrectHash", data.file,
-							data.relativeTo, Arrays.toString(data.validHashes),
-							hash);
+							WDL.baseProps,
+							WDLMessageTypes.UPDATE_DEBUG, "wdl.messages.updates.incorrectHash",
+							data.file, data.relativeTo,
+							Arrays.toString(data.validHashes), hash);
 
 					failed.put(data, hash);
 					continue;
 				} catch (Exception e) {
 					WDLMessages.chatMessageTranslated(
-							WDLMessageTypes.UPDATE_DEBUG,
-							"wdl.messages.updates.hashException", data.file,
-							data.relativeTo, Arrays.toString(data.validHashes),
-							e);
+							WDL.baseProps,
+							WDLMessageTypes.UPDATE_DEBUG, "wdl.messages.updates.hashException",
+							data.file, data.relativeTo,
+							Arrays.toString(data.validHashes), e);
 
 					failed.put(data, e);
 				}
@@ -349,12 +349,12 @@ public class WDLUpdateChecker extends Thread {
 				.setUnderlined(true).setClickEvent(
 						new ClickEvent(Action.OPEN_URL,
 								FORUMS_THREAD_USAGE_LINK));
-				WDLMessages.chatMessageTranslated(WDLMessageTypes.UPDATES,
-						"wdl.messages.updates.badHashesFound", mcfThread);
+				WDLMessages.chatMessageTranslated(WDL.baseProps,
+						WDLMessageTypes.UPDATES, "wdl.messages.updates.badHashesFound", mcfThread);
 			}
 		} catch (Exception e) {
-			WDLMessages.chatMessageTranslated(WDLMessageTypes.UPDATE_DEBUG,
-					"wdl.messages.updates.updateCheckError", e);
+			WDLMessages.chatMessageTranslated(WDL.baseProps,
+					WDLMessageTypes.UPDATE_DEBUG, "wdl.messages.updates.updateCheckError", e);
 
 			failed = true;
 			failReason = e.toString();

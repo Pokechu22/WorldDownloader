@@ -619,8 +619,8 @@ public class WDLPluginChannels {
 		canUseFunctionsUnknownToServer = true;
 
 		WDLMessages.chatMessageTranslated(
-				WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
-				"wdl.messages.permissions.init");
+				WDL.baseProps,
+				WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, "wdl.messages.permissions.init");
 
 		// Register the WDL messages.
 		PacketBuffer registerPacketBuffer = new PacketBuffer(Unpooled.buffer());
@@ -643,8 +643,8 @@ public class WDLPluginChannels {
 					new PacketBuffer(Unpooled.copiedBuffer(payload
 							.getBytes("UTF-8"))));
 		} catch (UnsupportedEncodingException e) {
-			WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR,
-					"wdl.messages.generalError.noUTF8", e);
+			WDLMessages.chatMessageTranslated(WDL.baseProps,
+					WDLMessageTypes.ERROR, "wdl.messages.generalError.noUTF8", e);
 
 			initPacket = new CPacketCustomPayload("WDL|INIT",
 					new PacketBuffer(Unpooled.buffer()));
@@ -665,9 +665,9 @@ public class WDLPluginChannels {
 				canUseFunctionsUnknownToServer = input.readBoolean();
 
 				WDLMessages.chatMessageTranslated(
+						WDL.baseProps,
 						WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
-						"wdl.messages.permissions.packet0",
-						canUseFunctionsUnknownToServer);
+						"wdl.messages.permissions.packet0", canUseFunctionsUnknownToServer);
 
 				break;
 			case 1:
@@ -679,18 +679,18 @@ public class WDLPluginChannels {
 				canSaveContainers = input.readBoolean();
 
 				WDLMessages.chatMessageTranslated(
+						WDL.baseProps,
 						WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
-						"wdl.messages.permissions.packet1",
-						canDownloadInGeneral, saveRadius,
-						canCacheChunks, canSaveEntities,
-						canSaveTileEntities, canSaveContainers);
+						"wdl.messages.permissions.packet1", canDownloadInGeneral,
+						saveRadius, canCacheChunks,
+						canSaveEntities, canSaveTileEntities, canSaveContainers);
 
 				//Cancel a download if it is occurring.
 				if (!canDownloadInGeneral) {
 					if (WDL.downloading) {
 						WDLMessages.chatMessageTranslated(
-								WDLMessageTypes.ERROR,
-								"wdl.messages.generalError.forbidden");
+								WDL.baseProps,
+								WDLMessageTypes.ERROR, "wdl.messages.generalError.forbidden");
 						WDL.cancelDownload();
 					}
 				}
@@ -707,19 +707,19 @@ public class WDLPluginChannels {
 				}
 
 				WDLMessages.chatMessageTranslated(
+						WDL.baseProps,
 						WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
-						"wdl.messages.permissions.packet2",
-						entityRanges.size());
+						"wdl.messages.permissions.packet2", entityRanges.size());
 				break;
 			case 3:
 				canRequestPermissions = input.readBoolean();
 				requestMessage = input.readUTF();
 
 				WDLMessages.chatMessageTranslated(
+						WDL.baseProps,
 						WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
-						"wdl.messages.permissions.packet3",
-						canRequestPermissions, requestMessage.length(),
-						Integer.toHexString(requestMessage.hashCode()));
+						"wdl.messages.permissions.packet3", canRequestPermissions,
+						requestMessage.length(), Integer.toHexString(requestMessage.hashCode()));
 				// Don't include the exact message because it's too long and would be spammy.
 				break;
 			case 4:
@@ -745,9 +745,9 @@ public class WDLPluginChannels {
 				}
 
 				WDLMessages.chatMessageTranslated(
+						WDL.baseProps,
 						WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
-						"wdl.messages.permissions.packet4",
-						numRangeGroups, totalRanges);
+						"wdl.messages.permissions.packet4", numRangeGroups, totalRanges);
 				break;
 			case 5:
 
@@ -770,14 +770,14 @@ public class WDLPluginChannels {
 
 				if (replaceGroups) {
 					WDLMessages.chatMessageTranslated(
+							WDL.baseProps,
 							WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
-							"wdl.messages.permissions.packet5.set",
-							numNewGroups, groupToEdit);
+							"wdl.messages.permissions.packet5.set", numNewGroups, groupToEdit);
 				} else {
 					WDLMessages.chatMessageTranslated(
+							WDL.baseProps,
 							WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
-							"wdl.messages.permissions.packet5.added",
-							numNewGroups, groupToEdit);
+							"wdl.messages.permissions.packet5.added", numNewGroups, groupToEdit);
 				}
 				break;
 			case 6:
@@ -797,9 +797,9 @@ public class WDLPluginChannels {
 				}
 
 				WDLMessages.chatMessageTranslated(
+						WDL.baseProps,
 						WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
-						"wdl.messages.permissions.packet6",
-						oldCount, groupToChangeTagsFor, Arrays.toString(tags));
+						"wdl.messages.permissions.packet6", oldCount, groupToChangeTagsFor, Arrays.toString(tags));
 				break;
 			case 7:
 				String groupToSetTagFor = input.readUTF();
@@ -818,14 +818,14 @@ public class WDLPluginChannels {
 				}
 
 				WDLMessages.chatMessageTranslated(
+						WDL.baseProps,
 						WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
-						"wdl.messages.permissions.packet7",
-						numRangesRemoved, groupToSetTagFor, tag, numNewRanges);
+						"wdl.messages.permissions.packet7", numRangesRemoved, groupToSetTagFor, tag, numNewRanges);
 				break;
 			default:
 				WDLMessages.chatMessageTranslated(
-						WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
-						"wdl.messages.permissions.unknownPacket", section);
+						WDL.baseProps,
+						WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, "wdl.messages.permissions.unknownPacket", section);
 
 				StringBuilder messageBuilder = new StringBuilder();
 				for (byte b : bytes) {

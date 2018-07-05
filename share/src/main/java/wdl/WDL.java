@@ -426,8 +426,8 @@ public class WDL {
 
 		startOnChange = true;
 		downloading = true;
-		WDLMessages.chatMessageTranslated(WDLMessageTypes.INFO,
-				"wdl.messages.generalInfo.downloadStarted");
+		WDLMessages.chatMessageTranslated(WDL.baseProps,
+				WDLMessageTypes.INFO, "wdl.messages.generalInfo.downloadStarted");
 	}
 
 	/**
@@ -438,8 +438,8 @@ public class WDL {
 			// Indicate that downloading has stopped
 			downloading = false;
 			startOnChange = false;
-			WDLMessages.chatMessageTranslated(WDLMessageTypes.INFO,
-					"wdl.messages.generalInfo.downloadStopped");
+			WDLMessages.chatMessageTranslated(WDL.baseProps,
+					WDLMessageTypes.INFO, "wdl.messages.generalInfo.downloadStopped");
 			startSaveThread();
 		}
 	}
@@ -458,8 +458,8 @@ public class WDL {
 			downloading = false;
 			worldLoadingDeferred = false;
 
-			WDLMessages.chatMessageTranslated(WDLMessageTypes.INFO,
-					"wdl.messages.generalInfo.downloadCanceled");
+			WDLMessages.chatMessageTranslated(WDL.baseProps,
+					WDLMessageTypes.INFO, "wdl.messages.generalInfo.downloadCanceled");
 		}
 	}
 
@@ -468,8 +468,8 @@ public class WDL {
 	 */
 	static void startSaveThread() {
 		// Indicate that we are saving
-		WDLMessages.chatMessageTranslated(WDLMessageTypes.INFO,
-				"wdl.messages.generalInfo.saveStarted");
+		WDLMessages.chatMessageTranslated(WDL.baseProps,
+				WDLMessageTypes.INFO, "wdl.messages.generalInfo.saveStarted");
 		WDL.saving = true;
 		Thread thread = new Thread(() -> {
 			try {
@@ -510,21 +510,21 @@ public class WDL {
 		// Is this a different server?
 		if (networkManager != newNM) {
 			// Different server, different world!
-			WDLMessages.chatMessageTranslated(WDLMessageTypes.ON_WORLD_LOAD,
-					"wdl.messages.onWorldLoad.differentServer");
+			WDLMessages.chatMessageTranslated(WDL.baseProps,
+					WDLMessageTypes.ON_WORLD_LOAD, "wdl.messages.onWorldLoad.differentServer");
 
 			networkManager = newNM;
 
 			if (isSpigot()) {
 				WDLMessages.chatMessageTranslated(
+						WDL.baseProps,
 						WDLMessageTypes.ON_WORLD_LOAD,
-						"wdl.messages.onWorldLoad.spigot",
-						thePlayer.getServerBrand());
+						"wdl.messages.onWorldLoad.spigot", thePlayer.getServerBrand());
 			} else {
 				WDLMessages.chatMessageTranslated(
+						WDL.baseProps,
 						WDLMessageTypes.ON_WORLD_LOAD,
-						"wdl.messages.onWorldLoad.vanilla",
-						thePlayer.getServerBrand());
+						"wdl.messages.onWorldLoad.vanilla", thePlayer.getServerBrand());
 			}
 
 			startOnChange = false;
@@ -532,19 +532,19 @@ public class WDL {
 			return true;
 		} else {
 			// Same server, different world!
-			WDLMessages.chatMessageTranslated(WDLMessageTypes.ON_WORLD_LOAD,
-					"wdl.messages.onWorldLoad.sameServer");
+			WDLMessages.chatMessageTranslated(WDL.baseProps,
+					WDLMessageTypes.ON_WORLD_LOAD, "wdl.messages.onWorldLoad.sameServer");
 
 			if (isSpigot()) {
 				WDLMessages.chatMessageTranslated(
+						WDL.baseProps,
 						WDLMessageTypes.ON_WORLD_LOAD,
-						"wdl.messages.onWorldLoad.spigot",
-						thePlayer.getServerBrand());
+						"wdl.messages.onWorldLoad.spigot", thePlayer.getServerBrand());
 			} else {
 				WDLMessages.chatMessageTranslated(
+						WDL.baseProps,
 						WDLMessageTypes.ON_WORLD_LOAD,
-						"wdl.messages.onWorldLoad.vanilla",
-						thePlayer.getServerBrand());
+						"wdl.messages.onWorldLoad.vanilla", thePlayer.getServerBrand());
 			}
 
 			if (startOnChange) {
@@ -567,14 +567,14 @@ public class WDL {
 
 		// If still downloading, load the current world and keep on downloading
 		if (downloading) {
-			WDLMessages.chatMessageTranslated(WDLMessageTypes.INFO,
-					"wdl.messages.generalInfo.saveComplete.startingAgain");
+			WDLMessages.chatMessageTranslated(WDL.baseProps,
+					WDLMessageTypes.INFO, "wdl.messages.generalInfo.saveComplete.startingAgain");
 			WDL.loadWorld();
 			return;
 		}
 
-		WDLMessages.chatMessageTranslated(WDLMessageTypes.INFO,
-				"wdl.messages.generalInfo.saveComplete.done");
+		WDLMessages.chatMessageTranslated(WDL.baseProps,
+				WDLMessageTypes.INFO, "wdl.messages.generalInfo.saveComplete.done");
 	}
 
 	/**
@@ -583,8 +583,8 @@ public class WDL {
 	 */
 	public static void saveEverything() throws Exception {
 		if (!WDLPluginChannels.canDownloadAtAll()) {
-			WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR,
-					"wdl.messages.generalError.forbidden");
+			WDLMessages.chatMessageTranslated(WDL.baseProps,
+					WDLMessageTypes.ERROR, "wdl.messages.generalError.forbidden");
 			return;
 		}
 
@@ -628,8 +628,8 @@ public class WDL {
 		}
 
 		try {
-			WDLMessages.chatMessageTranslated(WDLMessageTypes.SAVING,
-					"wdl.messages.saving.flushingIO");
+			WDLMessages.chatMessageTranslated(WDL.baseProps,
+					WDLMessageTypes.SAVING, "wdl.messages.saving.flushingIO");
 
 			progressScreen.startMajorTask(
 					I18n.format("wdl.saveProgress.flushingIO.title"), 1);
@@ -643,8 +643,8 @@ public class WDL {
 		}
 
 		if (backupType != WorldBackupType.NONE) {
-			WDLMessages.chatMessageTranslated(WDLMessageTypes.SAVING,
-					"wdl.messages.saving.backingUp");
+			WDLMessages.chatMessageTranslated(WDL.baseProps,
+					WDLMessageTypes.SAVING, "wdl.messages.saving.backingUp");
 			progressScreen.startMajorTask(
 					backupType.getTitle(), 1);
 			progressScreen.setMinorTaskProgress(
@@ -667,8 +667,8 @@ public class WDL {
 				WorldBackup.backupWorld(saveHandler.getWorldDirectory(),
 						getWorldFolderName(worldName), backupType, new BackupState());
 			} catch (IOException e) {
-				WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR,
-						"wdl.messages.generalError.failedToBackUp");
+				WDLMessages.chatMessageTranslated(WDL.baseProps,
+						WDLMessageTypes.ERROR, "wdl.messages.generalError.failedToBackUp");
 			}
 		}
 
@@ -687,8 +687,8 @@ public class WDL {
 		progressScreen.startMajorTask(
 				I18n.format("wdl.saveProgress.playerData.title"),
 				3 + WDLApi.getImplementingExtensions(IPlayerInfoEditor.class).size());
-		WDLMessages.chatMessageTranslated(WDLMessageTypes.SAVING,
-				"wdl.messages.saving.savingPlayer");
+		WDLMessages.chatMessageTranslated(WDL.baseProps,
+				WDLMessageTypes.SAVING, "wdl.messages.saving.savingPlayer");
 
 		progressScreen.setMinorTaskProgress(
 				I18n.format("wdl.saveProgress.playerData.creatingNBT"), 1);
@@ -736,8 +736,8 @@ public class WDL {
 			throw new RuntimeException("Couldn't save the player!", e);
 		}
 
-		WDLMessages.chatMessageTranslated(WDLMessageTypes.SAVING,
-				"wdl.messages.saving.playerSaved");
+		WDLMessages.chatMessageTranslated(WDL.baseProps,
+				WDLMessageTypes.SAVING, "wdl.messages.saving.playerSaved");
 
 		return playerNBT;
 	}
@@ -761,8 +761,8 @@ public class WDL {
 		progressScreen.startMajorTask(
 				I18n.format("wdl.saveProgress.worldMetadata.title"),
 				3 + WDLApi.getImplementingExtensions(IWorldInfoEditor.class).size());
-		WDLMessages.chatMessageTranslated(WDLMessageTypes.SAVING,
-				"wdl.messages.saving.savingWorld");
+		WDLMessages.chatMessageTranslated(WDL.baseProps,
+				WDLMessageTypes.SAVING, "wdl.messages.saving.savingWorld");
 
 		progressScreen.setMinorTaskProgress(
 				I18n.format("wdl.saveProgress.worldMetadata.creatingNBT"), 1);
@@ -831,8 +831,8 @@ public class WDL {
 			throw new RuntimeException("Couldn't save the world metadata!", e);
 		}
 
-		WDLMessages.chatMessageTranslated(WDLMessageTypes.SAVING,
-				"wdl.messages.saving.worldSaved");
+		WDLMessages.chatMessageTranslated(WDL.baseProps,
+				WDLMessageTypes.SAVING, "wdl.messages.saving.worldSaved");
 	}
 
 	/**
@@ -845,8 +845,8 @@ public class WDL {
 			throws IllegalArgumentException, IllegalAccessException {
 		if (!WDLPluginChannels.canDownloadAtAll()) { return; }
 
-		WDLMessages.chatMessageTranslated(WDLMessageTypes.SAVING,
-				"wdl.messages.saving.savingChunks");
+		WDLMessages.chatMessageTranslated(WDL.baseProps,
+				WDLMessageTypes.SAVING, "wdl.messages.saving.savingChunks");
 
 		// Get the ChunkProviderClient from WorldClient
 		ChunkProviderClient chunkProvider = worldClient
@@ -885,8 +885,8 @@ public class WDL {
 				saveChunk(c);
 			}
 		}
-		WDLMessages.chatMessageTranslated(WDLMessageTypes.SAVING,
-				"wdl.messages.saving.chunksSaved");
+		WDLMessages.chatMessageTranslated(WDL.baseProps,
+				WDLMessageTypes.SAVING, "wdl.messages.saving.chunksSaved");
 	}
 
 	/**
@@ -905,9 +905,9 @@ public class WDL {
 			chunkLoader.saveChunk(worldClient, c);
 		} catch (Exception e) {
 			// Better tell the player that something didn't work:
-			WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR,
-					"wdl.messages.generalError.failedToSaveChunk",
-					c.x, c.z, e);
+			WDLMessages.chatMessageTranslated(WDL.baseProps,
+					WDLMessageTypes.ERROR,
+					"wdl.messages.generalError.failedToSaveChunk", c.x, c.z, e);
 		}
 	}
 
@@ -1294,8 +1294,8 @@ public class WDL {
 		progressScreen.startMajorTask(
 				I18n.format("wdl.saveProgress.map.title"), newMapDatas.size());
 
-		WDLMessages.chatMessageTranslated(WDLMessageTypes.SAVING,
-				"wdl.messages.saving.savingMapItemData");
+		WDLMessages.chatMessageTranslated(WDL.baseProps,
+				WDLMessageTypes.SAVING, "wdl.messages.saving.savingMapItemData");
 
 		int count = 0;
 		for (Map.Entry<Integer, MapData> e : newMapDatas.entrySet()) {
@@ -1322,8 +1322,8 @@ public class WDL {
 			}
 		}
 
-		WDLMessages.chatMessageTranslated(WDLMessageTypes.SAVING,
-				"wdl.messages.saving.mapItemDataSaved");
+		WDLMessages.chatMessageTranslated(WDL.baseProps,
+				WDLMessageTypes.SAVING, "wdl.messages.saving.mapItemDataSaved");
 	}
 
 	/**
@@ -1494,18 +1494,18 @@ public class WDL {
 			}
 		}
 		if (!failures.isEmpty()) {
-			WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR, "wdl.sanity.failed");
+			WDLMessages.chatMessageTranslated(WDL.baseProps, WDLMessageTypes.ERROR, "wdl.sanity.failed");
 			for (Map.Entry<SanityCheck, Exception> failure : failures.entrySet()) {
-				WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR, failure.getKey().errorMessage, failure.getValue());
+				WDLMessages.chatMessageTranslated(WDL.baseProps, WDLMessageTypes.ERROR, failure.getKey().errorMessage, failure.getValue());
 			}
 			if (failures.containsKey(SanityCheck.TRANSLATION)) {
 				// Err, we can't put translated stuff into chat.  So redo those messages, without translation.
 				// For obvious reasons these messages aren't translated.
-				WDLMessages.chatMessage(WDLMessageTypes.ERROR, "----- SANITY CHECKS FAILED! -----");
+				WDLMessages.chatMessage(WDL.baseProps, WDLMessageTypes.ERROR, "----- SANITY CHECKS FAILED! -----");
 				for (Map.Entry<SanityCheck, Exception> failure : failures.entrySet()) {
-					WDLMessages.chatMessage(WDLMessageTypes.ERROR, failure.getKey() + ": " + failure.getValue());
+					WDLMessages.chatMessage(WDL.baseProps, WDLMessageTypes.ERROR, failure.getKey() + ": " + failure.getValue());
 				}
-				WDLMessages.chatMessage(WDLMessageTypes.ERROR, "Please check the log for more info.");
+				WDLMessages.chatMessage(WDL.baseProps, WDLMessageTypes.ERROR, "Please check the log for more info.");
 			}
 		}
 	}

@@ -186,8 +186,8 @@ public class GuiWDLPermissions extends GuiScreen {
 						new PacketBuffer(Unpooled.copiedBuffer(payload
 								.getBytes("UTF-8"))));
 			} catch (UnsupportedEncodingException e) {
-				WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR,
-						"wdl.messages.generalError.noUTF8", e);
+				WDLMessages.chatMessageTranslated(WDL.baseProps,
+						WDLMessageTypes.ERROR, "wdl.messages.generalError.noUTF8", e);
 
 				initPacket = new CPacketCustomPayload("WDL|INIT",
 						new PacketBuffer(Unpooled.buffer()));

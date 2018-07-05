@@ -92,8 +92,8 @@ public class GuiWDLEntities extends GuiScreen {
 				largestWidth = largestWidthSoFar;
 				totalWidth = largestWidth + 255;
 			} catch (Exception e) {
-				WDLMessages.chatMessageTranslated(WDLMessageTypes.ERROR,
-						"wdl.messages.generalError.failedToSetUpEntityUI", e);
+				WDLMessages.chatMessageTranslated(WDL.baseProps,
+						WDLMessageTypes.ERROR, "wdl.messages.generalError.failedToSetUpEntityUI", e);
 
 				Minecraft.getMinecraft().displayGuiScreen(null);
 			}

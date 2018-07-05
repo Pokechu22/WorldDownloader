@@ -120,9 +120,9 @@ public class WDLHooks {
 
 								if (!handled) {
 									WDLMessages.chatMessageTranslated(
+											WDL.baseProps,
 											WDLMessageTypes.ON_GUI_CLOSED_WARNING,
-											"wdl.messages.onGuiClosedWarning.unhandledEntity",
-											entity);
+											"wdl.messages.onGuiClosedWarning.unhandledEntity", entity);
 								}
 							} else {
 								BlockPos pos = WDL.lastClickedBlock;
@@ -140,9 +140,9 @@ public class WDLHooks {
 
 								if (!handled) {
 									WDLMessages.chatMessageTranslated(
+											WDL.baseProps,
 											WDLMessageTypes.ON_GUI_CLOSED_WARNING,
-											"wdl.messages.onGuiClosedWarning.unhandledTileEntity",
-											pos, sender.getTileEntity(pos));
+											"wdl.messages.onGuiClosedWarning.unhandledTileEntity", pos, sender.getTileEntity(pos));
 								}
 							}
 
