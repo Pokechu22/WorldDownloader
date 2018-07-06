@@ -20,8 +20,12 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.resources.Locale;
+import net.minecraft.client.resources.DefaultResourcePack;
+import net.minecraft.client.resources.IResourcePack;
+import net.minecraft.client.resources.LanguageManager;
+import net.minecraft.client.resources.ResourceIndex;
+import net.minecraft.client.resources.SimpleReloadableResourceManager;
+import net.minecraft.client.resources.data.MetadataSerializer;
 import net.minecraft.init.Bootstrap;
 
 /**
@@ -53,24 +57,14 @@ public abstract class MaybeMixinTest {
 		// Note: not checking Bootstrap.hasErrored as that didn't exist in this version
 
 		LOGGER.debug("Setting up I18n...");
-		// Needed to prepare a valid Locale instance for certain tests that depend upon it
-		ReflectionUtils.findAndSetPrivateField(I18n.class, Locale.class, new FakeLocale());
+		// Prepare I18n by constructing a LanguageManager and preparing it...
+		// (some tests depend on it)
+		MetadataSerializer metadataSerializer = new MetadataSerializer();
+		LanguageManager languageManager = new LanguageManager(metadataSerializer, "en_US");
+		SimpleReloadableResourceManager resourceManager = new SimpleReloadableResourceManager(metadataSerializer);
+		IResourcePack pack = new DefaultResourcePack(new ResourceIndex() {});
+		resourceManager.reloadResourcePack(pack);
+		languageManager.onResourceManagerReload(resourceManager);
 		LOGGER.debug("Set up I18n.");
-	}
-
-	/**
-	 * A Locale class that delegates to the other, deprecated I18n class,
-	 * which works during testing for some reason (not depending on other assets?)
-	 */
-	@SuppressWarnings("deprecation")
-	private static class FakeLocale extends Locale {
-		@Override
-		public String formatMessage(String translateKey, Object[] parameters) {
-			return net.minecraft.util.text.translation.I18n.translateToLocalFormatted(translateKey, parameters);
-		}
-		@Override
-		public boolean hasKey(String key) {
-			return net.minecraft.util.text.translation.I18n.canTranslate(key);
-		}
 	}
 }
