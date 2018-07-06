@@ -1,0 +1,5 @@
+# Patches that apply to all versions before and including 1.9.2
+# ChunkCoordIntPair -> ChunkPos: https://github.com/ModCoderPack/MCPBot-Issues/issues/179
+CL: net/minecraft/world/ChunkCoordIntPair net/minecraft/util/math/ChunkPos
+# IMetadataSerializer -> MetadataSerialzer https://github.com/ModCoderPack/MCPBot-Issues/issues/139
+CL: net/minecraft/client/resources/data/IMetadataSerializer net/minecraft/client/resources/data/MetadataSerializer

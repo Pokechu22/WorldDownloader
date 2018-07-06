@@ -77,7 +77,7 @@ extraSrgs {
     addSrg file('../srgs/EntityHorseToEquineEntity.srg')
     addSrg file('../srgs/AnimalChestToContainerHorseChest.srg')
     addSrg file('../srgs/HorseArmorTypeSwap.srg')
-    addSrg file('../srgs/ChunkCoordIntPairToChunkPos.srg')
+    addSrg file('../srgs/1.9.2.srg')
     addMethods file('../srgs/liteloader_1.9_methods.csv')
     addMethods file('../srgs/1.9.2_methods.csv')
     addMethods file('../srgs/old_inventory_methods.csv')
