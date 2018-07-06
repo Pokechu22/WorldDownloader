@@ -14,11 +14,16 @@
  */
 package wdl;
 
+import java.util.Collections;
+import java.util.Set;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.spongepowered.lwts.runner.LaunchWrapperTestRunner;
+
+import com.google.common.collect.Sets;
 
 import net.minecraft.client.resources.DefaultResourcePack;
 import net.minecraft.client.resources.IResourcePack;
@@ -64,7 +69,12 @@ public abstract class MaybeMixinTest {
 		MetadataSerializer metadataSerializer = new MetadataSerializer();
 		LanguageManager languageManager = new LanguageManager(metadataSerializer, "en_us");
 		SimpleReloadableResourceManager resourceManager = new SimpleReloadableResourceManager(metadataSerializer);
-		IResourcePack pack = new DefaultResourcePack(new ResourceIndex() {});
+		IResourcePack pack = new DefaultResourcePack(new ResourceIndex() {}) {
+			@Override
+			public Set<String> getResourceDomains() {
+				return Sets.union(super.getResourceDomains(), Collections.singleton("wdl"));
+			}
+		};
 		resourceManager.reloadResourcePack(pack);
 		languageManager.onResourceManagerReload(resourceManager);
 		LOGGER.debug("Set up I18n.");
