@@ -37,6 +37,8 @@ public final class MiscSettings {
 	// XXX this really should be a different type
 	public static final StringSetting LINKED_WORLDS =
 			new StringSetting("LinkedWorlds", "");
+	public static final Setting<Long> LAST_SAVED =
+			new BaseSetting<>("LastSaved", -1L, Long::parseLong, Object::toString);
 
 	private static class ServerNameSetting implements Setting<String> {
 		private final String name;

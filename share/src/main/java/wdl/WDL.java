@@ -390,8 +390,7 @@ public class WDL {
 		saveHandler = (SaveHandler) minecraft.getSaveLoader().getSaveLoader(
 				getWorldFolderName(worldName), true);
 
-		long lastSaved = Long.parseLong(worldProps.getProperty("LastSaved",
-				"-1"));
+		long lastSaved = worldProps.getValue(MiscSettings.LAST_SAVED);
 		long lastPlayed;
 		// Can't directly use worldClient.getWorldInfo, as that doesn't use
 		// the saved version.
@@ -802,8 +801,7 @@ public class WDL {
 				I18n.format("wdl.saveProgress.worldMetadata.writingNBT"), taskNum);
 		File saveDirectory = saveHandler.getWorldDirectory();
 
-		worldProps.setProperty("LastSaved",
-				Long.toString(worldInfoNBT.getLong("LastPlayed")));
+		worldProps.setValue(MiscSettings.LAST_SAVED, worldInfoNBT.getLong("LastPlayed"));
 
 		File dataFile = new File(saveDirectory, "level.dat_new");
 		File dataFileBackup = new File(saveDirectory, "level.dat_old");
