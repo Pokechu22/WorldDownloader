@@ -78,6 +78,7 @@ import wdl.api.WDLApi.ModInfo;
 import wdl.config.Configuration;
 import wdl.config.IConfiguration;
 import wdl.config.settings.MiscSettings;
+import wdl.config.settings.PlayerSettings;
 import wdl.gui.GuiWDLMultiworld;
 import wdl.gui.GuiWDLMultiworldSelect;
 import wdl.gui.GuiWDLOverwriteChanges;
@@ -1063,37 +1064,29 @@ public class WDL {
 	 */
 	public static void applyOverridesToPlayer(NBTTagCompound playerNBT) {
 		// Health
-		String health = worldProps.getProperty("PlayerHealth");
+		PlayerSettings.Health health = worldProps.getValue(PlayerSettings.HEALTH);
 
-		if (!health.equals("keep")) {
-			short h = Short.parseShort(health);
-			playerNBT.setShort("Health", h);
+		if (health != PlayerSettings.Health.KEEP) {
+			playerNBT.setShort("Health", health.healthValue);
 		}
 
 		// foodLevel, foodTimer, foodSaturationLevel, foodExhaustionLevel
-		String food = worldProps.getProperty("PlayerFood");
+		PlayerSettings.Hunger food = worldProps.getValue(PlayerSettings.HUNGER);
 
-		if (!food.equals("keep")) {
-			int f = Integer.parseInt(food);
-			playerNBT.setInteger("foodLevel", f);
-			playerNBT.setInteger("foodTickTimer", 0);
-
-			if (f == 20) {
-				playerNBT.setFloat("foodSaturationLevel", 5.0f);
-			} else {
-				playerNBT.setFloat("foodSaturationLevel", 0.0f);
-			}
-
-			playerNBT.setFloat("foodExhaustionLevel", 0.0f);
+		if (food != PlayerSettings.Hunger.KEEP) {
+			playerNBT.setInteger("foodLevel", food.foodLevel);
+			playerNBT.setInteger("foodTickTimer", food.foodTickTimer);
+			playerNBT.setFloat("foodSaturationLevel", food.foodSaturationLevel);
+			playerNBT.setFloat("foodExhaustionLevel", food.foodExhaustionLevel);
 		}
 
 		// Player Position
-		String playerPos = worldProps.getProperty("PlayerPos");
+		PlayerSettings.PlayerPos playerPos = worldProps.getValue(PlayerSettings.PLAYER_POSITION);
 
-		if (playerPos.equals("xyz")) {
-			int x = Integer.parseInt(worldProps.getProperty("PlayerX"));
-			int y = Integer.parseInt(worldProps.getProperty("PlayerY"));
-			int z = Integer.parseInt(worldProps.getProperty("PlayerZ"));
+		if (playerPos == PlayerSettings.PlayerPos.XYZ) {
+			int x = worldProps.getValue(PlayerSettings.PLAYER_X);
+			int y = worldProps.getValue(PlayerSettings.PLAYER_Y);
+			int z = worldProps.getValue(PlayerSettings.PLAYER_Z);
 			//Positions are offset to center of block,
 			//or player height.
 			NBTTagList pos = new NBTTagList();
@@ -1115,7 +1108,7 @@ public class WDL {
 
 		// If the player is able to fly, spawn them flying.
 		// Helps ensure they don't fall out of the world.
-		if (thePlayer.capabilities.allowFlying) {
+		if (playerNBT.getCompoundTag("abilities").getBoolean("mayfly")) {
 			playerNBT.getCompoundTag("abilities").setBoolean("flying", true);
 		}
 	}

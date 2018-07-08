@@ -40,14 +40,17 @@ public final class PlayerSettings {
 	public static final IntSetting PLAYER_Z = new IntSetting("PlayerZ", 8);
 
 	public enum Health implements IStringSerializable {
-		KEEP("keep"),
-		FULL("20");
+		KEEP("keep", -1),
+		FULL("20", 20);
 
 		private final String confName;
 		private static final Map<String, Health> FROM_STRING = makeFromString(values(), t -> t.confName);
 
-		private Health(String confName) {
+		public final short healthValue;
+
+		private Health(String confName, int healthValue) {
 			this.confName = confName;
+			this.healthValue = (short) healthValue;
 		}
 
 		public static Health fromString(String confName) {
@@ -61,14 +64,25 @@ public final class PlayerSettings {
 	}
 
 	public enum Hunger implements IStringSerializable {
-		KEEP("keep"),
-		FULL("20");
+		KEEP("keep", -1, -1, -1, -1),
+		FULL("20", 20, 0, 5.0f, 0.0f);
 
 		private final String confName;
 		private static final Map<String, Hunger> FROM_STRING = makeFromString(values(), t -> t.confName);
 
-		private Hunger(String confName) {
+		// https://minecraft.gamepedia.com/Hunger#Mechanics
+		public final int foodLevel;
+		public final int foodTickTimer;
+		public final float foodSaturationLevel; // should be 5 by default if full hunger
+		public final float foodExhaustionLevel;
+
+		private Hunger(String confName, int foodLevel, int foodTickTimer,
+				float foodSaturationLevel, float foodExhaustionLevel) {
 			this.confName = confName;
+			this.foodLevel = foodLevel;
+			this.foodTickTimer = foodTickTimer;
+			this.foodSaturationLevel = foodSaturationLevel;
+			this.foodExhaustionLevel = foodExhaustionLevel;
 		}
 
 		public static Hunger fromString(String confName) {
