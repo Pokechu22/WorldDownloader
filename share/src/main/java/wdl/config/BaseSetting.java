@@ -22,7 +22,7 @@ import java.util.function.Function;
  *
  * @param <T> The type of value.
  */
-public abstract class BaseSetting<T> implements Setting<T> {
+public class BaseSetting<T> implements Setting<T> {
 	/**
 	 * The default value.
 	 */

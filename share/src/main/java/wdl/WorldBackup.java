@@ -79,23 +79,6 @@ public class WorldBackup {
 		public String getTitle() {
 			return I18n.format(titleKey);
 		}
-
-		/**
-		 * Attempts to parse the given string into a WorldBackupType.  This
-		 * is performed case-insensitively.
-		 *
-		 * @param name The name of the backup type.
-		 * @return The backup type corresponding to the name.
-		 */
-		public static WorldBackupType match(String name) {
-			for (WorldBackupType type : WorldBackupType.values()) {
-				if (type.name().equalsIgnoreCase(name)) {
-					return type;
-				}
-			}
-
-			return WorldBackupType.NONE;
-		}
 	}
 
 	/**

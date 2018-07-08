@@ -26,6 +26,8 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 import wdl.WDL;
 import wdl.WDLPluginChannels;
+import wdl.config.IConfiguration;
+import wdl.config.settings.MiscSettings;
 import wdl.update.WDLUpdateChecker;
 
 public class GuiWDL extends GuiScreen {
@@ -139,13 +141,15 @@ public class GuiWDL extends GuiScreen {
 
 	private String title = "";
 
-	private GuiScreen parent;
+	private final GuiScreen parent;
+	private final IConfiguration config;
 
 	private GuiTextField worldname;
 	private GuiWDLButtonList list;
 
 	public GuiWDL(GuiScreen parent) {
 		this.parent = parent;
+		this.config = WDL.baseProps;
 	}
 
 	/**
@@ -203,7 +207,7 @@ public class GuiWDL extends GuiScreen {
 							}
 						}));
 					} else {
-						WDL.baseProps.setProperty("LinkedWorlds", "");
+						WDL.baseProps.setValue(MiscSettings.LINKED_WORLDS, "");
 						WDL.saveProps();
 						WDL.propsFound = true;
 
@@ -223,13 +227,9 @@ public class GuiWDL extends GuiScreen {
 		this.title = I18n.format("wdl.gui.wdl.title",
 				WDL.baseFolderName.replace('@', ':'));
 
-		if (WDL.baseProps.getProperty("ServerName").isEmpty()) {
-			WDL.baseProps.setProperty("ServerName", WDL.getServerName());
-		}
-
 		this.worldname = new GuiTextField(42, this.fontRenderer,
 				this.width / 2 - 155, 19, 150, 18);
-		this.worldname.setText(WDL.baseProps.getProperty("ServerName"));
+		this.worldname.setText(this.config.getValue(MiscSettings.SERVER_NAME));
 
 		this.buttonList.add(new GuiButton(100, this.width / 2 - 100,
 				this.height - 29, I18n.format("gui.done")));
@@ -255,9 +255,14 @@ public class GuiWDL extends GuiScreen {
 	@Override
 	public void onGuiClosed() {
 		if (this.worldname != null) {
-			WDL.baseProps.setProperty("ServerName", this.worldname.getText());
-
-			WDL.saveProps();
+			// Check to see if the server name matches the default, and clear the
+			// setting if so, such that changing the name of the server will be
+			// reflected in it.
+			if (this.worldname.getText().equals(MiscSettings.SERVER_NAME.getDefault(this.config))) {
+				this.config.clearValue(MiscSettings.SERVER_NAME);
+			} else {
+				this.config.setValue(MiscSettings.SERVER_NAME, this.worldname.getText());
+			}
 		}
 	}
 

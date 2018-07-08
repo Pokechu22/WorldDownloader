@@ -30,6 +30,7 @@ import wdl.VersionConstants;
 import wdl.WDL;
 import wdl.WDLMessageTypes;
 import wdl.WDLMessages;
+import wdl.config.settings.MiscSettings;
 import wdl.update.Release.HashData;
 
 /**
@@ -185,7 +186,7 @@ public class WDLUpdateChecker extends Thread {
 	@Override
 	public void run() {
 		try {
-			if (!WDL.globalProps.getProperty("TutorialShown").equals("true")) {
+			if (!WDL.globalProps.getValue(MiscSettings.TUTORIAL_SHOWN)) {
 				sleep(5000);
 
 				TextComponentTranslation success = new TextComponentTranslation(
@@ -231,7 +232,7 @@ public class WDLUpdateChecker extends Thread {
 				WDLMessages.chatMessage(WDL.baseProps, WDLMessageTypes.UPDATES, stolen);
 				WDLMessages.chatMessage(WDL.baseProps, WDLMessageTypes.UPDATES, stolenBeware);
 
-				WDL.globalProps.setProperty("TutorialShown", "true");
+				WDL.globalProps.setValue(MiscSettings.TUTORIAL_SHOWN, true);
 				WDL.saveGlobalProps();
 			}
 

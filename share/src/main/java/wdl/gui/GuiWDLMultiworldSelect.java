@@ -27,6 +27,7 @@ import org.lwjgl.input.Keyboard;
 
 import wdl.WDL;
 import wdl.config.Configuration;
+import wdl.config.settings.MiscSettings;
 
 /**
  * A GUI for selecting which world the player is currently in.
@@ -231,7 +232,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		this.callback = callback;
 
 		// Build a list of world names.
-		String[] worldNames = WDL.baseProps.getProperty("LinkedWorlds")
+		String[] worldNames = WDL.baseProps.getValue(MiscSettings.LINKED_WORLDS)
 				.split("\\|");
 		linkedWorlds = new ArrayList<>();
 
@@ -242,11 +243,11 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 
 			Configuration props = WDL.loadWorldProps(worldName);
 
-			if (!props.containsKey("WorldName")) {
+			String displayName = props.getValue(MiscSettings.WORLD_NAME);
+			if (displayName.isEmpty()) {
 				continue;
 			}
 
-			String displayName = props.getProperty("WorldName", worldName);
 			linkedWorlds.add(new MultiworldInfo(worldName, displayName));
 		}
 
@@ -444,12 +445,12 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		}
 
 		Configuration worldProps = new Configuration(WDL.baseProps);
-		worldProps.setProperty("WorldName", worldName);
+		worldProps.setValue(MiscSettings.WORLD_NAME, worldName);
 
-		String linkedWorldsProp = WDL.baseProps.getProperty("LinkedWorlds");
+		String linkedWorldsProp = WDL.baseProps.getValue(MiscSettings.LINKED_WORLDS);
 		linkedWorldsProp += "|" + folderName;
 
-		WDL.baseProps.setProperty("LinkedWorlds", linkedWorldsProp);
+		WDL.baseProps.setValue(MiscSettings.LINKED_WORLDS, linkedWorldsProp);
 		WDL.saveProps(folderName, worldProps);
 
 		linkedWorlds.add(new MultiworldInfo(folderName, worldName));

@@ -35,6 +35,8 @@ import wdl.WDL;
 import wdl.WDLMessages;
 import wdl.WDLPluginChannels;
 import wdl.api.WDLApi.ModInfo;
+import wdl.config.Setting;
+import wdl.config.settings.MiscSettings.ExtensionEnabledSetting;
 
 /**
  * {@link WDLApi.APIInstance} implementation.
@@ -42,7 +44,7 @@ import wdl.api.WDLApi.ModInfo;
 class APIImpl implements WDLApi.APIInstance {
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	private static Map<String, ModInfo<?>> wdlMods = new HashMap<>();
+	private static Map<String, ModInfoImpl<?>> wdlMods = new HashMap<>();
 
 	private static boolean hasLegacyEntityHandler = false;
 
@@ -77,7 +79,7 @@ class APIImpl implements WDLApi.APIInstance {
 					"(id=" + id + ", version=" + version + ")");
 		}
 
-		ModInfo<IWDLMod> info = new ModInfo<>(id, version, mod);
+		ModInfoImpl<IWDLMod> info = new ModInfoImpl<>(id, version, mod);
 		if (wdlMods.containsKey(id)) {
 			throw new IllegalArgumentException("A mod by the name of '"
 					+ id + "' is already registered by "
@@ -211,15 +213,28 @@ class APIImpl implements WDLApi.APIInstance {
 
 	@Override
 	public boolean isEnabled(String modID) {
-		return WDL.globalProps.getProperty("Extensions." + modID + ".enabled",
-				"true").equals("true");
+		if (wdlMods.containsKey(modID)) {
+			return WDL.globalProps.getValue(wdlMods.get(modID).enabledSetting);
+		} else {
+			return false;
+		}
 	}
 
 	@Override
 	public void setEnabled(String modID, boolean enabled) {
-		WDL.globalProps.setProperty("Extensions." + modID + ".enabled",
-				Boolean.toString(enabled));
-		WDL.saveGlobalProps();
+		if (wdlMods.containsKey(modID)) {
+			WDL.globalProps.setValue(wdlMods.get(modID).enabledSetting, enabled);
+			WDL.saveGlobalProps();
+		}
+	}
+
+	private static class ModInfoImpl<T extends IWDLMod> extends ModInfo<T> {
+		public final Setting<Boolean> enabledSetting;
+
+		ModInfoImpl(String id, String version, T mod) {
+			super(id, version, mod);
+			this.enabledSetting = new ExtensionEnabledSetting(id);
+		}
 	}
 
 	static {

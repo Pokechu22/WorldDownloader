@@ -125,7 +125,7 @@ public class WDLApi {
 	/**
 	 * Information about a single extension.
 	 */
-	public static final class ModInfo<T extends IWDLMod> {
+	public static class ModInfo<T extends IWDLMod> {
 		public final String id;
 		public final String version;
 		public final T mod;

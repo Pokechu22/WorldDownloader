@@ -21,12 +21,15 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import wdl.WDL;
 import wdl.WorldBackup.WorldBackupType;
+import wdl.config.IConfiguration;
+import wdl.config.settings.MiscSettings;
 
 /**
  * GUI allowing control over the way the world is backed up.
  */
 public class GuiWDLBackup extends GuiScreen {
-	private GuiScreen parent;
+	private final GuiScreen parent;
+	private final IConfiguration config;
 
 	private String description;
 
@@ -34,6 +37,7 @@ public class GuiWDLBackup extends GuiScreen {
 
 	public GuiWDLBackup(GuiScreen parent) {
 		this.parent = parent;
+		this.config = WDL.baseProps;
 
 		this.description = I18n.format("wdl.gui.backup.description1") + "\n\n"
 				+ I18n.format("wdl.gui.backup.description2") + "\n\n"
@@ -42,8 +46,7 @@ public class GuiWDLBackup extends GuiScreen {
 
 	@Override
 	public void initGui() {
-		backupType = WorldBackupType.match(
-				WDL.baseProps.getProperty("Backup", "ZIP"));
+		backupType = config.getValue(MiscSettings.BACKUP_TYPE);
 
 		this.buttonList.add(new GuiButton(0, this.width / 2 - 100, 32,
 				getBackupButtonText()));
@@ -78,7 +81,7 @@ public class GuiWDLBackup extends GuiScreen {
 
 	@Override
 	public void onGuiClosed() {
-		WDL.baseProps.setProperty("Backup", backupType.name());
+		config.setValue(MiscSettings.BACKUP_TYPE, backupType);
 
 		WDL.saveProps();
 	}

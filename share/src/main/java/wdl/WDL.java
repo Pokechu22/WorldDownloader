@@ -77,6 +77,7 @@ import wdl.api.WDLApi;
 import wdl.api.WDLApi.ModInfo;
 import wdl.config.Configuration;
 import wdl.config.IConfiguration;
+import wdl.config.settings.MiscSettings;
 import wdl.gui.GuiWDLMultiworld;
 import wdl.gui.GuiWDLMultiworldSelect;
 import wdl.gui.GuiWDLOverwriteChanges;
@@ -365,7 +366,7 @@ public class WDL {
 							}
 						}));
 					} else {
-						baseProps.setProperty("LinkedWorlds", "");
+						baseProps.setValue(MiscSettings.LINKED_WORLDS, "");
 						saveProps();
 						propsFound = true;
 
@@ -421,10 +422,6 @@ public class WDL {
 		newTileEntities.clear();
 		newEntities.clear();
 		newMapDatas.clear();
-
-		if (baseProps.getProperty("ServerName").isEmpty()) {
-			baseProps.setProperty("ServerName", getServerName());
-		}
 
 		startOnChange = true;
 		downloading = true;
@@ -590,8 +587,7 @@ public class WDL {
 			return;
 		}
 
-		WorldBackupType backupType =
-				WorldBackupType.match(baseProps.getProperty("Backup", "ZIP"));
+		WorldBackupType backupType = baseProps.getValue(MiscSettings.BACKUP_TYPE);
 
 		final GuiWDLSaveProgress progressScreen = new GuiWDLSaveProgress(
 				I18n.format("wdl.saveProgress.title"),
@@ -967,7 +963,7 @@ public class WDL {
 			LOGGER.debug("Failed to load base properties", e);
 		}
 
-		if (baseProps.getProperty("LinkedWorlds").isEmpty()) {
+		if (baseProps.getValue(MiscSettings.LINKED_WORLDS).isEmpty()) {
 			isMultiworld = false;
 			worldProps = new Configuration(baseProps);
 		} else {
@@ -1133,8 +1129,8 @@ public class WDL {
 	 */
 	public static void applyOverridesToWorldInfo(NBTTagCompound worldInfoNBT, NBTTagCompound rootWorldInfoNBT) {
 		// LevelName
-		String baseName = baseProps.getProperty("ServerName");
-		String worldName = worldProps.getProperty("WorldName");
+		String baseName = baseProps.getValue(MiscSettings.SERVER_NAME);
+		String worldName = worldProps.getValue(MiscSettings.WORLD_NAME);
 
 		if (worldName.isEmpty()) {
 			worldInfoNBT.setString("LevelName", baseName);

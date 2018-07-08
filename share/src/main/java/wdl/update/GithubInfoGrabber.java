@@ -23,6 +23,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.Nonnull;
 import javax.net.ssl.HttpsURLConnection;
@@ -32,6 +33,7 @@ import wdl.VersionConstants;
 import wdl.WDL;
 import wdl.WDLMessageTypes;
 import wdl.WDLMessages;
+import wdl.config.settings.MiscSettings;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -102,11 +104,9 @@ public class GithubInfoGrabber {
 			// avoid getting rate-limited, as if it is unchanged it no
 			// longer counts).
 			// See https://developer.github.com/v3/#conditional-requests
-			if (WDL.globalProps.getProperty("UpdateETag") != null) {
-				String etag = WDL.globalProps.getProperty("UpdateETag");
-				if (!etag.isEmpty()) {
-					connection.setRequestProperty("If-None-Match", etag);
-				}
+			Optional<String> oldEtag = WDL.globalProps.getValue(MiscSettings.UPDATE_ETAG);
+			if (oldEtag.isPresent()) {
+				connection.setRequestProperty("If-None-Match", oldEtag.get());
 			}
 
 			connection.connect();
@@ -143,12 +143,7 @@ public class GithubInfoGrabber {
 					etag = null;
 					throw e;
 				} finally {
-					if (etag != null) {
-						WDL.globalProps.setProperty("UpdateETag", etag);
-					} else {
-						WDL.globalProps.remove("UpdateETag");
-					}
-
+					WDL.globalProps.setValue(MiscSettings.UPDATE_ETAG, Optional.ofNullable(etag));
 					WDL.saveGlobalProps();
 				}
 
