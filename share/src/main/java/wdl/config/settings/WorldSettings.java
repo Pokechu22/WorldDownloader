@@ -18,9 +18,12 @@ import static wdl.config.settings.Utils.*;
 
 import java.util.Map;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.math.MathHelper;
 import wdl.config.BooleanSetting;
 import wdl.config.EnumSetting;
+import wdl.config.IConfiguration;
 import wdl.config.IntSetting;
 
 /**
@@ -44,16 +47,21 @@ public final class WorldSettings {
 	public static final IntSetting SPAWN_Z = new IntSetting("SpawnZ", 8);
 
 	public enum GameMode implements IStringSerializable {
-		KEEP("keep"),
-		CREATIVE("creative"),
-		SURVIVAL("survival"),
-		HARDCORE("hardcore");
+		KEEP("keep", -1, false),
+		CREATIVE("creative", 1, false),
+		SURVIVAL("survival", 0, false),
+		HARDCORE("hardcore", 0, true);
 
 		private final String confName;
 		private static final Map<String, GameMode> FROM_STRING = makeFromString(values(), t -> t.confName);
 
-		private GameMode(String confName) {
+		public final int gamemodeID;
+		public final boolean hardcore;
+
+		private GameMode(String confName, int gamemodeID, boolean hardcore) {
 			this.confName = confName;
+			this.gamemodeID = gamemodeID;
+			this.hardcore = hardcore;
 		}
 
 		public static GameMode fromString(String confName) {
@@ -67,16 +75,25 @@ public final class WorldSettings {
 	}
 
 	public enum Weather implements IStringSerializable {
-		KEEP("keep"),
-		SUNNY("sunny"),
-		RAIN("rain"),
-		THUNDERSTORM("thunderstorm");
+		KEEP("keep", false, -1, false, -1),
+		SUNNY("sunny", false, 0, false, 0),
+		RAIN("rain", true, 24000, false, 0),
+		THUNDERSTORM("thunderstorm", true, 24000, true, 24000);
 
 		private final String confName;
 		private static final Map<String, Weather> FROM_STRING = makeFromString(values(), t -> t.confName);
 
-		private Weather(String confName) {
+		public final boolean raining;
+		public final int rainTime;
+		public final boolean thundering;
+		public final int thunderTime;
+
+		private Weather(String confName, boolean raining, int rainTime, boolean thundering, int thunderTime) {
 			this.confName = confName;
+			this.raining = raining;
+			this.rainTime = rainTime;
+			this.thundering = thundering;
+			this.thunderTime = thunderTime;
 		}
 
 		public static Weather fromString(String confName) {
@@ -91,8 +108,34 @@ public final class WorldSettings {
 
 	public enum SpawnMode implements IStringSerializable {
 		AUTO("auto"),
-		PLAYER("player"),
-		XYZ("xyz");
+		PLAYER("player") {
+			@Override
+			public int getX(Entity player, IConfiguration config) {
+				return MathHelper.floor(player.posX);
+			}
+			@Override
+			public int getY(Entity player, IConfiguration config) {
+				return MathHelper.floor(player.posY);
+			}
+			@Override
+			public int getZ(Entity player, IConfiguration config) {
+				return MathHelper.floor(player.posZ);
+			}
+		},
+		XYZ("xyz") {
+			@Override
+			public int getX(Entity player, IConfiguration config) {
+				return config.getValue(SPAWN_X);
+			}
+			@Override
+			public int getY(Entity player, IConfiguration config) {
+				return config.getValue(SPAWN_Y);
+			}
+			@Override
+			public int getZ(Entity player, IConfiguration config) {
+				return config.getValue(SPAWN_Z);
+			}
+		};
 
 		private final String confName;
 		private static final Map<String, SpawnMode> FROM_STRING = makeFromString(values(), t -> t.confName);
@@ -109,22 +152,35 @@ public final class WorldSettings {
 		public String getName() {
 			return confName;
 		}
+
+		public int getX(Entity player, IConfiguration config) {
+			throw new UnsupportedOperationException();
+		}
+		public int getY(Entity player, IConfiguration config) {
+			throw new UnsupportedOperationException();
+		}
+		public int getZ(Entity player, IConfiguration config) {
+			throw new UnsupportedOperationException();
+		}
 	}
 
 	public enum Time implements IStringSerializable {
-		KEEP("keep"),
-		SUNRISE("23000"),
-		MORNING("0"),
-		NOON("6000"),
-		EVENING("11500"),
-		SUNSET("12500"),
-		MIDNIGHT("18000");
+		KEEP("keep", -1),
+		SUNRISE("23000", 23000),
+		MORNING("0", 0),
+		NOON("6000", 6000),
+		EVENING("11500", 11500),
+		SUNSET("12500", 12500),
+		MIDNIGHT("18000", 18000);
 
 		private final String confName;
 		private static final Map<String, Time> FROM_STRING = makeFromString(values(), t -> t.confName);
 
-		private Time(String confName) {
+		public final long timeValue;
+
+		private Time(String confName, long timeValue) {
 			this.confName = confName;
+			this.timeValue = timeValue;
 		}
 
 		public static Time fromString(String confName) {

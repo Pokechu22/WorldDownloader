@@ -60,7 +60,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ReportedException;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.MinecraftException;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.EmptyChunk;
@@ -77,8 +76,10 @@ import wdl.api.WDLApi;
 import wdl.api.WDLApi.ModInfo;
 import wdl.config.Configuration;
 import wdl.config.IConfiguration;
+import wdl.config.settings.GeneratorSettings;
 import wdl.config.settings.MiscSettings;
 import wdl.config.settings.PlayerSettings;
+import wdl.config.settings.WorldSettings;
 import wdl.gui.GuiWDLMultiworld;
 import wdl.gui.GuiWDLMultiworldSelect;
 import wdl.gui.GuiWDLOverwriteChanges;
@@ -1132,42 +1133,36 @@ public class WDL {
 		}
 
 		// Cheats
-		if (worldProps.getProperty("AllowCheats").equals("true")) {
-			worldInfoNBT.setBoolean("allowCommands", true);
-		} else {
-			worldInfoNBT.setBoolean("allowCommands", false);
-		}
+		boolean allowCommands = worldProps.getValue(WorldSettings.ALLOW_CHEATS);
+		worldInfoNBT.setBoolean("allowCommands", allowCommands);
 
 		// GameType
-		String gametypeOption = worldProps.getProperty("GameType");
+		WorldSettings.GameMode gametypeOption = worldProps.getValue(WorldSettings.GAME_MODE);
 
-		if (gametypeOption.equals("keep")) {
+		if (gametypeOption == WorldSettings.GameMode.KEEP) {
+			// XXX Do we want this?  Or should it just use the actual mod without overriding?
 			if (thePlayer.capabilities.isCreativeMode) { // capabilities
 				worldInfoNBT.setInteger("GameType", 1); // Creative
 			} else {
 				worldInfoNBT.setInteger("GameType", 0); // Survival
 			}
-		} else if (gametypeOption.equals("survival")) {
-			worldInfoNBT.setInteger("GameType", 0);
-		} else if (gametypeOption.equals("creative")) {
-			worldInfoNBT.setInteger("GameType", 1);
-		} else if (gametypeOption.equals("hardcore")) {
-			worldInfoNBT.setInteger("GameType", 0);
-			worldInfoNBT.setBoolean("hardcore", true);
+		} else {
+			worldInfoNBT.setInteger("GameType", gametypeOption.gamemodeID);
+			worldInfoNBT.setBoolean("hardcore", gametypeOption.hardcore);
 		}
 
 		// Time
-		String timeOption = worldProps.getProperty("Time");
+		WorldSettings.Time timeOption = worldProps.getValue(WorldSettings.TIME);
 
-		if (!timeOption.equals("keep")) {
-			long t = Integer.parseInt(timeOption);
-			worldInfoNBT.setLong("Time", t);
+		if (timeOption != WorldSettings.Time.KEEP) {
+			worldInfoNBT.setLong("Time", timeOption.timeValue);
 		}
 
 		// RandomSeed
-		String randomSeed = worldProps.getProperty("RandomSeed");
+		String randomSeed = worldProps.getValue(GeneratorSettings.SEED);
 		long seed = 0;
 
+		// As per GuiCreateWorld.actionPerformed's done button handler
 		if (!randomSeed.isEmpty()) {
 			try {
 				seed = Long.parseLong(randomSeed);
@@ -1177,55 +1172,37 @@ public class WDL {
 		}
 
 		worldInfoNBT.setLong("RandomSeed", seed);
+
 		// MapFeatures
-		boolean mapFeatures = Boolean.parseBoolean(worldProps
-				.getProperty("MapFeatures"));
+		boolean mapFeatures = worldProps.getValue(GeneratorSettings.GENERATE_STRUCTURES);
 		worldInfoNBT.setBoolean("MapFeatures", mapFeatures);
 		// generatorName
-		String generatorName = worldProps.getProperty("GeneratorName");
+		String generatorName = worldProps.getValue(GeneratorSettings.GENERATOR_NAME);
 		worldInfoNBT.setString("generatorName", generatorName);
 		// generatorOptions
-		String generatorOptions = worldProps.getProperty("GeneratorOptions");
+		String generatorOptions = worldProps.getValue(GeneratorSettings.GENERATOR_OPTIONS);
 		worldInfoNBT.setString("generatorOptions", generatorOptions);
 		// generatorVersion
-		int generatorVersion = Integer.parseInt(worldProps
-				.getProperty("GeneratorVersion"));
+		int generatorVersion = worldProps.getValue(GeneratorSettings.GENERATOR_VERSION);
 		worldInfoNBT.setInteger("generatorVersion", generatorVersion);
-		// Weather
-		String weather = worldProps.getProperty("Weather");
 
-		if (weather.equals("sunny")) {
-			worldInfoNBT.setBoolean("raining", false);
-			worldInfoNBT.setInteger("rainTime", 0);
-			worldInfoNBT.setBoolean("thundering", false);
-			worldInfoNBT.setInteger("thunderTime", 0);
-		} else if (weather.equals("rain")) {
-			worldInfoNBT.setBoolean("raining", true);
-			worldInfoNBT.setInteger("rainTime", 24000);
-			worldInfoNBT.setBoolean("thundering", false);
-			worldInfoNBT.setInteger("thunderTime", 0);
-		} else if (weather.equals("thunderstorm")) {
-			worldInfoNBT.setBoolean("raining", true);
-			worldInfoNBT.setInteger("rainTime", 24000);
-			worldInfoNBT.setBoolean("thundering", true);
-			worldInfoNBT.setInteger("thunderTime", 24000);
+		// Weather
+		WorldSettings.Weather weather = worldProps.getValue(WorldSettings.WEATHER);
+
+		if (weather != WorldSettings.Weather.KEEP) {
+			worldInfoNBT.setBoolean("raining", weather.raining);
+			worldInfoNBT.setInteger("rainTime", weather.rainTime);
+			worldInfoNBT.setBoolean("thundering", weather.thundering);
+			worldInfoNBT.setInteger("thunderTime", weather.thunderTime);
 		}
 
 		// Spawn
-		String spawn = worldProps.getProperty("Spawn");
+		WorldSettings.SpawnMode spawn = worldProps.getValue(WorldSettings.SPAWN);
 
-		if (spawn.equals("player")) {
-			int x = MathHelper.floor(thePlayer.posX);
-			int y = MathHelper.floor(thePlayer.posY);
-			int z = MathHelper.floor(thePlayer.posZ);
-			worldInfoNBT.setInteger("SpawnX", x);
-			worldInfoNBT.setInteger("SpawnY", y);
-			worldInfoNBT.setInteger("SpawnZ", z);
-			worldInfoNBT.setBoolean("initialized", true);
-		} else if (spawn.equals("xyz")) {
-			int x = Integer.parseInt(worldProps.getProperty("SpawnX"));
-			int y = Integer.parseInt(worldProps.getProperty("SpawnY"));
-			int z = Integer.parseInt(worldProps.getProperty("SpawnZ"));
+		if (spawn != WorldSettings.SpawnMode.AUTO) { 
+			int x = spawn.getX(thePlayer, worldProps);
+			int y = spawn.getY(thePlayer, worldProps);
+			int z = spawn.getZ(thePlayer, worldProps);
 			worldInfoNBT.setInteger("SpawnX", x);
 			worldInfoNBT.setInteger("SpawnY", y);
 			worldInfoNBT.setInteger("SpawnZ", z);
