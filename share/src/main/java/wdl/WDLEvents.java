@@ -35,6 +35,7 @@ import net.minecraft.world.storage.MapData;
 import wdl.api.IWorldLoadListener;
 import wdl.api.WDLApi;
 import wdl.api.WDLApi.ModInfo;
+import wdl.config.settings.GeneratorSettings;
 import wdl.handler.HandlerException;
 import wdl.handler.block.BlockHandler;
 import wdl.handler.entity.EntityHandler;
@@ -372,14 +373,13 @@ public class WDLEvents {
 	public static void onChatMessage(String msg) {
 		if (WDL.downloading && msg.startsWith("Seed: ")) {
 			String seed = msg.substring(6);
-			WDL.worldProps.setProperty("RandomSeed", seed);
+			WDL.worldProps.setValue(GeneratorSettings.SEED, seed);
 
-			if (WDL.worldProps.getProperty("MapGenerator", "void").equals("void")) {
+			if (WDL.worldProps.getValue(GeneratorSettings.GENERATOR) ==
+					GeneratorSettings.Generator.VOID) {
 
-				WDL.worldProps.setProperty("MapGenerator", "default");
-				WDL.worldProps.setProperty("GeneratorName", "default");
-				WDL.worldProps.setProperty("GeneratorVersion", "1");
-				WDL.worldProps.setProperty("GeneratorOptions", "");
+				WDL.worldProps.setValue(GeneratorSettings.GENERATOR,
+						GeneratorSettings.Generator.DEFAULT);
 
 				WDLMessages.chatMessageTranslated(WDL.baseProps,
 						WDLMessageTypes.INFO, "wdl.messages.generalInfo.seedAndGenSet", seed);
