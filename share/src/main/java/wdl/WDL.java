@@ -1138,7 +1138,7 @@ public class WDL {
 		WorldSettings.GameMode gametypeOption = worldProps.getValue(WorldSettings.GAME_MODE);
 
 		if (gametypeOption == WorldSettings.GameMode.KEEP) {
-			// XXX Do we want this?  Or should it just use the actual mod without overriding?
+			// XXX Do we want this?  Or should it just use the actual mode without overriding?
 			if (thePlayer.capabilities.isCreativeMode) { // capabilities
 				worldInfoNBT.setInteger("GameType", 1); // Creative
 			} else {
