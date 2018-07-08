@@ -24,6 +24,8 @@ import java.util.Optional;
 public interface Setting<T> {
 	/**
 	 * Deserializes a String back into a T instance.
+	 *
+	 * This method may return null values or throw an exception on incorrect input.
 	 */
 	public abstract T deserializeFromString(String text);
 

@@ -53,7 +53,6 @@ public class Configuration implements IConfiguration {
 		}
 	}
 
-	// XXX neither of these handle inheritance
 	@Override
 	public <T> void setValue(Setting<T> setting, T value) {
 		this.properties.setProperty(setting.getConfigurationKey(), setting.serializeToString(value));
@@ -65,7 +64,22 @@ public class Configuration implements IConfiguration {
 		if (override.isPresent()) {
 			return override.get();
 		}
-		return setting.deserializeFromString(this.properties.getProperty(setting.getConfigurationKey()));
+		String key = setting.getConfigurationKey();
+		if (this.containsKey(key)) {
+			String value = this.properties.getProperty(key);
+			try {
+				T t = setting.deserializeFromString(value);
+				if (t == null) {
+					throw new NullPointerException("deserializeFromString returned null");
+				}
+				return t;
+			} catch (Exception ex) {
+				LOGGER.warn("Failed to deserialize {} from configuration {} with '{}'='{}'", setting, this, key, value, ex);
+				LOGGER.warn("Clearing the value and using parent config now...");
+				this.clearValue(setting);
+			}
+		}
+		return parent.getValue(setting, config);
 	}
 
 	@Override
