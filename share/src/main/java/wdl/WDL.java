@@ -1197,7 +1197,7 @@ public class WDL {
 		// Spawn
 		WorldSettings.SpawnMode spawn = worldProps.getValue(WorldSettings.SPAWN);
 
-		if (spawn != WorldSettings.SpawnMode.AUTO) { 
+		if (spawn != WorldSettings.SpawnMode.AUTO) {
 			int x = spawn.getX(thePlayer, worldProps);
 			int y = spawn.getY(thePlayer, worldProps);
 			int z = spawn.getZ(thePlayer, worldProps);

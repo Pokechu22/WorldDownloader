@@ -78,7 +78,7 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 	static {
 		try {
 			worldProviderField = ReflectionUtils.findField(World.class, WorldProvider.class);
-	
+
 			Field modifiersField = Field.class.getDeclaredField("modifiers");
 			modifiersField.setAccessible(true);
 			modifiersField.setInt(worldProviderField, worldProviderField.getModifiers() & ~Modifier.FINAL);
