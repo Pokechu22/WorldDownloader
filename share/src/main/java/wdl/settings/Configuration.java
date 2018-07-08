@@ -36,21 +36,20 @@ import net.minecraft.crash.CrashReportCategory;
 public class Configuration implements IConfiguration {
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	@Nullable
-	final Configuration parent;
+	private final IConfiguration parent;
 	private final Properties properties;
 
 	public Configuration() {
 		this(null);
 	}
 
-	public Configuration(@Nullable Configuration parent) {
-		this.parent = parent;
+	public Configuration(@Nullable IConfiguration parent) {
 		if (parent != null) {
-			this.properties = new Properties(parent.properties);
+			this.parent = parent;
 		} else {
-			this.properties = new Properties();
+			this.parent = new DefaultConfiguration();
 		}
+		this.properties = new Properties();
 	}
 
 	@Override

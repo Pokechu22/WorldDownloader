@@ -80,6 +80,7 @@ import wdl.gui.GuiWDLMultiworldSelect;
 import wdl.gui.GuiWDLOverwriteChanges;
 import wdl.gui.GuiWDLSaveProgress;
 import wdl.settings.Configuration;
+import wdl.settings.IConfiguration;
 import wdl.update.GithubInfoGrabber;
 
 /**
@@ -230,7 +231,7 @@ public class WDL {
 	/**
 	 * Default properties that are used to create the global properites.
 	 */
-	public static final Configuration defaultProps;
+	public static final IConfiguration defaultProps;
 
 	private static final Logger LOGGER = LogManager.getLogger();
 
@@ -239,6 +240,7 @@ public class WDL {
 		minecraft = Minecraft.getMinecraft();
 		// Initialize the Properties template:
 		defaultProps = new Configuration();
+		Configuration defaultProps = (Configuration) WDL.defaultProps; // XXX temporary hack until this is made into actual DefaultConfiguration
 		defaultProps.setProperty("ServerName", "");
 		defaultProps.setProperty("WorldName", "");
 		defaultProps.setProperty("LinkedWorlds", "");
@@ -1029,7 +1031,8 @@ public class WDL {
 				LOGGER.warn("Failed to write world props!", e);
 			}
 		} else if (!isMultiworld) {
-			// XXX should there be any info in worldProps in this case?
+			// XXX Because most things write into worldProps and not baseProps,
+			// we need to copy worldProps' content into baseProps so that those things are saved
 			baseProps.putAll(theWorldProps);
 		}
 
