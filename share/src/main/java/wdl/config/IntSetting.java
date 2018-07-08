@@ -12,25 +12,19 @@
  *
  * Do not redistribute (in modified or unmodified form) without prior permission.
  */
-package wdl.settings;
+package wdl.config;
 
 /**
- * A setting that is simply true or false.
+ * A numeric setting.
  */
-public final class BooleanSetting extends BaseCyclableSetting<Boolean> {
+public final class IntSetting extends BaseSetting<Integer> {
 	/**
 	 * Constructor.
 	 *
 	 * @param name The name as used in a properties file.
 	 * @param def The default value.
-	 * @param key The translation key.
 	 */
-	public BooleanSetting(String name, boolean def, String key) {
-		super(name, def, key, Boolean::parseBoolean);
-	}
-
-	@Override
-	public Boolean cycle(Boolean value) {
-		return !value;
+	public IntSetting(String name, int def) {
+		super(name, def, Integer::parseInt, Object::toString);
 	}
 }

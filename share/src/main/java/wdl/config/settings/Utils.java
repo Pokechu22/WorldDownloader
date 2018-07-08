@@ -12,12 +12,25 @@
  *
  * Do not redistribute (in modified or unmodified form) without prior permission.
  */
-/**
- * Settings and configuration logic.
- */
-@ParametersAreNonnullByDefault
-@MethodsReturnNonnullByDefault
-package wdl.settings;
+package wdl.config.settings;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-import mcp.MethodsReturnNonnullByDefault;
+import java.util.function.Function;
+
+import com.google.common.collect.ImmutableMap;
+
+final class Utils {
+	private Utils() { throw new AssertionError(); }
+
+	/**
+	 * Creates an ImmutableMap intended for the FROM_STRING field for various enums.
+	 */
+	public static <T> ImmutableMap<String, T> makeFromString(T[] values, Function<T, String> keyFunc) {
+		// Can't use streams and toImmutableMap because of older versions
+		ImmutableMap.Builder<String, T> b = ImmutableMap.builder();
+		for (T t : values) {
+			b.put(keyFunc.apply(t), t);
+		}
+		return b.build();
+	}
+
+}

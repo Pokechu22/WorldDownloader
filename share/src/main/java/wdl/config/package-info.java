@@ -12,19 +12,12 @@
  *
  * Do not redistribute (in modified or unmodified form) without prior permission.
  */
-package wdl.settings;
-
 /**
- * A numeric setting.
+ * Logic related to configuration and settings.
  */
-public final class IntSetting extends BaseSetting<Integer> {
-	/**
-	 * Constructor.
-	 *
-	 * @param name The name as used in a properties file.
-	 * @param def The default value.
-	 */
-	public IntSetting(String name, int def) {
-		super(name, def, Integer::parseInt, Object::toString);
-	}
-}
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
+package wdl.config;
+
+import javax.annotation.ParametersAreNonnullByDefault;
+import mcp.MethodsReturnNonnullByDefault;

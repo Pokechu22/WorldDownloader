@@ -20,8 +20,8 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import wdl.WDL;
-import wdl.settings.IConfiguration;
-import wdl.settings.WorldSettings;
+import wdl.config.IConfiguration;
+import wdl.config.settings.WorldSettings;
 
 public class GuiWDLWorld extends GuiScreen {
 	private String title;

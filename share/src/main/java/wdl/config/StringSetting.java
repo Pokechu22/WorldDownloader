@@ -12,25 +12,21 @@
  *
  * Do not redistribute (in modified or unmodified form) without prior permission.
  */
-package wdl.settings;
+package wdl.config;
 
 import java.util.function.Function;
 
-import com.google.common.collect.ImmutableMap;
-
-final class Utils {
-	private Utils() { throw new AssertionError(); }
-
+/**
+ * A textual setting.
+ */
+public final class StringSetting extends BaseSetting<String> {
 	/**
-	 * Creates an ImmutableMap intended for the FROM_STRING field for various enums.
+	 * Constructor.
+	 *
+	 * @param name The name as used in a properties file.
+	 * @param def The default value.
 	 */
-	public static <T> ImmutableMap<String, T> makeFromString(T[] values, Function<T, String> keyFunc) {
-		// Can't use streams and toImmutableMap because of older versions
-		ImmutableMap.Builder<String, T> b = ImmutableMap.builder();
-		for (T t : values) {
-			b.put(keyFunc.apply(t), t);
-		}
-		return b.build();
+	public StringSetting(String name, String def) {
+		super(name, def, Function.identity(), Function.identity());
 	}
-
 }

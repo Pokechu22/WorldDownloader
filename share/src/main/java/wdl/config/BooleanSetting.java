@@ -12,35 +12,25 @@
  *
  * Do not redistribute (in modified or unmodified form) without prior permission.
  */
-package wdl.settings;
-
-import java.util.function.Function;
-
-import net.minecraft.util.IStringSerializable;
+package wdl.config;
 
 /**
- * A setting that uses an enum.
+ * A setting that is simply true or false.
  */
-public final class EnumSetting<T extends Enum<T> & IStringSerializable> extends BaseCyclableSetting<T> {
-
-	private T[] values;
-
+public final class BooleanSetting extends BaseCyclableSetting<Boolean> {
 	/**
 	 * Constructor.
 	 *
 	 * @param name The name as used in a properties file.
 	 * @param def The default value.
 	 * @param key The translation key.
-	 * @param values The values() method for the given enum.
-	 * @param fromString A function taking a string and returning an enum instance (e.g. valueOf)
 	 */
-	public EnumSetting(String name, T def, String key, T[] values, Function<String, T> fromString) {
-		super(name, def, key, fromString, T::getName);
-		this.values = values;
+	public BooleanSetting(String name, boolean def, String key) {
+		super(name, def, key, Boolean::parseBoolean);
 	}
 
 	@Override
-	public T cycle(T value) {
-		return values[(value.ordinal() + 1) % values.length];
+	public Boolean cycle(Boolean value) {
+		return !value;
 	}
 }

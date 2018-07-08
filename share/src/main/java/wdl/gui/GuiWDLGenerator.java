@@ -28,8 +28,8 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 import wdl.WDL;
-import wdl.settings.GeneratorSettings;
-import wdl.settings.IConfiguration;
+import wdl.config.IConfiguration;
+import wdl.config.settings.GeneratorSettings;
 
 public class GuiWDLGenerator extends GuiScreen {
 	private static final Logger LOGGER = LogManager.getLogger();

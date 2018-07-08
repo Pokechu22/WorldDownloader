@@ -26,7 +26,7 @@ import net.minecraft.client.resources.I18n;
 import org.lwjgl.input.Keyboard;
 
 import wdl.WDL;
-import wdl.settings.Configuration;
+import wdl.config.Configuration;
 
 /**
  * A GUI for selecting which world the player is currently in.

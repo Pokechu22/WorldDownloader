@@ -16,8 +16,8 @@ package wdl;
 
 import net.minecraft.client.resources.I18n;
 import wdl.api.IWDLMessageType;
-import wdl.settings.CyclableSetting;
-import wdl.settings.MessageSettings;
+import wdl.config.CyclableSetting;
+import wdl.config.settings.MessageSettings;
 
 /**
  * Category / collection of {@link IWDLMessageType}s.

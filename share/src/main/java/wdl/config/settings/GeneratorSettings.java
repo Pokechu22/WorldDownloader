@@ -12,14 +12,19 @@
  *
  * Do not redistribute (in modified or unmodified form) without prior permission.
  */
-package wdl.settings;
+package wdl.config.settings;
 
-import static wdl.settings.Utils.*;
+import static wdl.config.settings.Utils.*;
 
 import java.util.Map;
 import java.util.function.Function;
 
 import net.minecraft.util.IStringSerializable;
+import wdl.config.BooleanSetting;
+import wdl.config.EnumSetting;
+import wdl.config.IConfiguration;
+import wdl.config.Setting;
+import wdl.config.StringSetting;
 
 /**
  * Contains various settings and enums for the world generator.

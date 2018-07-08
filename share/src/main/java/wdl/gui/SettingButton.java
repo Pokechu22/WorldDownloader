@@ -16,8 +16,8 @@ package wdl.gui;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import wdl.settings.IConfiguration;
-import wdl.settings.CyclableSetting;
+import wdl.config.CyclableSetting;
+import wdl.config.IConfiguration;
 
 /**
  * A button that controls a setting.

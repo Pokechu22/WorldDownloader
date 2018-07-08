@@ -12,7 +12,7 @@
  *
  * Do not redistribute (in modified or unmodified form) without prior permission.
  */
-package wdl.settings;
+package wdl.config;
 
 import java.util.Collections;
 import java.util.Map;

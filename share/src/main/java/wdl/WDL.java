@@ -75,12 +75,12 @@ import wdl.api.ISaveListener;
 import wdl.api.IWorldInfoEditor;
 import wdl.api.WDLApi;
 import wdl.api.WDLApi.ModInfo;
+import wdl.config.Configuration;
+import wdl.config.IConfiguration;
 import wdl.gui.GuiWDLMultiworld;
 import wdl.gui.GuiWDLMultiworldSelect;
 import wdl.gui.GuiWDLOverwriteChanges;
 import wdl.gui.GuiWDLSaveProgress;
-import wdl.settings.Configuration;
-import wdl.settings.IConfiguration;
 import wdl.update.GithubInfoGrabber;
 
 /**

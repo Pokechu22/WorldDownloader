@@ -12,21 +12,35 @@
  *
  * Do not redistribute (in modified or unmodified form) without prior permission.
  */
-package wdl.settings;
+package wdl.config;
 
 import java.util.function.Function;
 
+import net.minecraft.util.IStringSerializable;
+
 /**
- * A textual setting.
+ * A setting that uses an enum.
  */
-public final class StringSetting extends BaseSetting<String> {
+public final class EnumSetting<T extends Enum<T> & IStringSerializable> extends BaseCyclableSetting<T> {
+
+	private T[] values;
+
 	/**
 	 * Constructor.
 	 *
 	 * @param name The name as used in a properties file.
 	 * @param def The default value.
+	 * @param key The translation key.
+	 * @param values The values() method for the given enum.
+	 * @param fromString A function taking a string and returning an enum instance (e.g. valueOf)
 	 */
-	public StringSetting(String name, String def) {
-		super(name, def, Function.identity(), Function.identity());
+	public EnumSetting(String name, T def, String key, T[] values, Function<String, T> fromString) {
+		super(name, def, key, fromString, T::getName);
+		this.values = values;
+	}
+
+	@Override
+	public T cycle(T value) {
+		return values[(value.ordinal() + 1) % values.length];
 	}
 }

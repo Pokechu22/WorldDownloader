@@ -12,7 +12,7 @@
  *
  * Do not redistribute (in modified or unmodified form) without prior permission.
  */
-package wdl.settings;
+package wdl.config.settings;
 
 import java.util.Optional;
 
@@ -22,11 +22,16 @@ import net.minecraft.util.text.TextComponentTranslation;
 import wdl.MessageTypeCategory;
 import wdl.WDLMessages.MessageRegistration;
 import wdl.api.IWDLMessageType;
+import wdl.config.BooleanSetting;
+import wdl.config.CyclableSetting;
+import wdl.config.IConfiguration;
 
 /**
  * Contains settings related to WDL's message system ({@link wdl.WDLMessages}).
  */
-public class MessageSettings {
+public final class MessageSettings {
+	private MessageSettings() { throw new AssertionError(); }
+
 	public static final BooleanSetting ENABLE_ALL_MESSAGES =
 			new BooleanSetting("Messages.enableAll", true, "wdl.gui.messages.all");
 

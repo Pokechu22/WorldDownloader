@@ -12,13 +12,15 @@
  *
  * Do not redistribute (in modified or unmodified form) without prior permission.
  */
-package wdl.settings;
+package wdl.config.settings;
 
-import static wdl.settings.Utils.*;
+import static wdl.config.settings.Utils.*;
 
 import java.util.Map;
 
 import net.minecraft.util.IStringSerializable;
+import wdl.config.EnumSetting;
+import wdl.config.IntSetting;
 
 /**
  * Contains various settings and enums for player settings.

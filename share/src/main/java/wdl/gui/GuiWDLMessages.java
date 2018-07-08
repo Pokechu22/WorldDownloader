@@ -32,8 +32,8 @@ import wdl.MessageTypeCategory;
 import wdl.WDL;
 import wdl.WDLMessages;
 import wdl.WDLMessages.MessageRegistration;
-import wdl.settings.IConfiguration;
-import wdl.settings.MessageSettings;
+import wdl.config.IConfiguration;
+import wdl.config.settings.MessageSettings;
 
 public class GuiWDLMessages extends GuiScreen {
 	/**

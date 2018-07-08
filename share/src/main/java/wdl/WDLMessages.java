@@ -38,9 +38,9 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.util.text.event.HoverEvent.Action;
 import wdl.api.IWDLMessageType;
-import wdl.settings.CyclableSetting;
-import wdl.settings.IConfiguration;
-import wdl.settings.MessageSettings;
+import wdl.config.CyclableSetting;
+import wdl.config.IConfiguration;
+import wdl.config.settings.MessageSettings;
 
 /**
  * Responsible for displaying messages in chat or the log, depending on whether
