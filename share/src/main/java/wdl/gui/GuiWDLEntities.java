@@ -28,7 +28,9 @@ import wdl.EntityUtils;
 import wdl.WDL;
 import wdl.WDLMessageTypes;
 import wdl.WDLMessages;
-import wdl.WDLPluginChannels;
+import wdl.config.IConfiguration;
+import wdl.config.settings.EntitySettings;
+import wdl.config.settings.EntitySettings.TrackDistanceMode;
 
 import com.google.common.collect.Multimap;
 
@@ -195,7 +197,7 @@ public class GuiWDLEntities extends GuiScreen {
 			private boolean entityEnabled;
 			private int range;
 
-			private String cachedMode;
+			private TrackDistanceMode cachedMode; // XXX this is an ugly hack
 
 			public EntityEntry(CategoryEntry category, String entity) {
 				this.category = category;
@@ -213,9 +215,9 @@ public class GuiWDLEntities extends GuiScreen {
 				this.rangeSlider = new GuiSlider(1, 0, 0, 150, 18,
 						"wdl.gui.entities.trackDistance", range, 256);
 
-				this.cachedMode = mode;
+				this.cachedMode = config.getValue(EntitySettings.TRACK_DISTANCE_MODE);
 
-				rangeSlider.enabled = (cachedMode.equals("user"));
+				rangeSlider.enabled = (cachedMode == TrackDistanceMode.USER);
 			}
 
 			@Override
@@ -237,9 +239,11 @@ public class GuiWDLEntities extends GuiScreen {
 				this.rangeSlider.x = center + 85;
 				this.rangeSlider.y = y;
 
-				if (!this.cachedMode.equals(mode)) {
+				// XXX calculating this each time
+				TrackDistanceMode mode = config.getValue(EntitySettings.TRACK_DISTANCE_MODE);
+				if (this.cachedMode != mode) {
 					cachedMode = mode;
-					rangeSlider.enabled = (cachedMode.equals("user"));
+					rangeSlider.enabled = canEditRanges();
 
 					rangeSlider.setValue(EntityUtils
 							.getEntityTrackDistance(entity));
@@ -280,7 +284,7 @@ public class GuiWDLEntities extends GuiScreen {
 					int mouseEvent, int relativeX, int relativeY) {
 				rangeSlider.mouseReleased(x, y);
 
-				if (this.cachedMode.equals("user")) {
+				if (this.cachedMode == TrackDistanceMode.USER) {
 					range = rangeSlider.getValue();
 
 					WDL.worldProps.setProperty("Entity." + entity
@@ -329,15 +333,15 @@ public class GuiWDLEntities extends GuiScreen {
 	}
 
 	private GuiEntityList entityList;
-	private GuiScreen parent;
+	private final GuiScreen parent;
+	private final IConfiguration config;
 
-	private GuiButton rangeModeButton;
+	private SettingButton rangeModeButton;
 	private GuiButton presetsButton;
-
-	private String mode;
 
 	public GuiWDLEntities(GuiScreen parent) {
 		this.parent = parent;
+		this.config = WDL.worldProps;
 	}
 
 	@Override
@@ -345,14 +349,11 @@ public class GuiWDLEntities extends GuiScreen {
 		this.buttonList.add(new GuiButton(200, this.width / 2 - 100,
 				this.height - 29, "OK"));
 
-		rangeModeButton = new GuiButton(100, this.width / 2 - 155, 18, 150,
-				20, getRangeModeText());
+		rangeModeButton = new SettingButton(100, EntitySettings.TRACK_DISTANCE_MODE, this.config, this.width / 2 - 155, 18, 150, 20);
 		presetsButton = new GuiButton(101, this.width / 2 + 5, 18, 150, 20,
 				I18n.format("wdl.gui.entities.rangePresets"));
 
-		this.mode = WDL.worldProps.getProperty("Entity.TrackDistanceMode");
-
-		presetsButton.enabled = shouldEnablePresetsButton();
+		this.presetsButton.enabled = this.canEditRanges();
 
 		this.buttonList.add(rangeModeButton);
 		this.buttonList.add(presetsButton);
@@ -372,7 +373,7 @@ public class GuiWDLEntities extends GuiScreen {
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if (button.id == 100) {
-			cycleRangeMode();
+			this.presetsButton.enabled = this.canEditRanges();
 		}
 		if (button.id == 101 && button.enabled) {
 			mc.displayGuiScreen(new GuiWDLEntityRangePresets(this));
@@ -413,44 +414,17 @@ public class GuiWDLEntities extends GuiScreen {
 				I18n.format("wdl.gui.entities.title"), this.width / 2, 8,
 				0xFFFFFF);
 
+		if (this.rangeModeButton.isMouseOver()) {
+			Utils.drawGuiInfoBox(this.rangeModeButton.getTooltip(), width, height, 48);
+		}
+
 		super.drawScreen(mouseX, mouseY, partialTicks);
 	}
 
 	/**
-	 * Cycles the range mode value.
+	 * Returns true if the various controls can be edited on the current mode.
 	 */
-	private void cycleRangeMode() {
-		if (mode.equals("default")) {
-			if (WDLPluginChannels.hasServerEntityRange()) {
-				mode = "server";
-			} else {
-				mode = "user";
-			}
-		} else if (mode.equals("server")) {
-			mode = "user";
-		} else {
-			mode = "default";
-		}
-
-		WDL.worldProps.setProperty("Entity.TrackDistanceMode", mode);
-
-		rangeModeButton.displayString = getRangeModeText();
-		presetsButton.enabled = shouldEnablePresetsButton();
-	}
-
-	/**
-	 * Gets the text for the range mode button.
-	 */
-	private String getRangeModeText() {
-		String mode = WDL.worldProps.getProperty("Entity.TrackDistanceMode");
-
-		return I18n.format("wdl.gui.entities.trackDistanceMode." + mode);
-	}
-
-	/**
-	 * Is the current mode a mode where the presets button should be enabled?
-	 */
-	private boolean shouldEnablePresetsButton() {
-		return mode.equals("user");
+	private boolean canEditRanges() {
+		return config.getValue(EntitySettings.TRACK_DISTANCE_MODE) == TrackDistanceMode.USER;
 	}
 }

@@ -215,6 +215,7 @@ wdl.gui.entities.entity.ignored=§cIgnored
 wdl.gui.entities.group.enabled=§aEnabled
 wdl.gui.entities.group.disabled=§cAll disabled
 wdl.gui.entities.trackDistance=Track Distance: %d
+wdl.gui.entities.trackDistanceMode.description=Track distance mode.  Controls the defaults for the track distance.
 
 wdl.gui.updates.title=World Downloader mod: Updates
 wdl.gui.updates.updateMinecraftVersion.client=Installed on %s client
