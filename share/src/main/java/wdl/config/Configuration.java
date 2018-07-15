@@ -25,8 +25,6 @@ import java.util.stream.Collectors;
 
 import javax.annotation.CheckForSigned;
 import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -44,16 +42,8 @@ public class Configuration implements IConfiguration {
 	private final IConfiguration parent;
 	private final Properties properties;
 
-	public Configuration() {
-		this(null);
-	}
-
-	public Configuration(@Nullable IConfiguration parent) {
-		if (parent != null) {
-			this.parent = parent;
-		} else {
-			this.parent = new DefaultConfiguration();
-		}
+	public Configuration(IConfiguration parent) {
+		this.parent = parent;
 		this.properties = new Properties();
 	}
 
@@ -212,22 +202,6 @@ public class Configuration implements IConfiguration {
 	public void setEntityGroupEnabled(String entityGroup, boolean value) {
 		String key = ENTITY_GROUP_PREFIX + entityGroup + ENTITY_GROUP_SUFFIX;
 		this.properties.setProperty(key, Boolean.toString(value));
-	}
-
-	// Keep but rename
-
-	public void setProperty(String key, String value) {
-		this.properties.setProperty(key, value);
-	}
-
-	@Nullable
-	public String getProperty(String key) {
-		return this.properties.getProperty(key);
-	}
-
-	@Nonnull
-	public String getProperty(String key, @Nonnull String defaultValue) {
-		return this.properties.getProperty(key, defaultValue);
 	}
 
 	// Things to definitely get rid of - smelly

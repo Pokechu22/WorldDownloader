@@ -243,55 +243,7 @@ public class WDL {
 	static {
 		minecraft = Minecraft.getMinecraft();
 		// Initialize the Properties template:
-		defaultProps = new Configuration();
-		Configuration defaultProps = (Configuration) WDL.defaultProps; // XXX temporary hack until this is made into actual DefaultConfiguration
-		defaultProps.setProperty("ServerName", "");
-		defaultProps.setProperty("WorldName", "");
-		defaultProps.setProperty("LinkedWorlds", "");
-		defaultProps.setProperty("Backup", "ZIP");
-		defaultProps.setProperty("AllowCheats", "true");
-		defaultProps.setProperty("GameType", "keep");
-		defaultProps.setProperty("Time", "keep");
-		defaultProps.setProperty("Weather", "keep");
-		defaultProps.setProperty("MapFeatures", "false");
-		defaultProps.setProperty("RandomSeed", "");
-		defaultProps.setProperty("MapGenerator", "void");
-		defaultProps.setProperty("GeneratorName", "flat");
-		defaultProps.setProperty("GeneratorVersion", "0");
-		defaultProps.setProperty("GeneratorOptions", ";0");
-		defaultProps.setProperty("Spawn", "player");
-		defaultProps.setProperty("SpawnX", "8");
-		defaultProps.setProperty("SpawnY", "127");
-		defaultProps.setProperty("SpawnZ", "8");
-		defaultProps.setProperty("PlayerPos", "keep");
-		defaultProps.setProperty("PlayerX", "8");
-		defaultProps.setProperty("PlayerY", "127");
-		defaultProps.setProperty("PlayerZ", "8");
-		defaultProps.setProperty("PlayerHealth", "20");
-		defaultProps.setProperty("PlayerFood", "20");
-
-		defaultProps.setProperty("Messages.enableAll", "true");
-
-		//Set up entities.
-		defaultProps.setProperty("Entity.TrackDistanceMode", "server");
-
-		//Don't save these entities by default -- they're problematic.
-		defaultProps.setProperty("Entity.FireworksRocketEntity.Enabled", "false");
-		defaultProps.setProperty("Entity.EnderDragon.Enabled", "false");
-		defaultProps.setProperty("Entity.WitherBoss.Enabled", "false");
-		defaultProps.setProperty("Entity.PrimedTnt.Enabled", "false");
-		defaultProps.setProperty("Entity.null.Enabled", "false"); // :(
-
-		//Groups
-		defaultProps.setProperty("EntityGroup.Other.Enabled", "true");
-		defaultProps.setProperty("EntityGroup.Hostile.Enabled", "true");
-		defaultProps.setProperty("EntityGroup.Passive.Enabled", "true");
-
-		//Last saved time, so that you can tell if the world was modified.
-		defaultProps.setProperty("LastSaved", "-1");
-
-		// Whether the 1-time tutorial has been shown.
-		defaultProps.setProperty("TutorialShown", "false");
+		defaultProps = new DefaultConfiguration();
 
 		DefaultConfiguration.DANGEROUS_ENTITY_TYPES.add("FireworksRocketEntity"); // old
 		DefaultConfiguration.DANGEROUS_ENTITY_TYPES.add("minecraft:fireworks_rocket"); // 1.11
