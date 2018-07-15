@@ -67,7 +67,7 @@ public class Configuration implements IConfiguration {
 			return override.get();
 		}
 		String key = setting.getConfigurationKey();
-		if (this.containsKey(key)) {
+		if (this.properties.containsKey(key)) {
 			String value = this.properties.getProperty(key);
 			try {
 				T t = setting.deserializeFromString(value);
@@ -86,7 +86,7 @@ public class Configuration implements IConfiguration {
 
 	@Override
 	public <T> void clearValue(Setting<T> setting) {
-		this.remove(setting.getConfigurationKey());
+		this.properties.remove(setting.getConfigurationKey());
 	}
 
 	// Rework slightly, and maybe rename
@@ -170,14 +170,6 @@ public class Configuration implements IConfiguration {
 	@Nonnull
 	public String getProperty(String key, @Nonnull String defaultValue) {
 		return this.properties.getProperty(key, defaultValue);
-	}
-
-	public boolean containsKey(String key) {
-		return this.properties.containsKey(key);
-	}
-
-	public void remove(String key) {
-		this.properties.remove(key);
 	}
 
 	// Things to definitely get rid of - smelly
