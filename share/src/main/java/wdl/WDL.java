@@ -75,6 +75,7 @@ import wdl.api.IWorldInfoEditor;
 import wdl.api.WDLApi;
 import wdl.api.WDLApi.ModInfo;
 import wdl.config.Configuration;
+import wdl.config.DefaultConfiguration;
 import wdl.config.IConfiguration;
 import wdl.config.settings.GeneratorSettings;
 import wdl.config.settings.MiscSettings;
@@ -292,6 +293,17 @@ public class WDL {
 		// Whether the 1-time tutorial has been shown.
 		defaultProps.setProperty("TutorialShown", "false");
 
+		DefaultConfiguration.DANGEROUS_ENTITY_TYPES.add("FireworksRocketEntity"); // old
+		DefaultConfiguration.DANGEROUS_ENTITY_TYPES.add("minecraft:fireworks_rocket"); // 1.11
+		DefaultConfiguration.DANGEROUS_ENTITY_TYPES.add("minecraft:firework_rocket"); // 1.13
+		DefaultConfiguration.DANGEROUS_ENTITY_TYPES.add("EnderDragon"); // old
+		DefaultConfiguration.DANGEROUS_ENTITY_TYPES.add("minecraft:ender_dragon"); // 1.11
+		DefaultConfiguration.DANGEROUS_ENTITY_TYPES.add("WitherBoss"); // old
+		DefaultConfiguration.DANGEROUS_ENTITY_TYPES.add("minecraft:wither"); // 1.11
+		DefaultConfiguration.DANGEROUS_ENTITY_TYPES.add("PrimedTnt"); // old
+		DefaultConfiguration.DANGEROUS_ENTITY_TYPES.add("minecraft:tnt"); // 1.11
+		DefaultConfiguration.DANGEROUS_ENTITY_TYPES.add("null"); // :( -- XXX is this really needed
+		
 		globalProps = new Configuration(defaultProps);
 
 		File dataFile = new File(minecraft.mcDataDir, "WorldDownloader.txt");

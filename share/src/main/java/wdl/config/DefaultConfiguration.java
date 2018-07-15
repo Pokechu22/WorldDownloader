@@ -15,7 +15,10 @@
 package wdl.config;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
+
+import javax.annotation.CheckForSigned;
 
 import net.minecraft.crash.CrashReportCategory;
 
@@ -69,5 +72,39 @@ public class DefaultConfiguration implements IConfiguration {
 	@Override
 	public boolean hasGameRule(String name) {
 		return false;
+	}
+
+	@Override
+	@CheckForSigned
+	public int getUserEntityTrackDistance(String entityType) {
+		return -1;
+	}
+
+	@Override
+	public void setUserEntityTrackDistance(String entityType, int value) {
+		throw new UnsupportedOperationException("Cannot change entity track settings on the default configuration (" + entityType + "->" + value + ")");
+	}
+
+	// XXX this is a bit of an ugly hack.  Set in WDL.<clinit>.
+	public static final Set<String> DANGEROUS_ENTITY_TYPES = new HashSet<>();
+
+	@Override
+	public boolean isEntityTypeEnabled(String entityType) {
+		return DANGEROUS_ENTITY_TYPES.contains(entityType);
+	}
+
+	@Override
+	public void setEntityTypeEnabled(String entityType, boolean value) {
+		throw new UnsupportedOperationException("Cannot change entity type settings on the default configuration (" + entityType + "->" + value + ")");
+	}
+
+	@Override
+	public boolean isEntityGroupEnabled(String entityGroup) {
+		return true;
+	}
+
+	@Override
+	public void setEntityGroupEnabled(String entityGroup, boolean value) {
+		throw new UnsupportedOperationException("Cannot change entity group settings on the default configuration (" + entityGroup + "->" + value + ")");
 	}
 }

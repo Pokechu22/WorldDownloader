@@ -25,6 +25,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.CheckForSigned;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.client.CPacketCustomPayload;
@@ -372,6 +374,7 @@ public class WDLPluginChannels {
 	 * @param entity The entity's name (via {@link EntityUtils#getEntityType}).
 	 * @return The entity's range, or -1 if no data was recieved.
 	 */
+	@CheckForSigned
 	public static int getEntityRange(String entity) {
 		if (!canSaveEntities(null)) {
 			return -1;

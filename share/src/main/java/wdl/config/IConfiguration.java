@@ -16,6 +16,9 @@ package wdl.config;
 
 import java.util.Set;
 
+import javax.annotation.CheckForSigned;
+import javax.annotation.Nonnegative;
+
 import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.util.text.ITextComponent;
 
@@ -114,4 +117,36 @@ public interface IConfiguration {
 	 * True if the given rule is present in this config or a parent of it.
 	 */
 	public abstract boolean hasGameRule(String name);
+
+	/**
+	 * Queries the track distance for the given entity type.
+	 * @return The distance if configured, or else -1.
+	 */
+	@CheckForSigned
+	public abstract int getUserEntityTrackDistance(String entityType);
+
+	/**
+	 * Sets the track distance for the given entity type.
+	 */
+	public abstract void setUserEntityTrackDistance(String entityType, @Nonnegative int value);
+
+	/**
+	 * Checks if the given entity type is enabled.
+	 */
+	public abstract boolean isEntityTypeEnabled(String entityType);
+
+	/**
+	 * Sets whether or not the given entity type is enabled.
+	 */
+	public abstract void setEntityTypeEnabled(String entityType, boolean value);
+
+	/**
+	 * Checks if the given entity group is enabled.
+	 */
+	public abstract boolean isEntityGroupEnabled(String entityGroup);
+
+	/**
+	 * Sets whether or not the given entity group is enabled.
+	 */
+	public abstract void setEntityGroupEnabled(String entityGroup, boolean value);
 }

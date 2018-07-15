@@ -121,8 +121,7 @@ public class GuiWDLEntities extends GuiScreen {
 				this.displayGroup = EntityUtils.getDisplayGroup(group);
 				this.labelWidth = mc.fontRenderer.getStringWidth(displayGroup);
 
-				this.groupEnabled = WDL.worldProps.getProperty("EntityGroup."
-						+ group + ".Enabled", "true").equals("true");
+				this.groupEnabled = config.isEntityGroupEnabled(group);
 
 				this.enableGroupButton = new GuiButton(0, 0, 0, 90, 18,
 						getButtonText());
@@ -152,8 +151,7 @@ public class GuiWDLEntities extends GuiScreen {
 
 					this.enableGroupButton.displayString = getButtonText();
 
-					WDL.worldProps.setProperty("EntityGroup." + group
-							+ ".Enabled", Boolean.toString(groupEnabled));
+					config.setEntityGroupEnabled(group, groupEnabled);
 					return true;
 				}
 				return false;
@@ -204,8 +202,7 @@ public class GuiWDLEntities extends GuiScreen {
 				this.entity = entity;
 				this.displayEntity = EntityUtils.getDisplayType(entity);
 
-				entityEnabled = WDL.worldProps.getProperty("Entity." + entity +
-						".Enabled", "true").equals("true");
+				entityEnabled = config.isEntityTypeEnabled(entity);
 				range = EntityUtils.getEntityTrackDistance(entity);
 
 				this.onOffButton = new GuiButton(0, 0, 0, 75, 18,
@@ -262,16 +259,13 @@ public class GuiWDLEntities extends GuiScreen {
 					onOffButton.playPressSound(mc.getSoundHandler());
 					onOffButton.displayString = getButtonText();
 
-					WDL.worldProps.setProperty("Entity." + entity +
-							".Enabled", Boolean.toString(entityEnabled));
+					config.setEntityTypeEnabled(entity, entityEnabled);
 					return true;
 				}
 				if (rangeSlider.mousePressed(mc, x, y)) {
 					range = rangeSlider.getValue();
 
-					WDL.worldProps.setProperty("Entity." + entity
-							+ ".TrackDistance",
-							Integer.toString(range));
+					config.setUserEntityTrackDistance(entity, range);
 
 					return true;
 				}
@@ -287,9 +281,7 @@ public class GuiWDLEntities extends GuiScreen {
 				if (this.cachedMode == TrackDistanceMode.USER) {
 					range = rangeSlider.getValue();
 
-					WDL.worldProps.setProperty("Entity." + entity
-							+ ".TrackDistance",
-							Integer.toString(range));
+					config.setUserEntityTrackDistance(entity, range);
 				}
 			}
 
@@ -376,7 +368,7 @@ public class GuiWDLEntities extends GuiScreen {
 			this.presetsButton.enabled = this.canEditRanges();
 		}
 		if (button.id == 101 && button.enabled) {
-			mc.displayGuiScreen(new GuiWDLEntityRangePresets(this));
+			mc.displayGuiScreen(new GuiWDLEntityRangePresets(this, config));
 		}
 		if (button.id == 200) {
 			mc.displayGuiScreen(parent);

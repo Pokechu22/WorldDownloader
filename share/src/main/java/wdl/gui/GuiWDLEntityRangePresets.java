@@ -27,20 +27,23 @@ import wdl.EntityUtils.SpigotEntityType;
 import wdl.StandardEntityManagers;
 import wdl.WDL;
 import wdl.WDLPluginChannels;
+import wdl.config.IConfiguration;
 
 /**
  * Provides fast setting for various entity options.
  */
 public class GuiWDLEntityRangePresets extends GuiScreen implements GuiYesNoCallback {
 	private final GuiScreen parent;
+	private final IConfiguration config;
 
 	private GuiButton vanillaButton;
 	private GuiButton spigotButton;
 	private GuiButton serverButton;
 	private GuiButton cancelButton;
 
-	public GuiWDLEntityRangePresets(GuiScreen parent) {
+	public GuiWDLEntityRangePresets(GuiScreen parent, IConfiguration config) {
 		this.parent = parent;
+		this.config = config;
 	}
 
 	@Override
@@ -140,23 +143,20 @@ public class GuiWDLEntityRangePresets extends GuiScreen implements GuiYesNoCallb
 
 			if (id == 0) {
 				for (String entity : StandardEntityManagers.VANILLA.getProvidedEntities()) {
-					WDL.worldProps.setProperty("Entity." + entity
-							+ ".TrackDistance", Integer.toString(
-									StandardEntityManagers.VANILLA.getTrackDistance(entity, null)));
+					config.setUserEntityTrackDistance(entity,
+							StandardEntityManagers.VANILLA.getTrackDistance(entity, null));
 				}
 			} else if (id == 1) {
 				for (String entity : StandardEntityManagers.SPIGOT.getProvidedEntities()) {
 					SpigotEntityType type = StandardEntityManagers.SPIGOT.getSpigotType(entity);
 					// XXX Allow specifying the range for each type instead of the default
-					WDL.worldProps.setProperty("Entity." + entity
-							+ ".TrackDistance", Integer.toString(
-									type.getDefaultRange()));
+					config.setUserEntityTrackDistance(entity,
+							type.getDefaultRange());
 				}
 			} else if (id == 2) {
 				for (String entity : entities) {
-					WDL.worldProps.setProperty("Entity." + entity
-							+ ".TrackDistance", Integer.toString(
-									WDLPluginChannels.getEntityRange(entity)));
+					config.setUserEntityTrackDistance(entity,
+							WDLPluginChannels.getEntityRange(entity));
 				}
 			}
 		}

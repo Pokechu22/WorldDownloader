@@ -23,6 +23,8 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.annotation.CheckForSigned;
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -117,6 +119,7 @@ public class Configuration implements IConfiguration {
 		}
 	}
 
+	// Wrap-around things -- should be removed later, but needed to be ready for release
 	private static final String GAME_RULE_PREFIX = "GameRule.";
 
 	@Override
@@ -154,6 +157,61 @@ public class Configuration implements IConfiguration {
 	public boolean hasGameRule(String name) {
 		String key = GAME_RULE_PREFIX + name;
 		return properties.containsKey(key) || parent.hasGameRule(name);
+	}
+
+	private static final String ENTITY_TRACK_PREFIX = "Entity.", ENTITY_TRACK_SUFFIX = ".TrackDistance";
+
+	@Override
+	@CheckForSigned
+	public int getUserEntityTrackDistance(String entityType) {
+		String key = ENTITY_TRACK_PREFIX + entityType + ENTITY_TRACK_SUFFIX;
+		if (this.properties.containsKey(key)) {
+			return Integer.parseInt(this.properties.getProperty(key));
+		} else {
+			return parent.getUserEntityTrackDistance(entityType);
+		}
+	}
+
+	@Override
+	public void setUserEntityTrackDistance(String entityType, @Nonnegative int value) {
+		assert value >= 0;
+		String key = ENTITY_TRACK_PREFIX + entityType + ENTITY_TRACK_SUFFIX;
+		this.properties.setProperty(key, Integer.toString(value));
+	}
+
+	private static final String ENTITY_TYPE_PREFIX = "Entity.", ENTITY_TYPE_SUFFIX = ".Enabled";
+
+	@Override
+	public boolean isEntityTypeEnabled(String entityType) {
+		String key = ENTITY_TYPE_PREFIX + entityType + ENTITY_TYPE_SUFFIX;
+		if (this.properties.containsKey(key)) {
+			return Boolean.parseBoolean(this.properties.getProperty(key));
+		} else {
+			return parent.isEntityTypeEnabled(entityType);
+		}
+	}
+
+	@Override
+	public void setEntityTypeEnabled(String entityType, boolean value) {
+		String key = ENTITY_TYPE_PREFIX + entityType + ENTITY_TYPE_SUFFIX;
+		this.properties.setProperty(key, Boolean.toString(value));
+	}
+
+	private static final String ENTITY_GROUP_PREFIX = "EntityGroup.", ENTITY_GROUP_SUFFIX = ".Enabled";
+	@Override
+	public boolean isEntityGroupEnabled(String entityGroup) {
+		String key = ENTITY_GROUP_PREFIX + entityGroup + ENTITY_GROUP_SUFFIX;
+		if (this.properties.containsKey(key)) {
+			return Boolean.parseBoolean(this.properties.getProperty(key));
+		} else {
+			return parent.isEntityGroupEnabled(entityGroup);
+		}
+	}
+
+	@Override
+	public void setEntityGroupEnabled(String entityGroup, boolean value) {
+		String key = ENTITY_GROUP_PREFIX + entityGroup + ENTITY_GROUP_SUFFIX;
+		this.properties.setProperty(key, Boolean.toString(value));
 	}
 
 	// Keep but rename

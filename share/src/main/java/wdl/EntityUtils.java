@@ -19,6 +19,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.CheckForSigned;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -96,6 +97,7 @@ public class EntityUtils {
 	 * @param entity
 	 * @return
 	 */
+	@CheckForSigned
 	public static int getEntityTrackDistance(@Nonnull Entity entity) {
 		String type = getEntityType(entity);
 		if (type == null) {
@@ -110,6 +112,7 @@ public class EntityUtils {
 	 * @param type
 	 * @return
 	 */
+	@CheckForSigned
 	public static int getEntityTrackDistance(@Nonnull String type) {
 		return getEntityTrackDistance(getTrackDistanceMode(), type, null);
 	}
@@ -122,6 +125,7 @@ public class EntityUtils {
 	 * @param entity
 	 * @return
 	 */
+	@CheckForSigned
 	public static int getEntityTrackDistance(TrackDistanceMode mode, @Nonnull String type, @Nullable Entity entity) {
 		switch (mode) {
 		case DEFAULT: {
@@ -130,7 +134,7 @@ public class EntityUtils {
 					continue;
 				}
 				int distance = manager.getTrackDistance(type, entity);
-				if (distance != -1) {
+				if (distance >= 0) {
 					return distance;
 				}
 			}
@@ -148,12 +152,9 @@ public class EntityUtils {
 			return serverDistance;
 		} 
 		case USER: {
-			String prop = WDL.worldProps.getProperty("Entity." +
-					type + ".TrackDistance", "-1");
+			int value = WDL.worldProps.getUserEntityTrackDistance(type);
 
-			int value = Integer.valueOf(prop);
-
-			if (value == -1) {
+			if (value < 0) {
 				return getEntityTrackDistance(TrackDistanceMode.SERVER, type, entity);
 			} else {
 				return value;
@@ -206,10 +207,8 @@ public class EntityUtils {
 	 * @return
 	 */
 	public static boolean isEntityEnabled(@Nonnull String type) {
-		boolean groupEnabled = WDL.worldProps.getProperty("EntityGroup." +
-				getEntityGroup(type) + ".Enabled", "true").equals("true");
-		boolean singleEnabled = WDL.worldProps.getProperty("Entity." +
-				type + ".Enabled", "true").equals("true");
+		boolean groupEnabled = WDL.worldProps.isEntityGroupEnabled(getEntityGroup(type));
+		boolean singleEnabled = WDL.worldProps.isEntityTypeEnabled(type);
 
 		return groupEnabled && singleEnabled;
 	}
