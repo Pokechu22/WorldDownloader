@@ -21,6 +21,7 @@ import net.minecraft.entity.item.EntityArmorStand;
 import wdl.api.IEntityManager;
 import wdl.api.IWDLMod;
 import wdl.api.IWDLModDescripted;
+import wdl.config.settings.EntitySettings.TrackDistanceMode;
 
 import com.google.common.collect.Sets;
 
@@ -75,7 +76,8 @@ IWDLModDescripted {
 	public int getTrackDistance(String identifier, Entity entity) {
 		// Assume holograms act the same as armor stands
 		if (identifier == "x-extended:hologram") {
-			return EntityUtils.getEntityTrackDistance("default", "minecraft:armor_stand", entity);
+			// XXX This should use the current config value
+			return EntityUtils.getEntityTrackDistance(TrackDistanceMode.DEFAULT, "minecraft:armor_stand", entity);
 		} else {
 			return -1;
 		}

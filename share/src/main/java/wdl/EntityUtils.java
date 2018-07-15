@@ -35,6 +35,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import wdl.api.IEntityManager;
 import wdl.api.WDLApi;
 import wdl.api.WDLApi.ModInfo;
+import wdl.config.settings.EntitySettings;
+import wdl.config.settings.EntitySettings.TrackDistanceMode;
 
 /**
  * Provides utility functions for recognizing entities.
@@ -120,8 +122,9 @@ public class EntityUtils {
 	 * @param entity
 	 * @return
 	 */
-	public static int getEntityTrackDistance(String mode, @Nonnull String type, @Nullable Entity entity) {
-		if ("default".equals(mode)) {
+	public static int getEntityTrackDistance(TrackDistanceMode mode, @Nonnull String type, @Nullable Entity entity) {
+		switch (mode) {
+		case DEFAULT: {
 			for (IEntityManager manager : getEntityManagers()) {
 				if (!manager.getProvidedEntities().contains(type)) {
 					continue;
@@ -133,29 +136,31 @@ public class EntityUtils {
 			}
 			LOGGER.warn("Failed to get track distance for " + type + " (" + entity + ")");
 			return -1;
-		} else if ("server".equals(mode)) {
+		}
+		case SERVER: {
 			int serverDistance = WDLPluginChannels
 					.getEntityRange(type);
 
 			if (serverDistance < 0) {
-				return getEntityTrackDistance("default", type, entity);
+				return getEntityTrackDistance(TrackDistanceMode.DEFAULT, type, entity);
 			}
 
 			return serverDistance;
-		} else if ("user".equals(mode)) {
+		} 
+		case USER: {
 			String prop = WDL.worldProps.getProperty("Entity." +
 					type + ".TrackDistance", "-1");
 
 			int value = Integer.valueOf(prop);
 
 			if (value == -1) {
-				return getEntityTrackDistance("server", type, entity);
+				return getEntityTrackDistance(TrackDistanceMode.SERVER, type, entity);
 			} else {
 				return value;
 			}
-		} else {
-			throw new IllegalArgumentException("Mode is not a valid mode: " + mode);
 		}
+		}
+		throw new IllegalArgumentException("Mode is not a valid mode: " + mode);
 	}
 
 	/**
@@ -239,8 +244,8 @@ public class EntityUtils {
 	/**
 	 * Gets the currently selected track distance mode from {@link WDL#worldProps}.
 	 */
-	public static String getTrackDistanceMode() {
-		return WDL.worldProps.getProperty("Entity.TrackDistanceMode", "server");
+	public static TrackDistanceMode getTrackDistanceMode() {
+		return WDL.worldProps.getValue(EntitySettings.TRACK_DISTANCE_MODE);
 	}
 
 	/**
