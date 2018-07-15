@@ -14,7 +14,7 @@
  */
 package wdl.config;
 
-import java.util.Map;
+import java.util.Set;
 
 import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.util.text.ITextComponent;
@@ -83,14 +83,35 @@ public interface IConfiguration {
 	}
 
 	/**
-	 * Gets a map of gamerules to values set in this configuration. This includes ones
-	 * inherited from the parent.
-	 */
-	public abstract Map<String, String> getGameRules();
-
-	/**
 	 * Puts the contents of this configuration into the given crash report category.
 	 */
 	public abstract void addToCrashReport(CrashReportCategory category, String name);
 
+	// XXX Older things that should be moved to the Setting system eventually, but
+	// I don't have time to do for this release
+	/**
+	 * Gets a set of defined gamerules.  The resultant set is not backed by this collection.
+	 * This includes rules defined by the parent.
+	 */
+	public abstract Set<String> getGameRules();
+
+	/**
+	 * Queries the value of a gamerule.
+	 */
+	public abstract String getGameRule(String name);
+
+	/**
+	 * Sets the value of a gamerule.
+	 */
+	public abstract void setGameRule(String name, String value);
+
+	/**
+	 * Removes the value for the given gamerule, even if it's set in a parent.
+	 */
+	public abstract void clearGameRule(String name);
+
+	/**
+	 * True if the given rule is present in this config or a parent of it.
+	 */
+	public abstract boolean hasGameRule(String name);
 }

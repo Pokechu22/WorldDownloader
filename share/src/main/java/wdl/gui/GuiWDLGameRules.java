@@ -34,6 +34,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.GameRules.ValueType;
 import wdl.WDL;
+import wdl.config.IConfiguration;
 
 public class GuiWDLGameRules extends GuiScreen {
 	private static final Logger LOGGER = LogManager.getLogger();
@@ -283,6 +284,8 @@ public class GuiWDLGameRules extends GuiScreen {
 	private GuiGameRuleList list;
 	@Nullable
 	private final GuiScreen parent;
+	private final IConfiguration config;
+
 	private GameRules rules;
 	/** All vanilla game rules; this list is immutable. */
 	private final List<String> vanillaGameRules;
@@ -298,7 +301,7 @@ public class GuiWDLGameRules extends GuiScreen {
 	@Nullable
 	private String getRule(@Nonnull String ruleName) {
 		if (isRuleSet(ruleName)) {
-			return WDL.worldProps.getProperty("GameRule." + ruleName);
+			return config.getGameRule("GameRule." + ruleName);
 		} else {
 			return rules.getString(ruleName);
 		}
@@ -314,7 +317,7 @@ public class GuiWDLGameRules extends GuiScreen {
 	 *            {@link #clearRule(String)}.
 	 */
 	private void setRule(@Nonnull String ruleName, @Nonnull String value) {
-		WDL.worldProps.setProperty("GameRule." + ruleName, value);
+		config.setGameRule(ruleName, value);
 	}
 
 	/**
@@ -325,10 +328,7 @@ public class GuiWDLGameRules extends GuiScreen {
 	 *            The name of the rule.
 	 */
 	private void clearRule(@Nonnull String ruleName) {
-		// TODO: Handle this in a less-hacky way, so that the property's only
-		// deleted from the one it needs to be deleted from
-		WDL.worldProps.remove("GameRule." + ruleName);
-		WDL.baseProps.remove("GameRule." + ruleName);
+		config.clearGameRule(ruleName);
 	}
 
 	/**
@@ -340,11 +340,12 @@ public class GuiWDLGameRules extends GuiScreen {
 	 *         no such rule exists).
 	 */
 	private boolean isRuleSet(@Nonnull String ruleName) {
-		return WDL.worldProps.containsKey("GameRule." + ruleName);
+		return config.hasGameRule(ruleName);
 	}
 
 	public GuiWDLGameRules(@Nullable GuiScreen parent) {
 		this.parent = parent;
+		this.config = WDL.worldProps;
 		this.rules = WDL.worldClient.getGameRules();
 		this.vanillaGameRules = ImmutableList.copyOf(rules.getRules());
 	}

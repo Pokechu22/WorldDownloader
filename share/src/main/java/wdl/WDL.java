@@ -1209,8 +1209,8 @@ public class WDL {
 
 		// Gamerules (most of these are already populated)
 		NBTTagCompound gamerules = worldInfoNBT.getCompoundTag("GameRules");
-		for (Map.Entry<String, String> e : worldProps.getGameRules().entrySet()) {
-			gamerules.setString(e.getKey(), e.getValue());
+		for (String rule : worldProps.getGameRules()) {
+			gamerules.setString(rule, worldProps.getGameRule(rule));
 		}
 
 		// Forge (TODO: move this elsewhere!)

@@ -15,7 +15,7 @@
 package wdl.config;
 
 import java.util.Collections;
-import java.util.Map;
+import java.util.Set;
 
 import net.minecraft.crash.CrashReportCategory;
 
@@ -42,13 +42,32 @@ public class DefaultConfiguration implements IConfiguration {
 	}
 
 	@Override
-	public Map<String, String> getGameRules() {
-		return Collections.emptyMap();
-	}
-
-	@Override
 	public void addToCrashReport(CrashReportCategory category, String name) {
 		category.addCrashSection("-", "Default config (" + name + ")");
 	}
 
+	@Override
+	public Set<String> getGameRules() {
+		return Collections.emptySet();
+	}
+
+	@Override
+	public String getGameRule(String name) {
+		throw new IllegalArgumentException("No custom value specified for gamerule " + name); // XXX Is this the best behavior?
+	}
+
+	@Override
+	public void setGameRule(String name, String value) {
+		throw new UnsupportedOperationException("Cannot change gamerule settings on the default configuration (" + name + "->" + value + ")");
+	}
+
+	@Override
+	public void clearGameRule(String name) {
+		// This is allowed, as clearGameRule is recursive.
+	}
+
+	@Override
+	public boolean hasGameRule(String name) {
+		return false;
+	}
 }

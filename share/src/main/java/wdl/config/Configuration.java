@@ -20,6 +20,7 @@ import java.io.Writer;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
@@ -27,6 +28,8 @@ import javax.annotation.Nullable;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.google.common.collect.Sets;
 
 import net.minecraft.crash.CrashReportCategory;
 
@@ -97,19 +100,6 @@ public class Configuration implements IConfiguration {
 	}
 
 	/**
-	 * Gets a map of gamerules to values set in this configuration. This includes ones
-	 * inherited from the parent.
-	 */
-	@Override
-	public Map<String, String> getGameRules() {
-		return this.properties.stringPropertyNames().stream()
-				.filter(s -> s.startsWith("GameRule."))
-				.collect(Collectors.toMap(
-						s -> s.substring("GameRule.".length()),
-						s -> getProperty(s)));
-	}
-
-	/**
 	 * Puts the contents of this configuration into the given crash report category.
 	 */
 	@Override
@@ -125,6 +115,45 @@ public class Configuration implements IConfiguration {
 		} else {
 			category.addCrashSection("-", "empty");
 		}
+	}
+
+	private static final String GAME_RULE_PREFIX = "GameRule.";
+
+	@Override
+	public Set<String> getGameRules() {
+		return Sets.union(this.properties.stringPropertyNames().stream()
+				.filter(s -> s.startsWith(GAME_RULE_PREFIX))
+				.map(s -> s.substring(GAME_RULE_PREFIX.length()))
+				.collect(Collectors.toSet()), this.parent.getGameRules());
+	}
+
+	@Override
+	public String getGameRule(String name) {
+		String key = GAME_RULE_PREFIX + name;
+		if (this.properties.containsKey(key)) {
+			return this.properties.getProperty(key);
+		} else {
+			return parent.getGameRule(name);
+		}
+	}
+
+	@Override
+	public void setGameRule(String name, String value) {
+		String key = GAME_RULE_PREFIX + name;
+		this.properties.setProperty(key, value);
+	}
+
+	@Override
+	public void clearGameRule(String name) {
+		String key = GAME_RULE_PREFIX + name;
+		this.properties.remove(key);
+		this.parent.clearGameRule(name);
+	}
+
+	@Override
+	public boolean hasGameRule(String name) {
+		String key = GAME_RULE_PREFIX + name;
+		return properties.containsKey(key) || parent.hasGameRule(name);
 	}
 
 	// Keep but rename
