@@ -19,8 +19,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityTracker;
 
 /**
  * Used to manage and produce a list of entities and their track distances.
@@ -33,8 +31,8 @@ public interface IEntityManager extends IWDLMod {
 	 * <p>
 	 * There is no requirement for the structure of these names, but it is
 	 * recommended that implementations use the conventional name for the entity
-	 * (as would be found in {@link EntityList}). Matching names will be merged
-	 * by the mod itself, which is beneficial.
+	 * (as would be found in {@link net.minecraft.entity.EntityList}). Matching
+	 * names will be merged by the mod itself, which is beneficial.
 	 * <p>
 	 * However, non-standard entities don't have a standardized name. Thus, they
 	 * should use the name that works best for them. For instance, entities
@@ -77,7 +75,7 @@ public interface IEntityManager extends IWDLMod {
 	 * which an entity stops rendering.
 	 * <p>
 	 * For vanilla entities, these values are provided in
-	 * {@link EntityTracker#track(Entity)}.
+	 * {@link net.minecraft.entity.EntityTracker#track(Entity)}.
 	 * <p>
 	 * This method will be called when {@link #getProvidedEntities()} includes
 	 * the given identifier, even if this provider did not identify the entity.
