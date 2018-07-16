@@ -35,7 +35,8 @@ import com.google.common.collect.Sets;
 import net.minecraft.crash.CrashReportCategory;
 
 /**
- * WDL configuration.  Right now, just a thin wrapper around {@link Properties}.
+ * An implementation of {@link IConfiguration} that is backed by a
+ * {@link Properties} object.
  */
 public class Configuration implements IConfiguration {
 	private static final Logger LOGGER = LogManager.getLogger();

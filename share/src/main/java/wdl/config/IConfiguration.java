@@ -24,6 +24,10 @@ import javax.annotation.Nonnegative;
 import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.util.text.ITextComponent;
 
+/**
+ * WDL configuration.  Mostly, based off of {@Link Setting} objects; there are a few things
+ * that are not based on that though (gamerules and entity settings).
+ */
 public interface IConfiguration {
 
 	/**
