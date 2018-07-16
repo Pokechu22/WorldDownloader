@@ -431,6 +431,7 @@ wdl.messages.permissions.packet5.set=Received settings packet #5: Changed list o
 wdl.messages.permissions.packet6=Received settings packet #6: Removed %d ChunkRanges from %s with tags matching %s.
 wdl.messages.permissions.packet7=Received settings packet #7: Replaced %d ChunkRanges in %s that had a tag of %s with %d new ranges.
 wdl.messages.permissions.unknownPacket=Received unknown settings packet #%d.  See log for binary contents.
+wdl.messages.permissions.badPacket=Received malformed packet.  See log for more information.  (%s)
 
 wdl.saveProgress.title=Saving downloaded world
 wdl.saveProgress.chunk.title=Saving chunks

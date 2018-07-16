@@ -657,6 +657,12 @@ public class WDLPluginChannels {
 
 	static void onPluginChannelPacket(String channel, byte[] bytes) {
 		if ("WDL|CONTROL".equals(channel)) {
+			handleControlPacket(bytes);
+		}
+	}
+
+	private static void handleControlPacket(byte[] bytes) {
+		try {
 			ByteArrayDataInput input = ByteStreams.newDataInput(bytes);
 
 			int section = input.readInt();
@@ -829,15 +835,21 @@ public class WDLPluginChannels {
 				WDLMessages.chatMessageTranslated(
 						WDL.baseProps,
 						WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, "wdl.messages.permissions.unknownPacket", section);
-
-				StringBuilder messageBuilder = new StringBuilder();
-				for (byte b : bytes) {
-					messageBuilder.append(b).append(' ');
-				}
-
-				LOGGER.info(messageBuilder.toString());
+				dump(bytes);
 			}
+		} catch (Exception ex) {
+			WDLMessages.chatMessageTranslated(WDL.baseProps, WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
+					"wdl.messages.permissions.badPacket", ex);
 		}
+	}
+
+	private static void dump(byte[] bytes) {
+		StringBuilder messageBuilder = new StringBuilder();
+		for (byte b : bytes) {
+			messageBuilder.append(b).append(' ');
+		}
+
+		LOGGER.info(messageBuilder.toString());
 	}
 
 	/**
