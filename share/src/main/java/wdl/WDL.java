@@ -17,8 +17,6 @@ package wdl;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -221,17 +219,17 @@ public class WDL {
 	/**
 	 * Base properties, shared between each world on a multiworld server.
 	 */
-	public static Configuration baseProps;
+	public static IConfiguration baseProps;
 	/**
 	 * Properties for a single world on a multiworld server, or all worlds
 	 * on a single world server.
 	 */
-	public static Configuration worldProps;
+	public static IConfiguration worldProps;
 	/**
 	 * Default properties used for creating baseProps.  Saved and loaded;
 	 * shared between all servers.
 	 */
-	public static final Configuration globalProps;
+	public static final IConfiguration globalProps;
 	/**
 	 * Default properties that are used to create the global properites.
 	 */
@@ -255,12 +253,12 @@ public class WDL {
 		DefaultConfiguration.DANGEROUS_ENTITY_TYPES.add("PrimedTnt"); // old
 		DefaultConfiguration.DANGEROUS_ENTITY_TYPES.add("minecraft:tnt"); // 1.11
 		DefaultConfiguration.DANGEROUS_ENTITY_TYPES.add("null"); // :( -- XXX is this really needed
-		
+
 		globalProps = new Configuration(defaultProps);
 
 		File dataFile = new File(minecraft.mcDataDir, "WorldDownloader.txt");
-		try (FileReader reader = new FileReader(dataFile)) {
-			globalProps.load(reader);
+		try {
+			globalProps.load(dataFile);
 		} catch (Exception e) {
 			LOGGER.debug("Failed to load global properties", e);
 		}
@@ -919,8 +917,8 @@ public class WDL {
 		File savesFolder = new File(minecraft.mcDataDir, "saves");
 		File baseFolder = new File(savesFolder, baseFolderName);
 		File dataFile = new File(baseFolder, "WorldDownloader.txt");
-		try (FileReader reader = new FileReader(dataFile)) {
-			baseProps.load(reader);
+		try {
+			baseProps.load(dataFile);
 			propsFound = true;
 		} catch (Exception e) {
 			propsFound = false;
@@ -941,8 +939,8 @@ public class WDL {
 	 * Returns an empty Configuration that inherits from baseProps if the specific
 	 * world cannot be found.
 	 */
-	public static Configuration loadWorldProps(String theWorldName) {
-		Configuration ret = new Configuration(baseProps);
+	public static IConfiguration loadWorldProps(String theWorldName) {
+		IConfiguration ret = new Configuration(baseProps);
 
 		if (theWorldName.isEmpty()) {
 			return ret;
@@ -954,14 +952,13 @@ public class WDL {
 		File worldFolder = new File(savesDir, folder);
 		File dataFile = new File(worldFolder, "WorldDownloader.txt");
 
-		try (FileReader reader = new FileReader(dataFile)) {
-			ret.load(reader);
-
-			return ret;
+		try {
+			ret.load(dataFile);
 		} catch (Exception e) {
 			LOGGER.debug("Failed to load world props for " + worldName, e);
-			return ret;
 		}
+
+		return ret;
 	}
 
 	/**
@@ -976,7 +973,7 @@ public class WDL {
 	 * Saves the specified world properties, and the base properties, in their
 	 * corresponding folders.
 	 */
-	public static void saveProps(String theWorldName, Configuration theWorldProps) {
+	public static void saveProps(String theWorldName, IConfiguration theWorldProps) {
 		File savesDir = new File(minecraft.mcDataDir, "saves");
 
 		if (theWorldName.length() > 0) {
@@ -985,23 +982,23 @@ public class WDL {
 			File worldFolder = new File(savesDir, folder);
 			worldFolder.mkdirs();
 			File worldPropsFile = new File(worldFolder, "WorldDownloader.txt");
-			try (FileWriter writer = new FileWriter(worldPropsFile)) {
-				theWorldProps.store(writer, I18n.format("wdl.props.world.title"));
+			try {
+				theWorldProps.store(worldPropsFile, I18n.format("wdl.props.world.title"));
 			} catch (Exception e) {
 				LOGGER.warn("Failed to write world props!", e);
 			}
 		} else if (!isMultiworld) {
 			// XXX Because most things write into worldProps and not baseProps,
 			// we need to copy worldProps' content into baseProps so that those things are saved
-			baseProps.putAll(theWorldProps);
+			((Configuration)baseProps).putAll((Configuration)theWorldProps);
 		}
 
 		File baseFolder = new File(savesDir, baseFolderName);
 		baseFolder.mkdirs();
 
 		File basePropsFile = new File(baseFolder, "WorldDownloader.txt");
-		try (FileWriter writer = new FileWriter(basePropsFile)) {
-			baseProps.store(writer, I18n.format("wdl.props.base.title"));
+		try {
+			baseProps.store(basePropsFile, I18n.format("wdl.props.base.title"));
 		} catch (Exception e) {
 			LOGGER.warn("Failed to write base props!", e);
 		}
@@ -1014,8 +1011,8 @@ public class WDL {
 	 */
 	public static void saveGlobalProps() {
 		File globalPropsFile = new File(minecraft.mcDataDir, "WorldDownloader.txt");
-		try (FileWriter writer = new FileWriter(globalPropsFile)) {
-			globalProps.store(writer, I18n.format("wdl.props.global.title"));
+		try {
+			globalProps.store(globalPropsFile, I18n.format("wdl.props.global.title"));
 		} catch (Exception e) {
 			LOGGER.warn("Failed to write globalprops!", e);
 		}

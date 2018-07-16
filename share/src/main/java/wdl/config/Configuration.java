@@ -14,9 +14,10 @@
  */
 package wdl.config;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
@@ -81,14 +82,18 @@ public class Configuration implements IConfiguration {
 		this.properties.remove(setting.getConfigurationKey());
 	}
 
-	// Rework slightly, and maybe rename
-
-	public void load(Reader reader) throws IOException {
-		this.properties.load(reader);
+	@Override
+	public void load(File file) throws IOException {
+		try (FileReader reader = new FileReader(file)) {
+			this.properties.load(reader);
+		}
 	}
 
-	public void store(Writer writer, String comments) throws IOException {
-		this.properties.store(writer, comments);
+	@Override
+	public void store(File file, String comments) throws IOException {
+		try (FileWriter writer = new FileWriter(file)) {
+			this.properties.store(writer, comments);
+		}
 	}
 
 	/**
@@ -206,6 +211,7 @@ public class Configuration implements IConfiguration {
 
 	// Things to definitely get rid of - smelly
 
+	@Deprecated
 	public void putAll(Configuration conf) {
 		this.properties.putAll(conf.properties);
 	}

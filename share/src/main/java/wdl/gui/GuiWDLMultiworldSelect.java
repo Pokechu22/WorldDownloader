@@ -19,14 +19,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.lwjgl.input.Keyboard;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
-
-import org.lwjgl.input.Keyboard;
-
 import wdl.WDL;
 import wdl.config.Configuration;
+import wdl.config.IConfiguration;
 import wdl.config.settings.MiscSettings;
 
 /**
@@ -241,7 +241,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 				continue;
 			}
 
-			Configuration props = WDL.loadWorldProps(worldName);
+			IConfiguration props = WDL.loadWorldProps(worldName);
 
 			String displayName = props.getValue(MiscSettings.WORLD_NAME);
 			if (displayName.isEmpty()) {
@@ -444,7 +444,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 			folderName = folderName.replace(unsafeChar, '_');
 		}
 
-		Configuration worldProps = new Configuration(WDL.baseProps);
+		IConfiguration worldProps = new Configuration(WDL.baseProps);
 		worldProps.setValue(MiscSettings.WORLD_NAME, worldName);
 
 		String linkedWorldsProp = WDL.baseProps.getValue(MiscSettings.LINKED_WORLDS);

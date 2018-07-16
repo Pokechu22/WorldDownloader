@@ -14,6 +14,8 @@
  */
 package wdl.config;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Set;
 
 import javax.annotation.CheckForSigned;
@@ -84,6 +86,24 @@ public interface IConfiguration {
 	public default <T> ITextComponent getButtonText(CyclableSetting<T> setting) {
 		return setting.getButtonText(this.getValue(setting));
 	}
+
+	/**
+	 * Reads the given file into this configuration, overwriting settings currently stored
+	 * but leaving ones not set in the file as-is.
+	 *
+	 * @param file The file to read from.
+	 * @throws IOException When an IO error occurs.
+	 */
+	public abstract void load(File file) throws IOException;
+
+	/**
+	 * Writes the contents of this configuration to disk.
+	 *
+	 * @param file The file to save into.
+	 * @param comments Comment to put at the top of the file.
+	 * @throws IOException When an IO error occurs.
+	 */
+	public abstract void store(File file, String comments) throws IOException;
 
 	/**
 	 * Puts the contents of this configuration into the given crash report category.

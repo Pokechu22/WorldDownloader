@@ -14,6 +14,8 @@
  */
 package wdl.config;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -50,6 +52,18 @@ public class DefaultConfiguration implements IConfiguration {
 	}
 
 	@Override
+	@Deprecated
+	public void load(File file) throws IOException {
+		throw new UnsupportedOperationException("Cannot load the default configuration!");
+	}
+
+	@Override
+	@Deprecated
+	public void store(File file, String comments) throws IOException {
+		throw new UnsupportedOperationException("Cannot save the default configuration!");
+	}
+
+	@Override
 	public Set<String> getGameRules() {
 		return Collections.emptySet();
 	}
@@ -60,13 +74,15 @@ public class DefaultConfiguration implements IConfiguration {
 	}
 
 	@Override
+	@Deprecated
 	public void setGameRule(String name, String value) {
 		throw new UnsupportedOperationException("Cannot change gamerule settings on the default configuration (" + name + "->" + value + ")");
 	}
 
 	@Override
+	@Deprecated
 	public void clearGameRule(String name) {
-		// This is allowed, as clearGameRule is recursive.
+		// This is allowed, as clearGameRule is recursive, but it shouldn't generally be used directly.
 	}
 
 	@Override
@@ -81,6 +97,7 @@ public class DefaultConfiguration implements IConfiguration {
 	}
 
 	@Override
+	@Deprecated
 	public void setUserEntityTrackDistance(String entityType, int value) {
 		throw new UnsupportedOperationException("Cannot change entity track settings on the default configuration (" + entityType + "->" + value + ")");
 	}
@@ -94,6 +111,7 @@ public class DefaultConfiguration implements IConfiguration {
 	}
 
 	@Override
+	@Deprecated
 	public void setEntityTypeEnabled(String entityType, boolean value) {
 		throw new UnsupportedOperationException("Cannot change entity type settings on the default configuration (" + entityType + "->" + value + ")");
 	}
@@ -104,6 +122,7 @@ public class DefaultConfiguration implements IConfiguration {
 	}
 
 	@Override
+	@Deprecated
 	public void setEntityGroupEnabled(String entityGroup, boolean value) {
 		throw new UnsupportedOperationException("Cannot change entity group settings on the default configuration (" + entityGroup + "->" + value + ")");
 	}
