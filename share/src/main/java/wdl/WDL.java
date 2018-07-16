@@ -938,13 +938,15 @@ public class WDL {
 	 *
 	 * Returns an empty Configuration that inherits from baseProps if the specific
 	 * world cannot be found.
+	 *
+	 * Returns baseProps if there is no multiworld (i.e. the world name is empty).
 	 */
 	public static IConfiguration loadWorldProps(String theWorldName) {
-		IConfiguration ret = new Configuration(baseProps);
-
 		if (theWorldName.isEmpty()) {
-			return ret;
+			return baseProps;
 		}
+
+		IConfiguration ret = new Configuration(baseProps);
 
 		File savesDir = new File(minecraft.mcDataDir, "saves");
 
@@ -987,10 +989,6 @@ public class WDL {
 			} catch (Exception e) {
 				LOGGER.warn("Failed to write world props!", e);
 			}
-		} else if (!isMultiworld) {
-			// XXX Because most things write into worldProps and not baseProps,
-			// we need to copy worldProps' content into baseProps so that those things are saved
-			((Configuration)baseProps).putAll((Configuration)theWorldProps);
 		}
 
 		File baseFolder = new File(savesDir, baseFolderName);
