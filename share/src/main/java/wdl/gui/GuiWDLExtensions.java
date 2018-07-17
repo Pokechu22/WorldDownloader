@@ -30,6 +30,7 @@ import net.minecraft.util.text.TextFormatting;
 import wdl.api.IWDLModWithGui;
 import wdl.api.WDLApi;
 import wdl.api.WDLApi.ModInfo;
+import wdl.gui.widget.Button;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.GuiListEntry;
 import wdl.gui.widget.TextList;
@@ -111,13 +112,32 @@ public class GuiWDLExtensions extends GuiScreen {
 						buttonName = I18n.format("wdl.gui.extensions.defaultSettingsButtonText");
 					}
 
-					button = new GuiButton(0, 0, 0, 80, 20,
-							guiMod.getButtonName());
+					button = new Button(0, 0, 80, 20, guiMod.getButtonName()) {
+						public @Override void performAction() {
+							if (mod.mod instanceof IWDLModWithGui) {
+								((IWDLModWithGui) mod.mod).openGui(GuiWDLExtensions.this);
+							}
+						}
+					};
 				}
 
-				disableButton = new GuiButton(0, 0, 0, 80, 20,
+				disableButton = new Button(0, 0, 80, 20,
 						I18n.format("wdl.gui.extensions."
-								+ (mod.isEnabled() ? "enabled" : "disabled")));
+								+ (mod.isEnabled() ? "enabled" : "disabled"))) {
+					public @Override void performAction() {
+						mod.toggleEnabled();
+
+						this.displayString = I18n.format("wdl.gui.extensions."
+								+ (mod.isEnabled() ? "enabled" : "disabled"));
+
+						if (!mod.isEnabled()) {
+							label = "" + TextFormatting.GRAY
+									+ TextFormatting.ITALIC + modDescription;
+						} else {
+							label = modDescription;
+						}
+					}
+				};
 			}
 
 			@Override
@@ -144,27 +164,12 @@ public class GuiWDLExtensions extends GuiScreen {
 					int mouseEvent, int relativeX, int relativeY) {
 				if (button != null) {
 					if (button.mousePressed(mc, x, y)) {
-						if (mod.mod instanceof IWDLModWithGui) {
-							((IWDLModWithGui) mod.mod).openGui(GuiWDLExtensions.this);
-						}
-
 						button.playPressSound(mc.getSoundHandler());
 						return true;
 					}
 				}
 				if (disableButton.mousePressed(mc, x, y)) {
-					mod.toggleEnabled();
-
 					disableButton.playPressSound(mc.getSoundHandler());
-					disableButton.displayString = I18n.format("wdl.gui.extensions."
-							+ (mod.isEnabled() ? "enabled" : "disabled"));
-
-					if (!mod.isEnabled()) {
-						this.label = "" + TextFormatting.GRAY
-								+ TextFormatting.ITALIC + modDescription;
-					} else {
-						this.label = modDescription;
-					}
 					return true;
 				}
 

@@ -35,6 +35,7 @@ import net.minecraft.world.GameRules;
 import net.minecraft.world.GameRules.ValueType;
 import wdl.WDL;
 import wdl.config.IConfiguration;
+import wdl.gui.widget.Button;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.GuiListEntry;
 import wdl.gui.widget.GuiNumericTextField;
@@ -87,7 +88,12 @@ public class GuiWDLGameRules extends GuiScreen {
 
 			public RuleEntry(@Nonnull String ruleName) {
 				this.ruleName = ruleName;
-				this.resetButton = new GuiButton(0, 0, 0, 50, 20, I18n.format("wdl.gui.gamerules.resetRule"));
+				this.resetButton = new Button(0, 0, 50, 20,
+						I18n.format("wdl.gui.gamerules.resetRule")) {
+					public @Override void performAction() {
+						performResetAction();
+					}
+				};
 			}
 
 			@Override
@@ -114,7 +120,6 @@ public class GuiWDLGameRules extends GuiScreen {
 
 				if (resetButton.mousePressed(mc, mouseX, mouseY)) {
 					resetButton.playPressSound(mc.getSoundHandler());
-					this.performResetAction();
 					return true;
 				}
 				return mouseDown(mouseX, mouseY, mouseEvent);
@@ -205,7 +210,12 @@ public class GuiWDLGameRules extends GuiScreen {
 
 			public BooleanRuleEntry(String ruleName) {
 				super(ruleName);
-				button = new GuiButton(0, 0, 0, 100, 20, "");
+				button = new Button(0, 0, 100, 20, "") {
+					public @Override void performAction() {
+						boolean oldValue = getRule(ruleName).equals("true");
+						setRule(ruleName, oldValue ? "false" : "true");
+					}
+				};
 			}
 
 			@Override
@@ -221,8 +231,6 @@ public class GuiWDLGameRules extends GuiScreen {
 			protected boolean mouseDown(int x, int y, int button) {
 				if (this.button.mousePressed(mc, x, y)) {
 					this.button.playPressSound(mc.getSoundHandler());
-					boolean oldValue = getRule(ruleName).equals("true");
-					setRule(ruleName, oldValue ? "false" : "true");
 					return true;
 				} else {
 					return false;

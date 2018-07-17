@@ -16,11 +16,11 @@ package wdl.gui;
 
 import java.io.IOException;
 
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import wdl.VersionConstants;
 import wdl.WDL;
+import wdl.gui.widget.Button;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.TextList;
 
@@ -53,8 +53,15 @@ public class GuiWDLAbout extends GuiScreen {
 	public void initGui() {
 		buttonList.add(new ButtonDisplayGui((this.width / 2) - 155, 18, 150, 20,
 				I18n.format("wdl.gui.about.extensions"), () -> new GuiWDLExtensions(this)));
-		buttonList.add(new GuiButton(1, (this.width / 2) + 5, 18, 150, 20,
-				I18n.format("wdl.gui.about.debugInfo")));
+		buttonList.add(new Button((this.width / 2) + 5, 18, 150, 20,
+				I18n.format("wdl.gui.about.debugInfo")) {
+			public @Override void performAction() {
+				// Copy debug info
+				setClipboardString(WDL.getDebugInfo());
+				// Change text to "copied" once clicked
+				this.displayString = I18n.format("wdl.gui.about.debugInfo.copied");
+			}
+		});
 		buttonList.add(new ButtonDisplayGui((this.width / 2) - 100, this.height - 29,
 				200, 20, parent));
 
@@ -90,17 +97,6 @@ public class GuiWDLAbout extends GuiScreen {
 			list.addBlankLine();
 			list.addLinkLine(I18n.format("wdl.gui.about.fastutil.website"), FASTUTIL_PAGE);
 			list.addLinkLine(I18n.format("wdl.gui.about.fastutil.license"), APACHE_LICENSE_2_0);
-		}
-	}
-
-	@Override
-	protected void actionPerformed(GuiButton button) throws IOException {
-		if (button.id == 1) {
-			// Copy debug info
-			setClipboardString(WDL.getDebugInfo());
-			// Change text to "copied" once clicked
-			button.displayString = I18n
-					.format("wdl.gui.about.debugInfo.copied");
 		}
 	}
 

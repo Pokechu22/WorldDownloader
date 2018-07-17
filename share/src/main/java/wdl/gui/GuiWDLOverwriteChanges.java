@@ -20,16 +20,16 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.resources.I18n;
-
 import org.lwjgl.input.Keyboard;
 
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.resources.I18n;
 import wdl.WDL;
 import wdl.WDLMessageTypes;
 import wdl.WDLMessages;
 import wdl.WorldBackup;
 import wdl.WorldBackup.IBackupProgressMonitor;
+import wdl.gui.widget.Button;
 
 /**
  * GUI shown before possibly overwriting data in the world.
@@ -172,20 +172,42 @@ IBackupProgressMonitor {
 		int x = (this.width / 2) - 100;
 		int y = infoBoxY + 22;
 
-		backupAsZipButton = new GuiButton(0, x, y,
-				I18n.format("wdl.gui.overwriteChanges.asZip.name"));
+		backupAsZipButton = new Button(x, y, 200, 20,
+				I18n.format("wdl.gui.overwriteChanges.asZip.name")) {
+			public @Override void performAction() {
+				if (backingUp) return;
+				backingUp = true;
+				new BackupThread(true).start();
+			}
+		};
 		this.buttonList.add(backupAsZipButton);
 		y += 22;
-		backupAsFolderButton = new GuiButton(1, x, y,
-				I18n.format("wdl.gui.overwriteChanges.asFolder.name"));
+		backupAsFolderButton = new Button(x, y, 200, 20,
+				I18n.format("wdl.gui.overwriteChanges.asFolder.name")) {
+			public @Override void performAction() {
+				if (backingUp) return;
+				backingUp = true;
+				new BackupThread(false).start();
+			}
+		};
 		this.buttonList.add(backupAsFolderButton);
 		y += 22;
-		downloadNowButton = new GuiButton(2, x, y,
-				I18n.format("wdl.gui.overwriteChanges.startNow.name"));
+		downloadNowButton = new Button(x, y, 200, 20,
+				I18n.format("wdl.gui.overwriteChanges.startNow.name")) {
+			public @Override void performAction() {
+				WDL.overrideLastModifiedCheck = true;
+				mc.displayGuiScreen(null);
+				WDL.startDownload();
+			}
+		};
 		this.buttonList.add(downloadNowButton);
 		y += 22;
-		cancelButton = new GuiButton(3, x, y,
-				I18n.format("wdl.gui.overwriteChanges.cancel.name"));
+		cancelButton = new Button(x, y, 200, 20,
+				I18n.format("wdl.gui.overwriteChanges.cancel.name")) {
+			public @Override void performAction() {
+				mc.displayGuiScreen(null);
+			}
+		};
 		this.buttonList.add(cancelButton);
 
 		super.initGui();
@@ -198,33 +220,6 @@ IBackupProgressMonitor {
 			return;
 		}
 		super.keyTyped(typedChar, keyCode);
-	}
-
-	@Override
-	protected void actionPerformed(GuiButton button) throws IOException {
-		if (this.backingUp) {
-			return;
-		}
-
-		if (button.id == 0) {
-			backingUp = true;
-
-			new BackupThread(true).start();
-		}
-		if (button.id == 1) {
-			backingUp = true;
-
-			new BackupThread(false).start();
-		}
-		if (button.id == 2) {
-			WDL.overrideLastModifiedCheck = true;
-			mc.displayGuiScreen(null);
-
-			WDL.startDownload();
-		}
-		if (button.id == 3) {
-			mc.displayGuiScreen(null);
-		}
 	}
 
 	@Override

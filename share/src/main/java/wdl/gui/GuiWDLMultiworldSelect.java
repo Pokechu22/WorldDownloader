@@ -275,16 +275,28 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		int offset = (numWorldButtons * 155 + 45) / 2;
 		int y = this.height - 49;
 
-		this.cancelBtn = new GuiButton(-1, this.width / 2 - 155, this.height - 25,
-				150, 20, I18n.format("gui.cancel"));
+		this.cancelBtn = new Button(this.width / 2 - 155, this.height - 25,
+				150, 20, I18n.format("gui.cancel")) {
+			public @Override void performAction() {
+				callback.onCancel();
+			}
+		};
 		this.buttonList.add(this.cancelBtn);
 
-		this.acceptBtn = new GuiButton(-2, this.width / 2 + 5, this.height - 25,
-				150, 20, I18n.format("wdl.gui.multiworldSelect.done"));
+		this.acceptBtn = new Button(this.width / 2 + 5, this.height - 25,
+				150, 20, I18n.format("wdl.gui.multiworldSelect.done")) {
+			public @Override void performAction() {
+				callback.onWorldSelected(selectedMultiWorld.folderName);
+			}
+		};
 		this.acceptBtn.enabled = (selectedMultiWorld != null);
 		this.buttonList.add(this.acceptBtn);
 
-		prevButton = new GuiButton(-4, this.width / 2 - offset, y, 20, 20, "<");
+		prevButton = new Button(this.width / 2 - offset, y, 20, 20, "<") {
+			public @Override void performAction() {
+				index--;
+			}
+		};
 		this.buttonList.add(prevButton);
 
 		for (int i = 0; i < numWorldButtons; i++) {
@@ -292,12 +304,20 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 					+ i * 155 + 25, y, 150, 20));
 		}
 
-		nextButton = new GuiButton(-5, this.width / 2 - offset + 25
-				+ numWorldButtons * 155, y, 20, 20, ">");
+		nextButton = new Button(this.width / 2 - offset + 25
+				+ numWorldButtons * 155, y, 20, 20, ">") {
+			public @Override void performAction() {
+				index++;
+			}
+		};
 		this.buttonList.add(nextButton);
 
-		this.newWorldButton = new GuiButton(-3, this.width / 2 - 155, 29, 150, 20,
-				I18n.format("wdl.gui.multiworldSelect.newName"));
+		this.newWorldButton = new Button(this.width / 2 - 155, 29, 150, 20,
+				I18n.format("wdl.gui.multiworldSelect.newName")) {
+			public @Override void performAction() {
+				showNewWorldTextBox = true;
+			}
+		};
 		this.buttonList.add(newWorldButton);
 
 		this.newNameField = new GuiTextField(40, this.fontRenderer,
@@ -306,23 +326,6 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		this.searchField = new GuiTextField(41, this.fontRenderer,
 				this.width / 2 + 5, 29, 150, 20);
 		this.searchField.setText(searchText);
-	}
-
-	@Override
-	protected void actionPerformed(GuiButton button) {
-		if (button.enabled) {
-			if (button.id == -1) {
-				callback.onCancel();
-			} else if (button.id == -2) {
-				callback.onWorldSelected(selectedMultiWorld.folderName);
-			} else if (button.id == -3) {
-				this.showNewWorldTextBox = true;
-			} else if (button.id == -4) {
-				index--;
-			} else if (button.id == -5) {
-				index++;
-			}
-		}
 	}
 
 	/**

@@ -33,6 +33,7 @@ import wdl.WDLMessages;
 import wdl.config.IConfiguration;
 import wdl.config.settings.EntitySettings;
 import wdl.config.settings.EntitySettings.TrackDistanceMode;
+import wdl.gui.widget.Button;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.GuiListEntry;
 import wdl.gui.widget.GuiSlider;
@@ -112,7 +113,6 @@ public class GuiWDLEntities extends GuiScreen {
 		 * {@link net.minecraft.client.gui.GuiKeyBindingList.CategoryEntry}.
 		 */
 		private class CategoryEntry extends GuiListEntry {
-			private final String group;
 			private final String displayGroup;
 			private final int labelWidth;
 
@@ -121,14 +121,18 @@ public class GuiWDLEntities extends GuiScreen {
 			private boolean groupEnabled;
 
 			public CategoryEntry(String group) {
-				this.group = group;
 				this.displayGroup = EntityUtils.getDisplayGroup(group);
 				this.labelWidth = mc.fontRenderer.getStringWidth(displayGroup);
 
 				this.groupEnabled = config.isEntityGroupEnabled(group);
 
-				this.enableGroupButton = new GuiButton(0, 0, 0, 90, 18,
-						getButtonText());
+				this.enableGroupButton = new Button(0, 0, 90, 18, getButtonText()) {
+					public @Override void performAction() {
+						groupEnabled ^= true;
+						this.displayString = getButtonText();
+						config.setEntityGroupEnabled(group, groupEnabled);
+					}
+				};
 			}
 
 			@Override
@@ -149,13 +153,7 @@ public class GuiWDLEntities extends GuiScreen {
 			public boolean mousePressed(int slotIndex, int x, int y,
 					int mouseEvent, int relativeX, int relativeY) {
 				if (enableGroupButton.mousePressed(mc, x, y)) {
-					groupEnabled ^= true;
-
 					enableGroupButton.playPressSound(mc.getSoundHandler());
-
-					this.enableGroupButton.displayString = getButtonText();
-
-					config.setEntityGroupEnabled(group, groupEnabled);
 					return true;
 				}
 				return false;
@@ -209,8 +207,13 @@ public class GuiWDLEntities extends GuiScreen {
 				entityEnabled = config.isEntityTypeEnabled(entity);
 				range = EntityUtils.getEntityTrackDistance(entity);
 
-				this.onOffButton = new GuiButton(0, 0, 0, 75, 18,
-						getButtonText());
+				this.onOffButton = new Button(0, 0, 75, 18, getButtonText()) {
+					public @Override void performAction() {
+						entityEnabled ^= true;
+						onOffButton.displayString = getButtonText();
+						config.setEntityTypeEnabled(entity, entityEnabled);
+					}
+				};
 				this.onOffButton.enabled = category.isGroupEnabled();
 
 				this.rangeSlider = new GuiSlider(0, 0, 150, 18,
@@ -258,12 +261,7 @@ public class GuiWDLEntities extends GuiScreen {
 			public boolean mousePressed(int slotIndex, int x, int y,
 					int mouseEvent, int relativeX, int relativeY) {
 				if (onOffButton.mousePressed(mc, x, y)) {
-					entityEnabled ^= true;
-
 					onOffButton.playPressSound(mc.getSoundHandler());
-					onOffButton.displayString = getButtonText();
-
-					config.setEntityTypeEnabled(entity, entityEnabled);
 					return true;
 				}
 				if (rangeSlider.mousePressed(mc, x, y)) {

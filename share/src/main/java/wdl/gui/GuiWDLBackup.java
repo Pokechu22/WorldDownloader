@@ -14,15 +14,13 @@
  */
 package wdl.gui;
 
-import java.io.IOException;
-
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import wdl.WDL;
 import wdl.WorldBackup.WorldBackupType;
 import wdl.config.IConfiguration;
 import wdl.config.settings.MiscSettings;
+import wdl.gui.widget.Button;
 import wdl.gui.widget.ButtonDisplayGui;
 
 /**
@@ -49,24 +47,21 @@ public class GuiWDLBackup extends GuiScreen {
 	public void initGui() {
 		backupType = config.getValue(MiscSettings.BACKUP_TYPE);
 
-		this.buttonList.add(new GuiButton(0, this.width / 2 - 100, 32,
-				getBackupButtonText()));
+		this.buttonList.add(new Button(this.width / 2 - 100, 32,
+				200, 20, getBackupButtonText()) {
+			public @Override void performAction() {
+				switch (backupType) {
+				case NONE: backupType = WorldBackupType.FOLDER; break;
+				case FOLDER: backupType = WorldBackupType.ZIP; break;
+				case ZIP: backupType = WorldBackupType.NONE; break;
+				}
+
+				this.displayString = getBackupButtonText();
+			}
+		});
 
 		this.buttonList.add(new ButtonDisplayGui(this.width / 2 - 100, height - 29,
 				200, 20, this.parent));
-	}
-
-	@Override
-	protected void actionPerformed(GuiButton button) throws IOException {
-		if (button.id == 0) { //Backup mode
-			switch (backupType) {
-			case NONE: backupType = WorldBackupType.FOLDER; break;
-			case FOLDER: backupType = WorldBackupType.ZIP; break;
-			case ZIP: backupType = WorldBackupType.NONE; break;
-			}
-
-			button.displayString = getBackupButtonText();
-		}
 	}
 
 	private String getBackupButtonText() {

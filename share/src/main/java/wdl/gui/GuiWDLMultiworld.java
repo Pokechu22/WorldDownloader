@@ -20,6 +20,7 @@ import java.util.List;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+import wdl.gui.widget.Button;
 
 public class GuiWDLMultiworld extends GuiScreen {
 	private final MultiworldCallback callback;
@@ -62,31 +63,28 @@ public class GuiWDLMultiworld extends GuiScreen {
 		infoBoxX = this.width / 2 - infoBoxWidth / 2;
 		infoBoxY = this.height / 2 - infoBoxHeight / 2;
 
-		this.multiworldEnabledBtn = new GuiButton(1, this.width / 2 - 100,
-				infoBoxY + infoBoxHeight - 30,
-				this.getMultiworldEnabledText());
+		this.multiworldEnabledBtn = new Button(this.width / 2 - 100,
+				infoBoxY + infoBoxHeight - 30, 200, 20,
+				this.getMultiworldEnabledText()) {
+			public @Override void performAction() {
+				toggleMultiworldEnabled();
+			}
+		};
 		this.buttonList.add(this.multiworldEnabledBtn);
 
-		this.buttonList.add(new GuiButton(100, this.width / 2 - 155,
-				this.height - 29, 150, 20, I18n.format("gui.cancel")));
+		this.buttonList.add(new Button(this.width / 2 - 155,
+				this.height - 29, 150, 20, I18n.format("gui.cancel")) {
+			public @Override void performAction() {
+				callback.onCancel();
+			}
+		});
 
-		this.buttonList.add(new GuiButton(101, this.width / 2 + 5,
-				this.height - 29, 150, 20, I18n.format("gui.done")));
-	}
-
-	/**
-	 * Fired when a control is clicked. This is the equivalent of
-	 * ActionListener.actionPerformed(ActionEvent e).
-	 */
-	@Override
-	protected void actionPerformed(GuiButton button) {
-		if (button.id == 1) {
-			this.toggleMultiworldEnabled();
-		} else if (button.id == 100) {
-			callback.onCancel();
-		} else if (button.id == 101) {
-			callback.onSelect(this.enableMultiworld);
-		}
+		this.buttonList.add(new Button(this.width / 2 + 5,
+				this.height - 29, 150, 20, I18n.format("gui.done")) {
+			public @Override void performAction() {
+				callback.onSelect(enableMultiworld);
+			}
+		});
 	}
 
 	/**

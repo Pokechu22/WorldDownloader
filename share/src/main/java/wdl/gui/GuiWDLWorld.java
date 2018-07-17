@@ -22,6 +22,7 @@ import net.minecraft.client.resources.I18n;
 import wdl.WDL;
 import wdl.config.IConfiguration;
 import wdl.config.settings.WorldSettings;
+import wdl.gui.widget.Button;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.GuiNumericTextField;
 import wdl.gui.widget.SettingButton;
@@ -92,27 +93,18 @@ public class GuiWDLWorld extends GuiScreen {
 		this.spawnY.setMaxStringLength(7);
 		this.spawnZ.setMaxStringLength(7);
 		y += 18;
-		this.pickSpawnBtn = new GuiButton(5, this.width / 2, y, 100, 20,
-				I18n.format("wdl.gui.world.setSpawnToCurrentPosition"));
+		this.pickSpawnBtn = new Button(this.width / 2, y, 100, 20,
+				I18n.format("wdl.gui.world.setSpawnToCurrentPosition")) {
+			public @Override void performAction() {
+				setSpawnToPlayerPosition();
+			}
+		};
 		this.buttonList.add(this.pickSpawnBtn);
 
 		updateSpawnTextBoxVisibility();
 
 		this.buttonList.add(new ButtonDisplayGui(this.width / 2 - 100, this.height - 29,
 				200, 20, this.parent));
-	}
-
-	/**
-	 * Fired when a control is clicked. This is the equivalent of
-	 * ActionListener.actionPerformed(ActionEvent e).
-	 */
-	@Override
-	protected void actionPerformed(GuiButton button) {
-		if (button.enabled) {
-			if (button.id == 5) {
-				this.setSpawnToPlayerPosition();
-			}
-		}
 	}
 
 	@Override

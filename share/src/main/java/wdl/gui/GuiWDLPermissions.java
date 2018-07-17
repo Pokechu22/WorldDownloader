@@ -29,6 +29,7 @@ import wdl.WDL;
 import wdl.WDLMessageTypes;
 import wdl.WDLMessages;
 import wdl.WDLPluginChannels;
+import wdl.gui.widget.Button;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.TextList;
 
@@ -76,8 +77,12 @@ public class GuiWDLPermissions extends GuiScreen {
 		this.buttonList.add(new ButtonDisplayGui(width / 2 - 100, height - 29,
 				200, 20, this.parent));
 
-		this.buttonList.add(new GuiButton(200, this.width / 2 - 155, 39, 100, 20,
-				I18n.format("wdl.gui.permissions.current")));
+		this.buttonList.add(new Button(this.width / 2 - 155, 39, 100, 20,
+				I18n.format("wdl.gui.permissions.current")) {
+			public @Override void performAction() {
+				// Would open this GUI; do nothing.
+			};
+		});
 		if (WDLPluginChannels.canRequestPermissions()) {
 			this.buttonList.add(new ButtonDisplayGui(this.width / 2 - 50, 39, 100, 20,
 					I18n.format("wdl.gui.permissions.request"), () -> new GuiWDLPermissionRequest(this.parent)));
@@ -85,8 +90,32 @@ public class GuiWDLPermissions extends GuiScreen {
 					I18n.format("wdl.gui.permissions.overrides"), () -> new GuiWDLChunkOverrides(this.parent)));
 		}
 
-		reloadButton = new GuiButton(1, (this.width / 2) + 5, 18, 150, 20,
-				"Reload permissions");
+		reloadButton = new Button((this.width / 2) + 5, 18, 150, 20,
+				"Reload permissions") {
+			public @Override void performAction() {
+				// Send the init packet.
+				CPacketCustomPayload initPacket;
+				try {
+					String payload = "{\"X-RTFM\":\"http://wiki.vg/Plugin_channels/World_downloader\",\"X-UpdateNote\":\"The plugin message system will be changing shortly.  Please stay tuned.\",\"Version\":\"%s\",\"State\":\"Refresh?\"}";
+					payload = String.format(payload, VersionConstants.getModVersion());
+					initPacket = new CPacketCustomPayload("WDL|INIT",
+							new PacketBuffer(Unpooled.copiedBuffer(payload
+									.getBytes("UTF-8"))));
+				} catch (UnsupportedEncodingException e) {
+					WDLMessages.chatMessageTranslated(WDL.baseProps,
+							WDLMessageTypes.ERROR, "wdl.messages.generalError.noUTF8", e);
+
+					initPacket = new CPacketCustomPayload("WDL|INIT",
+							new PacketBuffer(Unpooled.buffer()));
+				}
+				Minecraft.getMinecraft().getConnection().sendPacket(initPacket);
+
+				enabled = false;
+				displayString = "Refreshing...";
+
+				refreshTicks = 50; // 2.5 seconds
+			}
+		};
 		this.buttonList.add(reloadButton);
 
 		this.list = new TextList(mc, width, height, TOP_MARGIN, BOTTOM_MARGIN);
@@ -173,37 +202,6 @@ public class GuiWDLPermissions extends GuiScreen {
 			return;
 		}
 		super.mouseReleased(mouseX, mouseY, state);
-	}
-
-	@Override
-	protected void actionPerformed(GuiButton button) throws IOException {
-		if (button.id == 1) {
-			// Send the init packet.
-			CPacketCustomPayload initPacket;
-			try {
-				String payload = "{\"X-RTFM\":\"http://wiki.vg/Plugin_channels/World_downloader\",\"X-UpdateNote\":\"The plugin message system will be changing shortly.  Please stay tuned.\",\"Version\":\"%s\",\"State\":\"Refresh?\"}";
-				payload = String.format(payload, VersionConstants.getModVersion());
-				initPacket = new CPacketCustomPayload("WDL|INIT",
-						new PacketBuffer(Unpooled.copiedBuffer(payload
-								.getBytes("UTF-8"))));
-			} catch (UnsupportedEncodingException e) {
-				WDLMessages.chatMessageTranslated(WDL.baseProps,
-						WDLMessageTypes.ERROR, "wdl.messages.generalError.noUTF8", e);
-
-				initPacket = new CPacketCustomPayload("WDL|INIT",
-						new PacketBuffer(Unpooled.buffer()));
-			}
-			Minecraft.getMinecraft().getConnection().sendPacket(initPacket);
-
-			button.enabled = false;
-			button.displayString = "Refreshing...";
-
-			refreshTicks = 50; // 2.5 seconds
-		}
-
-		if (button.id == 200) {
-			// Would open this GUI; do nothing.
-		}
 	}
 
 	@Override

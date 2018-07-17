@@ -19,13 +19,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.SoundEvents;
 import wdl.VersionConstants;
 import wdl.WDL;
+import wdl.gui.widget.Button;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.GuiListEntry;
 import wdl.gui.widget.TextList;
@@ -350,11 +350,19 @@ public class GuiWDLUpdates extends GuiScreen {
 
 		@Override
 		public void initGui() {
-			this.buttonList.add(new GuiButton(0, this.width / 2 - 155,
-					18, 150, 20, I18n.format("wdl.gui.updates.update.viewOnline")));
+			this.buttonList.add(new Button(this.width / 2 - 155,
+					18, 150, 20, I18n.format("wdl.gui.updates.update.viewOnline")) {
+				public @Override void performAction() {
+					Utils.openLink(release.URL);
+				}
+			});
 			if (release.hiddenInfo != null) {
-				this.buttonList.add(new GuiButton(1, this.width / 2 + 5,
-						18, 150, 20, I18n.format("wdl.gui.updates.update.viewForumPost")));
+				this.buttonList.add(new Button(this.width / 2 + 5,
+						18, 150, 20, I18n.format("wdl.gui.updates.update.viewForumPost")) {
+					public @Override void performAction() {
+						Utils.openLink(release.hiddenInfo.post);
+					}
+				});
 			}
 			this.buttonList.add(new ButtonDisplayGui(this.width / 2 - 100, this.height - 29,
 					200, 20, this.parent));
@@ -366,16 +374,6 @@ public class GuiWDLUpdates extends GuiScreen {
 			list.addLine(buildVersionInfo(release));
 			list.addBlankLine();
 			list.addLine(release.textOnlyBody);
-		}
-
-		@Override
-		protected void actionPerformed(GuiButton button) throws IOException {
-			if (button.id == 0) {
-				Utils.openLink(release.URL);
-			}
-			if (button.id == 1) {
-				Utils.openLink(release.hiddenInfo.post);
-			}
 		}
 
 		/**

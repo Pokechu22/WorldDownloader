@@ -24,6 +24,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 import wdl.WDLPluginChannels;
+import wdl.gui.widget.Button;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.TextList;
 
@@ -74,8 +75,13 @@ public class GuiWDLPermissionRequest extends GuiScreen {
 		this.requestField = new GuiTextField(0, fontRenderer,
 				width / 2 - 155, 18, 150, 20);
 
-		this.submitButton = new GuiButton(1, width / 2 + 5, 18, 150,
-				20, "Submit request");
+		this.submitButton = new Button(width / 2 + 5, 18,
+				150, 20, "Submit request") {
+			public @Override void performAction() {
+				WDLPluginChannels.sendRequests();
+				displayString = "Submitted!";
+			}
+		};
 		this.submitButton.enabled = !(WDLPluginChannels.getRequests().isEmpty());
 		this.buttonList.add(this.submitButton);
 
@@ -84,22 +90,14 @@ public class GuiWDLPermissionRequest extends GuiScreen {
 
 		this.buttonList.add(new ButtonDisplayGui(this.width / 2 - 155, 39, 100, 20,
 				I18n.format("wdl.gui.permissions.current"), () -> new GuiWDLPermissions(this.parent)));
-		this.buttonList.add(new GuiButton(201, this.width / 2 - 50, 39, 100, 20,
-				I18n.format("wdl.gui.permissions.request")));
+		this.buttonList.add(new Button(this.width / 2 - 50, 39, 100, 20,
+				I18n.format("wdl.gui.permissions.request")) {
+			public @Override void performAction() {
+				// Would open this GUI; do nothing.
+			}
+		});
 		this.buttonList.add(new ButtonDisplayGui(this.width / 2 + 55, 39, 100, 20,
 				I18n.format("wdl.gui.permissions.overrides"), () -> new GuiWDLChunkOverrides(this.parent)));
-	}
-
-	@Override
-	protected void actionPerformed(GuiButton button) throws IOException {
-		if (button.id == 1) {
-			WDLPluginChannels.sendRequests();
-			button.displayString = "Submitted!";
-		}
-
-		if (button.id == 201) {
-			// Do nothing; on that GUI.
-		}
 	}
 
 	@Override

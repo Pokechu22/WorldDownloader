@@ -135,11 +135,23 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 			public @Override void performAction() { }
 		});
 
-		this.buttonList.add(new GuiButton(4, width / 2 - 80, 18, 80, 20,
-				"Send request"));
+		this.buttonList.add(new Button(width / 2 - 80, 18, 80, 20,
+				"Send request") {
+			public @Override void performAction() {
+				WDLPluginChannels.sendRequests();
+			}
+		});
 
-		startDownloadButton = new GuiButton(6, width / 2 + 5, 18, 150, 20,
-				"Start download in these ranges");
+		startDownloadButton = new Button(width / 2 + 5, 18, 150, 20,
+				"Start download in these ranges") {
+			public @Override void performAction() {
+				if (!WDLPluginChannels.canDownloadAtAll()) {
+					this.enabled = false;
+					return;
+				}
+				WDL.startDownload();
+			}
+		};
 		startDownloadButton.enabled = WDLPluginChannels.canDownloadAtAll();
 		this.buttonList.add(startDownloadButton);
 
@@ -150,26 +162,12 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 				I18n.format("wdl.gui.permissions.current"), () -> new GuiWDLPermissions(this.parent)));
 		this.buttonList.add(new ButtonDisplayGui(this.width / 2 - 50, 39, 100, 20,
 				I18n.format("wdl.gui.permissions.request"), () -> new GuiWDLPermissionRequest(this.parent)));
-		this.buttonList.add(new GuiButton(202, this.width / 2 + 55, 39, 100, 20,
-				I18n.format("wdl.gui.permissions.overrides")));
-	}
-
-	@Override
-	protected void actionPerformed(GuiButton button) throws IOException {
-		if (button.id == 4) {
-			WDLPluginChannels.sendRequests();
-		}
-		if (button.id == 6) {
-			if (!WDLPluginChannels.canDownloadAtAll()) {
-				button.enabled = false;
-				return;
-			}
-			WDL.startDownload();
-		}
-
-		if (button.id == 202) {
-			// Would open this GUI; do nothing.
-		}
+		this.buttonList.add(new Button(this.width / 2 + 55, 39, 100, 20,
+				I18n.format("wdl.gui.permissions.overrides")) {
+			public @Override void performAction() {
+				// Would open this GUI; do nothing.
+			};
+		});
 	}
 
 	/**
