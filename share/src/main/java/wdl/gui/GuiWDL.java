@@ -46,7 +46,6 @@ public class GuiWDL extends GuiScreen {
 
 		private class ButtonEntry extends GuiListEntry {
 			private final GuiButton button;
-			private final Function<GuiScreen, GuiScreen> openFunc;
 
 			private final String tooltip;
 
@@ -65,9 +64,9 @@ public class GuiWDL extends GuiScreen {
 			 *            this button.
 			 */
 			public ButtonEntry(String key, Function<GuiScreen, GuiScreen> openFunc, boolean needsPerms) {
-				this.button = new GuiButton(0, 0, 0, I18n.format("wdl.gui.wdl."
-						+ key + ".name"));
-				this.openFunc = openFunc;
+				this.button = new ButtonDisplayGui(0, 0, 200, 20,
+						I18n.format("wdl.gui.wdl." + key + ".name"),
+						() -> openFunc.apply(GuiWDL.this));
 				if (needsPerms) {
 					button.enabled = WDLPluginChannels.canDownloadAtAll();
 				}
@@ -92,8 +91,6 @@ public class GuiWDL extends GuiScreen {
 			public boolean mousePressed(int slotIndex, int x, int y,
 					int mouseEvent, int relativeX, int relativeY) {
 				if (button.mousePressed(mc, x, y)) {
-					mc.displayGuiScreen(openFunc.apply(GuiWDL.this));
-
 					button.playPressSound(mc.getSoundHandler());
 
 					return true;
