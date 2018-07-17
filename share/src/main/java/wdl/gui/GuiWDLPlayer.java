@@ -22,6 +22,8 @@ import net.minecraft.client.resources.I18n;
 import wdl.WDL;
 import wdl.config.IConfiguration;
 import wdl.config.settings.PlayerSettings;
+import wdl.gui.widget.GuiNumericTextField;
+import wdl.gui.widget.SettingButton;
 
 public class GuiWDLPlayer extends GuiScreen {
 	private String title;

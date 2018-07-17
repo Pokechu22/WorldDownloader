@@ -21,6 +21,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import wdl.VersionConstants;
 import wdl.WDL;
+import wdl.gui.widget.TextList;
 
 /**
  * Contains information about the current installation of WDL.

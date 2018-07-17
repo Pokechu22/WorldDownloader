@@ -30,6 +30,8 @@ import net.minecraft.util.text.TextFormatting;
 import wdl.api.IWDLModWithGui;
 import wdl.api.WDLApi;
 import wdl.api.WDLApi.ModInfo;
+import wdl.gui.widget.GuiListEntry;
+import wdl.gui.widget.TextList;
 
 /**
  * GUI showing the currently enabled mods, and their information.

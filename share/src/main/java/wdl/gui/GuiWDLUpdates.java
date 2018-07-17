@@ -26,6 +26,8 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.init.SoundEvents;
 import wdl.VersionConstants;
 import wdl.WDL;
+import wdl.gui.widget.GuiListEntry;
+import wdl.gui.widget.TextList;
 import wdl.update.Release;
 import wdl.update.WDLUpdateChecker;
 

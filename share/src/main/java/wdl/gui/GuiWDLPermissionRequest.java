@@ -25,6 +25,7 @@ import net.minecraft.client.resources.I18n;
 import org.lwjgl.input.Keyboard;
 
 import wdl.WDLPluginChannels;
+import wdl.gui.widget.TextList;
 
 /**
  * GUI for requesting permissions.  Again, this is a work in progress.

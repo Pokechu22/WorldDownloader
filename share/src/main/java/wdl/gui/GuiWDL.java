@@ -28,6 +28,7 @@ import wdl.WDL;
 import wdl.WDLPluginChannels;
 import wdl.config.IConfiguration;
 import wdl.config.settings.MiscSettings;
+import wdl.gui.widget.GuiListEntry;
 import wdl.update.WDLUpdateChecker;
 
 public class GuiWDL extends GuiScreen {

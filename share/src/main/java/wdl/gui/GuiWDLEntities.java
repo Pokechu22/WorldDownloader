@@ -31,6 +31,9 @@ import wdl.WDLMessages;
 import wdl.config.IConfiguration;
 import wdl.config.settings.EntitySettings;
 import wdl.config.settings.EntitySettings.TrackDistanceMode;
+import wdl.gui.widget.GuiListEntry;
+import wdl.gui.widget.GuiSlider;
+import wdl.gui.widget.SettingButton;
 
 import com.google.common.collect.Multimap;
 

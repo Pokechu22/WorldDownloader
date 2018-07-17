@@ -35,6 +35,8 @@ import net.minecraft.world.GameRules;
 import net.minecraft.world.GameRules.ValueType;
 import wdl.WDL;
 import wdl.config.IConfiguration;
+import wdl.gui.widget.GuiListEntry;
+import wdl.gui.widget.GuiNumericTextField;
 
 public class GuiWDLGameRules extends GuiScreen {
 	private static final Logger LOGGER = LogManager.getLogger();

@@ -28,6 +28,7 @@ import net.minecraft.util.math.MathHelper;
 import wdl.WDL;
 import wdl.WDLPluginChannels;
 import wdl.WDLPluginChannels.ChunkRange;
+import wdl.gui.widget.ExtButton;
 
 import com.google.common.collect.Multimap;
 

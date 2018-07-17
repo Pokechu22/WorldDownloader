@@ -30,6 +30,7 @@ import net.minecraft.client.resources.I18n;
 import wdl.WDL;
 import wdl.config.IConfiguration;
 import wdl.config.settings.GeneratorSettings;
+import wdl.gui.widget.SettingButton;
 
 public class GuiWDLGenerator extends GuiScreen {
 	private static final Logger LOGGER = LogManager.getLogger();

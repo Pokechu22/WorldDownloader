@@ -30,6 +30,7 @@ import wdl.WDL;
 import wdl.WDLMessageTypes;
 import wdl.WDLMessages;
 import wdl.WDLPluginChannels;
+import wdl.gui.widget.TextList;
 
 /**
  * GUI that shows the current permissions for the user.

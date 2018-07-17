@@ -28,6 +28,7 @@ import wdl.WDL;
 import wdl.config.Configuration;
 import wdl.config.IConfiguration;
 import wdl.config.settings.MiscSettings;
+import wdl.gui.widget.ExtButton;
 
 /**
  * A GUI for selecting which world the player is currently in.

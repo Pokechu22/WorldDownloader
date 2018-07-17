@@ -34,6 +34,8 @@ import wdl.WDLMessages;
 import wdl.WDLMessages.MessageRegistration;
 import wdl.config.IConfiguration;
 import wdl.config.settings.MessageSettings;
+import wdl.gui.widget.GuiListEntry;
+import wdl.gui.widget.SettingButton;
 
 public class GuiWDLMessages extends GuiScreen {
 	/**
