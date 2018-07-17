@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.google.common.collect.Multimap;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
@@ -31,11 +33,10 @@ import wdl.WDLMessages;
 import wdl.config.IConfiguration;
 import wdl.config.settings.EntitySettings;
 import wdl.config.settings.EntitySettings.TrackDistanceMode;
+import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.GuiListEntry;
 import wdl.gui.widget.GuiSlider;
 import wdl.gui.widget.SettingButton;
-
-import com.google.common.collect.Multimap;
 
 /**
  * GUI that controls what entities are saved.
@@ -341,8 +342,8 @@ public class GuiWDLEntities extends GuiScreen {
 
 	@Override
 	public void initGui() {
-		this.buttonList.add(new GuiButton(200, this.width / 2 - 100,
-				this.height - 29, "OK"));
+		this.buttonList.add(new ButtonDisplayGui(this.width / 2 - 100, this.height - 29,
+				200, 20, this.parent));
 
 		rangeModeButton = new SettingButton(100, EntitySettings.TRACK_DISTANCE_MODE, this.config, this.width / 2 - 155, 18, 150, 20);
 		presetsButton = new GuiButton(101, this.width / 2 + 5, 18, 150, 20,
@@ -372,9 +373,6 @@ public class GuiWDLEntities extends GuiScreen {
 		}
 		if (button.id == 101 && button.enabled) {
 			mc.displayGuiScreen(new GuiWDLEntityRangePresets(this, config));
-		}
-		if (button.id == 200) {
-			mc.displayGuiScreen(parent);
 		}
 	}
 

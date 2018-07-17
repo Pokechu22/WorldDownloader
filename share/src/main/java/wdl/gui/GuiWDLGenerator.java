@@ -30,6 +30,7 @@ import net.minecraft.client.resources.I18n;
 import wdl.WDL;
 import wdl.config.IConfiguration;
 import wdl.config.settings.GeneratorSettings;
+import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.SettingButton;
 
 public class GuiWDLGenerator extends GuiScreen {
@@ -76,8 +77,8 @@ public class GuiWDLGenerator extends GuiScreen {
 		updateSettingsButtonVisibility();
 		this.buttonList.add(this.settingsPageBtn);
 
-		this.buttonList.add(new GuiButton(100, this.width / 2 - 100, height - 29,
-				I18n.format("gui.done")));
+		this.buttonList.add(new ButtonDisplayGui(this.width / 2 - 100, height - 29,
+				200, 20, this.parent));
 	}
 
 	/**
@@ -108,8 +109,6 @@ public class GuiWDLGenerator extends GuiScreen {
 				default:
 					LOGGER.warn("Generator lacks extra settings; this button should not be usable: " + generator);
 				}
-			} else if (button.id == 100) {
-				this.mc.displayGuiScreen(this.parent);
 			}
 		}
 	}

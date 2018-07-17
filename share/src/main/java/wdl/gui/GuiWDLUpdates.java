@@ -26,6 +26,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.init.SoundEvents;
 import wdl.VersionConstants;
 import wdl.WDL;
+import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.GuiListEntry;
 import wdl.gui.widget.TextList;
 import wdl.update.Release;
@@ -201,15 +202,8 @@ public class GuiWDLUpdates extends GuiScreen {
 	public void initGui() {
 		this.list = new UpdateList();
 
-		this.buttonList.add(new GuiButton(100, this.width / 2 - 100,
-				this.height - 29, I18n.format("gui.done")));
-	}
-
-	@Override
-	protected void actionPerformed(GuiButton button) throws IOException {
-		if (button.id == 100) {
-			mc.displayGuiScreen(parent);
-		}
+		this.buttonList.add(new ButtonDisplayGui(this.width / 2 - 100, this.height - 29,
+				200, 20, this.parent));
 	}
 
 	@Override
@@ -362,8 +356,8 @@ public class GuiWDLUpdates extends GuiScreen {
 				this.buttonList.add(new GuiButton(1, this.width / 2 + 5,
 						18, 150, 20, I18n.format("wdl.gui.updates.update.viewForumPost")));
 			}
-			this.buttonList.add(new GuiButton(100, this.width / 2 - 100,
-					this.height - 29, I18n.format("gui.done")));
+			this.buttonList.add(new ButtonDisplayGui(this.width / 2 - 100, this.height - 29,
+					200, 20, this.parent));
 
 			this.list = new TextList(mc, width, height, TOP_MARGIN, BOTTOM_MARGIN);
 
@@ -381,9 +375,6 @@ public class GuiWDLUpdates extends GuiScreen {
 			}
 			if (button.id == 1) {
 				Utils.openLink(release.hiddenInfo.post);
-			}
-			if (button.id == 100) {
-				mc.displayGuiScreen(parent);
 			}
 		}
 

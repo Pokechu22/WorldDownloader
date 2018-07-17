@@ -17,14 +17,14 @@ package wdl.gui;
 import java.io.IOException;
 import java.util.Map;
 
+import org.lwjgl.input.Keyboard;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
-
-import org.lwjgl.input.Keyboard;
-
 import wdl.WDLPluginChannels;
+import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.TextList;
 
 /**
@@ -79,8 +79,8 @@ public class GuiWDLPermissionRequest extends GuiScreen {
 		this.submitButton.enabled = !(WDLPluginChannels.getRequests().isEmpty());
 		this.buttonList.add(this.submitButton);
 
-		this.buttonList.add(new GuiButton(100, width / 2 - 100, height - 29,
-				I18n.format("gui.done")));
+		this.buttonList.add(new ButtonDisplayGui(width / 2 - 100, height - 29,
+				200, 20, this.parent));
 
 		this.buttonList.add(new GuiButton(200, this.width / 2 - 155, 39, 100, 20,
 				I18n.format("wdl.gui.permissions.current")));
@@ -95,10 +95,6 @@ public class GuiWDLPermissionRequest extends GuiScreen {
 		if (button.id == 1) {
 			WDLPluginChannels.sendRequests();
 			button.displayString = "Submitted!";
-		}
-
-		if (button.id == 100) {
-			this.mc.displayGuiScreen(this.parent);
 		}
 
 		if (button.id == 200) {

@@ -21,6 +21,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import wdl.VersionConstants;
 import wdl.WDL;
+import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.TextList;
 
 /**
@@ -54,8 +55,8 @@ public class GuiWDLAbout extends GuiScreen {
 				I18n.format("wdl.gui.about.extensions")));
 		buttonList.add(new GuiButton(1, (this.width / 2) + 5, 18, 150, 20,
 				I18n.format("wdl.gui.about.debugInfo")));
-		buttonList.add(new GuiButton(2, (this.width / 2) - 100,
-				this.height - 29, I18n.format("gui.done")));
+		buttonList.add(new ButtonDisplayGui((this.width / 2) - 100, this.height - 29,
+				200, 20, parent));
 
 		String wdlVersion = VersionConstants.getModVersion();
 
@@ -103,9 +104,6 @@ public class GuiWDLAbout extends GuiScreen {
 			// Change text to "copied" once clicked
 			button.displayString = I18n
 					.format("wdl.gui.about.debugInfo.copied");
-		} else if (button.id == 2) {
-			// Done
-			mc.displayGuiScreen(parent);
 		}
 	}
 

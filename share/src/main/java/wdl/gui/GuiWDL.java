@@ -28,6 +28,7 @@ import wdl.WDL;
 import wdl.WDLPluginChannels;
 import wdl.config.IConfiguration;
 import wdl.config.settings.MiscSettings;
+import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.GuiListEntry;
 import wdl.update.WDLUpdateChecker;
 
@@ -232,25 +233,10 @@ public class GuiWDL extends GuiScreen {
 				this.width / 2 - 155, 19, 150, 18);
 		this.worldname.setText(this.config.getValue(MiscSettings.SERVER_NAME));
 
-		this.buttonList.add(new GuiButton(100, this.width / 2 - 100,
-				this.height - 29, I18n.format("gui.done")));
+		this.buttonList.add(new ButtonDisplayGui(this.width / 2 - 100, this.height - 29,
+				200, 20, parent));
 
 		this.list = new GuiWDLButtonList();
-	}
-
-	/**
-	 * Fired when a control is clicked. This is the equivalent of
-	 * ActionListener.actionPerformed(ActionEvent e).
-	 */
-	@Override
-	protected void actionPerformed(GuiButton button) {
-		if (!button.enabled) {
-			return;
-		}
-
-		if (button.id == 100) { // Done
-			this.mc.displayGuiScreen(this.parent);
-		}
 	}
 
 	@Override

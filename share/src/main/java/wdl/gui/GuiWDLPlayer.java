@@ -22,6 +22,7 @@ import net.minecraft.client.resources.I18n;
 import wdl.WDL;
 import wdl.config.IConfiguration;
 import wdl.config.settings.PlayerSettings;
+import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.GuiNumericTextField;
 import wdl.gui.widget.SettingButton;
 
@@ -82,8 +83,8 @@ public class GuiWDLPlayer extends GuiScreen {
 
 		upadatePlayerPosVisibility();
 
-		this.buttonList.add(new GuiButton(100, this.width / 2 - 100,
-				this.height - 29, I18n.format("gui.done")));
+		this.buttonList.add(new ButtonDisplayGui(this.width / 2 - 100, this.height - 29,
+				200, 20, this.parent));
 	}
 
 	/**
@@ -96,8 +97,6 @@ public class GuiWDLPlayer extends GuiScreen {
 			upadatePlayerPosVisibility();
 		} else if (button.id == 4) {
 			this.setPlayerPosToPlayerPosition();
-		} else if (button.id == 100) {
-			this.mc.displayGuiScreen(this.parent);
 		}
 	}
 

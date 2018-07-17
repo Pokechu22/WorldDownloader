@@ -16,6 +16,8 @@ package wdl.gui;
 
 import java.io.IOException;
 
+import com.google.common.collect.Multimap;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiButton;
@@ -29,8 +31,7 @@ import wdl.WDL;
 import wdl.WDLPluginChannels;
 import wdl.WDLPluginChannels.ChunkRange;
 import wdl.gui.widget.Button;
-
-import com.google.common.collect.Multimap;
+import wdl.gui.widget.ButtonDisplayGui;
 
 /**
  * A GUI that lists and allows requesting chunk overrides.
@@ -142,8 +143,8 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 		startDownloadButton.enabled = WDLPluginChannels.canDownloadAtAll();
 		this.buttonList.add(startDownloadButton);
 
-		this.buttonList.add(new GuiButton(100, width / 2 - 100, height - 29,
-				I18n.format("gui.done")));
+		this.buttonList.add(new ButtonDisplayGui(width / 2 - 100, height - 29,
+				200, 20, this.parent));
 
 		this.buttonList.add(new GuiButton(200, this.width / 2 - 155, 39, 100, 20,
 				I18n.format("wdl.gui.permissions.current")));
@@ -164,10 +165,6 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 				return;
 			}
 			WDL.startDownload();
-		}
-
-		if (button.id == 100) {
-			this.mc.displayGuiScreen(this.parent);
 		}
 
 		if (button.id == 200) {

@@ -23,6 +23,7 @@ import wdl.WDL;
 import wdl.WorldBackup.WorldBackupType;
 import wdl.config.IConfiguration;
 import wdl.config.settings.MiscSettings;
+import wdl.gui.widget.ButtonDisplayGui;
 
 /**
  * GUI allowing control over the way the world is backed up.
@@ -51,16 +52,12 @@ public class GuiWDLBackup extends GuiScreen {
 		this.buttonList.add(new GuiButton(0, this.width / 2 - 100, 32,
 				getBackupButtonText()));
 
-		this.buttonList.add(new GuiButton(100, this.width / 2 - 100,
-				height - 29, I18n.format("gui.done")));
+		this.buttonList.add(new ButtonDisplayGui(this.width / 2 - 100, height - 29,
+				200, 20, this.parent));
 	}
 
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
-		if (!button.enabled) {
-			return;
-		}
-
 		if (button.id == 0) { //Backup mode
 			switch (backupType) {
 			case NONE: backupType = WorldBackupType.FOLDER; break;
@@ -69,8 +66,6 @@ public class GuiWDLBackup extends GuiScreen {
 			}
 
 			button.displayString = getBackupButtonText();
-		} else if (button.id == 100) { //Done
-			this.mc.displayGuiScreen(this.parent);
 		}
 	}
 

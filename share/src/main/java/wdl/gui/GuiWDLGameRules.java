@@ -35,6 +35,7 @@ import net.minecraft.world.GameRules;
 import net.minecraft.world.GameRules.ValueType;
 import wdl.WDL;
 import wdl.config.IConfiguration;
+import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.GuiListEntry;
 import wdl.gui.widget.GuiNumericTextField;
 
@@ -357,8 +358,8 @@ public class GuiWDLGameRules extends GuiScreen {
 		this.title = I18n.format("wdl.gui.gamerules.title");
 		this.list = new GuiGameRuleList();
 
-		this.buttonList.add(new GuiButton(100, this.width / 2 - 100,
-				this.height - 29, I18n.format("gui.done")));
+		this.buttonList.add(new ButtonDisplayGui(this.width / 2 - 100,
+				this.height - 29, 200, 20, this.parent));
 	}
 
 	@Override
@@ -404,13 +405,6 @@ public class GuiWDLGameRules extends GuiScreen {
 	public void handleMouseInput() throws IOException {
 		super.handleMouseInput();
 		this.list.handleMouseInput();
-	}
-
-	@Override
-	protected void actionPerformed(GuiButton button) throws IOException {
-		if (button.id == 100) {
-			this.mc.displayGuiScreen(this.parent);
-		}
 	}
 
 	@Override

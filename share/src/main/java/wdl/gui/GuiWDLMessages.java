@@ -34,6 +34,7 @@ import wdl.WDLMessages;
 import wdl.WDLMessages.MessageRegistration;
 import wdl.config.IConfiguration;
 import wdl.config.settings.MessageSettings;
+import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.GuiListEntry;
 import wdl.gui.widget.SettingButton;
 
@@ -184,23 +185,17 @@ public class GuiWDLMessages extends GuiScreen {
 
 		this.list = new GuiMessageTypeList();
 
-		this.buttonList.add(new GuiButton(102, (this.width / 2) - 100,
-				this.height - 29, I18n.format("gui.done")));
+		this.buttonList.add(new ButtonDisplayGui((this.width / 2) - 100, this.height - 29,
+				200, 20, this.parent));
 	}
 
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
-		if (!button.enabled) {
-			return;
-		}
-
 		if (button.id == 101) {
 			this.mc.displayGuiScreen(new GuiYesNo(this,
 					I18n.format("wdl.gui.messages.reset.confirm.title"),
 					I18n.format("wdl.gui.messages.reset.confirm.subtitle"),
 					101));
-		} else if (button.id == 102) {
-			this.mc.displayGuiScreen(this.parent);
 		}
 	}
 

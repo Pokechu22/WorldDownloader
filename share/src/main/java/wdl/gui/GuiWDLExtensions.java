@@ -30,6 +30,7 @@ import net.minecraft.util.text.TextFormatting;
 import wdl.api.IWDLModWithGui;
 import wdl.api.WDLApi;
 import wdl.api.WDLApi.ModInfo;
+import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.GuiListEntry;
 import wdl.gui.widget.TextList;
 
@@ -325,15 +326,8 @@ public class GuiWDLExtensions extends GuiScreen {
 		this.list = new ModList();
 		this.detailsList = new ModDetailList();
 
-		this.buttonList.add(new GuiButton(0, width / 2 - 100, height - 29, I18n
-				.format("gui.done")));
-	}
-
-	@Override
-	protected void actionPerformed(GuiButton button) throws IOException {
-		if (button.id == 0) {
-			mc.displayGuiScreen(parent);
-		}
+		this.buttonList.add(new ButtonDisplayGui(width / 2 - 100, height - 29,
+				200, 20, this.parent));
 	}
 
 	/**

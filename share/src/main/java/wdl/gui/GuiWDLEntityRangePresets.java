@@ -28,6 +28,7 @@ import wdl.StandardEntityManagers;
 import wdl.WDL;
 import wdl.WDLPluginChannels;
 import wdl.config.IConfiguration;
+import wdl.gui.widget.ButtonDisplayGui;
 
 /**
  * Provides fast setting for various entity options.
@@ -67,8 +68,8 @@ public class GuiWDLEntityRangePresets extends GuiScreen implements GuiYesNoCallb
 
 		y += 28;
 
-		this.cancelButton = new GuiButton(100, this.width / 2 - 100,
-				this.height - 29, I18n.format("gui.cancel"));
+		this.cancelButton = new ButtonDisplayGui(this.width / 2 - 100, this.height - 29,
+				200, 20, I18n.format("gui.cancel"), this.parent);
 		this.buttonList.add(cancelButton);
 	}
 
@@ -78,7 +79,7 @@ public class GuiWDLEntityRangePresets extends GuiScreen implements GuiYesNoCallb
 			return;
 		}
 
-		if (button.id < 3) {
+		if (button.id >= 0 && button.id < 3) {
 			String upper;
 			String lower;
 
@@ -96,10 +97,6 @@ public class GuiWDLEntityRangePresets extends GuiScreen implements GuiYesNoCallb
 			}
 
 			mc.displayGuiScreen(new GuiYesNo(this, upper, lower, button.id));
-		}
-
-		if (button.id == 100) {
-			mc.displayGuiScreen(parent);
 		}
 	}
 

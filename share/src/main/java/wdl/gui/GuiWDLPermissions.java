@@ -14,11 +14,10 @@
  */
 package wdl.gui;
 
-import io.netty.buffer.Unpooled;
-
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
+import io.netty.buffer.Unpooled;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -30,6 +29,7 @@ import wdl.WDL;
 import wdl.WDLMessageTypes;
 import wdl.WDLMessages;
 import wdl.WDLPluginChannels;
+import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.TextList;
 
 /**
@@ -73,8 +73,8 @@ public class GuiWDLPermissions extends GuiScreen {
 	public void initGui() {
 		this.buttonList.clear();
 
-		this.buttonList.add(new GuiButton(100, width / 2 - 100, height - 29,
-				I18n.format("gui.done")));
+		this.buttonList.add(new ButtonDisplayGui(width / 2 - 100, height - 29,
+				200, 20, this.parent));
 
 		this.buttonList.add(new GuiButton(200, this.width / 2 - 155, 39, 100, 20,
 				I18n.format("wdl.gui.permissions.current")));
@@ -200,9 +200,7 @@ public class GuiWDLPermissions extends GuiScreen {
 
 			refreshTicks = 50; // 2.5 seconds
 		}
-		if (button.id == 100) {
-			this.mc.displayGuiScreen(this.parent);
-		}
+
 		if (button.id == 200) {
 			// Would open this GUI; do nothing.
 		}
