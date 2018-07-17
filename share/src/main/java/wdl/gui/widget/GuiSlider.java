@@ -15,7 +15,6 @@
 package wdl.gui.widget;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.MathHelper;
@@ -25,9 +24,8 @@ import net.minecraft.util.math.MathHelper;
  *
  * Based off of {@link net.minecraft.client.gui.GuiOptionSlider}.
  */
-public class GuiSlider extends GuiButton {
+public class GuiSlider extends ExtButton {
 	private float sliderValue;
-	private boolean dragging;
 	/**
 	 * I18n key for this slider.
 	 */
@@ -37,9 +35,8 @@ public class GuiSlider extends GuiButton {
 	 */
 	private final int max;
 
-	public GuiSlider(int id, int x, int y, int width, int height,
-			String text, int value, int max) {
-		super(id, x, y, width, height, text);
+	public GuiSlider(int x, int y, int width, int height, String text, int value, int max) {
+		super(x, y, width, height, text);
 
 		this.text = text;
 		this.max = max;
@@ -56,63 +53,55 @@ public class GuiSlider extends GuiButton {
 		return 0;
 	}
 
-	/**
-	 * Fired when the mouse button is dragged. Equivalent of
-	 * MouseListener.mouseDragged(MouseEvent e).
-	 */
 	@Override
-	protected void mouseDragged(Minecraft mc, int mouseX, int mouseY) {
-		if (this.visible) {
-			if (this.dragging) {
-				this.sliderValue = (float)(mouseX - (this.x + 4))
-						/ (float)(this.width - 8);
-				this.sliderValue = MathHelper.clamp(this.sliderValue, 0.0F,
-						1.0F);
-				this.dragging = true;
-
-				this.displayString = I18n.format(text, getValue());
-			}
-
-			mc.getTextureManager().bindTexture(BUTTON_TEXTURES);
-			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-
-			if (this.enabled) {
-				this.drawTexturedModalRect(this.x
-						+ (int) (this.sliderValue * (this.width - 8)),
-						this.y, 0, 66, 4, 20);
-				this.drawTexturedModalRect(this.x
-						+ (int) (this.sliderValue * (this.width - 8))
-						+ 4, this.y, 196, 66, 4, 20);
-			} else {
-				this.drawTexturedModalRect(this.x
-						+ (int) (this.sliderValue * (this.width - 8)),
-						this.y, 0, 46, 4, 20);
-				this.drawTexturedModalRect(this.x
-						+ (int) (this.sliderValue * (this.width - 8))
-						+ 4, this.y, 196, 46, 4, 20);
-			}
-		}
+	public void mouseDown(int mouseX, int mouseY) {
+		this.sliderValue = (float)(mouseX - (this.x + 4))
+				/ (float)(this.width - 8);
+		this.sliderValue = MathHelper.clamp(this.sliderValue, 0.0F,
+				1.0F);
+		this.displayString = I18n.format(text, getValue());
 	}
 
-	/**
-	 * Returns true if the mouse has been pressed on this control. Equivalent of
-	 * MouseListener.mousePressed(MouseEvent e).
-	 */
 	@Override
-	public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
-		if (super.mousePressed(mc, mouseX, mouseY)) {
-			this.sliderValue = (float)(mouseX - (this.x + 4))
-					/ (float)(this.width - 8);
-			this.sliderValue = MathHelper.clamp(this.sliderValue, 0.0F,
-					1.0F);
-			this.displayString = I18n.format(text, getValue());
+	public void mouseUp(int mouseX, int mouseY) { }
 
-			this.dragging = true;
-			return true;
+	@Override
+	public void mouseDragged(int mouseX, int mouseY) {
+		this.sliderValue = (float)(mouseX - (this.x + 4))
+				/ (float)(this.width - 8);
+		this.sliderValue = MathHelper.clamp(this.sliderValue, 0.0F,
+				1.0F);
+
+		this.displayString = I18n.format(text, getValue());
+	}
+
+	@Override
+	public void beforeDraw() { }
+
+	@Override
+	public void midDraw() {
+		Minecraft.getMinecraft().getTextureManager().bindTexture(BUTTON_TEXTURES);
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+
+		if (this.enabled) {
+			this.drawTexturedModalRect(this.x
+					+ (int) (this.sliderValue * (this.width - 8)),
+					this.y, 0, 66, 4, 20);
+			this.drawTexturedModalRect(this.x
+					+ (int) (this.sliderValue * (this.width - 8))
+					+ 4, this.y, 196, 66, 4, 20);
 		} else {
-			return false;
+			this.drawTexturedModalRect(this.x
+					+ (int) (this.sliderValue * (this.width - 8)),
+					this.y, 0, 46, 4, 20);
+			this.drawTexturedModalRect(this.x
+					+ (int) (this.sliderValue * (this.width - 8))
+					+ 4, this.y, 196, 46, 4, 20);
 		}
 	}
+
+	@Override
+	public void afterDraw() { }
 
 	/**
 	 * Gets the current value of the slider.
@@ -130,14 +119,5 @@ public class GuiSlider extends GuiButton {
 		this.sliderValue = value / (float)max;
 
 		this.displayString = I18n.format(text, getValue());
-	}
-
-	/**
-	 * Fired when the mouse button is released. Equivalent of
-	 * MouseListener.mouseReleased(MouseEvent e).
-	 */
-	@Override
-	public void mouseReleased(int mouseX, int mouseY) {
-		this.dragging = false;
 	}
 }

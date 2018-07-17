@@ -28,7 +28,7 @@ import net.minecraft.util.math.MathHelper;
 import wdl.WDL;
 import wdl.WDLPluginChannels;
 import wdl.WDLPluginChannels.ChunkRange;
-import wdl.gui.widget.ExtButton;
+import wdl.gui.widget.Button;
 
 import com.google.common.collect.Multimap;
 
@@ -114,10 +114,25 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 
 	@Override
 	public void initGui() {
-		this.buttonList.add(new RequestModeButton(0, width / 2 - 155, 18, Mode.PANNING));
-		this.buttonList.add(new RequestModeButton(1, width / 2 - 130, 18, Mode.REQUESTING));
-		this.buttonList.add(new RequestModeButton(2, width / 2 - 105, 18, Mode.ERASING) {{ enabled = false; }});
-		this.buttonList.add(new RequestModeButton(3, width / 2 - 80, 18, Mode.MOVING) {{ enabled = false; }});
+		this.buttonList.add(new RequestModeButton(width / 2 - 155, 18, Mode.PANNING) {
+			public @Override void performAction() {
+				GuiWDLChunkOverrides.this.mode = Mode.PANNING;
+			}
+		});
+		this.buttonList.add(new RequestModeButton(width / 2 - 130, 18, Mode.REQUESTING) {
+			public @Override void performAction() {
+				GuiWDLChunkOverrides.this.mode = Mode.REQUESTING;
+				partiallyRequested = false;
+			}
+		});
+		this.buttonList.add(new RequestModeButton(width / 2 - 105, 18, Mode.ERASING) {
+			{ enabled = false; }
+			public @Override void performAction() { }
+		});
+		this.buttonList.add(new RequestModeButton(width / 2 - 80, 18, Mode.MOVING) {
+			{ enabled = false; }
+			public @Override void performAction() { }
+		});
 
 		this.buttonList.add(new GuiButton(4, width / 2 - 80, 18, 80, 20,
 				"Send request"));
@@ -140,13 +155,6 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
-		if (button.id == 0) {
-			mode = Mode.PANNING;
-		}
-		if (button.id == 1) {
-			mode = Mode.REQUESTING;
-			partiallyRequested = false;
-		}
 		if (button.id == 4) {
 			WDLPluginChannels.sendRequests();
 		}
@@ -394,7 +402,7 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 	/**
 	 * Button for a mode that displays the icon for the given mode.
 	 */
-	private class RequestModeButton extends ExtButton {
+	private abstract class RequestModeButton extends Button {
 		/**
 		 * The mode for this button.
 		 */
@@ -407,8 +415,8 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 		 * @param y
 		 * @param mode
 		 */
-		public RequestModeButton(int buttonId, int x, int y, Mode mode) {
-			super(buttonId, x, y, 20, 20, "");
+		public RequestModeButton(int x, int y, Mode mode) {
+			super(x, y, 20, 20, "");
 			this.mode = mode;
 		}
 

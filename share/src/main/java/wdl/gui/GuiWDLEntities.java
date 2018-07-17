@@ -212,7 +212,7 @@ public class GuiWDLEntities extends GuiScreen {
 						getButtonText());
 				this.onOffButton.enabled = category.isGroupEnabled();
 
-				this.rangeSlider = new GuiSlider(1, 0, 0, 150, 18,
+				this.rangeSlider = new GuiSlider(0, 0, 150, 18,
 						"wdl.gui.entities.trackDistance", range, 256);
 
 				this.cachedMode = config.getValue(EntitySettings.TRACK_DISTANCE_MODE);

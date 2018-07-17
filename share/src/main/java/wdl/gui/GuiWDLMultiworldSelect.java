@@ -28,7 +28,7 @@ import wdl.WDL;
 import wdl.config.Configuration;
 import wdl.config.IConfiguration;
 import wdl.config.settings.MiscSettings;
-import wdl.gui.widget.ExtButton;
+import wdl.gui.widget.Button;
 
 /**
  * A GUI for selecting which world the player is currently in.
@@ -36,10 +36,9 @@ import wdl.gui.widget.ExtButton;
  * TODO: I might want to move the multiworld setup logic elsewhere.
  */
 public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
-	private class WorldGuiButton extends ExtButton {
-		public WorldGuiButton(int offset, int x, int y, int width,
-				int height) {
-			super(offset, x, y, width, height, "");
+	private class WorldGuiButton extends Button {
+		public WorldGuiButton(int x, int y, int width, int height) {
+			super(x, y, width, height, "");
 		}
 
 		@Override
@@ -60,9 +59,6 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 			}
 		}
 
-		@Override
-		public void afterDraw() { }
-
 		/**
 		 * Gets the world folder name marked by this button.
 		 *
@@ -78,6 +74,16 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 			}
 
 			return linkedWorldsFiltered.get(location);
+		}
+
+		@Override
+		public void performAction() {
+			selectedMultiWorld = this.getWorldInfo();
+			if (selectedMultiWorld != null) {
+				acceptBtn.enabled = true;
+			} else {
+				acceptBtn.enabled = false;
+			}
 		}
 	}
 
@@ -282,7 +288,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		this.buttonList.add(prevButton);
 
 		for (int i = 0; i < numWorldButtons; i++) {
-			this.buttonList.add(new WorldGuiButton(i, this.width / 2 - offset
+			this.buttonList.add(new WorldGuiButton(this.width / 2 - offset
 					+ i * 155 + 25, y, 150, 20));
 		}
 
@@ -305,14 +311,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	@Override
 	protected void actionPerformed(GuiButton button) {
 		if (button.enabled) {
-			if (button instanceof WorldGuiButton) {
-				selectedMultiWorld = ((WorldGuiButton) button).getWorldInfo();
-				if (selectedMultiWorld != null) {
-					acceptBtn.enabled = true;
-				} else {
-					acceptBtn.enabled = false;
-				}
-			} else if (button.id == -1) {
+			if (button.id == -1) {
 				callback.onCancel();
 			} else if (button.id == -2) {
 				callback.onWorldSelected(selectedMultiWorld.folderName);

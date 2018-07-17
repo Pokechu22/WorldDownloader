@@ -18,24 +18,49 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 
 /**
- * Extendable button, to deal with changing method names between versions
- * @author Pokechu22
- *
+ * Extendible button, to deal with changing method signatures between versions.
+ * The actual implementation is {@link Button}, and methods are declared in {@link IExtButton}.
  */
-public abstract class ExtButton extends GuiButton {
-	public ExtButton(int buttonId, int x, int y, int widthIn, int heightIn,
-			String buttonText) {
-		super(buttonId, x, y, widthIn, heightIn, buttonText);
+abstract class ExtButton extends GuiButton implements IExtButton {
+	public ExtButton(int x, int y, int widthIn, int heightIn, String buttonText) {
+		super(-1, x, y, widthIn, heightIn, buttonText);
 	}
 
-	public abstract void beforeDraw();
-	public abstract void afterDraw();
+	private boolean dragging;
 
 	@Override
-	public void drawButton(Minecraft mc, int mouseX, int mouseY,
+	public final boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
+		boolean result = super.mousePressed(mc, mouseX, mouseY);
+		if (result) {
+			dragging = true;
+			this.mouseDown(mouseX, mouseY);
+		}
+		return result;
+	}
+
+	@Override
+	public final void mouseReleased(int mouseX, int mouseY) {
+		super.mouseReleased(mouseX, mouseY);
+		dragging = false;
+		this.mouseUp(mouseX, mouseY);
+	}
+
+	@Override
+	public final void drawButton(Minecraft mc, int mouseX, int mouseY,
 			float partialTicks) {
-		beforeDraw();
+		if (this.dragging) {
+			this.mouseDragged(mouseX, mouseY);
+		}
+		this.beforeDraw();
 		super.drawButton(mc, mouseX, mouseY, partialTicks);
-		afterDraw();
+		this.afterDraw();
+	}
+
+	// NOTE: this method name is very misleading; it's called at all times whether the mouse
+	// is down or not.
+	@Override
+	protected final void mouseDragged(Minecraft mc, int mouseX, int mouseY) {
+		super.mouseDragged(mc, mouseX, mouseY);
+		this.midDraw();
 	}
 }
