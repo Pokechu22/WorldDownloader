@@ -14,24 +14,22 @@
  */
 package wdl.gui.widget;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
 import wdl.config.CyclableSetting;
 import wdl.config.IConfiguration;
 
 /**
  * A button that controls a setting.
  */
-public class SettingButton extends GuiButton {
+public class SettingButton extends Button {
 	private final CyclableSetting<?> setting;
 	private final IConfiguration config;
 
-	public SettingButton(int id, CyclableSetting<?> setting, IConfiguration config, int x, int y) {
-		this(id, setting, config, x, y, 200, 20);
+	public SettingButton(CyclableSetting<?> setting, IConfiguration config, int x, int y) {
+		this(setting, config, x, y, 200, 20);
 	}
 
-	public SettingButton(int id, CyclableSetting<?> setting, IConfiguration config, int x, int y, int width, int height) {
-		super(id, x, y, width, height, "");
+	public SettingButton(CyclableSetting<?> setting, IConfiguration config, int x, int y, int width, int height) {
+		super(x, y, width, height, "");
 		this.setting = setting;
 		this.config = config;
 		this.updateDisplayString();
@@ -42,14 +40,9 @@ public class SettingButton extends GuiButton {
 	}
 
 	@Override
-	public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
-		if (super.mousePressed(mc, mouseX, mouseY)) {
-			config.cycle(setting);
-			this.updateDisplayString();
-			return true;
-		} else {
-			return false;
-		}
+	public void performAction() {
+		config.cycle(setting);
+		this.updateDisplayString();
 	}
 
 	/**

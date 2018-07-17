@@ -345,7 +345,13 @@ public class GuiWDLEntities extends GuiScreen {
 		this.buttonList.add(new ButtonDisplayGui(this.width / 2 - 100, this.height - 29,
 				200, 20, this.parent));
 
-		rangeModeButton = new SettingButton(100, EntitySettings.TRACK_DISTANCE_MODE, this.config, this.width / 2 - 155, 18, 150, 20);
+		rangeModeButton = new SettingButton(EntitySettings.TRACK_DISTANCE_MODE, this.config,
+				this.width / 2 - 155, 18, 150, 20) {
+			public @Override void performAction() {
+				super.performAction();
+				presetsButton.enabled = canEditRanges();
+			}
+		};
 		presetsButton = new ButtonDisplayGui(this.width / 2 + 5, 18, 150, 20,
 				I18n.format("wdl.gui.entities.rangePresets"), () -> new GuiWDLEntityRangePresets(this, config));
 
@@ -364,13 +370,6 @@ public class GuiWDLEntities extends GuiScreen {
 	public void handleMouseInput() throws IOException {
 		super.handleMouseInput();
 		this.entityList.handleMouseInput();
-	}
-
-	@Override
-	protected void actionPerformed(GuiButton button) throws IOException {
-		if (button.id == 100) {
-			this.presetsButton.enabled = this.canEditRanges();
-		}
 	}
 
 	@Override

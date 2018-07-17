@@ -54,13 +54,18 @@ public class GuiWDLPlayer extends GuiScreen {
 		this.title = I18n.format("wdl.gui.player.title",
 				WDL.baseFolderName.replace('@', ':'));
 		int y = this.height / 4 - 15;
-		this.healthBtn = new SettingButton(1, PlayerSettings.HEALTH, this.config, this.width / 2 - 100, y);
+		this.healthBtn = new SettingButton(PlayerSettings.HEALTH, this.config, this.width / 2 - 100, y);
 		this.buttonList.add(this.healthBtn);
 		y += 22;
-		this.hungerBtn = new SettingButton(2, PlayerSettings.HUNGER, this.config, this.width / 2 - 100, y);
+		this.hungerBtn = new SettingButton(PlayerSettings.HUNGER, this.config, this.width / 2 - 100, y);
 		this.buttonList.add(this.hungerBtn);
 		y += 22;
-		this.playerPosBtn = new SettingButton(3, PlayerSettings.PLAYER_POSITION, this.config, this.width / 2 - 100, y);
+		this.playerPosBtn = new SettingButton(PlayerSettings.PLAYER_POSITION, this.config, this.width / 2 - 100, y) {
+			public @Override void performAction() {
+				super.performAction();
+				upadatePlayerPosVisibility();
+			}
+		};
 		this.buttonList.add(this.playerPosBtn);
 		y += 22;
 		this.posTextY = y + 4;
@@ -93,9 +98,7 @@ public class GuiWDLPlayer extends GuiScreen {
 	 */
 	@Override
 	protected void actionPerformed(GuiButton button) {
-		if (button.id == 3) {
-			upadatePlayerPosVisibility();
-		} else if (button.id == 4) {
+		if (button.id == 4) {
 			this.setPlayerPosToPlayerPosition();
 		}
 	}

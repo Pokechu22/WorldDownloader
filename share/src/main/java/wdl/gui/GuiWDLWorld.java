@@ -58,19 +58,24 @@ public class GuiWDLWorld extends GuiScreen {
 
 		int y = this.height / 4 - 15;
 
-		this.gamemodeBtn = new SettingButton(1, WorldSettings.GAME_MODE, this.config, this.width / 2 - 100, y);
+		this.gamemodeBtn = new SettingButton(WorldSettings.GAME_MODE, this.config, this.width / 2 - 100, y);
 		this.buttonList.add(this.gamemodeBtn);
 		y += 22;
-		this.allowCheatsBtn = new SettingButton(6, WorldSettings.ALLOW_CHEATS, this.config, this.width / 2 - 100, y);
+		this.allowCheatsBtn = new SettingButton(WorldSettings.ALLOW_CHEATS, this.config, this.width / 2 - 100, y);
 		this.buttonList.add(this.allowCheatsBtn);
 		y += 22;
-		this.timeBtn = new SettingButton(2, WorldSettings.TIME, this.config, this.width / 2 - 100, y);
+		this.timeBtn = new SettingButton(WorldSettings.TIME, this.config, this.width / 2 - 100, y);
 		this.buttonList.add(this.timeBtn);
 		y += 22;
-		this.weatherBtn = new SettingButton(3, WorldSettings.WEATHER, this.config, this.width / 2 - 100, y);
+		this.weatherBtn = new SettingButton(WorldSettings.WEATHER, this.config, this.width / 2 - 100, y);
 		this.buttonList.add(this.weatherBtn);
 		y += 22;
-		this.spawnBtn = new SettingButton(4, WorldSettings.SPAWN, this.config, this.width / 2 - 100, y);
+		this.spawnBtn = new SettingButton(WorldSettings.SPAWN, this.config, this.width / 2 - 100, y) {
+			public @Override void performAction() {
+				super.performAction();
+				updateSpawnTextBoxVisibility();
+			}
+		};
 		this.buttonList.add(this.spawnBtn);
 		y += 22;
 		this.spawnTextY = y + 4;
@@ -104,9 +109,7 @@ public class GuiWDLWorld extends GuiScreen {
 	@Override
 	protected void actionPerformed(GuiButton button) {
 		if (button.enabled) {
-			if (button.id == 4) {
-				this.updateSpawnTextBoxVisibility();
-			} else if (button.id == 5) {
+			if (button.id == 5) {
 				this.setSpawnToPlayerPosition();
 			}
 		}

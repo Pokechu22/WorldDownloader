@@ -58,7 +58,7 @@ public class GuiWDLMessages extends GuiScreen {
 
 			public CategoryEntry(MessageTypeCategory category) {
 				this.category = category;
-				this.button = new SettingButton(0, category.setting, config, 0, 0, 80, 20);
+				this.button = new SettingButton(category.setting, config, 0, 0, 80, 20);
 			}
 
 			@Override
@@ -105,7 +105,7 @@ public class GuiWDLMessages extends GuiScreen {
 
 			public MessageTypeEntry(MessageRegistration registration) {
 				this.typeRegistration = registration;
-				this.button = new SettingButton(0, registration.setting, config, 0, 0);
+				this.button = new SettingButton(registration.setting, config, 0, 0);
 			}
 
 			@Override
@@ -179,7 +179,7 @@ public class GuiWDLMessages extends GuiScreen {
 
 	@Override
 	public void initGui() {
-		enableAllButton = new SettingButton(100, MessageSettings.ENABLE_ALL_MESSAGES, this.config, (this.width / 2) - 155, 18, 150, 20);
+		enableAllButton = new SettingButton(MessageSettings.ENABLE_ALL_MESSAGES, this.config, (this.width / 2) - 155, 18, 150, 20);
 		this.buttonList.add(enableAllButton);
 		resetButton = new ButtonDisplayGui((this.width / 2) + 5, 18,
 				150, 20, I18n.format("wdl.gui.messages.reset"),

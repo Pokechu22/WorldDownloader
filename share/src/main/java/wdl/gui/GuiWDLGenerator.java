@@ -68,10 +68,19 @@ public class GuiWDLGenerator extends GuiScreen {
 				this.width / 2 - (100 - seedWidth), y, 200 - seedWidth, 18);
 		this.seedField.setText(config.getValue(GeneratorSettings.SEED));
 		y += 22;
-		this.generatorBtn = new SettingButton(1, GeneratorSettings.GENERATOR, this.config, this.width / 2 - 100, y);
+		this.generatorBtn = new SettingButton(GeneratorSettings.GENERATOR, this.config, this.width / 2 - 100, y) {
+			public @Override void performAction() {
+				super.performAction();
+				updateSettingsButtonVisibility();
+				// Clear any existing custom values, as they don't apply to another generator.
+				config.clearValue(GeneratorSettings.GENERATOR_NAME);
+				config.clearValue(GeneratorSettings.GENERATOR_VERSION);
+				config.clearValue(GeneratorSettings.GENERATOR_OPTIONS);
+			}
+		};
 		this.buttonList.add(this.generatorBtn);
 		y += 22;
-		this.generateStructuresBtn = new SettingButton(2, GeneratorSettings.GENERATE_STRUCTURES, this.config, this.width / 2 - 100, y);
+		this.generateStructuresBtn = new SettingButton(GeneratorSettings.GENERATE_STRUCTURES, this.config, this.width / 2 - 100, y);
 		this.buttonList.add(this.generateStructuresBtn);
 		y += 22;
 		this.settingsPageBtn = new ButtonDisplayGui(this.width / 2 - 100, y,
@@ -81,23 +90,6 @@ public class GuiWDLGenerator extends GuiScreen {
 
 		this.buttonList.add(new ButtonDisplayGui(this.width / 2 - 100, height - 29,
 				200, 20, this.parent));
-	}
-
-	/**
-	 * Fired when a control is clicked. This is the equivalent of
-	 * ActionListener.actionPerformed(ActionEvent e).
-	 */
-	@Override
-	protected void actionPerformed(GuiButton button) {
-		if (button.enabled) {
-			if (button.id == 1) {
-				this.updateSettingsButtonVisibility();
-				// Clear any existing custom values, as they don't apply to another generator.
-				this.config.clearValue(GeneratorSettings.GENERATOR_NAME);
-				this.config.clearValue(GeneratorSettings.GENERATOR_VERSION);
-				this.config.clearValue(GeneratorSettings.GENERATOR_OPTIONS);
-			}
-		}
 	}
 
 	/**
