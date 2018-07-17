@@ -16,6 +16,8 @@ package wdl.gui;
 
 import java.io.IOException;
 
+import javax.annotation.Nullable;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -72,8 +74,8 @@ public class GuiWDLGenerator extends GuiScreen {
 		this.generateStructuresBtn = new SettingButton(2, GeneratorSettings.GENERATE_STRUCTURES, this.config, this.width / 2 - 100, y);
 		this.buttonList.add(this.generateStructuresBtn);
 		y += 22;
-		this.settingsPageBtn = new GuiButton(3, this.width / 2 - 100, y,
-				"");
+		this.settingsPageBtn = new ButtonDisplayGui(this.width / 2 - 100, y,
+				200, 20, "", this::getSettingsGui);
 		updateSettingsButtonVisibility();
 		this.buttonList.add(this.settingsPageBtn);
 
@@ -94,23 +96,26 @@ public class GuiWDLGenerator extends GuiScreen {
 				this.config.clearValue(GeneratorSettings.GENERATOR_NAME);
 				this.config.clearValue(GeneratorSettings.GENERATOR_VERSION);
 				this.config.clearValue(GeneratorSettings.GENERATOR_OPTIONS);
-			} else if (button.id == 3) {
-				GeneratorSettings.Generator generator = config.getValue(GeneratorSettings.GENERATOR);
-				switch (generator) {
-				case FLAT:
-					this.mc.displayGuiScreen(new GuiFlatPresets(
-							new GuiCreateFlatWorldProxy()));
-					break;
-				case CUSTOMIZED:
-					this.mc.displayGuiScreen(new GuiCustomizeWorldScreen(
-							new GuiCreateWorldProxy(),
-							config.getValue(GeneratorSettings.GENERATOR_OPTIONS)));
-					break;
-				default:
-					LOGGER.warn("Generator lacks extra settings; this button should not be usable: " + generator);
-				}
 			}
 		}
+	}
+
+	/**
+	 * Gets the proxy GUI to use for the current settings.
+	 */
+	@Nullable
+	private GuiScreen getSettingsGui() {
+		GeneratorSettings.Generator generator = config.getValue(GeneratorSettings.GENERATOR);
+		switch (generator) {
+		case FLAT:
+			return new GuiFlatPresets(new GuiCreateFlatWorldProxy());
+		case CUSTOMIZED:
+			return new GuiCustomizeWorldScreen(new GuiCreateWorldProxy(),
+					config.getValue(GeneratorSettings.GENERATOR_OPTIONS));
+		default:
+			LOGGER.warn("Generator lacks extra settings; this button should not be usable: " + generator);
+		}
+		return null;
 	}
 
 	@Override

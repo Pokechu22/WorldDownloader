@@ -14,8 +14,8 @@
  */
 package wdl.gui;
 
-import java.io.IOException;
 import java.util.Set;
+import java.util.function.Supplier;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -42,6 +42,8 @@ public class GuiWDLEntityRangePresets extends GuiScreen implements GuiYesNoCallb
 	private GuiButton serverButton;
 	private GuiButton cancelButton;
 
+	private static final int ID_VANILLA = 0, ID_SPIGOT = 1, ID_SERVER = 2;
+
 	public GuiWDLEntityRangePresets(GuiScreen parent, IConfiguration config) {
 		this.parent = parent;
 		this.config = config;
@@ -51,14 +53,17 @@ public class GuiWDLEntityRangePresets extends GuiScreen implements GuiYesNoCallb
 	public void initGui() {
 		int y = this.height / 4;
 
-		this.vanillaButton = new GuiButton(0, this.width / 2 - 100, y,
-				I18n.format("wdl.gui.rangePresets.vanilla"));
+		this.vanillaButton = new ButtonDisplayGui(this.width / 2 - 100, y,
+				200, 20, I18n.format("wdl.gui.rangePresets.vanilla"),
+				makeYesNoGui("wdl.gui.rangePresets.vanilla.warning", ID_VANILLA));
 		y += 22;
-		this.spigotButton = new GuiButton(1, this.width / 2 - 100, y,
-				I18n.format("wdl.gui.rangePresets.spigot"));
+		this.spigotButton = new ButtonDisplayGui(this.width / 2 - 100, y,
+				200, 20, I18n.format("wdl.gui.rangePresets.spigot"),
+				makeYesNoGui("wdl.gui.rangePresets.spigot.warning", ID_SPIGOT));
 		y += 22;
-		this.serverButton = new GuiButton(2, this.width / 2 - 100, y,
-				I18n.format("wdl.gui.rangePresets.server"));
+		this.serverButton = new ButtonDisplayGui(this.width / 2 - 100, y,
+				200, 20, I18n.format("wdl.gui.rangePresets.server"),
+				makeYesNoGui("wdl.gui.rangePresets.spigot.warning", ID_SERVER));
 
 		serverButton.enabled = WDLPluginChannels.hasServerEntityRange();
 
@@ -73,31 +78,11 @@ public class GuiWDLEntityRangePresets extends GuiScreen implements GuiYesNoCallb
 		this.buttonList.add(cancelButton);
 	}
 
-	@Override
-	protected void actionPerformed(GuiButton button) throws IOException {
-		if (!button.enabled) {
-			return;
-		}
+	private Supplier<GuiYesNo> makeYesNoGui(String message, int id) {
+		String upper = I18n.format("wdl.gui.rangePresets.upperWarning");
+		String lower = I18n.format(message);
 
-		if (button.id >= 0 && button.id < 3) {
-			String upper;
-			String lower;
-
-			upper = I18n.format("wdl.gui.rangePresets.upperWarning");
-
-			if (button.id == 0) {
-				lower = I18n.format("wdl.gui.rangePresets.vanilla.warning");
-			} else if (button.id == 1) {
-				lower = I18n.format("wdl.gui.rangePresets.spigot.warning");
-			} else if (button.id == 2) {
-				lower = I18n.format("wdl.gui.rangePresets.server.warning");
-			} else {
-				//Should not happen.
-				throw new Error("Button.id should never be negative.");
-			}
-
-			mc.displayGuiScreen(new GuiYesNo(this, upper, lower, button.id));
-		}
+		return () -> new GuiYesNo(this, upper, lower, id);
 	}
 
 	@Override
@@ -138,19 +123,19 @@ public class GuiWDLEntityRangePresets extends GuiScreen implements GuiYesNoCallb
 		if (result) {
 			Set<String> entities = EntityUtils.getEntityTypes();
 
-			if (id == 0) {
+			if (id == ID_VANILLA) {
 				for (String entity : StandardEntityManagers.VANILLA.getProvidedEntities()) {
 					config.setUserEntityTrackDistance(entity,
 							StandardEntityManagers.VANILLA.getTrackDistance(entity, null));
 				}
-			} else if (id == 1) {
+			} else if (id == ID_SPIGOT) {
 				for (String entity : StandardEntityManagers.SPIGOT.getProvidedEntities()) {
 					SpigotEntityType type = StandardEntityManagers.SPIGOT.getSpigotType(entity);
 					// XXX Allow specifying the range for each type instead of the default
 					config.setUserEntityTrackDistance(entity,
 							type.getDefaultRange());
 				}
-			} else if (id == 2) {
+			} else if (id == ID_SERVER) {
 				for (String entity : entities) {
 					config.setUserEntityTrackDistance(entity,
 							WDLPluginChannels.getEntityRange(entity));

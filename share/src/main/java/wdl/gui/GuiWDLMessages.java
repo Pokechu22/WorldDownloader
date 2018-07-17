@@ -175,12 +175,18 @@ public class GuiWDLMessages extends GuiScreen {
 	private SettingButton enableAllButton;
 	private GuiButton resetButton;
 
+	private static final int ID_RESET_ALL = 101;
+
 	@Override
 	public void initGui() {
 		enableAllButton = new SettingButton(100, MessageSettings.ENABLE_ALL_MESSAGES, this.config, (this.width / 2) - 155, 18, 150, 20);
 		this.buttonList.add(enableAllButton);
-		resetButton = new GuiButton(101, (this.width / 2) + 5, 18, 150, 20,
-				I18n.format("wdl.gui.messages.reset"));
+		resetButton = new ButtonDisplayGui((this.width / 2) + 5, 18,
+				150, 20, I18n.format("wdl.gui.messages.reset"),
+				() -> new GuiYesNo(this,
+						I18n.format("wdl.gui.messages.reset.confirm.title"),
+						I18n.format("wdl.gui.messages.reset.confirm.subtitle"),
+						ID_RESET_ALL));
 		this.buttonList.add(resetButton);
 
 		this.list = new GuiMessageTypeList();
@@ -190,19 +196,9 @@ public class GuiWDLMessages extends GuiScreen {
 	}
 
 	@Override
-	protected void actionPerformed(GuiButton button) throws IOException {
-		if (button.id == 101) {
-			this.mc.displayGuiScreen(new GuiYesNo(this,
-					I18n.format("wdl.gui.messages.reset.confirm.title"),
-					I18n.format("wdl.gui.messages.reset.confirm.subtitle"),
-					101));
-		}
-	}
-
-	@Override
 	public void confirmClicked(boolean result, int id) {
 		if (result) {
-			if (id == 101) {
+			if (id == ID_RESET_ALL) {
 				ListMultimap<MessageTypeCategory, MessageRegistration> registrations = WDLMessages.getRegistrations();
 				config.clearValue(MessageSettings.ENABLE_ALL_MESSAGES);
 

@@ -146,10 +146,10 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 		this.buttonList.add(new ButtonDisplayGui(width / 2 - 100, height - 29,
 				200, 20, this.parent));
 
-		this.buttonList.add(new GuiButton(200, this.width / 2 - 155, 39, 100, 20,
-				I18n.format("wdl.gui.permissions.current")));
-		this.buttonList.add(new GuiButton(201, this.width / 2 - 50, 39, 100, 20,
-				I18n.format("wdl.gui.permissions.request")));
+		this.buttonList.add(new ButtonDisplayGui(this.width / 2 - 155, 39, 100, 20,
+				I18n.format("wdl.gui.permissions.current"), () -> new GuiWDLPermissions(this.parent)));
+		this.buttonList.add(new ButtonDisplayGui(this.width / 2 - 50, 39, 100, 20,
+				I18n.format("wdl.gui.permissions.request"), () -> new GuiWDLPermissionRequest(this.parent)));
 		this.buttonList.add(new GuiButton(202, this.width / 2 + 55, 39, 100, 20,
 				I18n.format("wdl.gui.permissions.overrides")));
 	}
@@ -167,12 +167,6 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 			WDL.startDownload();
 		}
 
-		if (button.id == 200) {
-			this.mc.displayGuiScreen(new GuiWDLPermissions(this.parent));
-		}
-		if (button.id == 201) {
-			this.mc.displayGuiScreen(new GuiWDLPermissionRequest(this.parent));
-		}
 		if (button.id == 202) {
 			// Would open this GUI; do nothing.
 		}

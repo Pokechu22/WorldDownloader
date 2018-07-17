@@ -51,8 +51,8 @@ public class GuiWDLAbout extends GuiScreen {
 
 	@Override
 	public void initGui() {
-		buttonList.add(new GuiButton(0, (this.width / 2) - 155, 18, 150, 20,
-				I18n.format("wdl.gui.about.extensions")));
+		buttonList.add(new ButtonDisplayGui((this.width / 2) - 155, 18, 150, 20,
+				I18n.format("wdl.gui.about.extensions"), () -> new GuiWDLExtensions(this)));
 		buttonList.add(new GuiButton(1, (this.width / 2) + 5, 18, 150, 20,
 				I18n.format("wdl.gui.about.debugInfo")));
 		buttonList.add(new ButtonDisplayGui((this.width / 2) - 100, this.height - 29,
@@ -95,10 +95,7 @@ public class GuiWDLAbout extends GuiScreen {
 
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
-		if (button.id == 0) {
-			// Extensions
-			mc.displayGuiScreen(new GuiWDLExtensions(this));
-		} else if (button.id == 1) {
+		if (button.id == 1) {
 			// Copy debug info
 			setClipboardString(WDL.getDebugInfo());
 			// Change text to "copied" once clicked

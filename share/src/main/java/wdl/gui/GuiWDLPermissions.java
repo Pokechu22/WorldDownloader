@@ -79,10 +79,10 @@ public class GuiWDLPermissions extends GuiScreen {
 		this.buttonList.add(new GuiButton(200, this.width / 2 - 155, 39, 100, 20,
 				I18n.format("wdl.gui.permissions.current")));
 		if (WDLPluginChannels.canRequestPermissions()) {
-			this.buttonList.add(new GuiButton(201, this.width / 2 - 50, 39, 100, 20,
-					I18n.format("wdl.gui.permissions.request")));
-			this.buttonList.add(new GuiButton(202, this.width / 2 + 55, 39, 100, 20,
-					I18n.format("wdl.gui.permissions.overrides")));
+			this.buttonList.add(new ButtonDisplayGui(this.width / 2 - 50, 39, 100, 20,
+					I18n.format("wdl.gui.permissions.request"), () -> new GuiWDLPermissionRequest(this.parent)));
+			this.buttonList.add(new ButtonDisplayGui(this.width / 2 + 55, 39, 100, 20,
+					I18n.format("wdl.gui.permissions.overrides"), () -> new GuiWDLChunkOverrides(this.parent)));
 		}
 
 		reloadButton = new GuiButton(1, (this.width / 2) + 5, 18, 150, 20,
@@ -203,12 +203,6 @@ public class GuiWDLPermissions extends GuiScreen {
 
 		if (button.id == 200) {
 			// Would open this GUI; do nothing.
-		}
-		if (button.id == 201) {
-			this.mc.displayGuiScreen(new GuiWDLPermissionRequest(this.parent));
-		}
-		if (button.id == 202) {
-			this.mc.displayGuiScreen(new GuiWDLChunkOverrides(this.parent));
 		}
 	}
 

@@ -30,7 +30,7 @@ public class ButtonDisplayGui extends Button {
 	/**
 	 * Supplier for the GUI to display.  Allowed to return null.
 	 */
-	private final Supplier<GuiScreen> screenSupplier;
+	private final Supplier<? extends GuiScreen> screenSupplier;
 
 	/**
 	 * Creates a new button that displays the given screen, with "done" as its text.
@@ -42,7 +42,7 @@ public class ButtonDisplayGui extends Button {
 	/**
 	 * Creates a new button that displays the given screen, with "done" as its text.
 	 */
-	public ButtonDisplayGui(int x, int y, int widthIn, int heightIn, Supplier<GuiScreen> supplier) {
+	public ButtonDisplayGui(int x, int y, int widthIn, int heightIn, Supplier<? extends GuiScreen> supplier) {
 		this(x, y, widthIn, heightIn, I18n.format("gui.done"), supplier);
 	}
 
@@ -56,7 +56,7 @@ public class ButtonDisplayGui extends Button {
 	/**
 	 * Creates a new button that displays the given screen, with the specified text.
 	 */
-	public ButtonDisplayGui(int x, int y, int widthIn, int heightIn, String buttonText, Supplier<GuiScreen> supplier) {
+	public ButtonDisplayGui(int x, int y, int widthIn, int heightIn, String buttonText, Supplier<? extends GuiScreen> supplier) {
 		super(x, y, widthIn, heightIn, buttonText);
 		this.screenSupplier = supplier;
 	}
