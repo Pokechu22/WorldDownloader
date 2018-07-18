@@ -15,7 +15,6 @@
 package wdl.gui;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -134,7 +133,6 @@ public class GuiWDLUpdates extends GuiScreen {
 			}
 		}
 
-		private List<VersionEntry> displayedVersions;
 		/**
 		 * Release that should be used.
 		 */
@@ -147,7 +145,7 @@ public class GuiWDLUpdates extends GuiScreen {
 		 * being called each frame.
 		 */
 		private void regenerateVersionList() {
-			displayedVersions = new ArrayList<>();
+			getEntries().clear();
 
 			if (WDLUpdateChecker.hasNewVersion()) {
 				recomendedRelease = WDLUpdateChecker.getRecomendedRelease();
@@ -161,9 +159,7 @@ public class GuiWDLUpdates extends GuiScreen {
 				return;
 			}
 
-			for (Release release : releases) {
-				displayedVersions.add(new VersionEntry(release));
-			}
+			releases.stream().map(VersionEntry::new).forEachOrdered(getEntries()::add);
 		}
 
 		@Override
