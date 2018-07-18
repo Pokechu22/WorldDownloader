@@ -259,7 +259,7 @@ public class GuiWDLGameRules extends GuiScreen {
 	@Nullable
 	private String getRule(@Nonnull String ruleName) {
 		if (isRuleSet(ruleName)) {
-			return config.getGameRule("GameRule." + ruleName);
+			return config.getGameRule(ruleName);
 		} else {
 			return rules.getString(ruleName);
 		}
