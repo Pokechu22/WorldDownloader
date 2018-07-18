@@ -20,7 +20,7 @@ import net.minecraft.inventory.ContainerShulkerBox;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntityShulkerBox;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.IBlockReader;
 import wdl.ReflectionUtils;
 import wdl.handler.HandlerException;
 
@@ -31,7 +31,7 @@ public class ShulkerBoxHandler extends BlockHandler<TileEntityShulkerBox, Contai
 
 	@Override
 	public String handle(BlockPos clickedPos, ContainerShulkerBox container,
-			TileEntityShulkerBox blockEntity, IBlockAccess world,
+			TileEntityShulkerBox blockEntity, IBlockReader world,
 			BiConsumer<BlockPos, TileEntityShulkerBox> saveMethod) throws HandlerException {
 		IInventory shulkerInventory = ReflectionUtils.findAndGetPrivateField(
 				container, IInventory.class);

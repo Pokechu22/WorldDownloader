@@ -58,19 +58,18 @@ import net.minecraft.util.ClassInheritanceMultiMap;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.MinecraftException;
 import net.minecraft.world.NextTickListEntry;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldProvider;
-import net.minecraft.world.WorldProviderEnd;
-import net.minecraft.world.WorldProviderHell;
+import net.minecraft.world.dimension.Dimension;
+import net.minecraft.world.dimension.EndDimension;
+import net.minecraft.world.dimension.NetherDimension;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.NibbleArray;
 import net.minecraft.world.chunk.storage.AnvilChunkLoader;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraft.world.chunk.storage.RegionFileCache;
 import net.minecraft.world.storage.SaveHandler;
-
+import net.minecraft.world.storage.SessionLockException;
 import wdl.api.IEntityEditor;
 import wdl.api.ITileEntityEditor;
 import wdl.api.ITileEntityEditor.TileEntityCreationMode;
@@ -86,8 +85,8 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	public static WDLChunkLoader create(SaveHandler handler,
-			WorldProvider provider) {
-		return new WDLChunkLoader(getWorldSaveFolder(handler, provider));
+			Dimension dimension) {
+		return new WDLChunkLoader(getWorldSaveFolder(handler, dimension));
 	}
 
 	/**
@@ -95,7 +94,7 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 	 * dimension names if forge is present.
 	 */
 	private static File getWorldSaveFolder(SaveHandler handler,
-			WorldProvider provider) {
+			Dimension dimension) {
 		File baseFolder = handler.getWorldDirectory();
 
 		// Based off of AnvilSaveHandler.getChunkLoader, but also accounts
@@ -104,10 +103,10 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 			// See forge changes here:
 			// https://github.com/MinecraftForge/MinecraftForge/blob/250a77b35936e7ac68006dfd28a9e93c6def9128/patches/minecraft/net/minecraft/world/WorldProvider.java.patch#L85-L93
 			// https://github.com/MinecraftForge/MinecraftForge/blob/250a77b35936e7ac68006dfd28a9e93c6def9128/patches/minecraft/net/minecraft/world/chunk/storage/AnvilSaveHandler.java.patch
-			Method forgeGetSaveFolderMethod = provider.getClass().getMethod(
+			Method forgeGetSaveFolderMethod = dimension.getClass().getMethod(
 					"getSaveFolder");
 
-			String name = (String) forgeGetSaveFolderMethod.invoke(provider);
+			String name = (String) forgeGetSaveFolderMethod.invoke(dimension);
 			if (name != null) {
 				File file = new File(baseFolder, name);
 				file.mkdirs();
@@ -118,11 +117,11 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 			// Not a forge setup - emulate the vanilla method in
 			// AnvilSaveHandler.getChunkLoader.
 
-			if (provider instanceof WorldProviderHell) {
+			if (dimension instanceof NetherDimension) {
 				File file = new File(baseFolder, "DIM-1");
 				file.mkdirs();
 				return file;
-			} else if (provider instanceof WorldProviderEnd) {
+			} else if (dimension instanceof EndDimension) {
 				File file = new File(baseFolder, "DIM1");
 				file.mkdirs();
 				return file;
@@ -151,8 +150,7 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 	 * version does not.
 	 */
 	@Override
-	public void saveChunk(World world, Chunk chunk) throws MinecraftException,
-	IOException {
+	public void saveChunk(World world, Chunk chunk) throws SessionLockException, IOException {
 		world.checkSessionLock();
 
 		NBTTagCompound levelTag = writeChunkToNBT(chunk, world);

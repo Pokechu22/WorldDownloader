@@ -22,7 +22,7 @@ import net.minecraft.inventory.ContainerChest;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.IBlockReader;
 import wdl.WDLMessageTypes;
 import wdl.handler.HandlerException;
 
@@ -33,7 +33,7 @@ public class ChestHandler extends BlockHandler<TileEntityChest, ContainerChest> 
 
 	@Override
 	public String handle(BlockPos clickedPos, ContainerChest container,
-			TileEntityChest blockEntity, IBlockAccess world,
+			TileEntityChest blockEntity, IBlockReader world,
 			BiConsumer<BlockPos, TileEntityChest> saveMethod) throws HandlerException {
 		String title = getCustomDisplayName(container.getLowerChestInventory());
 
@@ -57,7 +57,7 @@ public class ChestHandler extends BlockHandler<TileEntityChest, ContainerChest> 
 	 * @throws HandlerException As per {@link #handle}
 	 */
 	private void saveSingleChest(BlockPos clickedPos, ContainerChest container,
-			TileEntityChest blockEntity, IBlockAccess world,
+			TileEntityChest blockEntity, IBlockReader world,
 			BiConsumer<BlockPos, TileEntityChest> saveMethod,
 			@Nullable String displayName) throws HandlerException {
 		saveContainerItems(container, blockEntity, 0);
@@ -79,7 +79,7 @@ public class ChestHandler extends BlockHandler<TileEntityChest, ContainerChest> 
 	 * @throws HandlerException As per {@link #handle}
 	 */
 	private void saveDoubleChest(BlockPos clickedPos, ContainerChest container,
-			TileEntityChest blockEntity, IBlockAccess world,
+			TileEntityChest blockEntity, IBlockReader world,
 			BiConsumer<BlockPos, TileEntityChest> saveMethod,
 			@Nullable String displayName) throws HandlerException {
 		// This is messy, but it needs to be like this because

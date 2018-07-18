@@ -45,9 +45,9 @@ import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldProvider;
+import net.minecraft.world.dimension.Dimension;
+import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.storage.ISaveHandler;
 import net.minecraft.world.storage.WorldInfo;
 import wdl.MaybeMixinTest;
@@ -77,7 +77,7 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 	private static final Field worldProviderField;
 	static {
 		try {
-			worldProviderField = ReflectionUtils.findField(World.class, WorldProvider.class);
+			worldProviderField = ReflectionUtils.findField(World.class, Dimension.class);
 
 			Field modifiersField = Field.class.getDeclaredField("modifiers");
 			modifiersField.setAccessible(true);
@@ -109,10 +109,10 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 	 */
 	private World makeMockWorld(boolean client) {
 		String name = client ? "Client world" : "Server world";
-		WorldProvider provider = mock(WorldProvider.class);
-		when(provider.getDimensionType()).thenReturn(DimensionType.OVERWORLD);
+		Dimension dimension = mock(Dimension.class);
+		when(dimension.getDimensionType()).thenReturn(DimensionType.OVERWORLD);
 		return mock(World.class, withSettings().name(name).defaultAnswer(RETURNS_MOCKS)
-				.useConstructor(mock(ISaveHandler.class), mock(WorldInfo.class), provider, mock(Profiler.class), client));
+				.useConstructor(mock(ISaveHandler.class), mock(WorldInfo.class), dimension, mock(Profiler.class), client));
 	}
 
 	/**

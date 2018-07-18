@@ -20,7 +20,7 @@ import net.minecraft.inventory.ContainerFurnace;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.IBlockReader;
 import wdl.ReflectionUtils;
 import wdl.handler.HandlerException;
 
@@ -31,7 +31,7 @@ public class FurnaceHandler extends BlockHandler<TileEntityFurnace, ContainerFur
 
 	@Override
 	public String handle(BlockPos clickedPos, ContainerFurnace container,
-			TileEntityFurnace blockEntity, IBlockAccess world,
+			TileEntityFurnace blockEntity, IBlockReader world,
 			BiConsumer<BlockPos, TileEntityFurnace> saveMethod) throws HandlerException {
 		IInventory furnaceInventory = ReflectionUtils.findAndGetPrivateField(
 				container, IInventory.class);

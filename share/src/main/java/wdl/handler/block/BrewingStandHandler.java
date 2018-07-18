@@ -20,7 +20,7 @@ import net.minecraft.inventory.ContainerBrewingStand;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntityBrewingStand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.IBlockReader;
 import wdl.ReflectionUtils;
 import wdl.handler.HandlerException;
 
@@ -31,7 +31,7 @@ public class BrewingStandHandler extends BlockHandler<TileEntityBrewingStand, Co
 
 	@Override
 	public String handle(BlockPos clickedPos, ContainerBrewingStand container,
-			TileEntityBrewingStand blockEntity, IBlockAccess world,
+			TileEntityBrewingStand blockEntity, IBlockReader world,
 			BiConsumer<BlockPos, TileEntityBrewingStand> saveMethod) throws HandlerException {
 		IInventory brewingInventory = ReflectionUtils.findAndGetPrivateField(
 				container, IInventory.class);

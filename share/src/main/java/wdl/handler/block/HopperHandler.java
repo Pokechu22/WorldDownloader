@@ -20,7 +20,7 @@ import net.minecraft.inventory.ContainerHopper;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.IBlockReader;
 import wdl.ReflectionUtils;
 import wdl.handler.HandlerException;
 
@@ -31,7 +31,7 @@ public class HopperHandler extends BlockHandler<TileEntityHopper, ContainerHoppe
 
 	@Override
 	public String handle(BlockPos clickedPos, ContainerHopper container,
-			TileEntityHopper blockEntity, IBlockAccess world,
+			TileEntityHopper blockEntity, IBlockReader world,
 			BiConsumer<BlockPos, TileEntityHopper> saveMethod) throws HandlerException {
 		IInventory hopperInventory = ReflectionUtils.findAndGetPrivateField(
 				container, IInventory.class);

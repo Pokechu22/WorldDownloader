@@ -25,7 +25,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.IBlockReader;
 import wdl.VersionedProperties;
 import wdl.ducks.INetworkNameable;
 import wdl.handler.BaseHandler;
@@ -92,7 +92,7 @@ public abstract class BlockHandler<B extends TileEntity, C extends Container> ex
 	 *             If container or blockEntity are not instances of the handled class.
 	 */
 	public final String handleCasting(BlockPos clickedPos, Container container,
-			TileEntity blockEntity, IBlockAccess world,
+			TileEntity blockEntity, IBlockReader world,
 			BiConsumer<BlockPos, B> saveMethod) throws HandlerException, ClassCastException {
 		B b = blockEntityClass.cast(blockEntity);
 		C c = containerClass.cast(container);
@@ -118,7 +118,7 @@ public abstract class BlockHandler<B extends TileEntity, C extends Container> ex
 	 *             When something is handled wrong.
 	 */
 	public abstract String handle(BlockPos clickedPos, C container,
-			B blockEntity, IBlockAccess world,
+			B blockEntity, IBlockReader world,
 			BiConsumer<BlockPos, B> saveMethod) throws HandlerException;
 
 	/**
