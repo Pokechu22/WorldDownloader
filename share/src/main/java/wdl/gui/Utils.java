@@ -91,7 +91,7 @@ public class Utils {
 	 * @return A list of lines.
 	 */
 	public static List<String> wordWrap(String s, int width) {
-		s = s.replace("\r", ""); // If we got a \r\n in the text somehow, remove it.
+		s = s.replace("\\n", "\n");
 
 		List<String> lines = mc.fontRenderer.listFormattedStringToWidth(s, width);
 
@@ -169,7 +169,7 @@ public class Utils {
 			desktopClass.getMethod("browse", URI.class).invoke(desktop,
 					new URI(path));
 		} catch (Throwable e) {
-			LOGGER.error("Couldn\'t open link", e);
+			LOGGER.error("Couldn't open link", e);
 		}
 	}
 

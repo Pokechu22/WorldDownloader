@@ -1,17 +1,15 @@
-# WorldDownloader translation file
+# World Downloader translation file
 # All of the text on the left side of the = is the key, while the right side is the value.
-# '%s', '%d', and similar are formatting tokens, as described on the formatter
+# '%s' and similar are formatting tokens, as described on the formatter
 # docs: http://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html
-# '%s' is a string, '%d' is a decimal integer, and '%f' is a float.
-# '%%' is an escaped percent, and '%n' is a newline.  You can reference an argument
-# at a specific index with %i$s, where 'i' is the number (and 's' may be changed
-# with one of the other format types).
-# Precision can be specified like %.2f, giving 2 decimal points of accuracy.
+# Only '%s' and '%%' are allowed.  '%s' is a string, and '%%' is an escapped percent.
+# You can reference an argument at a specific index with %i$s, where 'i'
+# is the number.
 # Everything after a '#' is a comment.
-#  
-# Note that in all of the things put into chat (under wdl.messages) you can
-# ONLY use '%s', '%d', and '%f'.
-# 
+#
+# For description messages in GUIs, you are also allowed to use \n to indicate a new line.
+# This cannot be escaped.
+#
 # Additionally, Minecraft's §-based color codes may be used.  See
 # http://minecraft.gamepedia.com/Formatting_codes for more info.
 
@@ -69,9 +67,9 @@ wdl.gui.world.allowCheats.description=Contrôle si les commandes comme /gamemode
 wdl.gui.world.gamemode.description=Contrôle quel mode de jeu est utilisé dans le monde téléchargé.
 wdl.gui.world.time.description=Contrôle l'heure dans le monde téléchargé.
 wdl.gui.world.weather.description=Contrôle la météo dans le monde téléchargé.
-wdl.gui.world.spawn.description=Contrôle le point de spawn dans le monde téléchargé.%n%n§lNe pas changer§r : Utilisez le point de spawn du serveur.%n§lPosition du joueur§r : Utilise la position du joueur lorsque le téléchargement est stoppé.%n§lXYZ§r : Permet de spécifier des coordonées exactes.
+wdl.gui.world.spawn.description=Contrôle le point de spawn dans le monde téléchargé.\n\n§lNe pas changer§r : Utilisez le point de spawn du serveur.\n§lPosition du joueur§r : Utilise la position du joueur lorsque le téléchargement est stoppé.\n§lXYZ§r : Permet de spécifier des coordonées exactes.
 wdl.gui.world.setSpawnToCurrentPosition.description=Met le point de spawn à votre position actuelle.
-wdl.gui.world.spawnPos.description=Utilisez ces zones de texte pour spécifier des coordonées exactes%n%nCette zone de texte définit la coordonée en %s .
+wdl.gui.world.spawnPos.description=Utilisez ces zones de texte pour spécifier des coordonées exactes\n\nCette zone de texte définit la coordonée en %s .
 
 wdl.gui.player.title=World Downloader mod: Options Joueur for %s
 wdl.gui.player.health.keep=Vie: Ne pas changer
@@ -81,11 +79,11 @@ wdl.gui.player.hunger.20=Faim: Plein
 wdl.gui.player.position.keep=Position Joueur: Ne pas changer
 wdl.gui.player.position.xyz=Position Joueur:
 wdl.gui.player.setPositionToCurrentPosition=Position actuelle
-wdl.gui.player.health.description=Cette option fixe la vie que le joueur a dans la copie téléchargée du monde.%n%n§lNe pas changer§r: Conserve la vie à sa valeur lorsque le téléchargement à été arreté.%n§lEntière§r: Fixe la vie du joueur à sa valeur maximale.
-wdl.gui.player.hunger.description=Cette option fixe la vie que le joueur aura dans la copie téléchargée du monde.%n%n§lNe pas changer§r: Conserve la faim à sa valeur lorsque le téléchargement à été arreté.%n§lPlein§r: Fixe la faim à sa valeur maximale.
-wdl.gui.player.position.description=Cette option permet de choisir où vous souhaitez que le joueur se situe dans le monde téléchargé.%n%n§lNe pas changer§r: Utilise la position du joueur lorsque le téléchargement à été arreté.%n§lXYZ§r: Permet de choisir les coordonnées exactes.
+wdl.gui.player.health.description=Cette option fixe la vie que le joueur a dans la copie téléchargée du monde.\n\n§lNe pas changer§r: Conserve la vie à sa valeur lorsque le téléchargement à été arreté.\n§lEntière§r: Fixe la vie du joueur à sa valeur maximale.
+wdl.gui.player.hunger.description=Cette option fixe la vie que le joueur aura dans la copie téléchargée du monde.\n\n§lNe pas changer§r: Conserve la faim à sa valeur lorsque le téléchargement à été arreté.\n§lPlein§r: Fixe la faim à sa valeur maximale.
+wdl.gui.player.position.description=Cette option permet de choisir où vous souhaitez que le joueur se situe dans le monde téléchargé.\n\n§lNe pas changer§r: Utilise la position du joueur lorsque le téléchargement à été arreté.\n§lXYZ§r: Permet de choisir les coordonnées exactes.
 wdl.gui.player.setPositionToCurrentPosition.description=Défini la position à votre position courante.
-wdl.gui.player.positionTextBox.description=Utilisez ces champs de texte pour préciser la position exacte du joueur.%n%nDans ce champprécisez la coordonnée %s coordinate.
+wdl.gui.player.positionTextBox.description=Utilisez ces champs de texte pour préciser la position exacte du joueur.\n\nDans ce champprécisez la coordonnée %s coordinate.
 
 wdl.gui.generator.title=World Downloader mod: Options du World Generator pour %s
 wdl.gui.generator.seed=Seed:
@@ -122,7 +120,7 @@ wdl.gui.messages.all.false=Afficher les messages WDL: Non
 wdl.gui.messages.reset=Rétablir les défauts
 wdl.gui.messages.reset.confirm.title=Etes vous sure de vouloir reinitialiser vos paramètres messages?
 wdl.gui.messages.reset.confirm.subtitle=Vos anciens paramètres seront perdus pour toujours! (Longtemps !)
-wdl.gui.messages.all.description=Activer / desactiver tous les messages WDL.%n%nTout desactiver n'est §lPAS§r conseillé. Vous pourriez manquer des erreurs importantes.
+wdl.gui.messages.all.description=Activer / desactiver tous les messages WDL.\n\nTout desactiver n'est §lPAS§r conseillé. Vous pourriez manquer des erreurs importantes.
 wdl.gui.messages.reset.description=Réinitialiser si chaque message est activé à sa valeur par défaut.
 
 wdl.gui.about.title=A propos de World Downloader
@@ -152,7 +150,7 @@ wdl.gui.multiworldSelect.search=Recherche...
 wdl.gui.multiworldSelect.done=Utiliser le monde choisi
 
 wdl.gui.multiworld.title=World Downloader: §cSupport Multimonde
-wdl.gui.multiworld.descirption.requiredWhen=Le support Multimonde est nécessaire si au moins l'une des conditions suivantes sont remplies:%n - "Multiworld" est mentionné sur le site web%n du serveur - Le serveur a plus de 3 dimensions (ou mondes)%n - Le serveur a d'autres dimensions que celles officielles (l'overworld, le nether, et l'end)
+wdl.gui.multiworld.descirption.requiredWhen=Le support Multimonde est nécessaire si au moins l'une des conditions suivantes sont remplies:\n - "Multiworld" est mentionné sur le site web\n du serveur - Le serveur a plus de 3 dimensions (ou mondes)\n - Le serveur a d'autres dimensions que celles officielles (l'overworld, le nether, et l'end)
 wdl.gui.multiworld.descirption.whatIs = Multimonde vous invite à quel monde vous êtes avant que le téléchargement soit lancé. Si il est désactivé, mais le serveur est un serveur Multimonde, certains parties de la carte peuvent être écrasées.
 wdl.gui.multiworld.true=Support MultiMonde : Activé
 wdl.gui.multiworld.false=Support MultiMonde : Desactivé
@@ -160,10 +158,10 @@ wdl.gui.multiworld.false=Support MultiMonde : Desactivé
 wdl.gui.backup.title=World Downloader mod: Options de sauvegarde
 wdl.gui.backup.backupMode=Mode sauvegarde: %s
 wdl.gui.backup.description1=World Downloader sauvegarde le monde après chaque téléchargement.  Vous pouvez controler cette sauvegarde depuis cette interface.
-wdl.gui.backup.description2=§lAucune sauvegarde§r: Aucune sauvegarde n'est faite une fois que le téléchargement est arreté.%n§lCopie le dossier du monde§r: Le dossier du monde est entièrement copié, ce qui signifie que vous aurez toujours une version jouable du monde dans cet état, même si vous choisissez de le télécharger à nouveau.%n§lZip une copie du monde§r: Une copie sous forme de zip est créée dans le dossier du monde, êlle peut ensuite être décompressée si vous souhaitez annuler les changements.
+wdl.gui.backup.description2=§lAucune sauvegarde§r: Aucune sauvegarde n'est faite une fois que le téléchargement est arreté.\n§lCopie le dossier du monde§r: Le dossier du monde est entièrement copié, ce qui signifie que vous aurez toujours une version jouable du monde dans cet état, même si vous choisissez de le télécharger à nouveau.\n§lZip une copie du monde§r: Une copie sous forme de zip est créée dans le dossier du monde, êlle peut ensuite être décompressée si vous souhaitez annuler les changements.
 wdl.gui.backup.description3=Toutes les copies de sauvegarde sont datées donc vos anciennes sauvegardes ne seront pas écrasées.
 
-wdl.gui.saveProgress.progressInfo=%s (%d of %d)
+wdl.gui.saveProgress.progressInfo=%s (%s of %s)
 
 wdl.gui.rangePresets.title=World Downloader mod: Range presets
 wdl.gui.rangePresets.vanilla=Vanilla Minecraft ranges
@@ -174,7 +172,7 @@ wdl.gui.rangePresets.vanilla.warning=§rSetting to vanilla Minecraft ranges - §
 wdl.gui.rangePresets.spigot.warning=§rSetting to default spigot ranges - §c§n§lThis cannot be undone.§r
 wdl.gui.rangePresets.server.warning=§rSetting to server configured ranges - §c§n§lThis cannot be undone.§r
 wdl.gui.rangePresets.vanilla.description=Set the ranges to those used by an unmodified (vanilla) Minecraft server, and for some Bukkit servers.
-wdl.gui.rangePresets.spigot.description=Set the ranges to the default values for spigot servers.%nSpigot allows these values to be customized, but these are the defaults.
+wdl.gui.rangePresets.spigot.description=Set the ranges to the default values for spigot servers.\nSpigot allows these values to be customized, but these are the defaults.
 wdl.gui.rangePresets.server.description=Set the ranges to the values that are actually used on the server.  This option is only available if the server has the WDLCompanion plugin installed.
 wdl.gui.rangePresets.server.installed=§aAs it is installed, this may be used.
 wdl.gui.rangePresets.server.notInstalled=§cAs it is not installed, this cannot be used.
@@ -188,15 +186,15 @@ wdl.gui.overwriteChanges.captionSubtitle=Les modifications peuvent être perdues
 wdl.gui.overwriteChanges.overwriteWarning1=Il est aussi possible que vous ayez un monde différent avec le même
 wdl.gui.overwriteChanges.overwriteWarning2=nom que le serveur. Il sera alors écrasé. A utiliser avec précaution!
 wdl.gui.overwriteChanges.asZip.name=Sauvegarder en tant que (et commencer le téléchargement)
-wdl.gui.overwriteChanges.asZip.description=Créé un fichier .zip dans le dossier des sauvegardes.%n%nCette sauvegarde ne peut être jouée sans être décompressée, mais est utile si vous souhaitez archiver les modifications.
+wdl.gui.overwriteChanges.asZip.description=Créé un fichier .zip dans le dossier des sauvegardes.\n\nCette sauvegarde ne peut être jouée sans être décompressée, mais est utile si vous souhaitez archiver les modifications.
 wdl.gui.overwriteChanges.asFolder.name=sauvegarder le dossier (et commencer le téléchargement)
-wdl.gui.overwriteChanges.asFolder.description=Créé une copie du monde existant.%n%nCette sauvegarde du jeu peut être utilisée dans le jeu et sera affichée dans la liste des mondes.
+wdl.gui.overwriteChanges.asFolder.description=Créé une copie du monde existant.\n\nCette sauvegarde du jeu peut être utilisée dans le jeu et sera affichée dans la liste des mondes.
 wdl.gui.overwriteChanges.startNow.name=Autoriser la ré-écriture overwriting (et commencer le téléchargement)
-wdl.gui.overwriteChanges.startNow.description=Ne créé pas de sauvegarde.%n%n§cTous les changements faits dans le monde seront ecrasés.§r%nSi vous n'avez pas fait de modifications que vous souhaitez conserver, choisissez cette option.
+wdl.gui.overwriteChanges.startNow.description=Ne créé pas de sauvegarde.\n\n§cTous les changements faits dans le monde seront ecrasés.§r\nSi vous n'avez pas fait de modifications que vous souhaitez conserver, choisissez cette option.
 wdl.gui.overwriteChanges.cancel.name=Annuler (ne commence pas le téléchargement)
-wdl.gui.overwriteChanges.cancel.description=Ne pas commencer le téléchargement.%n%nRetour vers le serveur.  Vous pouvez sauvegarder manuellement ou ne pas télécharger pour le moment.
+wdl.gui.overwriteChanges.cancel.description=Ne pas commencer le téléchargement.\n\nRetour vers le serveur.  Vous pouvez sauvegarder manuellement ou ne pas télécharger pour le moment.
 wdl.gui.overwriteChanges.backingUp.title=Sauvegarde du monde...
-wdl.gui.overwriteChanges.backingUp.progress=%d / %d (%s)
+wdl.gui.overwriteChanges.backingUp.progress=%s / %s (%s)
 wdl.gui.overwriteChanges.backingUp.zip=Creation du fichier zip %s.
 wdl.gui.overwriteChanges.backingUp.folder=Copie du monde vers %s.
 
@@ -209,16 +207,16 @@ wdl.gui.entities.entity.included=§aIncluded
 wdl.gui.entities.entity.ignored=§cIgnored
 wdl.gui.entities.group.enabled=§aEnabled
 wdl.gui.entities.group.disabled=§cAll disabled
-wdl.gui.entities.trackDistance=Track Distance: %d
+wdl.gui.entities.trackDistance=Track Distance: %s
 
 wdl.gui.updates.title=World Downloader mod: Mise à jour
 wdl.gui.updates.updateMinecraftVersion.client=Instaallé sur %s client
 wdl.gui.updates.updateMinecraftVersion.server=Connecté à %s servers
 wdl.gui.updates.updateMinecraftVersion.any=Toutes les versions Minecraft
-wdl.gui.updates.updateMinecraftVersion.description=Quel critère choisir lorsque la déctection de la prochaine version doit être fait.%n%n§lInstallé sur %1$s clients§r: Le mod doit être installé pour la version de Minecraft.%n§lPeut se connecter à %1$s serveurs§r: Peut être installé sur n'importe quelle version de client dès lors qu'il peut se connecter au serveur distant %1$s.%n§lToute version de Minecraft§r: Toutes les versions de Minecraft sont autorisées.
+wdl.gui.updates.updateMinecraftVersion.description=Quel critère choisir lorsque la déctection de la prochaine version doit être fait.\n\n§lInstallé sur %1$s clients§r: Le mod doit être installé pour la version de Minecraft.\n§lPeut se connecter à %1$s serveurs§r: Peut être installé sur n'importe quelle version de client dès lors qu'il peut se connecter au serveur distant %1$s.\n§lToute version de Minecraft§r: Toutes les versions de Minecraft sont autorisées.
 wdl.gui.updates.updateAllowBetas.true=Utiliser versions beta : Oui
 wdl.gui.updates.updateAllowBetas.false=Utiliser versions beta: Non
-wdl.gui.updates.updateAllowBetas.description=Est-ce que les versions beta doivent être inclues dans le choix de la prochaine version ?%n%nLes versions beta peuvent être instables.
+wdl.gui.updates.updateAllowBetas.description=Est-ce que les versions beta doivent être inclues dans le choix de la prochaine version ?\n\nLes versions beta peuvent être instables.
 wdl.gui.updates.currentVersion=%s §6(Vous utilisez actuellement cette version)
 wdl.gui.updates.recomendedVersion=%s §6(Vous devriez utiliser cette version)
 wdl.gui.updates.pleaseWait=Mise à jour de la liste... patientez svp...
@@ -248,7 +246,7 @@ wdl.backup.none=Pas de sauvegarde
 wdl.backup.folder=Copie le dossier du monde
 wdl.backup.zip=Zip une copie du monde
 
-wdl.messages.tooltip=Ceci est un message créé par le mod World Downloader mod.%nVous pouvez desactiver ce message en desactivant %n§l%s §rdans les options des messages WDL.
+wdl.messages.tooltip=Ceci est un message créé par le mod World Downloader mod.\nVous pouvez desactiver ce message en desactivant \n§l%s §rdans les options des messages WDL.
 wdl.messages.message.info.text=Infos générales
 wdl.messages.message.error.text=Erreurs générales
 wdl.messages.message.updates.text=Informations nouvelle version
@@ -263,8 +261,8 @@ wdl.messages.message.saving.text=Sauvegarde des données
 wdl.messages.message.removeEntity.text=Suppression entity
 wdl.messages.message.pluginChannel.text=Plugin channel message
 wdl.messages.message.updateDebug.text=Update debug information
-wdl.messages.message.info.description=Messages généraux, tel "Début téléchargement" et "Sauvegarde terminée".%n%nRecommandé car cela contient les informations quand il est possible d'arreter de jouer sans risques, généralement très minimal.
-wdl.messages.message.error.description=Erreurs générales, telles que "Echec de la sauvegarde d'un Chunk" and "Impossible d'importer l'entité".%n%nRecommandé car contient des informations généralement importantes.
+wdl.messages.message.info.description=Messages généraux, tel "Début téléchargement" et "Sauvegarde terminée".\n\nRecommandé car cela contient les informations quand il est possible d'arreter de jouer sans risques, généralement très minimal.
+wdl.messages.message.error.description=Erreurs générales, telles que "Echec de la sauvegarde d'un Chunk" and "Impossible d'importer l'entité".\n\nRecommandé car contient des informations généralement importantes.
 wdl.messages.message.updates.description=Information lorsqu'une nouvelle version de WDl est disponible.
 wdl.messages.message.loadingTileEntity.description=Se produit lorsqu'une entité tile est importée d'une version de chunk sauvegardée précédemment. Il peut y avoir plusieurs tile entité dans un chunk.
 wdl.messages.message.onWorldLoad.description=Information lorsqu'un monde se charge, y compris si le joueur est sur le même serveur et la marque du serveur (version).
@@ -282,8 +280,8 @@ wdl.messages.category.core_debug=Core (debug)
 
 wdl.messages.removeEntity.allowingRemoveUserPref=removeEntityFromWorld: Autorise suppression de %s (user pref)
 wdl.messages.removeEntity.allowingRemoveUnrecognizedDistance=removeEntityFromWorld: Autorise suppression de %s (distance non reconnue)
-wdl.messages.removeEntity.allowingRemoveDistance=removeEntityFromWorld: Autorise suppression de %s à %s (joueur %s, track %d, serveur %d)
-wdl.messages.removeEntity.savingDistance=removeEntityFromWorld: Sauvegarde %s à %s (joueur %s, track %d, serveur %d)
+wdl.messages.removeEntity.allowingRemoveDistance=removeEntityFromWorld: Autorise suppression de %s à %s (joueur %s, track %s, serveur %s)
+wdl.messages.removeEntity.savingDistance=removeEntityFromWorld: Sauvegarde %s à %s (joueur %s, track %s, serveur %s)
 wdl.messages.removeEntity.notSavingUserPreference=saveChunk: Pas de sauvegarde %s (Préférence utilisateur)
 
 wdl.messages.tileEntity.usingOld=Utilisation ancien TE depuis un fichier sauvegardé: %s à %s
@@ -309,14 +307,14 @@ wdl.messages.onWorldLoad.differentServer=onWorldLoad: serveur différent!
 wdl.messages.onWorldLoad.spigot=Server brand = %s.  Using spigot track distances.
 wdl.messages.onWorldLoad.vanilla=Server brand = %s.  Using vanilla track distances.
 
-wdl.messages.onBlockEvent.noteblock=onBlockEvent: Note Block: %s pitch: %d - %s
-wdl.messages.onMapSaved=onMapDataLoaded: Carte enregistrée %d.
+wdl.messages.onBlockEvent.noteblock=onBlockEvent: Note Block: %s pitch: %s - %s
+wdl.messages.onMapSaved=onMapDataLoaded: Carte enregistrée %s.
 
-wdl.messages.onChunkNoLongerNeeded.saved=onChunkNoLongerNeeded: Chunk enregsitré à %d, %d
-wdl.messages.onChunkNoLongerNeeded.didNotSave.null=onChunkNoLongerNeeded: Impossible d'enregistrer Chunk at %d, %d car il est null!?
-wdl.messages.onChunkNoLongerNeeded.didNotSave.empty=onChunkNoLongerNeeded: Impossible d'enregistrer Chunk at %d, %d car il est vide!?  (C'est %s et situé à %d, %d; Est-ce que le serveur à déchargé le chunk 2 fois?)
-wdl.messages.onChunkNoLongerNeeded.didNotSave.dislocated=onChunkNoLongerNeeded: Impossible d'enregistrer Chunk at %d, %d car il est à la mauvaise position!?  (C'est %s et ses coordonnées sont %d, %d)
-wdl.messages.onChunkNoLongerNeeded.didNotSave.noPermission=onChunkNoLongerNeeded: Impossible d'enregistrer Chunk at %d, %d car vous n'avez pas la permission.
+wdl.messages.onChunkNoLongerNeeded.saved=onChunkNoLongerNeeded: Chunk enregsitré à %s, %s
+wdl.messages.onChunkNoLongerNeeded.didNotSave.null=onChunkNoLongerNeeded: Impossible d'enregistrer Chunk at %s, %s car il est null!?
+wdl.messages.onChunkNoLongerNeeded.didNotSave.empty=onChunkNoLongerNeeded: Impossible d'enregistrer Chunk at %s, %s car il est vide!?  (C'est %s et situé à %s, %s; Est-ce que le serveur à déchargé le chunk 2 fois?)
+wdl.messages.onChunkNoLongerNeeded.didNotSave.dislocated=onChunkNoLongerNeeded: Impossible d'enregistrer Chunk at %s, %s car il est à la mauvaise position!?  (C'est %s et ses coordonnées sont %s, %s)
+wdl.messages.onChunkNoLongerNeeded.didNotSave.noPermission=onChunkNoLongerNeeded: Impossible d'enregistrer Chunk at %s, %s car vous n'avez pas la permission.
 
 wdl.messages.onGuiClosedInfo.cannotSaveEntities=La configuration du serveur interdit l'enregistrement d'entités!
 wdl.messages.onGuiClosedInfo.cannotSaveTileEntities=La configuration du serveur interdit l'enregistrement de Tiles!
@@ -349,16 +347,16 @@ wdl.messages.generalInfo.downloadCanceled=Download canceled.
 wdl.messages.generalInfo.seedSet=Setting single-player world seed to %s.
 wdl.messages.generalInfo.seedAndGenSet=Setting single-player world seed to %s and using the default terrain generator (you can change the generator in the generator options)
 
-wdl.messages.generalError.failedToImportTE=Failed to import tile entities for chunk at %d, %d: %s
-wdl.messages.generalError.failedToSaveChunk=Chunk at position %d, %d cannot be saved!  (%s)
+wdl.messages.generalError.failedToImportTE=Failed to import tile entities for chunk at %s, %s: %s
+wdl.messages.generalError.failedToSaveChunk=Chunk at position %s, %s cannot be saved!  (%s)
 wdl.messages.generalError.forbidden=The server forbids downloading this world!
 wdl.messages.generalError.failedToBackUp=Error while backing up world: %s
 wdl.messages.generalError.noUTF8=Your computer doesn't support the UTF-8 charset: %s.  You should feel bad.
 wdl.messages.generalError.failedToSetUpEntityUI=Error setting up Entity List UI: %s
-wdl.messages.generalError.failedToSaveEntity=Failed to save entity %s for chunk at %d, %d: %s
-wdl.messages.generalError.failedToSaveTE=Failed to save tile entity %s at %s for chunk at %d, %d: %s
+wdl.messages.generalError.failedToSaveEntity=Failed to save entity %s for chunk at %s, %s: %s
+wdl.messages.generalError.failedToSaveTE=Failed to save tile entity %s at %s for chunk at %s, %s: %s
 
-wdl.messages.updates.releaseCount=Found %d releases.
+wdl.messages.updates.releaseCount=Found %s releases.
 wdl.messages.updates.failedToFindMatchingRelease=Could not find a release matching %s.  You may be running a version that hasn't been released yet.
 wdl.messages.updates.failedToFindMetadata=Could not find metadata for release %s.  Skipping hashing.
 wdl.messages.updates.newRelease=New version available!  You are running %s; the newest version is %s.  %s.
@@ -372,21 +370,21 @@ wdl.messages.updates.grabingUpdatesFromGithub=Loading verison list from GitHub r
 
 wdl.messages.permissions.init=Sending plugin channel registration.
 wdl.messages.permissions.packet0=Received settings packet #0: [canUseFunctionsUnknownToServer=%s]
-wdl.messages.permissions.packet1=Received settings packet #1: [canDownloadInGeneral=%s, canCacheChunks=%s, saveRadius=%d, canSaveEntities=%s, canSaveTileEntities=%s, canSaveContainers=%s]
-wdl.messages.permissions.packet2=Received settings packet #2: [entityRanges=(total of %d)]
-wdl.messages.permissions.packet3=Received settings packet #3: [canRequestPermissions=%s, requestMessage=(%d long, HashCode of %s)]
-wdl.messages.permissions.packet4=Received settings packet #4: [chunkOverrides=(%d groups, %d total ranges)]
-wdl.messages.permissions.packet5.added=Received settings packet #5: Added %d ChunkRanges to %s.
-wdl.messages.permissions.packet5.set=Received settings packet #5: Changed list of ChunkRanges to %d total in %s.
-wdl.messages.permissions.packet6=Received settings packet #6: Removed %d ChunkRanges from %s with tags matching %s.
-wdl.messages.permissions.packet7=Received settings packet #7: Replaced %d ChunkRanges in %s that had a tag of %s with %d new ranges.
-wdl.messages.permissions.unknownPacket=Received unknown settings packet #%d.  See log for binary contents.  
+wdl.messages.permissions.packet1=Received settings packet #1: [canDownloadInGeneral=%s, canCacheChunks=%s, saveRadius=%s, canSaveEntities=%s, canSaveTileEntities=%s, canSaveContainers=%s]
+wdl.messages.permissions.packet2=Received settings packet #2: [entityRanges=(total of %s)]
+wdl.messages.permissions.packet3=Received settings packet #3: [canRequestPermissions=%s, requestMessage=(%s long, HashCode of %s)]
+wdl.messages.permissions.packet4=Received settings packet #4: [chunkOverrides=(%s groups, %s total ranges)]
+wdl.messages.permissions.packet5.added=Received settings packet #5: Added %s ChunkRanges to %s.
+wdl.messages.permissions.packet5.set=Received settings packet #5: Changed list of ChunkRanges to %s total in %s.
+wdl.messages.permissions.packet6=Received settings packet #6: Removed %s ChunkRanges from %s with tags matching %s.
+wdl.messages.permissions.packet7=Received settings packet #7: Replaced %s ChunkRanges in %s that had a tag of %s with %s new ranges.
+wdl.messages.permissions.unknownPacket=Received unknown settings packet #%s.  See log for binary contents.  
 
 wdl.saveProgress.title=Saving downloaded world
 wdl.saveProgress.chunk.title=Saving chunks
-wdl.saveProgress.chunk.saving=Saving chunk at %d, %d
+wdl.saveProgress.chunk.saving=Saving chunk at %s, %s
 wdl.saveProgress.map.title=Saving map item data
-wdl.saveProgress.map.saving=Writing map #%d
+wdl.saveProgress.map.saving=Writing map #%s
 wdl.saveProgress.playerData.title=Saving player data
 wdl.saveProgress.playerData.creatingNBT=Creating player NBT
 wdl.saveProgress.playerData.editingNBT=Editing player NBT
