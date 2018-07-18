@@ -35,7 +35,7 @@ public final class EnumSetting<T extends Enum<T> & IStringSerializable> extends 
 	 * @param fromString A function taking a string and returning an enum instance (e.g. valueOf)
 	 */
 	public EnumSetting(String name, T def, String key, T[] values, Function<String, T> fromString) {
-		super(name, def, key, fromString, T::getName);
+		super(name, def, key, fromString, t -> t.getName());
 		this.values = values;
 	}
 
