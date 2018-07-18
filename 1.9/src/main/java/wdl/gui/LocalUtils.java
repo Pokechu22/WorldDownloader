@@ -26,7 +26,7 @@ import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import wdl.WDL;
 
-class LocalUtils {
+public class LocalUtils {
 	private static final Minecraft mc = Minecraft.getMinecraft();
 	private LocalUtils() { throw new AssertionError(); }
 
@@ -34,7 +34,7 @@ class LocalUtils {
 	 * Draws the given button (for multi-version compatability, this is needed for lists)
 	 * @param button The button to draw.  Should already have been positioned.
 	 */
-	public static void drawButton(GuiButton button, Minecraft mc, int mouseX, int mouseY) {
+	public static void drawButton(GuiButton button, int mouseX, int mouseY) {
 		button.drawButton(mc, mouseX, mouseY);
 	}
 

@@ -15,12 +15,9 @@
 package wdl.gui;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
@@ -28,8 +25,9 @@ import wdl.WDL;
 import wdl.WDLPluginChannels;
 import wdl.config.IConfiguration;
 import wdl.config.settings.MiscSettings;
+import wdl.gui.widget.Button;
 import wdl.gui.widget.ButtonDisplayGui;
-import wdl.gui.widget.GuiListEntry;
+import wdl.gui.widget.GuiList;
 import wdl.update.WDLUpdateChecker;
 
 public class GuiWDL extends GuiScreen {
@@ -38,14 +36,14 @@ public class GuiWDL extends GuiScreen {
 	 */
 	private String displayedTooltip = null;
 
-	private class GuiWDLButtonList extends GuiListExtended {
+	private class GuiWDLButtonList extends GuiList<GuiWDLButtonList.ButtonEntry> {
 		public GuiWDLButtonList() {
 			super(GuiWDL.this.mc, GuiWDL.this.width, GuiWDL.this.height, 39,
 					GuiWDL.this.height - 32, 20);
 		}
 
-		private class ButtonEntry extends GuiListEntry {
-			private final GuiButton button;
+		private class ButtonEntry extends GuiList.GuiListEntry {
+			private final Button button;
 
 			private final String tooltip;
 
@@ -70,45 +68,22 @@ public class GuiWDL extends GuiScreen {
 				if (needsPerms) {
 					button.enabled = WDLPluginChannels.canDownloadAtAll();
 				}
+				this.addButton(this.button, -100, 0);
 
 				this.tooltip = I18n.format("wdl.gui.wdl." + key + ".description");
 			}
 
 			@Override
-			public void drawEntry(int slotIndex, int x, int y, int listWidth,
-					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
-				button.x = GuiWDL.this.width / 2 - 100;
-				button.y = y;
-
-				LocalUtils.drawButton(button, mc, mouseX, mouseY);
-
+			public void drawEntry(int x, int y, int width, int height, int mouseX, int mouseY) {
+				super.drawEntry(x, y, width, height, mouseX, mouseY);
 				if (button.isMouseOver()) {
 					displayedTooltip = tooltip;
 				}
 			}
-
-			@Override
-			public boolean mousePressed(int slotIndex, int x, int y,
-					int mouseEvent, int relativeX, int relativeY) {
-				if (button.mousePressed(mc, x, y)) {
-					button.playPressSound(mc.getSoundHandler());
-
-					return true;
-				}
-
-				return false;
-			}
-
-			@Override
-			public void mouseReleased(int slotIndex, int x, int y,
-					int mouseEvent, int relativeX, int relativeY) {
-
-			}
 		}
 
-		private final List<GuiListEntry> entries;
 		{
-			entries = new ArrayList<>();
+			List<ButtonEntry> entries = getEntries();
 
 			entries.add(new ButtonEntry("worldOverrides", GuiWDLWorld::new, true));
 			entries.add(new ButtonEntry("generatorOverrides", GuiWDLGenerator::new, true));
@@ -125,16 +100,6 @@ public class GuiWDL extends GuiScreen {
 			} else {
 				entries.add(new ButtonEntry("updates", GuiWDLUpdates::new, false));
 			}
-		}
-
-		@Override
-		public IGuiListEntry getListEntry(int index) {
-			return entries.get(index);
-		}
-
-		@Override
-		protected int getSize() {
-			return entries.size();
 		}
 	}
 

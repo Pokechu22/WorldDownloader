@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.SoundEvents;
@@ -27,7 +26,7 @@ import wdl.VersionConstants;
 import wdl.WDL;
 import wdl.gui.widget.Button;
 import wdl.gui.widget.ButtonDisplayGui;
-import wdl.gui.widget.GuiListEntry;
+import wdl.gui.widget.GuiList;
 import wdl.gui.widget.TextList;
 import wdl.update.Release;
 import wdl.update.WDLUpdateChecker;
@@ -43,16 +42,15 @@ public class GuiWDLUpdates extends GuiScreen {
 	 */
 	private static final int TOP_MARGIN = 39, BOTTOM_MARGIN = 32;
 
-	private class UpdateList extends GuiListExtended {
+	private class UpdateList extends GuiList<GuiWDLUpdates.UpdateList.VersionEntry> {
 		public UpdateList() {
 			super(GuiWDLUpdates.this.mc, GuiWDLUpdates.this.width,
 					GuiWDLUpdates.this.height, TOP_MARGIN,
 					GuiWDLUpdates.this.height - BOTTOM_MARGIN,
 					(fontRenderer.FONT_HEIGHT + 1) * 6 + 2);
-			this.showSelectionBox = true;
 		}
 
-		private class VersionEntry extends GuiListEntry {
+		private class VersionEntry extends GuiList.GuiListEntry {
 			private final Release release;
 
 			private String title;
@@ -63,6 +61,7 @@ public class GuiWDLUpdates extends GuiScreen {
 			private String time;
 
 			private final int fontHeight;
+			private int y;
 
 			public VersionEntry(Release release) {
 				this.release = release;
@@ -81,11 +80,13 @@ public class GuiWDLUpdates extends GuiScreen {
 			}
 
 			@Override
-			public void drawEntry(int slotIndex, int x, int y, int listWidth,
-					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
+			public void drawEntry(int x, int y, int entryWidth, int entryHeight,
+					int mouseX, int mouseY) {
+				this.y = y;
+
 				String title;
 				//The 'isSelected' parameter is actually 'isMouseOver'
-				if (isSelected(slotIndex)) {
+				if (this.isSelected()) {
 					title = I18n.format("wdl.gui.updates.currentVersion",
 							this.title);
 				} else if (this.release == recomendedRelease) {
@@ -102,17 +103,16 @@ public class GuiWDLUpdates extends GuiScreen {
 				fontRenderer.drawString(body3, x, y + fontHeight * 4, 0xFFFFFF);
 				fontRenderer.drawString(time, x, y + fontHeight * 5, 0x808080);
 
-				if (mouseX > x && mouseX < x + listWidth && mouseY > y
+				if (mouseX > x && mouseX < x + entryWidth && mouseY > y
 						&& mouseY < y + slotHeight) {
-					drawRect(x - 2, y - 2, x + listWidth - 3, y + slotHeight + 2,
+					drawRect(x - 2, y - 2, x + entryWidth - 3, y + slotHeight + 2,
 							0x1FFFFFFF);
 				}
 			}
 
 			@Override
-			public boolean mousePressed(int slotIndex, int x, int y,
-					int mouseEvent, int relativeX, int relativeY) {
-				if (relativeY > 0 && relativeY < slotHeight) {
+			public boolean mouseDown(int x, int y, int mouseButton) {
+				if (y > this.y && y < this.y + slotHeight) {
 					mc.displayGuiScreen(new GuiWDLSingleUpdate(GuiWDLUpdates.this,
 							this.release));
 
@@ -125,9 +125,12 @@ public class GuiWDLUpdates extends GuiScreen {
 			}
 
 			@Override
-			public void mouseReleased(int slotIndex, int x, int y,
-					int mouseEvent, int relativeX, int relativeY) {
+			public void mouseUp(int x, int y, int mouseButton) { }
 
+			@Override
+			public boolean isSelected() {
+				String currentTag = "v" + VersionConstants.getModVersion();
+				return currentTag.equals(this.release.tag);
 			}
 		}
 
@@ -164,30 +167,12 @@ public class GuiWDLUpdates extends GuiScreen {
 		}
 
 		@Override
-		public VersionEntry getListEntry(int index) {
-			return displayedVersions.get(index);
-		}
-
-		@Override
-		protected int getSize() {
-			return displayedVersions.size();
-		}
-
-		@Override
-		protected boolean isSelected(int slotIndex) {
-			VersionEntry entry = getListEntry(slotIndex);
-
-			String currentTag = "v" + VersionConstants.getModVersion();
-			return currentTag.equals(entry.release.tag);
-		}
-
-		@Override
-		public int getListWidth() {
+		public int getEntryWidth() {
 			return width - 30;
 		}
 
 		@Override
-		protected int getScrollBarX() {
+		public int getScrollBarX() {
 			return width - 10;
 		}
 	}

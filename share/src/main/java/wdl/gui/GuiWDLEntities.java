@@ -23,7 +23,6 @@ import com.google.common.collect.Multimap;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import wdl.EntityUtils;
@@ -35,7 +34,8 @@ import wdl.config.settings.EntitySettings;
 import wdl.config.settings.EntitySettings.TrackDistanceMode;
 import wdl.gui.widget.Button;
 import wdl.gui.widget.ButtonDisplayGui;
-import wdl.gui.widget.GuiListEntry;
+import wdl.gui.widget.GuiList;
+import wdl.gui.widget.GuiList.GuiListEntry;
 import wdl.gui.widget.GuiSlider;
 import wdl.gui.widget.SettingButton;
 
@@ -43,7 +43,7 @@ import wdl.gui.widget.SettingButton;
  * GUI that controls what entities are saved.
  */
 public class GuiWDLEntities extends GuiScreen {
-	private class GuiEntityList extends GuiListExtended {
+	private class GuiEntityList extends GuiList<GuiListEntry> {
 		/**
 		 * Width of the largest entry.
 		 */
@@ -55,9 +55,8 @@ public class GuiWDLEntities extends GuiScreen {
 		 */
 		private int totalWidth;
 
-		private final List<GuiListEntry> entries;
 		{
-			entries = new ArrayList<>();
+			List<GuiListEntry> entries = this.getEntries();
 			try {
 				int largestWidthSoFar = 0;
 
@@ -116,7 +115,7 @@ public class GuiWDLEntities extends GuiScreen {
 			private final String displayGroup;
 			private final int labelWidth;
 
-			private final GuiButton enableGroupButton;
+			private final Button enableGroupButton;
 
 			private boolean groupEnabled;
 
@@ -133,35 +132,16 @@ public class GuiWDLEntities extends GuiScreen {
 						config.setEntityGroupEnabled(group, groupEnabled);
 					}
 				};
+				this.addButton(enableGroupButton, 0, 0);
 			}
 
 			@Override
-			public void drawEntry(int slotIndex, int x, int y, int listWidth,
-					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
+			public void drawEntry(int x, int y, int width, int height, int mouseX, int mouseY) {
+				this.enableGroupButton.displayString = getButtonText();
+				super.drawEntry(x, y, width, height, mouseX, mouseY);
 				mc.fontRenderer.drawString(this.displayGroup, (x + 110 / 2)
 						- (this.labelWidth / 2), y + slotHeight
 						- mc.fontRenderer.FONT_HEIGHT - 1, 0xFFFFFF);
-
-				this.enableGroupButton.x = x + 110;
-				this.enableGroupButton.y = y;
-				this.enableGroupButton.displayString = getButtonText();
-
-				LocalUtils.drawButton(this.enableGroupButton, mc, mouseX, mouseY);
-			}
-
-			@Override
-			public boolean mousePressed(int slotIndex, int x, int y,
-					int mouseEvent, int relativeX, int relativeY) {
-				if (enableGroupButton.mousePressed(mc, x, y)) {
-					enableGroupButton.playPressSound(mc.getSoundHandler());
-					return true;
-				}
-				return false;
-			}
-
-			@Override
-			public void mouseReleased(int slotIndex, int x, int y,
-					int mouseEvent, int relativeX, int relativeY) {
 			}
 
 			boolean isGroupEnabled() {
@@ -191,7 +171,7 @@ public class GuiWDLEntities extends GuiScreen {
 			private final String entity;
 			private final String displayEntity;
 
-			private final GuiButton onOffButton;
+			private final Button onOffButton;
 			private final GuiSlider rangeSlider;
 
 			private boolean entityEnabled;
@@ -207,6 +187,8 @@ public class GuiWDLEntities extends GuiScreen {
 				entityEnabled = config.isEntityTypeEnabled(entity);
 				range = EntityUtils.getEntityTrackDistance(entity);
 
+				int buttonOffset = -(totalWidth / 2) + largestWidth + 10;
+
 				this.onOffButton = new Button(0, 0, 75, 18, getButtonText()) {
 					public @Override void performAction() {
 						entityEnabled ^= true;
@@ -215,9 +197,11 @@ public class GuiWDLEntities extends GuiScreen {
 					}
 				};
 				this.onOffButton.enabled = category.isGroupEnabled();
+				this.addButton(onOffButton, buttonOffset, 0);
 
 				this.rangeSlider = new GuiSlider(0, 0, 150, 18,
 						"wdl.gui.entities.trackDistance", range, 256);
+				this.addButton(rangeSlider, buttonOffset + 85, 0);
 
 				this.cachedMode = config.getValue(EntitySettings.TRACK_DISTANCE_MODE);
 
@@ -225,23 +209,9 @@ public class GuiWDLEntities extends GuiScreen {
 			}
 
 			@Override
-			public void drawEntry(int slotIndex, int x, int y, int listWidth,
-					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
-				//Center for everything but the labels.
-				int center = (GuiWDLEntities.this.width / 2) - (totalWidth / 2)
-						+ largestWidth + 10;
-
-				mc.fontRenderer.drawString(this.displayEntity,
-						center - largestWidth - 10, y + slotHeight / 2 -
-						mc.fontRenderer.FONT_HEIGHT / 2, 0xFFFFFF);
-
-				this.onOffButton.x = center;
-				this.onOffButton.y = y;
+			public void drawEntry(int x, int y, int width, int height, int mouseX, int mouseY) {
 				this.onOffButton.enabled = category.isGroupEnabled();
 				this.onOffButton.displayString = getButtonText();
-
-				this.rangeSlider.x = center + 85;
-				this.rangeSlider.y = y;
 
 				// XXX calculating this each time
 				TrackDistanceMode mode = config.getValue(EntitySettings.TRACK_DISTANCE_MODE);
@@ -253,43 +223,20 @@ public class GuiWDLEntities extends GuiScreen {
 							.getEntityTrackDistance(entity));
 				}
 
-				LocalUtils.drawButton(onOffButton, mc, mouseX, mouseY);
-				LocalUtils.drawButton(rangeSlider, mc, mouseX, mouseY);
+				super.drawEntry(x, y, width, height, mouseX, mouseY);
+
+				mc.fontRenderer.drawString(this.displayEntity,
+						x, y + height / 2 - mc.fontRenderer.FONT_HEIGHT / 2, 0xFFFFFF);
 			}
 
 			@Override
-			public boolean mousePressed(int slotIndex, int x, int y,
-					int mouseEvent, int relativeX, int relativeY) {
-				if (onOffButton.mousePressed(mc, x, y)) {
-					onOffButton.playPressSound(mc.getSoundHandler());
-					return true;
-				}
-				if (rangeSlider.mousePressed(mc, x, y)) {
-					range = rangeSlider.getValue();
-
-					config.setUserEntityTrackDistance(entity, range);
-
-					return true;
-				}
-
-				return false;
-			}
-
-			@Override
-			public void mouseReleased(int slotIndex, int x, int y,
-					int mouseEvent, int relativeX, int relativeY) {
-				rangeSlider.mouseReleased(x, y);
-
+			public void mouseUp(int mouseX, int mouseY, int mouseButton) {
+				super.mouseUp(mouseX, mouseY, mouseButton);
 				if (this.cachedMode == TrackDistanceMode.USER) {
 					range = rangeSlider.getValue();
 
 					config.setUserEntityTrackDistance(entity, range);
 				}
-			}
-
-			@Override
-			public void setSelected(int p_178011_1_, int p_178011_2_,
-					int p_178011_3_) {
 			}
 
 			/**
@@ -311,18 +258,8 @@ public class GuiWDLEntities extends GuiScreen {
 		}
 
 		@Override
-		public IGuiListEntry getListEntry(int index) {
-			return entries.get(index);
-		}
-
-		@Override
-		protected int getSize() {
-			return entries.size();
-		}
-
-		@Override
-		protected int getScrollBarX() {
-			return (GuiWDLEntities.this.width) / 2 + (totalWidth / 2) + 10;
+		public int getEntryWidth() {
+			return totalWidth;
 		}
 	}
 

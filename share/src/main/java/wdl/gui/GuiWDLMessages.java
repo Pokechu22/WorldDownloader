@@ -15,8 +15,6 @@
 package wdl.gui;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
@@ -24,7 +22,6 @@ import javax.annotation.Nullable;
 import com.google.common.collect.ListMultimap;
 
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.resources.I18n;
@@ -35,7 +32,8 @@ import wdl.WDLMessages.MessageRegistration;
 import wdl.config.IConfiguration;
 import wdl.config.settings.MessageSettings;
 import wdl.gui.widget.ButtonDisplayGui;
-import wdl.gui.widget.GuiListEntry;
+import wdl.gui.widget.GuiList;
+import wdl.gui.widget.GuiList.GuiListEntry;
 import wdl.gui.widget.SettingButton;
 
 public class GuiWDLMessages extends GuiScreen {
@@ -45,7 +43,7 @@ public class GuiWDLMessages extends GuiScreen {
 	@Nullable
 	private String hoveredButtonTooltip = null;
 
-	private class GuiMessageTypeList extends GuiListExtended {
+	private class GuiMessageTypeList extends GuiList<GuiListEntry> {
 		public GuiMessageTypeList() {
 			super(GuiWDLMessages.this.mc, GuiWDLMessages.this.width,
 					GuiWDLMessages.this.height, 39,
@@ -59,43 +57,22 @@ public class GuiWDLMessages extends GuiScreen {
 			public CategoryEntry(MessageTypeCategory category) {
 				this.category = category;
 				this.button = new SettingButton(category.setting, config, 0, 0, 80, 20);
+				addButton(button, 20, 0);
 			}
 
 			@Override
-			public void drawEntry(int slotIndex, int x, int y, int listWidth,
-					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
+			public void drawEntry(int x, int y, int width, int height, int mouseX, int mouseY) {
+				button.enabled = config.getValue(MessageSettings.ENABLE_ALL_MESSAGES);
+
+				super.drawEntry(x, y, width, height, mouseX, mouseY);
+
 				drawCenteredString(fontRenderer, category.getDisplayName(),
 						GuiWDLMessages.this.width / 2 - 40, y + slotHeight
 						- mc.fontRenderer.FONT_HEIGHT - 1, 0xFFFFFF);
 
-				button.x = GuiWDLMessages.this.width / 2 + 20;
-				button.y = y;
-
-				button.enabled = config.getValue(MessageSettings.ENABLE_ALL_MESSAGES);
-
-				LocalUtils.drawButton(this.button, mc, mouseX, mouseY);
-
 				if (button.isMouseOver()) {
 					hoveredButtonTooltip = button.getTooltip();
 				}
-			}
-
-			@Override
-			public boolean mousePressed(int slotIndex, int x, int y,
-					int mouseEvent, int relativeX, int relativeY) {
-				if (button.mousePressed(mc, x, y)) {
-					button.playPressSound(mc.getSoundHandler());
-
-					return true;
-				}
-
-				return false;
-			}
-
-			@Override
-			public void mouseReleased(int slotIndex, int x, int y,
-					int mouseEvent, int relativeX, int relativeY) {
-
 			}
 		}
 
@@ -106,59 +83,29 @@ public class GuiWDLMessages extends GuiScreen {
 			public MessageTypeEntry(MessageRegistration registration) {
 				this.typeRegistration = registration;
 				this.button = new SettingButton(registration.setting, config, 0, 0);
+				addButton(this.button, 0, 0);
 			}
 
 			@Override
-			public void drawEntry(int slotIndex, int x, int y, int listWidth,
-					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
-				button.x = GuiWDLMessages.this.width / 2 - 100;
-				button.y = y;
-
+			public void drawEntry(int x, int y, int width, int height, int mouseX, int mouseY) {
 				button.enabled = config.getValue(typeRegistration.category.setting);
 
-				LocalUtils.drawButton(this.button, mc, mouseX, mouseY);
+				super.drawEntry(x, y, width, height, mouseX, mouseY);
 
 				if (button.isMouseOver()) {
 					hoveredButtonTooltip = button.getTooltip();
 				}
 			}
-
-			@Override
-			public boolean mousePressed(int slotIndex, int x, int y,
-					int mouseEvent, int relativeX, int relativeY) {
-				if (button.mousePressed(mc, x, y)) {
-					button.playPressSound(mc.getSoundHandler());
-
-					return true;
-				}
-
-				return false;
-			}
-
-			@Override
-			public void mouseReleased(int slotIndex, int x, int y,
-					int mouseEvent, int relativeX, int relativeY) {
-
-			}
 		}
 
 		// The call to Stream.concat is somewhat hacky, but hard to avoid
 		// (we want both a header an the items in it)
-		private List<GuiListEntry> entries = WDLMessages
-				.getRegistrations().asMap().entrySet().stream()
+		{
+			WDLMessages.getRegistrations().asMap().entrySet().stream()
 				.flatMap(e -> Stream.concat(
 						Stream.of(new CategoryEntry(e.getKey())),
 						e.getValue().stream().map(MessageTypeEntry::new)))
-				.collect(Collectors.toList());
-
-		@Override
-		public IGuiListEntry getListEntry(int index) {
-			return entries.get(index);
-		}
-
-		@Override
-		protected int getSize() {
-			return entries.size();
+				.forEach(getEntries()::add);
 		}
 
 	}

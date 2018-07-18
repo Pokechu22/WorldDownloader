@@ -13,6 +13,8 @@ public class LinkEntry extends TextEntry {
 	private final int textWidth;
 	private final int linkWidth;
 
+	private int x;
+
 	public LinkEntry(Minecraft mc, String text, String link) {
 		super(mc, text, 0x5555FF);
 
@@ -22,22 +24,22 @@ public class LinkEntry extends TextEntry {
 	}
 
 	@Override
-	public void drawEntry(int slotIndex, int x, int y, int listWidth,
-			int slotHeight, int mouseX, int mouseY, boolean isSelected) {
+	public void drawEntry(int x, int y, int width, int height, int mouseX, int mouseY) {
 		if (y < 0) {
 			return;
 		}
 
-		super.drawEntry(slotIndex, x, y, listWidth, slotHeight, mouseX,
-				mouseY, isSelected);
+		this.x = x;
+
+		super.drawEntry(x, y, width, height, mouseX, mouseY);
 
 		int relativeX = mouseX - x;
 		int relativeY = mouseY - y;
 		if (relativeX >= 0 && relativeX <= textWidth &&
-				relativeY >= 0 && relativeY <= slotHeight) {
+				relativeY >= 0 && relativeY <= height) {
 			int drawX = mouseX - 2;
-			if (drawX + linkWidth + 4 > listWidth + x) {
-				drawX = listWidth + x - (4 + linkWidth);
+			if (drawX + linkWidth + 4 > width + x) {
+				drawX = width + x - (4 + linkWidth);
 			}
 			Gui.drawRect(drawX, mouseY - 2, drawX + linkWidth + 4,
 					mouseY + mc.fontRenderer.FONT_HEIGHT + 2, 0x80000000);
@@ -47,9 +49,8 @@ public class LinkEntry extends TextEntry {
 	}
 
 	@Override
-	public boolean mousePressed(int slotIndex, int x, int y, int mouseEvent,
-			int relativeX, int relativeY) {
-		if (relativeX >= 0 && relativeX <= textWidth) {
+	public boolean mouseDown(int mouseX, int mouseY, int mouseButton) {
+		if (mouseX >= x && mouseX <= x + textWidth) {
 			Utils.openLink(link);
 			return true;
 		}

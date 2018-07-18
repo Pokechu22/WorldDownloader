@@ -15,7 +15,6 @@
 package wdl.gui;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -25,9 +24,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.ImmutableList;
-
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiListExtended.IGuiListEntry;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
@@ -37,7 +33,8 @@ import wdl.WDL;
 import wdl.config.IConfiguration;
 import wdl.gui.widget.Button;
 import wdl.gui.widget.ButtonDisplayGui;
-import wdl.gui.widget.GuiListEntry;
+import wdl.gui.widget.GuiList;
+import wdl.gui.widget.GuiList.GuiListEntry;
 import wdl.gui.widget.GuiNumericTextField;
 
 public class GuiWDLGameRules extends GuiScreen {
@@ -60,21 +57,21 @@ public class GuiWDLGameRules extends GuiScreen {
 	 */
 	private static final int SET_TEXT_FIELD = 0xE0E0E0, DEFAULT_TEXT_FIELD = 0x808080;
 
-	private class GuiGameRuleList extends GuiListExtended {
-		/** The rule that was last clicked.  This should be compared by ref. */
+	private class GuiGameRuleList extends GuiList<GuiWDLGameRules.GuiGameRuleList.RuleEntry> {
+		/** The entry that was last clicked.  This should be compared by ref. */
 		@Nullable
-		private String lastClickedRule = null;
+		private RuleEntry lastClickedEntry = null;
 
 		public GuiGameRuleList() {
 			super(GuiWDLGameRules.this.mc, GuiWDLGameRules.this.width,
 					GuiWDLGameRules.this.height, 39,
 					GuiWDLGameRules.this.height - 32, 24);
-			this.entries = new ArrayList<>();
+			List<RuleEntry> entries = this.getEntries();
 			for (String rule : vanillaGameRules) {
 				if (rules.areSameType(rule, ValueType.NUMERICAL_VALUE)) {
-					this.entries.add(new IntRuleEntry(rule));
+					entries.add(new IntRuleEntry(rule));
 				} else if (rules.areSameType(rule, ValueType.BOOLEAN_VALUE)) {
-					this.entries.add(new BooleanRuleEntry(rule));
+					entries.add(new BooleanRuleEntry(rule));
 				} else {
 					LOGGER.debug("Couldn't identify type for vanilla game rule " + rule);
 				}
@@ -84,27 +81,26 @@ public class GuiWDLGameRules extends GuiScreen {
 		private abstract class RuleEntry extends GuiListEntry {
 			@Nonnull
 			protected final String ruleName;
-			private GuiButton resetButton;
+			private Button resetButton;
 
 			public RuleEntry(@Nonnull String ruleName) {
 				this.ruleName = ruleName;
-				this.resetButton = new Button(0, 0, 50, 20,
+				resetButton = new Button(0, 0, 50, 20,
 						I18n.format("wdl.gui.gamerules.resetRule")) {
 					public @Override void performAction() {
 						performResetAction();
 					}
 				};
+				this.addButton(resetButton, 110, 0);
 			}
 
 			@Override
-			public final void drawEntry(int slotIndex, int x, int y, int listWidth,
-					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
-				drawString(fontRenderer, this.ruleName, x, y + 6, 0xFFFFFFFF);
-				this.resetButton.x = x + listWidth / 2 + 110;
-				this.resetButton.y = y;
+			public void drawEntry(int x, int y, int width, int height, int mouseX, int mouseY) {
 				this.resetButton.enabled = isRuleSet(this.ruleName);
-				LocalUtils.drawButton(this.resetButton, mc, mouseX, mouseY);
-				this.draw(x, y, listWidth, slotHeight, mouseX, mouseY);
+
+				super.drawEntry(x, y, width, height, mouseX, mouseY);
+
+				drawString(fontRenderer, this.ruleName, x, y + 6, 0xFFFFFFFF);
 
 				if (this.isMouseOverControl(mouseX, mouseY)) {
 					String key = "wdl.gui.gamerules.rules." + ruleName;
@@ -113,32 +109,18 @@ public class GuiWDLGameRules extends GuiScreen {
 					}
 				}
 			}
-			@Override
-			public final boolean mousePressed(int slotIndex, int mouseX, int mouseY,
-					int mouseEvent, int relativeX, int relativeY) {
-				lastClickedRule = this.ruleName;
 
-				if (resetButton.mousePressed(mc, mouseX, mouseY)) {
-					resetButton.playPressSound(mc.getSoundHandler());
-					return true;
-				}
-				return mouseDown(mouseX, mouseY, mouseEvent);
-			}
 			@Override
-			public final void mouseReleased(int slotIndex, int x, int y,
-					int mouseEvent, int relativeX, int relativeY) {
-				resetButton.mouseReleased(mouseX, mouseY);
-				mouseUp(mouseX, mouseY, mouseEvent);
+			public boolean mouseDown(int mouseX, int mouseY, int mouseButton) {
+				lastClickedEntry = this;
+				return super.mouseDown(mouseX, mouseY, mouseButton);
 			}
 
-			protected abstract void draw(int x, int y, int listWidth,
-					int slotHeight, int mouseX, int mouseY);
-			protected abstract boolean mouseDown(int x, int y, int button);
-			protected abstract void mouseUp(int x, int y, int button);
 			protected abstract boolean isMouseOverControl(int mouseX, int mouseY);
 
-			protected boolean isFocused() {
-				return lastClickedRule == this.ruleName;  // Ref equals
+			@Override
+			public boolean isSelected() {
+				return lastClickedEntry == this;
 			}
 
 			/** Called when the reset button is clicked. */
@@ -157,9 +139,9 @@ public class GuiWDLGameRules extends GuiScreen {
 			}
 
 			@Override
-			public void draw(int x, int y, int listWidth, int slotHeight,
-					int mouseX, int mouseY) {
-				if (!this.isFocused()) {
+			public void drawEntry(int x, int y, int width, int height, int mouseX, int mouseY) {
+				super.drawEntry(x, y, width, height, mouseX, mouseY);
+				if (!this.isSelected()) {
 					field.setFocused(false);
 				}
 				if (isRuleSet(this.ruleName)) {
@@ -167,19 +149,16 @@ public class GuiWDLGameRules extends GuiScreen {
 				} else {
 					field.setTextColor(DEFAULT_TEXT_FIELD);
 				}
-				field.x = x + listWidth / 2;
+				field.x = x + width / 2;
 				field.y = y;
 				field.drawTextBox();
 			}
 
 			@Override
-			protected boolean mouseDown(int x, int y, int button) {
+			public boolean mouseDown(int x, int y, int button) {
 				field.mouseClicked(x, y, button);
 				return false;
 			}
-
-			@Override
-			protected void mouseUp(int x, int y, int button) { }
 
 			@Override
 			public void onUpdate() {
@@ -206,7 +185,7 @@ public class GuiWDLGameRules extends GuiScreen {
 		}
 
 		private class BooleanRuleEntry extends RuleEntry {
-			private GuiButton button;
+			private Button button;
 
 			public BooleanRuleEntry(String ruleName) {
 				super(ruleName);
@@ -216,30 +195,13 @@ public class GuiWDLGameRules extends GuiScreen {
 						setRule(ruleName, oldValue ? "false" : "true");
 					}
 				};
+				this.addButton(button, 0, 0);
 			}
 
 			@Override
-			protected void draw(int x, int y, int listWidth, int slotHeight,
-					int mouseX, int mouseY) {
-				this.button.x = x + listWidth / 2;
-				this.button.y = y;
+			public void drawEntry(int x, int y, int width, int height, int mouseX, int mouseY) {
 				this.button.displayString = getRule(ruleName);
-				LocalUtils.drawButton(this.button, mc, mouseX, mouseY);
-			}
-
-			@Override
-			protected boolean mouseDown(int x, int y, int button) {
-				if (this.button.mousePressed(mc, x, y)) {
-					this.button.playPressSound(mc.getSoundHandler());
-					return true;
-				} else {
-					return false;
-				}
-			}
-
-			@Override
-			protected void mouseUp(int x, int y, int button) {
-				this.button.mouseReleased(x, y);
+				super.drawEntry(x, y, width, height, mouseX, mouseY);
 			}
 
 			@Override
@@ -248,22 +210,11 @@ public class GuiWDLGameRules extends GuiScreen {
 			}
 		}
 
-		private final List<GuiListEntry> entries;
-
-		@Override
-		public IGuiListEntry getListEntry(int index) {
-			return entries.get(index);
-		}
-
-		@Override
-		protected int getSize() {
-			return entries.size();
-		}
-
 		public void update() {
 			// Use a manual for loop to avoid concurrent modification exceptions
-			for (int i = 0; i < getSize(); i++) {
-				IGuiListEntry entry = getListEntry(i);
+			List<RuleEntry> entries = this.getEntries();
+			for (int i = 0; i < entries.size(); i++) {
+				RuleEntry entry = entries.get(i);
 				if (entry instanceof KeyboardEntry) {
 					((KeyboardEntry) entry).onUpdate();
 				}
@@ -272,8 +223,9 @@ public class GuiWDLGameRules extends GuiScreen {
 
 		public void keyDown(char typedChar, int keyCode) {
 			// Use a manual for loop to avoid concurrent modification exceptions
-			for (int i = 0; i < getSize(); i++) {
-				IGuiListEntry entry = getListEntry(i);
+			List<RuleEntry> entries = this.getEntries();
+			for (int i = 0; i < entries.size(); i++) {
+				RuleEntry entry = entries.get(i);
 				if (entry instanceof KeyboardEntry) {
 					((KeyboardEntry) entry).keyDown(typedChar, keyCode);
 				}
@@ -281,13 +233,8 @@ public class GuiWDLGameRules extends GuiScreen {
 		}
 
 		@Override
-		public int getListWidth() {
+		public int getEntryWidth() {
 			return 210 * 2;
-		}
-
-		@Override
-		protected int getScrollBarX() {
-			return this.width / 2 + getListWidth() / 2 + 4;
 		}
 	}
 

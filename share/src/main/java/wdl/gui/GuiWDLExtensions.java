@@ -15,12 +15,11 @@
 package wdl.gui;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
+
+import javax.annotation.Nullable;
 
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
@@ -32,7 +31,8 @@ import wdl.api.WDLApi;
 import wdl.api.WDLApi.ModInfo;
 import wdl.gui.widget.Button;
 import wdl.gui.widget.ButtonDisplayGui;
-import wdl.gui.widget.GuiListEntry;
+import wdl.gui.widget.GuiList;
+import wdl.gui.widget.GuiList.GuiListEntry;
 import wdl.gui.widget.TextList;
 
 /**
@@ -66,17 +66,15 @@ public class GuiWDLExtensions extends GuiScreen {
 	 */
 	private static final int BOTTOM_HEIGHT = 32;
 
-	/**
-	 * The currently selected mod.
-	 */
-	private int selectedModIndex = -1;
-
-	private class ModList extends GuiListExtended {
+	private class ModList extends GuiList<GuiWDLExtensions.ModList.ModEntry> {
 		public ModList() {
 			super(GuiWDLExtensions.this.mc, GuiWDLExtensions.this.width,
 					bottomLocation, TOP_HEIGHT, bottomLocation, 22);
 			this.showSelectionBox = true;
 		}
+
+		@Nullable
+		private ModEntry selectedEntry;
 
 		private class ModEntry extends GuiListEntry {
 			public final ModInfo<?> mod;
@@ -89,8 +87,6 @@ public class GuiWDLExtensions extends GuiScreen {
 			 * the mod is enabled.
 			 */
 			private String label;
-			private GuiButton button;
-			private GuiButton disableButton;
 
 			public ModEntry(ModInfo<?> mod) {
 				this.mod = mod;
@@ -112,16 +108,18 @@ public class GuiWDLExtensions extends GuiScreen {
 						buttonName = I18n.format("wdl.gui.extensions.defaultSettingsButtonText");
 					}
 
-					button = new Button(0, 0, 80, 20, guiMod.getButtonName()) {
+					Button button = new Button(0, 0, 80, 20, guiMod.getButtonName()) {
 						public @Override void performAction() {
 							if (mod.mod instanceof IWDLModWithGui) {
 								((IWDLModWithGui) mod.mod).openGui(GuiWDLExtensions.this);
 							}
 						}
 					};
+
+					addButton(button, (GuiWDLExtensions.this.width / 2) - 180, -1);
 				}
 
-				disableButton = new Button(0, 0, 80, 20,
+				Button disableButton = new Button(0, 0, 80, 20,
 						I18n.format("wdl.gui.extensions."
 								+ (mod.isEnabled() ? "enabled" : "disabled"))) {
 					public @Override void performAction() {
@@ -138,43 +136,19 @@ public class GuiWDLExtensions extends GuiScreen {
 						}
 					}
 				};
+
+				addButton(disableButton, (GuiWDLExtensions.this.width / 2) - 92, -1);
 			}
 
 			@Override
-			public void drawEntry(int slotIndex, int x, int y, int listWidth,
-					int slotHeight, int mouseX, int mouseY, boolean isSelected) {
-				if (button != null) {
-					button.x = GuiWDLExtensions.this.width - 180;
-					button.y = y - 1;
-
-					LocalUtils.drawButton(button, mc, mouseX, mouseY);
-				}
-
-				disableButton.x = GuiWDLExtensions.this.width - 92;
-				disableButton.y = y - 1;
-				LocalUtils.drawButton(disableButton, mc, mouseX, mouseY);
-
-				int centerY = y + slotHeight / 2
-						- fontRenderer.FONT_HEIGHT / 2;
-				fontRenderer.drawString(label, x, centerY, 0xFFFFFF);
-			}
-
-			@Override
-			public boolean mousePressed(int slotIndex, int x, int y,
-					int mouseEvent, int relativeX, int relativeY) {
-				if (button != null) {
-					if (button.mousePressed(mc, x, y)) {
-						button.playPressSound(mc.getSoundHandler());
-						return true;
-					}
-				}
-				if (disableButton.mousePressed(mc, x, y)) {
-					disableButton.playPressSound(mc.getSoundHandler());
+			public boolean mouseDown(int mouseX, int mouseY, int mouseButton) {
+				if (super.mouseDown(mouseX, mouseY, mouseButton)) {
 					return true;
 				}
 
-				if (selectedModIndex != slotIndex) {
-					selectedModIndex = slotIndex;
+				// A click, but not on a button
+				if (selectedEntry != this) {
+					selectedEntry = this;
 
 					mc.getSoundHandler().playSound(
 							PositionedSoundRecord.getMasterRecord(
@@ -189,16 +163,22 @@ public class GuiWDLExtensions extends GuiScreen {
 			}
 
 			@Override
-			public void mouseReleased(int slotIndex, int x, int y,
-					int mouseEvent, int relativeX, int relativeY) {
-				if (button != null) {
-					button.mouseReleased(x, y);
-				}
+			public void drawEntry(int x, int y, int width, int height, int mouseX, int mouseY) {
+				super.drawEntry(x, y, width, height, mouseX, mouseY);
+
+				int centerY = y + height / 2 - fontRenderer.FONT_HEIGHT / 2;
+				fontRenderer.drawString(label, x, centerY, 0xFFFFFF);
+			}
+
+			@Override
+			public boolean isSelected() {
+				return selectedEntry == this;
 			}
 		}
 
-		private List<GuiListEntry> entries = WDLApi.getWDLMods().values()
-				.stream().map(ModEntry::new).collect(Collectors.toList());
+		{
+			WDLApi.getWDLMods().values().stream().map(ModEntry::new).forEach(this.getEntries()::add);
+		}
 
 		@Override
 		public void drawScreen(int mouseX, int mouseY, float partialTicks) {
@@ -208,27 +188,12 @@ public class GuiWDLExtensions extends GuiScreen {
 		}
 
 		@Override
-		public IGuiListEntry getListEntry(int index) {
-			return entries.get(index);
-		}
-
-		@Override
-		protected int getSize() {
-			return entries.size();
-		}
-
-		@Override
-		protected boolean isSelected(int slotIndex) {
-			return slotIndex == selectedModIndex;
-		}
-
-		@Override
-		public int getListWidth() {
+		public int getEntryWidth() {
 			return GuiWDLExtensions.this.width - 20;
 		}
 
 		@Override
-		protected int getScrollBarX() {
+		public int getScrollBarX() {
 			return GuiWDLExtensions.this.width - 10;
 		}
 
