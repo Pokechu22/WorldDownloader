@@ -27,7 +27,7 @@ import net.minecraft.util.text.TextComponentTranslation;
  * based on key.value and key.description.
  */
 public abstract class BaseCyclableSetting<T> extends BaseSetting<T> implements CyclableSetting<T> {
-	private String key;
+	private final String key;
 
 	/**
 	 * Constructor.
@@ -52,6 +52,7 @@ public abstract class BaseCyclableSetting<T> extends BaseSetting<T> implements C
 	 */
 	public BaseCyclableSetting(String name, T def, String key, Function<String, T> fromString, Function<T, String> toString) {
 		super(name, def, fromString, toString);
+		this.key = key;
 	}
 
 	@Override
