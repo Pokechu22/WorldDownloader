@@ -168,7 +168,7 @@ public class GuiWDLGenerator extends GuiScreen {
 		} else if (generatorBtn.isMouseOver()) {
 			tooltip = generatorBtn.getTooltip();
 		} else if (generateStructuresBtn.isMouseOver()) {
-			tooltip = generatorBtn.getTooltip();
+			tooltip = generateStructuresBtn.getTooltip();
 		}
 		Utils.drawGuiInfoBox(tooltip, width, height, 48);
 	}
