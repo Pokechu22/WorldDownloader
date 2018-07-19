@@ -21,10 +21,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiListExtended;
 import wdl.gui.widget.ExtGuiList.ExtGuiListEntry;
 
-abstract class ExtGuiList<T extends ExtGuiListEntry> extends GuiListExtended implements IExtGuiList<T> {
+abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended implements IExtGuiList<T> {
 
-	static abstract class ExtGuiListEntry implements IExtGuiListEntry, IGuiListEntry {
-
+	static abstract class ExtGuiListEntry<T extends ExtGuiListEntry<T>> implements IExtGuiListEntry<T>, IGuiListEntry {
 		@Override
 		public void setSelected(int p_178011_1_, int p_178011_2_, int p_178011_3_) { }
 

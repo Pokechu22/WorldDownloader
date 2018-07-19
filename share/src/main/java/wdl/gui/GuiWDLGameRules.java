@@ -57,7 +57,7 @@ public class GuiWDLGameRules extends GuiScreen {
 	 */
 	private static final int SET_TEXT_FIELD = 0xE0E0E0, DEFAULT_TEXT_FIELD = 0x808080;
 
-	private class GuiGameRuleList extends GuiList<GuiWDLGameRules.GuiGameRuleList.RuleEntry> {
+	private class GuiGameRuleList extends GuiList<GuiGameRuleList.RuleEntry> {
 		/** The entry that was last clicked.  This should be compared by ref. */
 		@Nullable
 		private RuleEntry lastClickedEntry = null;
@@ -78,7 +78,7 @@ public class GuiWDLGameRules extends GuiScreen {
 			}
 		}
 
-		private abstract class RuleEntry extends GuiListEntry {
+		private abstract class RuleEntry extends GuiListEntry<RuleEntry> {
 			@Nonnull
 			protected final String ruleName;
 			private Button resetButton;

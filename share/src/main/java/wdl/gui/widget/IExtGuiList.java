@@ -19,8 +19,8 @@ import java.util.List;
 /**
  * Methods that should be provided or implemented in the implementation-specific ExtGuiList.
  */
-interface IExtGuiList<T extends IExtGuiList.IExtGuiListEntry> {
-	interface IExtGuiListEntry {
+interface IExtGuiList<T extends IExtGuiList.IExtGuiListEntry<T>> {
+	static interface IExtGuiListEntry<T> {
 		/**
 		 * Draw this entry, and also perform various update logic.
 		 *

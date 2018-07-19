@@ -23,12 +23,12 @@ import net.minecraft.client.Minecraft;
 import wdl.gui.LocalUtils;
 import wdl.gui.widget.GuiList.GuiListEntry;
 
-public abstract class GuiList<T extends GuiListEntry> extends ExtGuiList<T> {
+public abstract class GuiList<T extends GuiListEntry<T>> extends ExtGuiList<T> {
 	public GuiList(Minecraft mcIn, int widthIn, int heightIn, int topIn, int bottomIn, int entryHeight) {
 		super(mcIn, widthIn, heightIn, topIn, bottomIn, entryHeight);
 	}
 
-	public static class GuiListEntry extends ExtGuiListEntry {
+	public static class GuiListEntry<T extends GuiListEntry<T>> extends ExtGuiListEntry<T> {
 		private static class ButtonWrapper {
 			public final ExtButton button;
 			public final int x;

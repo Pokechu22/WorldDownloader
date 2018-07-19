@@ -21,7 +21,7 @@ import wdl.gui.widget.GuiList.GuiListEntry;
 /**
  * {@link GuiListEntry} that displays a single line of text.
  */
-public class TextEntry extends GuiListEntry {
+public class TextEntry extends GuiListEntry<TextEntry> {
 	private final String text;
 	private final int color;
 	protected final Minecraft mc;

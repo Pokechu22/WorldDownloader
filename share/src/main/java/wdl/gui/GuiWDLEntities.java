@@ -43,7 +43,7 @@ import wdl.gui.widget.SettingButton;
  * GUI that controls what entities are saved.
  */
 public class GuiWDLEntities extends GuiScreen {
-	private class GuiEntityList extends GuiList<GuiListEntry> {
+	private class GuiEntityList extends GuiList<GuiEntityList.Entry> {
 		/**
 		 * Width of the largest entry.
 		 */
@@ -56,7 +56,7 @@ public class GuiWDLEntities extends GuiScreen {
 		private int totalWidth;
 
 		{
-			List<GuiListEntry> entries = this.getEntries();
+			List<Entry> entries = this.getEntries();
 			try {
 				Multimap<String, String> entities = EntityUtils
 						.getEntitiesByGroup();
@@ -96,13 +96,16 @@ public class GuiWDLEntities extends GuiScreen {
 			}
 		}
 
+		/** Needed for proper generics behavior, unfortunately. */
+		private abstract class Entry extends GuiListEntry<Entry> { }
+
 		/**
 		 * Provides a label.
 		 *
 		 * Based off of
 		 * {@link net.minecraft.client.gui.GuiKeyBindingList.CategoryEntry}.
 		 */
-		private class CategoryEntry extends GuiListEntry {
+		private class CategoryEntry extends Entry {
 			private final String displayGroup;
 			private final int labelWidth;
 
@@ -157,7 +160,7 @@ public class GuiWDLEntities extends GuiScreen {
 		 * Based off of
 		 * {@link net.minecraft.client.gui.GuiKeyBindingList.KeyEntry}.
 		 */
-		private class EntityEntry extends GuiListEntry {
+		private class EntityEntry extends Entry {
 			private final CategoryEntry category;
 			private final String entity;
 			private final String displayEntity;

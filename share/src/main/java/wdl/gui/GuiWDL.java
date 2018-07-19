@@ -42,7 +42,7 @@ public class GuiWDL extends GuiScreen {
 					GuiWDL.this.height - 32, 20);
 		}
 
-		private class ButtonEntry extends GuiList.GuiListEntry {
+		private class ButtonEntry extends GuiList.GuiListEntry<ButtonEntry> {
 			private final Button button;
 
 			private final String tooltip;

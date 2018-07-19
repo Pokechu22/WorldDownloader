@@ -66,7 +66,7 @@ public class GuiWDLExtensions extends GuiScreen {
 	 */
 	private static final int BOTTOM_HEIGHT = 32;
 
-	private class ModList extends GuiList<GuiWDLExtensions.ModList.ModEntry> {
+	private class ModList extends GuiList<ModList.ModEntry> {
 		public ModList() {
 			super(GuiWDLExtensions.this.mc, GuiWDLExtensions.this.width,
 					bottomLocation, TOP_HEIGHT, bottomLocation, 22);
@@ -76,7 +76,7 @@ public class GuiWDLExtensions extends GuiScreen {
 		@Nullable
 		private ModEntry selectedEntry;
 
-		private class ModEntry extends GuiListEntry {
+		private class ModEntry extends GuiListEntry<ModEntry> {
 			public final ModInfo<?> mod;
 			/**
 			 * Constant information about the extension (name & version)

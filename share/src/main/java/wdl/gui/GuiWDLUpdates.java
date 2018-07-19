@@ -26,6 +26,7 @@ import wdl.WDL;
 import wdl.gui.widget.Button;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.GuiList;
+import wdl.gui.widget.GuiList.GuiListEntry;
 import wdl.gui.widget.TextList;
 import wdl.update.Release;
 import wdl.update.WDLUpdateChecker;
@@ -41,7 +42,7 @@ public class GuiWDLUpdates extends GuiScreen {
 	 */
 	private static final int TOP_MARGIN = 39, BOTTOM_MARGIN = 32;
 
-	private class UpdateList extends GuiList<GuiWDLUpdates.UpdateList.VersionEntry> {
+	private class UpdateList extends GuiList<UpdateList.VersionEntry> {
 		public UpdateList() {
 			super(GuiWDLUpdates.this.mc, GuiWDLUpdates.this.width,
 					GuiWDLUpdates.this.height, TOP_MARGIN,
@@ -49,7 +50,7 @@ public class GuiWDLUpdates extends GuiScreen {
 					(fontRenderer.FONT_HEIGHT + 1) * 6 + 2);
 		}
 
-		private class VersionEntry extends GuiList.GuiListEntry {
+		private class VersionEntry extends GuiListEntry<VersionEntry> {
 			private final Release release;
 
 			private String title;

@@ -43,14 +43,17 @@ public class GuiWDLMessages extends GuiScreen {
 	@Nullable
 	private String hoveredButtonTooltip = null;
 
-	private class GuiMessageTypeList extends GuiList<GuiListEntry> {
+	private class GuiMessageTypeList extends GuiList<GuiMessageTypeList.Entry> {
 		public GuiMessageTypeList() {
 			super(GuiWDLMessages.this.mc, GuiWDLMessages.this.width,
 					GuiWDLMessages.this.height, 39,
 					GuiWDLMessages.this.height - 32, 20);
 		}
 
-		private class CategoryEntry extends GuiListEntry {
+		/** Needed for proper generics behavior, unfortunately. */
+		private abstract class Entry extends GuiListEntry<Entry> { }
+
+		private class CategoryEntry extends Entry {
 			private final SettingButton button;
 			private final MessageTypeCategory category;
 
@@ -76,7 +79,7 @@ public class GuiWDLMessages extends GuiScreen {
 			}
 		}
 
-		private class MessageTypeEntry extends GuiListEntry {
+		private class MessageTypeEntry extends Entry {
 			private final SettingButton button;
 			private final MessageRegistration typeRegistration;
 
