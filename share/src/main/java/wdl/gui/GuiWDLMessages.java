@@ -83,7 +83,7 @@ public class GuiWDLMessages extends GuiScreen {
 			public MessageTypeEntry(MessageRegistration registration) {
 				this.typeRegistration = registration;
 				this.button = new SettingButton(registration.setting, config, 0, 0);
-				addButton(this.button, 0, 0);
+				addButton(this.button, -100, 0);
 			}
 
 			@Override
