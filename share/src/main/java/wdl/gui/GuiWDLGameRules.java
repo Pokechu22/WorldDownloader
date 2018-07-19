@@ -156,6 +156,9 @@ public class GuiWDLGameRules extends GuiScreen {
 
 			@Override
 			public boolean mouseDown(int x, int y, int button) {
+				if (super.mouseDown(x, y, button)) {
+					return true;
+				}
 				field.mouseClicked(x, y, button);
 				return false;
 			}
