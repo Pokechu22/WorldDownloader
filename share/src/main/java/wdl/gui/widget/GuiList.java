@@ -68,7 +68,7 @@ public abstract class GuiList<T extends GuiListEntry> extends ExtGuiList<T> {
 		public boolean mouseDown(int mouseX, int mouseY, int mouseButton) {
 			for (ButtonWrapper buttonW : this.buttonList) {
 				ExtButton button = buttonW.button;
-				if (button.isMouseOver()) {
+				if (button.enabled && button.isMouseOver()) {
 					this.activeButton = buttonW;
 					button.mouseDown(mouseX, mouseY);
 					button.playPressSound(Minecraft.getMinecraft().getSoundHandler());
