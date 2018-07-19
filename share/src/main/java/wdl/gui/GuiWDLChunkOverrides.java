@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017 Pokechu22, julialy
+ * Copyright (c) 2017-2018 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -14,11 +14,8 @@
  */
 package wdl.gui;
 
-import java.io.IOException;
-
 import com.google.common.collect.Multimap;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -32,13 +29,14 @@ import wdl.WDLPluginChannels;
 import wdl.WDLPluginChannels.ChunkRange;
 import wdl.gui.widget.Button;
 import wdl.gui.widget.ButtonDisplayGui;
+import wdl.gui.widget.Screen;
 
 /**
  * A GUI that lists and allows requesting chunk overrides.
  *
  * Also, expect a possible minimap integration in the future.
  */
-public class GuiWDLChunkOverrides extends GuiScreen {
+public class GuiWDLChunkOverrides extends Screen {
 	private static final int TOP_MARGIN = 61, BOTTOM_MARGIN = 32;
 
 	/**
@@ -95,10 +93,6 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 	 * Coordinates of the active request.
 	 */
 	private int requestStartX, requestStartZ, requestEndX, requestEndZ;
-	/**
-	 * Is the background being dragged?
-	 */
-	private boolean dragging;
 	/**
 	 * The position of the mouse on the last tick, for dragging.
 	 */
@@ -170,18 +164,11 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 		});
 	}
 
-	/**
-	 * Called when the mouse is clicked.
-	 */
 	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
-			throws IOException {
-		super.mouseClicked(mouseX, mouseY, mouseButton);
-
-		if (mouseY > TOP_MARGIN && mouseY < height - BOTTOM_MARGIN && mouseButton == 0) {
+	public void mouseDown(int mouseX, int mouseY) {
+		if (mouseY > TOP_MARGIN && mouseY < height - BOTTOM_MARGIN) {
 			switch (mode) {
 			case PANNING:
-				dragging = true;
 				lastTickX = mouseX;
 				lastTickY = mouseY;
 				break;
@@ -223,23 +210,14 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 	}
 
 	@Override
-	protected void mouseReleased(int mouseX, int mouseY, int state) {
-		super.mouseReleased(mouseX, mouseY, state);
-		if (state == 0) {
-			dragging = false;
-		}
-	}
+	public void mouseDragged(int mouseX, int mouseY) {
+		int deltaX = lastTickX - mouseX;
+		int deltaY = lastTickY - mouseY;
 
-	@Override
-	protected void mouseClickMove(int mouseX, int mouseY,
-			int clickedMouseButton, long timeSinceLastClick) {
-		if (dragging) {
-			int deltaX = lastTickX - mouseX;
-			int deltaY = lastTickY - mouseY;
+		lastTickX = mouseX;
+		lastTickY = mouseY;
 
-			lastTickX = mouseX;
-			lastTickY = mouseY;
-
+		if (mode == Mode.PANNING) {
 			scrollX += deltaX / (float)SCALE;
 			scrollZ += deltaY / (float)SCALE;
 		}
@@ -260,7 +238,7 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 			ChunkRange requestRange = new ChunkRange("", x1, z1, x2, z2);
 
 			// Fancy sin alpha changing by time.
-			int alpha = 127 + (int)(Math.sin(Minecraft.getSystemTime() * Math.PI / 5000) * 64);
+			int alpha = 127 + (int)(Math.sin(System.currentTimeMillis() * Math.PI / 5000) * 64);
 			drawRange(requestRange, 0xffffff, alpha);
 		}
 
@@ -272,7 +250,7 @@ public class GuiWDLChunkOverrides extends GuiScreen {
 		}
 		for (ChunkRange range : WDLPluginChannels.getChunkOverrideRequests()) {
 			// Fancy sin alpha changing by time.
-			int alpha = 127 + (int)(Math.sin(Minecraft.getSystemTime() * Math.PI / 5000) * 64);
+			int alpha = 127 + (int)(Math.sin(System.currentTimeMillis() * Math.PI / 5000) * 64);
 			drawRange(range, 0x808080, alpha);
 		}
 
