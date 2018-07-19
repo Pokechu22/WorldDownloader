@@ -44,7 +44,7 @@ public class LinkEntry extends TextEntry {
 			Gui.drawRect(drawX, mouseY - 2, drawX + linkWidth + 4,
 					mouseY + mc.fontRenderer.FONT_HEIGHT + 2, 0x80000000);
 
-			Utils.drawStringWithShadow(link, drawX + 2, mouseY, 0xFFFFFF);
+			mc.fontRenderer.drawStringWithShadow(link, drawX + 2, mouseY, 0xFFFFFF);
 		}
 	}
 

@@ -15,7 +15,6 @@
 package wdl.gui.widget;
 
 import net.minecraft.client.Minecraft;
-import wdl.gui.Utils;
 import wdl.gui.widget.GuiList.GuiListEntry;
 
 /**
@@ -47,6 +46,6 @@ public class TextEntry extends GuiListEntry<TextEntry> {
 		if (y < 0) {
 			return;
 		}
-		Utils.drawStringWithShadow(text, x, y + 1, color);
+		mc.fontRenderer.drawStringWithShadow(text, x, y + 1, color);
 	}
 }

@@ -172,14 +172,4 @@ public class Utils {
 			LOGGER.error("Couldn't open link", e);
 		}
 	}
-
-	/**
-	 * Draws a string with a shadow.
-	 *
-	 * Needed because of obfuscation.
-	 */
-	public static void drawStringWithShadow(String s, int x, int y, int color) {
-		//TODO: No longer obfuscated; should I care enough to inline this?
-		mc.fontRenderer.drawStringWithShadow(s, x, y, color);
-	}
 }
