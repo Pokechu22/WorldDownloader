@@ -14,7 +14,6 @@
  */
 package wdl.gui;
 
-import java.io.IOException;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -24,7 +23,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.ImmutableList;
-import net.minecraft.client.gui.GuiListExtended.IGuiListEntry;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.world.GameRules;
@@ -36,8 +34,9 @@ import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.GuiList;
 import wdl.gui.widget.GuiList.GuiListEntry;
 import wdl.gui.widget.GuiNumericTextField;
+import wdl.gui.widget.Screen;
 
-public class GuiWDLGameRules extends GuiScreen {
+public class GuiWDLGameRules extends Screen {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
@@ -45,11 +44,6 @@ public class GuiWDLGameRules extends GuiScreen {
 	 */
 	@Nullable
 	private String hoveredToolTip;
-
-	private static interface KeyboardEntry extends IGuiListEntry {
-		public abstract void keyDown(char typedChar, int keyCode);
-		public abstract void onUpdate();
-	}
 
 	/**
 	 * Colors for the text field on numeric entries when there is/is not a
@@ -129,13 +123,14 @@ public class GuiWDLGameRules extends GuiScreen {
 			}
 		}
 
-		private class IntRuleEntry extends RuleEntry implements KeyboardEntry {
+		private class IntRuleEntry extends RuleEntry {
 			private GuiNumericTextField field;
 
 			public IntRuleEntry(String ruleName) {
 				super(ruleName);
 				field = new GuiNumericTextField(0, fontRenderer, 0, 0, 100, 20);
 				field.setText(getRule(ruleName));
+				super.addTextField(field, 0, 0);
 			}
 
 			@Override
@@ -149,30 +144,11 @@ public class GuiWDLGameRules extends GuiScreen {
 				} else {
 					field.setTextColor(DEFAULT_TEXT_FIELD);
 				}
-				field.x = x + width / 2;
-				field.y = y;
-				field.drawTextBox();
 			}
 
 			@Override
-			public boolean mouseDown(int x, int y, int button) {
-				if (super.mouseDown(x, y, button)) {
-					return true;
-				}
-				field.mouseClicked(x, y, button);
-				return false;
-			}
-
-			@Override
-			public void onUpdate() {
-				this.field.updateCursorCounter();
-			}
-
-			@Override
-			public void keyDown(char typedChar, int keyCode) {
-				if (this.field.textboxKeyTyped(typedChar, keyCode)) {
-					setRule(ruleName, Integer.toString(this.field.getValue()));
-				}
+			public void charTyped(char keyChar) {
+				setRule(ruleName, Integer.toString(this.field.getValue()));
 			}
 
 			@Override
@@ -210,28 +186,6 @@ public class GuiWDLGameRules extends GuiScreen {
 			@Override
 			protected boolean isMouseOverControl(int mouseX, int mouseY) {
 				return button.isMouseOver();
-			}
-		}
-
-		public void update() {
-			// Use a manual for loop to avoid concurrent modification exceptions
-			List<RuleEntry> entries = this.getEntries();
-			for (int i = 0; i < entries.size(); i++) {
-				RuleEntry entry = entries.get(i);
-				if (entry instanceof KeyboardEntry) {
-					((KeyboardEntry) entry).onUpdate();
-				}
-			}
-		}
-
-		public void keyDown(char typedChar, int keyCode) {
-			// Use a manual for loop to avoid concurrent modification exceptions
-			List<RuleEntry> entries = this.getEntries();
-			for (int i = 0; i < entries.size(); i++) {
-				RuleEntry entry = entries.get(i);
-				if (entry instanceof KeyboardEntry) {
-					((KeyboardEntry) entry).keyDown(typedChar, keyCode);
-				}
 			}
 		}
 
@@ -315,21 +269,15 @@ public class GuiWDLGameRules extends GuiScreen {
 	public void initGui() {
 		this.title = I18n.format("wdl.gui.gamerules.title");
 		this.list = new GuiGameRuleList();
+		this.addList(list);
 
 		this.buttonList.add(new ButtonDisplayGui(this.width / 2 - 100,
 				this.height - 29, 200, 20, this.parent));
 	}
 
 	@Override
-	public void updateScreen() {
-		this.list.update();
-		super.updateScreen();
-	}
-
-	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		hoveredToolTip = null;
-		this.list.drawScreen(mouseX, mouseY, partialTicks);
 
 		super.drawScreen(mouseX, mouseY, partialTicks);
 
@@ -338,31 +286,6 @@ public class GuiWDLGameRules extends GuiScreen {
 		if (hoveredToolTip != null) {
 			Utils.drawGuiInfoBox(hoveredToolTip, width, height, 48);
 		}
-	}
-
-	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
-			throws IOException {
-		this.list.mouseClicked(mouseX, mouseY, mouseButton);
-		super.mouseClicked(mouseX, mouseY, mouseButton);
-	}
-
-	@Override
-	protected void mouseReleased(int mouseX, int mouseY, int state) {
-		this.list.mouseReleased(mouseX, mouseY, state);
-		super.mouseReleased(mouseX, mouseY, state);
-	}
-
-	@Override
-	protected void keyTyped(char typedChar, int keyCode) throws IOException {
-		this.list.keyDown(typedChar, keyCode);
-		super.keyTyped(typedChar, keyCode);
-	}
-
-	@Override
-	public void handleMouseInput() throws IOException {
-		super.handleMouseInput();
-		this.list.handleMouseInput();
 	}
 
 	@Override

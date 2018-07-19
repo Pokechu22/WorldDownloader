@@ -14,10 +14,7 @@
  */
 package wdl.gui;
 
-import java.io.IOException;
 import java.util.Map;
-
-import org.lwjgl.input.Keyboard;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -26,12 +23,13 @@ import net.minecraft.client.resources.I18n;
 import wdl.WDLPluginChannels;
 import wdl.gui.widget.Button;
 import wdl.gui.widget.ButtonDisplayGui;
+import wdl.gui.widget.Screen;
 import wdl.gui.widget.TextList;
 
 /**
  * GUI for requesting permissions.  Again, this is a work in progress.
  */
-public class GuiWDLPermissionRequest extends GuiScreen {
+public class GuiWDLPermissionRequest extends Screen {
 	private static final int TOP_MARGIN = 61, BOTTOM_MARGIN = 32;
 
 	private TextList list;
@@ -71,9 +69,11 @@ public class GuiWDLPermissionRequest extends GuiScreen {
 			list.addLine("Requesting '" + request.getKey() + "' to be '"
 					+ request.getValue() + "'.");
 		}
+		this.addList(this.list);
 
 		this.requestField = new GuiTextField(0, fontRenderer,
 				width / 2 - 155, 18, 150, 20);
+		this.addTextField(requestField);
 
 		this.submitButton = new Button(width / 2 + 5, 18,
 				150, 20, "Submit request") {
@@ -101,86 +101,38 @@ public class GuiWDLPermissionRequest extends GuiScreen {
 	}
 
 	@Override
-	public void updateScreen() {
-		requestField.updateCursorCounter();
-		super.updateScreen();
-	}
+	public void charTyped(char keyChar) {
+		String request = requestField.getText();
+		boolean isValid = false;
 
-	/**
-	 * Called when the mouse is clicked.
-	 */
-	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
-			throws IOException {
-		requestField.mouseClicked(mouseX, mouseY, mouseButton);
-		list.mouseClicked(mouseX, mouseY, mouseButton);
-		super.mouseClicked(mouseX, mouseY, mouseButton);
-	}
+		if (request.contains("=")) {
+			String[] requestData = request.split("=", 2);
+			if (requestData.length == 2) {
+				String key = requestData[0];
+				String value = requestData[1];
 
-	@Override
-	protected void keyTyped(char typedChar, int keyCode) throws IOException {
-		super.keyTyped(typedChar, keyCode);
-		requestField.textboxKeyTyped(typedChar, keyCode);
+				isValid = WDLPluginChannels.isValidRequest(key, value);
 
-		if (requestField.isFocused()) {
-			String request = requestField.getText();
+				if (isValid && keyChar == '\n') {
+					requestField.setText("");
+					isValid = false;
 
-			boolean isValid = false;
-
-			if (request.contains("=")) {
-				String[] requestData = request.split("=", 2);
-				if (requestData.length == 2) {
-					String key = requestData[0];
-					String value = requestData[1];
-
-					isValid = WDLPluginChannels.isValidRequest(key, value);
-
-					if (isValid && keyCode == Keyboard.KEY_RETURN) {
-						requestField.setText("");
-						isValid = false;
-
-						WDLPluginChannels.addRequest(key, value);
-						list.addLine("Requesting '" + key + "' to be '"
-								+ value + "'.");
-						submitButton.enabled = true;
-					}
+					WDLPluginChannels.addRequest(key, value);
+					list.addLine("Requesting '" + key + "' to be '"
+							+ value + "'.");
+					submitButton.enabled = true;
 				}
 			}
-
-			requestField.setTextColor(isValid ? 0x40E040 : 0xE04040);
 		}
-	}
 
-	/**
-	 * Handles mouse input.
-	 */
-	@Override
-	public void handleMouseInput() throws IOException {
-		super.handleMouseInput();
-		this.list.handleMouseInput();
-	}
-
-	@Override
-	protected void mouseReleased(int mouseX, int mouseY, int state) {
-		if (list.mouseReleased(mouseX, mouseY, state)) {
-			return;
-		}
-		super.mouseReleased(mouseX, mouseY, state);
+		requestField.setTextColor(isValid ? 0x40E040 : 0xE04040);
 	}
 
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		if (this.list == null) {
-			return;
-		}
-
-		this.list.drawScreen(mouseX, mouseY, partialTicks);
-
-		requestField.drawTextBox();
+		super.drawScreen(mouseX, mouseY, partialTicks);
 
 		this.drawCenteredString(this.fontRenderer, "Permission request",
 				this.width / 2, 8, 0xFFFFFF);
-
-		super.drawScreen(mouseX, mouseY, partialTicks);
 	}
 }

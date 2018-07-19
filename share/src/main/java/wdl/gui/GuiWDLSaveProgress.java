@@ -14,7 +14,6 @@
  */
 package wdl.gui;
 
-import java.io.IOException;
 import java.util.function.Supplier;
 
 import net.minecraft.client.gui.Gui;
@@ -194,8 +193,8 @@ public class GuiWDLSaveProgress extends GuiTurningCameraBase {
 	}
 
 	@Override
-	protected void keyTyped(char typedChar, int keyCode) throws IOException {
-		//Don't call the super method, as that causes the UI to close if escape
-		//is pressed.
+	public boolean onCloseAttempt() {
+		// Don't allow closing this GUI with escape
+		return false;
 	}
 }

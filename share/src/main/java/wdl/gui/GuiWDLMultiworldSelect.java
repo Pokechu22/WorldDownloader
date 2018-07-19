@@ -15,11 +15,8 @@
 package wdl.gui;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.lwjgl.input.Keyboard;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
@@ -322,56 +319,34 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 
 		this.newNameField = new GuiTextField(40, this.fontRenderer,
 				this.width / 2 - 155, 29, 150, 20);
+		this.addTextField(this.newNameField);
 
 		this.searchField = new GuiTextField(41, this.fontRenderer,
 				this.width / 2 + 5, 29, 150, 20);
 		this.searchField.setText(searchText);
+		this.addTextField(this.searchField);
 	}
 
-	/**
-	 * Called when the mouse is clicked.
-	 */
 	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
-			throws IOException {
-		super.mouseClicked(mouseX, mouseY, mouseButton);
-
-		if (this.showNewWorldTextBox) {
-			this.newNameField.mouseClicked(mouseX, mouseY, mouseButton);
-		}
-
-		this.searchField.mouseClicked(mouseX, mouseY, mouseButton);
+	public boolean onCloseAttempt() {
+		callback.onCancel();
+		return true;
 	}
 
-	/**
-	 * Fired when a key is typed. This is the equivalent of
-	 * KeyListener.keyTyped(KeyEvent e).
-	 */
 	@Override
-	protected void keyTyped(char typedChar, int keyCode) throws IOException {
-		if (keyCode == Keyboard.KEY_ESCAPE) {
-			callback.onCancel();
-		}
+	public void charTyped(char keyChar) {
+		if (this.newNameField.isFocused() && keyChar == '\n') {
+			String newName = this.newNameField.getText();
 
-		super.keyTyped(typedChar, keyCode);
-
-		if (this.showNewWorldTextBox) {
-			this.newNameField.textboxKeyTyped(typedChar, keyCode);
-
-			if (keyCode == Keyboard.KEY_RETURN) {
-				String newName = this.newNameField.getText();
-
-				if (newName != null && !newName.isEmpty()) {
-					//TODO: Ensure that the new world is in view.
-					this.addMultiworld(newName);
-					this.newNameField.setText("");
-					this.showNewWorldTextBox = false;
-				}
+			if (newName != null && !newName.isEmpty()) {
+				//TODO: Ensure that the new world is in view.
+				this.addMultiworld(newName);
+				this.newNameField.setText("");
+				this.showNewWorldTextBox = false;
 			}
 		}
 
-		// Return value of this function seems to be whether the text changed.
-		if (this.searchField.textboxKeyTyped(typedChar, keyCode)) {
+		if (this.searchField.isFocused()) {
 			this.searchText = searchField.getText();
 			rebuildFilteredWorlds();
 		}

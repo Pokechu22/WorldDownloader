@@ -14,7 +14,6 @@
  */
 package wdl.gui;
 
-import java.io.IOException;
 import java.util.List;
 
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -27,6 +26,7 @@ import wdl.gui.widget.Button;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.GuiList;
 import wdl.gui.widget.GuiList.GuiListEntry;
+import wdl.gui.widget.Screen;
 import wdl.gui.widget.TextList;
 import wdl.update.Release;
 import wdl.update.WDLUpdateChecker;
@@ -34,7 +34,7 @@ import wdl.update.WDLUpdateChecker;
 /**
  * Gui that lists updates fetched via {@link wdl.update.GithubInfoGrabber}.
  */
-public class GuiWDLUpdates extends GuiScreen {
+public class GuiWDLUpdates extends Screen {
 	private final GuiScreen parent;
 
 	/**
@@ -183,6 +183,7 @@ public class GuiWDLUpdates extends GuiScreen {
 	@Override
 	public void initGui() {
 		this.list = new UpdateList();
+		this.addList(this.list);
 
 		this.buttonList.add(new ButtonDisplayGui(this.width / 2 - 100, this.height - 29,
 				200, 20, this.parent));
@@ -193,41 +194,11 @@ public class GuiWDLUpdates extends GuiScreen {
 		WDL.saveGlobalProps();
 	}
 
-	/**
-	 * Called when the mouse is clicked.
-	 */
-	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
-			throws IOException {
-		list.mouseClicked(mouseX, mouseY, mouseButton);
-		super.mouseClicked(mouseX, mouseY, mouseButton);
-	}
-
-	/**
-	 * Handles mouse input.
-	 */
-	@Override
-	public void handleMouseInput() throws IOException {
-		super.handleMouseInput();
-		this.list.handleMouseInput();
-	}
-
-	@Override
-	protected void mouseReleased(int mouseX, int mouseY, int state) {
-		if (list.mouseReleased(mouseX, mouseY, state)) {
-			return;
-		}
-		super.mouseReleased(mouseX, mouseY, state);
-	}
-
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		if (this.list == null) {
-			return;
-		}
-
 		this.list.regenerateVersionList();
-		this.list.drawScreen(mouseX, mouseY, partialTicks);
+
+		super.drawScreen(mouseX, mouseY, partialTicks);
 
 		if (!WDLUpdateChecker.hasFinishedUpdateCheck()) {
 			drawCenteredString(fontRenderer,
@@ -245,8 +216,6 @@ public class GuiWDLUpdates extends GuiScreen {
 
 		drawCenteredString(fontRenderer, I18n.format("wdl.gui.updates.title"),
 				width / 2, 8, 0xFFFFFF);
-
-		super.drawScreen(mouseX, mouseY, partialTicks);
 	}
 
 	/**
@@ -319,11 +288,9 @@ public class GuiWDLUpdates extends GuiScreen {
 	/**
 	 * Gui that shows a single update.
 	 */
-	private class GuiWDLSingleUpdate extends GuiScreen {
+	private class GuiWDLSingleUpdate extends Screen {
 		private final GuiWDLUpdates parent;
 		private final Release release;
-
-		private TextList list;
 
 		public GuiWDLSingleUpdate(GuiWDLUpdates parent, Release releaseToShow) {
 			this.parent = parent;
@@ -349,54 +316,23 @@ public class GuiWDLUpdates extends GuiScreen {
 			this.buttonList.add(new ButtonDisplayGui(this.width / 2 - 100, this.height - 29,
 					200, 20, this.parent));
 
-			this.list = new TextList(mc, width, height, TOP_MARGIN, BOTTOM_MARGIN);
+			TextList list = new TextList(mc, width, height, TOP_MARGIN, BOTTOM_MARGIN);
 
 			list.addLine(buildReleaseTitle(release));
 			list.addLine(I18n.format("wdl.gui.updates.update.releaseDate", release.date));
 			list.addLine(buildVersionInfo(release));
 			list.addBlankLine();
 			list.addLine(release.textOnlyBody);
-		}
 
-		/**
-		 * Called when the mouse is clicked.
-		 */
-		@Override
-		protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
-				throws IOException {
-			list.mouseClicked(mouseX, mouseY, mouseButton);
-			super.mouseClicked(mouseX, mouseY, mouseButton);
-		}
-
-		/**
-		 * Handles mouse input.
-		 */
-		@Override
-		public void handleMouseInput() throws IOException {
-			super.handleMouseInput();
-			this.list.handleMouseInput();
-		}
-
-		@Override
-		protected void mouseReleased(int mouseX, int mouseY, int state) {
-			if (list.mouseReleased(mouseX, mouseY, state)) {
-				return;
-			}
-			super.mouseReleased(mouseX, mouseY, state);
+			this.addList(list);
 		}
 
 		@Override
 		public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-			if (this.list == null) {
-				return;
-			}
-
-			this.list.drawScreen(mouseX, mouseY, partialTicks);
+			super.drawScreen(mouseX, mouseY, partialTicks);
 
 			this.drawCenteredString(this.fontRenderer, buildReleaseTitle(release),
 					this.width / 2, 8, 0xFFFFFF);
-
-			super.drawScreen(mouseX, mouseY, partialTicks);
 		}
 	}
 }

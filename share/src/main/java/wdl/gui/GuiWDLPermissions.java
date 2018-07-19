@@ -14,7 +14,6 @@
  */
 package wdl.gui;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 import io.netty.buffer.Unpooled;
@@ -31,12 +30,13 @@ import wdl.WDLMessages;
 import wdl.WDLPluginChannels;
 import wdl.gui.widget.Button;
 import wdl.gui.widget.ButtonDisplayGui;
+import wdl.gui.widget.Screen;
 import wdl.gui.widget.TextList;
 
 /**
  * GUI that shows the current permissions for the user.
  */
-public class GuiWDLPermissions extends GuiScreen {
+public class GuiWDLPermissions extends Screen {
 	/**
 	 * Margins for the top and the bottom of the list.
 	 */
@@ -72,8 +72,6 @@ public class GuiWDLPermissions extends GuiScreen {
 
 	@Override
 	public void initGui() {
-		this.buttonList.clear();
-
 		this.buttonList.add(new ButtonDisplayGui(width / 2 - 100, height - 29,
 				200, 20, this.parent));
 
@@ -119,6 +117,7 @@ public class GuiWDLPermissions extends GuiScreen {
 		this.buttonList.add(reloadButton);
 
 		this.list = new TextList(mc, width, height, TOP_MARGIN, BOTTOM_MARGIN);
+		this.addList(list);
 
 		list.addLine("\u00A7c\u00A7lThis is a work in progress.");
 
@@ -177,40 +176,9 @@ public class GuiWDLPermissions extends GuiScreen {
 		WDL.saveProps();
 	}
 
-	/**
-	 * Called when the mouse is clicked.
-	 */
-	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
-			throws IOException {
-		list.mouseClicked(mouseX, mouseY, mouseButton);
-		super.mouseClicked(mouseX, mouseY, mouseButton);
-	}
-
-	/**
-	 * Handles mouse input.
-	 */
-	@Override
-	public void handleMouseInput() throws IOException {
-		super.handleMouseInput();
-		this.list.handleMouseInput();
-	}
-
-	@Override
-	protected void mouseReleased(int mouseX, int mouseY, int state) {
-		if (list.mouseReleased(mouseX, mouseY, state)) {
-			return;
-		}
-		super.mouseReleased(mouseX, mouseY, state);
-	}
-
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		if (this.list == null) {
-			return;
-		}
-
-		this.list.drawScreen(mouseX, mouseY, partialTicks);
+		super.drawScreen(mouseX, mouseY, partialTicks);
 
 		this.drawCenteredString(this.fontRenderer, "Permission info",
 				this.width / 2, 8, 0xFFFFFF);
@@ -221,7 +189,5 @@ public class GuiWDLPermissions extends GuiScreen {
 					this.width / 2, (this.height - 32 - 23) / 2 + 23
 					- fontRenderer.FONT_HEIGHT / 2, 0xFFFFFF);
 		}
-
-		super.drawScreen(mouseX, mouseY, partialTicks);
 	}
 }

@@ -14,7 +14,6 @@
  */
 package wdl.gui;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -37,12 +36,13 @@ import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.GuiList;
 import wdl.gui.widget.GuiList.GuiListEntry;
 import wdl.gui.widget.GuiSlider;
+import wdl.gui.widget.Screen;
 import wdl.gui.widget.SettingButton;
 
 /**
  * GUI that controls what entities are saved.
  */
-public class GuiWDLEntities extends GuiScreen {
+public class GuiWDLEntities extends Screen {
 	private class GuiEntityList extends GuiList<GuiEntityList.Entry> {
 		/**
 		 * Width of the largest entry.
@@ -290,15 +290,7 @@ public class GuiWDLEntities extends GuiScreen {
 		this.buttonList.add(presetsButton);
 
 		this.entityList = new GuiEntityList();
-	}
-
-	/**
-	 * Handles mouse input.
-	 */
-	@Override
-	public void handleMouseInput() throws IOException {
-		super.handleMouseInput();
-		this.entityList.handleMouseInput();
+		this.addList(this.entityList);
 	}
 
 	@Override
@@ -307,26 +299,10 @@ public class GuiWDLEntities extends GuiScreen {
 	}
 
 	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
-			throws IOException {
-		if (entityList.mouseClicked(mouseX, mouseY, mouseButton)) {
-			return;
-		}
-		super.mouseClicked(mouseX, mouseY, mouseButton);
-	}
-
-	@Override
-	protected void mouseReleased(int mouseX, int mouseY, int state) {
-		if (entityList.mouseReleased(mouseX, mouseY, state)) {
-			return;
-		}
-		super.mouseReleased(mouseX, mouseY, state);
-	}
-
-	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		this.drawDefaultBackground();
-		this.entityList.drawScreen(mouseX, mouseY, partialTicks);
+
+		super.drawScreen(mouseX, mouseY, partialTicks);
 
 		this.drawCenteredString(this.fontRenderer,
 				I18n.format("wdl.gui.entities.title"), this.width / 2, 8,
@@ -335,8 +311,6 @@ public class GuiWDLEntities extends GuiScreen {
 		if (this.rangeModeButton.isMouseOver()) {
 			Utils.drawGuiInfoBox(this.rangeModeButton.getTooltip(), width, height, 48);
 		}
-
-		super.drawScreen(mouseX, mouseY, partialTicks);
 	}
 
 	/**

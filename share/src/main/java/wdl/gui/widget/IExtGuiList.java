@@ -16,11 +16,34 @@ package wdl.gui.widget;
 
 import java.util.List;
 
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiTextField;
+
 /**
  * Methods that should be provided or implemented in the implementation-specific ExtGuiList.
  */
 interface IExtGuiList<T extends IExtGuiList.IExtGuiListEntry<T>> {
 	static interface IExtGuiListEntry<T> {
+		/**
+		 * Adds a button.  Intended for internal use.
+		 *
+		 * @param button The button.
+		 * @param x      x coordinate relative to the center of the screen (may be
+		 *               negative).
+		 * @param y      y coordinate relative to the top of the entry.
+		 */
+		public abstract void addButton(GuiButton button, int x, int y);
+
+		/**
+		 * Adds a text field.  Intended for internal use.
+		 *
+		 * @param field  The text field.
+		 * @param x      x coordinate relative to the center of the screen (may be
+		 *               negative).
+		 * @param y      y coordinate relative to the top of the entry.
+		 */
+		public abstract void addTextField(GuiTextField field, int x, int y);
+
 		/**
 		 * Draw this entry, and also perform various update logic.
 		 *
@@ -53,6 +76,14 @@ interface IExtGuiList<T extends IExtGuiList.IExtGuiListEntry<T>> {
 		 * @param mouseButton The button that was pressed.
 		 */
 		public abstract void mouseUp(int mouseX, int mouseY, int mouseButton);
+
+		/**
+		 * Called when a character is typed.  Will not be fired for special characters,
+		 * such as the arrow keys, but will be fixed when pressing enter.
+		 *
+		 * @param keyChar The character that was typed.
+		 */
+		public abstract void charTyped(char keyChar);
 
 		/**
 		 * Checks if this entry is selected.

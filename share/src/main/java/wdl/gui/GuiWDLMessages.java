@@ -14,7 +14,6 @@
  */
 package wdl.gui;
 
-import java.io.IOException;
 import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
@@ -33,10 +32,11 @@ import wdl.config.IConfiguration;
 import wdl.config.settings.MessageSettings;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.GuiList;
+import wdl.gui.widget.Screen;
 import wdl.gui.widget.GuiList.GuiListEntry;
 import wdl.gui.widget.SettingButton;
 
-public class GuiWDLMessages extends GuiScreen {
+public class GuiWDLMessages extends Screen {
 	/**
 	 * Set from inner classes; this is the text to draw.
 	 */
@@ -140,6 +140,7 @@ public class GuiWDLMessages extends GuiScreen {
 		this.buttonList.add(resetButton);
 
 		this.list = new GuiMessageTypeList();
+		this.addList(list);
 
 		this.buttonList.add(new ButtonDisplayGui((this.width / 2) - 100, this.height - 29,
 				200, 20, this.parent));
@@ -169,44 +170,16 @@ public class GuiWDLMessages extends GuiScreen {
 		WDL.saveProps();
 	}
 
-	/**
-	 * Handles mouse input.
-	 */
-	@Override
-	public void handleMouseInput() throws IOException {
-		super.handleMouseInput();
-		this.list.handleMouseInput();
-	}
-
-	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
-			throws IOException {
-		if (list.mouseClicked(mouseX, mouseY, mouseButton)) {
-			return;
-		}
-		super.mouseClicked(mouseX, mouseY, mouseButton);
-	}
-
-	@Override
-	protected void mouseReleased(int mouseX, int mouseY, int state) {
-		if (list.mouseReleased(mouseX, mouseY, state)) {
-			return;
-		}
-		super.mouseReleased(mouseX, mouseY, state);
-	}
-
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		hoveredButtonTooltip = null;
 
 		this.drawDefaultBackground();
-		this.list.drawScreen(mouseX, mouseY, partialTicks);
+		super.drawScreen(mouseX, mouseY, partialTicks);
 
 		this.drawCenteredString(this.fontRenderer,
 				I18n.format("wdl.gui.messages.message.title"),
 				this.width / 2, 8, 0xFFFFFF);
-
-		super.drawScreen(mouseX, mouseY, partialTicks);
 
 		String tooltip = null;
 		if (hoveredButtonTooltip != null) {

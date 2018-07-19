@@ -55,13 +55,15 @@ public class GuiSlider extends ExtButton {
 
 	@Override
 	public void mouseDown(int mouseX, int mouseY) {
-		super.mouseDown(mouseX, mouseY);
 		this.sliderValue = (float)(mouseX - (this.x + 4))
 				/ (float)(this.width - 8);
 		this.sliderValue = MathHelper.clamp(this.sliderValue, 0.0F,
 				1.0F);
 		this.displayString = I18n.format(text, getValue());
 	}
+
+	@Override
+	public void mouseUp(int mouseX, int mouseY) { }
 
 	@Override
 	public void mouseDragged(int mouseX, int mouseY) {

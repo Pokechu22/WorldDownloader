@@ -32,25 +32,17 @@ abstract class ExtButton extends GuiButton implements IExtButton {
 	public final boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
 		boolean result = super.mousePressed(mc, mouseX, mouseY);
 		if (result) {
+			dragging = true;
 			this.mouseDown(mouseX, mouseY);
 		}
 		return result;
 	}
 
 	@Override
-	public void mouseDown(int mouseX, int mouseY) {
-		dragging = true;
-	}
-
-	@Override
 	public final void mouseReleased(int mouseX, int mouseY) {
 		super.mouseReleased(mouseX, mouseY);
-		this.mouseUp(mouseX, mouseY);
-	}
-
-	@Override
-	public void mouseUp(int mouseX, int mouseY) {
 		dragging = false;
+		this.mouseUp(mouseX, mouseY);
 	}
 
 	@Override

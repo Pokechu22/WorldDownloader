@@ -14,7 +14,6 @@
  */
 package wdl.gui;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.function.Function;
 
@@ -28,9 +27,10 @@ import wdl.config.settings.MiscSettings;
 import wdl.gui.widget.Button;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.GuiList;
+import wdl.gui.widget.Screen;
 import wdl.update.WDLUpdateChecker;
 
-public class GuiWDL extends GuiScreen {
+public class GuiWDL extends Screen {
 	/**
 	 * Tooltip to display on the given frame.
 	 */
@@ -187,18 +187,19 @@ public class GuiWDL extends GuiScreen {
 			return;
 		}
 
-		this.buttonList.clear();
 		this.title = I18n.format("wdl.gui.wdl.title",
 				WDL.baseFolderName.replace('@', ':'));
 
 		this.worldname = new GuiTextField(42, this.fontRenderer,
 				this.width / 2 - 155, 19, 150, 18);
 		this.worldname.setText(this.config.getValue(MiscSettings.SERVER_NAME));
+		this.addTextField(this.worldname);
 
 		this.buttonList.add(new ButtonDisplayGui(this.width / 2 - 100, this.height - 29,
 				200, 20, parent));
 
 		this.list = new GuiWDLButtonList();
+		this.addList(list);
 	}
 
 	@Override
@@ -216,53 +217,6 @@ public class GuiWDL extends GuiScreen {
 	}
 
 	/**
-	 * Called when the mouse is clicked.
-	 */
-	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
-			throws IOException {
-		list.mouseClicked(mouseX, mouseY, mouseButton);
-		super.mouseClicked(mouseX, mouseY, mouseButton);
-		this.worldname.mouseClicked(mouseX, mouseY, mouseButton);
-	}
-
-	/**
-	 * Handles mouse input.
-	 */
-	@Override
-	public void handleMouseInput() throws IOException {
-		super.handleMouseInput();
-		this.list.handleMouseInput();
-	}
-
-	@Override
-	protected void mouseReleased(int mouseX, int mouseY, int state) {
-		if (list.mouseReleased(mouseX, mouseY, state)) {
-			return;
-		}
-		super.mouseReleased(mouseX, mouseY, state);
-	}
-
-	/**
-	 * Fired when a key is typed. This is the equivalent of
-	 * KeyListener.keyTyped(KeyEvent e).
-	 */
-	@Override
-	protected void keyTyped(char typedChar, int keyCode) throws IOException {
-		super.keyTyped(typedChar, keyCode);
-		this.worldname.textboxKeyTyped(typedChar, keyCode);
-	}
-
-	/**
-	 * Called from the main game loop to update the screen.
-	 */
-	@Override
-	public void updateScreen() {
-		this.worldname.updateCursorCounter();
-		super.updateScreen();
-	}
-
-	/**
 	 * Draws the screen and all the components in it.
 	 */
 	@Override
@@ -271,16 +225,13 @@ public class GuiWDL extends GuiScreen {
 
 		displayedTooltip = null;
 
-		this.list.drawScreen(mouseX, mouseY, partialTicks);
+		super.drawScreen(mouseX, mouseY, partialTicks);
 
 		this.drawCenteredString(this.fontRenderer, this.title,
 				this.width / 2, 8, 0xFFFFFF);
 		String name = I18n.format("wdl.gui.wdl.worldname");
 		this.drawString(this.fontRenderer, name, this.worldname.x
 				- this.fontRenderer.getStringWidth(name + " "), 26, 0xFFFFFF);
-		this.worldname.drawTextBox();
-
-		super.drawScreen(mouseX, mouseY, partialTicks);
 
 		Utils.drawGuiInfoBox(displayedTooltip, width, height, 48);
 	}

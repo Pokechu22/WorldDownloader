@@ -15,10 +15,10 @@
 package wdl.gui;
 
 import static org.lwjgl.opengl.GL11.*;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -30,14 +30,6 @@ public class LocalUtils {
 	private static final Minecraft mc = Minecraft.getMinecraft();
 
 	private LocalUtils() { throw new AssertionError(); }
-
-	/**
-	 * Draws the given button (for multi-version compatability, this is needed for lists)
-	 * @param button The button to draw.  Should already have been positioned.
-	 */
-	public static void drawButton(GuiButton button, int mouseX, int mouseY) {
-		button.drawButton(mc, mouseX, mouseY, 0 /* partialTicks */);
-	}
 
 	/**
 	 * Creates a new instance of {@link EntityPlayerSP}.

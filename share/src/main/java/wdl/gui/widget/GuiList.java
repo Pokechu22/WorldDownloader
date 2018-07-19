@@ -14,13 +14,7 @@
  */
 package wdl.gui.widget;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nullable;
-
 import net.minecraft.client.Minecraft;
-import wdl.gui.LocalUtils;
 import wdl.gui.widget.GuiList.GuiListEntry;
 
 public abstract class GuiList<T extends GuiListEntry<T>> extends ExtGuiList<T> {
@@ -29,62 +23,19 @@ public abstract class GuiList<T extends GuiListEntry<T>> extends ExtGuiList<T> {
 	}
 
 	public static class GuiListEntry<T extends GuiListEntry<T>> extends ExtGuiListEntry<T> {
-		private static class ButtonWrapper {
-			public final ExtButton button;
-			public final int x;
-			public final int y;
-			public ButtonWrapper(ExtButton button, int x, int y) {
-				this.button = button;
-				this.x = x;
-				this.y = y;
-			}
-		}
-		private final List<ButtonWrapper> buttonList = new ArrayList<>();
-		@Nullable
-		private ButtonWrapper activeButton;
-
-		/**
-		 * Adds a button.
-		 * 
-		 * @param button The button.
-		 * @param x      x coordinate relative to the center of the screen (may be
-		 *               negative).
-		 * @param y      y coordinate relative to the top of the entry.
-		 */
-		protected void addButton(ExtButton button, int x, int y) {
-			this.buttonList.add(new ButtonWrapper(button, x, y));
-		}
-
-		@Override
-		public void drawEntry(int x, int y, int width, int height, int mouseX, int mouseY) {
-			for (ButtonWrapper button : this.buttonList) {
-				button.button.x = button.x + x + (width / 2);
-				button.button.y = button.y + y;
-				LocalUtils.drawButton(button.button, mouseX, mouseY);
-			}
-		}
-
 		@Override
 		public boolean mouseDown(int mouseX, int mouseY, int mouseButton) {
-			for (ButtonWrapper buttonW : this.buttonList) {
-				ExtButton button = buttonW.button;
-				if (button.enabled && button.isMouseOver()) {
-					this.activeButton = buttonW;
-					button.mouseDown(mouseX, mouseY);
-					button.playPressSound(Minecraft.getMinecraft().getSoundHandler());
-					return true;
-				}
-			}
 			return false;
 		}
 
 		@Override
-		public void mouseUp(int mouseX, int mouseY, int mouseButton) {
-			if (this.activeButton != null) {
-				this.activeButton.button.mouseUp(mouseX, mouseY);
-				this.activeButton = null;
-			}
-		}
+		public void mouseUp(int mouseX, int mouseY, int mouseButton) { }
+
+		@Override
+		public void drawEntry(int x, int y, int width, int height, int mouseX, int mouseY) { }
+
+		@Override
+		public void charTyped(char keyChar) { }
 
 		@Override
 		public boolean isSelected() {

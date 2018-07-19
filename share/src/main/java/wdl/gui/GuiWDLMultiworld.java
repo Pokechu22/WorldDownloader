@@ -14,15 +14,14 @@
  */
 package wdl.gui;
 
-import java.io.IOException;
 import java.util.List;
 
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import wdl.gui.widget.Button;
+import wdl.gui.widget.Screen;
 
-public class GuiWDLMultiworld extends GuiScreen {
+public class GuiWDLMultiworld extends Screen {
 	private final MultiworldCallback callback;
 	private GuiButton multiworldEnabledBtn;
 	private boolean enableMultiworld = false;
@@ -49,8 +48,6 @@ public class GuiWDLMultiworld extends GuiScreen {
 	 */
 	@Override
 	public void initGui() {
-		this.buttonList.clear();
-
 		String multiworldMessage = I18n
 				.format("wdl.gui.multiworld.descirption.requiredWhen")
 				+ "\n\n"
@@ -85,24 +82,6 @@ public class GuiWDLMultiworld extends GuiScreen {
 				callback.onSelect(enableMultiworld);
 			}
 		});
-	}
-
-	/**
-	 * Called when the mouse is clicked.
-	 */
-	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
-			throws IOException {
-		super.mouseClicked(mouseX, mouseY, mouseButton);
-	}
-
-	/**
-	 * Fired when a key is typed. This is the equivalent of
-	 * KeyListener.keyTyped(KeyEvent e).
-	 */
-	@Override
-	protected void keyTyped(char typedChar, int keyCode) throws IOException {
-		super.keyTyped(typedChar, keyCode);
 	}
 
 	/**
@@ -157,5 +136,11 @@ public class GuiWDLMultiworld extends GuiScreen {
 	 */
 	private String getMultiworldEnabledText() {
 		return I18n.format("wdl.gui.multiworld." + enableMultiworld);
+	}
+
+	@Override
+	public boolean onCloseAttempt() {
+		callback.onCancel();
+		return true;
 	}
 }

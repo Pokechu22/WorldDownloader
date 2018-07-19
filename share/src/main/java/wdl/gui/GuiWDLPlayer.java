@@ -14,8 +14,6 @@
  */
 package wdl.gui;
 
-import java.io.IOException;
-
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
@@ -25,9 +23,10 @@ import wdl.config.settings.PlayerSettings;
 import wdl.gui.widget.Button;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.GuiNumericTextField;
+import wdl.gui.widget.Screen;
 import wdl.gui.widget.SettingButton;
 
-public class GuiWDLPlayer extends GuiScreen {
+public class GuiWDLPlayer extends Screen {
 	private String title;
 	private final GuiScreen parent;
 	private final IConfiguration config;
@@ -51,7 +50,6 @@ public class GuiWDLPlayer extends GuiScreen {
 	 */
 	@Override
 	public void initGui() {
-		this.buttonList.clear();
 		this.title = I18n.format("wdl.gui.player.title",
 				WDL.baseFolderName.replace('@', ':'));
 		int y = this.height / 4 - 15;
@@ -82,6 +80,9 @@ public class GuiWDLPlayer extends GuiScreen {
 		this.posX.setMaxStringLength(7);
 		this.posY.setMaxStringLength(7);
 		this.posZ.setMaxStringLength(7);
+		this.addTextField(posX);
+		this.addTextField(posY);
+		this.addTextField(posZ);
 		y += 18;
 		this.pickPosBtn = new Button(this.width / 2 - 0, y, 100, 20,
 				I18n.format("wdl.gui.player.setPositionToCurrentPosition")) {
@@ -109,44 +110,6 @@ public class GuiWDLPlayer extends GuiScreen {
 	}
 
 	/**
-	 * Called when the mouse is clicked.
-	 */
-	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
-			throws IOException {
-		super.mouseClicked(mouseX, mouseY, mouseButton);
-
-		if (this.showPosFields) {
-			this.posX.mouseClicked(mouseX, mouseY, mouseButton);
-			this.posY.mouseClicked(mouseX, mouseY, mouseButton);
-			this.posZ.mouseClicked(mouseX, mouseY, mouseButton);
-		}
-	}
-
-	/**
-	 * Fired when a key is typed. This is the equivalent of
-	 * KeyListener.keyTyped(KeyEvent e).
-	 */
-	@Override
-	protected void keyTyped(char typedChar, int keyCode) throws IOException {
-		super.keyTyped(typedChar, keyCode);
-		this.posX.textboxKeyTyped(typedChar, keyCode);
-		this.posY.textboxKeyTyped(typedChar, keyCode);
-		this.posZ.textboxKeyTyped(typedChar, keyCode);
-	}
-
-	/**
-	 * Called from the main game loop to update the screen.
-	 */
-	@Override
-	public void updateScreen() {
-		this.posX.updateCursorCounter();
-		this.posY.updateCursorCounter();
-		this.posZ.updateCursorCounter();
-		super.updateScreen();
-	}
-
-	/**
 	 * Draws the screen and all the components in it.
 	 */
 	@Override
@@ -165,9 +128,6 @@ public class GuiWDLPlayer extends GuiScreen {
 					this.posTextY, 0xFFFFFF);
 			this.drawString(this.fontRenderer, "Z:", this.width / 2 + 37,
 					this.posTextY, 0xFFFFFF);
-			this.posX.drawTextBox();
-			this.posY.drawTextBox();
-			this.posZ.drawTextBox();
 
 			if (Utils.isMouseOverTextBox(mouseX, mouseY, posX)) {
 				tooltip = I18n.format("wdl.gui.player.positionTextBox.description", "X");
@@ -200,7 +160,12 @@ public class GuiWDLPlayer extends GuiScreen {
 	}
 
 	private void upadatePlayerPosVisibility() {
-		showPosFields = config.getValue(PlayerSettings.PLAYER_POSITION) == PlayerSettings.PlayerPos.XYZ;
+		boolean show = config.getValue(PlayerSettings.PLAYER_POSITION) == PlayerSettings.PlayerPos.XYZ;;
+
+		showPosFields = show;
+		posX.setVisible(show);
+		posY.setVisible(show);
+		posZ.setVisible(show);
 		pickPosBtn.visible = showPosFields;
 	}
 

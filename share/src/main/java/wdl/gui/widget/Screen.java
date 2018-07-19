@@ -15,35 +15,24 @@
 package wdl.gui.widget;
 
 /**
- * A Button class that works across versions.
+ * A specialty screen that can store text fields and lists.
  */
-public abstract class Button extends ExtButton {
-	public Button(int x, int y, int widthIn, int heightIn, String buttonText) {
-		super(x, y, widthIn, heightIn, buttonText);
-	}
-
-	/**
-	 * Performs the action of this button when it has been clicked.
-	 */
-	public abstract void performAction();
+public class Screen extends ExtGuiScreen {
 
 	@Override
-	public void beforeDraw() { }
-
-	@Override
-	public void midDraw() { }
-
-	@Override
-	public void afterDraw() { }
-
-	@Override
-	public void mouseDown(int mouseX, int mouseY) {
-		this.performAction();
-	}
+	public void mouseDown(int mouseX, int mouseY) { }
 
 	@Override
 	public void mouseDragged(int mouseX, int mouseY) { }
 
 	@Override
 	public void mouseUp(int mouseX, int mouseY) { }
+
+	@Override
+	public void charTyped(char keyChar) { }
+
+	@Override
+	public boolean onCloseAttempt() {
+		return true;
+	}
 }

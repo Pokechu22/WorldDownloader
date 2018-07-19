@@ -20,8 +20,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.lwjgl.input.Keyboard;
-
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import wdl.WDL;
@@ -214,12 +212,9 @@ IBackupProgressMonitor {
 	}
 
 	@Override
-	protected void keyTyped(char typedChar, int keyCode) throws IOException {
-		if (keyCode == Keyboard.KEY_ESCAPE) {
-			//Don't allow closing at all.
-			return;
-		}
-		super.keyTyped(typedChar, keyCode);
+	public boolean onCloseAttempt() {
+		// Don't allow closing with escape.  The user has to read it!
+		return false;
 	}
 
 	@Override

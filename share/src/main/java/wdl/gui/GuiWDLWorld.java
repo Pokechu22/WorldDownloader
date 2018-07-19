@@ -14,8 +14,6 @@
  */
 package wdl.gui;
 
-import java.io.IOException;
-
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
@@ -25,9 +23,10 @@ import wdl.config.settings.WorldSettings;
 import wdl.gui.widget.Button;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.GuiNumericTextField;
+import wdl.gui.widget.Screen;
 import wdl.gui.widget.SettingButton;
 
-public class GuiWDLWorld extends GuiScreen {
+public class GuiWDLWorld extends Screen {
 	private String title;
 	private final GuiScreen parent;
 	private final IConfiguration config;
@@ -53,7 +52,6 @@ public class GuiWDLWorld extends GuiScreen {
 	 */
 	@Override
 	public void initGui() {
-		this.buttonList.clear();
 		this.title = I18n.format("wdl.gui.world.title",
 				WDL.baseFolderName.replace('@', ':'));
 
@@ -89,6 +87,9 @@ public class GuiWDLWorld extends GuiScreen {
 		spawnX.setValue(config.getValue(WorldSettings.SPAWN_X));
 		spawnY.setValue(config.getValue(WorldSettings.SPAWN_Y));
 		spawnZ.setValue(config.getValue(WorldSettings.SPAWN_Z));
+		this.addTextField(spawnX);
+		this.addTextField(spawnY);
+		this.addTextField(spawnZ);
 		this.spawnX.setMaxStringLength(7);
 		this.spawnY.setMaxStringLength(7);
 		this.spawnZ.setMaxStringLength(7);
@@ -119,44 +120,6 @@ public class GuiWDLWorld extends GuiScreen {
 	}
 
 	/**
-	 * Called when the mouse is clicked.
-	 */
-	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
-			throws IOException {
-		super.mouseClicked(mouseX, mouseY, mouseButton);
-
-		if (this.showSpawnFields) {
-			this.spawnX.mouseClicked(mouseX, mouseY, mouseButton);
-			this.spawnY.mouseClicked(mouseX, mouseY, mouseButton);
-			this.spawnZ.mouseClicked(mouseX, mouseY, mouseButton);
-		}
-	}
-
-	/**
-	 * Fired when a key is typed. This is the equivalent of
-	 * KeyListener.keyTyped(KeyEvent e).
-	 */
-	@Override
-	protected void keyTyped(char typedChar, int keyCode) throws IOException {
-		super.keyTyped(typedChar, keyCode);
-		this.spawnX.textboxKeyTyped(typedChar, keyCode);
-		this.spawnY.textboxKeyTyped(typedChar, keyCode);
-		this.spawnZ.textboxKeyTyped(typedChar, keyCode);
-	}
-
-	/**
-	 * Called from the main game loop to update the screen.
-	 */
-	@Override
-	public void updateScreen() {
-		this.spawnX.updateCursorCounter();
-		this.spawnY.updateCursorCounter();
-		this.spawnZ.updateCursorCounter();
-		super.updateScreen();
-	}
-
-	/**
 	 * Draws the screen and all the components in it.
 	 */
 	@Override
@@ -173,9 +136,6 @@ public class GuiWDLWorld extends GuiScreen {
 					this.spawnTextY, 0xFFFFFF);
 			this.drawString(this.fontRenderer, "Z:", this.width / 2 + 37,
 					this.spawnTextY, 0xFFFFFF);
-			this.spawnX.drawTextBox();
-			this.spawnY.drawTextBox();
-			this.spawnZ.drawTextBox();
 		}
 
 		super.drawScreen(mouseX, mouseY, partialTicks);
@@ -214,6 +174,9 @@ public class GuiWDLWorld extends GuiScreen {
 		boolean show = config.getValue(WorldSettings.SPAWN) == WorldSettings.SpawnMode.XYZ;
 
 		this.showSpawnFields = show;
+		this.spawnX.setVisible(show);
+		this.spawnY.setVisible(show);
+		this.spawnZ.setVisible(show);
 		this.pickSpawnBtn.visible = show;
 	}
 

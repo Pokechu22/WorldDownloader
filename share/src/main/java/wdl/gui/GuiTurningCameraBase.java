@@ -14,6 +14,8 @@
  */
 package wdl.gui;
 
+import javax.annotation.OverridingMethodsMustInvokeSuper;
+
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.Entity;
@@ -22,12 +24,13 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import wdl.WDL;
+import wdl.gui.widget.Screen;
 
 /**
  * Base GUI with the player in the background turning slowly to show the
  * entire world.
  */
-public abstract class GuiTurningCameraBase extends GuiScreen {
+public abstract class GuiTurningCameraBase extends Screen {
 	/**
 	 * Current yaw.
 	 */
@@ -66,6 +69,7 @@ public abstract class GuiTurningCameraBase extends GuiScreen {
 	 * Adds the buttons (and other controls) to the screen in question.
 	 */
 	@Override
+	@OverridingMethodsMustInvokeSuper
 	public void initGui() {
 		if (!initializedCamera) {
 			this.cam = LocalUtils.makePlayer();

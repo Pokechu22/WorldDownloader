@@ -33,9 +33,10 @@ import wdl.WDL;
 import wdl.config.IConfiguration;
 import wdl.config.settings.GeneratorSettings;
 import wdl.gui.widget.ButtonDisplayGui;
+import wdl.gui.widget.Screen;
 import wdl.gui.widget.SettingButton;
 
-public class GuiWDLGenerator extends GuiScreen {
+public class GuiWDLGenerator extends Screen {
 	private static final Logger LOGGER = LogManager.getLogger();
 	private String title;
 	private final GuiScreen parent;
@@ -60,13 +61,13 @@ public class GuiWDLGenerator extends GuiScreen {
 		this.seedText = I18n.format("wdl.gui.generator.seed");
 		int seedWidth = fontRenderer.getStringWidth(seedText + " ");
 
-		this.buttonList.clear();
 		this.title = I18n.format("wdl.gui.generator.title",
 				WDL.baseFolderName.replace('@', ':'));
 		int y = this.height / 4 - 15;
 		this.seedField = new GuiTextField(40, this.fontRenderer,
 				this.width / 2 - (100 - seedWidth), y, 200 - seedWidth, 18);
 		this.seedField.setText(config.getValue(GeneratorSettings.SEED));
+		this.addTextField(seedField);
 		y += 22;
 		this.generatorBtn = new SettingButton(GeneratorSettings.GENERATOR, this.config, this.width / 2 - 100, y) {
 			public @Override void performAction() {
@@ -118,35 +119,6 @@ public class GuiWDLGenerator extends GuiScreen {
 	}
 
 	/**
-	 * Called when the mouse is clicked.
-	 */
-	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
-			throws IOException {
-		super.mouseClicked(mouseX, mouseY, mouseButton);
-		this.seedField.mouseClicked(mouseX, mouseY, mouseButton);
-	}
-
-	/**
-	 * Fired when a key is typed. This is the equivalent of
-	 * KeyListener.keyTyped(KeyEvent e).
-	 */
-	@Override
-	protected void keyTyped(char typedChar, int keyCode) throws IOException {
-		super.keyTyped(typedChar, keyCode);
-		this.seedField.textboxKeyTyped(typedChar, keyCode);
-	}
-
-	/**
-	 * Called from the main game loop to update the screen.
-	 */
-	@Override
-	public void updateScreen() {
-		this.seedField.updateCursorCounter();
-		super.updateScreen();
-	}
-
-	/**
 	 * Draws the screen and all the components in it.
 	 */
 	@Override
@@ -158,7 +130,7 @@ public class GuiWDLGenerator extends GuiScreen {
 
 		this.drawString(this.fontRenderer, seedText, this.width / 2 - 100,
 				this.height / 4 - 10, 0xFFFFFF);
-		this.seedField.drawTextBox();
+
 		super.drawScreen(mouseX, mouseY, partialTicks);
 
 		String tooltip = null;

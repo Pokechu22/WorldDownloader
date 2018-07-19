@@ -14,20 +14,19 @@
  */
 package wdl.gui;
 
-import java.io.IOException;
-
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import wdl.VersionConstants;
 import wdl.WDL;
 import wdl.gui.widget.Button;
 import wdl.gui.widget.ButtonDisplayGui;
+import wdl.gui.widget.Screen;
 import wdl.gui.widget.TextList;
 
 /**
  * Contains information about the current installation of WDL.
  */
-public class GuiWDLAbout extends GuiScreen {
+public class GuiWDLAbout extends Screen {
 	/**
 	 * GUI to display afterwards.
 	 */
@@ -98,43 +97,12 @@ public class GuiWDLAbout extends GuiScreen {
 			list.addLinkLine(I18n.format("wdl.gui.about.fastutil.website"), FASTUTIL_PAGE);
 			list.addLinkLine(I18n.format("wdl.gui.about.fastutil.license"), APACHE_LICENSE_2_0);
 		}
-	}
 
-	/**
-	 * Called when the mouse is clicked.
-	 */
-	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
-			throws IOException {
-		list.mouseClicked(mouseX, mouseY, mouseButton);
-		super.mouseClicked(mouseX, mouseY, mouseButton);
-	}
-
-	/**
-	 * Handles mouse input.
-	 */
-	@Override
-	public void handleMouseInput() throws IOException {
-		super.handleMouseInput();
-		this.list.handleMouseInput();
-	}
-
-	@Override
-	protected void mouseReleased(int mouseX, int mouseY, int state) {
-		if (list.mouseReleased(mouseX, mouseY, state)) {
-			return;
-		}
-		super.mouseReleased(mouseX, mouseY, state);
+		this.addList(this.list);
 	}
 
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		if (this.list == null) {
-			return;
-		}
-
-		this.list.drawScreen(mouseX, mouseY, partialTicks);
-
 		super.drawScreen(mouseX, mouseY, partialTicks);
 
 		drawCenteredString(fontRenderer, I18n.format("wdl.gui.about.title"),
