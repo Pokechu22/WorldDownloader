@@ -164,5 +164,13 @@ public class LocalUtils {
 		GlStateManager.enableAlpha();
 		GlStateManager.disableBlend();
 	}
+
+	/**
+	 * Copies the given text into the system clipboard.
+	 * @param text The text to copy
+	 */
+	public static void setClipboardString(String text) {
+		GuiScreen.setClipboardString(text);
+	}
 }
 

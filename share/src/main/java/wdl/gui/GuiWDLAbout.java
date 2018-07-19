@@ -56,7 +56,7 @@ public class GuiWDLAbout extends Screen {
 				I18n.format("wdl.gui.about.debugInfo")) {
 			public @Override void performAction() {
 				// Copy debug info
-				setClipboardString(WDL.getDebugInfo());
+				LocalUtils.setClipboardString(WDL.getDebugInfo());
 				// Change text to "copied" once clicked
 				this.displayString = I18n.format("wdl.gui.about.debugInfo.copied");
 			}
