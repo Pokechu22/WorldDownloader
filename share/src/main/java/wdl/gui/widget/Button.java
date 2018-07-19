@@ -38,6 +38,7 @@ public abstract class Button extends ExtButton {
 
 	@Override
 	public void mouseDown(int mouseX, int mouseY) {
+		super.mouseDown(mouseX, mouseY);
 		this.performAction();
 	}
 
@@ -45,5 +46,7 @@ public abstract class Button extends ExtButton {
 	public void mouseDragged(int mouseX, int mouseY) { }
 
 	@Override
-	public void mouseUp(int mouseX, int mouseY) { }
+	public void mouseUp(int mouseX, int mouseY) {
+		super.mouseUp(mouseX, mouseY);
+	}
 }
