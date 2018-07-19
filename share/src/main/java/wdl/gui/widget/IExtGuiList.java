@@ -98,13 +98,20 @@ interface IExtGuiList<T extends IExtGuiList.IExtGuiListEntry<T>> {
 	 */
 	public abstract List<T> getEntries();
 
-	public abstract void scroll(double by);
-
 	/**
-	 * Sets a special vertical offset, which only applies visually.
-	 * @param offset The offset.
+	 * Can be used to visually offset the top of this list.
+	 * All controls will receive input as if y were 0.
+	 *
+	 * @param pos The new y position.
 	 */
-	public abstract void setVerticalOffset(int offset);
+	public abstract void setY(int pos);
+	/**
+	 * Gets the previously set y position.
+	 *
+	 * @return The y offset
+	 */
+	public abstract int getY();
+
 	public abstract int getEntryWidth();
 	public abstract int getScrollBarX();
 

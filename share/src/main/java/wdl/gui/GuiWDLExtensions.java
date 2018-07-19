@@ -14,15 +14,12 @@
  */
 package wdl.gui;
 
-import java.io.IOException;
-
 import javax.annotation.Nullable;
 
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.text.TextFormatting;
@@ -33,6 +30,7 @@ import wdl.gui.widget.Button;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.GuiList;
 import wdl.gui.widget.GuiList.GuiListEntry;
+import wdl.gui.widget.Screen;
 import wdl.gui.widget.TextList;
 
 /**
@@ -45,7 +43,7 @@ import wdl.gui.widget.TextList;
  *
  * @author Pokechu22
  */
-public class GuiWDLExtensions extends GuiScreen {
+public class GuiWDLExtensions extends Screen {
 	/**
 	 * Top of the bottom list.
 	 */
@@ -177,7 +175,9 @@ public class GuiWDLExtensions extends GuiScreen {
 		}
 
 		{
-			WDLApi.getWDLMods().values().stream().map(ModEntry::new).forEach(this.getEntries()::add);
+			WDLApi.getWDLMods().values().stream()
+					.map(ModEntry::new)
+					.forEach(this.getEntries()::add);
 		}
 
 		@Override
@@ -196,13 +196,6 @@ public class GuiWDLExtensions extends GuiScreen {
 		public int getScrollBarX() {
 			return GuiWDLExtensions.this.width - 10;
 		}
-
-		@Override
-		public void handleMouseInput() {
-			if (mouseY < bottomLocation) {
-				super.handleMouseInput();
-			}
-		}
 	}
 
 	private class ModDetailList extends TextList {
@@ -214,8 +207,7 @@ public class GuiWDLExtensions extends GuiScreen {
 
 		@Override
 		public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-			GlStateManager.translate(0, bottomLocation, 0);
-
+			this.setY(bottomLocation);
 			this.height = GuiWDLExtensions.this.height - bottomLocation;
 			this.bottom = this.height - 32;
 
@@ -223,41 +215,7 @@ public class GuiWDLExtensions extends GuiScreen {
 
 			drawCenteredString(fontRenderer,
 					I18n.format("wdl.gui.extensions.detailsCaption"),
-					GuiWDLExtensions.this.width / 2, 5, 0xFFFFFF);
-
-			GlStateManager.translate(0, -bottomLocation, 0);
-		}
-
-		/**
-		 * Used by the drawing routine; edited to reduce weirdness.
-		 *
-		 * (Don't move the bottom with the size of the screen).
-		 */
-		@Override
-		protected void overlayBackground(int y1, int y2,
-				int alpha1, int alpha2) {
-			if (y1 == 0) {
-				super.overlayBackground(y1, y2, alpha1, alpha2);
-				return;
-			} else {
-				GlStateManager.translate(0, -bottomLocation, 0);
-
-				super.overlayBackground(y1 + bottomLocation, y2
-						+ bottomLocation, alpha1, alpha2);
-
-				GlStateManager.translate(0, bottomLocation, 0);
-			}
-		}
-
-		@Override
-		public void handleMouseInput() {
-			mouseY -= bottomLocation;
-
-			if (mouseY > 0) {
-				super.handleMouseInput();
-			}
-
-			mouseY += bottomLocation;
+					GuiWDLExtensions.this.width / 2, bottomLocation + 5, 0xFFFFFF);
 		}
 	}
 
@@ -295,6 +253,8 @@ public class GuiWDLExtensions extends GuiScreen {
 
 		this.list = new ModList();
 		this.detailsList = new ModDetailList();
+		this.addList(this.list);
+		this.addList(this.detailsList);
 
 		this.buttonList.add(new ButtonDisplayGui(width / 2 - 100, height - 29,
 				200, 20, this.parent));
@@ -306,51 +266,22 @@ public class GuiWDLExtensions extends GuiScreen {
 	private boolean dragging = false;
 	private int dragOffset;
 
-	/**
-	 * Handles mouse input.
-	 */
 	@Override
-	public void handleMouseInput() throws IOException {
-		super.handleMouseInput();
-		this.list.handleMouseInput();
-		this.detailsList.handleMouseInput();
-	}
-
-	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
-			throws IOException {
+	public void mouseDown(int mouseX, int mouseY) {
 		if (mouseY > bottomLocation && mouseY < bottomLocation + MIDDLE_HEIGHT) {
 			dragging = true;
 			dragOffset = mouseY - bottomLocation;
-
-			return;
+			// return true?
 		}
-
-		if (list.mouseClicked(mouseX, mouseY, mouseButton)) {
-			return;
-		}
-		if (detailsList.mouseClicked(mouseX, mouseY, mouseButton)) {
-			return;
-		}
-		super.mouseClicked(mouseX, mouseY, mouseButton);
 	}
 
 	@Override
-	protected void mouseReleased(int mouseX, int mouseY, int state) {
+	public void mouseUp(int mouseX, int mouseY) {
 		dragging = false;
-
-		if (list.mouseReleased(mouseX, mouseY, state)) {
-			return;
-		}
-		if (detailsList.mouseReleased(mouseX, mouseY, state)) {
-			return;
-		}
-		super.mouseReleased(mouseX, mouseY, state);
 	}
 
 	@Override
-	protected void mouseClickMove(int mouseX, int mouseY,
-			int clickedMouseButton, long timeSinceLastClick) {
+	public void mouseDragged(int mouseX, int mouseY) {
 		if (dragging) {
 			bottomLocation = mouseY - dragOffset;
 		}
@@ -376,13 +307,10 @@ public class GuiWDLExtensions extends GuiScreen {
 			bottomLocation = height - MIDDLE_HEIGHT - BOTTOM_HEIGHT - 33;
 		}
 
-		this.list.drawScreen(mouseX, mouseY, partialTicks);
-		this.detailsList.drawScreen(mouseX, mouseY, partialTicks);
+		super.drawScreen(mouseX, mouseY, partialTicks);
 
 		this.drawCenteredString(this.fontRenderer,
 				I18n.format("wdl.gui.extensions.title"), this.width / 2, 8,
 				0xFFFFFF);
-
-		super.drawScreen(mouseX, mouseY, partialTicks);
 	}
 }

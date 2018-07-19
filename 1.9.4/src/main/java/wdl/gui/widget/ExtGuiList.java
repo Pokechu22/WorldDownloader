@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nullable;
+import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import org.lwjgl.input.Keyboard;
 
@@ -25,6 +26,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.renderer.GlStateManager;
 import wdl.gui.widget.ExtGuiList.ExtGuiListEntry;
 
 abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended implements IExtGuiList<T> {
@@ -140,10 +142,21 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended 
 	}
 
 	private final List<T> entries = new ArrayList<>();
+	private int y = 0;
 
 	@Override
-	public List<T> getEntries() {
+	public final List<T> getEntries() {
 		return entries;
+	}
+
+	@Override
+	public final void setY(int pos) {
+		this.y = pos;
+	}
+
+	@Override
+	public final int getY() {
+		return this.y;
 	}
 
 	@Override
@@ -182,12 +195,52 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended 
 	public abstract int getScrollBarX();
 
 	@Override
-	public void scroll(double by) {
-		this.scrollBy((int)by);
+	public final int getWidth() {
+		return this.width;
+	}
+
+	// Hacks for y offsetting
+	@Override
+	public final boolean mouseClicked(int mouseX, int mouseY, int mouseEvent) {
+		if (mouseY - y >= top && mouseY - y <= bottom) {
+			return super.mouseClicked(mouseX, mouseY - y, mouseEvent);
+		} else {
+			return false;
+		}
 	}
 
 	@Override
-	public final int getWidth() {
-		return this.width;
+	public final boolean mouseReleased(int x, int y, int mouseEvent) {
+		return super.mouseReleased(x, y - this.y, mouseEvent);
+	}
+
+	@Override
+	public final void handleMouseInput() {
+		super.handleMouseInput();
+	}
+
+	@Override
+	@OverridingMethodsMustInvokeSuper
+	public void drawScreen(int mouseXIn, int mouseYIn, float partialTicks) {
+		GlStateManager.translate(0, y, 0);
+		super.drawScreen(mouseXIn, mouseYIn - y, partialTicks);
+		GlStateManager.translate(0, -y, 0);
+	}
+
+	// Make the dirt background use visual positions that match the screen
+	// so that dragging looks less weird
+	@Override
+	protected final void overlayBackground(int y1, int y2,
+			int alpha1, int alpha2) {
+		if (y1 == 0) {
+			super.overlayBackground(y1, y2, alpha1, alpha2);
+			return;
+		} else {
+			GlStateManager.translate(0, -y, 0);
+
+			super.overlayBackground(y1 + y, y2 + y, alpha1, alpha2);
+
+			GlStateManager.translate(0, y, 0);
+		}
 	}
 }

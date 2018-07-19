@@ -43,13 +43,6 @@ public abstract class GuiList<T extends GuiListEntry<T>> extends ExtGuiList<T> {
 		}
 	}
 
-	//private int verticalOffset;
-
-	@Override
-	public void setVerticalOffset(int offset) {
-//		this.verticalOffset = offset;
-	}
-
 	@Override
 	public int getEntryWidth() {
 		return 220;
