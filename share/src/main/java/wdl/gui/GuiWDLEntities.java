@@ -58,10 +58,12 @@ public class GuiWDLEntities extends GuiScreen {
 		{
 			List<GuiListEntry> entries = this.getEntries();
 			try {
-				int largestWidthSoFar = 0;
-
 				Multimap<String, String> entities = EntityUtils
 						.getEntitiesByGroup();
+				largestWidth = entities.values().stream()
+						.mapToInt(fontRenderer::getStringWidth)
+						.max().orElse(0);
+				totalWidth = largestWidth + 255;
 
 				// Partially sort map items so that the basic things are
 				// near the top. In some cases, there will be more items
@@ -81,22 +83,11 @@ public class GuiWDLEntities extends GuiScreen {
 					CategoryEntry categoryEntry = new CategoryEntry(category);
 					entries.add(categoryEntry);
 
-					List<String> categoryEntities = new ArrayList<>(
-							entities.get(category));
-					Collections.sort(categoryEntities);
-
-					for (String entity : categoryEntities) {
-						entries.add(new EntityEntry(categoryEntry, entity));
-
-						int width = fontRenderer.getStringWidth(entity);
-						if (width > largestWidthSoFar) {
-							largestWidthSoFar = width;
-						}
-					}
+					entities.get(category).stream()
+							.sorted()
+							.map(entity -> new EntityEntry(categoryEntry, entity))
+							.forEachOrdered(entries::add);
 				}
-
-				largestWidth = largestWidthSoFar;
-				totalWidth = largestWidth + 255;
 			} catch (Exception e) {
 				WDLMessages.chatMessageTranslated(WDL.baseProps,
 						WDLMessageTypes.ERROR, "wdl.messages.generalError.failedToSetUpEntityUI", e);
