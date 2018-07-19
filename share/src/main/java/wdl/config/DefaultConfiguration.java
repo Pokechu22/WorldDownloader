@@ -107,7 +107,7 @@ public class DefaultConfiguration implements IConfiguration {
 
 	@Override
 	public boolean isEntityTypeEnabled(String entityType) {
-		return DANGEROUS_ENTITY_TYPES.contains(entityType);
+		return !DANGEROUS_ENTITY_TYPES.contains(entityType);
 	}
 
 	@Override
