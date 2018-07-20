@@ -14,8 +14,6 @@
  */
 package wdl;
 
-import io.netty.buffer.Unpooled;
-
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,7 +26,6 @@ import java.util.Map;
 import javax.annotation.CheckForSigned;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.client.CPacketCustomPayload;
 import net.minecraft.world.chunk.Chunk;
 
@@ -600,10 +597,7 @@ public class WDLPluginChannels {
 			range.writeToOutput(output);
 		}
 
-		PacketBuffer requestBuffer = new PacketBuffer(Unpooled.buffer());
-		requestBuffer.writeBytes(output.toByteArray());
-		CPacketCustomPayload requestPacket = new CPacketCustomPayload(
-				"WDL|REQUEST", requestBuffer);
+		CPacketCustomPayload requestPacket = VersionedProperties.makePluginMessagePacket("WDL|REQUEST", output.toByteArray());
 		Minecraft.getMinecraft().getConnection().sendPacket(requestPacket);
 	}
 
@@ -626,15 +620,11 @@ public class WDLPluginChannels {
 				WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, "wdl.messages.permissions.init");
 
 		// Register the WDL messages.
-		PacketBuffer registerPacketBuffer = new PacketBuffer(Unpooled.buffer());
-		// Done like this because "buffer.writeString" doesn't do the propper
-		// null-terminated strings.
-		registerPacketBuffer.writeBytes(new byte[] {
+		byte[] registerBytes = new byte[] {
 				'W', 'D', 'L', '|', 'I', 'N', 'I', 'T', '\0',
 				'W', 'D', 'L', '|', 'C', 'O', 'N', 'T', 'R', 'O', 'L', '\0',
-				'W', 'D', 'L', '|', 'R', 'E', 'Q', 'U', 'E', 'S', 'T', '\0' });
-		CPacketCustomPayload registerPacket = new CPacketCustomPayload(
-				"REGISTER", registerPacketBuffer);
+				'W', 'D', 'L', '|', 'R', 'E', 'Q', 'U', 'E', 'S', 'T', '\0' };
+		CPacketCustomPayload registerPacket = VersionedProperties.makePluginMessagePacket("REGISTER", registerBytes);
 		minecraft.getConnection().sendPacket(registerPacket);
 
 		// Send the init message.
