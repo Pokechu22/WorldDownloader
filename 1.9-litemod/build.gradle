@@ -70,7 +70,7 @@ minecraft {
     // We don't currently want a source jar (doesn't work well for base edits, and the version info doesn't work yet)
     makeObfSourceJar = false
     // en_us.lang to en_US.lang
-    ext.renameLangFiles = true
+    ext.lowercaseLangFiles = true
 }
 
 extraSrgs {
