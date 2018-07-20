@@ -28,7 +28,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import wdl.EntityRealigner;
 import wdl.HologramHandler;
-import wdl.LegacyEntityManager;
 import wdl.MessageTypeCategory;
 import wdl.VersionConstants;
 import wdl.WDL;
@@ -46,8 +45,6 @@ class APIImpl implements WDLApi.APIInstance {
 
 	private static Map<String, ModInfoImpl<?>> wdlMods = new HashMap<>();
 
-	private static boolean hasLegacyEntityHandler = false;
-
 	@Override
 	public void saveTileEntity(BlockPos pos, TileEntity te) {
 		if (!WDLPluginChannels.canSaveTileEntities(pos.getX() >> 4,
@@ -64,7 +61,6 @@ class APIImpl implements WDLApi.APIInstance {
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public void addWDLMod(String id, String version, IWDLMod mod) {
 		if (id == null) {
 			throw new IllegalArgumentException("id must not be null!  (mod="
@@ -112,11 +108,6 @@ class APIImpl implements WDLApi.APIInstance {
 			for (Map.Entry<String, IWDLMessageType> e : types.entrySet()) {
 				WDLMessages.registerMessage(e.getKey(), e.getValue(), category);
 			}
-		}
-		// Needs callback for legacy interfaces
-		if (!hasLegacyEntityHandler
-				&& (mod instanceof IEntityAdder || mod instanceof ISpecialEntityHandler)) {
-			addWDLMod("LegacyEntitySupport", "1.0", new LegacyEntityManager());
 		}
 	}
 
