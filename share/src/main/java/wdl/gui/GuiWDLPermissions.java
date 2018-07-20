@@ -14,19 +14,16 @@
  */
 package wdl.gui;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
-import io.netty.buffer.Unpooled;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.client.CPacketCustomPayload;
 import wdl.VersionConstants;
+import wdl.VersionedProperties;
 import wdl.WDL;
-import wdl.WDLMessageTypes;
-import wdl.WDLMessages;
 import wdl.WDLPluginChannels;
 import wdl.gui.widget.Button;
 import wdl.gui.widget.ButtonDisplayGui;
@@ -93,19 +90,9 @@ public class GuiWDLPermissions extends Screen {
 			public @Override void performAction() {
 				// Send the init packet.
 				CPacketCustomPayload initPacket;
-				try {
-					String payload = "{\"X-RTFM\":\"http://wiki.vg/Plugin_channels/World_downloader\",\"X-UpdateNote\":\"The plugin message system will be changing shortly.  Please stay tuned.\",\"Version\":\"%s\",\"State\":\"Refresh?\"}";
-					payload = String.format(payload, VersionConstants.getModVersion());
-					initPacket = new CPacketCustomPayload("WDL|INIT",
-							new PacketBuffer(Unpooled.copiedBuffer(payload
-									.getBytes("UTF-8"))));
-				} catch (UnsupportedEncodingException e) {
-					WDLMessages.chatMessageTranslated(WDL.baseProps,
-							WDLMessageTypes.ERROR, "wdl.messages.generalError.noUTF8", e);
-
-					initPacket = new CPacketCustomPayload("WDL|INIT",
-							new PacketBuffer(Unpooled.buffer()));
-				}
+				String payload = "{\"X-RTFM\":\"http://wiki.vg/Plugin_channels/World_downloader\",\"X-UpdateNote\":\"The plugin message system will be changing shortly.  Please stay tuned.\",\"Version\":\"%s\",\"State\":\"Refresh?\"}";
+				payload = String.format(payload, VersionConstants.getModVersion());
+				initPacket = VersionedProperties.makePluginMessagePacket("WDL|INIT", payload.getBytes(StandardCharsets.UTF_8));
 				Minecraft.getMinecraft().getConnection().sendPacket(initPacket);
 
 				enabled = false;

@@ -336,7 +336,6 @@ wdl.messages.generalError.failedToImportTE=Fracasé en importar los entidades de
 wdl.messages.generalError.failedToSaveChunk=¡Fracasé en guardar el chunk en %s, %s!  (%s)
 wdl.messages.generalError.forbidden=¡El servidor no permite descargando este mundo!
 wdl.messages.generalError.failedToBackUp=Un error occurió durante el backup del mundo: %s
-wdl.messages.generalError.noUTF8=Su computadora no habilita el charset UTF-8: %s.  Debe sentir mal.
 wdl.messages.generalError.failedToSetUpEntityUI=No pude crear los opciones de entidades: %s
 
 wdl.messages.updates.releaseCount=Ubiqué %s versiones.

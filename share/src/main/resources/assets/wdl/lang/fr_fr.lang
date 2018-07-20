@@ -351,7 +351,6 @@ wdl.messages.generalError.failedToImportTE=Failed to import tile entities for ch
 wdl.messages.generalError.failedToSaveChunk=Chunk at position %s, %s cannot be saved!  (%s)
 wdl.messages.generalError.forbidden=The server forbids downloading this world!
 wdl.messages.generalError.failedToBackUp=Error while backing up world: %s
-wdl.messages.generalError.noUTF8=Your computer doesn't support the UTF-8 charset: %s.  You should feel bad.
 wdl.messages.generalError.failedToSetUpEntityUI=Error setting up Entity List UI: %s
 wdl.messages.generalError.failedToSaveEntity=Failed to save entity %s for chunk at %s, %s: %s
 wdl.messages.generalError.failedToSaveTE=Failed to save tile entity %s at %s for chunk at %s, %s: %s

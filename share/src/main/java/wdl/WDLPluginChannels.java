@@ -16,7 +16,7 @@ package wdl;
 
 import io.netty.buffer.Unpooled;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -639,19 +639,10 @@ public class WDLPluginChannels {
 
 		// Send the init message.
 		CPacketCustomPayload initPacket;
-		try {
-			String payload = "{\"X-RTFM\":\"http://wiki.vg/Plugin_channels/World_downloader\",\"X-UpdateNote\":\"The plugin message system will be changing shortly.  Please stay tuned.\",\"Version\":\"%s\",\"State\":\"Init?\"}";
-			payload = String.format(payload, VersionConstants.getModVersion());
-			initPacket = new CPacketCustomPayload("WDL|INIT",
-					new PacketBuffer(Unpooled.copiedBuffer(payload
-							.getBytes("UTF-8"))));
-		} catch (UnsupportedEncodingException e) {
-			WDLMessages.chatMessageTranslated(WDL.baseProps,
-					WDLMessageTypes.ERROR, "wdl.messages.generalError.noUTF8", e);
+		String payload = "{\"X-RTFM\":\"http://wiki.vg/Plugin_channels/World_downloader\",\"X-UpdateNote\":\"The plugin message system will be changing shortly.  Please stay tuned.\",\"Version\":\"%s\",\"State\":\"Init?\"}";
+		payload = String.format(payload, VersionConstants.getModVersion());
+		initPacket = VersionedProperties.makePluginMessagePacket("WDL|INIT", payload.getBytes(StandardCharsets.UTF_8));
 
-			initPacket = new CPacketCustomPayload("WDL|INIT",
-					new PacketBuffer(Unpooled.buffer()));
-		}
 		minecraft.getConnection().sendPacket(initPacket);
 	}
 

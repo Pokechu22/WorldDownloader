@@ -16,9 +16,12 @@ package wdl;
 
 import com.google.common.collect.ImmutableList;
 
+import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockShulkerBox;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.play.client.CPacketCustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityShulkerBox;
 import net.minecraft.util.ResourceLocation;
@@ -101,5 +104,15 @@ public class VersionedProperties {
 	@SuppressWarnings("rawtypes")
 	public static Class<Long2ObjectMap> getChunkListClass() {
 		return Long2ObjectMap.class;
+	}
+
+	/**
+	 * Creates a plugin message packet.
+	 * @param channel The channel to send on.
+	 * @param bytes The payload.
+	 * @return The new packet.
+	 */
+	public static CPacketCustomPayload makePluginMessagePacket(String channel, byte[] bytes) {
+		return new CPacketCustomPayload(channel, new PacketBuffer(Unpooled.copiedBuffer(bytes)));
 	}
 }
