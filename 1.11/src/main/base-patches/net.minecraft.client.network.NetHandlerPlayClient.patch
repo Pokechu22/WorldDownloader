@@ -33,7 +33,7 @@
  	}
  
  	public void handleEffect(SPacketEffect packetIn) {
-@@ -1624,6 +1636,10 @@
+@@ -1627,6 +1639,10 @@
  			String s1 = packetbuffer2.readString(256);
  			this.client.getSoundHandler().stop(s1, SoundCategory.getByName(s));
  		}

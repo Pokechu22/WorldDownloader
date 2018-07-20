@@ -29,13 +29,17 @@ import org.apache.logging.log4j.Logger;
  */
 enum SanityCheck {
 	TRIPWIRE("wdl.sanity.tripwire") {
+		@Override
+		public boolean canRun() {
+			return VersionConstants.getDataVersion() < 1451; // < 17w47a (flattening)
+		}
 		/**
 		 * Tripwire sometimes has the wrong state due to
 		 * https://github.com/MinecraftForge/MinecraftForge/issues/3924
 		 */
 		@Override
 		public void run() throws Exception {
-			int wireID = Block.getIdFromBlock(Blocks.TRIPWIRE);
+			int wireID = Block.REGISTRY.getIDForObject(Blocks.TRIPWIRE);
 			for (int meta = 0; meta <= 15; meta++) {
 				int id = wireID << 4 | meta;
 				// Note: Deprecated but supported under forge, and this is
@@ -76,6 +80,8 @@ enum SanityCheck {
 	TRANSLATION("wdl.sanity.translation") {
 		@Override
 		public void run() throws Exception {
+			System.out.println(I18n.format("gui.done"));
+			System.out.println(I18n.format(this.errorMessage));
 			if (!I18n.hasKey(this.errorMessage)) {
 				// Verbose, because obviously the normal string will not be translated.
 				throw new Exception("Translation strings are not present!  All messages will be the untranslated keys (e.g. `wdl.sanity.translation').  Please redownload the mod.  If this problem persists, file a bug report.");
@@ -104,4 +110,12 @@ enum SanityCheck {
 	 * @throws Exception on failure
 	 */
 	public abstract void run() throws Exception;
+
+	/**
+	 * Returns true if this sanity check can even run in this context.
+	 * @return True if this sanity check makes sense to run.
+	 */
+	public boolean canRun() {
+		return true;
+	}
 }

@@ -52,6 +52,7 @@ minecraft {
 extraSrgs {
     addSrg file('../srgs/AbstractHorseToEquineEntity.srg')
     addSrg file('../srgs/1.13.srg')
+    addMethods file('../srgs/1.12_methods.csv')
 }
 
 sourceSets {

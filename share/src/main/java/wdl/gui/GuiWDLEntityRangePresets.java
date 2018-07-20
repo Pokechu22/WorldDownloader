@@ -119,7 +119,7 @@ public class GuiWDLEntityRangePresets extends GuiScreen implements GuiYesNoCallb
 	}
 
 	@Override
-	public void confirmClicked(boolean result, int id) {
+	public void confirmResult(boolean result, int id) {
 		if (result) {
 			Set<String> entities = EntityUtils.getEntityTypes();
 

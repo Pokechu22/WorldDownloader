@@ -14,6 +14,8 @@
  */
 package wdl;
 
+import static org.junit.Assume.*;
+
 import org.junit.Test;
 
 /**
@@ -23,21 +25,25 @@ public class SanityCheckTest extends MaybeMixinTest {
 	// XXX This probably should be parameterized, but MaybeMixinTest doesn't support that
 	@Test
 	public void testTripwire() throws Exception {
+		assumeTrue(SanityCheck.TRIPWIRE.canRun());
 		SanityCheck.TRIPWIRE.run();
 	}
 
 	@Test
 	public void testVersion() throws Exception {
+		assumeTrue(SanityCheck.VERSION.canRun());
 		SanityCheck.VERSION.run();
 	}
 
 	@Test
 	public void testTranslation() throws Exception {
+		assumeTrue(SanityCheck.TRANSLATION.canRun());
 		SanityCheck.TRANSLATION.run();
 	}
 
 	@Test
 	public void testMixin() throws Exception {
+		assumeTrue(SanityCheck.MIXIN.canRun());
 		SanityCheck.MIXIN.run();
 	}
 }

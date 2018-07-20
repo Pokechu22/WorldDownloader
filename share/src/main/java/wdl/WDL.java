@@ -36,6 +36,8 @@ import com.mojang.realmsclient.RealmsMainScreen;
 import com.mojang.realmsclient.dto.RealmsServer;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockAir;
+import net.minecraft.block.BlockBed;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiScreen;
@@ -59,8 +61,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.ChunkSection;
 import net.minecraft.world.chunk.EmptyChunk;
-import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraft.world.storage.MapData;
 import net.minecraft.world.storage.SaveHandler;
 import net.minecraft.world.storage.SessionLockException;
@@ -875,7 +877,7 @@ public class WDL {
 		if (c.isEmpty() || c instanceof EmptyChunk) {
 			return true;
 		}
-		ExtendedBlockStorage[] array = c.getBlockStorageArray();
+		ChunkSection[] array = c.getBlockStorageArray();
 		for (int i = 1; i < array.length; i++) {
 			if (array[i] != Chunk.NULL_BLOCK_STORAGE) {
 				return false;
@@ -887,10 +889,8 @@ public class WDL {
 			for (int y = 0; y < 16; y++) {
 				for (int z = 0; z < 16; z++) {
 					for (int x = 0; x < 16; x++) {
-						int id = Block.getStateId(array[0].get(x, y, z));
-						// Convert to standard global palette form
-						id = (id & 0xFFF) << 4 | (id & 0xF000) >> 12;
-						if ((id > 0x00F) && (id < 0x1A0 || id > 0x1AF)) {
+						Block block = array[0].get(x, y, z).getBlock(); 
+						if (!(block instanceof BlockAir || block instanceof BlockBed)) {
 							// Contains a non-airoid; stop
 							return false;
 						}
@@ -1048,19 +1048,19 @@ public class WDL {
 			//Positions are offset to center of block,
 			//or player height.
 			NBTTagList pos = new NBTTagList();
-			pos.appendTag(new NBTTagDouble(x + 0.5D));
-			pos.appendTag(new NBTTagDouble(y + 0.621D));
-			pos.appendTag(new NBTTagDouble(z + 0.5D));
+			pos.add(new NBTTagDouble(x + 0.5D));
+			pos.add(new NBTTagDouble(y + 0.621D));
+			pos.add(new NBTTagDouble(z + 0.5D));
 			playerNBT.setTag("Pos", pos);
 			NBTTagList motion = new NBTTagList();
-			motion.appendTag(new NBTTagDouble(0.0D));
+			motion.add(new NBTTagDouble(0.0D));
 			//Force them to land on the ground?
-			motion.appendTag(new NBTTagDouble(-0.0001D));
-			motion.appendTag(new NBTTagDouble(0.0D));
+			motion.add(new NBTTagDouble(-0.0001D));
+			motion.add(new NBTTagDouble(0.0D));
 			playerNBT.setTag("Motion", motion);
 			NBTTagList rotation = new NBTTagList();
-			rotation.appendTag(new NBTTagFloat(0.0f));
-			rotation.appendTag(new NBTTagFloat(0.0f));
+			rotation.add(new NBTTagFloat(0.0f));
+			rotation.add(new NBTTagFloat(0.0f));
 			playerNBT.setTag("Rotation", rotation);
 		}
 
@@ -1412,8 +1412,12 @@ public class WDL {
 
 		for (SanityCheck check : SanityCheck.values()) {
 			try {
-				LOGGER.trace("Running {}", check);
-				check.run();
+				if (check.canRun()) {
+					LOGGER.trace("Running {}", check);
+					check.run();
+				} else {
+					LOGGER.trace("Skipping {}", check);
+				}
 			} catch (Exception ex) {
 				LOGGER.trace("{} failed", check, ex);
 				failures.put(check, ex);

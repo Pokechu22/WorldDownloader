@@ -1,0 +1,5 @@
+searge,name,side,desc
+func_73878_a,confirmResult,0,Changed for unchangeable 1.13 name
+func_74745_c,size,0,Returns the number of tags in the list.
+func_74742_a,add,0,Adds the provided tag to the end of the list. There is no check to verify this tag is of the same type as any previous tag.
+func_150260_c,getString,0,Changed for unchangeable 1.13 name

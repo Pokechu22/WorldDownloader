@@ -64,9 +64,9 @@ import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.dimension.EndDimension;
 import net.minecraft.world.dimension.NetherDimension;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.ChunkSection;
 import net.minecraft.world.chunk.NibbleArray;
 import net.minecraft.world.chunk.storage.AnvilChunkLoader;
-import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraft.world.chunk.storage.RegionFileCache;
 import net.minecraft.world.storage.SaveHandler;
 import net.minecraft.world.storage.SessionLockException;
@@ -191,11 +191,11 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 		compound.setBoolean("TerrainPopulated", true);  // We always want this
 		compound.setBoolean("LightPopulated", chunk.isLightPopulated());
 		compound.setLong("InhabitedTime", chunk.getInhabitedTime());
-		ExtendedBlockStorage[] blockStorageArray = chunk.getBlockStorageArray();
+		ChunkSection[] blockStorageArray = chunk.getBlockStorageArray();
 		NBTTagList blockStorageList = new NBTTagList();
 		boolean hasSky = VersionedProperties.hasSkyLight(world);
 
-		for (ExtendedBlockStorage blockStorage : blockStorageArray) {
+		for (ChunkSection blockStorage : blockStorageArray) {
 			if (blockStorage != null) {
 				NBTTagCompound blockData = new NBTTagCompound();
 				blockData.setByte("Y",
@@ -231,7 +231,7 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 					blockData.setByteArray("SkyLight", new byte[lightArrayLen]);
 				}
 
-				blockStorageList.appendTag(blockData);
+				blockStorageList.add(blockData);
 			}
 		}
 
@@ -263,7 +263,7 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 				entryTag.setInteger("t",
 						(int) (entry.scheduledTime - worldTime));
 				entryTag.setInteger("p", entry.priority);
-				entries.appendTag(entryTag);
+				entries.add(entryTag);
 			}
 
 			compound.setTag("TileTicks", entries);
@@ -328,7 +328,7 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 			try {
 				if (entity.writeToNBTOptional(entityData)) {
 					chunk.setHasEntities(true);
-					entityList.appendTag(entityData);
+					entityList.add(entityData);
 				}
 			} catch (Exception e) {
 				WDLMessages.chatMessageTranslated(
@@ -446,7 +446,7 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 
 				editTileEntity(pos, compound, TileEntityCreationMode.NEW);
 
-				tileEntityList.appendTag(compound);
+				tileEntityList.add(compound);
 			} else if (oldTEMap.containsKey(pos)) {
 				NBTTagCompound compound = oldTEMap.get(pos);
 				String entityType = compound.getString("id");
@@ -457,7 +457,7 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 
 				editTileEntity(pos, compound, TileEntityCreationMode.IMPORTED);
 
-				tileEntityList.appendTag(compound);
+				tileEntityList.add(compound);
 			} else if (chunkTEMap.containsKey(pos)) {
 				// TODO: Do we want a chat message for this?
 				// It seems unnecessary.
@@ -476,7 +476,7 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 
 				editTileEntity(pos, compound, TileEntityCreationMode.EXISTING);
 
-				tileEntityList.appendTag(compound);
+				tileEntityList.add(compound);
 			}
 		}
 
@@ -522,7 +522,7 @@ public class WDLChunkLoader extends AnvilChunkLoader {
 			NBTTagList oldList = levelNBT.getTagList("TileEntities", 10);
 
 			if (oldList != null) {
-				for (int i = 0; i < oldList.tagCount(); i++) {
+				for (int i = 0; i < oldList.size(); i++) {
 					NBTTagCompound oldNBT = oldList.getCompoundTagAt(i);
 
 					String entityID = oldNBT.getString("id");

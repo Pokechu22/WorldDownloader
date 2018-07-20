@@ -306,7 +306,7 @@ public class WDLMessages {
 			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(
 					text);
 		} else {
-			LOGGER.info(text.getUnformattedText());
+			LOGGER.info(text.getString());
 		}
 	}
 

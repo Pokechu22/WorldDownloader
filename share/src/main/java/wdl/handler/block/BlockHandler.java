@@ -157,7 +157,7 @@ public abstract class BlockHandler<B extends TileEntity, C extends Container> ex
 		}
 		// Fallback, will fail for situations where the custom name
 		// is the vanilla name
-		String name = inventory.getDisplayName().getUnformattedText();
+		String name = inventory.getDisplayName().getString();
 		for (String key : defaultNames) {
 			if (I18n.format(key).equals(name)) {
 				return null;

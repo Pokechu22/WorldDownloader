@@ -147,7 +147,7 @@ public class GuiWDLMessages extends Screen {
 	}
 
 	@Override
-	public void confirmClicked(boolean result, int id) {
+	public void confirmResult(boolean result, int id) {
 		if (result) {
 			if (id == ID_RESET_ALL) {
 				ListMultimap<MessageTypeCategory, MessageRegistration> registrations = WDLMessages.getRegistrations();

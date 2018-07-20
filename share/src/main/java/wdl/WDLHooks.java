@@ -246,7 +246,7 @@ public class WDLHooks {
 
 			if (ENABLE_PROFILER) PROFILER.startSection("wdl.onChatMessage");
 
-			String chatMessage = packet.getChatComponent().getUnformattedText();
+			String chatMessage = packet.getChatComponent().getString();
 
 			if (ENABLE_PROFILER) PROFILER.startSection("Core");
 			WDLEvents.onChatMessage(chatMessage);

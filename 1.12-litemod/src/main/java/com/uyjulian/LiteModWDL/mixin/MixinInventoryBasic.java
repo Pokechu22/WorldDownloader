@@ -31,7 +31,7 @@ public abstract class MixinInventoryBasic implements INetworkNameable {
 	@Inject(method = "<init>(Lnet/minecraft/util/text/ITextComponent;I)V", at = @At("RETURN"))
 	private void onConstructed(ITextComponent title, int slotCount, CallbackInfo ci) {
 		if (title instanceof TextComponentString) {
-			this.networkCustomName = title.getUnformattedText();
+			this.networkCustomName = title.getString();
 		}
 	}
 

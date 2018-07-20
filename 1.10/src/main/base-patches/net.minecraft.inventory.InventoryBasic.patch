@@ -33,10 +33,10 @@
 @@ -26,6 +39,11 @@
  
  	public InventoryBasic(ITextComponent title, int slotCount) {
- 		this(title.getUnformattedText(), true, slotCount);
+ 		this(title.getString(), true, slotCount);
 +		/* WDL >>> */
 +		if (title instanceof TextComponentString) {
-+			this.networkCustomName = title.getUnformattedText();
++			this.networkCustomName = title.getString();
 +		}
 +		/* <<< WDL */
  	}
