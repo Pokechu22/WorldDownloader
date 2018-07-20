@@ -409,13 +409,10 @@ public class WDLHooks {
 	 * @param gui
 	 * @param buttonList
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static void injectWDLButtons(GuiIngameMenu gui, List buttonList) {
+	public static void injectWDLButtons(GuiIngameMenu gui, List<GuiButton> buttonList) {
 		int insertAtYPos = 0;
 
-		for (Object obj : buttonList) {
-			GuiButton btn = (GuiButton) obj;
-
+		for (GuiButton btn : buttonList) {
 			if (btn.id == 5) { // Button "Achievements"
 				insertAtYPos = btn.y + 24;
 				break;
@@ -423,9 +420,7 @@ public class WDLHooks {
 		}
 
 		// Move other buttons down one slot (= 24 height units)
-		for (Object obj : buttonList) {
-			GuiButton btn = (GuiButton) obj;
-
+		for (GuiButton btn : buttonList) {
 			if (btn.y >= insertAtYPos) {
 				btn.y += 24;
 			}
