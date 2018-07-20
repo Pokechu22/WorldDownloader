@@ -376,8 +376,8 @@ public class WDL {
 
 		runSanityCheck();
 
-		WDL.minecraft.displayGuiScreen((GuiScreen) null);
-		WDL.minecraft.setIngameFocus();
+		WDL.minecraft.displayGuiScreen(null);
+
 		chunkLoader = WDLChunkLoader.create(saveHandler, worldClient.provider);
 		newTileEntities.values().forEach((m) -> {
 			m.clear();
