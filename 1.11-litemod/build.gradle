@@ -81,6 +81,7 @@ sourceSets {
         java {
             srcDir project(':1.11').file("src/main/java")
             srcDir project(':share').file("src/main/java")
+            exclude "wdl/WDLChunkLoader13.java"
         }
         resources {
             srcDir "src/main/resources"

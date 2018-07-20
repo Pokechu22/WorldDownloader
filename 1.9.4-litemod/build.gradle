@@ -88,6 +88,7 @@ sourceSets {
             srcDir project(':1.9.4').file("src/main/java")
             srcDir project(':share').file("src/main/java")
             exclude "wdl/handler/block/ShulkerBoxHandler.java"
+            exclude "wdl/WDLChunkLoader13.java"
         }
         resources {
             srcDir "src/main/resources"
