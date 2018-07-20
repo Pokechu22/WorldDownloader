@@ -149,62 +149,63 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 		compound.setBoolean("TerrainPopulated", true);  // We always want this
 		compound.setBoolean("LightPopulated", chunk.isLightPopulated());
 		compound.setLong("InhabitedTime", chunk.getInhabitedTime());
-		ChunkSection[] blockStorageArray = chunk.getBlockStorageArray();
-		NBTTagList blockStorageList = new NBTTagList();
+
+		ChunkSection[] chunkSections = chunk.getBlockStorageArray();
+		NBTTagList chunkSectionList = new NBTTagList();
 		boolean hasSky = VersionedProperties.hasSkyLight(world);
 
-		for (ChunkSection blockStorage : blockStorageArray) {
-			if (blockStorage != null) {
-				NBTTagCompound blockData = new NBTTagCompound();
-				blockData.setByte("Y",
-						(byte) (blockStorage.getYLocation() >> 4 & 255));
+		for (ChunkSection chunkSection : chunkSections) {
+			if (chunkSection != null) {
+				NBTTagCompound sectionNBT = new NBTTagCompound();
+				sectionNBT.setByte("Y",
+						(byte) (chunkSection.getYLocation() >> 4 & 255));
 				byte[] buffer = new byte[4096];
 				NibbleArray nibblearray = new NibbleArray();
-				NibbleArray nibblearray1 = blockStorage.getData()
+				NibbleArray nibblearray1 = chunkSection.getData()
 						.getDataForNBT(buffer, nibblearray);
-				blockData.setByteArray("Blocks", buffer);
-				blockData.setByteArray("Data", nibblearray.getData());
+				sectionNBT.setByteArray("Blocks", buffer);
+				sectionNBT.setByteArray("Data", nibblearray.getData());
 
 				if (nibblearray1 != null) {
-					blockData.setByteArray("Add", nibblearray1.getData());
+					sectionNBT.setByteArray("Add", nibblearray1.getData());
 				}
 
-				NibbleArray blocklightArray = blockStorage.getBlockLight();
+				NibbleArray blocklightArray = chunkSection.getBlockLight();
 				int lightArrayLen = blocklightArray.getData().length;
-				blockData.setByteArray("BlockLight", blocklightArray.getData());
+				sectionNBT.setByteArray("BlockLight", blocklightArray.getData());
 
 				if (hasSky) {
-					NibbleArray skylightArray = blockStorage.getSkyLight();
+					NibbleArray skylightArray = chunkSection.getSkyLight();
 					if (skylightArray != null) {
-						blockData.setByteArray("SkyLight", skylightArray.getData());
+						sectionNBT.setByteArray("SkyLight", skylightArray.getData());
 					} else {
 						// Shouldn't happen, but if it does, handle it smoothly.
 						LOGGER.error("[WDL] Skylight array for chunk at " +
 								chunk.x + ", " + chunk.z +
 								" is null despite VersionedProperties " +
 								"saying it shouldn't be!");
-						blockData.setByteArray("SkyLight", new byte[lightArrayLen]);
+						sectionNBT.setByteArray("SkyLight", new byte[lightArrayLen]);
 					}
 				} else {
-					blockData.setByteArray("SkyLight", new byte[lightArrayLen]);
+					sectionNBT.setByteArray("SkyLight", new byte[lightArrayLen]);
 				}
 
-				blockStorageList.add(blockData);
+				chunkSectionList.add(sectionNBT);
 			}
 		}
 
-		compound.setTag("Sections", blockStorageList);
+		compound.setTag("Sections", chunkSectionList);
 		compound.setByteArray("Biomes", chunk.getBiomeArray());
-		chunk.setHasEntities(false);
 
+		chunk.setHasEntities(false);
 		NBTTagList entityList = getEntityList(chunk);
 		compound.setTag("Entities", entityList);
 
 		NBTTagList tileEntityList = getTileEntityList(chunk);
 		compound.setTag("TileEntities", tileEntityList);
+
 		List<NextTickListEntry> updateList = world.getPendingBlockUpdates(
 				chunk, false);
-
 		if (updateList != null) {
 			long worldTime = world.getTotalWorldTime();
 			NBTTagList entries = new NBTTagList();
