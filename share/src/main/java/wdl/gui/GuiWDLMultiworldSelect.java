@@ -34,8 +34,10 @@ import wdl.gui.widget.Button;
  */
 public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	private class WorldGuiButton extends Button {
-		public WorldGuiButton(int x, int y, int width, int height) {
+		private final int buttonOffset;
+		public WorldGuiButton(int buttonOffset, int x, int y, int width, int height) {
 			super(x, y, width, height, "");
+			this.buttonOffset = buttonOffset;
 		}
 
 		@Override
@@ -62,7 +64,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		 * @return the world info, or null if there isn't any.
 		 */
 		public MultiworldInfo getWorldInfo() {
-			int location = index + id;
+			int location = index + buttonOffset;
 			if (location < 0) {
 				return null;
 			}
@@ -297,7 +299,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		this.buttonList.add(prevButton);
 
 		for (int i = 0; i < numWorldButtons; i++) {
-			this.buttonList.add(new WorldGuiButton(this.width / 2 - offset
+			this.buttonList.add(new WorldGuiButton(i, this.width / 2 - offset
 					+ i * 155 + 25, y, 150, 20));
 		}
 
@@ -391,10 +393,11 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 				I18n.format("wdl.gui.multiworldSelect.subtitle"),
 				this.width / 2, 18, 0xFF0000);
 
-		if (this.showNewWorldTextBox) {
-			this.newNameField.drawTextBox();
-		}
-		this.searchField.drawTextBox();
+		newWorldButton.visible = !showNewWorldTextBox;
+		this.newNameField.setVisible(showNewWorldTextBox);
+
+		super.drawScreen(mouseX, mouseY, partialTicks);
+
 		//Hint as to what the text box does
 		if (this.searchField.getText().isEmpty() && !this.searchField.isFocused()) {
 			drawString(fontRenderer,
@@ -402,10 +405,6 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 					searchField.x + 4, searchField.y + 6,
 					0x909090);
 		}
-
-		newWorldButton.visible = !showNewWorldTextBox;
-
-		super.drawScreen(mouseX, mouseY, partialTicks);
 
 		drawMultiworldDescription();
 	}
