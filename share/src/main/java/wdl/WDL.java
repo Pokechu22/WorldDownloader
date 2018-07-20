@@ -1525,6 +1525,10 @@ public class WDL {
 		state.addCrashSection("worldLoadingDeferred", worldLoadingDeferred);
 		state.addCrashSection("worldName", worldName);
 		state.addCrashSection("baseFolderName", baseFolderName);
+		state.addCrashSection("baseProps", baseProps);
+		state.addCrashSection("worldProps", worldProps);
+		state.addCrashSection("globalProps", globalProps);
+		state.addCrashSection("defaultProps", defaultProps);
 
 		CrashReportCategory base = report.makeCategoryDepth(
 				"World Downloader Mod - Base properties", stSize);
@@ -1536,14 +1540,14 @@ public class WDL {
 		CrashReportCategory world = report.makeCategoryDepth(
 				"World Downloader Mod - World properties", stSize);
 		if (worldProps != null) {
-			baseProps.addToCrashReport(base, "worldProps");
+			worldProps.addToCrashReport(world, "worldProps");
 		} else {
 			world.addCrashSection("-", "null");
 		}
 		CrashReportCategory global = report.makeCategoryDepth(
 				"World Downloader Mod - Global properties", stSize);
 		if (globalProps != null) {
-			baseProps.addToCrashReport(base, "globalProps");
+			globalProps.addToCrashReport(global, "globalProps");
 		} else {
 			global.addCrashSection("-", "null");
 		}
