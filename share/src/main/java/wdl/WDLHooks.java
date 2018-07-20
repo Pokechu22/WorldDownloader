@@ -71,7 +71,7 @@ public class WDLHooks {
 	 * optimize it out, as may be verified by javap.
 	 */
 	static final boolean ENABLE_PROFILER = false;
-	private static final Profiler PROFILER = ENABLE_PROFILER ? Minecraft.getMinecraft().mcProfiler : null;
+	private static final Profiler PROFILER = ENABLE_PROFILER ? Minecraft.getMinecraft().profiler : null;
 
 	/**
 	 * Called when {@link WorldClient#tick()} is called.
@@ -184,7 +184,7 @@ public class WDLHooks {
 
 			if (!loading) {
 				if (ENABLE_PROFILER) PROFILER.startSection("onChunkNoLongerNeeded");
-				Chunk c = sender.getChunkFromChunkCoords(x, z);
+				Chunk c = sender.getChunk(x, z);
 
 				if (ENABLE_PROFILER) PROFILER.startSection("Core");
 				wdl.WDLEvents.onChunkNoLongerNeeded(c);

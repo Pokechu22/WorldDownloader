@@ -153,7 +153,7 @@ public abstract class GuiTurningCameraBase extends Screen {
 	 * @return A new distance, equal to or less than <code>currentDistance</code>.
 	 */
 	private double truncateDistanceIfBlockInWay(double camX, double camZ, double currentDistance) {
-		Vec3d playerPos = WDL.thePlayer.getPositionVector().addVector(0, WDL.thePlayer.getEyeHeight(), 0);
+		Vec3d playerPos = WDL.thePlayer.getPositionVector().add(0, WDL.thePlayer.getEyeHeight(), 0);
 		Vec3d offsetPos = new Vec3d(WDL.thePlayer.posX - currentDistance * camX, WDL.thePlayer.posY + WDL.thePlayer.getEyeHeight(), WDL.thePlayer.posZ + camZ);
 
 		// NOTE: Vec3.addVector and Vec3.add return new vectors and leave the
@@ -170,8 +170,8 @@ public abstract class GuiTurningCameraBase extends Screen {
 				offsetZ = 0;
 			}
 
-			Vec3d from = playerPos.addVector(offsetX, offsetY, offsetZ);
-			Vec3d to = offsetPos.addVector(offsetX, offsetY, offsetZ);
+			Vec3d from = playerPos.add(offsetX, offsetY, offsetZ);
+			Vec3d to = offsetPos.add(offsetX, offsetY, offsetZ);
 
 			RayTraceResult pos = mc.world.rayTraceBlocks(from, to);
 

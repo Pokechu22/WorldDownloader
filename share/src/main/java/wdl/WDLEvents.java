@@ -53,7 +53,7 @@ import wdl.update.WDLUpdateChecker;
 public class WDLEvents {
 	/** @see WDLHooks#ENABLE_PROFILER */
 	private static final boolean ENABLE_PROFILER = WDLHooks.ENABLE_PROFILER;
-	private static final Profiler PROFILER = ENABLE_PROFILER ? Minecraft.getMinecraft().mcProfiler : null;
+	private static final Profiler PROFILER = ENABLE_PROFILER ? Minecraft.getMinecraft().profiler : null;
 
 	/**
 	 * Must be called after the static World object in Minecraft has been

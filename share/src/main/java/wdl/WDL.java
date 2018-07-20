@@ -256,7 +256,7 @@ public class WDL {
 
 		globalProps = new Configuration(defaultProps);
 
-		File dataFile = new File(minecraft.mcDataDir, "WorldDownloader.txt");
+		File dataFile = new File(minecraft.gameDir, "WorldDownloader.txt");
 		try {
 			globalProps.load(dataFile);
 		} catch (Exception e) {
@@ -914,7 +914,7 @@ public class WDL {
 		baseFolderName = getBaseFolderName();
 		baseProps = new Configuration(globalProps);
 
-		File savesFolder = new File(minecraft.mcDataDir, "saves");
+		File savesFolder = new File(minecraft.gameDir, "saves");
 		File baseFolder = new File(savesFolder, baseFolderName);
 		File dataFile = new File(baseFolder, "WorldDownloader.txt");
 		try {
@@ -948,7 +948,7 @@ public class WDL {
 
 		IConfiguration ret = new Configuration(baseProps);
 
-		File savesDir = new File(minecraft.mcDataDir, "saves");
+		File savesDir = new File(minecraft.gameDir, "saves");
 
 		String folder = getWorldFolderName(theWorldName);
 		File worldFolder = new File(savesDir, folder);
@@ -976,7 +976,7 @@ public class WDL {
 	 * corresponding folders.
 	 */
 	public static void saveProps(String theWorldName, IConfiguration theWorldProps) {
-		File savesDir = new File(minecraft.mcDataDir, "saves");
+		File savesDir = new File(minecraft.gameDir, "saves");
 
 		if (theWorldName.length() > 0) {
 			String folder = getWorldFolderName(theWorldName);
@@ -1008,7 +1008,7 @@ public class WDL {
 	 * Saves the global properties, which are used for all servers.
 	 */
 	public static void saveGlobalProps() {
-		File globalPropsFile = new File(minecraft.mcDataDir, "WorldDownloader.txt");
+		File globalPropsFile = new File(minecraft.gameDir, "WorldDownloader.txt");
 		try {
 			globalProps.store(globalPropsFile, I18n.format("wdl.props.global.title"));
 		} catch (Exception e) {

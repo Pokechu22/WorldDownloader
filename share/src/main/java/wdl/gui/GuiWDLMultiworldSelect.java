@@ -110,7 +110,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 				// TODO: More info than just dimensions - EG if the
 				// chunk the player is in is added, etc.
 				description.add("Defined dimensions:");
-				File savesFolder = new File(WDL.minecraft.mcDataDir, "saves");
+				File savesFolder = new File(WDL.minecraft.gameDir, "saves");
 				File world = new File(savesFolder, WDL.getWorldFolderName(folderName));
 				File[] subfolders = world.listFiles();
 
