@@ -14,18 +14,7 @@
  */
 package wdl.gui;
 
-import java.io.IOException;
-
-import javax.annotation.Nullable;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiCreateFlatWorld;
-import net.minecraft.client.gui.GuiCreateWorld;
-import net.minecraft.client.gui.GuiCustomizeWorldScreen;
-import net.minecraft.client.gui.GuiFlatPresets;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
@@ -35,9 +24,9 @@ import wdl.config.settings.GeneratorSettings;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.Screen;
 import wdl.gui.widget.SettingButton;
+import wdl.versioned.VersionedFunctions;
 
 public class GuiWDLGenerator extends Screen {
-	private static final Logger LOGGER = LogManager.getLogger();
 	private String title;
 	private final GuiScreen parent;
 	private final IConfiguration config;
@@ -85,7 +74,7 @@ public class GuiWDLGenerator extends Screen {
 		this.buttonList.add(this.generateStructuresBtn);
 		y += 22;
 		this.settingsPageBtn = new ButtonDisplayGui(this.width / 2 - 100, y,
-				200, 20, "", this::getSettingsGui);
+				200, 20, "", this::makeGeneratorSettingsGui);
 		updateSettingsButtonVisibility();
 		this.buttonList.add(this.settingsPageBtn);
 
@@ -96,19 +85,11 @@ public class GuiWDLGenerator extends Screen {
 	/**
 	 * Gets the proxy GUI to use for the current settings.
 	 */
-	@Nullable
-	private GuiScreen getSettingsGui() {
+	private GuiScreen makeGeneratorSettingsGui() {
 		GeneratorSettings.Generator generator = config.getValue(GeneratorSettings.GENERATOR);
-		switch (generator) {
-		case FLAT:
-			return new GuiFlatPresets(new GuiCreateFlatWorldProxy());
-		case CUSTOMIZED:
-			return new GuiCustomizeWorldScreen(new GuiCreateWorldProxy(),
-					config.getValue(GeneratorSettings.GENERATOR_OPTIONS));
-		default:
-			LOGGER.warn("Generator lacks extra settings; this button should not be usable: " + generator);
-		}
-		return null;
+		String generatorConfig = config.getValue(GeneratorSettings.GENERATOR_OPTIONS);
+		return VersionedFunctions.makeGeneratorSettingsGui(generator, this, generatorConfig,
+				value -> config.setValue(GeneratorSettings.GENERATOR_OPTIONS, value));
 	}
 
 	@Override
@@ -158,85 +139,13 @@ public class GuiWDLGenerator extends Screen {
 		case CUSTOMIZED:
 			settingsPageBtn.visible = true;
 			settingsPageBtn.displayString = I18n.format("wdl.gui.generator.customSettings");
-		break;
+			break;
+		case BUFFET:
+			settingsPageBtn.visible = true;
+			settingsPageBtn.displayString = I18n.format("wdl.gui.generator.buffetSettings");
+			break;
 		default:
 			settingsPageBtn.visible = false;
-		}
-	}
-
-	/**
-	 * Fake implementation of {@link GuiCreateFlatWorld} that allows use of
-	 * {@link GuiFlatPresets}.  Doesn't actually do anything; just passed in
-	 * to the constructor to forward the information we need and to switch
-	 * back to the main GUI afterwards.
-	 */
-	private class GuiCreateFlatWorldProxy extends GuiCreateFlatWorld {
-		public GuiCreateFlatWorldProxy() {
-			super(null, config.getValue(GeneratorSettings.GENERATOR_OPTIONS));
-		}
-
-		@Override
-		public void initGui() {
-			mc.displayGuiScreen(GuiWDLGenerator.this);
-		}
-
-		@Override
-		protected void actionPerformed(GuiButton button) throws IOException {
-			// Do nothing
-		}
-
-		@Override
-		public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-			// Do nothing
-		}
-
-		/**
-		 * Gets the current flat preset.
-		 */
-		@Override
-		public String getPreset() {
-			return config.getValue(GeneratorSettings.GENERATOR_OPTIONS);
-		}
-
-		/**
-		 * Sets the current flat preset.
-		 */
-		@Override
-		public void setPreset(String preset) {
-			if (preset == null) {
-				preset = "";
-			}
-			config.setValue(GeneratorSettings.GENERATOR_OPTIONS, preset);
-		}
-	}
-
-	/**
-	 * Fake implementation of {@link GuiCreateWorld} that allows use of
-	 * {@link GuiCustomizeWorldScreen}.  Doesn't actually do anything; just passed in
-	 * to the constructor to forward the information we need and to switch
-	 * back to the main GUI afterwards.
-	 */
-	private class GuiCreateWorldProxy extends GuiCreateWorld {
-		public GuiCreateWorldProxy() {
-			super(GuiWDLGenerator.this);
-
-			this.chunkProviderSettingsJson = config.getValue(GeneratorSettings.GENERATOR_OPTIONS);
-		}
-
-		@Override
-		public void initGui() {
-			mc.displayGuiScreen(GuiWDLGenerator.this);
-			config.setValue(GeneratorSettings.GENERATOR_OPTIONS, this.chunkProviderSettingsJson);
-		}
-
-		@Override
-		protected void actionPerformed(GuiButton button) throws IOException {
-			// Do nothing
-		}
-
-		@Override
-		public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-			// Do nothing
 		}
 	}
 }

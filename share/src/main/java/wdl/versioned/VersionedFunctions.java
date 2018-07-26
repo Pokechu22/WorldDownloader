@@ -15,18 +15,21 @@
 package wdl.versioned;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.client.CPacketCustomPayload;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import wdl.config.settings.GeneratorSettings.Generator;
 import wdl.handler.block.BlockHandler;
 import wdl.handler.entity.EntityHandler;
 
@@ -127,5 +130,30 @@ public class VersionedFunctions {
 	 */
 	public static List<String> getGameRules(GameRules rules) {
 		return GameRuleFunctions.getGameRules(rules);
+	}
+
+	/**
+	 * Returns true if the given generator can be used in this Minecraft version.
+	 * @param generator The generator
+	 * @return True if it is usable.
+	 */
+	public static boolean isAvaliableGenerator(Generator generator) {
+		return GeneratorFunctions.isAvaliableGenerator(generator);
+	}
+
+	/**
+	 * Creates a settings GUI for the given world generator (e.g. superflat
+	 * options).
+	 *
+	 * @param generator       The generator.
+	 * @param parent          The GUI to return to when the settings GUI is closed.
+	 * @param generatorConfig The configuration for the generator, which depends on
+	 *                        the generator.
+	 * @param callback        Called with the new generator config.
+	 * @return The new GUI, or the parent if there is no valid GUI.
+	 */
+	public static GuiScreen makeGeneratorSettingsGui(Generator generator, GuiScreen parent,
+			String generatorConfig, Consumer<String> callback) {
+		return GeneratorFunctions.makeGeneratorSettingsGui(generator, parent, generatorConfig, callback);
 	}
 }

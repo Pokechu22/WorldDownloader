@@ -16,15 +16,21 @@ package wdl.config.settings;
 
 import static wdl.config.settings.Utils.*;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import wdl.config.BooleanSetting;
-import wdl.config.EnumSetting;
+import wdl.config.CyclableSetting;
 import wdl.config.IConfiguration;
 import wdl.config.Setting;
 import wdl.config.StringSetting;
+import wdl.versioned.VersionedFunctions;
 
 /**
  * Contains various settings and enums for the world generator.
@@ -37,8 +43,8 @@ public final class GeneratorSettings {
 	public static final BooleanSetting GENERATE_STRUCTURES =
 			new BooleanSetting("MapFeatures", true, "wdl.gui.generator.generateStructures");
 	// Used to control what generator is exposed in the UI.
-	public static final EnumSetting<Generator> GENERATOR =
-			new EnumSetting<>("MapGenerator", Generator.VOID, "wdl.gui.generator.generator", Generator.values(), Generator::fromString);
+	public static final CyclableSetting<Generator> GENERATOR =
+			new GeneratorSetting("MapGenerator", Generator.VOID, "wdl.gui.generator.generator");
 	// Actual generator properties
 	public static final Setting<String> GENERATOR_NAME = new NameSetting("GeneratorName");
 	public static final Setting<Integer> GENERATOR_VERSION = new VersionSetting("GeneratorVersion");
@@ -51,6 +57,7 @@ public final class GeneratorSettings {
 		LARGE_BIOMES("largeBiomes", "largeBiomes", 0, ""),
 		AMPLIFIED("amplified", "amplified", 0, ""),
 		CUSTOMIZED("custom", "custom", 0, ""),
+		BUFFET("buffet", "buffet", 0, ""),
 		LEGACY("legacy", "default_1_1", 0, ""); // XXX do we really need this?
 
 		private final String confName;
@@ -77,14 +84,68 @@ public final class GeneratorSettings {
 		}
 	}
 
+	// Skips generators that aren't avaliable
+	private static class GeneratorSetting implements CyclableSetting<Generator> {
+		private final String name;
+		private final Generator defaultValue;
+		private final String key;
+
+		private final List<Generator> generators;
+
+		public GeneratorSetting(String name, Generator defaultValue, String key) {
+			this.name = name;
+			this.defaultValue = defaultValue;
+			this.key = key;
+
+			this.generators = Arrays.stream(Generator.values())
+					.filter(VersionedFunctions::isAvaliableGenerator)
+					.collect(Collectors.toList());
+		}
+
+		@Override
+		public Generator deserializeFromString(String text) {
+			return Generator.fromString(text);
+		}
+
+		@Override
+		public String serializeToString(Generator value) {
+			return value.getName();
+		}
+
+		@Override
+		public String getConfigurationKey() {
+			return name;
+		}
+
+		@Override
+		public Generator getDefault(IConfiguration context) {
+			return defaultValue;
+		}
+
+		@Override
+		public Generator cycle(Generator value) {
+			return generators.get((generators.indexOf(value) + 1) % generators.size());
+		}
+
+		@Override
+		public ITextComponent getDescription() {
+			return new TextComponentTranslation(key + ".description");
+		}
+
+		@Override
+		public ITextComponent getButtonText(Generator curValue) {
+			return new TextComponentTranslation(key + "." + serializeToString(curValue));
+		}
+	}
+
 	// Note: this is an abstract class instead of taking a parameter, such that
 	// the class name for each subclass is identified in stack traces
-	private static abstract class GeneratorSetting<T> implements Setting<T> {
+	private static abstract class BaseGeneratorSetting<T> implements Setting<T> {
 		private final String name;
 		private final Function<String, T> fromString;
 		private final Function<T, String> toString;
 
-		protected GeneratorSetting(String name, Function<String, T> fromString, Function<T, String> toString) {
+		protected BaseGeneratorSetting(String name, Function<String, T> fromString, Function<T, String> toString) {
 			this.name = name;
 			this.fromString = fromString;
 			this.toString = toString;
@@ -114,7 +175,7 @@ public final class GeneratorSettings {
 	}
 
 	// These take a name value for clarity above
-	private static class NameSetting extends GeneratorSetting<String> {
+	private static class NameSetting extends BaseGeneratorSetting<String> {
 		public NameSetting(String name) {
 			super(name, Function.identity(), Function.identity());
 		}
@@ -125,7 +186,7 @@ public final class GeneratorSettings {
 		}
 	}
 
-	private static class VersionSetting extends GeneratorSetting<Integer> {
+	private static class VersionSetting extends BaseGeneratorSetting<Integer> {
 		public VersionSetting(String name) {
 			super(name, Integer::parseInt, Object::toString);
 		}
@@ -136,7 +197,7 @@ public final class GeneratorSettings {
 		}
 	}
 
-	private static class OptionSetting extends GeneratorSetting<String> {
+	private static class OptionSetting extends BaseGeneratorSetting<String> {
 		public OptionSetting(String name) {
 			super(name, Function.identity(), Function.identity());
 		}

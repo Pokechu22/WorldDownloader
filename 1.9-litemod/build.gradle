@@ -103,6 +103,7 @@ sourceSets {
             exclude "wdl/handler/block/ShulkerBoxHandler.java"
             exclude "wdl/WDLChunkLoader_1_13.java"
             exclude "wdl/versioned/GameRules_1_13.java"
+            exclude "wdl/versioned/Generator_1_13.java"
             exclude "wdl/versioned/Handlers_1_10.java"
             exclude "wdl/versioned/Handlers_1_12.java"
             exclude "wdl/versioned/Handlers_1_13.java"
