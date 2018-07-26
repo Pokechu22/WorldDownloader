@@ -15,7 +15,10 @@
 package wdl;
 
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.Map;
+
+import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
 
@@ -26,6 +29,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.client.CPacketCustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import wdl.handler.block.BeaconHandler;
 import wdl.handler.block.BlockHandler;
@@ -143,5 +147,45 @@ public class VersionedProperties {
 	 */
 	public static CPacketCustomPayload makePluginMessagePacket(String channel, byte[] bytes) {
 		return new CPacketCustomPayload(channel, new PacketBuffer(Unpooled.copiedBuffer(bytes)));
+	}
+
+	/**
+	 * Checks if the given game rule is of the given type.
+	 * @param rules The rule collection
+	 * @param rule The name of the rule
+	 * @return The type, or null if no info could be found.
+	 */
+	@Nullable
+	public static GameRules.ValueType getRuleType(GameRules rules, String rule) {
+		for (GameRules.ValueType type : GameRules.ValueType.values()) {
+			if (type == GameRules.ValueType.ANY_VALUE) {
+				// Ignore this as it always returns true
+				continue;
+			}
+			if (rules.areSameType(rule, type)) {
+				return type;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Gets the value of a game rule.
+	 * @param rules The rule collection
+	 * @param rule The name of the rule
+	 * @return The value, or null if no info could be found.
+	 */
+	@Nullable
+	public static String getRuleValue(GameRules rules, String rule) { 
+		return rules.hasRule(rule) ? rules.getString(rule) : null;
+	}
+
+	/**
+	 * Gets a list of all game rules.
+	 * @param rules The rules object.
+	 * @return A list of all rule names.
+	 */
+	public static List<String> getGameRules(GameRules rules) {
+		return ImmutableList.copyOf(rules.getRules());
 	}
 }

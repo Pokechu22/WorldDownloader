@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017 Pokechu22, julialy
+ * Copyright (c) 2017-2018 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -22,11 +22,11 @@ import javax.annotation.Nullable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.google.common.collect.ImmutableList;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.GameRules.ValueType;
+import wdl.VersionedProperties;
 import wdl.WDL;
 import wdl.config.IConfiguration;
 import wdl.gui.widget.Button;
@@ -62,12 +62,13 @@ public class GuiWDLGameRules extends Screen {
 					GuiWDLGameRules.this.height - 32, 24);
 			List<RuleEntry> entries = this.getEntries();
 			for (String rule : vanillaGameRules) {
-				if (rules.areSameType(rule, ValueType.NUMERICAL_VALUE)) {
+				GameRules.ValueType type = VersionedProperties.getRuleType(rules, rule);
+				if (type == ValueType.NUMERICAL_VALUE) {
 					entries.add(new IntRuleEntry(rule));
-				} else if (rules.areSameType(rule, ValueType.BOOLEAN_VALUE)) {
+				} else if (type == ValueType.BOOLEAN_VALUE) {
 					entries.add(new BooleanRuleEntry(rule));
 				} else {
-					LOGGER.debug("Couldn't identify type for vanilla game rule " + rule);
+					LOGGER.debug("Unexpected type for vanilla game rule " + rule + ": " + type);
 				}
 			}
 		}
@@ -218,7 +219,7 @@ public class GuiWDLGameRules extends Screen {
 		if (isRuleSet(ruleName)) {
 			return config.getGameRule(ruleName);
 		} else {
-			return rules.getString(ruleName);
+			return VersionedProperties.getRuleValue(rules, ruleName);
 		}
 	}
 
@@ -262,7 +263,7 @@ public class GuiWDLGameRules extends Screen {
 		this.parent = parent;
 		this.config = WDL.worldProps;
 		this.rules = WDL.worldClient.getGameRules();
-		this.vanillaGameRules = ImmutableList.copyOf(rules.getRules());
+		this.vanillaGameRules = VersionedProperties.getGameRules(rules);
 	}
 
 	@Override
