@@ -317,7 +317,7 @@ public class WDLHooks {
 			if (ENABLE_PROFILER) PROFILER.startSection("wdl.onPluginMessage");
 
 			if (ENABLE_PROFILER) PROFILER.startSection("Parse");
-			String channel = packet.getChannelName();
+			String channel = packet.getChannelName().toString(); // 1.13: ResourceLocation -> String; otherwise no-op
 			ByteBuf buf = packet.getBufferData();
 			byte[] payload = new byte[buf.readableBytes()];
 			buf.readBytes(payload);
