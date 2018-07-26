@@ -18,11 +18,22 @@ import com.google.common.collect.ImmutableList;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockBeacon;
+import net.minecraft.block.BlockBrewingStand;
+import net.minecraft.block.BlockChest;
+import net.minecraft.block.BlockCommandBlock;
+import net.minecraft.block.BlockDispenser;
+import net.minecraft.block.BlockDropper;
+import net.minecraft.block.BlockFurnace;
+import net.minecraft.block.BlockHopper;
 import net.minecraft.block.BlockShulkerBox;
+import net.minecraft.block.BlockTrappedChest;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityShulkerBox;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.tileentity.TileEntityCommandBlock;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 import wdl.handler.block.BeaconHandler;
 import wdl.handler.block.BlockHandler;
 import wdl.handler.block.BrewingStandHandler;
@@ -50,15 +61,6 @@ final class HandlerFunctions {
 	}
 
 	/* (non-javadoc)
-	 * @see VersionedFunctions#getBlockEntityID
-	 */
-	static String getBlockEntityID(Class<? extends TileEntity> clazz) {
-		// 1.11+: use new IDs, and getKey exists.
-		ResourceLocation loc = TileEntity.getKey(clazz);
-		return (loc != null) ? loc.toString() : "";
-	}
-
-	/* (non-javadoc)
 	 * @see VersionedFunctions#BLOCK_HANDLERS
 	 */
 	static final ImmutableList<BlockHandler<?, ?>> BLOCK_HANDLERS = ImmutableList.of(
@@ -83,10 +85,46 @@ final class HandlerFunctions {
 	);
 
 	/* (non-javadoc)
-	 * @see VersionedFunctions#isImportableShulkerBox
+	 * @see VersionedFunctions#shouldImportBlockEntity
 	 */
-	static boolean isImportableShulkerBox(String entityID, Block block) {
-		return block instanceof BlockShulkerBox && entityID.equals(getBlockEntityID(TileEntityShulkerBox.class));
+	static boolean shouldImportBlockEntity(String entityID, BlockPos pos,
+			Block block, NBTTagCompound blockEntityNBT, Chunk chunk) {
+		// Note blocks do not have a block entity in this version.
+		if (block instanceof BlockChest && entityID.equals("minecraft:chest")) {
+			return true;
+		} else if (block instanceof BlockTrappedChest && entityID.equals("minecraft:trapped_chest")) {
+			// Separate block entity from regular chests in this version.
+			return true;
+		} else if (block instanceof BlockDispenser && entityID.equals("minecraft:dispenser")) {
+			return true;
+		} else if (block instanceof BlockDropper && entityID.equals("minecraft:dropper")) {
+			return true;
+		} else if (block instanceof BlockFurnace && entityID.equals("minecraft:furnace")) {
+			return true;
+		} else if (block instanceof BlockBrewingStand && entityID.equals("minecraft:brewing_stand")) {
+			return true;
+		} else if (block instanceof BlockHopper && entityID.equals("minecraft:hopper")) {
+			return true;
+		} else if (block instanceof BlockBeacon && entityID.equals("minecraft:beacon")) {
+			return true;
+		} else if (block instanceof BlockShulkerBox && entityID.equals("minecraft:shulker_box")) {
+			return true;
+		} else if (block instanceof BlockCommandBlock && entityID.equals("minecraft:command_block")) {
+			// Only import command blocks if the current world doesn't have a command set
+			// for the one there, as WDL doesn't explicitly save them so we need to use the
+			// one currently present in the world.
+			TileEntity temp = chunk.getTileEntity(pos, Chunk.EnumCreateEntityType.CHECK);
+			if (temp == null || !(temp instanceof TileEntityCommandBlock)) {
+				// Bad/missing data currently there, import the old data
+				return true;
+			}
+			TileEntityCommandBlock te = (TileEntityCommandBlock) temp;
+			boolean currentBlockHasCommand = !te.getCommandBlockLogic().getCommand().isEmpty();
+			// Only import if the current command block has no command.
+			return !currentBlockHasCommand;
+		} else {
+			return false;
+		}
 	}
 
 	/* (non-javadoc)

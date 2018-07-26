@@ -14,16 +14,26 @@
  */
 package wdl.versioned;
 
-import java.lang.reflect.Field;
 import java.util.List;
-import java.util.Map;
 
 import com.google.common.collect.ImmutableList;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockBeacon;
+import net.minecraft.block.BlockBrewingStand;
+import net.minecraft.block.BlockChest;
+import net.minecraft.block.BlockCommandBlock;
+import net.minecraft.block.BlockDispenser;
+import net.minecraft.block.BlockDropper;
+import net.minecraft.block.BlockFurnace;
+import net.minecraft.block.BlockHopper;
+import net.minecraft.block.BlockNote;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraft.tileentity.TileEntityCommandBlock;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 import wdl.handler.block.BeaconHandler;
 import wdl.handler.block.BlockHandler;
 import wdl.handler.block.BrewingStandHandler;
@@ -47,45 +57,6 @@ final class HandlerFunctions {
 	static boolean hasSkyLight(World world) {
 		// 1.10-: use isNether (hasNoSky)
 		return !world.provider.isNether();
-	}
-
-	static {
-		Map<Class<? extends TileEntity>, String> result = null;
-		try {
-			for (Field field : TileEntity.class.getDeclaredFields()) {
-				if (field.getType().equals(Map.class)) {
-					field.setAccessible(true);
-					Map<?, ?> map = (Map<?, ?>) field.get(null);
-					// Check for a Map<Class, String>
-					if (map.containsKey(TileEntityFurnace.class)) {
-						@SuppressWarnings("unchecked")
-						Map<Class<? extends TileEntity>, String> tmp =
-							(Map<Class<? extends TileEntity>, String>) map;
-						result = tmp;
-						break;
-					}
-				}
-			}
-			if (result == null) {
-				throw new RuntimeException("Could not locate TileEntity.classToNameMap!");
-			}
-		} catch (Exception ex) {
-			throw new RuntimeException(ex);
-		}
-		TE_REVERSE_MAP = result;
-	}
-
-	/**
-	 * A reference to {@link TileEntity#classToNameMap} (field_145853_j).
-	 */
-	private static final Map<Class<? extends TileEntity>, String> TE_REVERSE_MAP;
-
-	/* (non-javadoc)
-	 * @see VersionedFunctions#getBlockEntityID
-	 */
-	static String getBlockEntityID(Class<? extends TileEntity> clazz) {
-		// 1.10-: There is no nice way to get the ID; use reflection
-		return TE_REVERSE_MAP.getOrDefault(clazz, "");
 	}
 
 	/* (non-javadoc)
@@ -112,10 +83,44 @@ final class HandlerFunctions {
 	);
 
 	/* (non-javadoc)
-	 * @see VersionedFunctions#isImportableShulkerBox
+	 * @see VersionedFunctions#shouldImportBlockEntity
 	 */
-	static boolean isImportableShulkerBox(String entityID, Block block) {
-		return false;
+	static boolean shouldImportBlockEntity(String entityID, BlockPos pos,
+			Block block, NBTTagCompound blockEntityNBT, Chunk chunk) {
+		// Older (and stranger) block entity IDs.  Note also that
+		// shulker boxes did not exist at this time.
+		if (block instanceof BlockChest && entityID.equals("Chest")) {
+			return true;
+		} else if (block instanceof BlockDispenser && entityID.equals("Trap")) {
+			return true;
+		} else if (block instanceof BlockDropper && entityID.equals("Dropper")) {
+			return true;
+		} else if (block instanceof BlockFurnace && entityID.equals("Furnace")) {
+			return true;
+		} else if (block instanceof BlockNote && entityID.equals("Music")) {
+			return true;
+		} else if (block instanceof BlockBrewingStand && entityID.equals("Cauldron")) {
+			return true;
+		} else if (block instanceof BlockHopper && entityID.equals("Hopper")) {
+			return true;
+		} else if (block instanceof BlockBeacon && entityID.equals("Beacon")) {
+			return true;
+		} else if (block instanceof BlockCommandBlock && entityID.equals("Control")) {
+			// Only import command blocks if the current world doesn't have a command set
+			// for the one there, as WDL doesn't explicitly save them so we need to use the
+			// one currently present in the world.
+			TileEntity temp = chunk.getTileEntity(pos, Chunk.EnumCreateEntityType.CHECK);
+			if (temp == null || !(temp instanceof TileEntityCommandBlock)) {
+				// Bad/missing data currently there, import the old data
+				return true;
+			}
+			TileEntityCommandBlock te = (TileEntityCommandBlock) temp;
+			boolean currentBlockHasCommand = !te.getCommandBlockLogic().getCommand().isEmpty();
+			// Only import if the current command block has no command.
+			return !currentBlockHasCommand;
+		} else {
+			return false;
+		}
 	}
 
 	/* (non-javadoc)

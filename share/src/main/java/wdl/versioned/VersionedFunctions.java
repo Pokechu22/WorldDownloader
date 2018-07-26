@@ -21,10 +21,12 @@ import javax.annotation.Nullable;
 import com.google.common.collect.ImmutableList;
 
 import net.minecraft.block.Block;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.client.CPacketCustomPayload;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 import wdl.handler.block.BlockHandler;
 import wdl.handler.entity.EntityHandler;
 
@@ -43,15 +45,6 @@ public class VersionedFunctions {
 	}
 
 	/**
-	 * Returns the ID used for block entities with the given class in the given version
-	 *
-	 * @return The ID, or an empty string if the given TE is not registered.
-	 */
-	public static String getBlockEntityID(Class<? extends TileEntity> clazz) {
-		return HandlerFunctions.getBlockEntityID(clazz);
-	}
-
-	/**
 	 * All supported {@link BlockHandler}s.  Each type will only be represented once.
 	 */
 	public static final ImmutableList<BlockHandler<?, ?>> BLOCK_HANDLERS = HandlerFunctions.BLOCK_HANDLERS;
@@ -62,10 +55,30 @@ public class VersionedFunctions {
 	public static final ImmutableList<EntityHandler<?, ?>> ENTITY_HANDLERS = HandlerFunctions.ENTITY_HANDLERS;
 
 	/**
-	 * Checks if the given block is a shulker box, and the block entity ID matches.
+	 * Checks if the block entity should be imported. Only "problematic" (IE,
+	 * those that require manual interaction such as chests) block entities will
+	 * be imported. Additionally, the block at the block entity's coordinates
+	 * must be one that would normally be used with that block entity.
+	 *
+	 * @param entityID
+	 *            The block entity's ID, as found in the 'id' tag.
+	 * @param pos
+	 *            The location of the block entity, as created by its 'x', 'y',
+	 *            and 'z' tags.
+	 * @param block
+	 *            The block in the current world at the given position.
+	 * @param blockEntityNBT
+	 *            The full NBT tag of the existing block entity. May be used if
+	 *            further identification is needed.
+	 * @param chunk
+	 *            The (current) chunk for which entities are being imported. May be used
+	 *            if further identification is needed (e.g. nearby blocks).
+	 * @return true if it should be imported
+	 * @see wdl.WDLChunkLoader#shouldImportBlockEntity
 	 */
-	public static boolean isImportableShulkerBox(String entityID, Block block) {
-		return HandlerFunctions.isImportableShulkerBox(entityID, block);
+	public static boolean shouldImportBlockEntity(String entityID, BlockPos pos,
+			Block block, NBTTagCompound blockEntityNBT, Chunk chunk) {
+		return HandlerFunctions.shouldImportBlockEntity(entityID, pos, block, blockEntityNBT, chunk);
 	}
 
 	/**
