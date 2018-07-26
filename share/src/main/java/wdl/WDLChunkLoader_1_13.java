@@ -43,6 +43,7 @@ import net.minecraft.world.dimension.NetherDimension;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.storage.SaveHandler;
 import net.minecraft.world.storage.SessionLockException;
+import wdl.versioned.VersionedFunctions;
 
 /**
  * Alternative implementation of {@link AnvilChunkLoader} that handles editing
@@ -139,7 +140,7 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 
 		ChunkSection[] chunkSections = chunk.getBlockStorageArray();
 		NBTTagList chunkSectionList = new NBTTagList();
-		boolean hasSky = VersionedProperties.hasSkyLight(world);
+		boolean hasSky = VersionedFunctions.hasSkyLight(world);
 
 		for (ChunkSection chunkSection : chunkSections) {
 			if (chunkSection != Chunk.NULL_BLOCK_STORAGE) {
