@@ -12,24 +12,17 @@
  *
  * Do not redistribute (in modified or unmodified form) without prior permission.
  */
-package wdl;
+package wdl.versioned;
 
 import java.lang.reflect.Field;
-import java.util.List;
 import java.util.Map;
-
-import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
 
-import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.minecraft.block.Block;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.client.CPacketCustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
-import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import wdl.handler.block.BeaconHandler;
 import wdl.handler.block.BlockHandler;
@@ -45,17 +38,13 @@ import wdl.handler.entity.HorseHandler;
 import wdl.handler.entity.StorageMinecartHandler;
 import wdl.handler.entity.VillagerHandler;
 
-/**
- * Helper that determines version-specific information about things, such
- * as whether a world has skylight.
- */
-public class VersionedProperties {
-	/**
-	 * Returns true if the given world has skylight data.
-	 *
-	 * @return a boolean
+final class HandlerFunctions {
+	private HandlerFunctions() { throw new AssertionError(); }
+
+	/* (non-javadoc)
+	 * @see VersionedFunctions#hasSkyLight
 	 */
-	public static boolean hasSkyLight(World world) {
+	static boolean hasSkyLight(World world) {
 		// 1.10-: use isNether (hasNoSky)
 		return !world.provider.isNether();
 	}
@@ -91,20 +80,18 @@ public class VersionedProperties {
 	 */
 	private static final Map<Class<? extends TileEntity>, String> TE_REVERSE_MAP;
 
-	/**
-	 * Returns the ID used for block entities with the given class in the given version
-	 *
-	 * @return The ID, or an empty string if the given TE is not registered.
+	/* (non-javadoc)
+	 * @see VersionedFunctions#getBlockEntityID
 	 */
-	public static String getBlockEntityID(Class<? extends TileEntity> clazz) {
+	static String getBlockEntityID(Class<? extends TileEntity> clazz) {
 		// 1.10-: There is no nice way to get the ID; use reflection
 		return TE_REVERSE_MAP.getOrDefault(clazz, "");
 	}
 
-	/**
-	 * All supported {@link BlockHandler}s.  Each type will only be represented once.
+	/* (non-javadoc)
+	 * @see VersionedFunctions#BLOCK_HANDLERS
 	 */
-	public static final ImmutableList<BlockHandler<?, ?>> BLOCK_HANDLERS = ImmutableList.of(
+	static final ImmutableList<BlockHandler<?, ?>> BLOCK_HANDLERS = ImmutableList.of(
 			new BeaconHandler(),
 			new BrewingStandHandler(),
 			new ChestHandler(),
@@ -114,78 +101,28 @@ public class VersionedProperties {
 			new HopperHandler()
 	);
 
-	/**
-	 * All supported {@link EntityHandler}s.  There will be no ambiguities.
+	/* (non-javadoc)
+	 * @see VersionedFunctions#ENTITY_HANDLERS
 	 */
-	public static final ImmutableList<EntityHandler<?, ?>> ENTITY_HANDLERS = ImmutableList.of(
+	static final ImmutableList<EntityHandler<?, ?>> ENTITY_HANDLERS = ImmutableList.of(
 			new HopperMinecartHandler(),
 			new HorseHandler(),
 			new StorageMinecartHandler(),
 			new VillagerHandler()
 	);
 
-	/**
-	 * Checks if the given block is a shulker box, and the block entity ID matches.
+	/* (non-javadoc)
+	 * @see VersionedFunctions#isImportableShulkerBox
 	 */
-	public static boolean isImportableShulkerBox(String entityID, Block block) {
+	static boolean isImportableShulkerBox(String entityID, Block block) {
 		return false;
 	}
 
-	/**
-	 * Gets the class used to store the list of chunks in ChunkProviderClient.
+	/* (non-javadoc)
+	 * @see VersionedFunctions#getChunkListClass
 	 */
 	@SuppressWarnings("rawtypes")
-	public static Class<Long2ObjectMap> getChunkListClass() {
+	static Class<Long2ObjectMap> getChunkListClass() {
 		return Long2ObjectMap.class;
-	}
-
-	/**
-	 * Creates a plugin message packet.
-	 * @param channel The channel to send on.
-	 * @param bytes The payload.
-	 * @return The new packet.
-	 */
-	public static CPacketCustomPayload makePluginMessagePacket(String channel, byte[] bytes) {
-		return new CPacketCustomPayload(channel, new PacketBuffer(Unpooled.copiedBuffer(bytes)));
-	}
-
-	/**
-	 * Checks if the given game rule is of the given type.
-	 * @param rules The rule collection
-	 * @param rule The name of the rule
-	 * @return The type, or null if no info could be found.
-	 */
-	@Nullable
-	public static GameRules.ValueType getRuleType(GameRules rules, String rule) {
-		for (GameRules.ValueType type : GameRules.ValueType.values()) {
-			if (type == GameRules.ValueType.ANY_VALUE) {
-				// Ignore this as it always returns true
-				continue;
-			}
-			if (rules.areSameType(rule, type)) {
-				return type;
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Gets the value of a game rule.
-	 * @param rules The rule collection
-	 * @param rule The name of the rule
-	 * @return The value, or null if no info could be found.
-	 */
-	@Nullable
-	public static String getRuleValue(GameRules rules, String rule) { 
-		return rules.hasRule(rule) ? rules.getString(rule) : null;
-	}
-
-	/**
-	 * Gets a list of all game rules.
-	 * @param rules The rules object.
-	 * @return A list of all rule names.
-	 */
-	public static List<String> getGameRules(GameRules rules) {
-		return ImmutableList.copyOf(rules.getRules());
 	}
 }

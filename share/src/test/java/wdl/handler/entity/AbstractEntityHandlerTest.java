@@ -53,9 +53,9 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.World;
 import wdl.ReflectionUtils;
-import wdl.VersionedProperties;
 import wdl.handler.AbstractWorldBehaviorTest;
 import wdl.handler.HandlerException;
+import wdl.versioned.VersionedFunctions;
 
 /**
  * Test for entity handlers.
@@ -101,7 +101,7 @@ public abstract class AbstractEntityHandlerTest<E extends Entity, C extends Cont
 
 	/**
 	 * Handler under test.  Will be a new object, not the handler registered in
-	 * {@link VersionedProperties}.
+	 * {@link VersionedFunctions}.
 	 */
 	protected final H handler;
 

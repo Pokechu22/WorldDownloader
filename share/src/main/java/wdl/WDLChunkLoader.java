@@ -65,6 +65,7 @@ import wdl.api.ITileEntityEditor.TileEntityCreationMode;
 import wdl.api.ITileEntityImportationIdentifier;
 import wdl.api.WDLApi;
 import wdl.api.WDLApi.ModInfo;
+import wdl.versioned.VersionedFunctions;
 
 /**
  * Alternative implementation of {@link AnvilChunkLoader} that handles editing
@@ -389,23 +390,23 @@ public class WDLChunkLoader extends WDLChunkLoaderBase {
 	 */
 	protected boolean shouldImportTileEntity(String entityID, BlockPos pos,
 			Block block, NBTTagCompound tileEntityNBT, Chunk chunk) {
-		if (block instanceof BlockChest && entityID.equals(VersionedProperties.getBlockEntityID(TileEntityChest.class))) {
+		if (block instanceof BlockChest && entityID.equals(VersionedFunctions.getBlockEntityID(TileEntityChest.class))) {
 			return true;
-		} else if (block instanceof BlockDispenser && entityID.equals(VersionedProperties.getBlockEntityID(TileEntityDispenser.class))) {
+		} else if (block instanceof BlockDispenser && entityID.equals(VersionedFunctions.getBlockEntityID(TileEntityDispenser.class))) {
 			return true;
-		} else if (block instanceof BlockDropper && entityID.equals(VersionedProperties.getBlockEntityID(TileEntityDropper.class))) {
+		} else if (block instanceof BlockDropper && entityID.equals(VersionedFunctions.getBlockEntityID(TileEntityDropper.class))) {
 			return true;
-		} else if (block instanceof BlockFurnace && entityID.equals(VersionedProperties.getBlockEntityID(TileEntityFurnace.class))) {
+		} else if (block instanceof BlockFurnace && entityID.equals(VersionedFunctions.getBlockEntityID(TileEntityFurnace.class))) {
 			return true;
-		} else if (block instanceof BlockNote && entityID.equals(VersionedProperties.getBlockEntityID(TileEntityNote.class))) {
+		} else if (block instanceof BlockNote && entityID.equals(VersionedFunctions.getBlockEntityID(TileEntityNote.class))) {
 			return true;
-		} else if (block instanceof BlockBrewingStand && entityID.equals(VersionedProperties.getBlockEntityID(TileEntityBrewingStand.class))) {
+		} else if (block instanceof BlockBrewingStand && entityID.equals(VersionedFunctions.getBlockEntityID(TileEntityBrewingStand.class))) {
 			return true;
-		} else if (block instanceof BlockHopper && entityID.equals(VersionedProperties.getBlockEntityID(TileEntityHopper.class))) {
+		} else if (block instanceof BlockHopper && entityID.equals(VersionedFunctions.getBlockEntityID(TileEntityHopper.class))) {
 			return true;
-		} else if (block instanceof BlockBeacon && entityID.equals(VersionedProperties.getBlockEntityID(TileEntityBeacon.class))) {
+		} else if (block instanceof BlockBeacon && entityID.equals(VersionedFunctions.getBlockEntityID(TileEntityBeacon.class))) {
 			return true;
-		} else if (block instanceof BlockCommandBlock && entityID.equals(VersionedProperties.getBlockEntityID(TileEntityCommandBlock.class))) {
+		} else if (block instanceof BlockCommandBlock && entityID.equals(VersionedFunctions.getBlockEntityID(TileEntityCommandBlock.class))) {
 			// Only import command blocks if the current world doesn't have a command set
 			// for the one there, as WDL doesn't explicitly save them so we need to use the
 			// one currently present in the world.
@@ -418,7 +419,7 @@ public class WDLChunkLoader extends WDLChunkLoaderBase {
 			boolean currentBlockHasCommand = !te.getCommandBlockLogic().getCommand().isEmpty();
 			// Only import if the current command block has no command.
 			return !currentBlockHasCommand;
-		} else if (VersionedProperties.isImportableShulkerBox(entityID, block)) {
+		} else if (VersionedFunctions.isImportableShulkerBox(entityID, block)) {
 			return true;
 		}
 

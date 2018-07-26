@@ -86,6 +86,7 @@ import wdl.gui.GuiWDLMultiworldSelect;
 import wdl.gui.GuiWDLOverwriteChanges;
 import wdl.gui.GuiWDLSaveProgress;
 import wdl.update.GithubInfoGrabber;
+import wdl.versioned.VersionedFunctions;
 
 /**
  * This is the main class that does most of the work.
@@ -814,7 +815,7 @@ public class WDL {
 		ChunkProviderClient chunkProvider = worldClient
 				.getChunkProvider();
 		// Get the list of loaded chunks
-		Object obj = ReflectionUtils.findAndGetPrivateField(chunkProvider, VersionedProperties.getChunkListClass());
+		Object obj = ReflectionUtils.findAndGetPrivateField(chunkProvider, VersionedFunctions.getChunkListClass());
 		List<Chunk> chunks;
 		if (obj instanceof List<?>) {
 			@SuppressWarnings("unchecked")

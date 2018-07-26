@@ -39,6 +39,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.chunk.storage.AnvilChunkLoader;
 import wdl.gui.GuiWDLSaveProgress;
+import wdl.versioned.VersionedFunctions;
 
 /**
  * Tests all situations where {@link ReflectionUtils} is used, to verify that
@@ -73,7 +74,7 @@ public class ReflectionUtilsUsageTest {
 	/** Handles {@link WDL#saveChunks(GuiWDLSaveProgress)} */
 	@Test
 	public void testWDLSaveChunks() {
-		ReflectionUtils.findField(ChunkProviderClient.class, VersionedProperties.getChunkListClass());
+		ReflectionUtils.findField(ChunkProviderClient.class, VersionedFunctions.getChunkListClass());
 	}
 
 	/** Handles {@link WDLChunkLoader#WDLChunkLoader(File)} */

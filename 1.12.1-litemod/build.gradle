@@ -80,7 +80,12 @@ sourceSets {
             srcDir "src/main/java"
             srcDir project(':1.12.1').file("src/main/java")
             srcDir project(':share').file("src/main/java")
-            exclude "wdl/WDLChunkLoader13.java"
+            exclude "wdl/WDLChunkLoader_1_13.java"
+            exclude "wdl/versioned/GameRules_1_13.java"
+            exclude "wdl/versioned/Handlers_1_9_2.java"
+            exclude "wdl/versioned/Handlers_1_10.java"
+            exclude "wdl/versioned/Handlers_1_13.java"
+            exclude "wdl/versioned/Packets_1_13.java"
         }
         resources {
             srcDir "src/main/resources"

@@ -41,9 +41,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IInteractionObject;
-import wdl.VersionedProperties;
 import wdl.handler.AbstractWorldBehaviorTest;
 import wdl.handler.HandlerException;
+import wdl.versioned.VersionedFunctions;
 
 /**
  * Test for block entity handlers.
@@ -89,7 +89,7 @@ public abstract class AbstractBlockHandlerTest<B extends TileEntity, C extends C
 
 	/**
 	 * Handler under test.  Will be a new object, not the handler registered in
-	 * {@link VersionedProperties}.
+	 * {@link VersionedFunctions}.
 	 */
 	protected final H handler;
 

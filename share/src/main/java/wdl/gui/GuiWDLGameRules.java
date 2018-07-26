@@ -26,13 +26,13 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.GameRules.ValueType;
-import wdl.VersionedProperties;
 import wdl.WDL;
 import wdl.config.IConfiguration;
 import wdl.gui.widget.Button;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.GuiList;
 import wdl.gui.widget.GuiList.GuiListEntry;
+import wdl.versioned.VersionedFunctions;
 import wdl.gui.widget.GuiNumericTextField;
 import wdl.gui.widget.Screen;
 
@@ -62,7 +62,7 @@ public class GuiWDLGameRules extends Screen {
 					GuiWDLGameRules.this.height - 32, 24);
 			List<RuleEntry> entries = this.getEntries();
 			for (String rule : vanillaGameRules) {
-				GameRules.ValueType type = VersionedProperties.getRuleType(rules, rule);
+				GameRules.ValueType type = VersionedFunctions.getRuleType(rules, rule);
 				if (type == ValueType.NUMERICAL_VALUE) {
 					entries.add(new IntRuleEntry(rule));
 				} else if (type == ValueType.BOOLEAN_VALUE) {
@@ -219,7 +219,7 @@ public class GuiWDLGameRules extends Screen {
 		if (isRuleSet(ruleName)) {
 			return config.getGameRule(ruleName);
 		} else {
-			return VersionedProperties.getRuleValue(rules, ruleName);
+			return VersionedFunctions.getRuleValue(rules, ruleName);
 		}
 	}
 
@@ -263,7 +263,7 @@ public class GuiWDLGameRules extends Screen {
 		this.parent = parent;
 		this.config = WDL.worldProps;
 		this.rules = WDL.worldClient.getGameRules();
-		this.vanillaGameRules = VersionedProperties.getGameRules(rules);
+		this.vanillaGameRules = VersionedFunctions.getGameRules(rules);
 	}
 
 	@Override

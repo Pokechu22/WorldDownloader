@@ -26,10 +26,10 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
-import wdl.VersionedProperties;
 import wdl.ducks.INetworkNameable;
 import wdl.handler.BaseHandler;
 import wdl.handler.HandlerException;
+import wdl.versioned.VersionedFunctions;
 
 /**
  * A handler for an arbitrary block entity.
@@ -168,7 +168,7 @@ public abstract class BlockHandler<B extends TileEntity, C extends Container> ex
 
 	/**
 	 * Looks up the handler that handles the given block entity/container combo,
-	 * from {@link VersionedProperties#BLOCK_HANDLERS}.
+	 * from {@link VersionedFunctions#BLOCK_HANDLERS}.
 	 *
 	 * @param blockEntityClass The type for the block entity.
 	 * @param containerClass The type for the container.
@@ -177,7 +177,7 @@ public abstract class BlockHandler<B extends TileEntity, C extends Container> ex
 	@SuppressWarnings("unchecked")
 	@Nullable
 	public static <B extends TileEntity, C extends Container> BlockHandler<B, C> getHandler(Class<B> blockEntityClass, Class<C> containerClass) {
-		for (BlockHandler<?, ?> h : VersionedProperties.BLOCK_HANDLERS) {
+		for (BlockHandler<?, ?> h : VersionedFunctions.BLOCK_HANDLERS) {
 			if (h.getBlockEntityClass().equals(blockEntityClass) &&
 					h.getContainerClass().equals(containerClass)) {
 				return (BlockHandler<B, C>)h;

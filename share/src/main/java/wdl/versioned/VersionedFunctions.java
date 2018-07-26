@@ -12,7 +12,7 @@
  *
  * Do not redistribute (in modified or unmodified form) without prior permission.
  */
-package wdl;
+package wdl.versioned;
 
 import java.util.List;
 
@@ -20,45 +20,26 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
 
-import io.netty.buffer.Unpooled;
-import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockShulkerBox;
-import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.client.CPacketCustomPayload;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityShulkerBox;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
-import wdl.handler.block.BeaconHandler;
 import wdl.handler.block.BlockHandler;
-import wdl.handler.block.BrewingStandHandler;
-import wdl.handler.block.ChestHandler;
-import wdl.handler.block.DispenserHandler;
-import wdl.handler.block.DropperHandler;
-import wdl.handler.block.FurnaceHandler;
-import wdl.handler.block.HopperHandler;
-import wdl.handler.block.ShulkerBoxHandler;
 import wdl.handler.entity.EntityHandler;
-import wdl.handler.entity.HopperMinecartHandler;
-import wdl.handler.entity.HorseHandler;
-import wdl.handler.entity.StorageMinecartHandler;
-import wdl.handler.entity.VillagerHandler;
 
 /**
  * Helper that determines version-specific information about things, such
  * as whether a world has skylight.
  */
-public class VersionedProperties {
+public class VersionedFunctions {
 	/**
 	 * Returns true if the given world has skylight data.
 	 *
 	 * @return a boolean
 	 */
 	public static boolean hasSkyLight(World world) {
-		// 1.11+: use hasSkyLight
-		return world.provider.hasSkyLight();
+		return HandlerFunctions.hasSkyLight(world);
 	}
 
 	/**
@@ -67,48 +48,31 @@ public class VersionedProperties {
 	 * @return The ID, or an empty string if the given TE is not registered.
 	 */
 	public static String getBlockEntityID(Class<? extends TileEntity> clazz) {
-		// 1.11+: use new IDs, and getKey exists.
-		ResourceLocation loc = TileEntity.getKey(clazz);
-		return (loc != null) ? loc.toString() : "";
+		return HandlerFunctions.getBlockEntityID(clazz);
 	}
 
 	/**
 	 * All supported {@link BlockHandler}s.  Each type will only be represented once.
 	 */
-	public static final ImmutableList<BlockHandler<?, ?>> BLOCK_HANDLERS = ImmutableList.of(
-			new BeaconHandler(),
-			new BrewingStandHandler(),
-			new ChestHandler(),
-			new DispenserHandler(),
-			new DropperHandler(),
-			new FurnaceHandler(),
-			new HopperHandler(),
-			new ShulkerBoxHandler()
-	);
+	public static final ImmutableList<BlockHandler<?, ?>> BLOCK_HANDLERS = HandlerFunctions.BLOCK_HANDLERS;
 
 	/**
 	 * All supported {@link EntityHandler}s.  There will be no ambiguities.
 	 */
-	public static final ImmutableList<EntityHandler<?, ?>> ENTITY_HANDLERS = ImmutableList.of(
-			new HopperMinecartHandler(),
-			new HorseHandler(),
-			new StorageMinecartHandler(),
-			new VillagerHandler()
-	);
+	public static final ImmutableList<EntityHandler<?, ?>> ENTITY_HANDLERS = HandlerFunctions.ENTITY_HANDLERS;
 
 	/**
 	 * Checks if the given block is a shulker box, and the block entity ID matches.
 	 */
 	public static boolean isImportableShulkerBox(String entityID, Block block) {
-		return block instanceof BlockShulkerBox && entityID.equals(getBlockEntityID(TileEntityShulkerBox.class));
+		return HandlerFunctions.isImportableShulkerBox(entityID, block);
 	}
 
 	/**
 	 * Gets the class used to store the list of chunks in ChunkProviderClient.
 	 */
-	@SuppressWarnings("rawtypes")
-	public static Class<Long2ObjectMap> getChunkListClass() {
-		return Long2ObjectMap.class;
+	public static Class<?> getChunkListClass() {
+		return HandlerFunctions.getChunkListClass();
 	}
 
 	/**
@@ -118,7 +82,7 @@ public class VersionedProperties {
 	 * @return The new packet.
 	 */
 	public static CPacketCustomPayload makePluginMessagePacket(String channel, byte[] bytes) {
-		return new CPacketCustomPayload(channel, new PacketBuffer(Unpooled.copiedBuffer(bytes)));
+		return PacketFunctions.makePluginMessagePacket(channel, bytes);
 	}
 
 	/**
@@ -129,16 +93,7 @@ public class VersionedProperties {
 	 */
 	@Nullable
 	public static GameRules.ValueType getRuleType(GameRules rules, String rule) {
-		for (GameRules.ValueType type : GameRules.ValueType.values()) {
-			if (type == GameRules.ValueType.ANY_VALUE) {
-				// Ignore this as it always returns true
-				continue;
-			}
-			if (rules.areSameType(rule, type)) {
-				return type;
-			}
-		}
-		return null;
+		return GameRuleFunctions.getRuleType(rules, rule);
 	}
 
 	/**
@@ -149,7 +104,7 @@ public class VersionedProperties {
 	 */
 	@Nullable
 	public static String getRuleValue(GameRules rules, String rule) { 
-		return rules.hasRule(rule) ? rules.getString(rule) : null;
+		return GameRuleFunctions.getRuleValue(rules, rule);
 	}
 
 	/**
@@ -158,6 +113,6 @@ public class VersionedProperties {
 	 * @return A list of all rule names.
 	 */
 	public static List<String> getGameRules(GameRules rules) {
-		return ImmutableList.copyOf(rules.getRules());
+		return GameRuleFunctions.getGameRules(rules);
 	}
 }

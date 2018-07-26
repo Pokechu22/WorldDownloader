@@ -28,6 +28,7 @@ import javax.annotation.CheckForSigned;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.play.client.CPacketCustomPayload;
 import net.minecraft.world.chunk.Chunk;
+import wdl.versioned.VersionedFunctions;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -597,7 +598,7 @@ public class WDLPluginChannels {
 			range.writeToOutput(output);
 		}
 
-		CPacketCustomPayload requestPacket = VersionedProperties.makePluginMessagePacket("WDL|REQUEST", output.toByteArray());
+		CPacketCustomPayload requestPacket = VersionedFunctions.makePluginMessagePacket("WDL|REQUEST", output.toByteArray());
 		Minecraft.getMinecraft().getConnection().sendPacket(requestPacket);
 	}
 
@@ -624,14 +625,14 @@ public class WDLPluginChannels {
 				'W', 'D', 'L', '|', 'I', 'N', 'I', 'T', '\0',
 				'W', 'D', 'L', '|', 'C', 'O', 'N', 'T', 'R', 'O', 'L', '\0',
 				'W', 'D', 'L', '|', 'R', 'E', 'Q', 'U', 'E', 'S', 'T', '\0' };
-		CPacketCustomPayload registerPacket = VersionedProperties.makePluginMessagePacket("REGISTER", registerBytes);
+		CPacketCustomPayload registerPacket = VersionedFunctions.makePluginMessagePacket("REGISTER", registerBytes);
 		minecraft.getConnection().sendPacket(registerPacket);
 
 		// Send the init message.
 		CPacketCustomPayload initPacket;
 		String payload = "{\"X-RTFM\":\"http://wiki.vg/Plugin_channels/World_downloader\",\"X-UpdateNote\":\"The plugin message system will be changing shortly.  Please stay tuned.\",\"Version\":\"%s\",\"State\":\"Init?\"}";
 		payload = String.format(payload, VersionConstants.getModVersion());
-		initPacket = VersionedProperties.makePluginMessagePacket("WDL|INIT", payload.getBytes(StandardCharsets.UTF_8));
+		initPacket = VersionedFunctions.makePluginMessagePacket("WDL|INIT", payload.getBytes(StandardCharsets.UTF_8));
 
 		minecraft.getConnection().sendPacket(initPacket);
 	}

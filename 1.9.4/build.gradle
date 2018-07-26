@@ -75,7 +75,12 @@ sourceSets {
             srcDir "src/main/java"
             srcDir project(':share').file("src/main/java")
             exclude "wdl/handler/block/ShulkerBoxHandler.java"
-            exclude "wdl/WDLChunkLoader13.java"
+            exclude "wdl/WDLChunkLoader_1_13.java"
+            exclude "wdl/versioned/GameRules_1_13.java"
+            exclude "wdl/versioned/Handlers_1_10.java"
+            exclude "wdl/versioned/Handlers_1_12.java"
+            exclude "wdl/versioned/Handlers_1_13.java"
+            exclude "wdl/versioned/Packets_1_13.java"
         }
         resources {
             srcDir project(':share').file("src/main/resources")
