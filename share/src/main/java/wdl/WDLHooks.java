@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017 Pokechu22, julialy
+ * Copyright (c) 2017-2018 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -24,6 +24,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiIngameMenu;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.resources.I18n;
@@ -50,6 +51,7 @@ import wdl.gui.GuiWDL;
 import wdl.gui.GuiWDLAbout;
 import wdl.gui.GuiWDLChunkOverrides;
 import wdl.gui.GuiWDLPermissions;
+import wdl.gui.widget.Button;
 
 /**
  * The various hooks for WDL. <br/>
@@ -403,6 +405,106 @@ public class WDLHooks {
 	 */
 	private static final int WDLo = ('W' << 24) | ('D' << 16) | ('L' << 8) | ('o');
 
+	private static class StartDownloadButton extends Button {
+		public StartDownloadButton(GuiScreen menu, int x, int y, int width, int height) {
+			super(x, y, width, height, null);
+			this.menu = menu;
+			this.id = WDLs; // keep unique, even though this isn't used by WDL
+		}
+
+		// The GuiScreen containing this button, as a parent for other GUIs
+		private final GuiScreen menu;
+
+		@Override
+		public void beforeDraw() {
+			final String displayString;
+			final boolean enabled;
+			if (WDL.minecraft.isIntegratedServerRunning()) {
+				// Singleplayer
+				displayString = I18n
+						.format("wdl.gui.ingameMenu.downloadStatus.singlePlayer");
+				enabled = false;
+			} else if (!WDLPluginChannels.canDownloadAtAll()) {
+				if (WDLPluginChannels.canRequestPermissions()) {
+					// Allow requesting permissions.
+					displayString = I18n
+							.format("wdl.gui.ingameMenu.downloadStatus.request");
+					enabled = true;
+				} else {
+					// Out of date plugin :/
+					displayString = I18n
+							.format("wdl.gui.ingameMenu.downloadStatus.disabled");
+					enabled = false;
+				}
+			} else if (WDL.saving) {
+				// Normally not accessible; only happens as a major fallback...
+				displayString = I18n
+						.format("wdl.gui.ingameMenu.downloadStatus.saving");
+				enabled = false;
+			} else if (WDL.downloading) {
+				displayString = I18n
+						.format("wdl.gui.ingameMenu.downloadStatus.stop");
+				enabled = true;
+			} else {
+				displayString = I18n
+						.format("wdl.gui.ingameMenu.downloadStatus.start");
+				enabled = true;
+			}
+			this.enabled = enabled;
+			this.displayString = displayString;
+		}
+
+		@Override
+		public void performAction() {
+			if (WDL.minecraft.isIntegratedServerRunning()) {
+				return; // WDL not available if in singleplayer or LAN server mode
+			}
+
+			if (WDL.downloading) {
+				WDL.stopDownload();
+				enabled = false; // Disable to stop double-clicks
+			} else {
+				if (!WDLPluginChannels.canDownloadAtAll()) {
+					// If they don't have any permissions, let the player
+					// request some.
+					if (WDLPluginChannels.canRequestPermissions()) {
+						WDL.minecraft.displayGuiScreen(new GuiWDLPermissions(menu));
+					} else {
+						// Should never happen
+					}
+				} else if (WDLPluginChannels.hasChunkOverrides()
+						&& !WDLPluginChannels.canDownloadInGeneral()) {
+					// Handle the "only has chunk overrides" state - notify
+					// the player of limited areas.
+					WDL.minecraft.displayGuiScreen(new GuiWDLChunkOverrides(menu));
+				} else {
+					WDL.startDownload();
+					enabled = false; // Disable to stop double-clicks
+				}
+			}
+		}
+	}
+
+	private static class SettingsButton extends Button {
+		public SettingsButton(GuiScreen menu, int x, int y, int width, int height, String displayString) {
+			super(x, y, width, height, displayString);
+			this.menu = menu;
+			this.id = WDLo; // keep unique, even though this isn't used by WDL
+		}
+
+		// The GuiScreen containing this button, as a parent for other GUIs
+		private final GuiScreen menu;
+
+		@Override
+		public void performAction() {
+			if (WDL.minecraft.isIntegratedServerRunning()) {
+				WDL.minecraft.displayGuiScreen(new GuiWDLAbout(menu));
+			} else {
+				WDL.minecraft.displayGuiScreen(new GuiWDL(menu));
+			}
+		}
+	}
+
 	/**
 	 * Adds the "Download this world" button to the ingame pause GUI.
 	 *
@@ -427,42 +529,12 @@ public class WDLHooks {
 		}
 
 		// Insert wdl buttons.
-		GuiButton wdlDownload = new GuiButton(WDLs, gui.width / 2 - 100,
-				insertAtYPos, 170, 20, null);
+		buttonList.add(new StartDownloadButton(gui,
+				gui.width / 2 - 100, insertAtYPos, 170, 20));
 
-		GuiButton wdlOptions = new GuiButton(WDLo, gui.width / 2 + 71,
-				insertAtYPos, 28, 20,
-				I18n.format("wdl.gui.ingameMenu.settings"));
-
-		if (WDL.minecraft.isIntegratedServerRunning()) {
-			wdlDownload.displayString = I18n
-					.format("wdl.gui.ingameMenu.downloadStatus.singlePlayer");
-			wdlDownload.enabled = false;
-		} else if (!WDLPluginChannels.canDownloadAtAll()) {
-			if (WDLPluginChannels.canRequestPermissions()) {
-				// Allow requesting permissions.
-				wdlDownload.displayString = I18n
-						.format("wdl.gui.ingameMenu.downloadStatus.request");
-			} else {
-				// Out of date plugin :/
-				wdlDownload.displayString = I18n
-						.format("wdl.gui.ingameMenu.downloadStatus.disabled");
-				wdlDownload.enabled = false;
-			}
-		} else if (WDL.saving) {
-			wdlDownload.displayString = I18n
-					.format("wdl.gui.ingameMenu.downloadStatus.saving");
-			wdlDownload.enabled = false;
-			wdlOptions.enabled = false;
-		} else if (WDL.downloading) {
-			wdlDownload.displayString = I18n
-					.format("wdl.gui.ingameMenu.downloadStatus.stop");
-		} else {
-			wdlDownload.displayString = I18n
-					.format("wdl.gui.ingameMenu.downloadStatus.start");
-		}
-		buttonList.add(wdlDownload);
-		buttonList.add(wdlOptions);
+		buttonList.add(new SettingsButton(gui,
+				gui.width / 2 + 71, insertAtYPos, 28, 20,
+				I18n.format("wdl.gui.ingameMenu.settings")));
 	}
 
 	/**
@@ -476,44 +548,7 @@ public class WDLHooks {
 			return;
 		}
 
-		if (button.id == WDLs) { // "Start/Stop Download"
-			if (WDL.minecraft.isIntegratedServerRunning()) {
-				return; // WDL not available if in singleplayer or LAN server mode
-			}
-
-			if (WDL.downloading) {
-				WDL.stopDownload();
-				// Disable the button to prevent double-clicks
-				button.enabled = false;
-			} else {
-				if (!WDLPluginChannels.canDownloadAtAll()) {
-					// If they don't have any permissions, let the player
-					// request some.
-					if (WDLPluginChannels.canRequestPermissions()) {
-						WDL.minecraft.displayGuiScreen(new GuiWDLPermissions(gui));
-					} else {
-						button.enabled = false;
-					}
-
-					return;
-				} else if (WDLPluginChannels.hasChunkOverrides()
-						&& !WDLPluginChannels.canDownloadInGeneral()) {
-					// Handle the "only has chunk overrides" state - notify
-					// the player of limited areas.
-					WDL.minecraft.displayGuiScreen(new GuiWDLChunkOverrides(gui));
-				} else {
-					WDL.startDownload();
-					// Disable the button to prevent double-clicks
-					button.enabled = false;
-				}
-			}
-		} else if (button.id == WDLo) { // "..." (options)
-			if (WDL.minecraft.isIntegratedServerRunning()) {
-				WDL.minecraft.displayGuiScreen(new GuiWDLAbout(gui));
-			} else {
-				WDL.minecraft.displayGuiScreen(new GuiWDL(gui));
-			}
-		} else if (button.id == 1) { // "Disconnect"
+		if (button.id == 1) { // "Disconnect", from vanilla
 			WDL.stopDownload();
 			// Disable the button to prevent double-clicks
 			button.enabled = false;
