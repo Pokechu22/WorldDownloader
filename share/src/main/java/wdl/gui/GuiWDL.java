@@ -189,10 +189,9 @@ public class GuiWDL extends Screen {
 		this.title = I18n.format("wdl.gui.wdl.title",
 				WDL.baseFolderName.replace('@', ':'));
 
-		this.worldname = new GuiTextField(42, this.fontRenderer,
-				this.width / 2 - 155, 19, 150, 18);
+		this.worldname = this.addTextField(new GuiTextField(42, this.fontRenderer,
+				this.width / 2 - 155, 19, 150, 18));
 		this.worldname.setText(this.config.getValue(MiscSettings.SERVER_NAME));
-		this.addTextField(this.worldname);
 
 		this.addButton(new ButtonDisplayGui(this.width / 2 - 100, this.height - 29,
 				200, 20, parent));

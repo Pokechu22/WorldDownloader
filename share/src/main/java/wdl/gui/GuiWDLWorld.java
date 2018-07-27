@@ -78,18 +78,15 @@ public class GuiWDLWorld extends Screen {
 		});
 		y += 22;
 		this.spawnTextY = y + 4;
-		this.spawnX = new GuiNumericTextField(40, this.fontRenderer, this.width / 2 - 87,
-				y, 50, 16);
-		this.spawnY = new GuiNumericTextField(41, this.fontRenderer, this.width / 2 - 19,
-				y, 50, 16);
-		this.spawnZ = new GuiNumericTextField(42, this.fontRenderer, this.width / 2 + 48,
-				y, 50, 16);
+		this.spawnX = this.addTextField(new GuiNumericTextField(40, this.fontRenderer,
+				this.width / 2 - 87, y, 50, 16));
+		this.spawnY = this.addTextField(new GuiNumericTextField(41, this.fontRenderer,
+				this.width / 2 - 19, y, 50, 16));
+		this.spawnZ = this.addTextField(new GuiNumericTextField(42, this.fontRenderer,
+				this.width / 2 + 48, y, 50, 16));
 		spawnX.setValue(config.getValue(WorldSettings.SPAWN_X));
 		spawnY.setValue(config.getValue(WorldSettings.SPAWN_Y));
 		spawnZ.setValue(config.getValue(WorldSettings.SPAWN_Z));
-		this.addTextField(spawnX);
-		this.addTextField(spawnY);
-		this.addTextField(spawnZ);
 		this.spawnX.setMaxStringLength(7);
 		this.spawnY.setMaxStringLength(7);
 		this.spawnZ.setMaxStringLength(7);

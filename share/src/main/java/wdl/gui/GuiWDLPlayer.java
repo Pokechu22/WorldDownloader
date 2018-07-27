@@ -68,21 +68,18 @@ public class GuiWDLPlayer extends Screen {
 		});
 		y += 22;
 		this.posTextY = y + 4;
-		this.posX = new GuiNumericTextField(40, this.fontRenderer,
-				this.width / 2 - 87, y, 50, 16);
-		this.posY = new GuiNumericTextField(41, this.fontRenderer,
-				this.width / 2 - 19, y, 50, 16);
-		this.posZ = new GuiNumericTextField(42, this.fontRenderer,
-				this.width / 2 + 48, y, 50, 16);
+		this.posX = this.addTextField(new GuiNumericTextField(40, this.fontRenderer,
+				this.width / 2 - 87, y, 50, 16));
+		this.posY = this.addTextField(new GuiNumericTextField(41, this.fontRenderer,
+				this.width / 2 - 19, y, 50, 16));
+		this.posZ = this.addTextField(new GuiNumericTextField(42, this.fontRenderer,
+				this.width / 2 + 48, y, 50, 16));
 		this.posX.setValue(config.getValue(PlayerSettings.PLAYER_X));
 		this.posY.setValue(config.getValue(PlayerSettings.PLAYER_Y));
 		this.posZ.setValue(config.getValue(PlayerSettings.PLAYER_Z));
 		this.posX.setMaxStringLength(7);
 		this.posY.setMaxStringLength(7);
 		this.posZ.setMaxStringLength(7);
-		this.addTextField(posX);
-		this.addTextField(posY);
-		this.addTextField(posZ);
 		y += 18;
 		this.pickPosBtn = this.addButton(new Button(
 				this.width / 2 - 0, y, 100, 20,

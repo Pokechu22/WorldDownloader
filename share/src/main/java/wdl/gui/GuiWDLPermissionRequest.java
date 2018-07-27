@@ -70,9 +70,8 @@ public class GuiWDLPermissionRequest extends Screen {
 					+ request.getValue() + "'.");
 		}
 
-		this.requestField = new GuiTextField(0, fontRenderer,
-				width / 2 - 155, 18, 150, 20);
-		this.addTextField(requestField);
+		this.requestField = this.addTextField(new GuiTextField(0, fontRenderer,
+				width / 2 - 155, 18, 150, 20));
 
 		this.submitButton = this.addButton(new Button(
 				width / 2 + 5, 18, 150, 20,

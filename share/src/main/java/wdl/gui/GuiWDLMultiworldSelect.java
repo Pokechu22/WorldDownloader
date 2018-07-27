@@ -313,14 +313,12 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 			}
 		});
 
-		this.newNameField = new GuiTextField(40, this.fontRenderer,
-				this.width / 2 - 155, 29, 150, 20);
-		this.addTextField(this.newNameField);
+		this.newNameField = this.addTextField(new GuiTextField(40, this.fontRenderer,
+				this.width / 2 - 155, 29, 150, 20));
 
-		this.searchField = new GuiTextField(41, this.fontRenderer,
-				this.width / 2 + 5, 29, 150, 20);
+		this.searchField = this.addTextField(new GuiTextField(41, this.fontRenderer,
+				this.width / 2 + 5, 29, 150, 20));
 		this.searchField.setText(searchText);
-		this.addTextField(this.searchField);
 	}
 
 	@Override
