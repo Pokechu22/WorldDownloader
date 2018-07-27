@@ -26,32 +26,37 @@ abstract class ExtButton extends GuiButton implements IExtButton {
 		super(-1, x, y, widthIn, heightIn, buttonText);
 	}
 
-	private boolean dragging;
-
 	@Override
-	public final boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
-		boolean result = super.mousePressed(mc, mouseX, mouseY);
-		if (result) {
-			dragging = true;
-			this.mouseDown(mouseX, mouseY);
+	public boolean mouseClicked(double arg0, double arg1, int arg2) {
+		boolean result = super.mouseClicked(arg0, arg1, arg2);
+		if (result && arg2 == 0) {
+			this.mouseDown((int)arg0, (int)arg1);
 		}
 		return result;
 	}
 
 	@Override
-	public final void mouseReleased(int mouseX, int mouseY) {
-		super.mouseReleased(mouseX, mouseY);
-		dragging = false;
-		this.mouseUp(mouseX, mouseY);
+	public boolean mouseReleased(double arg0, double arg1, int arg2) {
+		boolean result = super.mouseReleased(arg0, arg1, arg2);
+		if (arg2 == 0) {
+			this.mouseUp((int)arg0, (int)arg1);
+		}
+		return result;
 	}
 
 	@Override
-	public final void drawButton(Minecraft mc, int mouseX, int mouseY) {
-		if (this.dragging) {
-			this.mouseDragged(mouseX, mouseY);
+	public final boolean mouseDragged(double arg0, double arg1, int arg2, double arg3, double arg4) {
+		boolean result = super.mouseDragged(arg0, arg1, arg2, arg3, arg4);
+		if (arg2 == 0) {
+			this.mouseDragged((int)arg0, (int)arg1);
 		}
+		return result;
+	}
+
+	@Override
+	public final void drawButton(int mouseX, int mouseY, float partialTicks) {
 		this.beforeDraw();
-		super.drawButton(mc, mouseX, mouseY);
+		super.drawButton(mouseX, mouseY, partialTicks);
 		this.afterDraw();
 	}
 

@@ -16,6 +16,7 @@ package wdl.gui.widget;
 
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 
 /**
@@ -27,18 +28,25 @@ public interface IExtGuiScreen {
 	public abstract void initGui();
 
 	/**
-	 * Adds a list to the collection of lists to tick.
+	 * Adds a button to the collection of buttons to process.
+	 *
+	 * @param button The button to add.
+	 */
+	public abstract <T extends GuiButton> T addButton(T button);
+
+	/**
+	 * Adds a list to the collection of lists to process.
 	 *
 	 * @param list The list to add.
 	 */
-	public abstract void addList(GuiList<?> list);
+	public abstract <T extends GuiList<E>, E extends GuiList.GuiListEntry<E>> T addList(T list);
 
 	/**
-	 * Adds a text field to the collection of fields to tick.
+	 * Adds a text field to the collection of fields to process.
 	 *
 	 * @param field The field to add.
 	 */
-	public abstract void addTextField(GuiTextField field);
+	public abstract <T extends GuiTextField> T addTextField(T field);
 
 	/**
 	 * Called on click when the mouse is over the button.

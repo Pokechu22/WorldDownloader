@@ -20,8 +20,6 @@ import java.util.List;
 import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
-import org.lwjgl.input.Keyboard;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
@@ -29,12 +27,9 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
 import wdl.gui.widget.ExtGuiList.ExtGuiListEntry;
 
-abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended implements IExtGuiList<T> {
+abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended<T> implements IExtGuiList<T> {
 
-	static abstract class ExtGuiListEntry<T extends ExtGuiListEntry<T>> implements IExtGuiListEntry<T>, IGuiListEntry {
-
-		@Override
-		public void setSelected(int p_178011_1_, int p_178011_2_, int p_178011_3_) { }
+	static abstract class ExtGuiListEntry<T extends ExtGuiListEntry<T>> extends IGuiListEntry<T> implements IExtGuiListEntry<T> {
 
 		private static class ButtonWrapper {
 			public final GuiButton button;
@@ -73,61 +68,83 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended 
 		}
 
 		@Override
-		public final void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY,
-				boolean isSelected) {
-			this.drawEntry(x, y, listWidth, slotHeight, mouseX, mouseY);
+		public final void drawEntry(int entryWidth, int entryHeight, int mouseX, int mouseY, boolean arg4, float partialTicks) {
+			int x = getX();
+			int y = getY();
+
+			this.drawEntry(x, y, entryWidth, entryHeight, mouseX, mouseY);
 			for (ButtonWrapper button : this.buttonList) {
-				button.button.x = button.x + x + (listWidth / 2);
+				button.button.x = button.x + x + (entryWidth / 2);
 				button.button.y = button.y + y;
-				button.button.drawButton(Minecraft.getMinecraft(), mouseX, mouseY);
+				button.button.drawButton(mouseX, mouseY, partialTicks);
 			}
 			for (TextFieldWrapper field : this.fieldList) {
-				field.field.x = field.x + x + (listWidth / 2);
+				field.field.x = field.x + x + (entryWidth / 2);
 				field.field.y = field.y + y;
-				field.field.drawTextBox();
+				field.field.drawTextField(mouseX, mouseY, partialTicks);
 			}
 		}
 
 		@Override
-		public final boolean mousePressed(int slotIndex, int mouseX, int mouseY, int mouseEvent, int relativeX,
-				int relativeY) {
+		public final boolean mouseClicked(double arg0, double arg1, int arg2) {
 			for (ButtonWrapper button : this.buttonList) {
-				if (button.button.mousePressed(Minecraft.getMinecraft(), mouseX, mouseY)) {
+				if (button.button.mouseClicked(arg0, arg1, arg2)) {
 					this.activeButton = button;
 					button.button.playPressSound(Minecraft.getMinecraft().getSoundHandler());
 					return true;
 				}
 			}
-			for (TextFieldWrapper field : this.fieldList) {
-				if (field.field.getVisible()) {
-					field.field.mouseClicked(mouseX, mouseY, mouseEvent);
+			for (TextFieldWrapper field : this.fieldList) { 
+				if (field.field.getVisible() && field.field.mouseClicked(arg0, arg1, arg2)) {
+					return true;
 				}
 			}
-			return this.mouseDown(mouseX, mouseY, mouseEvent);
+			return this.mouseDown((int)arg0, (int)arg1, arg2);
 		}
 
 		@Override
-		public final void mouseReleased(int slotIndex, int x, int y, int mouseEvent, int relativeX, int relativeY) {
+		public final boolean mouseReleased(double arg0, double arg1, int arg2) {
 			if (this.activeButton != null) {
-				this.activeButton.button.mouseReleased(x, y);
+				boolean result = this.activeButton.button.mouseReleased(arg0, arg1, arg2);
 				this.activeButton = null;
-				return;
+				return result;
 			}
-			this.mouseUp(x, y, mouseEvent);
+			this.mouseUp((int)arg0, (int)arg1, arg2);
+			return false;
 		}
 
-		final void keyTyped(char typedChar, int keyCode) {
+		@Override
+		public final boolean mouseDragged(double arg0, double arg1, int arg2, double arg3, double arg4) {
+			if (this.activeButton != null) {
+				return this.activeButton.button.mouseDragged(arg0, arg1, arg2, arg3, arg4);
+			}
+			return false;
+		}
+
+		@Override
+		public final boolean charTyped(char p_charTyped_1_, int p_charTyped_2_) {
 			for (TextFieldWrapper field : this.fieldList) {
-				if (field.field.getVisible()) {
-					field.field.textboxKeyTyped(typedChar, keyCode);
-				}
+				field.field.charTyped(p_charTyped_1_, p_charTyped_2_);
 			}
-			if (keyCode == Keyboard.KEY_RETURN || keyCode == Keyboard.KEY_NUMPADENTER) {
-				typedChar = '\n';
+			// TODO Does this handle enter?
+			this.charTyped(p_charTyped_1_);
+			return false;
+		}
+
+		@Override
+		public final boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_) {
+			for (TextFieldWrapper field : this.fieldList) {
+				field.field.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_);
 			}
-			if (typedChar != 0) {
-				this.charTyped(typedChar);
+			return false;
+		}
+
+		@Override
+		public final boolean keyReleased(int p_keyReleased_1_, int p_keyReleased_2_, int p_keyReleased_3_) {
+			for (TextFieldWrapper field : this.fieldList) {
+				field.field.keyReleased(p_keyReleased_1_, p_keyReleased_2_, p_keyReleased_3_);
 			}
+			return false;
 		}
 
 		final void updateScreen() {
@@ -141,12 +158,11 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended 
 		super(mcIn, widthIn, heightIn, topIn, bottomIn, slotHeightIn);
 	}
 
-	private final List<T> entries = new ArrayList<>();
-	private int y = 0;
+	private int y;
 
 	@Override
 	public final List<T> getEntries() {
-		return entries;
+		return super.func_195074_b();
 	}
 
 	@Override
@@ -161,28 +177,12 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended 
 
 	@Override
 	protected final boolean isSelected(int slotIndex) {
-		return entries.get(slotIndex).isSelected();
-	}
-
-	@Override
-	public final IGuiListEntry getListEntry(int index) {
-		return entries.get(index);
-	}
-
-	@Override
-	protected final int getSize() {
-		return entries.size();
+		return getEntries().get(slotIndex).isSelected();
 	}
 
 	final void updateScreen() {
-		for (T t : this.entries) {
+		for (T t : this.getEntries()) {
 			t.updateScreen();
-		}
-	}
-
-	final void keyTyped(char typedChar, int keyCode) {
-		for (T t : this.entries) {
-			t.keyTyped(typedChar, keyCode);
 		}
 	}
 
@@ -201,7 +201,7 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended 
 
 	// Hacks for y offsetting
 	@Override
-	public final boolean mouseClicked(int mouseX, int mouseY, int mouseEvent) {
+	public final boolean mouseClicked(double mouseX, double mouseY, int mouseEvent) {
 		if (mouseY - y >= top && mouseY - y <= bottom) {
 			return super.mouseClicked(mouseX, mouseY - y, mouseEvent);
 		} else {
@@ -210,13 +210,19 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended 
 	}
 
 	@Override
-	public final boolean mouseReleased(int x, int y, int mouseEvent) {
+	public final boolean mouseReleased(double x, double y, int mouseEvent) {
 		return super.mouseReleased(x, y - this.y, mouseEvent);
 	}
 
 	@Override
-	public final void handleMouseInput() {
-		super.handleMouseInput();
+	public final boolean mouseDragged(double arg0, double arg1, int arg2, double arg3, double arg4) {
+		return super.mouseDragged(arg0, arg1 - y, arg2, arg3, arg4);
+	}
+
+	@Override
+	public final boolean mouseScrolled(double p_mouseScrolled_1_) {
+		// TODO check that the scroll is actually over this...
+		return super.mouseScrolled(p_mouseScrolled_1_);
 	}
 
 	@Override

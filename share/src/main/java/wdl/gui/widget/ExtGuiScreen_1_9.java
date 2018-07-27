@@ -26,6 +26,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
+import wdl.gui.widget.GuiList.GuiListEntry;
 
 abstract class ExtGuiScreen extends GuiScreen implements IExtGuiScreen {
 
@@ -41,13 +42,21 @@ abstract class ExtGuiScreen extends GuiScreen implements IExtGuiScreen {
 	}
 
 	@Override
-	public final void addList(GuiList<?> list) {
-		this.listList.add(list);
+	public final <T extends GuiButton> T addButton(T buttonIn) {
+		this.buttonList.add(buttonIn);
+		return buttonIn;
 	}
 
 	@Override
-	public final void addTextField(GuiTextField field) {
+	public final <T extends GuiList<E>, E extends GuiListEntry<E>> T addList(T list) {
+		this.listList.add(list);
+		return list;
+	}
+
+	@Override
+	public final <T extends GuiTextField> T addTextField(T field) {
 		this.textFieldList.add(field);
+		return field;
 	}
 
 	@Override
