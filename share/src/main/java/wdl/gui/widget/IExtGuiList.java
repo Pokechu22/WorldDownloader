@@ -32,7 +32,7 @@ interface IExtGuiList<T extends IExtGuiList.IExtGuiListEntry<T>> {
 		 *               negative).
 		 * @param y      y coordinate relative to the top of the entry.
 		 */
-		public abstract void addButton(GuiButton button, int x, int y);
+		public abstract <B extends GuiButton> B addButton(B button, int x, int y);
 
 		/**
 		 * Adds a text field.  Intended for internal use.
@@ -42,7 +42,7 @@ interface IExtGuiList<T extends IExtGuiList.IExtGuiListEntry<T>> {
 		 *               negative).
 		 * @param y      y coordinate relative to the top of the entry.
 		 */
-		public abstract void addTextField(GuiTextField field, int x, int y);
+		public abstract <B extends GuiTextField> B addTextField(B field, int x, int y);
 
 		/**
 		 * Draw this entry, and also perform various update logic.

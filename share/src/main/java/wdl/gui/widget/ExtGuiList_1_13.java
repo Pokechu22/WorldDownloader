@@ -58,13 +58,15 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended<
 		private ButtonWrapper activeButton;
 
 		@Override
-		public final void addButton(GuiButton button, int x, int y) {
+		public final <B extends GuiButton> B addButton(B button, int x, int y) {
 			this.buttonList.add(new ButtonWrapper(button, x, y));
+			return button;
 		}
 
 		@Override
-		public final void addTextField(GuiTextField field, int x, int y) {
+		public final <B extends GuiTextField> B addTextField(B field, int x, int y) {
 			this.fieldList.add(new TextFieldWrapper(field, x, y));
+			return field;
 		}
 
 		@Override
