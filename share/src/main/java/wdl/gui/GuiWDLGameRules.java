@@ -80,13 +80,12 @@ public class GuiWDLGameRules extends Screen {
 
 			public RuleEntry(@Nonnull String ruleName) {
 				this.ruleName = ruleName;
-				resetButton = new Button(0, 0, 50, 20,
+				resetButton = this.addButton(new Button(0, 0, 50, 20,
 						I18n.format("wdl.gui.gamerules.resetRule")) {
 					public @Override void performAction() {
 						performResetAction();
 					}
-				};
-				this.addButton(resetButton, 110, 0);
+				}, 110, 0);
 			}
 
 			@Override
@@ -129,9 +128,9 @@ public class GuiWDLGameRules extends Screen {
 
 			public IntRuleEntry(String ruleName) {
 				super(ruleName);
-				field = new GuiNumericTextField(0, fontRenderer, 0, 0, 100, 20);
+				field = this.addTextField(new GuiNumericTextField(
+						0, fontRenderer, 0, 0, 100, 20), 0, 0);
 				field.setText(getRule(ruleName));
-				super.addTextField(field, 0, 0);
 			}
 
 			@Override
@@ -169,13 +168,12 @@ public class GuiWDLGameRules extends Screen {
 
 			public BooleanRuleEntry(String ruleName) {
 				super(ruleName);
-				button = new Button(0, 0, 100, 20, "") {
+				button = this.addButton(new Button(0, 0, 100, 20, "") {
 					public @Override void performAction() {
 						boolean oldValue = getRule(ruleName).equals("true");
 						setRule(ruleName, oldValue ? "false" : "true");
 					}
-				};
-				this.addButton(button, 0, 0);
+				}, 0, 0);
 			}
 
 			@Override

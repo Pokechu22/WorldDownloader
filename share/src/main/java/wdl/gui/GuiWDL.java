@@ -62,13 +62,12 @@ public class GuiWDL extends Screen {
 			 *            this button.
 			 */
 			public ButtonEntry(String key, Function<GuiScreen, GuiScreen> openFunc, boolean needsPerms) {
-				this.button = new ButtonDisplayGui(0, 0, 200, 20,
+				this.button = this.addButton(new ButtonDisplayGui(0, 0, 200, 20,
 						I18n.format("wdl.gui.wdl." + key + ".name"),
-						() -> openFunc.apply(GuiWDL.this));
+						() -> openFunc.apply(GuiWDL.this)), -100, 0);
 				if (needsPerms) {
 					button.enabled = WDLPluginChannels.canDownloadAtAll();
 				}
-				this.addButton(this.button, -100, 0);
 
 				this.tooltip = I18n.format("wdl.gui.wdl." + key + ".description");
 			}

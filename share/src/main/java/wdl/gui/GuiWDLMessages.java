@@ -59,8 +59,8 @@ public class GuiWDLMessages extends Screen {
 
 			public CategoryEntry(MessageTypeCategory category) {
 				this.category = category;
-				this.button = new SettingButton(category.setting, config, 0, 0, 80, 20);
-				addButton(button, 20, 0);
+				this.button = this.addButton(new SettingButton(
+						category.setting, config, 0, 0, 80, 20), 20, 0);
 			}
 
 			@Override
@@ -85,8 +85,8 @@ public class GuiWDLMessages extends Screen {
 
 			public MessageTypeEntry(MessageRegistration registration) {
 				this.typeRegistration = registration;
-				this.button = new SettingButton(registration.setting, config, 0, 0);
-				addButton(this.button, -100, 0);
+				this.button = this.addButton(new SettingButton(
+						registration.setting, config, 0, 0), -100, 0);
 			}
 
 			@Override

@@ -119,14 +119,14 @@ public class GuiWDLEntities extends Screen {
 
 				this.groupEnabled = config.isEntityGroupEnabled(group);
 
-				this.enableGroupButton = new Button(0, 0, 90, 18, getButtonText()) {
+				this.enableGroupButton = this.addButton(new Button(
+						0, 0, 90, 18, getButtonText()) {
 					public @Override void performAction() {
 						groupEnabled ^= true;
 						this.displayString = getButtonText();
 						config.setEntityGroupEnabled(group, groupEnabled);
 					}
-				};
-				this.addButton(enableGroupButton, 0, 0);
+				}, 0, 0);
 			}
 
 			@Override
@@ -183,19 +183,19 @@ public class GuiWDLEntities extends Screen {
 
 				int buttonOffset = -(totalWidth / 2) + largestWidth + 10;
 
-				this.onOffButton = new Button(0, 0, 75, 18, getButtonText()) {
+				this.onOffButton = this.addButton(new Button(
+						0, 0, 75, 18, getButtonText()) {
 					public @Override void performAction() {
 						entityEnabled ^= true;
 						onOffButton.displayString = getButtonText();
 						config.setEntityTypeEnabled(entity, entityEnabled);
 					}
-				};
+				}, buttonOffset, 0);
 				this.onOffButton.enabled = category.isGroupEnabled();
-				this.addButton(onOffButton, buttonOffset, 0);
 
-				this.rangeSlider = new GuiSlider(0, 0, 150, 18,
-						"wdl.gui.entities.trackDistance", range, 256);
-				this.addButton(rangeSlider, buttonOffset + 85, 0);
+				this.rangeSlider = this.addButton(new GuiSlider(0, 0, 150, 18,
+						"wdl.gui.entities.trackDistance", range, 256),
+						buttonOffset + 85, 0);
 
 				this.cachedMode = config.getValue(EntitySettings.TRACK_DISTANCE_MODE);
 

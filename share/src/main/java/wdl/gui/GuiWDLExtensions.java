@@ -106,18 +106,16 @@ public class GuiWDLExtensions extends Screen {
 						buttonName = I18n.format("wdl.gui.extensions.defaultSettingsButtonText");
 					}
 
-					Button button = new Button(0, 0, 80, 20, guiMod.getButtonName()) {
+					this.addButton(new Button(0, 0, 80, 20, guiMod.getButtonName()) {
 						public @Override void performAction() {
 							if (mod.mod instanceof IWDLModWithGui) {
 								((IWDLModWithGui) mod.mod).openGui(GuiWDLExtensions.this);
 							}
 						}
-					};
-
-					addButton(button, (GuiWDLExtensions.this.width / 2) - 180, -1);
+					}, (GuiWDLExtensions.this.width / 2) - 180, -1);
 				}
 
-				Button disableButton = new Button(0, 0, 80, 20,
+				this.addButton(new Button(0, 0, 80, 20,
 						I18n.format("wdl.gui.extensions."
 								+ (mod.isEnabled() ? "enabled" : "disabled"))) {
 					public @Override void performAction() {
@@ -133,9 +131,7 @@ public class GuiWDLExtensions extends Screen {
 							label = modDescription;
 						}
 					}
-				};
-
-				addButton(disableButton, (GuiWDLExtensions.this.width / 2) - 92, -1);
+				}, (GuiWDLExtensions.this.width / 2) - 92, -1);
 			}
 
 			@Override
