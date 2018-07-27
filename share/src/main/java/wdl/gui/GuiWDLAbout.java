@@ -68,7 +68,7 @@ public class GuiWDLAbout extends Screen {
 
 		String mcVersion = VersionConstants.getMinecraftVersionInfo();
 
-		list = new TextList(mc, width, height, 39, 32);
+		list = this.addList(new TextList(mc, width, height, 39, 32));
 		list.addLine(I18n.format("wdl.gui.about.blurb"));
 		list.addBlankLine();
 		list.addLine(I18n.format("wdl.gui.about.version", wdlVersion,
@@ -97,8 +97,6 @@ public class GuiWDLAbout extends Screen {
 			list.addLinkLine(I18n.format("wdl.gui.about.fastutil.website"), FASTUTIL_PAGE);
 			list.addLinkLine(I18n.format("wdl.gui.about.fastutil.license"), APACHE_LICENSE_2_0);
 		}
-
-		this.addList(this.list);
 	}
 
 	@Override

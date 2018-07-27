@@ -109,7 +109,6 @@ public class GuiWDL extends Screen {
 	private final IConfiguration config;
 
 	private GuiTextField worldname;
-	private GuiWDLButtonList list;
 
 	public GuiWDL(GuiScreen parent) {
 		this.parent = parent;
@@ -198,8 +197,7 @@ public class GuiWDL extends Screen {
 		this.addButton(new ButtonDisplayGui(this.width / 2 - 100, this.height - 29,
 				200, 20, parent));
 
-		this.list = new GuiWDLButtonList();
-		this.addList(list);
+		this.addList(new GuiWDLButtonList());
 	}
 
 	@Override

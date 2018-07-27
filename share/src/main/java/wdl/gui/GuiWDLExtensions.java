@@ -234,10 +234,6 @@ public class GuiWDLExtensions extends Screen {
 	 */
 	private final GuiScreen parent;
 	/**
-	 * List of mods.
-	 */
-	private ModList list;
-	/**
 	 * Details on the selected mod.
 	 */
 	private ModDetailList detailsList;
@@ -251,10 +247,8 @@ public class GuiWDLExtensions extends Screen {
 		bottomLocation = height - 100;
 		dragging = false;
 
-		this.list = new ModList();
-		this.detailsList = new ModDetailList();
-		this.addList(this.list);
-		this.addList(this.detailsList);
+		this.addList(new ModList());
+		this.detailsList = this.addList(new ModDetailList());
 
 		this.addButton(new ButtonDisplayGui(width / 2 - 100, height - 29,
 				200, 20, this.parent));

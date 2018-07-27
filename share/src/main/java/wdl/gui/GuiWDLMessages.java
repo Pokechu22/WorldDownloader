@@ -115,7 +115,6 @@ public class GuiWDLMessages extends Screen {
 
 	private final GuiScreen parent;
 	private final IConfiguration config;
-	private GuiMessageTypeList list;
 
 	public GuiWDLMessages(GuiScreen parent) {
 		this.parent = parent;
@@ -140,8 +139,7 @@ public class GuiWDLMessages extends Screen {
 						I18n.format("wdl.gui.messages.reset.confirm.subtitle"),
 						ID_RESET_ALL)));
 
-		this.list = new GuiMessageTypeList();
-		this.addList(list);
+		this.addList(new GuiMessageTypeList());
 
 		this.addButton(new ButtonDisplayGui((this.width / 2) - 100, this.height - 29,
 				200, 20, this.parent));

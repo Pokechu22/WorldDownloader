@@ -96,8 +96,7 @@ public class GuiWDLPermissions extends Screen {
 			}
 		});
 
-		this.list = new TextList(mc, width, height, TOP_MARGIN, BOTTOM_MARGIN);
-		this.addList(list);
+		this.list = this.addList(new TextList(mc, width, height, TOP_MARGIN, BOTTOM_MARGIN));
 
 		list.addLine("\u00A7c\u00A7lThis is a work in progress.");
 

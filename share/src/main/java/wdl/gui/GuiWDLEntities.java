@@ -257,7 +257,6 @@ public class GuiWDLEntities extends Screen {
 		}
 	}
 
-	private GuiEntityList entityList;
 	private final GuiScreen parent;
 	private final IConfiguration config;
 
@@ -288,8 +287,7 @@ public class GuiWDLEntities extends Screen {
 
 		this.presetsButton.enabled = this.canEditRanges();
 
-		this.entityList = new GuiEntityList();
-		this.addList(this.entityList);
+		this.addList(new GuiEntityList());
 	}
 
 	@Override

@@ -182,8 +182,7 @@ public class GuiWDLUpdates extends Screen {
 
 	@Override
 	public void initGui() {
-		this.list = new UpdateList();
-		this.addList(this.list);
+		this.list = this.addList(new UpdateList());
 
 		this.addButton(new ButtonDisplayGui(this.width / 2 - 100, this.height - 29,
 				200, 20, this.parent));

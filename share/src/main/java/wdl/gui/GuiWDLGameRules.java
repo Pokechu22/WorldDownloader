@@ -197,7 +197,6 @@ public class GuiWDLGameRules extends Screen {
 	}
 
 	private String title;
-	private GuiGameRuleList list;
 	@Nullable
 	private final GuiScreen parent;
 	private final IConfiguration config;
@@ -269,8 +268,7 @@ public class GuiWDLGameRules extends Screen {
 	@Override
 	public void initGui() {
 		this.title = I18n.format("wdl.gui.gamerules.title");
-		this.list = new GuiGameRuleList();
-		this.addList(list);
+		this.addList(new GuiGameRuleList());
 
 		this.addButton(new ButtonDisplayGui(this.width / 2 - 100,
 				this.height - 29, 200, 20, this.parent));
