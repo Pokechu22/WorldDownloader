@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017 Pokechu22, julialy
+ * Copyright (c) 2017-2018 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -57,25 +57,25 @@ public class GuiWDLWorld extends Screen {
 
 		int y = this.height / 4 - 15;
 
-		this.gamemodeBtn = new SettingButton(WorldSettings.GAME_MODE, this.config, this.width / 2 - 100, y);
-		this.buttonList.add(this.gamemodeBtn);
+		this.gamemodeBtn = this.addButton(new SettingButton(
+				WorldSettings.GAME_MODE, this.config, this.width / 2 - 100, y));
 		y += 22;
-		this.allowCheatsBtn = new SettingButton(WorldSettings.ALLOW_CHEATS, this.config, this.width / 2 - 100, y);
-		this.buttonList.add(this.allowCheatsBtn);
+		this.allowCheatsBtn = this.addButton(new SettingButton(
+				WorldSettings.ALLOW_CHEATS, this.config, this.width / 2 - 100, y));
 		y += 22;
-		this.timeBtn = new SettingButton(WorldSettings.TIME, this.config, this.width / 2 - 100, y);
-		this.buttonList.add(this.timeBtn);
+		this.timeBtn = this.addButton(new SettingButton(
+				WorldSettings.TIME, this.config, this.width / 2 - 100, y));
 		y += 22;
-		this.weatherBtn = new SettingButton(WorldSettings.WEATHER, this.config, this.width / 2 - 100, y);
-		this.buttonList.add(this.weatherBtn);
+		this.weatherBtn = this.addButton(new SettingButton(
+				WorldSettings.WEATHER, this.config, this.width / 2 - 100, y));
 		y += 22;
-		this.spawnBtn = new SettingButton(WorldSettings.SPAWN, this.config, this.width / 2 - 100, y) {
+		this.spawnBtn = this.addButton(new SettingButton(
+				WorldSettings.SPAWN, this.config, this.width / 2 - 100, y) {
 			public @Override void performAction() {
 				super.performAction();
 				updateSpawnTextBoxVisibility();
 			}
-		};
-		this.buttonList.add(this.spawnBtn);
+		});
 		y += 22;
 		this.spawnTextY = y + 4;
 		this.spawnX = new GuiNumericTextField(40, this.fontRenderer, this.width / 2 - 87,
@@ -94,17 +94,16 @@ public class GuiWDLWorld extends Screen {
 		this.spawnY.setMaxStringLength(7);
 		this.spawnZ.setMaxStringLength(7);
 		y += 18;
-		this.pickSpawnBtn = new Button(this.width / 2, y, 100, 20,
+		this.pickSpawnBtn = this.addButton(new Button(this.width / 2, y, 100, 20,
 				I18n.format("wdl.gui.world.setSpawnToCurrentPosition")) {
 			public @Override void performAction() {
 				setSpawnToPlayerPosition();
 			}
-		};
-		this.buttonList.add(this.pickSpawnBtn);
+		});
 
 		updateSpawnTextBoxVisibility();
 
-		this.buttonList.add(new ButtonDisplayGui(this.width / 2 - 100, this.height - 29,
+		this.addButton(new ButtonDisplayGui(this.width / 2 - 100, this.height - 29,
 				200, 20, this.parent));
 	}
 

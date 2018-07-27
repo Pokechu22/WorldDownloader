@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017 Pokechu22, julialy
+ * Copyright (c) 2017-2018 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -177,10 +177,6 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	 */
 	private final String title;
 	/**
-	 * The cancel button.
-	 */
-	private GuiButton cancelBtn;
-	/**
 	 * The accept button.
 	 */
 	private GuiButton acceptBtn;
@@ -274,50 +270,48 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		int offset = (numWorldButtons * 155 + 45) / 2;
 		int y = this.height - 49;
 
-		this.cancelBtn = new Button(this.width / 2 - 155, this.height - 25,
-				150, 20, I18n.format("gui.cancel")) {
+		this.addButton(new Button(this.width / 2 - 155, this.height - 25, 150, 20,
+				I18n.format("gui.cancel")) {
 			public @Override void performAction() {
 				callback.onCancel();
 			}
-		};
-		this.buttonList.add(this.cancelBtn);
+		});
 
-		this.acceptBtn = new Button(this.width / 2 + 5, this.height - 25,
-				150, 20, I18n.format("wdl.gui.multiworldSelect.done")) {
+		this.acceptBtn = this.addButton(new Button(
+				this.width / 2 + 5, this.height - 25, 150, 20,
+				I18n.format("wdl.gui.multiworldSelect.done")) {
 			public @Override void performAction() {
 				callback.onWorldSelected(selectedMultiWorld.folderName);
 			}
-		};
+		});
 		this.acceptBtn.enabled = (selectedMultiWorld != null);
-		this.buttonList.add(this.acceptBtn);
 
-		prevButton = new Button(this.width / 2 - offset, y, 20, 20, "<") {
+		prevButton = this.addButton(new Button(this.width / 2 - offset, y, 20, 20, "<") {
 			public @Override void performAction() {
 				index--;
 			}
-		};
-		this.buttonList.add(prevButton);
+		});
 
 		for (int i = 0; i < numWorldButtons; i++) {
-			this.buttonList.add(new WorldGuiButton(i, this.width / 2 - offset
+			this.addButton(new WorldGuiButton(i, this.width / 2 - offset
 					+ i * 155 + 25, y, 150, 20));
 		}
 
-		nextButton = new Button(this.width / 2 - offset + 25
-				+ numWorldButtons * 155, y, 20, 20, ">") {
+		nextButton = this.addButton(new Button(
+				this.width / 2 - offset + 25 + numWorldButtons * 155,
+				y, 20, 20, ">") {
 			public @Override void performAction() {
 				index++;
 			}
-		};
-		this.buttonList.add(nextButton);
+		});
 
-		this.newWorldButton = new Button(this.width / 2 - 155, 29, 150, 20,
+		this.newWorldButton = this.addButton(new Button(
+				this.width / 2 - 155, 29, 150, 20,
 				I18n.format("wdl.gui.multiworldSelect.newName")) {
 			public @Override void performAction() {
 				showNewWorldTextBox = true;
 			}
-		};
-		this.buttonList.add(newWorldButton);
+		});
 
 		this.newNameField = new GuiTextField(40, this.fontRenderer,
 				this.width / 2 - 155, 29, 150, 20);

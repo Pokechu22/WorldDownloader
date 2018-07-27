@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017 Pokechu22, julialy
+ * Copyright (c) 2017-2018 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -53,19 +53,19 @@ public class GuiWDLPlayer extends Screen {
 		this.title = I18n.format("wdl.gui.player.title",
 				WDL.baseFolderName.replace('@', ':'));
 		int y = this.height / 4 - 15;
-		this.healthBtn = new SettingButton(PlayerSettings.HEALTH, this.config, this.width / 2 - 100, y);
-		this.buttonList.add(this.healthBtn);
+		this.healthBtn = this.addButton(new SettingButton(
+				PlayerSettings.HEALTH, this.config, this.width / 2 - 100, y));
 		y += 22;
-		this.hungerBtn = new SettingButton(PlayerSettings.HUNGER, this.config, this.width / 2 - 100, y);
-		this.buttonList.add(this.hungerBtn);
+		this.hungerBtn = this.addButton(new SettingButton(
+				PlayerSettings.HUNGER, this.config, this.width / 2 - 100, y));
 		y += 22;
-		this.playerPosBtn = new SettingButton(PlayerSettings.PLAYER_POSITION, this.config, this.width / 2 - 100, y) {
+		this.playerPosBtn = this.addButton(new SettingButton(
+				PlayerSettings.PLAYER_POSITION, this.config, this.width / 2 - 100, y) {
 			public @Override void performAction() {
 				super.performAction();
 				upadatePlayerPosVisibility();
 			}
-		};
-		this.buttonList.add(this.playerPosBtn);
+		});
 		y += 22;
 		this.posTextY = y + 4;
 		this.posX = new GuiNumericTextField(40, this.fontRenderer,
@@ -84,17 +84,17 @@ public class GuiWDLPlayer extends Screen {
 		this.addTextField(posY);
 		this.addTextField(posZ);
 		y += 18;
-		this.pickPosBtn = new Button(this.width / 2 - 0, y, 100, 20,
+		this.pickPosBtn = this.addButton(new Button(
+				this.width / 2 - 0, y, 100, 20,
 				I18n.format("wdl.gui.player.setPositionToCurrentPosition")) {
 			public @Override void performAction() {
 				setPlayerPosToPlayerPosition();
 			}
-		};
-		this.buttonList.add(this.pickPosBtn);
+		});
 
 		upadatePlayerPosVisibility();
 
-		this.buttonList.add(new ButtonDisplayGui(this.width / 2 - 100, this.height - 29,
+		this.addButton(new ButtonDisplayGui(this.width / 2 - 100, this.height - 29,
 				200, 20, this.parent));
 	}
 

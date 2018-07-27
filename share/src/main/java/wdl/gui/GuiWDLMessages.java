@@ -129,20 +129,21 @@ public class GuiWDLMessages extends Screen {
 
 	@Override
 	public void initGui() {
-		enableAllButton = new SettingButton(MessageSettings.ENABLE_ALL_MESSAGES, this.config, (this.width / 2) - 155, 18, 150, 20);
-		this.buttonList.add(enableAllButton);
-		resetButton = new ButtonDisplayGui((this.width / 2) + 5, 18,
-				150, 20, I18n.format("wdl.gui.messages.reset"),
+		enableAllButton = this.addButton(new SettingButton(
+				MessageSettings.ENABLE_ALL_MESSAGES, this.config,
+				(this.width / 2) - 155, 18, 150, 20));
+		resetButton = this.addButton(new ButtonDisplayGui(
+				(this.width / 2) + 5, 18, 150, 20,
+				I18n.format("wdl.gui.messages.reset"),
 				() -> new GuiYesNo(this,
 						I18n.format("wdl.gui.messages.reset.confirm.title"),
 						I18n.format("wdl.gui.messages.reset.confirm.subtitle"),
-						ID_RESET_ALL));
-		this.buttonList.add(resetButton);
+						ID_RESET_ALL)));
 
 		this.list = new GuiMessageTypeList();
 		this.addList(list);
 
-		this.buttonList.add(new ButtonDisplayGui((this.width / 2) - 100, this.height - 29,
+		this.addButton(new ButtonDisplayGui((this.width / 2) - 100, this.height - 29,
 				200, 20, this.parent));
 	}
 

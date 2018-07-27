@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017 Pokechu22, julialy
+ * Copyright (c) 2017-2018 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -185,7 +185,7 @@ public class GuiWDLUpdates extends Screen {
 		this.list = new UpdateList();
 		this.addList(this.list);
 
-		this.buttonList.add(new ButtonDisplayGui(this.width / 2 - 100, this.height - 29,
+		this.addButton(new ButtonDisplayGui(this.width / 2 - 100, this.height - 29,
 				200, 20, this.parent));
 	}
 
@@ -299,22 +299,24 @@ public class GuiWDLUpdates extends Screen {
 
 		@Override
 		public void initGui() {
-			this.buttonList.add(new Button(this.width / 2 - 155,
-					18, 150, 20, I18n.format("wdl.gui.updates.update.viewOnline")) {
+			this.addButton(new Button(
+					this.width / 2 - 155, 18, 150, 20,
+					I18n.format("wdl.gui.updates.update.viewOnline")) {
 				public @Override void performAction() {
 					Utils.openLink(release.URL);
 				}
 			});
 			if (release.hiddenInfo != null) {
-				this.buttonList.add(new Button(this.width / 2 + 5,
-						18, 150, 20, I18n.format("wdl.gui.updates.update.viewForumPost")) {
+				this.addButton(new Button(
+						this.width / 2 + 5, 18, 150, 20,
+						I18n.format("wdl.gui.updates.update.viewForumPost")) {
 					public @Override void performAction() {
 						Utils.openLink(release.hiddenInfo.post);
 					}
 				});
 			}
-			this.buttonList.add(new ButtonDisplayGui(this.width / 2 - 100, this.height - 29,
-					200, 20, this.parent));
+			this.addButton(new ButtonDisplayGui(
+					this.width / 2 - 100, this.height - 29, 200, 20, this.parent));
 
 			TextList list = new TextList(mc, width, height, TOP_MARGIN, BOTTOM_MARGIN);
 

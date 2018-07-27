@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017 Pokechu22, julialy
+ * Copyright (c) 2017-2018 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -60,23 +60,22 @@ public class GuiWDLMultiworld extends Screen {
 		infoBoxX = this.width / 2 - infoBoxWidth / 2;
 		infoBoxY = this.height / 2 - infoBoxHeight / 2;
 
-		this.multiworldEnabledBtn = new Button(this.width / 2 - 100,
-				infoBoxY + infoBoxHeight - 30, 200, 20,
+		this.multiworldEnabledBtn = this.addButton(new Button(
+				this.width / 2 - 100, infoBoxY + infoBoxHeight - 30, 200, 20,
 				this.getMultiworldEnabledText()) {
 			public @Override void performAction() {
 				toggleMultiworldEnabled();
 			}
-		};
-		this.buttonList.add(this.multiworldEnabledBtn);
+		});
 
-		this.buttonList.add(new Button(this.width / 2 - 155,
+		this.addButton(new Button(this.width / 2 - 155,
 				this.height - 29, 150, 20, I18n.format("gui.cancel")) {
 			public @Override void performAction() {
 				callback.onCancel();
 			}
 		});
 
-		this.buttonList.add(new Button(this.width / 2 + 5,
+		this.addButton(new Button(this.width / 2 + 5,
 				this.height - 29, 150, 20, I18n.format("gui.done")) {
 			public @Override void performAction() {
 				callback.onSelect(enableMultiworld);

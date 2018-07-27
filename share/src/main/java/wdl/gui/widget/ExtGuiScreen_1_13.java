@@ -26,6 +26,13 @@ import wdl.gui.widget.GuiList.GuiListEntry;
 
 abstract class ExtGuiScreen extends GuiScreen implements IExtGuiScreen {
 
+	/**
+	 * Hide the buttonList field from subclasses.
+	 * @deprecated Do not use; use {@link #addButton(GuiButton)} instead.
+	 */
+	@Deprecated
+	protected static final Void buttonList = null;
+
 	private final List<GuiList<?>> listList = new ArrayList<>();
 	private final List<GuiTextField> textFieldList = new ArrayList<>();
 

@@ -30,6 +30,13 @@ import wdl.gui.widget.GuiList.GuiListEntry;
 
 abstract class ExtGuiScreen extends GuiScreen implements IExtGuiScreen {
 
+	/**
+	 * Hide the buttonList field from subclasses.
+	 * @deprecated Do not use; use {@link #addButton(GuiButton)} instead.
+	 */
+	@Deprecated
+	protected static final Void buttonList = null;
+
 	private final List<GuiList<?>> listList = new ArrayList<>();
 	private final List<GuiTextField> textFieldList = new ArrayList<>();
 
@@ -43,7 +50,7 @@ abstract class ExtGuiScreen extends GuiScreen implements IExtGuiScreen {
 
 	@Override
 	public final <T extends GuiButton> T addButton(T buttonIn) {
-		this.buttonList.add(buttonIn);
+		super.buttonList.add(buttonIn);
 		return buttonIn;
 	}
 

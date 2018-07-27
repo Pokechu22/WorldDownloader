@@ -272,7 +272,7 @@ public class GuiWDLGameRules extends Screen {
 		this.list = new GuiGameRuleList();
 		this.addList(list);
 
-		this.buttonList.add(new ButtonDisplayGui(this.width / 2 - 100,
+		this.addButton(new ButtonDisplayGui(this.width / 2 - 100,
 				this.height - 29, 200, 20, this.parent));
 	}
 

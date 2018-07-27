@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017 Pokechu22, julialy
+ * Copyright (c) 2017-2018 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -75,28 +75,28 @@ public class GuiWDLPermissionRequest extends Screen {
 				width / 2 - 155, 18, 150, 20);
 		this.addTextField(requestField);
 
-		this.submitButton = new Button(width / 2 + 5, 18,
-				150, 20, "Submit request") {
+		this.submitButton = this.addButton(new Button(
+				width / 2 + 5, 18, 150, 20,
+				"Submit request") {
 			public @Override void performAction() {
 				WDLPluginChannels.sendRequests();
 				displayString = "Submitted!";
 			}
-		};
+		});
 		this.submitButton.enabled = !(WDLPluginChannels.getRequests().isEmpty());
-		this.buttonList.add(this.submitButton);
 
-		this.buttonList.add(new ButtonDisplayGui(width / 2 - 100, height - 29,
+		this.addButton(new ButtonDisplayGui(width / 2 - 100, height - 29,
 				200, 20, this.parent));
 
-		this.buttonList.add(new ButtonDisplayGui(this.width / 2 - 155, 39, 100, 20,
+		this.addButton(new ButtonDisplayGui(this.width / 2 - 155, 39, 100, 20,
 				I18n.format("wdl.gui.permissions.current"), () -> new GuiWDLPermissions(this.parent)));
-		this.buttonList.add(new Button(this.width / 2 - 50, 39, 100, 20,
+		this.addButton(new Button(this.width / 2 - 50, 39, 100, 20,
 				I18n.format("wdl.gui.permissions.request")) {
 			public @Override void performAction() {
 				// Would open this GUI; do nothing.
 			}
 		});
-		this.buttonList.add(new ButtonDisplayGui(this.width / 2 + 55, 39, 100, 20,
+		this.addButton(new ButtonDisplayGui(this.width / 2 + 55, 39, 100, 20,
 				I18n.format("wdl.gui.permissions.overrides"), () -> new GuiWDLChunkOverrides(this.parent)));
 	}
 

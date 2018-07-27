@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017 Pokechu22, julialy
+ * Copyright (c) 2017-2018 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -29,11 +29,12 @@ import wdl.WDL;
 import wdl.WDLPluginChannels;
 import wdl.config.IConfiguration;
 import wdl.gui.widget.ButtonDisplayGui;
+import wdl.gui.widget.Screen;
 
 /**
  * Provides fast setting for various entity options.
  */
-public class GuiWDLEntityRangePresets extends GuiScreen implements GuiYesNoCallback {
+public class GuiWDLEntityRangePresets extends Screen implements GuiYesNoCallback {
 	private final GuiScreen parent;
 	private final IConfiguration config;
 
@@ -53,29 +54,28 @@ public class GuiWDLEntityRangePresets extends GuiScreen implements GuiYesNoCallb
 	public void initGui() {
 		int y = this.height / 4;
 
-		this.vanillaButton = new ButtonDisplayGui(this.width / 2 - 100, y,
-				200, 20, I18n.format("wdl.gui.rangePresets.vanilla"),
-				makeYesNoGui("wdl.gui.rangePresets.vanilla.warning", ID_VANILLA));
+		this.vanillaButton = this.addButton(new ButtonDisplayGui(
+				this.width / 2 - 100, y, 200, 20,
+				I18n.format("wdl.gui.rangePresets.vanilla"),
+				makeYesNoGui("wdl.gui.rangePresets.vanilla.warning", ID_VANILLA)));
 		y += 22;
-		this.spigotButton = new ButtonDisplayGui(this.width / 2 - 100, y,
-				200, 20, I18n.format("wdl.gui.rangePresets.spigot"),
-				makeYesNoGui("wdl.gui.rangePresets.spigot.warning", ID_SPIGOT));
+		this.spigotButton = this.addButton(new ButtonDisplayGui(
+				this.width / 2 - 100, y, 200, 20,
+				I18n.format("wdl.gui.rangePresets.spigot"),
+				makeYesNoGui("wdl.gui.rangePresets.spigot.warning", ID_SPIGOT)));
 		y += 22;
-		this.serverButton = new ButtonDisplayGui(this.width / 2 - 100, y,
-				200, 20, I18n.format("wdl.gui.rangePresets.server"),
-				makeYesNoGui("wdl.gui.rangePresets.spigot.warning", ID_SERVER));
+		this.serverButton = this.addButton(new ButtonDisplayGui(
+				this.width / 2 - 100, y, 200, 20,
+				I18n.format("wdl.gui.rangePresets.server"),
+				makeYesNoGui("wdl.gui.rangePresets.spigot.warning", ID_SERVER)));
 
 		serverButton.enabled = WDLPluginChannels.hasServerEntityRange();
 
-		this.buttonList.add(vanillaButton);
-		this.buttonList.add(spigotButton);
-		this.buttonList.add(serverButton);
-
 		y += 28;
 
-		this.cancelButton = new ButtonDisplayGui(this.width / 2 - 100, this.height - 29,
-				200, 20, I18n.format("gui.cancel"), this.parent);
-		this.buttonList.add(cancelButton);
+		this.cancelButton = this.addButton(new ButtonDisplayGui(
+				this.width / 2 - 100, this.height - 29, 200, 20,
+				I18n.format("gui.cancel"), this.parent));
 	}
 
 	private Supplier<GuiYesNo> makeYesNoGui(String message, int id) {

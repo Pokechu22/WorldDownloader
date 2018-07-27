@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017 Pokechu22, julialy
+ * Copyright (c) 2017-2018 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -22,11 +22,12 @@ import wdl.config.IConfiguration;
 import wdl.config.settings.MiscSettings;
 import wdl.gui.widget.Button;
 import wdl.gui.widget.ButtonDisplayGui;
+import wdl.gui.widget.Screen;
 
 /**
  * GUI allowing control over the way the world is backed up.
  */
-public class GuiWDLBackup extends GuiScreen {
+public class GuiWDLBackup extends Screen {
 	private final GuiScreen parent;
 	private final IConfiguration config;
 
@@ -47,7 +48,7 @@ public class GuiWDLBackup extends GuiScreen {
 	public void initGui() {
 		backupType = config.getValue(MiscSettings.BACKUP_TYPE);
 
-		this.buttonList.add(new Button(this.width / 2 - 100, 32,
+		this.addButton(new Button(this.width / 2 - 100, 32,
 				200, 20, getBackupButtonText()) {
 			public @Override void performAction() {
 				switch (backupType) {
@@ -60,7 +61,7 @@ public class GuiWDLBackup extends GuiScreen {
 			}
 		});
 
-		this.buttonList.add(new ButtonDisplayGui(this.width / 2 - 100, height - 29,
+		this.addButton(new ButtonDisplayGui(this.width / 2 - 100, height - 29,
 				200, 20, this.parent));
 	}
 

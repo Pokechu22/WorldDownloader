@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017 Pokechu22, julialy
+ * Copyright (c) 2017-2018 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -170,43 +170,39 @@ IBackupProgressMonitor {
 		int x = (this.width / 2) - 100;
 		int y = infoBoxY + 22;
 
-		backupAsZipButton = new Button(x, y, 200, 20,
+		backupAsZipButton = this.addButton(new Button(x, y, 200, 20,
 				I18n.format("wdl.gui.overwriteChanges.asZip.name")) {
 			public @Override void performAction() {
 				if (backingUp) return;
 				backingUp = true;
 				new BackupThread(true).start();
 			}
-		};
-		this.buttonList.add(backupAsZipButton);
+		});
 		y += 22;
-		backupAsFolderButton = new Button(x, y, 200, 20,
+		backupAsFolderButton = this.addButton(new Button(x, y, 200, 20,
 				I18n.format("wdl.gui.overwriteChanges.asFolder.name")) {
 			public @Override void performAction() {
 				if (backingUp) return;
 				backingUp = true;
 				new BackupThread(false).start();
 			}
-		};
-		this.buttonList.add(backupAsFolderButton);
+		});
 		y += 22;
-		downloadNowButton = new Button(x, y, 200, 20,
+		downloadNowButton = this.addButton(new Button(x, y, 200, 20,
 				I18n.format("wdl.gui.overwriteChanges.startNow.name")) {
 			public @Override void performAction() {
 				WDL.overrideLastModifiedCheck = true;
 				mc.displayGuiScreen(null);
 				WDL.startDownload();
 			}
-		};
-		this.buttonList.add(downloadNowButton);
+		});
 		y += 22;
-		cancelButton = new Button(x, y, 200, 20,
+		cancelButton = this.addButton(new Button(x, y, 200, 20,
 				I18n.format("wdl.gui.overwriteChanges.cancel.name")) {
 			public @Override void performAction() {
 				mc.displayGuiScreen(null);
 			}
-		};
-		this.buttonList.add(cancelButton);
+		});
 
 		super.initGui();
 	}

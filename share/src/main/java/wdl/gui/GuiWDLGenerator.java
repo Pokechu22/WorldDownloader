@@ -58,7 +58,8 @@ public class GuiWDLGenerator extends Screen {
 		this.seedField.setText(config.getValue(GeneratorSettings.SEED));
 		this.addTextField(seedField);
 		y += 22;
-		this.generatorBtn = new SettingButton(GeneratorSettings.GENERATOR, this.config, this.width / 2 - 100, y) {
+		this.generatorBtn = this.addButton(new SettingButton(
+				GeneratorSettings.GENERATOR, this.config, this.width / 2 - 100, y) {
 			public @Override void performAction() {
 				super.performAction();
 				updateSettingsButtonVisibility();
@@ -67,18 +68,17 @@ public class GuiWDLGenerator extends Screen {
 				config.clearValue(GeneratorSettings.GENERATOR_VERSION);
 				config.clearValue(GeneratorSettings.GENERATOR_OPTIONS);
 			}
-		};
-		this.buttonList.add(this.generatorBtn);
+		});
 		y += 22;
-		this.generateStructuresBtn = new SettingButton(GeneratorSettings.GENERATE_STRUCTURES, this.config, this.width / 2 - 100, y);
-		this.buttonList.add(this.generateStructuresBtn);
+		this.generateStructuresBtn = this.addButton(new SettingButton(
+				GeneratorSettings.GENERATE_STRUCTURES, this.config, this.width / 2 - 100, y));
 		y += 22;
-		this.settingsPageBtn = new ButtonDisplayGui(this.width / 2 - 100, y,
-				200, 20, "", this::makeGeneratorSettingsGui);
+		this.settingsPageBtn = this.addButton(new ButtonDisplayGui(
+				this.width / 2 - 100, y, 200, 20,
+				"", this::makeGeneratorSettingsGui));
 		updateSettingsButtonVisibility();
-		this.buttonList.add(this.settingsPageBtn);
 
-		this.buttonList.add(new ButtonDisplayGui(this.width / 2 - 100, height - 29,
+		this.addButton(new ButtonDisplayGui(this.width / 2 - 100, height - 29,
 				200, 20, this.parent));
 	}
 

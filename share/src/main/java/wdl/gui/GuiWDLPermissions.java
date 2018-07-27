@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017 Pokechu22, julialy
+ * Copyright (c) 2017-2018 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -17,7 +17,6 @@ package wdl.gui;
 import java.nio.charset.StandardCharsets;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.network.play.client.CPacketCustomPayload;
@@ -38,11 +37,6 @@ public class GuiWDLPermissions extends Screen {
 	 * Margins for the top and the bottom of the list.
 	 */
 	private static final int TOP_MARGIN = 61, BOTTOM_MARGIN = 32;
-
-	/**
-	 * Reload permissions button
-	 */
-	private GuiButton reloadButton;
 
 	/**
 	 * Ticks (20ths of a second) until this UI needs to refresh.
@@ -69,23 +63,23 @@ public class GuiWDLPermissions extends Screen {
 
 	@Override
 	public void initGui() {
-		this.buttonList.add(new ButtonDisplayGui(width / 2 - 100, height - 29,
+		this.addButton(new ButtonDisplayGui(width / 2 - 100, height - 29,
 				200, 20, this.parent));
 
-		this.buttonList.add(new Button(this.width / 2 - 155, 39, 100, 20,
+		this.addButton(new Button(this.width / 2 - 155, 39, 100, 20,
 				I18n.format("wdl.gui.permissions.current")) {
 			public @Override void performAction() {
 				// Would open this GUI; do nothing.
 			};
 		});
 		if (WDLPluginChannels.canRequestPermissions()) {
-			this.buttonList.add(new ButtonDisplayGui(this.width / 2 - 50, 39, 100, 20,
+			this.addButton(new ButtonDisplayGui(this.width / 2 - 50, 39, 100, 20,
 					I18n.format("wdl.gui.permissions.request"), () -> new GuiWDLPermissionRequest(this.parent)));
-			this.buttonList.add(new ButtonDisplayGui(this.width / 2 + 55, 39, 100, 20,
+			this.addButton(new ButtonDisplayGui(this.width / 2 + 55, 39, 100, 20,
 					I18n.format("wdl.gui.permissions.overrides"), () -> new GuiWDLChunkOverrides(this.parent)));
 		}
 
-		reloadButton = new Button((this.width / 2) + 5, 18, 150, 20,
+		this.addButton(new Button((this.width / 2) + 5, 18, 150, 20,
 				"Reload permissions") {
 			public @Override void performAction() {
 				// Send the init packet.
@@ -100,8 +94,7 @@ public class GuiWDLPermissions extends Screen {
 
 				refreshTicks = 50; // 2.5 seconds
 			}
-		};
-		this.buttonList.add(reloadButton);
+		});
 
 		this.list = new TextList(mc, width, height, TOP_MARGIN, BOTTOM_MARGIN);
 		this.addList(list);

@@ -109,34 +109,34 @@ public class GuiWDLChunkOverrides extends Screen {
 
 	@Override
 	public void initGui() {
-		this.buttonList.add(new RequestModeButton(width / 2 - 155, 18, Mode.PANNING) {
+		this.addButton(new RequestModeButton(width / 2 - 155, 18, Mode.PANNING) {
 			public @Override void performAction() {
 				GuiWDLChunkOverrides.this.mode = Mode.PANNING;
 			}
 		});
-		this.buttonList.add(new RequestModeButton(width / 2 - 130, 18, Mode.REQUESTING) {
+		this.addButton(new RequestModeButton(width / 2 - 130, 18, Mode.REQUESTING) {
 			public @Override void performAction() {
 				GuiWDLChunkOverrides.this.mode = Mode.REQUESTING;
 				partiallyRequested = false;
 			}
 		});
-		this.buttonList.add(new RequestModeButton(width / 2 - 105, 18, Mode.ERASING) {
+		this.addButton(new RequestModeButton(width / 2 - 105, 18, Mode.ERASING) {
 			{ enabled = false; }
 			public @Override void performAction() { }
 		});
-		this.buttonList.add(new RequestModeButton(width / 2 - 80, 18, Mode.MOVING) {
+		this.addButton(new RequestModeButton(width / 2 - 80, 18, Mode.MOVING) {
 			{ enabled = false; }
 			public @Override void performAction() { }
 		});
 
-		this.buttonList.add(new Button(width / 2 - 80, 18, 80, 20,
+		this.addButton(new Button(width / 2 - 80, 18, 80, 20,
 				"Send request") {
 			public @Override void performAction() {
 				WDLPluginChannels.sendRequests();
 			}
 		});
 
-		startDownloadButton = new Button(width / 2 + 5, 18, 150, 20,
+		this.startDownloadButton = this.addButton(new Button(width / 2 + 5, 18, 150, 20,
 				"Start download in these ranges") {
 			public @Override void performAction() {
 				if (!WDLPluginChannels.canDownloadAtAll()) {
@@ -145,18 +145,17 @@ public class GuiWDLChunkOverrides extends Screen {
 				}
 				WDL.startDownload();
 			}
-		};
+		});
 		startDownloadButton.enabled = WDLPluginChannels.canDownloadAtAll();
-		this.buttonList.add(startDownloadButton);
 
-		this.buttonList.add(new ButtonDisplayGui(width / 2 - 100, height - 29,
+		this.addButton(new ButtonDisplayGui(width / 2 - 100, height - 29,
 				200, 20, this.parent));
 
-		this.buttonList.add(new ButtonDisplayGui(this.width / 2 - 155, 39, 100, 20,
+		this.addButton(new ButtonDisplayGui(this.width / 2 - 155, 39, 100, 20,
 				I18n.format("wdl.gui.permissions.current"), () -> new GuiWDLPermissions(this.parent)));
-		this.buttonList.add(new ButtonDisplayGui(this.width / 2 - 50, 39, 100, 20,
+		this.addButton(new ButtonDisplayGui(this.width / 2 - 50, 39, 100, 20,
 				I18n.format("wdl.gui.permissions.request"), () -> new GuiWDLPermissionRequest(this.parent)));
-		this.buttonList.add(new Button(this.width / 2 + 55, 39, 100, 20,
+		this.addButton(new Button(this.width / 2 + 55, 39, 100, 20,
 				I18n.format("wdl.gui.permissions.overrides")) {
 			public @Override void performAction() {
 				// Would open this GUI; do nothing.

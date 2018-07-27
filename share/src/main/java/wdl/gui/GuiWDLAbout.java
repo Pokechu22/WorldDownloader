@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017 Pokechu22, julialy
+ * Copyright (c) 2017-2018 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -50,9 +50,9 @@ public class GuiWDLAbout extends Screen {
 
 	@Override
 	public void initGui() {
-		buttonList.add(new ButtonDisplayGui((this.width / 2) - 155, 18, 150, 20,
+		this.addButton(new ButtonDisplayGui((this.width / 2) - 155, 18, 150, 20,
 				I18n.format("wdl.gui.about.extensions"), () -> new GuiWDLExtensions(this)));
-		buttonList.add(new Button((this.width / 2) + 5, 18, 150, 20,
+		this.addButton(new Button((this.width / 2) + 5, 18, 150, 20,
 				I18n.format("wdl.gui.about.debugInfo")) {
 			public @Override void performAction() {
 				// Copy debug info
@@ -61,7 +61,7 @@ public class GuiWDLAbout extends Screen {
 				this.displayString = I18n.format("wdl.gui.about.debugInfo.copied");
 			}
 		});
-		buttonList.add(new ButtonDisplayGui((this.width / 2) - 100, this.height - 29,
+		this.addButton(new ButtonDisplayGui((this.width / 2) - 100, this.height - 29,
 				200, 20, parent));
 
 		String wdlVersion = VersionConstants.getModVersion();
