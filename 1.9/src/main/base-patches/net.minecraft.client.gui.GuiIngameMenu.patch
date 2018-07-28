@@ -6,7 +6,7 @@
  		guibutton.enabled = this.mc.isSingleplayer() && !this.mc.getIntegratedServer().getPublic();
 +
 +		/* WDL >>> */
-+		wdl.WDLHooks.injectWDLButtons(this, buttonList);
++		wdl.WDLHooks.injectWDLButtons(this, buttonList, buttonList::add);
 +		/* <<< WDL */
  	}
  

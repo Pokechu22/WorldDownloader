@@ -14,7 +14,8 @@
  */
 package wdl;
 
-import java.util.List;
+import java.util.Collection;
+import java.util.function.Consumer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -506,12 +507,15 @@ public class WDLHooks {
 	}
 
 	/**
-	 * Adds the "Download this world" button to the ingame pause GUI.
+	 * Adds WDL's buttons to the pause menu GUI.
 	 *
-	 * @param gui
-	 * @param buttonList
+	 * @param gui        The GUI
+	 * @param buttonList The list of buttons in the GUI. This list should not be
+	 *                   modified directly.
+	 * @param addButton  Method to add a button to the GUI.
 	 */
-	public static void injectWDLButtons(GuiIngameMenu gui, List<GuiButton> buttonList) {
+	public static void injectWDLButtons(GuiIngameMenu gui, Collection<GuiButton> buttonList,
+			Consumer<GuiButton> addButton) {
 		int insertAtYPos = 0;
 
 		for (GuiButton btn : buttonList) {
@@ -529,25 +533,22 @@ public class WDLHooks {
 		}
 
 		// Insert wdl buttons.
-		buttonList.add(new StartDownloadButton(gui,
+		addButton.accept(new StartDownloadButton(gui,
 				gui.width / 2 - 100, insertAtYPos, 170, 20));
 
-		buttonList.add(new SettingsButton(gui,
+		addButton.accept(new SettingsButton(gui,
 				gui.width / 2 + 71, insertAtYPos, 28, 20,
 				I18n.format("wdl.gui.ingameMenu.settings")));
 	}
 
 	/**
-	 * Handle clicks in the ingame pause GUI.
+	 * Handle clicks to the ingame pause GUI, specifically for the disconnect
+	 * button.
 	 *
-	 * @param gui
-	 * @param button
+	 * @param gui    The GUI
+	 * @param button The button that was clicked.
 	 */
 	public static void handleWDLButtonClick(GuiIngameMenu gui, GuiButton button) {
-		if (!button.enabled) {
-			return;
-		}
-
 		if (button.id == 1) { // "Disconnect", from vanilla
 			WDL.stopDownload();
 			// Disable the button to prevent double-clicks
