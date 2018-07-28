@@ -303,8 +303,10 @@ public class WDLMessages {
 		text.appendSibling(header);
 		text.appendSibling(messageFormat);
 		if (enabled) {
-			Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(
-					text);
+			Minecraft minecraft = Minecraft.getMinecraft();
+			// Cross-thread calls to printChatMessage are illegal in 1.13 due to accessing
+			// the font renderer; add a scheduled task instead.
+			minecraft.addScheduledTask(() -> minecraft.ingameGUI.getChatGUI().printChatMessage(text));
 		} else {
 			LOGGER.info(text.getString());
 		}
