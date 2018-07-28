@@ -92,7 +92,7 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended<
 			for (ButtonWrapper button : this.buttonList) {
 				if (button.button.mouseClicked(arg0, arg1, arg2)) {
 					this.activeButton = button;
-					button.button.playPressSound(Minecraft.getMinecraft().getSoundHandler());
+					// no need to call playPressSound; mouseClicked does it automatically
 					return true;
 				}
 			}
