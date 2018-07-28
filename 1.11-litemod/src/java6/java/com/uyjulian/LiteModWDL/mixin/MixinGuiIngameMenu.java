@@ -26,19 +26,22 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(GuiIngameMenu.class)
-public abstract class MixinGuiIngameMenu extends GuiScreen {
+public abstract class MixinGuiIngameMenu extends GuiScreen implements Consumer<GuiButton> {
 
 	@Inject(method="initGui", at=@At("RETURN"))
 	private void onInitGui(CallbackInfo ci) {
-		wdl.WDLHooks.injectWDLButtons((GuiIngameMenu)(Object)this, buttonList, new Consumer<GuiButton>() {
-			@Override
-			public void accept(GuiButton t) {
-				addButton(t);
-			}
-		});
+		wdl.WDLHooks.injectWDLButtons((GuiIngameMenu)(Object)this, buttonList, this);
 	}
 	@Inject(method="actionPerformed", at=@At("HEAD"))
 	private void onActionPerformed(GuiButton guibutton, CallbackInfo ci) {
 		wdl.WDLHooks.handleWDLButtonClick((GuiIngameMenu)(Object)this, guibutton);
+	}
+
+	// I would use a lambda, but this must be java 6;
+	// I would use an inner class, but those don't work in mixins
+	// Thus, implementation of Consumer...
+	@Override
+	public void accept(GuiButton button) {
+		this.addButton(button);
 	}
 }
