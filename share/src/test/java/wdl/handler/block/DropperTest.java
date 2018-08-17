@@ -36,8 +36,8 @@ public class DropperTest extends AbstractBlockHandlerTest<TileEntityDropper, Con
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.DROPPER);
 		TileEntityDropper te = new TileEntityDropper();
-		te.setInventorySlotContents(0, new ItemStack(Items.FISH)); // something something flopper
-		te.setInventorySlotContents(8, new ItemStack(Items.FISH));
+		te.setInventorySlotContents(0, new ItemStack(Items.COD)); // something something flopper
+		te.setInventorySlotContents(8, new ItemStack(Items.COD));
 		placeTEAt(pos, te);
 
 		runHandler(pos, makeClientContainer(pos));

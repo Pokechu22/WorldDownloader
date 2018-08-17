@@ -33,9 +33,9 @@
  	}
  
  	public void handleEffect(SPacketEffect packetIn) {
-@@ -1686,6 +1698,10 @@
+@@ -1683,6 +1695,10 @@
  			String s1 = packetbuffer3.readString(256);
- 			this.client.getSoundHandler().stop(s1, SoundCategory.getByName(s));
+ 			this.client.getSoundHandler().func_189520_a(s1, SoundCategory.func_187950_a(s));
  		}
 +
 +		/* WDL >>> */

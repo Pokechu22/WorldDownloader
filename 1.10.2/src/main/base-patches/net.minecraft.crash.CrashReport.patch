@@ -1,7 +1,7 @@
 --- net/minecraft/crash/CrashReport.java
 +++ net/minecraft/crash/CrashReport.java
 @@ -101,6 +101,22 @@
- 				return IntCache.getCacheSizes();
+ 				return IntCache.func_85144_b();
  			}
  		});
 +

@@ -65,6 +65,7 @@ extraSrgs {
     addMethods file('../srgs/liteloader_1.9_methods.csv')
     addMethods file('../srgs/old_inventory_methods.csv')
     addMethods file('../srgs/1.11_gui_methods.csv')
+    addFields file('../srgs/1.12_fields.csv')
     addFields file('../srgs/old_inventory_fields.csv')
     addPatch('net.minecraft.entity.passive.EquineEntity.java', file('../srgs/EE_1.9.4.patch'))
 }

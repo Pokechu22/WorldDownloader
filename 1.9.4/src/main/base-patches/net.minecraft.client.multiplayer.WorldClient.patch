@@ -10,8 +10,8 @@
 +		/* <<< WDL */
  	}
  
- 	/**
-@@ -172,6 +176,10 @@
+ 	public void func_73031_a(int p_73031_1_, int p_73031_2_, int p_73031_3_, int p_73031_4_, int p_73031_5_, int p_73031_6_) {
+@@ -168,6 +172,10 @@
  	}
  
  	public void doPreChunk(int chunkX, int chunkZ, boolean loadChunk) {
@@ -22,7 +22,7 @@
  		if (loadChunk) {
  			this.clientChunkProvider.loadChunk(chunkX, chunkZ);
  		} else {
-@@ -255,6 +263,10 @@
+@@ -251,6 +259,10 @@
  	}
  
  	public Entity removeEntityFromWorld(int entityID) {

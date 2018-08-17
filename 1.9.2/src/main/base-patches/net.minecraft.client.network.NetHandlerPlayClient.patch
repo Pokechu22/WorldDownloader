@@ -33,7 +33,7 @@
  	}
  
  	public void handleEffect(SPacketEffect packetIn) {
-@@ -1571,6 +1583,10 @@
+@@ -1568,6 +1580,10 @@
  			PathEntity pathentity = PathEntity.read(packetbuffer1);
  			this.client.debugRenderer.pathfinding.addPath(j, pathentity, f);
  		}

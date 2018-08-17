@@ -54,9 +54,9 @@ public abstract class MaybeMixinTest {
 		LOGGER.debug("Initializing bootstrap...");
 		Bootstrap.register();
 		LOGGER.debug("Initialized bootstrap.");
-		if (Bootstrap.hasErrored) {
-			LOGGER.warn("Bootstrap errored!");
-		}
+		//if (Bootstrap.hasErrored) {
+			//LOGGER.warn("Bootstrap errored!");
+		//}
 
 		LOGGER.debug("Setting up I18n...");
 		// Prepare I18n by constructing a LanguageManager and preparing it...
