@@ -14,6 +14,8 @@
  */
 package wdl.handler.block;
 
+import static wdl.versioned.VersionedFunctions.customName;
+
 import java.util.function.BiConsumer;
 
 import net.minecraft.inventory.ContainerBrewingStand;
@@ -39,7 +41,7 @@ public class BrewingStandHandler extends BlockHandler<TileEntityBrewingStand, Co
 		saveContainerItems(container, blockEntity, 0);
 		saveInventoryFields(brewingInventory, blockEntity);
 		if (title != null) {
-			blockEntity.setName(title);
+			blockEntity.setCustomName(customName(title));
 		}
 		saveMethod.accept(clickedPos, blockEntity);
 		return "wdl.messages.onGuiClosedInfo.savedTileEntity.brewingStand";

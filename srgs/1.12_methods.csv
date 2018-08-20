@@ -46,3 +46,10 @@ func_82763_b,getRules,0,
 func_146383_a,setPreset,0,
 func_146384_e,getPreset,0,
 func_192035_E,getRecipeBook,0,
+func_190575_a,setCustomName,0,
+func_145999_a,setCustomName,0,(Was setName)
+func_145937_a,setCustomName,0,(Was setName)
+func_145951_a,setCustomName,0,(Was setCustomInventoryName)
+func_200227_a,setCustomName,0,(Unused)
+func_82833_r,getDisplayName,0,
+func_151001_c,setDisplayName,0,

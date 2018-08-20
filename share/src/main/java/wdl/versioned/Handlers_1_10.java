@@ -129,4 +129,11 @@ final class HandlerFunctions {
 	static Class<Long2ObjectMap> getChunkListClass() {
 		return Long2ObjectMap.class;
 	}
+
+	/* (non-javadoc)
+	 * @see VersionedFunctions#customName
+	 */
+	static String customName(String name) {
+		return name;
+	}
 }

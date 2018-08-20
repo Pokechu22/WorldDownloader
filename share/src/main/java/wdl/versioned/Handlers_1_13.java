@@ -32,6 +32,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityCommandBlock;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import wdl.handler.block.BeaconHandler;
@@ -133,5 +134,12 @@ final class HandlerFunctions {
 	@SuppressWarnings("rawtypes")
 	static Class<Long2ObjectMap> getChunkListClass() {
 		return Long2ObjectMap.class;
+	}
+
+	/* (non-javadoc)
+	 * @see VersionedFunctions#customName
+	 */
+	static TextComponentString customName(String name) {
+		return new TextComponentString(name);
 	}
 }

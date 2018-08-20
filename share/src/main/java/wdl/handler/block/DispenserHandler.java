@@ -14,6 +14,8 @@
  */
 package wdl.handler.block;
 
+import static wdl.versioned.VersionedFunctions.customName;
+
 import java.util.function.BiConsumer;
 
 import net.minecraft.inventory.ContainerDispenser;
@@ -39,7 +41,7 @@ public class DispenserHandler extends BlockHandler<TileEntityDispenser, Containe
 		saveContainerItems(container, blockEntity, 0);
 		saveMethod.accept(clickedPos, blockEntity);
 		if (title != null) {
-			blockEntity.setCustomName(title);
+			blockEntity.setCustomName(customName(title));
 		}
 		return "wdl.messages.onGuiClosedInfo.savedTileEntity.dispenser";
 	}

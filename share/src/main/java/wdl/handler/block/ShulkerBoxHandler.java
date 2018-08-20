@@ -14,6 +14,8 @@
  */
 package wdl.handler.block;
 
+import static wdl.versioned.VersionedFunctions.customName;
+
 import java.util.function.BiConsumer;
 
 import net.minecraft.inventory.ContainerShulkerBox;
@@ -39,7 +41,7 @@ public class ShulkerBoxHandler extends BlockHandler<TileEntityShulkerBox, Contai
 		saveContainerItems(container, blockEntity, 0);
 		saveInventoryFields(shulkerInventory, blockEntity);
 		if (title != null) {
-			blockEntity.setCustomName(title);
+			blockEntity.setCustomName(customName(title));
 		}
 		saveMethod.accept(clickedPos, blockEntity);
 		return "wdl.messages.onGuiClosedInfo.savedTileEntity.shulkerBox";

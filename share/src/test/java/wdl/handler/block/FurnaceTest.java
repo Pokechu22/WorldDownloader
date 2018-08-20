@@ -14,6 +14,8 @@
  */
 package wdl.handler.block;
 
+import static wdl.versioned.VersionedFunctions.customName;
+
 import org.junit.Test;
 
 import net.minecraft.init.Blocks;
@@ -70,7 +72,7 @@ public class FurnaceTest extends AbstractBlockHandlerTest<TileEntityFurnace, Con
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.FURNACE);
 		TileEntityFurnace te = new TileEntityFurnace();
-		te.setCustomInventoryName("Furni");
+		te.setCustomName(customName("Furni"));
 		placeTEAt(pos, te);
 
 		runHandler(pos, makeClientContainer(pos));
@@ -85,7 +87,7 @@ public class FurnaceTest extends AbstractBlockHandlerTest<TileEntityFurnace, Con
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.FURNACE);
 		TileEntityFurnace te = new TileEntityFurnace();
-		te.setCustomInventoryName("Furnace");
+		te.setCustomName(customName("Furnace"));
 		placeTEAt(pos, te);
 
 		runHandler(pos, makeClientContainer(pos));

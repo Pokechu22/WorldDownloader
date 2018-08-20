@@ -14,6 +14,8 @@
  */
 package wdl.handler.block;
 
+import static wdl.versioned.VersionedFunctions.customName;
+
 import org.junit.Test;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -61,7 +63,7 @@ public class ShulkerBoxTest extends AbstractBlockHandlerTest<TileEntityShulkerBo
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.LIME_SHULKER_BOX);
 		TileEntityShulkerBox te = new TileEntityShulkerBox();
-		te.setCustomName("Favorite things");
+		te.setCustomName(customName("Favorite things"));
 		te.setInventorySlotContents(13, new ItemStack(Items.POISONOUS_POTATO, 64));
 		placeTEAt(pos, te);
 
@@ -77,7 +79,7 @@ public class ShulkerBoxTest extends AbstractBlockHandlerTest<TileEntityShulkerBo
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.PURPLE_SHULKER_BOX);
 		TileEntityShulkerBox te = new TileEntityShulkerBox();
-		te.setCustomName("Shulker Box");
+		te.setCustomName(customName("Shulker Box"));
 		placeTEAt(pos, te);
 
 		runHandler(pos, makeClientContainer(pos));

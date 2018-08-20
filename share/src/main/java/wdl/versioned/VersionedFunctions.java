@@ -92,6 +92,21 @@ public class VersionedFunctions {
 	}
 
 	/**
+	 * (EVIL) Converts name to the appropriate type for a custom name on this
+	 * version.
+	 *
+	 * @param name The name. Non-null.
+	 * @param <T> The type that is expected to be returned, based on the method
+	 *             being called.
+	 * @return Either a String or a TextComponentString, depending on the version; T
+	 *         should be inferred to the right one of those.
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T customName(String name) {
+		return (T)HandlerFunctions.customName(name);
+	}
+
+	/**
 	 * Creates a plugin message packet.
 	 * @param channel The channel to send on.
 	 * @param bytes The payload.

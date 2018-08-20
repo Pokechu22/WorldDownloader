@@ -14,6 +14,8 @@
  */
 package wdl.handler.block;
 
+import static wdl.versioned.VersionedFunctions.customName;
+
 import org.junit.Test;
 
 import net.minecraft.init.Blocks;
@@ -50,7 +52,7 @@ public class DropperTest extends AbstractBlockHandlerTest<TileEntityDropper, Con
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.DROPPER);
 		TileEntityDropper te = new TileEntityDropper();
-		te.setCustomName("Something");
+		te.setCustomName(customName("Something"));
 		placeTEAt(pos, te);
 
 		runHandler(pos, makeClientContainer(pos));
@@ -65,7 +67,7 @@ public class DropperTest extends AbstractBlockHandlerTest<TileEntityDropper, Con
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.DROPPER);
 		TileEntityDropper te = new TileEntityDropper();
-		te.setCustomName("Dropper");
+		te.setCustomName(customName("Dropper"));
 		placeTEAt(pos, te);
 
 		runHandler(pos, makeClientContainer(pos));

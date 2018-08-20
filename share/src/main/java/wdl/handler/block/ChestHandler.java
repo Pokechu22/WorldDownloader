@@ -14,6 +14,8 @@
  */
 package wdl.handler.block;
 
+import static wdl.versioned.VersionedFunctions.customName;
+
 import java.util.function.BiConsumer;
 
 import javax.annotation.Nullable;
@@ -62,7 +64,7 @@ public class ChestHandler extends BlockHandler<TileEntityChest, ContainerChest> 
 			@Nullable String displayName) throws HandlerException {
 		saveContainerItems(container, blockEntity, 0);
 		if (displayName != null) {
-			blockEntity.setCustomName(displayName);
+			blockEntity.setCustomName(customName(displayName));
 		}
 		saveMethod.accept(clickedPos, blockEntity);
 	}
@@ -159,8 +161,8 @@ public class ChestHandler extends BlockHandler<TileEntityChest, ContainerChest> 
 		if (displayName != null) {
 			// This is NOT server-accurate.  But making it correct is not easy.
 			// Only one of the chests needs to have the name.
-			chest1.setCustomName(displayName);
-			chest2.setCustomName(displayName);
+			chest1.setCustomName(customName(displayName));
+			chest2.setCustomName(customName(displayName));
 		}
 
 		saveMethod.accept(chestPos1, chest1);

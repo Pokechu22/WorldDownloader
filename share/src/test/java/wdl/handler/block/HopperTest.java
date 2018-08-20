@@ -14,6 +14,8 @@
  */
 package wdl.handler.block;
 
+import static wdl.versioned.VersionedFunctions.customName;
+
 import org.junit.Test;
 
 import net.minecraft.init.Blocks;
@@ -37,10 +39,11 @@ public class HopperTest extends AbstractBlockHandlerTest<TileEntityHopper, Conta
 		placeBlockAt(pos, Blocks.HOPPER);
 		TileEntityHopper te = new TileEntityHopper();
 		te.setInventorySlotContents(0, new ItemStack(Items.DIAMOND));
-		te.setInventorySlotContents(1, new ItemStack(Items.PAPER).setStackDisplayName("This is the filler! //"));
-		te.setInventorySlotContents(2, new ItemStack(Items.PAPER).setStackDisplayName("Fi-ll-er dance! //"));
-		te.setInventorySlotContents(3, new ItemStack(Items.PAPER).setStackDisplayName("When ya don't have 'nuff stuff"));
-		te.setInventorySlotContents(4, new ItemStack(Items.PAPER).setStackDisplayName("for a whole hopper slot! //"));
+		// Old reference, and not just to the SethBling short
+		te.setInventorySlotContents(1, new ItemStack(Items.PAPER).setDisplayName(customName("This is the filler! //")));
+		te.setInventorySlotContents(2, new ItemStack(Items.PAPER).setDisplayName(customName("Fi-ll-er dance! //")));
+		te.setInventorySlotContents(3, new ItemStack(Items.PAPER).setDisplayName(customName("When ya don't have 'nuff stuff")));
+		te.setInventorySlotContents(4, new ItemStack(Items.PAPER).setDisplayName(customName("for a whole hopper slot! //")));
 		placeTEAt(pos, te);
 
 		runHandler(pos, makeClientContainer(pos));
@@ -53,7 +56,7 @@ public class HopperTest extends AbstractBlockHandlerTest<TileEntityHopper, Conta
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.HOPPER);
 		TileEntityHopper te = new TileEntityHopper();
-		te.setCustomName("Bin");
+		te.setCustomName(customName("Bin"));
 		placeTEAt(pos, te);
 
 		runHandler(pos, makeClientContainer(pos));
@@ -66,7 +69,7 @@ public class HopperTest extends AbstractBlockHandlerTest<TileEntityHopper, Conta
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.HOPPER);
 		TileEntityHopper te = new TileEntityHopper();
-		te.setCustomName("Hopper");
+		te.setCustomName(customName("Hopper"));
 		placeTEAt(pos, te);
 
 		runHandler(pos, makeClientContainer(pos));

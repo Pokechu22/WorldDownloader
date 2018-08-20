@@ -130,4 +130,11 @@ final class HandlerFunctions {
 	static Class<List> getChunkListClass() {
 		return List.class;
 	}
+
+	/* (non-javadoc)
+	 * @see VersionedFunctions#customName
+	 */
+	static String customName(String name) {
+		return name;
+	}
 }

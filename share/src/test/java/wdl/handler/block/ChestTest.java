@@ -14,6 +14,8 @@
  */
 package wdl.handler.block;
 
+import static wdl.versioned.VersionedFunctions.customName;
+
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
@@ -141,10 +143,10 @@ public class ChestTest extends AbstractBlockHandlerTest<TileEntityChest, Contain
 		placeBlockAt(offset, Blocks.CHEST);
 		TileEntityChest te1 = new TileEntityChest();
 		te1.setInventorySlotContents(2, new ItemStack(Items.BEEF));
-		te1.setCustomName("Food");
+		te1.setCustomName(customName("Food"));
 		TileEntityChest te2 = new TileEntityChest();
 		te2.setInventorySlotContents(8, new ItemStack(Items.COOKED_BEEF));
-		te2.setCustomName("Food");
+		te2.setCustomName(customName("Food"));
 		placeTEAt(center, te1);
 		placeTEAt(offset, te2);
 
@@ -168,10 +170,10 @@ public class ChestTest extends AbstractBlockHandlerTest<TileEntityChest, Contain
 		placeBlockAt(offset, Blocks.CHEST);
 		TileEntityChest te1 = new TileEntityChest();
 		te1.setInventorySlotContents(2, new ItemStack(Items.BEEF));
-		te1.setCustomName("Name 1");
+		te1.setCustomName(customName("Name 1"));
 		TileEntityChest te2 = new TileEntityChest();
 		te2.setInventorySlotContents(8, new ItemStack(Items.COOKED_BEEF));
-		te2.setCustomName("Name 2");
+		te2.setCustomName(customName("Name 2"));
 		placeTEAt(center, te1);
 		placeTEAt(offset, te2);
 
@@ -196,7 +198,7 @@ public class ChestTest extends AbstractBlockHandlerTest<TileEntityChest, Contain
 		placeBlockAt(offset, Blocks.CHEST);
 		TileEntityChest te1 = new TileEntityChest();
 		te1.setInventorySlotContents(2, new ItemStack(Items.BEEF));
-		te1.setCustomName("Name 1");
+		te1.setCustomName(customName("Name 1"));
 		TileEntityChest te2 = new TileEntityChest();
 		te2.setInventorySlotContents(8, new ItemStack(Items.COOKED_BEEF));
 		placeTEAt(center, te1);
@@ -225,10 +227,10 @@ public class ChestTest extends AbstractBlockHandlerTest<TileEntityChest, Contain
 		placeBlockAt(offset, Blocks.CHEST);
 		TileEntityChest te1 = new TileEntityChest();
 		te1.setInventorySlotContents(2, new ItemStack(Items.BEEF));
-		te1.setCustomName("Large Chest");
+		te1.setCustomName(customName("Large Chest"));
 		TileEntityChest te2 = new TileEntityChest();
 		te2.setInventorySlotContents(8, new ItemStack(Items.COOKED_BEEF));
-		te2.setCustomName("Large Chest");
+		te2.setCustomName(customName("Large Chest"));
 		placeTEAt(center, te1);
 		placeTEAt(offset, te2);
 
@@ -247,7 +249,7 @@ public class ChestTest extends AbstractBlockHandlerTest<TileEntityChest, Contain
 		makeMockWorld();
 		placeBlockAt(center, Blocks.CHEST);
 		TileEntityChest te = new TileEntityChest();
-		te.setCustomName("A chest");
+		te.setCustomName(customName("A chest"));
 		te.setInventorySlotContents(2, new ItemStack(Items.BEEF));
 		placeTEAt(center, te);
 
@@ -270,7 +272,7 @@ public class ChestTest extends AbstractBlockHandlerTest<TileEntityChest, Contain
 		makeMockWorld();
 		placeBlockAt(center, Blocks.CHEST);
 		TileEntityChest te = new TileEntityChest();
-		te.setCustomName("Chest");
+		te.setCustomName(customName("Chest"));
 		te.setInventorySlotContents(2, new ItemStack(Items.BEEF));
 		placeTEAt(center, te);
 
@@ -299,7 +301,7 @@ public class ChestTest extends AbstractBlockHandlerTest<TileEntityChest, Contain
 			BlockPos offset = center.offset(direction);
 			placeBlockAt(offset, Blocks.CHEST);
 			TileEntityChest te2 = new TileEntityChest();
-			te2.setInventorySlotContents(8, new ItemStack(Items.COOKED_BEEF).setStackDisplayName(direction.getName()));
+			te2.setInventorySlotContents(8, new ItemStack(Items.COOKED_BEEF).setDisplayName(customName(direction.getName())));
 			placeTEAt(offset, te2);
 		}
 

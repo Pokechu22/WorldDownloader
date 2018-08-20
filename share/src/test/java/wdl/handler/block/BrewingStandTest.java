@@ -14,6 +14,8 @@
  */
 package wdl.handler.block;
 
+import static wdl.versioned.VersionedFunctions.customName;
+
 import org.junit.Test;
 
 import net.minecraft.init.Blocks;
@@ -76,7 +78,7 @@ public class BrewingStandTest extends AbstractBlockHandlerTest<TileEntityBrewing
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.BREWING_STAND);
 		TileEntityBrewingStand te = new TileEntityBrewingStand();
-		te.setName("Potion maker");
+		te.setCustomName(customName("Potion maker"));
 		placeTEAt(pos, te);
 
 		runHandler(pos, makeClientContainer(pos));
@@ -94,7 +96,7 @@ public class BrewingStandTest extends AbstractBlockHandlerTest<TileEntityBrewing
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.BREWING_STAND);
 		TileEntityBrewingStand te = new TileEntityBrewingStand();
-		te.setName("Brewing Stand");
+		te.setCustomName(customName("Brewing Stand"));
 		placeTEAt(pos, te);
 
 		runHandler(pos, makeClientContainer(pos));
