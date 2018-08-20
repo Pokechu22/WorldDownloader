@@ -34,7 +34,7 @@ final class GameRuleFunctions {
 	 */
 	@Nullable
 	static GameRules.ValueType getRuleType(GameRules rules, String rule) {
-		GameRules.Value value = rules.func_196230_f(rule);
+		GameRules.Value value = rules.get(rule);
 		if (value == null) {
 			return null;
 		} else {
@@ -47,7 +47,7 @@ final class GameRuleFunctions {
 	 */
 	@Nullable
 	static String getRuleValue(GameRules rules, String rule) { 
-		GameRules.Value value = rules.func_196230_f(rule);
+		GameRules.Value value = rules.get(rule);
 		if (value == null) {
 			return null;
 		} else {
@@ -59,6 +59,6 @@ final class GameRuleFunctions {
 	 * @see VersionedFunctions#getGameRules
 	 */
 	static List<String> getGameRules(GameRules rules) {
-		return ImmutableList.copyOf(GameRules.func_196231_c().keySet()); // Static now for some reason
+		return ImmutableList.copyOf(GameRules.getDefinitions().keySet()); // Static now for some reason
 	}
 }

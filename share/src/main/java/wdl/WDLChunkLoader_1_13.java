@@ -132,10 +132,10 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 		compound.setLong("LastUpdate", world.getTotalWorldTime());
 		compound.setLong("InhabitedTime", chunk.getInhabitedTime());
 		compound.setString("Status", chunk.getStatus().getName());
-		UpgradeData upgradedata = chunk.func_196966_y();
+		UpgradeData upgradedata = chunk.getUpgradeData();
 
 		if (!upgradedata.func_196988_a()) {
-			compound.setTag("UpgradeData", upgradedata.func_196992_b());
+			compound.setTag("UpgradeData", upgradedata.write());
 		}
 
 		ChunkSection[] chunkSections = chunk.getBlockStorageArray();
@@ -147,7 +147,7 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 				NBTTagCompound sectionNBT = new NBTTagCompound();
 				sectionNBT.setByte("Y",
 						(byte) (chunkSection.getYLocation() >> 4 & 255));
-				chunkSection.getData().func_196963_b(sectionNBT, "Palette", "BlockStates");
+				chunkSection.getData().writeChunkPalette(sectionNBT, "Palette", "BlockStates");
 
 				NibbleArray blocklightArray = chunkSection.getBlockLight();
 				int lightArrayLen = blocklightArray.getData().length;
@@ -190,26 +190,26 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 		NBTTagList tileEntityList = getTileEntityList(chunk);
 		compound.setTag("TileEntities", tileEntityList);
 
-		if (world.func_205220_G_() instanceof ServerTickList) {
-			compound.setTag("TileTicks", ((ServerTickList<?>) world.func_205220_G_()).func_205363_a(chunk));
+		if (world.getPendingBlockTicks() instanceof ServerTickList) {
+			compound.setTag("TileTicks", ((ServerTickList<?>) world.getPendingBlockTicks()).write(chunk));
 		}
 		if (world.getPendingFluidTicks() instanceof ServerTickList) {
-			compound.setTag("LiquidTicks", ((ServerTickList<?>) world.getPendingFluidTicks()).func_205363_a(chunk));
+			compound.setTag("LiquidTicks", ((ServerTickList<?>) world.getPendingFluidTicks()).write(chunk));
 		}
 
-		compound.setTag("PostProcessing", func_202163_a(chunk.func_201614_D()));
+		compound.setTag("PostProcessing", listArrayToTag(chunk.getPackedPositions()));
 
 		if (chunk.getBlocksToBeTicked() instanceof ChunkPrimerTickList) {
-			compound.setTag("ToBeTicked", ((ChunkPrimerTickList<?>) chunk.getBlocksToBeTicked()).func_205379_a());
+			compound.setTag("ToBeTicked", ((ChunkPrimerTickList<?>) chunk.getBlocksToBeTicked()).write());
 		}
-		if (chunk.func_205217_j_() instanceof ChunkPrimerTickList) {
-			compound.setTag("LiquidsToBeTicked", ((ChunkPrimerTickList<?>) chunk.func_205217_j_()).func_205379_a());
+		if (chunk.getFluidsToBeTicked() instanceof ChunkPrimerTickList) {
+			compound.setTag("LiquidsToBeTicked", ((ChunkPrimerTickList<?>) chunk.getFluidsToBeTicked()).write());
 		}
 
 		NBTTagCompound heightMaps = new NBTTagCompound();
 
-		for (Heightmap.Type type : chunk.func_201615_v()) {
-			if (type.func_207512_c() == Heightmap.Usage.LIVE_WORLD) {
+		for (Heightmap.Type type : chunk.getHeightmaps()) {
+			if (type.getUsage() == Heightmap.Usage.LIVE_WORLD) {
 				heightMaps.setTag(type.getId(),
 						new NBTTagLongArray(chunk.getHeightmap(type).getDataArray()));
 			}

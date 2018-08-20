@@ -164,7 +164,7 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended<
 
 	@Override
 	public final List<T> getEntries() {
-		return super.func_195074_b();
+		return super.getEventListeners();
 	}
 
 	@Override
