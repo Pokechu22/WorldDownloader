@@ -131,7 +131,7 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 		compound.setInteger("zPos", chunk.z);
 		compound.setLong("LastUpdate", world.getTotalWorldTime());
 		compound.setLong("InhabitedTime", chunk.getInhabitedTime());
-		compound.setString("Status", chunk.func_201589_g().func_202125_b());
+		compound.setString("Status", chunk.getStatus().getName());
 		UpgradeData upgradedata = chunk.func_196966_y();
 
 		if (!upgradedata.func_196988_a()) {
@@ -175,7 +175,7 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 
 		compound.setTag("Sections", chunkSectionList);
 
-		Biome[] biomes = chunk.func_201590_e();
+		Biome[] biomes = chunk.getBiomes();
 		int[] biomeData = new int[biomes.length];
 		for (int i = 0; i < biomes.length; ++i) {
 			biomeData[i] = Biome.REGISTRY.getIDForObject(biomes[i]);
@@ -193,14 +193,14 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 		if (world.func_205220_G_() instanceof ServerTickList) {
 			compound.setTag("TileTicks", ((ServerTickList<?>) world.func_205220_G_()).func_205363_a(chunk));
 		}
-		if (world.func_205219_F_() instanceof ServerTickList) {
-			compound.setTag("LiquidTicks", ((ServerTickList<?>) world.func_205219_F_()).func_205363_a(chunk));
+		if (world.getPendingFluidTicks() instanceof ServerTickList) {
+			compound.setTag("LiquidTicks", ((ServerTickList<?>) world.getPendingFluidTicks()).func_205363_a(chunk));
 		}
 
 		compound.setTag("PostProcessing", func_202163_a(chunk.func_201614_D()));
 
-		if (chunk.func_205218_i_() instanceof ChunkPrimerTickList) {
-			compound.setTag("ToBeTicked", ((ChunkPrimerTickList<?>) chunk.func_205218_i_()).func_205379_a());
+		if (chunk.getBlocksToBeTicked() instanceof ChunkPrimerTickList) {
+			compound.setTag("ToBeTicked", ((ChunkPrimerTickList<?>) chunk.getBlocksToBeTicked()).func_205379_a());
 		}
 		if (chunk.func_205217_j_() instanceof ChunkPrimerTickList) {
 			compound.setTag("LiquidsToBeTicked", ((ChunkPrimerTickList<?>) chunk.func_205217_j_()).func_205379_a());
@@ -210,8 +210,8 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 
 		for (Heightmap.Type type : chunk.func_201615_v()) {
 			if (type.func_207512_c() == Heightmap.Usage.LIVE_WORLD) {
-				heightMaps.setTag(type.func_203500_b(),
-						new NBTTagLongArray(chunk.func_201608_a(type).func_202269_a()));
+				heightMaps.setTag(type.getId(),
+						new NBTTagLongArray(chunk.getHeightmap(type).getDataArray()));
 			}
 		}
 
