@@ -101,8 +101,8 @@ public class ChestHandler extends BlockHandler<TileEntityChest, ContainerChest> 
 		pos2 = pos1.add(0, 0, 1);
 		te2 = world.getTileEntity(pos2);
 		if (te2 instanceof TileEntityChest &&
-				((TileEntityChest) te2).getChestType() ==
-				((TileEntityChest) te1).getChestType()) {
+				world.getBlockState(pos2).getBlock() ==
+				world.getBlockState(pos1).getBlock()) {
 
 			chest1 = (TileEntityChest) te1;
 			chest2 = (TileEntityChest) te2;
@@ -114,8 +114,8 @@ public class ChestHandler extends BlockHandler<TileEntityChest, ContainerChest> 
 		pos2 = pos1.add(0, 0, -1);
 		te2 = world.getTileEntity(pos2);
 		if (te2 instanceof TileEntityChest &&
-				((TileEntityChest) te2).getChestType() ==
-				((TileEntityChest) te1).getChestType()) {
+				world.getBlockState(pos2).getBlock() ==
+				world.getBlockState(pos1).getBlock()) {
 
 			chest1 = (TileEntityChest) te2;
 			chest2 = (TileEntityChest) te1;
@@ -127,8 +127,8 @@ public class ChestHandler extends BlockHandler<TileEntityChest, ContainerChest> 
 		pos2 = pos1.add(1, 0, 0);
 		te2 = world.getTileEntity(pos2);
 		if (te2 instanceof TileEntityChest &&
-				((TileEntityChest) te2).getChestType() ==
-				((TileEntityChest) te1).getChestType()) {
+				world.getBlockState(pos2).getBlock() ==
+				world.getBlockState(pos1).getBlock()) {
 			chest1 = (TileEntityChest) te1;
 			chest2 = (TileEntityChest) te2;
 
@@ -139,8 +139,8 @@ public class ChestHandler extends BlockHandler<TileEntityChest, ContainerChest> 
 		pos2 = pos1.add(-1, 0, 0);
 		te2 = world.getTileEntity(pos2);
 		if (te2 instanceof TileEntityChest &&
-				((TileEntityChest) te2).getChestType() ==
-				((TileEntityChest) te1).getChestType()) {
+				world.getBlockState(pos2).getBlock() ==
+				world.getBlockState(pos1).getBlock()) {
 			chest1 = (TileEntityChest) te2;
 			chest2 = (TileEntityChest) te1;
 
