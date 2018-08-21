@@ -61,3 +61,6 @@ func_70005_c_,getName,0,"Gets the name of this thing. This method has slightly d
 func_149915_a,createNewTileEntity,0,
 func_176201_c,getMetaFromState,0,
 func_189418_a,getContainer,0,
+func_180676_d,getContainer,0,
+func_110587_b,getResourceDomains,0,
+func_179237_a,merge,0,

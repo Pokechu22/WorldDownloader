@@ -156,6 +156,6 @@ final class HandlerFunctions {
 	 */
 	@Nullable
 	static ILockableContainer getLargeChest(BlockChest block, World world, BlockPos pos, boolean allowBlockedChest) {
-		return block.getContainer(world, pos, allowBlockedChest);
+		return block.getContainer(world, pos);
 	}
 }
