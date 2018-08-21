@@ -16,6 +16,7 @@ package wdl.handler;
 
 import javax.annotation.Nonnull;
 
+import net.minecraft.client.resources.I18n;
 import wdl.WDLMessageTypes;
 import wdl.api.IWDLMessageType;
 
@@ -36,7 +37,7 @@ public class HandlerException extends Exception {
 	 *            translation key
 	 */
 	public HandlerException(String translationKey, Object... args) {
-		this(WDLMessageTypes.ON_GUI_CLOSED_WARNING, translationKey);
+		this(WDLMessageTypes.ON_GUI_CLOSED_WARNING, translationKey, args);
 	}
 
 	/**
@@ -68,4 +69,9 @@ public class HandlerException extends Exception {
 	 * The arguments to use for formatting the translation key.
 	 */
 	public final @Nonnull Object[] args;
+
+	@Override
+	public String getLocalizedMessage() {
+		return I18n.format(translationKey, args);
+	}
 }
