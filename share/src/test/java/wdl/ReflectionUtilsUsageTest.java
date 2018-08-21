@@ -16,29 +16,33 @@ package wdl;
 
 import java.io.File;
 import java.util.List;
-import java.util.Map;
 
 import org.junit.Test;
 
-import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.ChunkProviderClient;
 import net.minecraft.client.network.NetHandlerPlayClient;
-import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.entity.IMerchant;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.passive.EquineEntity;
 import net.minecraft.inventory.ContainerBrewingStand;
+import net.minecraft.inventory.ContainerDispenser;
 import net.minecraft.inventory.ContainerFurnace;
+import net.minecraft.inventory.ContainerHopper;
 import net.minecraft.inventory.ContainerHorseChest;
-import net.minecraft.inventory.ContainerHorseInventory;
 import net.minecraft.inventory.ContainerMerchant;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.chunk.storage.AnvilChunkLoader;
 import wdl.gui.GuiWDLSaveProgress;
+import wdl.handler.block.BrewingStandHandler;
+import wdl.handler.block.DispenserHandler;
+import wdl.handler.block.DropperHandler;
+import wdl.handler.block.FurnaceHandler;
+import wdl.handler.block.HopperHandler;
+import wdl.handler.entity.HorseHandler;
+import wdl.handler.entity.VillagerHandler;
 import wdl.versioned.VersionedFunctions;
 
 /**
@@ -46,18 +50,6 @@ import wdl.versioned.VersionedFunctions;
  * the field exists.
  */
 public class ReflectionUtilsUsageTest {
-
-	/** Handles {@link CapeHandler#setPlayerCape(NetworkPlayerInfo, ResourceLocation)} */
-	@Test
-	public void testCapeHandlerSetPlayerCape() {
-		ReflectionUtils.findField(NetworkPlayerInfo.class, Map.class);
-	}
-
-	/** Handles {@link CapeHandler#setupPlayer(AbstractClientPlayer)} */
-	@Test
-	public void testCapeHandlerSetupPlayer() {
-		ReflectionUtils.findField(AbstractClientPlayer.class, NetworkPlayerInfo.class);
-	}
 
 	/** Handles {@link WDL#crashed(Throwable, String)} */
 	@Test
@@ -80,22 +72,43 @@ public class ReflectionUtilsUsageTest {
 	/** Handles {@link WDLChunkLoader#WDLChunkLoader(File)} */
 	@Test
 	public void testWDLChunkLoaderInit() {
-		ReflectionUtils.findField(AnvilChunkLoader.class, Map.class);
+		ReflectionUtils.findField(AnvilChunkLoader.class, WDLChunkLoaderBase.CHUNKS_TO_SAVE_CLASS);
 	}
 
-	/** Handles {@link WDLEvents#onItemGuiClosed()} */
+	/** Handles {@link BrewingStandHandler#handle} */
 	@Test
-	public void testWDLEventsOnItemGuiClosed() {
-		ReflectionUtils.findField(ContainerHorseInventory.class, EquineEntity.class);
-		ReflectionUtils.findField(ContainerMerchant.class, IMerchant.class);
-		ReflectionUtils.findField(EntityVillager.class, MerchantRecipeList.class);
+	public void testBrewingStandHandler() {
 		ReflectionUtils.findField(ContainerBrewingStand.class, IInventory.class);
+	}
+
+	/** Handles {@link DispenserHandler#handle} and {@link DropperHandler#handle} */
+	public void testDispenserHandler() {
+		ReflectionUtils.findField(ContainerDispenser.class, IInventory.class);
+	}
+
+	/** Handles {@link FurnaceHandler#handle} */
+	public void testFuranceHandler() {
 		ReflectionUtils.findField(ContainerFurnace.class, IInventory.class);
 	}
 
-	/** Handles {@link WDLEvents#saveHorse(ContainerHorseInventory, EquineEntity)} */
+	/** Handles {@link HopperHandler#handle} */
+	public void testHopperHandler() {
+		ReflectionUtils.findField(ContainerHopper.class, IInventory.class);
+	}
+
+	// Skipping ShulkerBoxHandler due to version properties; testing is mostly redundant anyways
+	// since the handlers have their own dedicated tests
+
+	/** Handles {@link HorseHandler#copyData} and {@link HorseHandler#checkRiding} */
 	@Test
-	public void testWDLEventsSaveHorse() {
+	public void testHorseHandler() {
 		ReflectionUtils.findField(EquineEntity.class, ContainerHorseChest.class);
+	}
+
+	/** Handles {@link VillagerHandler#copyData(ContainerMerchant, EntityVillager, boolean)} */
+	@Test
+	public void testVillagerHandler() {
+		ReflectionUtils.findField(ContainerMerchant.class, IMerchant.class);
+		ReflectionUtils.findField(EntityVillager.class, MerchantRecipeList.class);
 	}
 }

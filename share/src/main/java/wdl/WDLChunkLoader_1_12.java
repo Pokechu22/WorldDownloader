@@ -48,6 +48,13 @@ import wdl.versioned.VersionedFunctions;
  * This variant is used for chunks from 1.12 and earlier.
  */
 abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
+
+	/**
+	 * The class that is used for the {@linkplain AnvilChunkLoader#chunksToSave} field.
+	 */
+	@SuppressWarnings("rawtypes")
+	static final Class<Map> CHUNKS_TO_SAVE_CLASS = Map.class;
+
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
@@ -98,8 +105,8 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 	protected WDLChunkLoaderBase(File file) {
 		super(file, null);
 		@SuppressWarnings("unchecked")
-		Map<ChunkPos, NBTTagCompound> chunksToSave = (Map<ChunkPos, NBTTagCompound>)
-				ReflectionUtils.findAndGetPrivateField(this, AnvilChunkLoader.class, Map.class);
+		Map<ChunkPos, NBTTagCompound> chunksToSave =
+				ReflectionUtils.findAndGetPrivateField(this, AnvilChunkLoader.class, CHUNKS_TO_SAVE_CLASS);
 		this.chunksToSave = chunksToSave;
 		this.chunkSaveLocation = file;
 	}
