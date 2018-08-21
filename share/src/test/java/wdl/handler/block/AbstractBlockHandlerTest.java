@@ -135,7 +135,7 @@ public abstract class AbstractBlockHandlerTest<B extends TileEntity, C extends C
 
 		IBlockState curState = clientWorld.getBlockState(pos);
 		BlockContainer curBlock = (BlockContainer)(curState.getBlock());
-		TileEntity defaultAtPos = curBlock.createNewTileEntity(clientWorld, curBlock.getMetaFromState(curState));
+		TileEntity defaultAtPos = VersionedFunctions.createNewBlockEntity(clientWorld, curBlock, curState);
 		defaultAtPos.setWorld(clientWorld);
 		defaultAtPos.setPos(pos);
 
@@ -162,7 +162,7 @@ public abstract class AbstractBlockHandlerTest<B extends TileEntity, C extends C
 		if (serverWorld.getBlockState(pos).getBlock() instanceof BlockChest) {
 			// Special-casing for large chests
 			BlockChest chest = (BlockChest) serverWorld.getBlockState(pos).getBlock();
-			serverInv = chest.getLockableContainer(serverWorld, pos);
+			serverInv = VersionedFunctions.getLargeChest(chest, serverWorld, pos, false);
 		} else {
 			serverInv = (IInventory) serverTE;
 		}

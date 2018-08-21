@@ -14,6 +14,8 @@
  */
 package wdl.versioned;
 
+import javax.annotation.Nullable;
+
 import com.google.common.collect.ImmutableList;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
@@ -22,17 +24,20 @@ import net.minecraft.block.BlockBeacon;
 import net.minecraft.block.BlockBrewingStand;
 import net.minecraft.block.BlockChest;
 import net.minecraft.block.BlockCommandBlock;
+import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.block.BlockDropper;
 import net.minecraft.block.BlockFurnace;
 import net.minecraft.block.BlockHopper;
 import net.minecraft.block.BlockShulkerBox;
 import net.minecraft.block.BlockTrappedChest;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityCommandBlock;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.world.ILockableContainer;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import wdl.handler.block.BeaconHandler;
@@ -141,5 +146,21 @@ final class HandlerFunctions {
 	 */
 	static TextComponentString customName(String name) {
 		return new TextComponentString(name);
+	}
+
+	/* (non-javadoc)
+	 * @see VersionedFunctions#createNewBlockEntity
+	 */
+	@Nullable
+	static TileEntity createNewBlockEntity(World world, BlockContainer block, IBlockState state) {
+		return block.createNewTileEntity(world);
+	}
+
+	/* (non-javadoc)
+	 * @see VersionedFunctions#getLargeChest
+	 */
+	@Nullable
+	static ILockableContainer getLargeChest(BlockChest block, World world, BlockPos pos, boolean allowBlockedChest) {
+		return block.getContainer(world.getBlockState(pos), world, pos, allowBlockedChest);
 	}
 }

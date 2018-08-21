@@ -22,12 +22,17 @@ import javax.annotation.Nullable;
 import com.google.common.collect.ImmutableList;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockChest;
+import net.minecraft.block.BlockContainer;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.client.CPacketCustomPayload;
 import net.minecraft.network.play.server.SPacketMaps;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameRules;
+import net.minecraft.world.ILockableContainer;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.storage.MapData;
@@ -106,6 +111,37 @@ public class VersionedFunctions {
 	@SuppressWarnings("unchecked")
 	public static <T> T customName(String name) {
 		return (T)HandlerFunctions.customName(name);
+	}
+
+	/**
+	 * Creates a new block entity.  For use in testing only.
+	 *
+	 * @param world The world to create it in.
+	 * @param block The block to use to create it.
+	 * @param state The block state.
+	 * @return The block entity, or null if the creation function fails.
+	 */
+	@Nullable
+	public static TileEntity createNewBlockEntity(World world, BlockContainer block, IBlockState state) {
+		return HandlerFunctions.createNewBlockEntity(world, block, state);
+	}
+
+	/**
+	 * Gets the container for a large chest. For use in testing only.
+	 *
+	 * @param block             The chest
+	 * @param world             The world
+	 * @param pos               The position to check
+	 * @param allowBlockedChest If false, then if the chest is blocked then
+	 *                          <code>null</code> will be returned. If true, ignores
+	 *                          blocking for the chest at the given position (but,
+	 *                          due to
+	 *                          <a href="https://bugs.mojang.com/browse/MC-99321">a
+	 *                          bug</a>, still checks if the neighbor is blocked in
+	 *                          versions before 1.13).
+	 */
+	public static ILockableContainer getLargeChest(BlockChest block, World world, BlockPos pos, boolean allowBlockedChest) {
+		return HandlerFunctions.getLargeChest(block, world, pos, allowBlockedChest);
 	}
 
 	/**

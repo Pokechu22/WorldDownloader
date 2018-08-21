@@ -47,7 +47,6 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.nbt.NBTException;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.village.MerchantRecipeList;
@@ -340,7 +339,7 @@ public abstract class AbstractEntityHandlerTest<E extends Entity, C extends Cont
 	protected void applyNBT(Entity entity, String nbt) {
 		try {
 			applyNBT(entity, JsonToNBT.getTagFromJson(nbt));
-		} catch (NBTException ex) {
+		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}
 	}

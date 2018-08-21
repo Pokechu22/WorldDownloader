@@ -6,6 +6,9 @@ func_150260_c,getString,0,Changed for unchangeable 1.13 name
 func_78276_b,drawString,0,
 func_146284_a,actionPerformed,0,
 func_146194_f,drawTextBox,0,
+func_191745_a,drawButton,0,
+func_192634_a,drawEntry,0,
+func_192633_a,updatePosition,0,
 func_146274_d,handleMouseInput,0,
 func_178039_p,handleMouseInput,0,
 func_73864_a,mouseClicked,0,
@@ -47,9 +50,14 @@ func_146383_a,setPreset,0,
 func_146384_e,getPreset,0,
 func_192035_E,getRecipeBook,0,
 func_190575_a,setCustomName,0,
+func_110133_a,setCustomName,0,
 func_145999_a,setCustomName,0,(Was setName)
 func_145937_a,setCustomName,0,(Was setName)
 func_145951_a,setCustomName,0,(Was setCustomInventoryName)
 func_200227_a,setCustomName,0,(Unused)
 func_82833_r,getDisplayName,0,
 func_151001_c,setDisplayName,0,
+func_70005_c_,getName,0,"Gets the name of this thing. This method has slightly different behavior depending on the interface (for <a href=""https://github.com/ModCoderPack/MCPBot-Issues/issues/14"">technical reasons</a> the same method is used for both IWorldNameable and ICommandSender):\n \n<dl>\n<dt>{@link net.minecraft.util.INameable#getName() INameable.getName()}</dt>\n<dd>Returns the name of this inventory. If this {@linkplain net.minecraft.inventory#hasCustomName() has a custom name} then this <em>should</em> be a direct string; otherwise it <em>should</em> be a valid translation string.</dd>\n<dd>However, note that <strong>the translation string may be invalid</strong>, as is the case for {@link net.minecraft.tileentity.TileEntityBanner TileEntityBanner} (always returns nonexistent translation code <code>banner</code> without a custom name), {@link net.minecraft.block.BlockAnvil.Anvil BlockAnvil$Anvil} (always returns <code>anvil</code>), {@link net.minecraft.block.BlockWorkbench.InterfaceCraftingTable BlockWorkbench$InterfaceCraftingTable} (always returns <code>crafting_table</code>), {@link net.minecraft.inventory.InventoryCraftResult InventoryCraftResult} (always returns <code>Result</code>) and the {@link net.minecraft.entity.item.EntityMinecart EntityMinecart} family (uses the entity definition). This is not an exaustive list.</dd>\n<dd>In general, this method should be safe to use on tile entities that implement IInventory.</dd>\n<dt>{@link net.minecraft.command.ICommandSender#getName() ICommandSender.getName()} and {@link net.minecraft.entity.Entity#getName() Entity.getName()}</dt>\n<dd>Returns a valid, displayable name (which may be localized). For most entities, this is the translated version of its translation string (obtained via {@link net.minecraft.entity.EntityList#getEntityString EntityList.getEntityString}).</dd>\n<dd>If this entity has a custom name set, this will return that name.</dd>\n<dd>For some entities, this will attempt to translate a nonexistent translation string; see <a href=""https://bugs.mojang.com/browse/MC-68446"">MC-68446</a>. For {@linkplain net.minecraft.entity.player.EntityPlayer#getName() players} this returns the player's name. For {@linkplain net.minecraft.entity.passive.EntityOcelot ocelots} this may return the translation of <code>entity.Cat.name</code> if it is tamed. For {@linkplain net.minecraft.entity.item.EntityItem#getName() item entities}, this will attempt to return the name of the item in that item entity. In all cases other than players, the custom name will overrule this.</dd>\n<dd>For non-entity command senders, this will return some arbitrary name, such as ""Rcon"" or ""Server"".</dd>\n</dl>"
+func_149915_a,createNewTileEntity,0,
+func_176201_c,getMetaFromState,0,
+func_189418_a,getContainer,0,

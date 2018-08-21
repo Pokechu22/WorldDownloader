@@ -44,8 +44,8 @@ public class HorseHandler extends EntityHandler<EquineEntity, ContainerHorseInve
 	@Override
 	public String copyData(ContainerHorseInventory container, EquineEntity horse, boolean riding) throws HandlerException {
 		ContainerHorseChest horseInventory = new ContainerHorseChest(
-				"HorseChest", container.inventorySlots.size()
-				- PLAYER_INVENTORY_SLOTS);
+				horse.getName(), // This was hardcoded to "HorseChest" in 1.12, but the name in 1.13.  The actual value is unused.
+				container.inventorySlots.size() - PLAYER_INVENTORY_SLOTS);
 
 		for (int i = 0; i < horseInventory.getSizeInventory(); i++) {
 			Slot slot = container.getSlot(i);
