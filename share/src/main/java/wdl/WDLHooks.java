@@ -32,7 +32,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.Container;
-import net.minecraft.item.ItemMap;
 import net.minecraft.network.play.server.SPacketBlockAction;
 import net.minecraft.network.play.server.SPacketChat;
 import net.minecraft.network.play.server.SPacketCustomPayload;
@@ -53,6 +52,7 @@ import wdl.gui.GuiWDLAbout;
 import wdl.gui.GuiWDLChunkOverrides;
 import wdl.gui.GuiWDLPermissions;
 import wdl.gui.widget.Button;
+import wdl.versioned.VersionedFunctions;
 
 /**
  * The various hooks for WDL. <br/>
@@ -285,13 +285,15 @@ public class WDLHooks {
 
 			if (ENABLE_PROFILER) PROFILER.startSection("wdl.onMapDataLoaded");
 
-			int id = packet.getMapId();
-			MapData mapData = ItemMap.loadMapData(packet.getMapId(),
-					WDL.worldClient);
+			MapData mapData = VersionedFunctions.getMapData(WDL.worldClient, packet);
 
-			if (ENABLE_PROFILER) PROFILER.startSection("Core");
-			WDLEvents.onMapDataLoaded(id, mapData);
-			if (ENABLE_PROFILER) PROFILER.endSection();  // "Core"
+			if (mapData != null) {
+				if (ENABLE_PROFILER) PROFILER.startSection("Core");
+				WDLEvents.onMapDataLoaded(packet.getMapId(), mapData);
+				if (ENABLE_PROFILER) PROFILER.endSection();  // "Core"
+			} else {
+				LOGGER.warn("Received a null map data: " + packet.getMapId());
+			}
 
 			if (ENABLE_PROFILER) PROFILER.endSection();  // "wdl.onMapDataLoaded"
 		} catch (Throwable e) {

@@ -14,10 +14,16 @@
  */
 package wdl.versioned;
 
+import javax.annotation.Nullable;
+
 import io.netty.buffer.Unpooled;
+import net.minecraft.item.ItemMap;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.client.CPacketCustomPayload;
+import net.minecraft.network.play.server.SPacketMaps;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
+import net.minecraft.world.storage.MapData;
 
 /**
  * Contains functions related to packets. This version is used in Minecraft 1.13
@@ -31,5 +37,13 @@ final class PacketFunctions {
 	 */
 	static CPacketCustomPayload makePluginMessagePacket(String channel, byte[] bytes) {
 		return new CPacketCustomPayload(new ResourceLocation(channel), new PacketBuffer(Unpooled.copiedBuffer(bytes)));
+	}
+
+	/* (non-javadoc)
+	 * {@see VersionedFunctions#getMapData}
+	 */
+	@Nullable
+	static MapData getMapData(World world, SPacketMaps mapPacket) {
+		return ItemMap.loadMapData(world, "map_" + mapPacket.getMapId());
 	}
 }

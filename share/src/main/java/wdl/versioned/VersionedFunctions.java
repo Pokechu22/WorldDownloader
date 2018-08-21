@@ -25,10 +25,12 @@ import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.client.CPacketCustomPayload;
+import net.minecraft.network.play.server.SPacketMaps;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.storage.MapData;
 import wdl.config.settings.GeneratorSettings.Generator;
 import wdl.handler.block.BlockHandler;
 import wdl.handler.entity.EntityHandler;
@@ -114,6 +116,18 @@ public class VersionedFunctions {
 	 */
 	public static CPacketCustomPayload makePluginMessagePacket(String channel, byte[] bytes) {
 		return PacketFunctions.makePluginMessagePacket(channel, bytes);
+	}
+
+	/**
+	 * Gets the map data associated with the given packet.
+	 *
+	 * @param world The client world.
+	 * @param mapPacket The packet.
+	 * @return The map data, or null if the underlying function returns null.
+	 */
+	@Nullable
+	public static MapData getMapData(World world, SPacketMaps mapPacket) {
+		return PacketFunctions.getMapData(world, mapPacket);
 	}
 
 	/**
