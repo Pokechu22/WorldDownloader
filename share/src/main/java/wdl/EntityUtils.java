@@ -316,7 +316,7 @@ public class EntityUtils {
 
 		double distance = Math.max(dx, dz);
 
-		LOGGER.info("removeEntity: {} is at distance {} from {} (dx {}, dz {}); configured track distance is {}"
+		LOGGER.debug("removeEntity: {} is at distance {} from {} (dx {}, dz {}); configured track distance is {}"
 				+ " and server distance for view distance {} is {}.  Entity kept: {}",
 				entity, distance, player, dx, dz, trackDistance, viewDistance, maxRange, (distance > threshold));
 
