@@ -18,9 +18,6 @@ import java.lang.reflect.Field;
 
 import javax.annotation.Nullable;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.BiMap;
 
@@ -35,8 +32,6 @@ import wdl.handler.HandlerException;
 import wdl.versioned.VersionedFunctions;
 
 public class VillagerHandler extends EntityHandler<EntityVillager, ContainerMerchant> {
-	private static final Logger LOGGER = LogManager.getLogger();
-
 	public VillagerHandler() {
 		super(EntityVillager.class, ContainerMerchant.class);
 	}
@@ -48,29 +43,30 @@ public class VillagerHandler extends EntityHandler<EntityVillager, ContainerMerc
 		MerchantRecipeList recipes = merchant.getRecipes(merchant.getCustomer()); // note: parameter is ignored by all implementations
 		ReflectionUtils.findAndSetPrivateField(villager, MerchantRecipeList.class, recipes);
 
-		ITextComponent displayName = merchant.getDisplayName();
-		if (!(displayName instanceof TextComponentTranslation)) {
-			// Taking the toString to reflect JSON structure
-			String componentDesc = String.valueOf(displayName);
-			throw new HandlerException("wdl.messages.onGuiClosedWarning.villagerCareer.notAComponent", componentDesc);
-		}
-
-		TextComponentTranslation displayNameTranslation = ((TextComponentTranslation) displayName);
-		String key = displayNameTranslation.getKey();
-
 		if (CAREER_ID_FIELD != null) {
+			ITextComponent displayName = merchant.getDisplayName();
+			if (!(displayName instanceof TextComponentTranslation)) {
+				// Taking the toString to reflect JSON structure
+				String componentDesc = String.valueOf(displayName);
+				throw new HandlerException("wdl.messages.onGuiClosedWarning.villagerCareer.notAComponent", componentDesc);
+			}
+	
+			TextComponentTranslation displayNameTranslation = ((TextComponentTranslation) displayName);
+			String key = displayNameTranslation.getKey();
+
+			int profession = villager.getProfession();
+			int career;
 			try {
-				int career = getCareer(key, villager.getProfession());
+				career = getCareer(key, profession);
 
 				CAREER_ID_FIELD.setInt(villager, career);
-
-				LOGGER.debug("Saved villager career ({} -> {}).", key, career);
 			} catch (IllegalArgumentException | IllegalAccessException e) {
 				throw new HandlerException("wdl.messages.onGuiClosedWarning.villagerCareer.exception", e);
 			}
+			return new TextComponentTranslation("wdl.messages.onGuiClosedInfo.savedEntity.villager.tradesAndCareer", displayName, profession, career);
+		} else {
+			return new TextComponentTranslation("wdl.messages.onGuiClosedInfo.savedEntity.villager.tradesOnly");
 		}
-
-		return new TextComponentTranslation("wdl.messages.onGuiClosedInfo.savedEntity.villager");
 	}
 
 	/**
