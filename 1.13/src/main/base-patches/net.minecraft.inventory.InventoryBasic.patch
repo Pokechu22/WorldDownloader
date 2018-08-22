@@ -1,6 +1,6 @@
 --- net/minecraft/inventory/InventoryBasic.java
 +++ net/minecraft/inventory/InventoryBasic.java
-@@ -9,18 +9,33 @@
+@@ -9,7 +9,7 @@
  import net.minecraft.util.NonNullList;
  import net.minecraft.util.text.ITextComponent;
  
@@ -9,8 +9,9 @@
  	private final ITextComponent inventoryTitle;
  	private final int slotsCount;
  	private final NonNullList<ItemStack> inventoryContents;
- 	/** Listeners notified when any item in this inventory is changed. */
+@@ -17,11 +17,26 @@
  	private List<IInventoryChangedListener> changeListeners;
+ 	/** The custom name of this inventory, or null if it doesn't have one and {@link inventoryTitle} should be used instead */
  	private ITextComponent customName;
 +	/* WDL >>> */
 +	@Nullable
