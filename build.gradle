@@ -43,3 +43,9 @@ project(':1.12.1').evaluationDependsOn(':share')
 project(':1.12.1-litemod').evaluationDependsOn(':1.12.1')
 project(':1.12.2').evaluationDependsOn(':share')
 project(':1.12.2-litemod').evaluationDependsOn(':1.12.2')
+
+allprojects {
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+    }
+}
