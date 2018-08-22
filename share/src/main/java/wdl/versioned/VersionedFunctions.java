@@ -25,6 +25,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.client.CPacketCustomPayload;
@@ -36,6 +37,7 @@ import net.minecraft.world.ILockableContainer;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.storage.MapData;
+import net.minecraft.world.storage.SaveHandler;
 import wdl.config.settings.GeneratorSettings.Generator;
 import wdl.handler.block.BlockHandler;
 import wdl.handler.entity.EntityHandler;
@@ -142,6 +144,17 @@ public class VersionedFunctions {
 	 */
 	public static ILockableContainer getLargeChest(BlockChest block, World world, BlockPos pos, boolean allowBlockedChest) {
 		return HandlerFunctions.getLargeChest(block, world, pos, allowBlockedChest);
+	}
+
+	/**
+	 * Gets the SaveHandler for the world with the given name.
+	 *
+	 * @param minecraft The Minecraft instance
+	 * @param worldName The name of the world.
+	 * @return The SaveHandler.
+	 */
+	public static SaveHandler getSaveHandler(Minecraft minecraft, String worldName) {
+		return HandlerFunctions.getSaveHandler(minecraft, worldName);
 	}
 
 	/**

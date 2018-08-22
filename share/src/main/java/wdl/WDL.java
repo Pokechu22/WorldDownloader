@@ -352,8 +352,7 @@ public class WDL {
 		}
 
 		worldProps = loadWorldProps(worldName);
-		saveHandler = (SaveHandler) minecraft.getSaveLoader().getSaveLoader(
-				getWorldFolderName(worldName), true);
+		saveHandler = VersionedFunctions.getSaveHandler(minecraft, getWorldFolderName(worldName));
 
 		long lastSaved = worldProps.getValue(MiscSettings.LAST_SAVED);
 		long lastPlayed;

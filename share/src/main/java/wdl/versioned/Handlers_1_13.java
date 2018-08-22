@@ -32,6 +32,7 @@ import net.minecraft.block.BlockHopper;
 import net.minecraft.block.BlockShulkerBox;
 import net.minecraft.block.BlockTrappedChest;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityCommandBlock;
@@ -40,6 +41,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.ILockableContainer;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.storage.SaveHandler;
 import wdl.handler.block.BeaconHandler;
 import wdl.handler.block.BlockHandler;
 import wdl.handler.block.BrewingStandHandler;
@@ -162,5 +164,14 @@ final class HandlerFunctions {
 	@Nullable
 	static ILockableContainer getLargeChest(BlockChest block, World world, BlockPos pos, boolean allowBlockedChest) {
 		return block.getContainer(world.getBlockState(pos), world, pos, allowBlockedChest);
+	}
+
+	/* (non-javadoc)
+	 * @see VersionedFunctions#getSaveHandler
+	 */
+	static SaveHandler getSaveHandler(Minecraft minecraft, String worldName) {
+		// Null => No server to use when saving player data.  This is fine for WDL
+		// we handle player data manually.
+		return (SaveHandler)minecraft.getSaveLoader().getSaveLoader(worldName, null);
 	}
 }
