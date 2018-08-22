@@ -680,6 +680,7 @@ public class WDL {
 
 		File playersDirectory = new File(saveHandler.getWorldDirectory(),
 				"playerdata");
+		playersDirectory.mkdirs();
 		File playerFileTmp = new File(playersDirectory, thePlayer
 				.getUniqueID().toString() + ".dat.tmp");
 		File playerFile = new File(playersDirectory, thePlayer
