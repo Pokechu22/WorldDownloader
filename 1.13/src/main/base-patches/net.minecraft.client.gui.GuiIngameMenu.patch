@@ -1,0 +1,24 @@
+--- net/minecraft/client/gui/GuiIngameMenu.java
++++ net/minecraft/client/gui/GuiIngameMenu.java
+@@ -19,6 +19,10 @@
+ 			 * Called when the left mouse button is pressed.
+ 			 */
+ 			public void mousePressed(double mouseX, double mouseY) {
++				/* WDL >>> */
++				wdl.WDLHooks.handleWDLButtonClick(GuiIngameMenu.this, this); // XXX this call is awkward, maybe just make it for the disconnect button?
++				/* <<< WDL */
++
+ 				boolean flag = GuiIngameMenu.this.mc.isIntegratedServerRunning();
+ 				boolean flag1 = GuiIngameMenu.this.mc.isConnectedToRealms();
+ 				this.enabled = false;
+@@ -87,6 +91,10 @@
+ 				GuiIngameMenu.this.mc.displayGuiScreen(new GuiStats(GuiIngameMenu.this, GuiIngameMenu.this.mc.player.getStatFileWriter()));
+ 			}
+ 		});
++
++		/* WDL >>> */
++		wdl.WDLHooks.injectWDLButtons(this, buttonList, this::addButton);
++		/* <<< WDL */
+ 	}
+ 
+ 	/**
