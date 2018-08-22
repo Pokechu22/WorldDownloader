@@ -175,8 +175,8 @@ public class WDLEvents {
 					}
 
 					try {
-						String msg = handler.copyDataCasting(windowContainer, ridingEntity, true);
-						WDLMessages.chatMessageTranslated(WDL.baseProps, WDLMessageTypes.ON_GUI_CLOSED_INFO, msg);
+						ITextComponent msg = handler.copyDataCasting(windowContainer, ridingEntity, true);
+						WDLMessages.chatMessage(WDL.baseProps, WDLMessageTypes.ON_GUI_CLOSED_INFO, msg);
 						return true;
 					} catch (HandlerException e) {
 						WDLMessages.chatMessageTranslated(WDL.baseProps, e.messageType, e.translationKey, e.args);
@@ -201,8 +201,8 @@ public class WDLEvents {
 			EntityHandler<?, ?> handler = EntityHandler.getHandler(entity.getClass(), windowContainer.getClass());
 			if (handler != null) {
 				try {
-					String msg = handler.copyDataCasting(windowContainer, entity, true);
-					WDLMessages.chatMessageTranslated(WDL.baseProps, WDLMessageTypes.ON_GUI_CLOSED_INFO, msg);
+					ITextComponent msg = handler.copyDataCasting(windowContainer, entity, true);
+					WDLMessages.chatMessage(WDL.baseProps, WDLMessageTypes.ON_GUI_CLOSED_INFO, msg);
 					return true;
 				} catch (HandlerException e) {
 					WDLMessages.chatMessageTranslated(WDL.baseProps, e.messageType, e.translationKey, e.args);

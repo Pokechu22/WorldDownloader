@@ -42,7 +42,7 @@ public class VillagerHandler extends EntityHandler<EntityVillager, ContainerMerc
 	}
 
 	@Override
-	public String copyData(ContainerMerchant container, EntityVillager villager, boolean riding) throws HandlerException {
+	public ITextComponent copyData(ContainerMerchant container, EntityVillager villager, boolean riding) throws HandlerException {
 		IMerchant merchant = ReflectionUtils.findAndGetPrivateField(
 				container, IMerchant.class);
 		MerchantRecipeList recipes = merchant.getRecipes(merchant.getCustomer()); // note: parameter is ignored by all implementations
@@ -70,7 +70,7 @@ public class VillagerHandler extends EntityHandler<EntityVillager, ContainerMerc
 			}
 		}
 
-		return "wdl.messages.onGuiClosedInfo.savedEntity.villager";
+		return new TextComponentTranslation("wdl.messages.onGuiClosedInfo.savedEntity.villager");
 	}
 
 	/**

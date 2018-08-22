@@ -19,6 +19,7 @@ import javax.annotation.Nullable;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.Container;
+import net.minecraft.util.text.ITextComponent;
 import wdl.handler.BaseHandler;
 import wdl.handler.HandlerException;
 import wdl.versioned.VersionedFunctions;
@@ -118,13 +119,13 @@ public abstract class EntityHandler<E extends Entity, C extends Container> exten
 	 * @param riding
 	 *            True if this is a ridden entity (generally not needed).
 	 *
-	 * @return A translation key to put into chat describing what was saved.
+	 * @return A message to put into chat describing what was saved.
 	 * @throws HandlerException
 	 *             When something is handled wrong.
 	 * @throws ClassCastException
 	 *             If container or entity are not instances of the handled class.
 	 */
-	public final String copyDataCasting(Container container, Entity entity, boolean riding)
+	public final ITextComponent copyDataCasting(Container container, Entity entity, boolean riding)
 			throws HandlerException, ClassCastException {
 		C c = containerClass.cast(container);
 		E e = entityClass.cast(entity);
@@ -141,11 +142,11 @@ public abstract class EntityHandler<E extends Entity, C extends Container> exten
 	 * @param riding
 	 *            True if this is a ridden entity (generally not needed).
 	 *
-	 * @return A translation key to put into chat describing what was saved.
+	 * @return A message to put into chat describing what was saved.
 	 * @throws HandlerException
 	 *             When something is handled wrong.
 	 */
-	public abstract String copyData(C container, E entity, boolean riding) throws HandlerException;
+	public abstract ITextComponent copyData(C container, E entity, boolean riding) throws HandlerException;
 
 	/**
 	 * Looks up the handler that handles the given block entity/container combo,
