@@ -48,6 +48,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.World;
@@ -138,6 +139,10 @@ public abstract class AbstractEntityHandlerTest<E extends Entity, C extends Cont
 
 		when(clientWorld.getEntityByID(anyInt())).thenReturn(null);
 		when(serverWorld.getEntityByID(anyInt())).thenReturn(null);
+
+		Scoreboard board = mock(Scoreboard.class); // returns null for e.g. getPlayerTeam
+		when(clientWorld.getScoreboard()).thenReturn(board);
+		when(serverWorld.getScoreboard()).thenReturn(board);
 	}
 
 	protected void addEntity(Entity serverEntity) {

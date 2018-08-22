@@ -16,8 +16,12 @@ package wdl.versioned;
 
 import javax.annotation.Nullable;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableList;
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBeacon;
@@ -176,5 +180,37 @@ final class HandlerFunctions {
 		// False => Don't save player data.  This is fine for WDL since
 		// we handle player data manually.
 		return (SaveHandler)minecraft.getSaveLoader().getSaveLoader(worldName, false);
+	}
+
+	/* (non-javadoc)
+	 * @see VersionedFunctions#VANILLA_VILLAGER_CAREERS
+	 */
+	static final Int2ObjectMap<BiMap<String, Integer>> VANILLA_VILLAGER_CAREERS = new Int2ObjectArrayMap<>();
+	static {
+		BiMap<String, Integer> farmer = HashBiMap.create(4);
+		farmer.put("entity.Villager.farmer", 1);
+		farmer.put("entity.Villager.fisherman", 2);
+		farmer.put("entity.Villager.shepherd", 3);
+		farmer.put("entity.Villager.fletcher", 4);
+		BiMap<String, Integer> librarian = HashBiMap.create(2);
+		librarian.put("entity.Villager.librarian", 1);
+		BiMap<String, Integer> priest = HashBiMap.create(1);
+		priest.put("entity.Villager.cleric", 1);
+		BiMap<String, Integer> blacksmith = HashBiMap.create(3);
+		blacksmith.put("entity.Villager.armor", 1);
+		blacksmith.put("entity.Villager.weapon", 2);
+		blacksmith.put("entity.Villager.tool", 3);
+		BiMap<String, Integer> butcher = HashBiMap.create(2);
+		butcher.put("entity.Villager.butcher", 1);
+		butcher.put("entity.Villager.leather", 2);
+		BiMap<String, Integer> nitwit = HashBiMap.create(1);
+		nitwit.put("entity.Villager.nitwit", 1);
+
+		VANILLA_VILLAGER_CAREERS.put(0, farmer);
+		VANILLA_VILLAGER_CAREERS.put(1, librarian);
+		VANILLA_VILLAGER_CAREERS.put(2, priest);
+		VANILLA_VILLAGER_CAREERS.put(3, blacksmith);
+		VANILLA_VILLAGER_CAREERS.put(4, butcher);
+		VANILLA_VILLAGER_CAREERS.put(5, nitwit);
 	}
 }

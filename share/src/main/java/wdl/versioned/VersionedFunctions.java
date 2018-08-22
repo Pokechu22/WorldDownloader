@@ -19,14 +19,17 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
+import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableList;
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.client.CPacketCustomPayload;
 import net.minecraft.network.play.server.SPacketMaps;
@@ -162,6 +165,15 @@ public class VersionedFunctions {
 	public static SaveHandler getSaveHandler(Minecraft minecraft, String worldName) {
 		return HandlerFunctions.getSaveHandler(minecraft, worldName);
 	}
+
+	/**
+	 * A map mapping villager professions to a map from each career's I18n name to
+	 * the career's ID.
+	 *
+	 * @see https://minecraft.gamepedia.com/Villager#Professions_and_careers
+	 * @see EntityVillager#getDisplayName
+	 */
+	public static final Int2ObjectMap<BiMap<String, Integer>> VANILLA_VILLAGER_CAREERS = HandlerFunctions.VANILLA_VILLAGER_CAREERS;
 
 	/**
 	 * Creates a plugin message packet.
