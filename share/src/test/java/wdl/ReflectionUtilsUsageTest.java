@@ -82,16 +82,19 @@ public class ReflectionUtilsUsageTest {
 	}
 
 	/** Handles {@link DispenserHandler#handle} and {@link DropperHandler#handle} */
+	@Test
 	public void testDispenserHandler() {
 		ReflectionUtils.findField(ContainerDispenser.class, IInventory.class);
 	}
 
 	/** Handles {@link FurnaceHandler#handle} */
+	@Test
 	public void testFuranceHandler() {
 		ReflectionUtils.findField(ContainerFurnace.class, IInventory.class);
 	}
 
 	/** Handles {@link HopperHandler#handle} */
+	@Test
 	public void testHopperHandler() {
 		ReflectionUtils.findField(ContainerHopper.class, IInventory.class);
 	}
