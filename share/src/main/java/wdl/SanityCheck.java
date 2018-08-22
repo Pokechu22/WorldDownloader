@@ -93,7 +93,20 @@ enum SanityCheck {
 				throw new Exception("InventoryBasic does not implement INetworkNameable!");
 			}
 		}
-	}
+	},
+	ENCODING("wdl.sanity.encoding") {
+		@Override
+		public void run() throws Exception {
+			compare("§aSection-sign text§r", "\u00a7aSection-sign text\u00a7r");
+			compare("༼ つ ◕_◕ ༽つ  Give UNICODE", "\u0F3C \u3064 \u25D5_\u25D5 \u0F3D\u3064  Give UNICODE");
+			compare("ＴＥＳＴ", "\uFF34\uFF25\uFF33\uFF34");
+		}
+		private void compare(String actual, String expected) throws Exception {
+			if (!actual.equals(expected)) {
+				throw new Exception("Mismatched strings -- expected " + expected + " but got " + actual);
+			}
+		}
+	},
 	;
 	/** Translation key for the general message */
 	public final String errorMessage;

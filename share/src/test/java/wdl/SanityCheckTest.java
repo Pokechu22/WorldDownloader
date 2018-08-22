@@ -46,4 +46,10 @@ public class SanityCheckTest extends MaybeMixinTest {
 		assumeTrue(SanityCheck.MIXIN.canRun());
 		SanityCheck.MIXIN.run();
 	}
+
+	@Test
+	public void testEncoding() throws Exception {
+		assumeTrue(SanityCheck.ENCODING.canRun());
+		SanityCheck.ENCODING.run();
+	}
 }
