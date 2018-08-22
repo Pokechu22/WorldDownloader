@@ -22,6 +22,8 @@ import net.minecraft.inventory.ContainerFurnace;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IBlockReader;
 import wdl.ReflectionUtils;
 import wdl.handler.HandlerException;
@@ -32,7 +34,7 @@ public class FurnaceHandler extends BlockHandler<TileEntityFurnace, ContainerFur
 	}
 
 	@Override
-	public String handle(BlockPos clickedPos, ContainerFurnace container,
+	public ITextComponent handle(BlockPos clickedPos, ContainerFurnace container,
 			TileEntityFurnace blockEntity, IBlockReader world,
 			BiConsumer<BlockPos, TileEntityFurnace> saveMethod) throws HandlerException {
 		IInventory furnaceInventory = ReflectionUtils.findAndGetPrivateField(
@@ -44,6 +46,6 @@ public class FurnaceHandler extends BlockHandler<TileEntityFurnace, ContainerFur
 			blockEntity.setCustomName(customName(title));
 		}
 		saveMethod.accept(clickedPos, blockEntity);
-		return "wdl.messages.onGuiClosedInfo.savedTileEntity.furnace";
+		return new TextComponentTranslation("wdl.messages.onGuiClosedInfo.savedTileEntity.furnace");
 	}
 }

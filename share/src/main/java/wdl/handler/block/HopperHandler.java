@@ -22,6 +22,8 @@ import net.minecraft.inventory.ContainerHopper;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IBlockReader;
 import wdl.ReflectionUtils;
 import wdl.handler.HandlerException;
@@ -32,7 +34,7 @@ public class HopperHandler extends BlockHandler<TileEntityHopper, ContainerHoppe
 	}
 
 	@Override
-	public String handle(BlockPos clickedPos, ContainerHopper container,
+	public ITextComponent handle(BlockPos clickedPos, ContainerHopper container,
 			TileEntityHopper blockEntity, IBlockReader world,
 			BiConsumer<BlockPos, TileEntityHopper> saveMethod) throws HandlerException {
 		IInventory hopperInventory = ReflectionUtils.findAndGetPrivateField(
@@ -43,6 +45,6 @@ public class HopperHandler extends BlockHandler<TileEntityHopper, ContainerHoppe
 		if (title != null) {
 			blockEntity.setCustomName(customName(title));
 		}
-		return "wdl.messages.onGuiClosedInfo.savedTileEntity.hopper";
+		return new TextComponentTranslation("wdl.messages.onGuiClosedInfo.savedTileEntity.hopper");
 	}
 }

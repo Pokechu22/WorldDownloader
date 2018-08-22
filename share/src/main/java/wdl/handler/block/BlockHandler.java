@@ -25,6 +25,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IBlockReader;
 import wdl.ducks.INetworkNameable;
 import wdl.handler.BaseHandler;
@@ -85,13 +86,13 @@ public abstract class BlockHandler<B extends TileEntity, C extends Container> ex
 	 *            The world to query if more information is needed.
 	 * @param saveMethod
 	 *            The method to call to save block entities.
-	 * @return A translation key to put into chat describing what was saved.
+	 * @return A message to put into chat describing what was saved.
 	 * @throws HandlerException
 	 *             When something is handled wrong.
 	 * @throws ClassCastException
 	 *             If container or blockEntity are not instances of the handled class.
 	 */
-	public final String handleCasting(BlockPos clickedPos, Container container,
+	public final ITextComponent handleCasting(BlockPos clickedPos, Container container,
 			TileEntity blockEntity, IBlockReader world,
 			BiConsumer<BlockPos, B> saveMethod) throws HandlerException, ClassCastException {
 		B b = blockEntityClass.cast(blockEntity);
@@ -113,11 +114,11 @@ public abstract class BlockHandler<B extends TileEntity, C extends Container> ex
 	 *            The world to query if more information is needed.
 	 * @param saveMethod
 	 *            The method to call to save block entities.
-	 * @return A translation key to put into chat describing what was saved.
+	 * @return A message to put into chat describing what was saved.
 	 * @throws HandlerException
 	 *             When something is handled wrong.
 	 */
-	public abstract String handle(BlockPos clickedPos, C container,
+	public abstract ITextComponent handle(BlockPos clickedPos, C container,
 			B blockEntity, IBlockReader world,
 			BiConsumer<BlockPos, B> saveMethod) throws HandlerException;
 

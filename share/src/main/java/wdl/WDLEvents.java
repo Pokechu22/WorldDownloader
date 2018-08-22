@@ -239,9 +239,9 @@ public class WDLEvents {
 				BlockHandler.getHandler(te.getClass(), WDL.windowContainer.getClass());
 		if (handler != null) {
 			try {
-				String msg = handler.handleCasting(WDL.lastClickedBlock, WDL.windowContainer,
+				ITextComponent msg = handler.handleCasting(WDL.lastClickedBlock, WDL.windowContainer,
 						te, WDL.worldClient, WDL::saveTileEntity);
-				WDLMessages.chatMessageTranslated(WDL.baseProps, WDLMessageTypes.ON_GUI_CLOSED_INFO, msg);
+				WDLMessages.chatMessage(WDL.baseProps, WDLMessageTypes.ON_GUI_CLOSED_INFO, msg);
 				return true;
 			} catch (HandlerException e) {
 				WDLMessages.chatMessageTranslated(WDL.baseProps, e.messageType, e.translationKey, e.args);

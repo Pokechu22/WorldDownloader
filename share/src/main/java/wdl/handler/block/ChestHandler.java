@@ -24,6 +24,8 @@ import net.minecraft.inventory.ContainerChest;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IBlockReader;
 import wdl.WDLMessageTypes;
 import wdl.handler.HandlerException;
@@ -34,17 +36,17 @@ public class ChestHandler extends BlockHandler<TileEntityChest, ContainerChest> 
 	}
 
 	@Override
-	public String handle(BlockPos clickedPos, ContainerChest container,
+	public ITextComponent handle(BlockPos clickedPos, ContainerChest container,
 			TileEntityChest blockEntity, IBlockReader world,
 			BiConsumer<BlockPos, TileEntityChest> saveMethod) throws HandlerException {
 		String title = getCustomDisplayName(container.getLowerChestInventory());
 
 		if (container.inventorySlots.size() > 63) {
 			saveDoubleChest(clickedPos, container, blockEntity, world, saveMethod, title);
-			return "wdl.messages.onGuiClosedInfo.savedTileEntity.doubleChest";
+			return new TextComponentTranslation("wdl.messages.onGuiClosedInfo.savedTileEntity.doubleChest");
 		} else {
 			saveSingleChest(clickedPos, container, blockEntity, world, saveMethod, title);
-			return "wdl.messages.onGuiClosedInfo.savedTileEntity.singleChest";
+			return new TextComponentTranslation("wdl.messages.onGuiClosedInfo.savedTileEntity.singleChest");
 		}
 	}
 	/**
