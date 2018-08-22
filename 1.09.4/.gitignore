@@ -8,8 +8,8 @@
 # Eclipse
 .project
 .classpath
-1.9.2_Client.launch
+1.09.4_Client.launch
 /.settings/
 
 # Idea
-1.9.2.iml
+1.09.4.iml

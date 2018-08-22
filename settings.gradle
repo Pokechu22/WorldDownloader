@@ -1,7 +1,7 @@
 include 'share'
-include '1.9', '1.9-litemod'
-include '1.9.2' // There never was a 1.9.2 liteloader
-include '1.9.4', '1.9.4-litemod'
+include '1.09', '1.09-litemod'
+include '1.09.2' // There never was a 1.9.2 liteloader
+include '1.09.4', '1.09.4-litemod'
 include '1.10', '1.10-litemod'
 include '1.10.2', '1.10.2-litemod'
 include '1.11', '1.11-litemod'
