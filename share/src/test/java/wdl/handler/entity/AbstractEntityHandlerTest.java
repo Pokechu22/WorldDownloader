@@ -224,6 +224,9 @@ public abstract class AbstractEntityHandlerTest<E extends Entity, C extends Cont
 		// NHPC.handleCustomPayload
 		// NOTE: the villager code never actually uses the player
 		MerchantRecipeList serverRecipes = serverVillager.getRecipes(this.serverPlayer);
+		// Normalize the recipe list (NBT serialization can mess with the
+		// damage tag in 1.13; just make sure that the server one is also messed like that)
+		serverRecipes.forEach(recipe -> recipe.readFromTags(recipe.writeToTags()));
 		// Substitute for network stuff
 		MerchantRecipeList clientRecipes = new MerchantRecipeList(serverRecipes.getRecipiesAsTags());
 
