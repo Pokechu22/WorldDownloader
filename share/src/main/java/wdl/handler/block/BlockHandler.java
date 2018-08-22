@@ -77,10 +77,10 @@ public abstract class BlockHandler<B extends TileEntity, C extends Container> ex
 	 *            blockEntity is at that position.
 	 * @param container
 	 *            The container to grab items from. Must be an instance of
-	 *            <code>B</code>.
+	 *            <code>C</code>.
 	 * @param blockEntity
 	 *            The block entity at the given position. Must be an instance of
-	 *            <code>C</code>.
+	 *            <code>B</code>.
 	 * @param world
 	 *            The world to query if more information is needed.
 	 * @param saveMethod
