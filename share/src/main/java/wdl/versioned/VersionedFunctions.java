@@ -40,6 +40,7 @@ import net.minecraft.world.storage.MapData;
 import net.minecraft.world.storage.SaveHandler;
 import wdl.config.settings.GeneratorSettings.Generator;
 import wdl.handler.block.BlockHandler;
+import wdl.handler.blockaction.BlockActionHandler;
 import wdl.handler.entity.EntityHandler;
 
 /**
@@ -60,6 +61,11 @@ public class VersionedFunctions {
 	 * All supported {@link BlockHandler}s.  Each type will only be represented once.
 	 */
 	public static final ImmutableList<BlockHandler<?, ?>> BLOCK_HANDLERS = HandlerFunctions.BLOCK_HANDLERS;
+
+	/**
+	 * All supported {@link BlockActionHandler}s.  Each type will only be represented once.
+	 */
+	public static final ImmutableList<BlockActionHandler<?, ?>> BLOCK_ACTION_HANDLERS = HandlerFunctions.BLOCK_ACTION_HANDLERS;
 
 	/**
 	 * All supported {@link EntityHandler}s.  There will be no ambiguities.

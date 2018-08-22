@@ -51,6 +51,7 @@ import wdl.handler.block.DropperHandler;
 import wdl.handler.block.FurnaceHandler;
 import wdl.handler.block.HopperHandler;
 import wdl.handler.block.ShulkerBoxHandler;
+import wdl.handler.blockaction.BlockActionHandler;
 import wdl.handler.entity.EntityHandler;
 import wdl.handler.entity.HopperMinecartHandler;
 import wdl.handler.entity.HorseHandler;
@@ -81,6 +82,11 @@ final class HandlerFunctions {
 			new HopperHandler(),
 			new ShulkerBoxHandler()
 	);
+
+	/* (non-javadoc)
+	 * @see VersionedFunctions#BLOCK_ACTION_HANDLERS
+	 */
+	static final ImmutableList<BlockActionHandler<?, ?>> BLOCK_ACTION_HANDLERS = ImmutableList.of();
 
 	/* (non-javadoc)
 	 * @see VersionedFunctions#ENTITY_HANDLERS

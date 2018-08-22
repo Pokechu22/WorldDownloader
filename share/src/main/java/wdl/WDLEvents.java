@@ -18,7 +18,6 @@ import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.Entity;
-import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.InventoryEnderChest;
@@ -26,10 +25,10 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityEnderChest;
-import net.minecraft.tileentity.TileEntityNote;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.storage.MapData;
 import wdl.api.IWorldLoadListener;
@@ -38,6 +37,7 @@ import wdl.api.WDLApi.ModInfo;
 import wdl.config.settings.GeneratorSettings;
 import wdl.handler.HandlerException;
 import wdl.handler.block.BlockHandler;
+import wdl.handler.blockaction.BlockActionHandler;
 import wdl.handler.entity.EntityHandler;
 import wdl.update.WDLUpdateChecker;
 
@@ -271,24 +271,28 @@ public class WDLEvents {
 	}
 
 	/**
-	 * Must be called when a block event is scheduled for the next tick. The
-	 * caller has to check if WDL.downloading is true!
+	 * Must be called when a block event/block action packet is received.
 	 */
-	public static void onBlockEvent(BlockPos pos, Block block, int event,
-			int param) {
+	public static void onBlockEvent(BlockPos pos, Block block, int data1, int data2) {
 		if (!WDL.downloading) { return; }
 
 		if (!WDLPluginChannels.canSaveTileEntities(pos.getX() >> 4,
 				pos.getZ() >> 4)) {
 			return;
 		}
-		if (block == Blocks.NOTEBLOCK) {
-			TileEntityNote newTE = new TileEntityNote();
-			newTE.note = (byte)(param % 25);
-			WDL.worldClient.setTileEntity(pos, newTE);
-			WDL.saveTileEntity(pos, newTE);
-			WDLMessages.chatMessageTranslated(WDL.baseProps,
-					WDLMessageTypes.ON_BLOCK_EVENT, "wdl.messages.onBlockEvent.noteblock", pos, param, newTE);
+
+		TileEntity blockEntity = WDL.worldClient.getTileEntity(pos);
+
+		BlockActionHandler<? extends Block, ? extends TileEntity> handler =
+				BlockActionHandler.getHandler(block.getClass(), blockEntity.getClass());
+		if (handler != null) {
+			try {
+				ITextComponent msg = handler.handleCasting(pos, block, blockEntity,
+						data1, data2, WDL.worldClient, WDL::saveTileEntity);
+				WDLMessages.chatMessage(WDL.baseProps, WDLMessageTypes.ON_GUI_CLOSED_INFO, msg);
+			} catch (HandlerException e) {
+				WDLMessages.chatMessageTranslated(WDL.baseProps, e.messageType, e.translationKey, e.args);
+			}
 		}
 	}
 
