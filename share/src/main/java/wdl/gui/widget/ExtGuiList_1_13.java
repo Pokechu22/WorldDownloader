@@ -91,19 +91,21 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended<
 
 		@Override
 		public final boolean mouseClicked(double arg0, double arg1, int arg2) {
+			boolean result = false;
 			for (ButtonWrapper button : this.buttonList) {
 				if (button.button.mouseClicked(arg0, arg1, arg2)) {
 					this.activeButton = button;
 					// no need to call playPressSound; mouseClicked does it automatically
-					return true;
+					result = true;
 				}
 			}
 			for (TextFieldWrapper field : this.fieldList) { 
 				if (field.field.getVisible() && field.field.mouseClicked(arg0, arg1, arg2)) {
-					return true;
+					result = true;
 				}
 			}
-			return this.mouseDown((int)arg0, (int)arg1, arg2);
+			result |= this.mouseDown((int)arg0, (int)arg1, arg2);
+			return result;
 		}
 
 		@Override

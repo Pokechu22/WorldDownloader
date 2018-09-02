@@ -93,11 +93,12 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended 
 		@Override
 		public final boolean mousePressed(int slotIndex, int mouseX, int mouseY, int mouseEvent, int relativeX,
 				int relativeY) {
+			boolean result = false;
 			for (ButtonWrapper button : this.buttonList) {
 				if (button.button.mousePressed(Minecraft.getMinecraft(), mouseX, mouseY)) {
 					this.activeButton = button;
 					button.button.playPressSound(Minecraft.getMinecraft().getSoundHandler());
-					return true;
+					result = true;
 				}
 			}
 			for (TextFieldWrapper field : this.fieldList) {
@@ -105,7 +106,8 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended 
 					field.field.mouseClicked(mouseX, mouseY, mouseEvent);
 				}
 			}
-			return this.mouseDown(mouseX, mouseY, mouseEvent);
+			result |= this.mouseDown(mouseX, mouseY, mouseEvent);
+			return result;
 		}
 
 		@Override
