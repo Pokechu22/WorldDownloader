@@ -21,6 +21,7 @@ import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import org.lwjgl.glfw.GLFW;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
@@ -38,11 +39,12 @@ abstract class ExtGuiScreen extends GuiScreen implements IExtGuiScreen {
 	private final List<GuiList<?>> listList = new ArrayList<>();
 	private final List<GuiTextField> textFieldList = new ArrayList<>();
 
+	// Called before initGui
 	@Override
-	public void initGui() {
+	public final void setWorldAndResolution(Minecraft mc, int width, int height) {
 		this.listList.clear();
 		this.textFieldList.clear();
-		super.initGui();
+		super.setWorldAndResolution(mc, width, height);
 	}
 
 	@Override

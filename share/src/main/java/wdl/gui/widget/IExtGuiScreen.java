@@ -14,8 +14,6 @@
  */
 package wdl.gui.widget;
 
-import javax.annotation.OverridingMethodsMustInvokeSuper;
-
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 
@@ -23,10 +21,6 @@ import net.minecraft.client.gui.GuiTextField;
  * Shared interface for a GuiScreen variant that can also store buttons and GuiLists.
  */
 public interface IExtGuiScreen {
-	// Used to reset some logic.
-	@OverridingMethodsMustInvokeSuper
-	public abstract void initGui();
-
 	/**
 	 * Adds a button to the collection of buttons to process.
 	 *
