@@ -19,6 +19,8 @@ import java.util.List;
 
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
+import org.lwjgl.glfw.GLFW;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
@@ -65,6 +67,49 @@ abstract class ExtGuiScreen extends GuiScreen implements IExtGuiScreen {
 	@Override
 	public final boolean allowCloseWithEscape() {
 		return this.onCloseAttempt();
+	}
+
+	@Override
+	public final boolean mouseClicked(double mouseX, double mouseY, int state) {
+		boolean result = super.mouseClicked(mouseX, mouseY, state);
+		if (state == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+			this.mouseDown((int)mouseX, (int)mouseY);
+		}
+		return result;
+	}
+
+	@Override
+	public final boolean mouseReleased(double mouseX, double mouseY, int state) {
+		boolean result = super.mouseReleased(mouseX, mouseY, state);
+		if (state == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+			this.mouseUp((int)mouseX, (int)mouseY);
+		}
+		return result;
+	}
+
+	@Override
+	public final boolean mouseDragged(double mouseX, double mouseY, int state, double dx, double dy) {
+		boolean result = super.mouseDragged(mouseX, mouseY, state, dx, dy);
+		if (state == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+			this.mouseDragged((int)mouseX, (int)mouseY);
+		}
+		return result;
+	}
+
+	@Override
+	public final boolean keyPressed(int key, int scanCode, int modifiers) {
+		boolean result = super.keyPressed(key, scanCode, modifiers);
+		if (key == GLFW.GLFW_KEY_ENTER || key == GLFW.GLFW_KEY_KP_ENTER) {
+			this.charTyped('\n');
+		}
+		return result;
+	}
+
+	@Override
+	public final boolean charTyped(char c, int modifiers) {
+		boolean result = super.charTyped(c, modifiers);
+		this.charTyped(c);
+		return result;
 	}
 
 	@Override
