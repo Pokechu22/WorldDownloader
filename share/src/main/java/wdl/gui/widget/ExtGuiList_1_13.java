@@ -20,6 +20,8 @@ import java.util.List;
 import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
+import org.lwjgl.glfw.GLFW;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
@@ -128,7 +130,6 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended<
 			for (TextFieldWrapper field : this.fieldList) {
 				field.field.charTyped(p_charTyped_1_, p_charTyped_2_);
 			}
-			// TODO Does this handle enter?
 			this.charTyped(p_charTyped_1_);
 			return false;
 		}
@@ -137,6 +138,9 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended<
 		public final boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_) {
 			for (TextFieldWrapper field : this.fieldList) {
 				field.field.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_);
+			}
+			if (p_keyPressed_1_ == GLFW.GLFW_KEY_ENTER || p_keyPressed_1_ == GLFW.GLFW_KEY_KP_ENTER) {
+				this.charTyped('\n');
 			}
 			return false;
 		}
