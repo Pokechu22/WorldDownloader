@@ -14,20 +14,14 @@
  */
 package wdl.gui;
 
-import java.nio.charset.StandardCharsets;
-
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.network.play.client.CPacketCustomPayload;
-import wdl.VersionConstants;
 import wdl.WDL;
 import wdl.WDLPluginChannels;
 import wdl.gui.widget.Button;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.Screen;
 import wdl.gui.widget.TextList;
-import wdl.versioned.VersionedFunctions;
 
 /**
  * GUI that shows the current permissions for the user.
@@ -83,11 +77,7 @@ public class GuiWDLPermissions extends Screen {
 				"Reload permissions") {
 			public @Override void performAction() {
 				// Send the init packet.
-				CPacketCustomPayload initPacket;
-				String payload = "{\"X-RTFM\":\"http://wiki.vg/Plugin_channels/World_downloader\",\"X-UpdateNote\":\"The plugin message system will be changing shortly.  Please stay tuned.\",\"Version\":\"%s\",\"State\":\"Refresh?\"}";
-				payload = String.format(payload, VersionConstants.getModVersion());
-				initPacket = VersionedFunctions.makePluginMessagePacket("WDL|INIT", payload.getBytes(StandardCharsets.UTF_8));
-				Minecraft.getMinecraft().getConnection().sendPacket(initPacket);
+				WDLPluginChannels.sendInitPacket("Refresh?");
 
 				enabled = false;
 				displayString = "Refreshing...";

@@ -22,13 +22,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.WeakHashMap;
 
 import javax.annotation.CheckForSigned;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.network.play.client.CPacketCustomPayload;
-import net.minecraft.world.chunk.Chunk;
-import wdl.versioned.VersionedFunctions;
+import javax.annotation.Nullable;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -41,6 +39,14 @@ import com.google.common.collect.Multimap;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+import com.google.gson.JsonObject;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.client.CPacketCustomPayload;
+import net.minecraft.world.chunk.Chunk;
+import wdl.versioned.VersionedFunctions;
+import wdl.versioned.VersionedFunctions.ChannelName;
 
 /**
  * World Downloader permission system implemented with Plugin Channels.
@@ -598,8 +604,95 @@ public class WDLPluginChannels {
 			range.writeToOutput(output);
 		}
 
-		CPacketCustomPayload requestPacket = VersionedFunctions.makePluginMessagePacket("WDL|REQUEST", output.toByteArray());
+		final String channel;
+		if (isRegistered(REQUEST_CHANNEL_NEW)) {
+			channel = REQUEST_CHANNEL_NEW;
+		} else if (isRegistered(REQUEST_CHANNEL_OLD)) {
+			channel = REQUEST_CHANNEL_OLD;
+		} else {
+			throw new RuntimeException("No request channel has been registered :("); // XXX
+		}
+		CPacketCustomPayload requestPacket = VersionedFunctions.makePluginMessagePacket(channel, output.toByteArray());
 		Minecraft.getMinecraft().getConnection().sendPacket(requestPacket);
+	}
+
+	/**
+	 * Channels that the server has registered/unregistered.
+	 *
+	 * A map from a NetworkManager instance to a String, so that data is kept per-server.
+	 *
+	 * Unfortunately, clearing in onWorldLoad -> newServer doesn't work right, as that happens
+	 * after (possibly far after) plugin messages are handled.
+	 *
+	 * XXX Equally unfortunately, the server never bothers to tell the client what channels it will send on...
+	 */
+	private static final Map<NetworkManager, Set<@ChannelName String>> REGISTERED_CHANNELS = new WeakHashMap<>();
+
+	/** Channels for the init packet */
+	private static final String INIT_CHANNEL_OLD = "WDL|INIT", INIT_CHANNEL_NEW = "wdl:init";
+	/** Channels for the control packet */
+	private static final String CONTROL_CHANNEL_OLD = "WDL|CONTROL", CONTROL_CHANNEL_NEW = "wdl:control";
+	/** Channels for the request packet */
+	private static final String REQUEST_CHANNEL_OLD = "WDL|REQUEST", REQUEST_CHANNEL_NEW = "wdl:request";
+
+	/** All known channels */
+	private static final List<@ChannelName String> WDL_CHANNELS = VersionedFunctions.removeInvalidChannelNames(
+			INIT_CHANNEL_NEW, CONTROL_CHANNEL_NEW, REQUEST_CHANNEL_NEW,
+			INIT_CHANNEL_OLD, CONTROL_CHANNEL_OLD, REQUEST_CHANNEL_OLD
+			);
+
+	/**
+	 * Gets the current set of registered channels for this server.
+	 */
+	private static Set<@ChannelName String> getRegisteredChannels() {
+		return REGISTERED_CHANNELS.computeIfAbsent(
+				Minecraft.getMinecraft().getConnection().getNetworkManager(),
+				key -> new HashSet<>());
+	}
+
+	/**
+	 * Checks if the given channel is registered on this server.
+	 */
+	private static boolean isRegistered(String channelName) {
+		return getRegisteredChannels().contains(channelName);
+	}
+
+	private static final String UPDATE_NOTE = "For 1.13 compatibility, please update your plugin as channel names have changed.";
+
+	/**
+	 * The state for {@link #sendInitPacket(String)} if it was called when no channels were registered.
+	 */
+	@Nullable
+	private static String deferredInitState = null;
+
+	public static void sendInitPacket(String state) {
+		final String channel;
+		if (isRegistered(INIT_CHANNEL_NEW)) {
+			channel = INIT_CHANNEL_NEW;
+		} else if (isRegistered(INIT_CHANNEL_OLD)) {
+			channel = INIT_CHANNEL_OLD;
+		} else {
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("[WDL] Deferring init packet for state {} (existing deferred state is {} -- should be null), as no registered channel: {}", state, deferredInitState, REGISTERED_CHANNELS);
+			}
+			deferredInitState = state;
+			return;
+		}
+
+		LOGGER.debug("[WDL] Sending init packet for state {} on {}", state, channel);
+
+		JsonObject object = new JsonObject();
+		object.addProperty("X-RTFM", "http://wiki.vg/Plugin_channels/World_downloader");
+		object.addProperty("X-UpdateNote", UPDATE_NOTE);
+		object.addProperty("Version", VersionConstants.getModVersion());
+		object.addProperty("State", state);
+		byte[] bytes = object.toString().getBytes(StandardCharsets.UTF_8);
+
+		CPacketCustomPayload initPacket = VersionedFunctions.makePluginMessagePacket(channel, bytes);
+
+		Minecraft.getMinecraft().getConnection().sendPacket(initPacket);
+
+		deferredInitState = null;
 	}
 
 	/**
@@ -621,25 +714,56 @@ public class WDLPluginChannels {
 				WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, "wdl.messages.permissions.init");
 
 		// Register the WDL messages.
-		byte[] registerBytes = new byte[] {
-				'W', 'D', 'L', '|', 'I', 'N', 'I', 'T', '\0',
-				'W', 'D', 'L', '|', 'C', 'O', 'N', 'T', 'R', 'O', 'L', '\0',
-				'W', 'D', 'L', '|', 'R', 'E', 'Q', 'U', 'E', 'S', 'T', '\0' };
-		CPacketCustomPayload registerPacket = VersionedFunctions.makePluginMessagePacket("REGISTER", registerBytes);
+		byte[] registerBytes = String.join("\0", WDL_CHANNELS).getBytes();
+
+		CPacketCustomPayload registerPacket = VersionedFunctions.makePluginMessagePacket(VersionedFunctions.getRegisterChannel(), registerBytes);
 		minecraft.getConnection().sendPacket(registerPacket);
 
 		// Send the init message.
-		CPacketCustomPayload initPacket;
-		String payload = "{\"X-RTFM\":\"http://wiki.vg/Plugin_channels/World_downloader\",\"X-UpdateNote\":\"The plugin message system will be changing shortly.  Please stay tuned.\",\"Version\":\"%s\",\"State\":\"Init?\"}";
-		payload = String.format(payload, VersionConstants.getModVersion());
-		initPacket = VersionedFunctions.makePluginMessagePacket("WDL|INIT", payload.getBytes(StandardCharsets.UTF_8));
-
-		minecraft.getConnection().sendPacket(initPacket);
+		sendInitPacket("Init?");
 	}
 
 	static void onPluginChannelPacket(String channel, byte[] bytes) {
-		if ("WDL|CONTROL".equals(channel)) {
+		if ("REGISTER".equals(channel) || "minecraft:register".equals(channel)) {
+			registerChannels(bytes);
+		} else if ("UNREGISTER".equals(channel) || "minecraft:unregister".equals(channel)) {
+			unregisterChannels(bytes);
+		} else if (CONTROL_CHANNEL_NEW.equals(channel) || CONTROL_CHANNEL_OLD.equals(channel)) {
 			handleControlPacket(bytes);
+		}
+	}
+
+	private static void registerChannels(byte[] bytes) {
+		String existing = LOGGER.isDebugEnabled() ? REGISTERED_CHANNELS.toString() : null;
+
+		String str = new String(bytes, StandardCharsets.UTF_8);
+
+		List<String> channels = Arrays.asList(str.split("\0"));
+		channels.stream()
+				.filter(WDL_CHANNELS::contains)
+				.forEach(getRegisteredChannels()::add);
+
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("[WDL] REGISTER: " + str + "/" + channels + ": " + existing + " => " + REGISTERED_CHANNELS);
+		}
+
+		if (deferredInitState != null) {
+			LOGGER.debug("[WDL] REGISTER: Trying to resolve deffered {}", deferredInitState);
+			sendInitPacket(deferredInitState);
+		}
+	}
+
+	private static void unregisterChannels(byte[] bytes) {
+		String existing = LOGGER.isDebugEnabled() ? REGISTERED_CHANNELS.toString() : null;
+
+		String str = new String(bytes, StandardCharsets.UTF_8);
+		List<String> channels = Arrays.asList(str.split("\0"));
+		channels.stream()
+				.filter(WDL_CHANNELS::contains)
+				.forEach(getRegisteredChannels()::remove);
+
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("[WDL] UNREGISTER: " + str + "/" + channels + ": " + existing + " => " + REGISTERED_CHANNELS);
 		}
 	}
 

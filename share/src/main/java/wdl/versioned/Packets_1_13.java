@@ -24,6 +24,7 @@ import net.minecraft.network.play.server.SPacketMaps;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.MapData;
+import wdl.versioned.VersionedFunctions.ChannelName;
 
 /**
  * Contains functions related to packets. This version is used in Minecraft 1.13
@@ -33,9 +34,14 @@ final class PacketFunctions {
 	private PacketFunctions() { throw new AssertionError(); }
 
 	/* (non-javadoc)
-	 * {@see VersionedFunctions#makePluginMessagePacket
+	 * @see VersionedFunctions#CHANNEL_NAME_REGEX
 	 */
-	static CPacketCustomPayload makePluginMessagePacket(String channel, byte[] bytes) {
+	static final String CHANNEL_NAME_REGEX = "([a-z0-9_.-]+:)?[a-z0-9/._-]+";
+
+	/* (non-javadoc)
+	 * @see VersionedFunctions#makePluginMessagePacket
+	 */
+	static CPacketCustomPayload makePluginMessagePacket(@ChannelName String channel, byte[] bytes) {
 		return new CPacketCustomPayload(new ResourceLocation(channel), new PacketBuffer(Unpooled.copiedBuffer(bytes)));
 	}
 
@@ -45,5 +51,21 @@ final class PacketFunctions {
 	@Nullable
 	static MapData getMapData(World world, SPacketMaps mapPacket) {
 		return ItemMap.loadMapData(world, "map_" + mapPacket.getMapId());
+	}
+
+	/* (non-javadoc)
+	 * @see VersionedFunctions#getRegisterChannel
+	 */
+	@ChannelName
+	static String getRegisterChannel() {
+		return "minecraft:register";
+	}
+
+	/* (non-javadoc)
+	 * @see VersionedFunctions#getUnregisterChannel
+	 */
+	@ChannelName
+	static String getUnregisterChannel() {
+		return "minecraft:unregister";
 	}
 }

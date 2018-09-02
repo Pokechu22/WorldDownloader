@@ -14,10 +14,18 @@
  */
 package wdl.versioned;
 
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.util.List;
 import java.util.function.Consumer;
 
+import javax.annotation.MatchesPattern;
 import javax.annotation.Nullable;
+import javax.annotation.RegEx;
+import javax.annotation.meta.TypeQualifierNickname;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableList;
@@ -176,12 +184,28 @@ public class VersionedFunctions {
 	public static final Int2ObjectMap<BiMap<String, Integer>> VANILLA_VILLAGER_CAREERS = HandlerFunctions.VANILLA_VILLAGER_CAREERS;
 
 	/**
+	 * A regex that indicates whether a name is valid for a plugin channel.
+	 * In 1.13, channels are namespaced identifiers; in 1.12 they are not.
+	 */
+	@RegEx
+	public static final String CHANNEL_NAME_REGEX = PacketFunctions.CHANNEL_NAME_REGEX;
+
+	/**
+	 * Marks a parameter as requiring a valid channel name for a plugin message.
+	 */
+	@Documented
+	@TypeQualifierNickname @MatchesPattern(CHANNEL_NAME_REGEX)
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target({ElementType.TYPE_USE})
+	public static @interface ChannelName { }
+
+	/**
 	 * Creates a plugin message packet.
 	 * @param channel The channel to send on.
 	 * @param bytes The payload.
 	 * @return The new packet.
 	 */
-	public static CPacketCustomPayload makePluginMessagePacket(String channel, byte[] bytes) {
+	public static CPacketCustomPayload makePluginMessagePacket(@ChannelName String channel, byte[] bytes) {
 		return PacketFunctions.makePluginMessagePacket(channel, bytes);
 	}
 
@@ -195,6 +219,41 @@ public class VersionedFunctions {
 	@Nullable
 	public static MapData getMapData(World world, SPacketMaps mapPacket) {
 		return PacketFunctions.getMapData(world, mapPacket);
+	}
+
+	/**
+	 * Gets the name of the channel that is used to register plugin messages.
+	 * @return The channel name.
+	 */
+	@ChannelName
+	public static String getRegisterChannel() {
+		return PacketFunctions.getRegisterChannel();
+	}
+
+	/**
+	 * Gets the name of the channel that is used to unregister plugin messages.
+	 * @return The channel name.
+	 */
+	@ChannelName
+	public static String getUnregisterChannel() {
+		return PacketFunctions.getUnregisterChannel();
+	}
+
+	/**
+	 * Creates a list of channel names based on the given list, but with names that
+	 * are not valid for this version removed.
+	 *
+	 * @param names The names list.
+	 * @return A sanitized list of names.
+	 */
+	public static ImmutableList<@ChannelName String> removeInvalidChannelNames(String... names) {
+		ImmutableList.Builder<@ChannelName String> list = ImmutableList.builder();
+		for (String name : names) {
+			if (name.matches(CHANNEL_NAME_REGEX)) {
+				list.add(name);
+			}
+		}
+		return list.build();
 	}
 
 	/**
