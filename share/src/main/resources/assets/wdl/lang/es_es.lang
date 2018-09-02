@@ -211,7 +211,7 @@ wdl.gui.updates.pleaseWait=Cargar la lista de versiones... Por favor, espera...
 wdl.gui.updates.checkFailed=Error cargando la lista de versiones.
 wdl.gui.updates.update.title.release=Edición World Downloader %s por Minecraft %s
 wdl.gui.updates.update.title.prerelease=Pre-edición World Downloader %s por Minecraft %s
-wdl.gui.updates.update.version=%s versión por Minecraft %s (puede conectar a %s)
+wdl.gui.updates.update.version=%s versión por Minecraft %s
 # Version list, inserted after 'supports' in the above key.
 # Note that listStart and listMiddle have spaces at the end.
 wdl.gui.updates.update.version.listSingle=%s

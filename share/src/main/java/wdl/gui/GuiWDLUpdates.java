@@ -230,7 +230,7 @@ public class GuiWDLUpdates extends Screen {
 			supportedVersions = buildSupportedVersions(versions);
 		}
 
-		return I18n.format("wdl.gui.updates.update.version", type, supportedVersions, supportedVersions);
+		return I18n.format("wdl.gui.updates.update.version", type, supportedVersions);
 	}
 
 	private String buildSupportedVersions(String[] versions) {
