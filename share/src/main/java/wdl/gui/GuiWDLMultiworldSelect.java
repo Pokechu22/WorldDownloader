@@ -347,16 +347,6 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	}
 
 	/**
-	 * Called from the main game loop to update the screen.
-	 */
-	@Override
-	public void updateScreen() {
-		this.newNameField.updateCursorCounter();
-		this.searchField.updateCursorCounter();
-		super.updateScreen();
-	}
-
-	/**
 	 * Draws the screen and all the components in it.
 	 */
 	@Override
