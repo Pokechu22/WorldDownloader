@@ -2,7 +2,7 @@
 +++ net/minecraft/client/multiplayer/WorldClient.java
 @@ -101,6 +101,10 @@
  		this.profiler.endStartSection("blocks");
- 		this.updateBlocks();
+ 		this.tickBlocks();
  		this.profiler.endSection();
 +
 +		/* WDL >>> */
