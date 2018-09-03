@@ -77,7 +77,7 @@ IBackupProgressMonitor {
 				}
 			} catch (Exception e) {
 				WDLMessages.chatMessageTranslated(WDL.baseProps,
-						WDLMessageTypes.ERROR, "wdl.messages.generalError.failedToSetUpEntityUI");
+						WDLMessageTypes.ERROR, "wdl.messages.generalError.failedToBackUp");
 			} finally {
 				backingUp = false;
 
