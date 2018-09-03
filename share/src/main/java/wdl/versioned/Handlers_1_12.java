@@ -70,7 +70,7 @@ final class HandlerFunctions {
 	 */
 	static boolean hasSkyLight(World world) {
 		// 1.11+: use hasSkyLight
-		return world.provider.hasSkyLight();
+		return world.dimension.hasSkyLight();
 	}
 
 	/* (non-javadoc)

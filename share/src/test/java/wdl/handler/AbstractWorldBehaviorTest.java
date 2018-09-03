@@ -110,7 +110,7 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 	private World makeMockWorld(boolean client) {
 		String name = client ? "Client world" : "Server world";
 		Dimension dimension = mock(Dimension.class);
-		when(dimension.getDimensionType()).thenReturn(DimensionType.OVERWORLD);
+		when(dimension.getType()).thenReturn(DimensionType.OVERWORLD);
 		return mock(World.class, withSettings().name(name).defaultAnswer(RETURNS_MOCKS)
 				.useConstructor(mock(ISaveHandler.class), mock(WorldInfo.class), dimension, mock(Profiler.class), client));
 	}

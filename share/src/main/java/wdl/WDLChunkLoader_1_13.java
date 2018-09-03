@@ -140,11 +140,11 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 		compound.setString("Status", chunk.getStatus().getName());
 		UpgradeData upgradedata = chunk.getUpgradeData();
 
-		if (!upgradedata.func_196988_a()) {
+		if (!upgradedata.isEmpty()) {
 			compound.setTag("UpgradeData", upgradedata.write());
 		}
 
-		ChunkSection[] chunkSections = chunk.getBlockStorageArray();
+		ChunkSection[] chunkSections = chunk.getSections();
 		NBTTagList chunkSectionList = new NBTTagList();
 		boolean hasSky = VersionedFunctions.hasSkyLight(world);
 
@@ -184,7 +184,7 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 		Biome[] biomes = chunk.getBiomes();
 		int[] biomeData = new int[biomes.length];
 		for (int i = 0; i < biomes.length; ++i) {
-			biomeData[i] = Biome.REGISTRY.getIDForObject(biomes[i]);
+			biomeData[i] = Biome.REGISTRY.getId(biomes[i]);
 		}
 
 		compound.setIntArray("Biomes", biomeData);

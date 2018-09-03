@@ -155,7 +155,7 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended<
 			return false;
 		}
 
-		final void updateScreen() {
+		final void tick() {
 			for (TextFieldWrapper field : this.fieldList) {
 				field.field.updateCursorCounter();
 			}
@@ -188,9 +188,9 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended<
 		return getEntries().get(slotIndex).isSelected();
 	}
 
-	final void updateScreen() {
+	final void tick() {
 		for (T t : this.getEntries()) {
-			t.updateScreen();
+			t.tick();
 		}
 	}
 

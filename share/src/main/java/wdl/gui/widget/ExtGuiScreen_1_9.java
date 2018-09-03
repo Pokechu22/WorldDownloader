@@ -139,10 +139,10 @@ abstract class ExtGuiScreen extends GuiScreen implements IExtGuiScreen {
 
 	@Override
 	@OverridingMethodsMustInvokeSuper
-	public void updateScreen() {
-		super.updateScreen();
+	public void tick() {
+		super.tick();
 		for (GuiList<?> list : this.listList) {
-			list.updateScreen();
+			list.tick();
 		}
 		for (GuiTextField field : this.textFieldList) {
 			field.updateCursorCounter();

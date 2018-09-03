@@ -268,7 +268,7 @@ public enum StandardEntityManagers implements IEntityManager {
 		}
 		assert getProvidedEntities().contains(identifier);
 
-		Class<? extends Entity> c = EntityType.REGISTRY.getObject(loc).getEntityClass();
+		Class<? extends Entity> c = EntityType.REGISTRY.get(loc).getEntityClass();
 		assert c != null;
 
 		return c;

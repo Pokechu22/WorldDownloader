@@ -158,7 +158,7 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 		compound.setBoolean("LightPopulated", chunk.isLightPopulated());
 		compound.setLong("InhabitedTime", chunk.getInhabitedTime());
 
-		ChunkSection[] chunkSections = chunk.getBlockStorageArray();
+		ChunkSection[] chunkSections = chunk.getSections();
 		NBTTagList chunkSectionList = new NBTTagList();
 		boolean hasSky = VersionedFunctions.hasSkyLight(world);
 
@@ -221,7 +221,7 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 			for (NextTickListEntry entry : updateList) {
 				NBTTagCompound entryTag = new NBTTagCompound();
 				ResourceLocation location = Block.REGISTRY
-						.getNameForObject(entry.getBlock());
+						.getKey(entry.getBlock());
 				entryTag.setString("i",
 						location == null ? "" : location.toString());
 				entryTag.setInteger("x", entry.position.getX());

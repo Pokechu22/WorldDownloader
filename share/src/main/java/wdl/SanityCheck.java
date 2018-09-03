@@ -39,7 +39,7 @@ enum SanityCheck {
 		 */
 		@Override
 		public void run() throws Exception {
-			int wireID = Block.REGISTRY.getIDForObject(Blocks.TRIPWIRE);
+			int wireID = Block.REGISTRY.getId(Blocks.TRIPWIRE);
 			for (int meta = 0; meta <= 15; meta++) {
 				int id = wireID << 4 | meta;
 				// Note: Deprecated but supported under forge, and this is

@@ -276,7 +276,7 @@ public enum StandardEntityManagers implements IEntityManager {
 
 		Class<? extends Entity> c;
 		if (ENTITY_REGISTRY != null) {
-			c = ENTITY_REGISTRY.getObject(loc);
+			c = ENTITY_REGISTRY.get(loc);
 		} else {
 			c = EntityList_forge_getClass(loc);
 		}

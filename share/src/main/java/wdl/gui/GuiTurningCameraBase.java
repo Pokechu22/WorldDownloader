@@ -99,7 +99,7 @@ public abstract class GuiTurningCameraBase extends Screen {
 	 * Increment yaw to the yaw for the next tick.
 	 */
 	@Override
-	public void updateScreen() {
+	public void tick() {
 		if (mc.world != null && this.initializedCamera) {
 			this.cam.prevRotationPitch = this.cam.rotationPitch = 0.0F;
 			this.cam.prevRotationYaw = this.yaw;
@@ -141,7 +141,7 @@ public abstract class GuiTurningCameraBase extends Screen {
 
 		this.deactivateRenderViewEntity();
 
-		super.updateScreen();
+		super.tick();
 	}
 
 	/**

@@ -130,14 +130,14 @@ public class GuiWDLPermissions extends Screen {
 	}
 
 	@Override
-	public void updateScreen() {
+	public void tick() {
 		if (refreshTicks > 0) {
 			refreshTicks--;
 		} else if (refreshTicks == 0) {
 			initGui();
 			refreshTicks = -1;
 		}
-		super.updateScreen();
+		super.tick();
 	}
 
 	@Override

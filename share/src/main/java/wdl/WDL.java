@@ -380,7 +380,7 @@ public class WDL {
 
 		WDL.minecraft.displayGuiScreen(null);
 
-		chunkLoader = WDLChunkLoader.create(saveHandler, worldClient.provider);
+		chunkLoader = WDLChunkLoader.create(saveHandler, worldClient.dimension);
 		newTileEntities.values().forEach((m) -> {
 			m.clear();
 		});
@@ -878,7 +878,7 @@ public class WDL {
 		if (c.isEmpty() || c instanceof EmptyChunk) {
 			return true;
 		}
-		ChunkSection[] array = c.getBlockStorageArray();
+		ChunkSection[] array = c.getSections();
 		for (int i = 1; i < array.length; i++) {
 			if (array[i] != Chunk.NULL_BLOCK_STORAGE) {
 				return false;
