@@ -18,13 +18,17 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.SignStyle;
+import java.time.temporal.ChronoField;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
+import wdl.versioned.VersionedFunctions;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -98,11 +102,29 @@ public class WorldBackup {
 
 	/**
 	 * The format that is used for world date saving.
-	 *
-	 * TODO: Allow modification ingame?
 	 */
-	private static final DateFormat DATE_FORMAT =
-			new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+	private static final DateTimeFormatter DATE_FORMAT = new DateTimeFormatterBuilder()
+			.appendValue(ChronoField.YEAR, 4, 10, SignStyle.EXCEEDS_PAD)
+			.appendLiteral('-')
+			.appendValue(ChronoField.MONTH_OF_YEAR, 2)
+			.appendLiteral('-')
+			.appendValue(ChronoField.DAY_OF_MONTH, 2)
+			.appendLiteral('_')
+			.appendValue(ChronoField.HOUR_OF_DAY, 2)
+			.appendLiteral('-')
+			.appendValue(ChronoField.MINUTE_OF_HOUR, 2)
+			.appendLiteral('-')
+			.appendValue(ChronoField.SECOND_OF_MINUTE, 2)
+			.toFormatter();
+
+	/**
+	 * Gets the .minecraft/backups folder.
+	 */
+	private static File getBackupsFolder() {
+		File file = new File(Minecraft.getInstance().gameDir, "backups");
+		file.mkdirs();
+		return file;
+	}
 
 	/**
 	 * Backs up the given world with the selected type.
@@ -116,13 +138,14 @@ public class WorldBackup {
 	 */
 	public static void backupWorld(File worldFolder, String worldName,
 			WorldBackupType type, IBackupProgressMonitor monitor) throws IOException {
-		String newWorldName = worldName + "_" + DATE_FORMAT.format(new Date());
 
 		switch (type) {
 		case NONE: {
 			return;
 		}
 		case FOLDER: {
+			String newWorldName = worldName + "_" + LocalDateTime.now().format(DATE_FORMAT);
+
 			File destination = new File(worldFolder.getParentFile(),
 					newWorldName);
 
@@ -131,19 +154,23 @@ public class WorldBackup {
 						") already exists!");
 			}
 
-			copyDirectory(worldFolder, destination, monitor);
+			long size = copyDirectory(worldFolder, destination, monitor);
+			VersionedFunctions.makeBackupToast(worldName, size);
 			return;
 		}
 		case ZIP: {
-			File destination = new File(worldFolder.getParentFile(),
-					newWorldName + ".zip");
+			String archiveName = LocalDateTime.now().format(DATE_FORMAT) + "_" + worldName + ".zip";
+
+			File destination = new File(getBackupsFolder(),
+					archiveName);
 
 			if (destination.exists()) {
 				throw new IOException("Backup file (" + destination +
 						") already exists!");
 			}
 
-			zipDirectory(worldFolder, destination, monitor);
+			long size = zipDirectory(worldFolder, destination, monitor);
+			VersionedFunctions.makeBackupToast(worldName, size);
 			return;
 		}
 		}
@@ -151,18 +178,20 @@ public class WorldBackup {
 
 	/**
 	 * Copies a directory.
+	 * @return The size of the created copy.
 	 */
-	public static void copyDirectory(File src, File destination,
+	public static long copyDirectory(File src, File destination,
 			IBackupProgressMonitor monitor) throws IOException {
 		monitor.setNumberOfFiles(countFilesInFolder(src));
 
-		copy(src, destination, src.getPath().length() + 1, monitor);
+		return copy(src, destination, src.getPath().length() + 1, monitor);
 	}
 
 	/**
 	 * Zips a directory.
+	 * @return The size of the created file.
 	 */
-	public static void zipDirectory(File src, File destination,
+	public static long zipDirectory(File src, File destination,
 			IBackupProgressMonitor monitor) throws IOException {
 		monitor.setNumberOfFiles(countFilesInFolder(src));
 
@@ -171,6 +200,8 @@ public class WorldBackup {
 				zipFolder(src, stream, src.getPath().length() + 1, monitor);
 			}
 		}
+
+		return destination.length();
 	}
 
 	/**
@@ -208,24 +239,28 @@ public class WorldBackup {
 	 * @param to The new location for the file.
 	 * @param pathStartIndex The start of the file path.
 	 * @param monitor A monitor.
+	 * @return Copied file size
 	 * @throws IOException
 	 */
-	private static void copy(File from, File to, int pathStartIndex,
+	private static long copy(File from, File to, int pathStartIndex,
 			IBackupProgressMonitor monitor) throws IOException {
 		if (from.isDirectory()) {
 			if (!to.exists()) {
 				to.mkdir();
 			}
 
+			long size = 0;
 			for (String fileName : from.list()) {
-				copy(new File(from, fileName),
+				size += copy(new File(from, fileName),
 						new File(to, fileName), pathStartIndex, monitor);
 			}
+			return size;
 		} else {
 			monitor.onNextFile(to.getPath().substring(pathStartIndex));
 			//Yes, FileUtils#copyDirectory exists, but we can't monitor the
 			//progress using it.
 			FileUtils.copyFile(from, to, true);
+			return from.length();
 		}
 	}
 

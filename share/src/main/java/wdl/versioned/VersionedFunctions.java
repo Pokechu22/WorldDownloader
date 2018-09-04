@@ -311,4 +311,14 @@ public class VersionedFunctions {
 			String generatorConfig, Consumer<String> callback) {
 		return GeneratorFunctions.makeGeneratorSettingsGui(generator, parent, generatorConfig, callback);
 	}
+
+	/**
+	 * Makes a backup toast, on versions that support it.
+	 *
+	 * @param name The name of the world
+	 * @param fileSize The size of the file in bytes
+	 */
+	public static void makeBackupToast(String name, long fileSize) {
+		GeneratorFunctions.makeBackupToast(name, fileSize);
+	}
 }

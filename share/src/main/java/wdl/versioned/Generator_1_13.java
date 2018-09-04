@@ -23,13 +23,19 @@ import org.apache.logging.log4j.Logger;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiCreateBuffetWorld;
 import net.minecraft.client.gui.GuiCreateFlatWorld;
 import net.minecraft.client.gui.GuiCreateWorld;
 import net.minecraft.client.gui.GuiFlatPresets;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.toasts.GuiToast;
+import net.minecraft.client.gui.toasts.SystemToast;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import wdl.config.settings.GeneratorSettings.Generator;
 
 final class GeneratorFunctions {
@@ -141,5 +147,16 @@ final class GeneratorFunctions {
 		public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 			// Do nothing
 		}
+	}
+
+	/* (non-javadoc)
+	 * @see VersionedFunctions#makeBackupToast
+	 */
+	static void makeBackupToast(String name, long fileSize) {
+		// See GuiWorldEdit.createBackup
+		GuiToast guitoast = Minecraft.getInstance().getToastGui();
+		ITextComponent top = new TextComponentTranslation("selectWorld.edit.backupCreated", name);
+		ITextComponent bot = new TextComponentTranslation("selectWorld.edit.backupSize", MathHelper.ceil(fileSize / 1048576.0));
+		guitoast.add(new SystemToast(SystemToast.Type.WORLD_BACKUP, top, bot));
 	}
 }

@@ -14,12 +14,6 @@
  */
 package wdl.gui;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import wdl.WDL;
@@ -27,6 +21,7 @@ import wdl.WDLMessageTypes;
 import wdl.WDLMessages;
 import wdl.WorldBackup;
 import wdl.WorldBackup.IBackupProgressMonitor;
+import wdl.WorldBackup.WorldBackupType;
 import wdl.gui.widget.Button;
 
 /**
@@ -35,9 +30,6 @@ import wdl.gui.widget.Button;
 public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements
 IBackupProgressMonitor {
 	private class BackupThread extends Thread {
-		private final DateFormat folderDateFormat =
-				new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
-
 		public BackupThread(boolean zip) {
 			this.zip = zip;
 		}
@@ -47,34 +39,20 @@ IBackupProgressMonitor {
 		@Override
 		public void run() {
 			try {
-				String backupName = WDL.getWorldFolderName(WDL.worldName) + "_"
-						+ folderDateFormat.format(new Date())
-						+ "_user" + (zip ? ".zip" : "");
+				WorldBackupType type = zip ? WorldBackupType.ZIP : WorldBackupType.FOLDER;
 
+				String name = WDL.getWorldFolderName(WDL.worldName);
 				if (zip) {
 					backupData = I18n
-							.format("wdl.gui.overwriteChanges.backingUp.zip", backupName);
+							.format("wdl.gui.overwriteChanges.backingUp.zip", name);
 				} else {
 					backupData = I18n
-							.format("wdl.gui.overwriteChanges.backingUp.folder", backupName);
+							.format("wdl.gui.overwriteChanges.backingUp.folder", name);
 				}
 
-				File fromFolder = WDL.saveHandler.getWorldDirectory();
-				File backupFile = new File(fromFolder.getParentFile(),
-						backupName);
-
-				if (backupFile.exists()) {
-					throw new IOException("Backup target (" + backupFile
-							+ ") already exists!");
-				}
-
-				if (zip) {
-					WorldBackup.zipDirectory(fromFolder, backupFile,
-							GuiWDLOverwriteChanges.this);
-				} else {
-					WorldBackup.copyDirectory(fromFolder, backupFile,
-							GuiWDLOverwriteChanges.this);
-				}
+				WorldBackup.backupWorld(WDL.saveHandler.getWorldDirectory(),
+						WDL.getWorldFolderName(WDL.worldName) + "_user", type,
+						GuiWDLOverwriteChanges.this);
 			} catch (Exception e) {
 				WDLMessages.chatMessageTranslated(WDL.baseProps,
 						WDLMessageTypes.ERROR, "wdl.messages.generalError.failedToBackUp");

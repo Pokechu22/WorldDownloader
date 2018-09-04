@@ -142,4 +142,11 @@ final class GeneratorFunctions {
 			// Do nothing
 		}
 	}
+
+	/* (non-javadoc)
+	 * @see VersionedFunctions#makeBackupToast
+	 */
+	static void makeBackupToast(String name, long fileSize) {
+		// No toasts in this version
+	}
 }
