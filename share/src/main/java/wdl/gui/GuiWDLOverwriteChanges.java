@@ -81,10 +81,12 @@ IBackupProgressMonitor {
 			} finally {
 				backingUp = false;
 
-				WDL.overrideLastModifiedCheck = true;
-				mc.displayGuiScreen(null);
+				mc.addScheduledTask(() -> {
+					WDL.overrideLastModifiedCheck = true;
+					mc.displayGuiScreen(null);
 
-				WDL.startDownload();
+					WDL.startDownload();
+				});
 			}
 		}
 	}
