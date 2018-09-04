@@ -74,7 +74,7 @@ public class WDLHooks {
 	 * optimize it out, as may be verified by javap.
 	 */
 	static final boolean ENABLE_PROFILER = false;
-	private static final Profiler PROFILER = ENABLE_PROFILER ? Minecraft.getMinecraft().profiler : null;
+	private static final Profiler PROFILER = ENABLE_PROFILER ? Minecraft.getInstance().profiler : null;
 
 	/**
 	 * Called when {@link WorldClient#tick()} is called.
@@ -241,7 +241,7 @@ public class WDLHooks {
 	public static void onNHPCHandleChat(NetHandlerPlayClient sender,
 			SPacketChat packet) {
 		try {
-			if (!Minecraft.getMinecraft().isCallingFromMinecraftThread()) {
+			if (!Minecraft.getInstance().isCallingFromMinecraftThread()) {
 				return;
 			}
 
@@ -277,7 +277,7 @@ public class WDLHooks {
 	public static void onNHPCHandleMaps(NetHandlerPlayClient sender,
 			SPacketMaps packet) {
 		try {
-			if (!Minecraft.getMinecraft().isCallingFromMinecraftThread()) {
+			if (!Minecraft.getInstance().isCallingFromMinecraftThread()) {
 				return;
 			}
 
@@ -311,7 +311,7 @@ public class WDLHooks {
 	public static void onNHPCHandleCustomPayload(NetHandlerPlayClient sender,
 			SPacketCustomPayload packet) {
 		try {
-			if (!Minecraft.getMinecraft().isCallingFromMinecraftThread()) {
+			if (!Minecraft.getInstance().isCallingFromMinecraftThread()) {
 				return;
 			}
 			if (!packet.getBufferData().isReadable()) {
@@ -355,7 +355,7 @@ public class WDLHooks {
 	public static void onNHPCHandleBlockAction(NetHandlerPlayClient sender,
 			SPacketBlockAction packet) {
 		try {
-			if (!Minecraft.getMinecraft().isCallingFromMinecraftThread()) {
+			if (!Minecraft.getInstance().isCallingFromMinecraftThread()) {
 				return;
 			}
 

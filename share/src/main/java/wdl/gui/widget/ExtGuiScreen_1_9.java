@@ -145,7 +145,7 @@ abstract class ExtGuiScreen extends GuiScreen implements IExtGuiScreen {
 			list.tick();
 		}
 		for (GuiTextField field : this.textFieldList) {
-			field.updateCursorCounter();
+			field.tick();
 		}
 	}
 

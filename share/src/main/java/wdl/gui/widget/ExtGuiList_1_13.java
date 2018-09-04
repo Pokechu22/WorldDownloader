@@ -157,7 +157,7 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended<
 
 		final void tick() {
 			for (TextFieldWrapper field : this.fieldList) {
-				field.field.updateCursorCounter();
+				field.field.tick();
 			}
 		}
 	}
@@ -170,7 +170,7 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended<
 
 	@Override
 	public final List<T> getEntries() {
-		return super.getEventListeners();
+		return super.getChildren();
 	}
 
 	@Override

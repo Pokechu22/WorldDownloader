@@ -81,7 +81,7 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended 
 			for (ButtonWrapper button : this.buttonList) {
 				button.button.x = button.x + x + (listWidth / 2);
 				button.button.y = button.y + y;
-				button.button.drawButton(Minecraft.getMinecraft(), mouseX, mouseY, partialTicks);
+				button.button.drawButton(Minecraft.getInstance(), mouseX, mouseY, partialTicks);
 			}
 			for (TextFieldWrapper field : this.fieldList) {
 				field.field.x = field.x + x + (listWidth / 2);
@@ -95,9 +95,9 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended 
 				int relativeY) {
 			boolean result = false;
 			for (ButtonWrapper button : this.buttonList) {
-				if (button.button.mousePressed(Minecraft.getMinecraft(), mouseX, mouseY)) {
+				if (button.button.mousePressed(Minecraft.getInstance(), mouseX, mouseY)) {
 					this.activeButton = button;
-					button.button.playPressSound(Minecraft.getMinecraft().getSoundHandler());
+					button.button.playPressSound(Minecraft.getInstance().getSoundHandler());
 					result = true;
 				}
 			}
@@ -136,7 +136,7 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended 
 
 		final void tick() {
 			for (TextFieldWrapper field : this.fieldList) {
-				field.field.updateCursorCounter();
+				field.field.tick();
 			}
 		}
 	}

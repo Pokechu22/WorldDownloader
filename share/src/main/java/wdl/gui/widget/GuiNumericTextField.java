@@ -34,7 +34,7 @@ public class GuiNumericTextField extends GuiTextField {
 	private String lastSafeText = "0";
 
 	@Override
-	public void updateCursorCounter() {
+	public void tick() {
 		// Save last safe text.
 		try {
 			Integer.parseInt("0" + getText());
@@ -42,7 +42,7 @@ public class GuiNumericTextField extends GuiTextField {
 		} catch (NumberFormatException e) {
 			setText(lastSafeText);
 		}
-		super.updateCursorCounter();
+		super.tick();
 	}
 
 	/**

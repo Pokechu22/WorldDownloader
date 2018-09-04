@@ -71,9 +71,9 @@ public class VersionConstants {
 	public static String getMinecraftVersionInfo() {
 		String version = getMinecraftVersion();
 		// Gets the launched version (appears in F3)
-		String launchedVersion = Minecraft.getMinecraft().getVersion();
+		String launchedVersion = Minecraft.getInstance().getVersion();
 		String brand = ClientBrandRetriever.getClientModName();
-		String versionType = Minecraft.getMinecraft().getVersionType();
+		String versionType = Minecraft.getInstance().getVersionType();
 
 		return String.format("Minecraft %s (%s/%s/%s)", version,
 				launchedVersion, brand, versionType);

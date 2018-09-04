@@ -613,7 +613,7 @@ public class WDLPluginChannels {
 			throw new RuntimeException("No request channel has been registered :("); // XXX
 		}
 		CPacketCustomPayload requestPacket = VersionedFunctions.makePluginMessagePacket(channel, output.toByteArray());
-		Minecraft.getMinecraft().getConnection().sendPacket(requestPacket);
+		Minecraft.getInstance().getConnection().sendPacket(requestPacket);
 	}
 
 	/**
@@ -646,7 +646,7 @@ public class WDLPluginChannels {
 	 */
 	private static Set<@ChannelName String> getRegisteredChannels() {
 		return REGISTERED_CHANNELS.computeIfAbsent(
-				Minecraft.getMinecraft().getConnection().getNetworkManager(),
+				Minecraft.getInstance().getConnection().getNetworkManager(),
 				key -> new HashSet<>());
 	}
 
@@ -690,7 +690,7 @@ public class WDLPluginChannels {
 
 		CPacketCustomPayload initPacket = VersionedFunctions.makePluginMessagePacket(channel, bytes);
 
-		Minecraft.getMinecraft().getConnection().sendPacket(initPacket);
+		Minecraft.getInstance().getConnection().sendPacket(initPacket);
 
 		deferredInitState = null;
 	}
@@ -701,7 +701,7 @@ public class WDLPluginChannels {
 	 * correct ones.
 	 */
 	static void onWorldLoad() {
-		Minecraft minecraft = Minecraft.getMinecraft();
+		Minecraft minecraft = Minecraft.getInstance();
 
 		receivedPackets = new HashSet<>();
 		requests = new HashMap<>();

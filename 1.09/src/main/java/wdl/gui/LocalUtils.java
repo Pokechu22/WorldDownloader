@@ -27,7 +27,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import wdl.WDL;
 
 public class LocalUtils {
-	private static final Minecraft mc = Minecraft.getMinecraft();
+	private static final Minecraft mc = Minecraft.getInstance();
 	private LocalUtils() { throw new AssertionError(); }
 
 	/**

@@ -63,6 +63,6 @@ public class ButtonDisplayGui extends Button {
 
 	@Override
 	public void performAction() {
-		Minecraft.getMinecraft().displayGuiScreen(this.screenSupplier.get());
+		Minecraft.getInstance().displayGuiScreen(this.screenSupplier.get());
 	}
 }

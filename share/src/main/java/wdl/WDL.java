@@ -242,7 +242,7 @@ public class WDL {
 
 	// Initialization:
 	static {
-		minecraft = Minecraft.getMinecraft();
+		minecraft = Minecraft.getInstance();
 		// Initialize the Properties template:
 		defaultProps = new DefaultConfiguration();
 
