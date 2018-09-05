@@ -86,7 +86,7 @@ public class GuiWDLEntityRangePresets extends Screen implements GuiYesNoCallback
 	}
 
 	@Override
-	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+	public void render(int mouseX, int mouseY, float partialTicks) {
 		Utils.drawListBackground(23, 32, 0, 0, height, width);
 
 		this.drawCenteredString(this.fontRenderer,
@@ -115,7 +115,7 @@ public class GuiWDLEntityRangePresets extends Screen implements GuiYesNoCallback
 			Utils.drawGuiInfoBox(infoText, width, height, 48);
 		}
 
-		super.drawScreen(mouseX, mouseY, partialTicks);
+		super.render(mouseX, mouseY, partialTicks);
 	}
 
 	@Override

@@ -193,10 +193,10 @@ public class GuiWDLUpdates extends Screen {
 	}
 
 	@Override
-	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+	public void render(int mouseX, int mouseY, float partialTicks) {
 		this.list.regenerateVersionList();
 
-		super.drawScreen(mouseX, mouseY, partialTicks);
+		super.render(mouseX, mouseY, partialTicks);
 
 		if (!WDLUpdateChecker.hasFinishedUpdateCheck()) {
 			drawCenteredString(fontRenderer,
@@ -328,8 +328,8 @@ public class GuiWDLUpdates extends Screen {
 		}
 
 		@Override
-		public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-			super.drawScreen(mouseX, mouseY, partialTicks);
+		public void render(int mouseX, int mouseY, float partialTicks) {
+			super.render(mouseX, mouseY, partialTicks);
 
 			this.drawCenteredString(this.fontRenderer, buildReleaseTitle(release),
 					this.width / 2, 8, 0xFFFFFF);

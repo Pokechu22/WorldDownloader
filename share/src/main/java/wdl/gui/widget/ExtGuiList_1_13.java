@@ -80,7 +80,7 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended<
 			for (ButtonWrapper button : this.buttonList) {
 				button.button.x = button.x + x + (entryWidth / 2);
 				button.button.y = button.y + y;
-				button.button.drawButton(mouseX, mouseY, partialTicks);
+				button.button.render(mouseX, mouseY, partialTicks);
 			}
 			for (TextFieldWrapper field : this.fieldList) {
 				field.field.x = field.x + x + (entryWidth / 2);

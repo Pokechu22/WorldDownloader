@@ -350,7 +350,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	 * Draws the screen and all the components in it.
 	 */
 	@Override
-	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+	public void render(int mouseX, int mouseY, float partialTicks) {
 		this.drawDefaultBackground();
 
 		if (index >= linkedWorlds.size() - numWorldButtons) {
@@ -378,7 +378,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		newWorldButton.visible = !showNewWorldTextBox;
 		this.newNameField.setVisible(showNewWorldTextBox);
 
-		super.drawScreen(mouseX, mouseY, partialTicks);
+		super.render(mouseX, mouseY, partialTicks);
 
 		//Hint as to what the text box does
 		if (this.searchField.getText().isEmpty() && !this.searchField.isFocused()) {

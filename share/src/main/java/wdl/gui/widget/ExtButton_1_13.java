@@ -54,17 +54,15 @@ abstract class ExtButton extends GuiButton implements IExtButton {
 	}
 
 	@Override
-	public final void drawButton(int mouseX, int mouseY, float partialTicks) {
+	public final void render(int mouseX, int mouseY, float partialTicks) {
 		this.beforeDraw();
-		super.drawButton(mouseX, mouseY, partialTicks);
+		super.render(mouseX, mouseY, partialTicks);
 		this.afterDraw();
 	}
 
-	// NOTE: this method name is very misleading; it's called at all times whether the mouse
-	// is down or not.
 	@Override
-	protected final void mouseDragged(Minecraft mc, int mouseX, int mouseY) {
-		super.mouseDragged(mc, mouseX, mouseY);
+	protected final void renderBg(Minecraft mc, int mouseX, int mouseY) {
+		super.renderBg(mc, mouseX, mouseY);
 		this.midDraw();
 	}
 }

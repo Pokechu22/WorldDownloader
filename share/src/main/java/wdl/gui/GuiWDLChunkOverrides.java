@@ -220,7 +220,7 @@ public class GuiWDLChunkOverrides extends Screen {
 	}
 
 	@Override
-	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+	public void render(int mouseX, int mouseY, float partialTicks) {
 		LocalUtils.drawDarkBackground(0, 0, height, width);
 
 		// Draw the current request range.
@@ -264,7 +264,7 @@ public class GuiWDLChunkOverrides extends Screen {
 		this.drawCenteredString(this.fontRenderer, "Chunk overrides",
 				this.width / 2, 8, 0xFFFFFF);
 
-		super.drawScreen(mouseX, mouseY, partialTicks);
+		super.render(mouseX, mouseY, partialTicks);
 
 		this.drawCenteredString(this.fontRenderer, "\u00A7c\u00A7lThis is a work in progress.",
 				this.width / 2, this.height / 2, 0xFFFFFF);

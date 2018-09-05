@@ -111,7 +111,7 @@ public class GuiWDLSaveProgress extends GuiTurningCameraBase {
 	 * renderPartialTicks
 	 */
 	@Override
-	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+	public void render(int mouseX, int mouseY, float partialTicks) {
 		this.drawDefaultBackground();
 
 		if (this.doneWorking) {
@@ -151,7 +151,7 @@ public class GuiWDLSaveProgress extends GuiTurningCameraBase {
 					this.width / 2, 130, 0xFFFFFF);
 			this.drawProgressBar(140, 64, 69, minorTaskProgress, minorTaskMaximum);
 
-			super.drawScreen(mouseX, mouseY, partialTicks);
+			super.render(mouseX, mouseY, partialTicks);
 		}
 	}
 

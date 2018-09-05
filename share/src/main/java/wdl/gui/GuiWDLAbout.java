@@ -100,8 +100,8 @@ public class GuiWDLAbout extends Screen {
 	}
 
 	@Override
-	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		super.drawScreen(mouseX, mouseY, partialTicks);
+	public void render(int mouseX, int mouseY, float partialTicks) {
+		super.render(mouseX, mouseY, partialTicks);
 
 		drawCenteredString(fontRenderer, I18n.format("wdl.gui.about.title"),
 				width / 2, 2, 0xFFFFFF);

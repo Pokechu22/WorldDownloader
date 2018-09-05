@@ -127,8 +127,8 @@ public class GuiWDLPermissionRequest extends Screen {
 	}
 
 	@Override
-	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		super.drawScreen(mouseX, mouseY, partialTicks);
+	public void render(int mouseX, int mouseY, float partialTicks) {
+		super.render(mouseX, mouseY, partialTicks);
 
 		this.drawCenteredString(this.fontRenderer, "Permission request",
 				this.width / 2, 8, 0xFFFFFF);

@@ -150,11 +150,11 @@ abstract class ExtGuiScreen extends GuiScreen implements IExtGuiScreen {
 
 	@Override
 	@OverridingMethodsMustInvokeSuper
-	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+	public void render(int mouseX, int mouseY, float partialTicks) {
 		for (GuiList<?> list : this.listList) {
 			list.drawScreen(mouseX, mouseY, partialTicks);
 		}
-		super.drawScreen(mouseX, mouseY, partialTicks);
+		super.render(mouseX, mouseY, partialTicks);
 		for (GuiTextField field : this.textFieldList) {
 			field.drawTextBox();
 		}

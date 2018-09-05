@@ -86,7 +86,7 @@ final class GeneratorFunctions {
 		}
 
 		@Override
-		public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		public void render(int mouseX, int mouseY, float partialTicks) {
 			// Do nothing
 		}
 
@@ -138,7 +138,7 @@ final class GeneratorFunctions {
 		}
 
 		@Override
-		public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		public void render(int mouseX, int mouseY, float partialTicks) {
 			// Do nothing
 		}
 	}

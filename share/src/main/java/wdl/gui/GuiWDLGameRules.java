@@ -273,10 +273,10 @@ public class GuiWDLGameRules extends Screen {
 	}
 
 	@Override
-	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+	public void render(int mouseX, int mouseY, float partialTicks) {
 		hoveredToolTip = null;
 
-		super.drawScreen(mouseX, mouseY, partialTicks);
+		super.render(mouseX, mouseY, partialTicks);
 
 		this.drawCenteredString(fontRenderer, title, width / 2, 4, 0xFFFFFF);
 

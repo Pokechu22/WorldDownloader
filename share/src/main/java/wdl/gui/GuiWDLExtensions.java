@@ -285,7 +285,7 @@ public class GuiWDLExtensions extends Screen {
 	}
 
 	@Override
-	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+	public void render(int mouseX, int mouseY, float partialTicks) {
 		this.drawDefaultBackground();
 
 		//Clamp bottomLocation.
@@ -296,7 +296,7 @@ public class GuiWDLExtensions extends Screen {
 			bottomLocation = height - MIDDLE_HEIGHT - BOTTOM_HEIGHT - 33;
 		}
 
-		super.drawScreen(mouseX, mouseY, partialTicks);
+		super.render(mouseX, mouseY, partialTicks);
 
 		this.drawCenteredString(this.fontRenderer,
 				I18n.format("wdl.gui.extensions.title"), this.width / 2, 8,

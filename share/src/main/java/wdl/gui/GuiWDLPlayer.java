@@ -110,7 +110,7 @@ public class GuiWDLPlayer extends Screen {
 	 * Draws the screen and all the components in it.
 	 */
 	@Override
-	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+	public void render(int mouseX, int mouseY, float partialTicks) {
 		Utils.drawListBackground(23, 32, 0, 0, height, width);
 
 		this.drawCenteredString(this.fontRenderer, this.title,
@@ -149,7 +149,7 @@ public class GuiWDLPlayer extends Screen {
 			tooltip = playerPosBtn.getTooltip();
 		}
 
-		super.drawScreen(mouseX, mouseY, partialTicks);
+		super.render(mouseX, mouseY, partialTicks);
 
 		if (tooltip != null) {
 			Utils.drawGuiInfoBox(tooltip, width, height, 48);

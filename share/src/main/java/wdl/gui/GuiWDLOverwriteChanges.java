@@ -194,7 +194,7 @@ IBackupProgressMonitor {
 	}
 
 	@Override
-	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+	public void render(int mouseX, int mouseY, float partialTicks) {
 		this.drawDefaultBackground();
 
 		if (this.backingUp) {
@@ -232,7 +232,7 @@ IBackupProgressMonitor {
 			drawCenteredString(fontRenderer, overwriteWarning2, width / 2,
 					infoBoxY + 115 + fontRenderer.FONT_HEIGHT, 0xFFFFFF);
 
-			super.drawScreen(mouseX, mouseY, partialTicks);
+			super.render(mouseX, mouseY, partialTicks);
 
 			String tooltip = null;
 			if (backupAsZipButton.isMouseOver()) {
