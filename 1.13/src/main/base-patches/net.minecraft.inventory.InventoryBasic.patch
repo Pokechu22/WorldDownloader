@@ -10,7 +10,7 @@
  	private final int slotsCount;
  	private final NonNullList<ItemStack> inventoryContents;
 @@ -17,11 +17,26 @@
- 	private List<IInventoryChangedListener> changeListeners;
+ 	private List<IInventoryChangedListener> listeners;
  	/** The custom name of this inventory, or null if it doesn't have one and {@link inventoryTitle} should be used instead */
  	private ITextComponent customName;
 +	/* WDL >>> */

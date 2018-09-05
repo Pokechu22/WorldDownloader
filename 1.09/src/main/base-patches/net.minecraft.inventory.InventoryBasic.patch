@@ -10,7 +10,7 @@
  	private int slotsCount;
  	private ItemStack[] inventoryContents;
  	/** Listeners notified when any item in this inventory is changed. */
- 	private List<IInvBasic> changeListeners;
+ 	private List<IInvBasic> listeners;
  	private boolean hasCustomName;
 +	/* WDL >>> */
 +	@javax.annotation.Nullable

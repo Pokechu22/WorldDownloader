@@ -10,7 +10,7 @@
  	private final int slotsCount;
  	private final ItemStack[] inventoryContents;
  	/** Listeners notified when any item in this inventory is changed. */
- 	private List<IInventoryChangedListener> changeListeners;
+ 	private List<IInventoryChangedListener> listeners;
  	private boolean hasCustomName;
 +	/* WDL >>> */
 +	@Nullable
