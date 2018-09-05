@@ -102,6 +102,8 @@ sourceSets {
         java {
             srcDir "src/test/java"
             srcDir project(':share').file("src/test/java")
+            exclude "wdl/handler/SimpleWorld_1.10.java"
+            exclude "wdl/handler/SimpleWorld_1.13.java"
         }
     }
     api {

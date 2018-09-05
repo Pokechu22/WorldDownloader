@@ -37,11 +37,10 @@ public class FurnaceTest extends AbstractBlockHandlerTest<TileEntityFurnace, Con
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.FURNACE);
-		TileEntityFurnace te = new TileEntityFurnace();
+		TileEntityFurnace te = placeTEAt(pos, new TileEntityFurnace());
 		te.setInventorySlotContents(0, new ItemStack(Blocks.COAL_ORE));
 		te.setInventorySlotContents(1, new ItemStack(Items.WOODEN_HOE));
 		te.setInventorySlotContents(2, new ItemStack(Items.COAL));
-		placeTEAt(pos, te);
 
 		runHandler(pos, makeClientContainer(pos));
 		checkAllTEs();
@@ -52,7 +51,7 @@ public class FurnaceTest extends AbstractBlockHandlerTest<TileEntityFurnace, Con
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.FURNACE);
-		TileEntityFurnace te = new TileEntityFurnace();
+		TileEntityFurnace te = placeTEAt(pos, new TileEntityFurnace());
 		te.setInventorySlotContents(0, new ItemStack(Blocks.COAL_ORE));
 		te.setInventorySlotContents(1, new ItemStack(Items.WOODEN_HOE));
 		te.setInventorySlotContents(2, new ItemStack(Items.COAL));
@@ -60,7 +59,6 @@ public class FurnaceTest extends AbstractBlockHandlerTest<TileEntityFurnace, Con
 		// skip field 1 (total burn time) -- not saved: https://bugs.mojang.com/browse/MC-10025
 		te.setField(2, 100); // cook time
 		te.setField(3, 200); // total cook time (saved but unused?)
-		placeTEAt(pos, te);
 
 		runHandler(pos, makeClientContainer(pos));
 		checkAllTEs();

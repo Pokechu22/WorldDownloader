@@ -16,8 +16,6 @@ package wdl.handler.block;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -119,30 +117,32 @@ public abstract class AbstractBlockHandlerTest<B extends TileEntity, C extends C
 
 		tileEntities = new HashMap<>();
 		origTEPoses = new HashSet<>();
-		when(clientWorld.getTileEntity(any())).thenReturn(null);
-		when(serverWorld.getTileEntity(any())).thenReturn(null);
 	}
 
 	/**
 	 * Puts the given block entity into the mock worlds at the given position.
 	 * The server world gets the exact block entity; the client gets a default one.
 	 *
+	 * The block entity may be modified after this method is called; in fact, this method
+	 * needs to be called first in some cases (some block entities such as beacons
+	 * require a world before properties can be changed on them)
+	 *
 	 * @param pos The position
 	 * @param te The block entity to put
+	 *
+	 * @return The same block entity that was passed in.
 	 */
-	protected void placeTEAt(BlockPos pos, TileEntity te) {
+	protected <T extends TileEntity> T placeTEAt(BlockPos pos, T te) {
 		origTEPoses.add(pos);
 
 		IBlockState curState = clientWorld.getBlockState(pos);
 		BlockContainer curBlock = (BlockContainer)(curState.getBlock());
 		TileEntity defaultAtPos = VersionedFunctions.createNewBlockEntity(clientWorld, curBlock, curState);
-		defaultAtPos.setWorld(clientWorld);
-		defaultAtPos.setPos(pos);
 
-		when(clientWorld.getTileEntity(pos)).thenReturn(defaultAtPos);
-		when(serverWorld.getTileEntity(pos)).thenReturn(te);
-		te.setWorld(serverWorld);
-		te.setPos(pos);
+		serverWorld.setTileEntity(pos, te);
+		clientWorld.setTileEntity(pos, defaultAtPos);
+
+		return te;
 	}
 
 	/**

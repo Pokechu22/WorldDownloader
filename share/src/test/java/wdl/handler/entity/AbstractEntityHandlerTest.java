@@ -16,11 +16,8 @@ package wdl.handler.entity;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -48,7 +45,6 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.World;
@@ -136,27 +132,16 @@ public abstract class AbstractEntityHandlerTest<E extends Entity, C extends Cont
 		nextEID = 0;
 		serverEntities = new Int2ObjectArrayMap<>(4);
 		clientEntities = new Int2ObjectArrayMap<>(4);
-
-		when(clientWorld.getEntityByID(anyInt())).thenReturn(null);
-		when(serverWorld.getEntityByID(anyInt())).thenReturn(null);
-
-		Scoreboard board = mock(Scoreboard.class); // returns null for e.g. getPlayerTeam
-		when(clientWorld.getScoreboard()).thenReturn(board);
-		when(serverWorld.getScoreboard()).thenReturn(board);
 	}
 
 	protected void addEntity(Entity serverEntity) {
 		try {
 			int eid = nextEID++;
-			serverEntity.setEntityId(eid);
-			serverEntity.setUniqueId(new UUID(0, eid));
 			this.serverEntities.put(eid, serverEntity);
-			when(this.serverWorld.getEntityByID(eid)).thenReturn(serverEntity);
+			this.serverWorld.addEntity(serverEntity, eid);
 
 			// Create the client copy
 			Entity clientEntity = serverEntity.getClass().getConstructor(World.class).newInstance((World)clientWorld);
-			clientEntity.setEntityId(eid);
-			clientEntity.setUniqueId(serverEntity.getUniqueID());
 			// Copy the standard entity data
 			clientEntity.posX = serverEntity.posX;
 			clientEntity.posY = serverEntity.posY;
@@ -172,7 +157,7 @@ public abstract class AbstractEntityHandlerTest<E extends Entity, C extends Cont
 			clientEntity.getDataManager().setEntryValues(serverEntity.getDataManager().getAll());
 			// Now add it
 			this.clientEntities.put(eid, clientEntity);
-			when(this.clientWorld.getEntityByID(eid)).thenReturn(clientEntity);
+			this.clientWorld.addEntity(clientEntity, eid);
 
 			nextEID++;
 		} catch (Exception ex) {

@@ -15,11 +15,9 @@
 package wdl.handler;
 
 import static org.junit.Assume.*;
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
+import java.util.UUID;
 
 import javax.annotation.Nullable;
 
@@ -29,6 +27,7 @@ import org.apache.logging.log4j.Logger;
 import junit.framework.ComparisonFailure;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
@@ -45,13 +44,11 @@ import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.storage.ISaveHandler;
 import net.minecraft.world.storage.WorldInfo;
 import wdl.MaybeMixinTest;
-import wdl.ReflectionUtils;
 import wdl.ducks.INetworkNameable;
 
 /**
@@ -64,55 +61,54 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	/** Worlds corresponding to what the server and client know */
-	protected World serverWorld, clientWorld;
+	protected TestWorld serverWorld, clientWorld;
 	/** Player entities.  Both have valid, empty inventories. */
 	protected EntityPlayer clientPlayer, serverPlayer;
-
-	/**
-	 * https://stackoverflow.com/a/3301720/3991344
-	 *
-	 * Needed because the world provider must be set for entities
-	 * for things not to explode :/
-	 */
-	private static final Field worldProviderField;
-	static {
-		try {
-			worldProviderField = ReflectionUtils.findField(World.class, Dimension.class);
-
-			Field modifiersField = Field.class.getDeclaredField("modifiers");
-			modifiersField.setAccessible(true);
-			modifiersField.setInt(worldProviderField, worldProviderField.getModifiers() & ~Modifier.FINAL);
-		} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
-			throw new RuntimeException(e);
-		}
-	}
 
 	/**
 	 * Creates a mock world, returning air for blocks and null for TEs.
 	 */
 	protected void makeMockWorld() {
-		clientWorld = makeMockWorld(true);
-		serverWorld = makeMockWorld(false);
-
 		clientPlayer = mock(EntityPlayer.class, "Client player");
 		serverPlayer = mock(EntityPlayer.class, "Server player");
 
-		when(clientWorld.getBlockState(any())).thenReturn(Blocks.AIR.getDefaultState());
-		when(serverWorld.getBlockState(any())).thenReturn(Blocks.AIR.getDefaultState());
+		clientWorld = TestWorld.create(true);
+		serverWorld = TestWorld.create(false);
 
 		clientPlayer.inventory = new InventoryPlayer(clientPlayer);
 		serverPlayer.inventory = new InventoryPlayer(serverPlayer);
 	}
 
-	/**
-	 * Creates a World instance.
-	 */
-	private World makeMockWorld(boolean client) {
-		String name = client ? "Client world" : "Server world";
-		Dimension dimension = mock(Dimension.class);
-		when(dimension.getType()).thenReturn(DimensionType.OVERWORLD);
-		return mock(World.class, withSettings().name(name).defaultAnswer(RETURNS_MOCKS)
-				.useConstructor(mock(ISaveHandler.class), mock(WorldInfo.class), dimension, mock(Profiler.class), client));
+	protected static class TestWorld extends SimpleWorld {
+		public static TestWorld create(boolean client) {
+			ISaveHandler saveHandler = mock(ISaveHandler.class);
+			WorldInfo info = mock(WorldInfo.class);
+			Dimension dimension = mock(Dimension.class);
+			when(dimension.getType()).thenReturn(DimensionType.OVERWORLD);
+
+			String name = client ? "Client world" : "Server world";
+
+			return new TestWorld(saveHandler, info, dimension, new Profiler(), client, name);
+		}
+
+		private TestWorld(ISaveHandler saveHandlerIn, WorldInfo info, Dimension dimension, Profiler profilerIn, boolean client, String name) {
+			super(saveHandlerIn, info, dimension, profilerIn, client);
+			this.name = name;
+		}
+
+		private final String name;
+
+		@Override
+		public String toString() {
+			return this.name;
+		}
+
+		public void addEntity(Entity e, int eid) {
+			e.setEntityId(eid);
+			e.setUniqueId(new UUID(0, eid));
+			this.spawnEntity(e);
+			this.entitiesById.addKey(eid, e);
+		}
 	}
 
 	/**
@@ -132,8 +128,8 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 	 * @param block The block to put
 	 */
 	protected void placeBlockAt(BlockPos pos, IBlockState state) {
-		when(clientWorld.getBlockState(pos)).thenReturn(state);
-		when(serverWorld.getBlockState(pos)).thenReturn(state);
+		clientWorld.setBlockState(pos, state);
+		serverWorld.setBlockState(pos, state);
 	}
 
 	/**

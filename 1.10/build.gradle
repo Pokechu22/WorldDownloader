@@ -111,6 +111,8 @@ sourceSets {
         java {
             srcDir "src/test/java"
             srcDir project(':share').file("src/test/java")
+            exclude "wdl/handler/SimpleWorld_1.12.java"
+            exclude "wdl/handler/SimpleWorld_1.13.java"
             exclude "wdl/handler/block/ShulkerBoxTest.java"
         }
     }
