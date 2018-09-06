@@ -149,7 +149,7 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 		boolean hasSky = VersionedFunctions.hasSkyLight(world);
 
 		for (ChunkSection chunkSection : chunkSections) {
-			if (chunkSection != Chunk.NULL_BLOCK_STORAGE) {
+			if (chunkSection != Chunk.EMPTY_SECTION) {
 				NBTTagCompound sectionNBT = new NBTTagCompound();
 				sectionNBT.setByte("Y",
 						(byte) (chunkSection.getYLocation() >> 4 & 255));

@@ -880,11 +880,11 @@ public class WDL {
 		}
 		ChunkSection[] array = c.getSections();
 		for (int i = 1; i < array.length; i++) {
-			if (array[i] != Chunk.NULL_BLOCK_STORAGE) {
+			if (array[i] != Chunk.EMPTY_SECTION) {
 				return false;
 			}
 		}
-		if (array[0] != Chunk.NULL_BLOCK_STORAGE) {
+		if (array[0] != Chunk.EMPTY_SECTION) {
 			// All-air empty chunks sometimes are sent with a bottom section;
 			// handle that and a few other special cases.
 			for (int y = 0; y < 16; y++) {
