@@ -135,7 +135,7 @@ public class LocalUtils {
 
 		//Gradients
 		GlStateManager.enableBlend();
-		GlStateManager.tryBlendFuncSeparate(GL_SRC_ALPHA,
+		GlStateManager.blendFuncSeparate(GL_SRC_ALPHA,
 				GL_ONE_MINUS_SRC_ALPHA, 0, 1);
 		GlStateManager.disableAlpha();
 		GlStateManager.shadeModel(GL_SMOOTH);

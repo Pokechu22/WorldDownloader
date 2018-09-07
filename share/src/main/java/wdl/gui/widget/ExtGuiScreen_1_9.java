@@ -50,7 +50,7 @@ abstract class ExtGuiScreen extends GuiScreen implements IExtGuiScreen {
 
 	@Override
 	public final <T extends GuiButton> T addButton(T buttonIn) {
-		super.buttonList.add(buttonIn);
+		super.buttons.add(buttonIn);
 		return buttonIn;
 	}
 

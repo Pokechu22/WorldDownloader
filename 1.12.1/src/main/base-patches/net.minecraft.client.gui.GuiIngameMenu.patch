@@ -2,11 +2,11 @@
 +++ net/minecraft/client/gui/GuiIngameMenu.java
 @@ -32,9 +32,17 @@
  		guibutton.enabled = this.mc.isSingleplayer() && !this.mc.getIntegratedServer().getPublic();
- 		this.buttonList.add(new GuiButton(5, this.width / 2 - 100, this.height / 4 + 48 + -16, 98, 20, I18n.format("gui.advancements")));
- 		this.buttonList.add(new GuiButton(6, this.width / 2 + 2, this.height / 4 + 48 + -16, 98, 20, I18n.format("gui.stats")));
+ 		this.buttons.add(new GuiButton(5, this.width / 2 - 100, this.height / 4 + 48 + -16, 98, 20, I18n.format("gui.advancements")));
+ 		this.buttons.add(new GuiButton(6, this.width / 2 + 2, this.height / 4 + 48 + -16, 98, 20, I18n.format("gui.stats")));
 +
 +		/* WDL >>> */
-+		wdl.WDLHooks.injectWDLButtons(this, buttonList, this::addButton);
++		wdl.WDLHooks.injectWDLButtons(this, buttons, this::addButton);
 +		/* <<< WDL */
  	}
  

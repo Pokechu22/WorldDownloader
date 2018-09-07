@@ -28,7 +28,7 @@ public abstract class MixinGuiIngameMenu extends GuiScreen {
 
 	@Inject(method="initGui", at=@At("RETURN"))
 	private void onInitGui(CallbackInfo ci) {
-		wdl.WDLHooks.injectWDLButtons((GuiIngameMenu)(Object)this, buttonList, this::addButton);
+		wdl.WDLHooks.injectWDLButtons((GuiIngameMenu)(Object)this, buttons, this::addButton);
 	}
 	@Inject(method="actionPerformed", at=@At("HEAD"))
 	private void onActionPerformed(GuiButton guibutton, CallbackInfo ci) {

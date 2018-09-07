@@ -30,7 +30,7 @@ public abstract class MixinGuiIngameMenu extends GuiScreen implements Consumer<G
 
 	@Inject(method="initGui", at=@At("RETURN"))
 	private void onInitGui(CallbackInfo ci) {
-		wdl.WDLHooks.injectWDLButtons((GuiIngameMenu)(Object)this, buttonList, this);
+		wdl.WDLHooks.injectWDLButtons((GuiIngameMenu)(Object)this, buttons, this);
 	}
 	@Inject(method="actionPerformed", at=@At("HEAD"))
 	private void onActionPerformed(GuiButton guibutton, CallbackInfo ci) {
@@ -42,6 +42,6 @@ public abstract class MixinGuiIngameMenu extends GuiScreen implements Consumer<G
 	// Thus, implementation of Consumer...
 	@Override
 	public void accept(GuiButton button) {
-		this.buttonList.add(button);
+		this.buttons.add(button);
 	}
 }

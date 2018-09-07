@@ -236,9 +236,9 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended<
 	@Override
 	@OverridingMethodsMustInvokeSuper
 	public void drawScreen(int mouseXIn, int mouseYIn, float partialTicks) {
-		GlStateManager.translate(0, y, 0);
+		GlStateManager.translatef(0, y, 0);
 		super.drawScreen(mouseXIn, mouseYIn - y, partialTicks);
-		GlStateManager.translate(0, -y, 0);
+		GlStateManager.translatef(0, -y, 0);
 	}
 
 	// Make the dirt background use visual positions that match the screen
@@ -250,11 +250,11 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended<
 			super.overlayBackground(y1, y2, alpha1, alpha2);
 			return;
 		} else {
-			GlStateManager.translate(0, -y, 0);
+			GlStateManager.translatef(0, -y, 0);
 
 			super.overlayBackground(y1 + y, y2 + y, alpha1, alpha2);
 
-			GlStateManager.translate(0, y, 0);
+			GlStateManager.translatef(0, y, 0);
 		}
 	}
 }

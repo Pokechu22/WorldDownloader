@@ -17,7 +17,7 @@
  		});
 +
 +		/* WDL >>> */
-+		wdl.WDLHooks.injectWDLButtons(this, buttonList, this::addButton);
++		wdl.WDLHooks.injectWDLButtons(this, buttons, this::addButton);
 +		/* <<< WDL */
  	}
  
