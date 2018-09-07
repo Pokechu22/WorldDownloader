@@ -1,9 +1,9 @@
---- net/minecraft/block/BlockCoralPlant.java
-+++ net/minecraft/block/BlockCoralPlant.java
-@@ -18,6 +18,16 @@
- import net.minecraft.world.IWorldReaderBase;
+--- net/minecraft/block/BlockConduit.java
++++ net/minecraft/block/BlockConduit.java
+@@ -23,6 +23,16 @@
+ import net.minecraft.world.World;
  
- public class BlockCoralPlant extends Block {
+ public class BlockConduit extends BlockContainer {
 +	/* WDL 1.13.1 >>> */
 +	public static final net.minecraft.state.BooleanProperty WATERLOGGED = net.minecraft.state.properties.BlockStateProperties.WATERLOGGED;
 +	@Override
@@ -14,6 +14,6 @@
 +		setDefaultState(getDefaultState().with(WATERLOGGED, true));
 +	}
 +	/* <<< WDL */
- 	protected static final VoxelShape SHAPE = Block.makeCuboidShape(2.0D, 0.0D, 2.0D, 14.0D, 15.0D, 14.0D);
+ 	protected static final VoxelShape SHAPE = Block.makeCuboidShape(5.0D, 5.0D, 5.0D, 11.0D, 11.0D, 11.0D);
  
- 	protected BlockCoralPlant(Block.Builder builder) {
+ 	public BlockConduit(Block.Builder builder) {
