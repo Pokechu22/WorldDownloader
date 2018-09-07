@@ -1,0 +1,12 @@
+--- net/minecraft/client/gui/GuiMainMenu.java
++++ net/minecraft/client/gui/GuiMainMenu.java
+@@ -356,6 +356,9 @@
+ 		} else {
+ 			s = s + ("release".equalsIgnoreCase(this.mc.getVersionType()) ? "" : "/" + this.mc.getVersionType());
+ 		}
++		/* WDL 1.13.1 >>> */
++		s += " ?c?lUNSTABLE 1.13.1 WDL BRIDGE USE WITH CAUTION";
++		/* WDL <<<*/
+ 
+ 		this.drawString(this.fontRenderer, s, 2, this.height - 10, -1);
+ 		this.drawString(this.fontRenderer, "Copyright Mojang AB. Do not distribute!", this.widthCopyrightRest, this.height - 10, -1);

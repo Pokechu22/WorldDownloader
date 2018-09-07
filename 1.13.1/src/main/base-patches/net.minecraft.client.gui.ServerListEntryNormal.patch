@@ -1,0 +1,15 @@
+--- net/minecraft/client/gui/ServerListEntryNormal.java
++++ net/minecraft/client/gui/ServerListEntryNormal.java
+@@ -67,8 +67,10 @@
+ 			});
+ 		}
+ 
+-		boolean flag = this.server.version > 393;
+-		boolean flag1 = this.server.version < 393;
++		/* WDL 1.13.1 >>> */
++		boolean flag = this.server.version > 401;
++		boolean flag1 = this.server.version < 401;
++		/* <<< WDL */
+ 		boolean flag2 = flag || flag1;
+ 		this.mc.fontRenderer.drawString(this.server.serverName, (float)(j + 32 + 3), (float)(i + 1), 16777215);
+ 		List<String> list = this.mc.fontRenderer.listFormattedStringToWidth(this.server.serverMOTD, entryWidth - 32 - 2);
