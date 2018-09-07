@@ -29,7 +29,8 @@ public class VersionConstants {
 	 *         version number</a>, eg <samp>316</samp>.
 	 */
 	public static int getProtocolVersion() {
-		return RealmsSharedConstants.NETWORK_PROTOCOL_VERSION;
+		//return RealmsSharedConstants.NETWORK_PROTOCOL_VERSION;
+		return 401;
 	}
 
 	/**
@@ -39,7 +40,7 @@ public class VersionConstants {
 	 * @return A version string, eg <samp>1.11</samp>.
 	 */
 	public static String getMinecraftVersion() {
-		return RealmsSharedConstants.VERSION_STRING;
+		return RealmsSharedConstants.VERSION_STRING + "-1.13.1 PH";
 	}
 
 	/**
@@ -60,7 +61,7 @@ public class VersionConstants {
 	 * @return A version string, eg <samp>1.11</samp>.
 	 */
 	public static String getExpectedVersion() {
-		return "1.13";
+		return "1.13" + "-1.13.1 PH";
 	}
 
 	/**

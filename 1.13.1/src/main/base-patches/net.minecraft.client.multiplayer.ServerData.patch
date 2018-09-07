@@ -1,0 +1,17 @@
+--- net/minecraft/client/multiplayer/ServerData.java
++++ net/minecraft/client/multiplayer/ServerData.java
+@@ -16,9 +16,11 @@
+ 	public String serverMOTD;
+ 	/** last server ping that showed up in the server browser */
+ 	public long pingToServer;
+-	public int version = 393;
+-	/** Game version for this server. */
+-	public String gameVersion = "1.13";
++	/* WDL 1.13.1 >>> */
++	public int version = 401;
++	//** Game version for this server. */
++	public String gameVersion = "1.13.1";
++	/* <<< WDL */
+ 	public boolean pinged;
+ 	public String playerList;
+ 	private ServerData.ServerResourceMode resourceMode = ServerData.ServerResourceMode.PROMPT;

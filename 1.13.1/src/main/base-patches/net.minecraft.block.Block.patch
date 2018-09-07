@@ -1,0 +1,16 @@
+--- net/minecraft/block/Block.java
++++ net/minecraft/block/Block.java
+@@ -1691,6 +1691,13 @@
+ 		register("bubble_coral", new BlockCoralPlant(Block.Builder.create(Material.OCEAN_PLANT, MapColor.PURPLE).doesNotBlockMovement().zeroHardnessAndResistance().sound(SoundType.WET_GRASS)));
+ 		register("fire_coral", new BlockCoralPlant(Block.Builder.create(Material.OCEAN_PLANT, MapColor.RED).doesNotBlockMovement().zeroHardnessAndResistance().sound(SoundType.WET_GRASS)));
+ 		register("horn_coral", new BlockCoralPlant(Block.Builder.create(Material.OCEAN_PLANT, MapColor.YELLOW).doesNotBlockMovement().zeroHardnessAndResistance().sound(SoundType.WET_GRASS)));
++		/* WDL 1.13.1 >>> */
++		register("dead_tube_coral", new BlockCoralPlant(Block.Builder.create(Material.OCEAN_PLANT, MapColor.BLUE).doesNotBlockMovement().zeroHardnessAndResistance().sound(SoundType.WET_GRASS)));
++		register("dead_brain_coral", new BlockCoralPlant(Block.Builder.create(Material.OCEAN_PLANT, MapColor.PINK).doesNotBlockMovement().zeroHardnessAndResistance().sound(SoundType.WET_GRASS)));
++		register("dead_bubble_coral", new BlockCoralPlant(Block.Builder.create(Material.OCEAN_PLANT, MapColor.PURPLE).doesNotBlockMovement().zeroHardnessAndResistance().sound(SoundType.WET_GRASS)));
++		register("dead_fire_coral", new BlockCoralPlant(Block.Builder.create(Material.OCEAN_PLANT, MapColor.RED).doesNotBlockMovement().zeroHardnessAndResistance().sound(SoundType.WET_GRASS)));
++		register("dead_horn_coral", new BlockCoralPlant(Block.Builder.create(Material.OCEAN_PLANT, MapColor.YELLOW).doesNotBlockMovement().zeroHardnessAndResistance().sound(SoundType.WET_GRASS)));
++		/* <<< WDL */
+ 		Block block70 = new BlockCoralWallFanDead(Block.Builder.create(Material.ROCK, MapColor.GRAY).doesNotBlockMovement().zeroHardnessAndResistance());
+ 		Block block71 = new BlockCoralWallFanDead(Block.Builder.create(Material.ROCK, MapColor.GRAY).doesNotBlockMovement().zeroHardnessAndResistance());
+ 		Block block72 = new BlockCoralWallFanDead(Block.Builder.create(Material.ROCK, MapColor.GRAY).doesNotBlockMovement().zeroHardnessAndResistance());
