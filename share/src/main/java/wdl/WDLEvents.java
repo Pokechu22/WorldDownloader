@@ -282,6 +282,9 @@ public class WDLEvents {
 		}
 
 		TileEntity blockEntity = WDL.worldClient.getTileEntity(pos);
+		if (blockEntity == null) {
+			return;
+		}
 
 		BlockActionHandler<? extends Block, ? extends TileEntity> handler =
 				BlockActionHandler.getHandler(block.getClass(), blockEntity.getClass());
