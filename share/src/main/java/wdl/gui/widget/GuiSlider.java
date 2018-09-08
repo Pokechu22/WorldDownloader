@@ -81,7 +81,7 @@ public class GuiSlider extends ExtButton {
 	@Override
 	public void midDraw() {
 		Minecraft.getInstance().getTextureManager().bindTexture(BUTTON_TEXTURES);
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 		if (this.enabled) {
 			this.drawTexturedModalRect(this.x

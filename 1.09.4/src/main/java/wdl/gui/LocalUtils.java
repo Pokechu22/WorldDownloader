@@ -55,7 +55,7 @@ public class LocalUtils {
 		VertexBuffer b = t.getBuffer();
 
 		mc.getTextureManager().bindTexture(Gui.OPTIONS_BACKGROUND);
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 		float textureSize = 32.0F;
 		b.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
@@ -88,11 +88,11 @@ public class LocalUtils {
 	public static void drawBorder(int topMargin, int bottomMargin, int top, int left, int bottom, int right) {
 		GlStateManager.disableLighting();
 		GlStateManager.disableFog();
-		GlStateManager.disableDepth();
+		GlStateManager.disableDepthTest();
 		byte padding = 4;
 
 		mc.getTextureManager().bindTexture(Gui.OPTIONS_BACKGROUND);
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 		float textureSize = 32.0F;
 
@@ -103,7 +103,7 @@ public class LocalUtils {
 		//Upper box
 		int upperBoxEnd = top + topMargin;
 
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		b.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
 		b.pos(left, upperBoxEnd, 0.0D).tex(0.0D, upperBoxEnd
 				/ textureSize).color(64, 64, 64, 255).endVertex();
@@ -118,7 +118,7 @@ public class LocalUtils {
 		// Lower box
 		int lowerBoxStart = bottom - bottomMargin;
 
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		b.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
 		b.pos(left, bottom, 0.0D).tex(0.0D, bottom / textureSize)
 		.color(64, 64, 64, 255).endVertex();
@@ -135,7 +135,7 @@ public class LocalUtils {
 		GlStateManager.enableBlend();
 		GlStateManager.blendFuncSeparate(GL_SRC_ALPHA,
 				GL_ONE_MINUS_SRC_ALPHA, 0, 1);
-		GlStateManager.disableAlpha();
+		GlStateManager.disableAlphaTest();
 		GlStateManager.shadeModel(GL_SMOOTH);
 		GlStateManager.disableTexture2D();
 		b.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
@@ -161,7 +161,7 @@ public class LocalUtils {
 
 		GlStateManager.enableTexture2D();
 		GlStateManager.shadeModel(GL_FLAT);
-		GlStateManager.enableAlpha();
+		GlStateManager.enableAlphaTest();
 		GlStateManager.disableBlend();
 	}
 

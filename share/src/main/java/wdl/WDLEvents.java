@@ -133,8 +133,8 @@ public class WDLEvents {
 			return;
 		}
 
-		if (WDL.minecraft.objectMouseOver.typeOfHit == RayTraceResult.Type.ENTITY) {
-			WDL.lastEntity = WDL.minecraft.objectMouseOver.entityHit;
+		if (WDL.minecraft.objectMouseOver.type == RayTraceResult.Type.ENTITY) {
+			WDL.lastEntity = WDL.minecraft.objectMouseOver.entity;
 		} else {
 			WDL.lastEntity = null;
 			WDL.lastClickedBlock = WDL.minecraft.objectMouseOver.getBlockPos();

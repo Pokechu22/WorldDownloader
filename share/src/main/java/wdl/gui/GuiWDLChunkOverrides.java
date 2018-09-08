@@ -396,7 +396,7 @@ public class GuiWDLChunkOverrides extends Screen {
 		@Override
 		public void afterDraw() {
 			// Reset the color, which gets set somewhere (probably when drawing text)
-			GlStateManager.color(1.0f, 1.0f, 1.0f);
+			GlStateManager.color3f(1.0f, 1.0f, 1.0f);
 			mc.getTextureManager().bindTexture(WIDGET_TEXTURES);
 
 			this.drawTexturedModalRect(this.x + 2, this.y + 2,
