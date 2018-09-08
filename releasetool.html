@@ -19,6 +19,8 @@
 <p><label>Installed minecraft version</label></p>
 <p><select id="main-version">
 <optgroup label="-- select --"><option disabled selected> -- </option></optgroup>
+<optgroup label="Protocol 401"><option>1.13.1</option></optgroup>
+<optgroup label="Protocol 393"><option>1.13</option></optgroup>
 <optgroup label="Protocol 340"><option>1.12.2</option></optgroup>
 <optgroup label="Protocol 338"><option>1.12.1</option></optgroup>
 <optgroup label="Protocol 335"><option>1.12</option></optgroup>
@@ -35,6 +37,8 @@
 <p><label>Supported minecraft versions (hold shift or control)</label></p>
 <p><select id="supported-versions" size="23" multiple>
 <optgroup label="-- select --"><option disabled selected> -- </option></optgroup>
+<optgroup label="Protocol 401"><option>1.13.1</option></optgroup>
+<optgroup label="Protocol 393"><option>1.13</option></optgroup>
 <optgroup label="Protocol 340"><option>1.12.2</option></optgroup>
 <optgroup label="Protocol 338"><option>1.12.1</option></optgroup>
 <optgroup label="Protocol 335"><option>1.12</option></optgroup>
@@ -57,7 +61,7 @@
 //Adapted from https://raw.githubusercontent.com/gildas-lormeau/zip.js/gh-pages/demos/demo2.js
 (function(obj) {
 	"use strict";
-	
+
 	var versionInfoJson = {
 		Loader: "",
 		Post: "",
@@ -65,7 +69,7 @@
 		MinecraftCompatible: [],
 		Hashes: []
 	};
-	
+
 	$("#loader").on("input", function() {
 		versionInfoJson["Loader"] = $("#loader").val();
 		updateTextBox();
@@ -88,14 +92,14 @@
 				console.log(supported);
 			}
 		}
-		
+
 		versionInfoJson["MinecraftCompatible"] = supported;
-		
+
 		console.log(supported);
-		
+
 		updateTextBox();
 	});
-	
+
 	function onerror(message) {
 		alert(message);
 		console.log(message);
@@ -113,7 +117,7 @@
 			},
 			getEntryBlob : function(entry, onend, onprogress) {
 				var writer = new zip.BlobWriter();
-				
+
 				entry.getData(writer, function(blob) {
 					onend(blob);
 				}, onprogress);
@@ -124,34 +128,34 @@
 	(function() {
 		var fileInput = document.getElementById("file-input");
 		var fileList = document.getElementById("file-list");
-		
+
 		var hashes = versionInfoJson["Hashes"] || [];
-		
+
 		function addHash(entry, dd, callback) {
 			var unzipProgress = document.createElement("progress");
-			
+
 			model.getEntryBlob(entry, function(blobURL) {
 				unzipProgress.value = 0;
 				unzipProgress.max = 0;
-				
+
 				var fileReader = new FileReader();
-				
+
 				fileReader.onerror = function () {
 					alert('Something went wrong with the file reader.');
 				};
-				
+
 				fileReader.onloadend = function (e) {
 					if (fileReader.result == null) {
 						return;
 					}
-					
+
 					var hash = SparkMD5.ArrayBuffer.hash(fileReader.result, false);
 					dd.textContent = hash;
-					
+
 					if (entry.filename.indexOf("wdl") === 0 && entry.filename.indexOf(".") !== -1) {
 						// Only include files starting with WDL
 						// and that have a file extension.
-					
+
 						var path = entry.filename;
 						var innerClassIndex = path.indexOf("$");
 						var relativeTo;
@@ -163,13 +167,13 @@
 							relativeTo = path.substring(0, path.lastIndexOf("."));
 						}
 						relativeTo = relativeTo.replace(/\//g, ".");
-						
+
 						// End of the package name.
 						var classNameStart = relativeTo.lastIndexOf(".") + 1;
-						
+
 						// File name relative to the given class.
 						var fileName = path.substring(classNameStart);
-						
+
 						var hashInfo = null;
 						hashes.forEach(function(entry) {
 							if (entry["RelativeTo"] == relativeTo && entry["File"] == fileName) {
@@ -188,10 +192,10 @@
 							hashInfo["Hash"].push(hash);
 						}
 					}
-					
+
 					callback();
 				}
-				
+
 				fileReader.readAsArrayBuffer(blobURL);
 			}, function(current, total) {
 				unzipProgress.value = current;
@@ -199,55 +203,55 @@
 				dd.appendChild(unzipProgress);
 			});
 		}
-		
+
 		fileInput.addEventListener('change', function() {
 			fileInput.disabled = true;
 			model.getEntries(fileInput.files, function(entries) {
 				fileList.innerHTML = "";
-				
+
 				var currentEntryNum = 0;
-				
+
 				var nextEntry = function() {
 					if (currentEntryNum >= entries.length) {
 						versionInfoJson["Hashes"] = hashes;
-						
+
 						fileInput.disabled = false;
 						updateTextBox();
 						return;
 					}
-					
+
 					var entry = entries[currentEntryNum];
 					currentEntryNum++;
-					
+
 					//Don't hash non-wdl code or otherwise volatile code.
 					if (entry.filename.indexOf("wdl") == -1 ||
-							entry.filename.indexOf("WDLPluginChannels") != -1 ||
+							entry.filename.indexOf("data") != -1 ||
 							entry.filename.indexOf("assets") != -1) {
 						nextEntry();
 						return;
 					}
-					
+
 					var dt = document.createElement("dt");
 					dt.textContent = entry.filename;
 					var dd = document.createElement("dd");
-					
+
 					fileList.appendChild(dt);
 					fileList.appendChild(dd);
-					
+
 					dd.textContent = "";
-					
+
 					addHash(entry, dd, nextEntry);
 				}
-				
+
 				nextEntry();
 			});
 		}, false);
 	})();
-	
+
 	function updateTextBox() {
 		$("#release-description").val("[](# '" + JSON.stringify(versionInfoJson) + "')Type your description here...")
 	}
-	
+
 	updateTextBox();
 })(this);
 </script>
