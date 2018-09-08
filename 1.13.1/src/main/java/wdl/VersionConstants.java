@@ -16,7 +16,7 @@ package wdl;
 
 import net.minecraft.client.ClientBrandRetriever;
 import net.minecraft.client.Minecraft;
-import net.minecraft.realms.RealmsSharedConstants;
+//import net.minecraft.realms.RealmsSharedConstants;
 
 /**
  * Contains constants that vary between versions of the mod.
@@ -40,7 +40,7 @@ public class VersionConstants {
 	 * @return A version string, eg <samp>1.11</samp>.
 	 */
 	public static String getMinecraftVersion() {
-		return RealmsSharedConstants.VERSION_STRING + "-1.13.1 PH";
+		return "1.13-1.13.1 PH";
 	}
 
 	/**
