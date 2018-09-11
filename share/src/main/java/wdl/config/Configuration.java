@@ -108,10 +108,10 @@ public class Configuration implements IConfiguration {
 					LOGGER.warn("Non-string key " + e.getKey() + " in " + name);
 					continue;
 				}
-				category.addCrashSection((String)e.getKey(), e.getValue());
+				category.addDetail((String)e.getKey(), e.getValue());
 			}
 		} else {
-			category.addCrashSection("-", "empty");
+			category.addDetail("-", "empty");
 		}
 	}
 

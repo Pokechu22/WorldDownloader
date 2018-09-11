@@ -1482,11 +1482,11 @@ public class WDL {
 		}
 		CrashReportCategory core = report.makeCategoryDepth(
 				"World Downloader Mod - Core", stSize);
-		core.addCrashSection("WDL version", VersionConstants.getModVersion());
-		core.addCrashSection("Minecraft version", VersionConstants.getMinecraftVersionInfo());
-		core.addCrashSection("Expected version", VersionConstants.getExpectedVersion());
-		core.addCrashSection("Protocol version", VersionConstants.getProtocolVersion());
-		core.addCrashSection("Data version", VersionConstants.getDataVersion());
+		core.addDetail("WDL version", VersionConstants.getModVersion());
+		core.addDetail("Minecraft version", VersionConstants.getMinecraftVersionInfo());
+		core.addDetail("Expected version", VersionConstants.getExpectedVersion());
+		core.addDetail("Protocol version", VersionConstants.getProtocolVersion());
+		core.addDetail("Data version", VersionConstants.getDataVersion());
 		core.addDetail("File location", () -> {
 			//http://stackoverflow.com/q/320542/3991344
 			String path = new File(WDL.class.getProtectionDomain()
@@ -1502,59 +1502,59 @@ public class WDL {
 		CrashReportCategory ext = report.makeCategoryDepth(
 				"World Downloader Mod - Extensions", stSize);
 		Map<String, ModInfo<?>> extensions = WDLApi.getWDLMods();
-		ext.addCrashSection("Number loaded", extensions.size());
+		ext.addDetail("Number loaded", extensions.size());
 		for (Map.Entry<String, ModInfo<?>> e : extensions.entrySet()) {
 			ext.addDetail(e.getKey(), e.getValue()::getInfo);
 		}
 
 		CrashReportCategory state = report.makeCategoryDepth(
 				"World Downloader Mod - State", stSize);
-		state.addCrashSection("minecraft", minecraft);
-		state.addCrashSection("worldClient", worldClient);
-		state.addCrashSection("networkManager", networkManager);
-		state.addCrashSection("thePlayer", thePlayer);
-		state.addCrashSection("windowContainer", windowContainer);
-		state.addCrashSection("lastClickedBlock", lastClickedBlock);
-		state.addCrashSection("lastEntity", lastEntity);
-		state.addCrashSection("saveHandler", saveHandler);
-		state.addCrashSection("chunkLoader", chunkLoader);
-		state.addCrashSection("newTileEntities", newTileEntities);
-		state.addCrashSection("newEntities", newEntities);
-		state.addCrashSection("newMapDatas", newMapDatas);
-		state.addCrashSection("downloading", downloading);
-		state.addCrashSection("isMultiworld", isMultiworld);
-		state.addCrashSection("propsFound", propsFound);
-		state.addCrashSection("startOnChange", startOnChange);
-		state.addCrashSection("overrideLastModifiedCheck", overrideLastModifiedCheck);
-		state.addCrashSection("saving", saving);
-		state.addCrashSection("worldLoadingDeferred", worldLoadingDeferred);
-		state.addCrashSection("worldName", worldName);
-		state.addCrashSection("baseFolderName", baseFolderName);
-		state.addCrashSection("baseProps", baseProps);
-		state.addCrashSection("worldProps", worldProps);
-		state.addCrashSection("globalProps", globalProps);
-		state.addCrashSection("defaultProps", defaultProps);
+		state.addDetail("minecraft", minecraft);
+		state.addDetail("worldClient", worldClient);
+		state.addDetail("networkManager", networkManager);
+		state.addDetail("thePlayer", thePlayer);
+		state.addDetail("windowContainer", windowContainer);
+		state.addDetail("lastClickedBlock", lastClickedBlock);
+		state.addDetail("lastEntity", lastEntity);
+		state.addDetail("saveHandler", saveHandler);
+		state.addDetail("chunkLoader", chunkLoader);
+		state.addDetail("newTileEntities", newTileEntities);
+		state.addDetail("newEntities", newEntities);
+		state.addDetail("newMapDatas", newMapDatas);
+		state.addDetail("downloading", downloading);
+		state.addDetail("isMultiworld", isMultiworld);
+		state.addDetail("propsFound", propsFound);
+		state.addDetail("startOnChange", startOnChange);
+		state.addDetail("overrideLastModifiedCheck", overrideLastModifiedCheck);
+		state.addDetail("saving", saving);
+		state.addDetail("worldLoadingDeferred", worldLoadingDeferred);
+		state.addDetail("worldName", worldName);
+		state.addDetail("baseFolderName", baseFolderName);
+		state.addDetail("baseProps", baseProps);
+		state.addDetail("worldProps", worldProps);
+		state.addDetail("globalProps", globalProps);
+		state.addDetail("defaultProps", defaultProps);
 
 		CrashReportCategory base = report.makeCategoryDepth(
 				"World Downloader Mod - Base properties", stSize);
 		if (baseProps != null) {
 			baseProps.addToCrashReport(base, "baseProps");
 		} else {
-			base.addCrashSection("-", "null");
+			base.addDetail("-", "null");
 		}
 		CrashReportCategory world = report.makeCategoryDepth(
 				"World Downloader Mod - World properties", stSize);
 		if (worldProps != null) {
 			worldProps.addToCrashReport(world, "worldProps");
 		} else {
-			world.addCrashSection("-", "null");
+			world.addDetail("-", "null");
 		}
 		CrashReportCategory global = report.makeCategoryDepth(
 				"World Downloader Mod - Global properties", stSize);
 		if (globalProps != null) {
 			globalProps.addToCrashReport(global, "globalProps");
 		} else {
-			global.addCrashSection("-", "null");
+			global.addDetail("-", "null");
 		}
 	}
 

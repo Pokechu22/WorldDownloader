@@ -135,7 +135,7 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 
 		compound.setInteger("xPos", chunk.x);
 		compound.setInteger("zPos", chunk.z);
-		compound.setLong("LastUpdate", world.getTotalWorldTime());
+		compound.setLong("LastUpdate", world.getGameTime());
 		compound.setLong("InhabitedTime", chunk.getInhabitedTime());
 		compound.setString("Status", chunk.getStatus().getName());
 		UpgradeData upgradedata = chunk.getUpgradeData();

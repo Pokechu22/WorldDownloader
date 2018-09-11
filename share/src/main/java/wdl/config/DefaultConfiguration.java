@@ -48,7 +48,7 @@ public class DefaultConfiguration implements IConfiguration {
 
 	@Override
 	public void addToCrashReport(CrashReportCategory category, String name) {
-		category.addCrashSection("-", "Default config (" + name + ")");
+		category.addDetail("-", "Default config (" + name + ")");
 	}
 
 	@Override

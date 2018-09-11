@@ -213,7 +213,7 @@ public abstract class AbstractEntityHandlerTest<E extends Entity, C extends Cont
 		// damage tag in 1.13; just make sure that the server one is also messed like that)
 		serverRecipes.forEach(recipe -> recipe.readFromTags(recipe.writeToTags()));
 		// Substitute for network stuff
-		MerchantRecipeList clientRecipes = new MerchantRecipeList(serverRecipes.getRecipiesAsTags());
+		MerchantRecipeList clientRecipes = new MerchantRecipeList(serverRecipes.write());
 
 		clientMerchant.setRecipes(clientRecipes);
 

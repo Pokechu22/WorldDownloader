@@ -152,7 +152,7 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 
 		compound.setInteger("xPos", chunk.x);
 		compound.setInteger("zPos", chunk.z);
-		compound.setLong("LastUpdate", world.getTotalWorldTime());
+		compound.setLong("LastUpdate", world.getGameTime());
 		compound.setIntArray("HeightMap", chunk.getHeightMap());
 		compound.setBoolean("TerrainPopulated", true);  // We always want this
 		compound.setBoolean("LightPopulated", chunk.isLightPopulated());
@@ -215,7 +215,7 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 		List<NextTickListEntry> updateList = world.getPendingBlockUpdates(
 				chunk, false);
 		if (updateList != null) {
-			long worldTime = world.getTotalWorldTime();
+			long worldTime = world.getGameTime();
 			NBTTagList entries = new NBTTagList();
 
 			for (NextTickListEntry entry : updateList) {
