@@ -41,7 +41,7 @@ public final class GeneratorSettings {
 	public static final StringSetting SEED =
 			new StringSetting("RandomSeed", "");
 	public static final BooleanSetting GENERATE_STRUCTURES =
-			new BooleanSetting("MapFeatures", true, "wdl.gui.generator.generateStructures");
+			new BooleanSetting("MapFeatures", false, "wdl.gui.generator.generateStructures");
 	// Used to control what generator is exposed in the UI.
 	public static final CyclableSetting<Generator> GENERATOR =
 			new GeneratorSetting("MapGenerator", Generator.VOID, "wdl.gui.generator.generator");
