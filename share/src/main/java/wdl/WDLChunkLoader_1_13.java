@@ -33,6 +33,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkPrimerTickList;
 import net.minecraft.world.chunk.ChunkSection;
+import net.minecraft.world.chunk.ChunkStatus;
 import net.minecraft.world.chunk.IChunk;
 import net.minecraft.world.chunk.NibbleArray;
 import net.minecraft.world.chunk.UpgradeData;
@@ -137,7 +138,7 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 		compound.setInteger("zPos", chunk.z);
 		compound.setLong("LastUpdate", world.getGameTime());
 		compound.setLong("InhabitedTime", chunk.getInhabitedTime());
-		compound.setString("Status", chunk.getStatus().getName());
+		compound.setString("Status", ChunkStatus.POSTPROCESSED.getName()); // Make sure that the chunk is considered fully generated
 		UpgradeData upgradedata = chunk.getUpgradeData();
 
 		if (!upgradedata.isEmpty()) {
