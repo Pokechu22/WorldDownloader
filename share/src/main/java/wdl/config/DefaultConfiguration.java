@@ -37,7 +37,7 @@ public class DefaultConfiguration implements IConfiguration {
 
 	@Override
 	public <T> T getValue(Setting<T> setting, IConfiguration config) {
-		return setting.getDefault(this);
+		return setting.getDefault(config);
 	}
 
 	@Override
