@@ -28,6 +28,8 @@ import net.minecraft.client.gui.GuiCreateWorld;
 import net.minecraft.client.gui.GuiCustomizeWorldScreen;
 import net.minecraft.client.gui.GuiFlatPresets;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.init.Biomes;
+import net.minecraft.world.biome.Biome;
 import wdl.config.settings.GeneratorSettings.Generator;
 
 final class GeneratorFunctions {
@@ -148,5 +150,18 @@ final class GeneratorFunctions {
 	 */
 	static void makeBackupToast(String name, long fileSize) {
 		// No toasts in this version
+	}
+
+	/* (non-javadoc)
+	 * @see VersionedFunctions#VOID_FLAT_PRESET
+	 */
+	static final String VOID_FLAT_PRESET = "3;minecraft:air;127";
+
+	static {
+		// Make sure that the void biome exists
+		// (this check partially exists so that this class will not compile in versions without it)
+		if (Biome.getIdForBiome(Biomes.THE_VOID) != 127) {
+			LOGGER.warn("[WDL] Mismatched ID for void biome: " + Biomes.THE_VOID + " = " + Biome.getIdForBiome(Biomes.THE_VOID));
+		}
 	}
 }

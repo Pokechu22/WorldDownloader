@@ -51,7 +51,7 @@ public final class GeneratorSettings {
 	public static final Setting<String> GENERATOR_OPTIONS = new OptionSetting("GeneratorOptions");
 
 	public enum Generator implements IStringSerializable {
-		VOID("void", "flat", 0, ";0"), // XXX ;0 for air format will break in 1.13
+		VOID("void", "flat", 0, VersionedFunctions.VOID_FLAT_PRESET), // XXX ;0 for air format will break in 1.13
 		DEFAULT("default", "default", 1, ""),
 		FLAT("flat", "flat", 0, ""),
 		LARGE_BIOMES("largeBiomes", "largeBiomes", 0, ""),

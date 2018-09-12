@@ -159,4 +159,9 @@ final class GeneratorFunctions {
 		ITextComponent bot = new TextComponentTranslation("selectWorld.edit.backupSize", MathHelper.ceil(fileSize / 1048576.0));
 		guitoast.add(new SystemToast(SystemToast.Type.WORLD_BACKUP, top, bot));
 	}
+
+	/* (non-javadoc)
+	 * @see VersionedFunctions#VOID_FLAT_PRESET
+	 */
+	static final String VOID_FLAT_PRESET = "minecraft:air;minecraft:the_void";
 }
