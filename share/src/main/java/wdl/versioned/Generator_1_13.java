@@ -58,7 +58,7 @@ final class GeneratorFunctions {
 		switch (generator) {
 		case FLAT:
 			return new GuiFlatPresets(new GuiCreateFlatWorldProxy(parent, generatorConfig, callback));
-		case CUSTOMIZED: {
+		case BUFFET: {
 			NBTTagCompound generatorNBT;
 			try {
 				generatorNBT = JsonToNBT.getTagFromJson(generatorConfig);
