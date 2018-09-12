@@ -380,6 +380,9 @@ public class WDLEvents {
 	public static void onChatMessage(String msg) {
 		if (WDL.downloading && msg.startsWith("Seed: ")) {
 			String seed = msg.substring(6);
+			if (seed.startsWith("[") && seed.endsWith("]")) {
+				seed = seed.substring(1, seed.length() - 1);
+			}
 			WDL.worldProps.setValue(GeneratorSettings.SEED, seed);
 
 			if (WDL.worldProps.getValue(GeneratorSettings.GENERATOR) ==
