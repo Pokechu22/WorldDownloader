@@ -101,21 +101,17 @@ final class GeneratorFunctions {
 			// Do nothing
 		}
 
-		/**
-		 * Gets the current flat preset.
-		 */
 		@Override
-		public String func_210501_h() {
+		public String getPreset() {
 			return generatorConfig;
 		}
 
-		/**
-		 * Sets the current flat preset.
-		 */
 		@Override
-		public void func_210502_a(@Nullable String preset) {
-			super.func_210502_a(preset);
-			callback.accept(this.func_210504_i().toString());
+		public void setPreset(@Nullable String preset) {
+			super.setPreset(preset);
+			// Note: super.setPreset fills in the FlatGenSettings instance.
+			// Then we can call getGeneratorOptions to get it as NBT.
+			callback.accept(this.getGeneratorOptions().toString());
 		}
 	}
 
