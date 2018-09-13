@@ -330,4 +330,17 @@ public class VersionedFunctions {
 	 * without the void biome, another biome (ocean since it's 0, maybe) should be used.
 	 */
 	public static final String VOID_FLAT_PRESET = GeneratorFunctions.VOID_FLAT_PRESET;
+
+	/**
+	 * Creates the generator options tag,
+	 *
+	 * @param generatorOptions The content.  Either a string or an SNBT representation of the data.
+	 * @param <T> The type that is expected to be returned, based on the method
+	 *             being called.
+	 * @return An NBT tag of some type.
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T createGeneratorOptionsTag(String generatorOptions) {
+		return (T)GeneratorFunctions.createGeneratorOptionsTag(generatorOptions);
+	}
 }

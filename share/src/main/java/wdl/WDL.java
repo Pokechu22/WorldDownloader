@@ -1139,7 +1139,8 @@ public class WDL {
 		worldInfoNBT.setString("generatorName", generatorName);
 		// generatorOptions
 		String generatorOptions = worldProps.getValue(GeneratorSettings.GENERATOR_OPTIONS);
-		worldInfoNBT.setString("generatorOptions", generatorOptions);
+		// NOTE: The type varies between versions; in 1.12.2 it's a string tag and in 1.13 it's a compound.
+		worldInfoNBT.setTag("generatorOptions", VersionedFunctions.createGeneratorOptionsTag(generatorOptions));
 		// generatorVersion
 		int generatorVersion = worldProps.getValue(GeneratorSettings.GENERATOR_VERSION);
 		worldInfoNBT.setInteger("generatorVersion", generatorVersion);

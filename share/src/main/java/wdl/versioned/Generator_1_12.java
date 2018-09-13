@@ -29,6 +29,7 @@ import net.minecraft.client.gui.GuiCustomizeWorldScreen;
 import net.minecraft.client.gui.GuiFlatPresets;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.init.Biomes;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.world.biome.Biome;
 import wdl.config.settings.GeneratorSettings.Generator;
 
@@ -163,5 +164,12 @@ final class GeneratorFunctions {
 		if (Biome.getIdForBiome(Biomes.THE_VOID) != 127) {
 			LOGGER.warn("[WDL] Mismatched ID for void biome: " + Biomes.THE_VOID + " = " + Biome.getIdForBiome(Biomes.THE_VOID));
 		}
+	}
+
+	/* (non-javadoc)
+	 * @see GeneratorFunctions#createGeneratorOptionsTag
+	 */
+	public static NBTTagString createGeneratorOptionsTag(String generatorOptions) {
+		return new NBTTagString(generatorOptions);
 	}
 }

@@ -54,7 +54,7 @@ final class GeneratorFunctions {
 	 */
 	static GuiScreen makeGeneratorSettingsGui(Generator generator, GuiScreen parent,
 			String generatorConfig, Consumer<String> callback) {
-		// XXX: The final world generator takes NBT, not SNBT (which is what we're giving it)...
+		// NOTE: These give SNBT values, but the actual code expects NBT.
 		switch (generator) {
 		case FLAT:
 			return new GuiFlatPresets(new GuiCreateFlatWorldProxy(parent, generatorConfig, callback));
@@ -114,7 +114,8 @@ final class GeneratorFunctions {
 		 */
 		@Override
 		public void func_210502_a(@Nullable String preset) {
-			callback.accept(preset == null ? "" : preset);
+			super.func_210502_a(preset);
+			callback.accept(this.func_210504_i().toString());
 		}
 	}
 
@@ -164,4 +165,15 @@ final class GeneratorFunctions {
 	 * @see VersionedFunctions#VOID_FLAT_PRESET
 	 */
 	static final String VOID_FLAT_PRESET = "minecraft:air;minecraft:the_void";
+
+	/* (non-javadoc)
+	 * @see GeneratorFunctions#createGeneratorOptionsTag
+	 */
+	public static NBTTagCompound createGeneratorOptionsTag(String generatorOptions) {
+		try {
+			return JsonToNBT.getTagFromJson(generatorOptions);
+		} catch (CommandSyntaxException e) {
+			return new NBTTagCompound();
+		}
+	}
 }
