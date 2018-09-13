@@ -84,7 +84,7 @@ public final class GeneratorSettings {
 		}
 	}
 
-	// Skips generators that aren't avaliable
+	// Skips generators that aren't available
 	private static class GeneratorSetting implements CyclableSetting<Generator> {
 		private final String name;
 		private final Generator defaultValue;
