@@ -162,9 +162,9 @@ final class GeneratorFunctions {
 	}
 
 	/* (non-javadoc)
-	 * @see VersionedFunctions#VOID_FLAT_PRESET
+	 * @see VersionedFunctions#VOID_FLAT_CONFIG
 	 */
-	static final String VOID_FLAT_PRESET = "minecraft:air;minecraft:the_void";
+	static final String VOID_FLAT_CONFIG = "{layers:[{block:\"minecraft:air\",height:1b}],biome:\"minecraft:the_void\"}";
 
 	/* (non-javadoc)
 	 * @see GeneratorFunctions#createGeneratorOptionsTag

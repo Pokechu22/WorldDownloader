@@ -323,13 +323,13 @@ public class VersionedFunctions {
 	}
 
 	/**
-	 * A superflat preset that generates only air.
+	 * A superflat configuration that generates only air.
 	 *
 	 * This should be similar to the "the void" preset present since 1.9 (including the
 	 * "void" biome), but shouldn't include any decoration (the 31x31 platform).  In versions
 	 * without the void biome, another biome (ocean since it's 0, maybe) should be used.
 	 */
-	public static final String VOID_FLAT_PRESET = GeneratorFunctions.VOID_FLAT_PRESET;
+	public static final String VOID_FLAT_CONFIG = GeneratorFunctions.VOID_FLAT_CONFIG;
 
 	/**
 	 * Creates the generator options tag,

@@ -154,9 +154,9 @@ final class GeneratorFunctions {
 	}
 
 	/* (non-javadoc)
-	 * @see VersionedFunctions#VOID_FLAT_PRESET
+	 * @see VersionedFunctions#VOID_FLAT_CONFIG
 	 */
-	static final String VOID_FLAT_PRESET = "3;minecraft:air;127";
+	static final String VOID_FLAT_CONFIG = "3;minecraft:air;127";
 
 	static {
 		// Make sure that the void biome exists
