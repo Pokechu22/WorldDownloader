@@ -381,6 +381,8 @@ public class WDLEvents {
 		if (WDL.downloading && msg.startsWith("Seed: ")) {
 			String seed = msg.substring(6);
 			if (seed.startsWith("[") && seed.endsWith("]")) {
+				// In 1.13, the seed is enclosed by brackets (and is also selectable on click)
+				// We don't want those brackets.
 				seed = seed.substring(1, seed.length() - 1);
 			}
 			WDL.worldProps.setValue(GeneratorSettings.SEED, seed);
