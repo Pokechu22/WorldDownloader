@@ -14,11 +14,18 @@
  */
 package wdl.config.settings;
 
+import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.*;
 import static wdl.config.settings.TestUtils.*;
 
 import org.junit.Test;
 
+import net.minecraft.entity.Entity;
 import wdl.MaybeMixinTest;
+import wdl.config.Configuration;
+import wdl.config.DefaultConfiguration;
+import wdl.config.settings.WorldSettings.SpawnMode;
 
 public class WorldSettingsTest extends MaybeMixinTest {
 
@@ -49,5 +56,32 @@ public class WorldSettingsTest extends MaybeMixinTest {
 	public void testSpawn() {
 		checkAllText(WorldSettings.SPAWN);
 		checkParsability(WorldSettings.SPAWN);
+	}
+
+	@Test
+	public void testSpawnCoords() {
+		Configuration config = new Configuration(new DefaultConfiguration());
+		config.setValue(WorldSettings.SPAWN_X, 42);
+		config.setValue(WorldSettings.SPAWN_Y, 43);
+		config.setValue(WorldSettings.SPAWN_Z, 44);
+		Entity entity = mock(Entity.class);
+		entity.posX = 90;
+		entity.posY = 24;
+		entity.posZ = 36;
+
+		// All of these are invalid.
+		assertThrows(() -> SpawnMode.AUTO.getX(entity, config));
+		assertThrows(() -> SpawnMode.AUTO.getY(entity, config));
+		assertThrows(() -> SpawnMode.AUTO.getZ(entity, config));
+
+		// These should use the earlier settings
+		assertThat(SpawnMode.XYZ.getX(entity, config), is(42));
+		assertThat(SpawnMode.XYZ.getY(entity, config), is(43));
+		assertThat(SpawnMode.XYZ.getZ(entity, config), is(44));
+
+		// These should use the entity position
+		assertThat(SpawnMode.PLAYER.getX(entity, config), is(90));
+		assertThat(SpawnMode.PLAYER.getY(entity, config), is(24));
+		assertThat(SpawnMode.PLAYER.getZ(entity, config), is(36));
 	}
 }

@@ -69,4 +69,13 @@ final class TestUtils {
 		// Make sure it can translate
 		transComponent.getUnformattedComponentText();
 	}
+
+	public static void assertThrows(Runnable action) {
+		try {
+			action.run();
+		} catch (Exception ex) {
+			return;
+		}
+		fail("Expected an exception to be thrown");
+	}
 }
