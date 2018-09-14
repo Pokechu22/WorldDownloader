@@ -36,6 +36,7 @@ final class TestUtils {
 	 * Verifies that all translation strings used by the given setting exist.
 	 */
 	public static <T> void checkAllText(CyclableSetting<T> setting) {
+		assertValidTranslationString(setting.getDescription());
 		forEachValue(setting, value -> {
 			assertValidTranslationString(setting.getButtonText(value));
 		});
@@ -52,7 +53,6 @@ final class TestUtils {
 
 	public static <T> void forEachValue(CyclableSetting<T> setting, Consumer<T> action) {
 		T def = setting.getDefault(new DefaultConfiguration());
-		assertValidTranslationString(setting.getDescription());
 		T value = def;
 		do {
 			action.accept(value);
