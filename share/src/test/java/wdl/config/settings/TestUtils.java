@@ -24,6 +24,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import wdl.config.CyclableSetting;
 import wdl.config.DefaultConfiguration;
+import wdl.config.Setting;
 
 /**
  * Utilities for testing settings.
@@ -45,11 +46,11 @@ final class TestUtils {
 	 */
 	public static <T> void checkParsability(CyclableSetting<T> setting) {
 		forEachValue(setting, value -> {
-			assertThat(setting.deserializeFromString(setting.serializeToString(value)), is(value));
+			assertReserializesCorrectly(setting, value);
 		});
 	}
 
-	private static <T> void forEachValue(CyclableSetting<T> setting, Consumer<T> action) {
+	public static <T> void forEachValue(CyclableSetting<T> setting, Consumer<T> action) {
 		T def = setting.getDefault(new DefaultConfiguration());
 		assertValidTranslationString(setting.getDescription());
 		T value = def;
@@ -68,6 +69,10 @@ final class TestUtils {
 				I18n.hasKey(transComponent.getKey()));
 		// Make sure it can translate
 		transComponent.getUnformattedComponentText();
+	}
+
+	public static <T> void assertReserializesCorrectly(Setting<T> setting, T value) {
+		assertThat(setting.deserializeFromString(setting.serializeToString(value)), is(value));
 	}
 
 	public static void assertThrows(Runnable action) {

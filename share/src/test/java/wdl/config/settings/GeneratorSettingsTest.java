@@ -15,16 +15,41 @@
 package wdl.config.settings;
 
 import static wdl.config.settings.TestUtils.*;
+import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.*;
 
 import org.junit.Test;
 
 import wdl.MaybeMixinTest;
+import wdl.config.Configuration;
+import wdl.config.DefaultConfiguration;
+import wdl.config.IConfiguration;
 
 public class GeneratorSettingsTest extends MaybeMixinTest {
+
+	@Test
+	public void testGenerateStructures() {
+		checkAllText(GeneratorSettings.GENERATE_STRUCTURES);
+	}
 
 	@Test
 	public void testGenerator() {
 		checkAllText(GeneratorSettings.GENERATOR);
 		checkParsability(GeneratorSettings.GENERATOR);
+	}
+
+	@Test
+	public void testProperties() {
+		IConfiguration config = new Configuration(new DefaultConfiguration());
+		forEachValue(GeneratorSettings.GENERATOR, (generator) -> {
+			config.setValue(GeneratorSettings.GENERATOR, generator);
+			assertThat(config.getValue(GeneratorSettings.GENERATOR_NAME), is(generator.generatorName));
+			assertThat(config.getValue(GeneratorSettings.GENERATOR_VERSION), is(generator.generatorVersion));
+			assertThat(config.getValue(GeneratorSettings.GENERATOR_OPTIONS), is(generator.defaultOption));
+
+			assertReserializesCorrectly(GeneratorSettings.GENERATOR_NAME, generator.generatorName);
+			assertReserializesCorrectly(GeneratorSettings.GENERATOR_VERSION, generator.generatorVersion);
+			assertReserializesCorrectly(GeneratorSettings.GENERATOR_OPTIONS, generator.defaultOption);
+		});
 	}
 }
