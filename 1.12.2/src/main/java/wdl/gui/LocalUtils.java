@@ -36,7 +36,7 @@ public class LocalUtils {
 	 */
 	public static EntityPlayerSP makePlayer() {
 		return new EntityPlayerSP(WDL.minecraft, WDL.worldClient,
-				WDL.thePlayer.connection, WDL.thePlayer.getStatFileWriter(),
+				WDL.thePlayer.connection, WDL.thePlayer.getStats(),
 				WDL.thePlayer.getRecipeBook());
 	}
 

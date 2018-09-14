@@ -657,7 +657,7 @@ public class WDL {
 				I18n.format("wdl.saveProgress.playerData.creatingNBT"), 1);
 
 		NBTTagCompound playerNBT = new NBTTagCompound();
-		thePlayer.writeToNBT(playerNBT);
+		thePlayer.writeWithoutTypeId(playerNBT);
 
 		progressScreen.setMinorTaskProgress(
 				I18n.format("wdl.saveProgress.playerData.editingNBT"), 2);
@@ -1238,7 +1238,7 @@ public class WDL {
 			NBTTagCompound mapNBT = new NBTTagCompound();
 			NBTTagCompound data = new NBTTagCompound();
 
-			e.getValue().writeToNBT(data);
+			e.getValue().write(data);
 
 			mapNBT.setTag("data", data);
 

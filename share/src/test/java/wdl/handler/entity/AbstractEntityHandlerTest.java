@@ -309,9 +309,9 @@ public abstract class AbstractEntityHandlerTest<E extends Entity, C extends Cont
 	protected void assertSameNBT(Entity expected, Entity actual) {
 		// Can't call these methods directly because writeToNBT returns void in 1.9
 		NBTTagCompound expectedNBT = new NBTTagCompound();
-		expected.writeToNBT(expectedNBT);
+		expected.writeWithoutTypeId(expectedNBT);
 		NBTTagCompound actualNBT = new NBTTagCompound();
-		actual.writeToNBT(actualNBT);
+		actual.writeWithoutTypeId(actualNBT);
 		for (String key : getIgnoreTags()) {
 			expectedNBT.removeTag(key);
 			actualNBT.removeTag(key);
@@ -342,8 +342,8 @@ public abstract class AbstractEntityHandlerTest<E extends Entity, C extends Cont
 	 */
 	protected void applyNBT(Entity entity, NBTTagCompound update) {
 		NBTTagCompound tag = new NBTTagCompound();
-		entity.writeToNBT(tag);
+		entity.writeWithoutTypeId(tag);
 		tag.merge(update);
-		entity.readFromNBT(tag);
+		entity.read(tag);
 	}
 }

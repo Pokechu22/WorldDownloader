@@ -90,7 +90,7 @@ public class WDLChunkLoader extends WDLChunkLoaderBase {
 		// Add the manually saved entities.
 		for (Entity e : WDL.newEntities.get(chunk.getPos())) {
 			// "Unkill" the entity, since it is killed when it is unloaded.
-			e.isDead = false;
+			e.removed = false;
 			entities.add(e);
 		}
 
@@ -123,7 +123,7 @@ public class WDLChunkLoader extends WDLChunkLoaderBase {
 			NBTTagCompound entityData = new NBTTagCompound();
 
 			try {
-				if (entity.writeToNBTOptional(entityData)) {
+				if (entity.writeUnlessPassenger(entityData)) {
 					chunk.setHasEntities(true);
 					entityList.add(entityData);
 				}
@@ -225,7 +225,7 @@ public class WDLChunkLoader extends WDLChunkLoaderBase {
 
 				TileEntity te = newTEMap.get(pos);
 				try {
-					te.writeToNBT(compound);
+					te.write(compound);
 				} catch (Exception e) {
 					WDLMessages.chatMessageTranslated(
 							WDL.baseProps,
@@ -262,7 +262,7 @@ public class WDLChunkLoader extends WDLChunkLoaderBase {
 				TileEntity te = chunkTEMap.get(pos);
 				NBTTagCompound compound = new NBTTagCompound();
 				try {
-					te.writeToNBT(compound);
+					te.write(compound);
 				} catch (Exception e) {
 					WDLMessages.chatMessageTranslated(
 							WDL.baseProps,

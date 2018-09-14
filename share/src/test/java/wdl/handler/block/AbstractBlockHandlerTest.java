@@ -237,9 +237,9 @@ public abstract class AbstractBlockHandlerTest<B extends TileEntity, C extends C
 	protected void assertSameNBT(TileEntity expected, TileEntity actual) {
 		// Can't call these methods directly because writeToNBT returns void in 1.9
 		NBTTagCompound expectedNBT = new NBTTagCompound();
-		expected.writeToNBT(expectedNBT);
+		expected.write(expectedNBT);
 		NBTTagCompound actualNBT = new NBTTagCompound();
-		actual.writeToNBT(actualNBT);
+		actual.write(actualNBT);
 		assertSameNBT(expectedNBT, actualNBT);
 	}
 }
