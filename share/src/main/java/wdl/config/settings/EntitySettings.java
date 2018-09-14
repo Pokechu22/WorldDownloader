@@ -17,6 +17,9 @@ package wdl.config.settings;
 import static wdl.config.settings.Utils.*;
 
 import java.util.Map;
+import java.util.function.BooleanSupplier;
+
+import com.google.common.annotations.VisibleForTesting;
 
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
@@ -34,6 +37,9 @@ public final class EntitySettings {
 
 	public static final CyclableSetting<TrackDistanceMode> TRACK_DISTANCE_MODE =
 			new TrackDistanceModeSetting("Entity.TrackDistanceMode", "wdl.gui.entities.trackDistanceMode");
+
+	@VisibleForTesting
+	static BooleanSupplier hasServerEntityRange = WDLPluginChannels::hasServerEntityRange;
 
 	public enum TrackDistanceMode implements IStringSerializable {
 		DEFAULT("default"),
@@ -83,7 +89,7 @@ public final class EntitySettings {
 
 		@Override
 		public TrackDistanceMode getDefault(IConfiguration context) {
-			if (WDLPluginChannels.hasServerEntityRange()) {
+			if (hasServerEntityRange.getAsBoolean()) {
 				return TrackDistanceMode.SERVER;
 			} else {
 				return TrackDistanceMode.DEFAULT;
@@ -93,7 +99,7 @@ public final class EntitySettings {
 		@Override
 		public TrackDistanceMode cycle(TrackDistanceMode value) {
 			if (value == TrackDistanceMode.DEFAULT) {
-				if (WDLPluginChannels.hasServerEntityRange()) {
+				if (hasServerEntityRange.getAsBoolean()) {
 					return TrackDistanceMode.SERVER;
 				} else {
 					return TrackDistanceMode.USER;
