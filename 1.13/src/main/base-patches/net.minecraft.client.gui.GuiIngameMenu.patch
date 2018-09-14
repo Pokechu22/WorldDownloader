@@ -12,7 +12,7 @@
  				boolean flag1 = GuiIngameMenu.this.mc.isConnectedToRealms();
  				this.enabled = false;
 @@ -87,6 +91,10 @@
- 				GuiIngameMenu.this.mc.displayGuiScreen(new GuiStats(GuiIngameMenu.this, GuiIngameMenu.this.mc.player.getStatFileWriter()));
+ 				GuiIngameMenu.this.mc.displayGuiScreen(new GuiStats(GuiIngameMenu.this, GuiIngameMenu.this.mc.player.getStats()));
  			}
  		});
 +
