@@ -109,7 +109,7 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 
 		NBTTagCompound rootTag = new NBTTagCompound();
 		rootTag.setTag("Level", levelTag);
-		rootTag.setInteger("DataVersion", VersionConstants.getDataVersion());
+		rootTag.setInt("DataVersion", VersionConstants.getDataVersion());
 
 		addChunkToPending(chunk.getPos(), rootTag);
 
@@ -134,8 +134,8 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 	private NBTTagCompound writeChunkToNBT(Chunk chunk, World world) {
 		NBTTagCompound compound = new NBTTagCompound();
 
-		compound.setInteger("xPos", chunk.x);
-		compound.setInteger("zPos", chunk.z);
+		compound.setInt("xPos", chunk.x);
+		compound.setInt("zPos", chunk.z);
 		compound.setLong("LastUpdate", world.getGameTime());
 		compound.setLong("InhabitedTime", chunk.getInhabitedTime());
 		compound.setString("Status", ChunkStatus.POSTPROCESSED.getName()); // Make sure that the chunk is considered fully generated

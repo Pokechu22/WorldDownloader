@@ -125,7 +125,7 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 
 		NBTTagCompound rootTag = new NBTTagCompound();
 		rootTag.setTag("Level", levelTag);
-		rootTag.setInteger("DataVersion", VersionConstants.getDataVersion());
+		rootTag.setInt("DataVersion", VersionConstants.getDataVersion());
 
 		addChunkToPending(chunk.getPos(), rootTag);
 
@@ -150,8 +150,8 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 	private NBTTagCompound writeChunkToNBT(Chunk chunk, World world) {
 		NBTTagCompound compound = new NBTTagCompound();
 
-		compound.setInteger("xPos", chunk.x);
-		compound.setInteger("zPos", chunk.z);
+		compound.setInt("xPos", chunk.x);
+		compound.setInt("zPos", chunk.z);
 		compound.setLong("LastUpdate", world.getGameTime());
 		compound.setIntArray("HeightMap", chunk.getHeightMap());
 		compound.setBoolean("TerrainPopulated", true);  // We always want this
@@ -224,12 +224,12 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 						.getKey(entry.getTarget());
 				entryTag.setString("i",
 						location == null ? "" : location.toString());
-				entryTag.setInteger("x", entry.position.getX());
-				entryTag.setInteger("y", entry.position.getY());
-				entryTag.setInteger("z", entry.position.getZ());
-				entryTag.setInteger("t",
+				entryTag.setInt("x", entry.position.getX());
+				entryTag.setInt("y", entry.position.getY());
+				entryTag.setInt("z", entry.position.getZ());
+				entryTag.setInt("t",
 						(int) (entry.scheduledTime - worldTime));
-				entryTag.setInteger("p", entry.priority);
+				entryTag.setInt("p", entry.priority);
 				entries.add(entryTag);
 			}
 

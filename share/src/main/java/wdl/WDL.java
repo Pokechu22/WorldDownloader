@@ -361,7 +361,7 @@ public class WDL {
 		File levelDatFile = new File(saveHandler.getWorldDirectory(), "level.dat");
 		try (FileInputStream stream = new FileInputStream(levelDatFile)) {
 			NBTTagCompound compound = CompressedStreamTools.readCompressed(stream);
-			lastPlayed = compound.getCompoundTag("Data").getLong("LastPlayed");
+			lastPlayed = compound.getCompound("Data").getLong("LastPlayed");
 		} catch (Exception e) {
 			LOGGER.warn("Error while checking if the map has been played and " +
 					"needs to be backed up (this is normal if this world " +
@@ -1033,8 +1033,8 @@ public class WDL {
 		PlayerSettings.Hunger food = worldProps.getValue(PlayerSettings.HUNGER);
 
 		if (food != PlayerSettings.Hunger.KEEP) {
-			playerNBT.setInteger("foodLevel", food.foodLevel);
-			playerNBT.setInteger("foodTickTimer", food.foodTickTimer);
+			playerNBT.setInt("foodLevel", food.foodLevel);
+			playerNBT.setInt("foodTickTimer", food.foodTickTimer);
 			playerNBT.setFloat("foodSaturationLevel", food.foodSaturationLevel);
 			playerNBT.setFloat("foodExhaustionLevel", food.foodExhaustionLevel);
 		}
@@ -1067,8 +1067,8 @@ public class WDL {
 
 		// If the player is able to fly, spawn them flying.
 		// Helps ensure they don't fall out of the world.
-		if (playerNBT.getCompoundTag("abilities").getBoolean("mayfly")) {
-			playerNBT.getCompoundTag("abilities").setBoolean("flying", true);
+		if (playerNBT.getCompound("abilities").getBoolean("mayfly")) {
+			playerNBT.getCompound("abilities").setBoolean("flying", true);
 		}
 	}
 
@@ -1100,12 +1100,12 @@ public class WDL {
 		if (gametypeOption == WorldSettings.GameMode.KEEP) {
 			// XXX Do we want this?  Or should it just use the actual mode without overriding?
 			if (thePlayer.capabilities.isCreativeMode) { // capabilities
-				worldInfoNBT.setInteger("GameType", 1); // Creative
+				worldInfoNBT.setInt("GameType", 1); // Creative
 			} else {
-				worldInfoNBT.setInteger("GameType", 0); // Survival
+				worldInfoNBT.setInt("GameType", 0); // Survival
 			}
 		} else {
-			worldInfoNBT.setInteger("GameType", gametypeOption.gamemodeID);
+			worldInfoNBT.setInt("GameType", gametypeOption.gamemodeID);
 			worldInfoNBT.setBoolean("hardcore", gametypeOption.hardcore);
 		}
 
@@ -1143,16 +1143,16 @@ public class WDL {
 		worldInfoNBT.setTag("generatorOptions", VersionedFunctions.createGeneratorOptionsTag(generatorOptions));
 		// generatorVersion
 		int generatorVersion = worldProps.getValue(GeneratorSettings.GENERATOR_VERSION);
-		worldInfoNBT.setInteger("generatorVersion", generatorVersion);
+		worldInfoNBT.setInt("generatorVersion", generatorVersion);
 
 		// Weather
 		WorldSettings.Weather weather = worldProps.getValue(WorldSettings.WEATHER);
 
 		if (weather != WorldSettings.Weather.KEEP) {
 			worldInfoNBT.setBoolean("raining", weather.raining);
-			worldInfoNBT.setInteger("rainTime", weather.rainTime);
+			worldInfoNBT.setInt("rainTime", weather.rainTime);
 			worldInfoNBT.setBoolean("thundering", weather.thundering);
-			worldInfoNBT.setInteger("thunderTime", weather.thunderTime);
+			worldInfoNBT.setInt("thunderTime", weather.thunderTime);
 		}
 
 		// Spawn
@@ -1162,14 +1162,14 @@ public class WDL {
 			int x = spawn.getX(thePlayer, worldProps);
 			int y = spawn.getY(thePlayer, worldProps);
 			int z = spawn.getZ(thePlayer, worldProps);
-			worldInfoNBT.setInteger("SpawnX", x);
-			worldInfoNBT.setInteger("SpawnY", y);
-			worldInfoNBT.setInteger("SpawnZ", z);
+			worldInfoNBT.setInt("SpawnX", x);
+			worldInfoNBT.setInt("SpawnY", y);
+			worldInfoNBT.setInt("SpawnZ", z);
 			worldInfoNBT.setBoolean("initialized", true);
 		}
 
 		// Gamerules (most of these are already populated)
-		NBTTagCompound gamerules = worldInfoNBT.getCompoundTag("GameRules");
+		NBTTagCompound gamerules = worldInfoNBT.getCompound("GameRules");
 		for (String rule : worldProps.getGameRules()) {
 			gamerules.setString(rule, worldProps.getGameRule(rule));
 		}
@@ -1177,7 +1177,7 @@ public class WDL {
 		// Forge (TODO: move this elsewhere!)
 		try {
 			LOGGER.debug("Trying to call FML writeVersionData");
-			NBTTagCompound versionInfo = worldInfoNBT.getCompoundTag("Version");
+			NBTTagCompound versionInfo = worldInfoNBT.getCompound("Version");
 
 			Class<?> fmlCommonHandler = Class.forName("net.minecraftforge.fml.common.FMLCommonHandler");
 			Object instance = fmlCommonHandler.getMethod("instance").invoke(null);
@@ -1200,7 +1200,7 @@ public class WDL {
 					SaveHandler.class, WorldInfo.class, NBTTagCompound.class);
 			handleWorldDataSave.invoke(instance, WDL.saveHandler, WDL.worldClient.getWorldInfo(), rootWorldInfoNBT);
 
-			LOGGER.debug("Called FML handleWorldDataSave!  Keys are now " + rootWorldInfoNBT.getKeySet());
+			LOGGER.debug("Called FML handleWorldDataSave!  Keys are now " + rootWorldInfoNBT.keySet());
 		} catch (Throwable ex) {
 			LOGGER.info("Failed to call FML handleWorldDataSave", ex);
 		}

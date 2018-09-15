@@ -316,16 +316,16 @@ public class WDLChunkLoader extends WDLChunkLoaderBase {
 				chunkNBT = CompressedStreamTools.read(dis);
 			}
 
-			NBTTagCompound levelNBT = chunkNBT.getCompoundTag("Level");
-			NBTTagList oldList = levelNBT.getTagList("TileEntities", 10);
+			NBTTagCompound levelNBT = chunkNBT.getCompound("Level");
+			NBTTagList oldList = levelNBT.getList("TileEntities", 10);
 
 			if (oldList != null) {
 				for (int i = 0; i < oldList.size(); i++) {
-					NBTTagCompound oldNBT = oldList.getCompoundTagAt(i);
+					NBTTagCompound oldNBT = oldList.getCompound(i);
 
 					String entityID = oldNBT.getString("id");
-					BlockPos pos = new BlockPos(oldNBT.getInteger("x"),
-							oldNBT.getInteger("y"), oldNBT.getInteger("z"));
+					BlockPos pos = new BlockPos(oldNBT.getInt("x"),
+							oldNBT.getInt("y"), oldNBT.getInt("z"));
 					Block block = chunk.getBlockState(pos).getBlock();
 
 					if (shouldImportBlockEntity(entityID, pos, block, oldNBT, chunk)) {
