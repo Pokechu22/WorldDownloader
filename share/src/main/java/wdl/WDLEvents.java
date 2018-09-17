@@ -17,6 +17,7 @@ package wdl;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ContainerChest;
@@ -321,9 +322,9 @@ public class WDLEvents {
 	 * Must be called whenever a plugin channel message / custom payload packet
 	 * is received.
 	 */
-	public static void onPluginChannelPacket(String channel,
-			byte[] bytes) {
-		WDLPluginChannels.onPluginChannelPacket(channel, bytes);
+	public static void onPluginChannelPacket(NetHandlerPlayClient sender,
+			String channel, byte[] bytes) {
+		WDLPluginChannels.onPluginChannelPacket(sender, channel, bytes);
 	}
 
 	/**

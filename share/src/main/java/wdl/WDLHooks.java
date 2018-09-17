@@ -327,7 +327,7 @@ public class WDLHooks {
 			if (ENABLE_PROFILER) PROFILER.endSection();  // "Parse"
 
 			if (ENABLE_PROFILER) PROFILER.startSection("Core");
-			WDLEvents.onPluginChannelPacket(channel, payload);
+			WDLEvents.onPluginChannelPacket(sender, channel, payload);
 			if (ENABLE_PROFILER) PROFILER.endSection();  // "Core"
 
 			for (ModInfo<IPluginChannelListener> info : WDLApi
