@@ -38,6 +38,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.passive.EntityVillager;
+import net.minecraft.nbt.INBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.client.CPacketCustomPayload;
 import net.minecraft.network.play.server.SPacketMaps;
@@ -335,12 +336,9 @@ public class VersionedFunctions {
 	 * Creates the generator options tag,
 	 *
 	 * @param generatorOptions The content.  Either a string or an SNBT representation of the data.
-	 * @param <T> The type that is expected to be returned, based on the method
-	 *             being called.
 	 * @return An NBT tag of some type.
 	 */
-	@SuppressWarnings("unchecked")
-	public static <T> T createGeneratorOptionsTag(String generatorOptions) {
-		return (T)GeneratorFunctions.createGeneratorOptionsTag(generatorOptions);
+	public static INBTBase createGeneratorOptionsTag(String generatorOptions) {
+		return GeneratorFunctions.createGeneratorOptionsTag(generatorOptions);
 	}
 }
