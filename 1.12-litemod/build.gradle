@@ -73,6 +73,7 @@ extraSrgs {
     addSrg file('../srgs/1.13.srg')
     addMethods file('../srgs/1.12_methods.csv')
     addFields file('../srgs/1.12_fields.csv')
+    addPatch('net.minecraft.nbt.JsonToNBT.java', file('../srgs/JsonToNBT_1.12.patch'))
 }
 
 sourceSets {
