@@ -18,7 +18,6 @@ import static wdl.versioned.VersionedFunctions.customName;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
-import static org.junit.Assume.*;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -80,7 +79,6 @@ public class ChestTest extends AbstractBlockHandlerTest<TileEntityChest, Contain
 			placeTEAt(offset, te2);
 
 			ContainerChest container = (ContainerChest) makeClientContainer(center);
-			assumeTrue("Expected a large test", container.inventorySlots.size() == 90);
 
 			runHandler(center, container);
 
@@ -119,7 +117,6 @@ public class ChestTest extends AbstractBlockHandlerTest<TileEntityChest, Contain
 			}
 
 			ContainerChest container = (ContainerChest) makeClientContainer(center);
-			assumeTrue("Expected a large test", container.inventorySlots.size() == 90);
 
 			runHandler(center, container);
 
@@ -154,7 +151,6 @@ public class ChestTest extends AbstractBlockHandlerTest<TileEntityChest, Contain
 		placeTEAt(offset, te2);
 
 		ContainerChest container = (ContainerChest) makeClientContainer(center);
-		assumeTrue("Expected a large test", container.inventorySlots.size() == 90);
 		runHandler(center, container);
 		checkAllTEs();
 	}
@@ -239,7 +235,6 @@ public class ChestTest extends AbstractBlockHandlerTest<TileEntityChest, Contain
 		placeTEAt(offset, te2);
 
 		ContainerChest container = (ContainerChest) makeClientContainer(center);
-		assumeTrue("Expected a large test", container.inventorySlots.size() == 90);
 		runHandler(center, container);
 
 		checkAllTEs();
