@@ -139,8 +139,8 @@ sourceSets {
             runtimeClasspath += sourceSets.mixin.output
             srcDir "src/test/java"
             srcDir project(':share').file("src/test/java")
-            exclude "wdl/handler/SimpleWorld_1.12.java"
-            exclude "wdl/handler/SimpleWorld_1.13.java"
+            exclude "wdl/handler/SimpleWorld_1_12.java"
+            exclude "wdl/handler/SimpleWorld_1_13.java"
             exclude "wdl/handler/block/ShulkerBoxTest.java"
         }
     }
