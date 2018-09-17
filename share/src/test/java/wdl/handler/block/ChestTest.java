@@ -241,7 +241,7 @@ public class ChestTest extends AbstractBlockHandlerTest<TileEntityChest, Contain
 		ContainerChest container = (ContainerChest) makeClientContainer(center);
 		assumeTrue("Expected a large test", container.inventorySlots.size() == 90);
 		runHandler(center, container);
-		// Fails as the custom name is lost
+
 		checkAllTEs();
 	}
 
