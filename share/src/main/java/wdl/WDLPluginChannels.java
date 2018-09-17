@@ -748,7 +748,7 @@ public class WDLPluginChannels {
 		}
 
 		if (deferredInitState != null) {
-			LOGGER.debug("[WDL] REGISTER: Trying to resolve deffered {}", deferredInitState);
+			LOGGER.debug("[WDL] REGISTER: Trying to resolve deferred {}", deferredInitState);
 			sendInitPacket(deferredInitState);
 		}
 	}
