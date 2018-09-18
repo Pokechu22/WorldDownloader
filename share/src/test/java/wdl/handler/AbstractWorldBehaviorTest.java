@@ -43,6 +43,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.profiler.Profiler;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.dimension.DimensionType;
@@ -77,6 +78,10 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 
 		clientPlayer.inventory = new InventoryPlayer(clientPlayer);
 		serverPlayer.inventory = new InventoryPlayer(serverPlayer);
+		when(clientPlayer.getHorizontalFacing()).thenCallRealMethod();
+		when(serverPlayer.getHorizontalFacing()).thenCallRealMethod();
+		clientPlayer.world = clientWorld;
+		serverPlayer.world = serverWorld;
 	}
 
 	protected static class TestWorld extends SimpleWorld {
@@ -130,6 +135,18 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 	protected void placeBlockAt(BlockPos pos, IBlockState state) {
 		clientWorld.setBlockState(pos, state);
 		serverWorld.setBlockState(pos, state);
+	}
+
+	/**
+	 * Puts the given block into the mock worlds at the given position.
+	 *
+	 * @param pos The position
+	 * @param block The block to put
+	 * @param facing The direction to place the block from
+	 */
+	protected void placeBlockAt(BlockPos pos, Block block, EnumFacing facing) {
+		clientWorld.placeBlockAt(pos, block, clientPlayer, facing);
+		serverWorld.placeBlockAt(pos, block, serverPlayer, facing);
 	}
 
 	/**

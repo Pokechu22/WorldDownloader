@@ -58,73 +58,74 @@ public class ChestTest extends AbstractBlockHandlerTest<TileEntityChest, Contain
 
 	@Test
 	public void testSimpleDoubleChest() throws HandlerException {
-		// TODO: Handle orientation of chests
-		// Not important in this version, but will matter later
-
 		// TODO: Maybe vary this, might help with +/- issues
 		BlockPos center = new BlockPos(0, 0, 0);
 
 		for (EnumFacing direction : EnumFacing.Plane.HORIZONTAL) {
-			makeMockWorld();
-
-			BlockPos offset = center.offset(direction);
-
-			placeBlockAt(center, Blocks.CHEST);
-			placeBlockAt(offset, Blocks.CHEST);
-			TileEntityChest te1 = new TileEntityChest();
-			te1.setInventorySlotContents(2, new ItemStack(Items.BEEF));
-			TileEntityChest te2 = new TileEntityChest();
-			te2.setInventorySlotContents(8, new ItemStack(Items.COOKED_BEEF));
-			placeTEAt(center, te1);
-			placeTEAt(offset, te2);
-
-			ContainerChest container = (ContainerChest) makeClientContainer(center);
-
-			runHandler(center, container);
-
-			checkAllTEs();
+			EnumFacing[] orientations = { direction.rotateY(), direction.rotateYCCW() };
+			for (EnumFacing orientation : orientations) {
+				makeMockWorld();
+	
+				BlockPos offset = center.offset(direction);
+	
+				placeBlockAt(center, Blocks.CHEST, orientation);
+				placeBlockAt(offset, Blocks.CHEST, orientation);
+				TileEntityChest te1 = new TileEntityChest();
+				te1.setInventorySlotContents(2, new ItemStack(Items.BEEF));
+				TileEntityChest te2 = new TileEntityChest();
+				te2.setInventorySlotContents(8, new ItemStack(Items.COOKED_BEEF));
+				placeTEAt(center, te1);
+				placeTEAt(offset, te2);
+	
+				ContainerChest container = (ContainerChest) makeClientContainer(center);
+	
+				runHandler(center, container);
+	
+				checkAllTEs();
+			}
 		}
 	}
 
 	@Test
 	public void testRegularAndTrappedChest() throws HandlerException {
-		// TODO: As with before, orientation
-
 		// TODO: Maybe vary this, might help with +/- issues
 		BlockPos center = new BlockPos(0, 0, 0);
 
 		for (EnumFacing direction : EnumFacing.Plane.HORIZONTAL) {
-			makeMockWorld();
-
-			BlockPos offset = center.offset(direction);
-
-			placeBlockAt(center, Blocks.CHEST);
-			placeBlockAt(offset, Blocks.CHEST);
-			TileEntityChest te1 = new TileEntityChest();
-			te1.setInventorySlotContents(2, new ItemStack(Items.BEEF));
-			TileEntityChest te2 = new TileEntityChest();
-			te2.setInventorySlotContents(8, new ItemStack(Items.COOKED_BEEF));
-			placeTEAt(center, te1);
-			placeTEAt(offset, te2);
-
-			for (EnumFacing direction2 : EnumFacing.Plane.HORIZONTAL) {
-				if (direction2 == direction) continue;
-				BlockPos offset2 = center.offset(direction2);
-				placeBlockAt(offset2, Blocks.TRAPPED_CHEST);
-				TileEntityChest badTE = new TileEntityChest();
-				badTE.setInventorySlotContents(0, new ItemStack(Blocks.TNT));
-				placeTEAt(offset2, badTE);
+			EnumFacing[] orientations = { direction.rotateY(), direction.rotateYCCW() };
+			for (EnumFacing orientation : orientations) {
+				makeMockWorld();
+	
+				BlockPos offset = center.offset(direction);
+	
+				placeBlockAt(center, Blocks.CHEST, orientation);
+				placeBlockAt(offset, Blocks.CHEST, orientation);
+				TileEntityChest te1 = new TileEntityChest();
+				te1.setInventorySlotContents(2, new ItemStack(Items.BEEF));
+				TileEntityChest te2 = new TileEntityChest();
+				te2.setInventorySlotContents(8, new ItemStack(Items.COOKED_BEEF));
+				placeTEAt(center, te1);
+				placeTEAt(offset, te2);
+	
+				for (EnumFacing direction2 : EnumFacing.Plane.HORIZONTAL) {
+					if (direction2 == direction) continue;
+					BlockPos offset2 = center.offset(direction2);
+					placeBlockAt(offset2, Blocks.TRAPPED_CHEST, orientation);
+					TileEntityChest badTE = new TileEntityChest();
+					badTE.setInventorySlotContents(0, new ItemStack(Blocks.TNT));
+					placeTEAt(offset2, badTE);
+				}
+	
+				ContainerChest container = (ContainerChest) makeClientContainer(center);
+	
+				runHandler(center, container);
+	
+				// Only those two were saved
+				assertThat(tileEntities.keySet(), containsInAnyOrder(center, offset));
+	
+				assertSameNBT(tileEntities.get(center), te1);
+				assertSameNBT(tileEntities.get(offset), te2);
 			}
-
-			ContainerChest container = (ContainerChest) makeClientContainer(center);
-
-			runHandler(center, container);
-
-			// Only those two were saved
-			assertThat(tileEntities.keySet(), containsInAnyOrder(center, offset));
-
-			assertSameNBT(tileEntities.get(center), te1);
-			assertSameNBT(tileEntities.get(offset), te2);
 		}
 	}
 
@@ -139,8 +140,8 @@ public class ChestTest extends AbstractBlockHandlerTest<TileEntityChest, Contain
 		BlockPos center = new BlockPos(0, 0, 0);
 		BlockPos offset = new BlockPos(0, 0, 1);
 
-		placeBlockAt(center, Blocks.CHEST);
-		placeBlockAt(offset, Blocks.CHEST);
+		placeBlockAt(center, Blocks.CHEST, EnumFacing.EAST);
+		placeBlockAt(offset, Blocks.CHEST, EnumFacing.EAST);
 		TileEntityChest te1 = new TileEntityChest();
 		te1.setInventorySlotContents(2, new ItemStack(Items.BEEF));
 		te1.setCustomName(customName("Food"));
@@ -166,8 +167,8 @@ public class ChestTest extends AbstractBlockHandlerTest<TileEntityChest, Contain
 		BlockPos center = new BlockPos(0, 0, 0);
 		BlockPos offset = new BlockPos(0, 0, 1);
 
-		placeBlockAt(center, Blocks.CHEST);
-		placeBlockAt(offset, Blocks.CHEST);
+		placeBlockAt(center, Blocks.CHEST, EnumFacing.EAST);
+		placeBlockAt(offset, Blocks.CHEST, EnumFacing.EAST);
 		TileEntityChest te1 = new TileEntityChest();
 		te1.setInventorySlotContents(2, new ItemStack(Items.BEEF));
 		te1.setCustomName(customName("Name 1"));
@@ -194,8 +195,8 @@ public class ChestTest extends AbstractBlockHandlerTest<TileEntityChest, Contain
 		BlockPos center = new BlockPos(0, 0, 0);
 		BlockPos offset = new BlockPos(0, 0, 1);
 
-		placeBlockAt(center, Blocks.CHEST);
-		placeBlockAt(offset, Blocks.CHEST);
+		placeBlockAt(center, Blocks.CHEST, EnumFacing.EAST);
+		placeBlockAt(offset, Blocks.CHEST, EnumFacing.EAST);
 		TileEntityChest te1 = new TileEntityChest();
 		te1.setInventorySlotContents(2, new ItemStack(Items.BEEF));
 		te1.setCustomName(customName("Name 1"));
@@ -223,8 +224,8 @@ public class ChestTest extends AbstractBlockHandlerTest<TileEntityChest, Contain
 		BlockPos center = new BlockPos(0, 0, 0);
 		BlockPos offset = new BlockPos(0, 0, 1);
 
-		placeBlockAt(center, Blocks.CHEST);
-		placeBlockAt(offset, Blocks.CHEST);
+		placeBlockAt(center, Blocks.CHEST, EnumFacing.EAST);
+		placeBlockAt(offset, Blocks.CHEST, EnumFacing.EAST);
 		TileEntityChest te1 = new TileEntityChest();
 		te1.setInventorySlotContents(2, new ItemStack(Items.BEEF));
 		te1.setCustomName(customName("Large Chest"));
@@ -299,7 +300,7 @@ public class ChestTest extends AbstractBlockHandlerTest<TileEntityChest, Contain
 		placeTEAt(center, te);
 		for (EnumFacing direction : EnumFacing.Plane.HORIZONTAL) {
 			BlockPos offset = center.offset(direction);
-			placeBlockAt(offset, Blocks.CHEST);
+			placeBlockAt(offset, Blocks.CHEST, EnumFacing.EAST);
 			TileEntityChest te2 = new TileEntityChest();
 			te2.setInventorySlotContents(8, new ItemStack(Items.COOKED_BEEF).setDisplayName(customName(direction.getName())));
 			placeTEAt(offset, te2);

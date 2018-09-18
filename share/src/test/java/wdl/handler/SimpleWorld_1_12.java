@@ -16,7 +16,12 @@ package wdl.handler;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.profiler.Profiler;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -33,6 +38,13 @@ abstract class SimpleWorld extends World {
 			boolean client) {
 		super(saveHandlerIn, info, dimension, profilerIn, client);
 		this.chunkProvider = this.createChunkProvider();
+	}
+
+	/** Places a block, creating the proper state. */
+	public void placeBlockAt(BlockPos pos, Block block, EntityPlayer player, EnumFacing direction) {
+		player.rotationYaw = direction.getHorizontalAngle();
+		IBlockState state = block.func_180642_a(this, pos, direction, 0, 0, 0, 0, player);
+		this.setBlockState(pos, state);
 	}
 
 	@Override
