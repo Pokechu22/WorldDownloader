@@ -17,12 +17,13 @@ package wdl.gui;
 import java.net.URI;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiTextField;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import wdl.versioned.VersionedFunctions;
 
 public class Utils {
 	private static final Minecraft mc = Minecraft.getInstance();
@@ -114,7 +115,7 @@ public class Utils {
 	 * @param right Where to stop drawing (usually, width)
 	 */
 	public static void drawListBackground(int topMargin, int bottomMargin, int top, int left, int bottom, int right) {
-		LocalUtils.drawDarkBackground(top, left, bottom, right);
+		VersionedFunctions.drawDarkBackground(top, left, bottom, right);
 		drawBorder(topMargin, bottomMargin, top, left, bottom, right);
 	}
 
@@ -134,7 +135,7 @@ public class Utils {
 	 * @param right Where to stop drawing (usually, width)
 	 */
 	public static void drawBorder(int topMargin, int bottomMargin, int top, int left, int bottom, int right) {
-		LocalUtils.drawBorder(topMargin, bottomMargin, top, left, bottom, right);
+		VersionedFunctions.drawBorder(topMargin, bottomMargin, top, left, bottom, right);
 	}
 
 	/**

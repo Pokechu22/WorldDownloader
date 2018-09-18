@@ -30,6 +30,7 @@ import wdl.WDLPluginChannels.ChunkRange;
 import wdl.gui.widget.Button;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.Screen;
+import wdl.versioned.VersionedFunctions;
 
 /**
  * A GUI that lists and allows requesting chunk overrides.
@@ -221,7 +222,7 @@ public class GuiWDLChunkOverrides extends Screen {
 
 	@Override
 	public void render(int mouseX, int mouseY, float partialTicks) {
-		LocalUtils.drawDarkBackground(0, 0, height, width);
+		VersionedFunctions.drawDarkBackground(0, 0, height, width);
 
 		// Draw the current request range.
 		if (mode == Mode.REQUESTING) {

@@ -25,6 +25,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import wdl.WDL;
 import wdl.gui.widget.Screen;
+import wdl.versioned.VersionedFunctions;
 
 /**
  * Base GUI with the player in the background turning slowly to show the
@@ -72,7 +73,7 @@ public abstract class GuiTurningCameraBase extends Screen {
 	@OverridingMethodsMustInvokeSuper
 	public void initGui() {
 		if (!initializedCamera) {
-			this.cam = LocalUtils.makePlayer();
+			this.cam = VersionedFunctions.makePlayer();
 			this.cam.setLocationAndAngles(WDL.thePlayer.posX, WDL.thePlayer.posY,
 					WDL.thePlayer.posZ, WDL.thePlayer.rotationYaw, 0.0F);
 			this.yaw = WDL.thePlayer.rotationYaw;

@@ -36,6 +36,7 @@ import net.minecraft.block.BlockChest;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.nbt.INBTBase;
@@ -340,5 +341,52 @@ public class VersionedFunctions {
 	 */
 	public static INBTBase createGeneratorOptionsTag(String generatorOptions) {
 		return GeneratorFunctions.createGeneratorOptionsTag(generatorOptions);
+	}
+
+	/**
+	 * Creates a new instance of {@link EntityPlayerSP}.
+	 */
+	public static EntityPlayerSP makePlayer() {
+		return GuiFunctions.makePlayer();
+	}
+
+	/**
+	 * Draws a dark background, similar to {@link GuiScreen#drawBackground(int)} but darker.
+	 * Same appearance as the background in lists.
+	 *
+	 * @param top Where to start drawing (usually, 0)
+	 * @param left Where to start drawing (usually, 0)
+	 * @param bottom Where to stop drawing (usually, height).
+	 * @param right Where to stop drawing (usually, width)
+	 */
+	public static void drawDarkBackground(int top, int left, int bottom, int right) {
+		GuiFunctions.drawDarkBackground(top, left, bottom, right);
+	}
+
+	/**
+	 * Draws the top and bottom borders found on gui lists (but no background).
+	 * <br/>
+	 * Based off of
+	 * {@link net.minecraft.client.gui.GuiSlot#overlayBackground(int, int, int, int)}.
+	 *
+	 * Note that there is an additional 4-pixel padding on the margins for the gradient.
+	 *
+	 * @param topMargin Amount of space to give for the upper box.
+	 * @param bottomMargin Amount of space to give for the lower box.
+	 * @param top Where to start drawing (usually, 0)
+	 * @param left Where to start drawing (usually, 0)
+	 * @param bottom Where to stop drawing (usually, height).
+	 * @param right Where to stop drawing (usually, width)
+	 */
+	public static void drawBorder(int topMargin, int bottomMargin, int top, int left, int bottom, int right) {
+		GuiFunctions.drawBorder(topMargin, bottomMargin, top, left, bottom, right);
+	}
+
+	/**
+	 * Copies the given text into the system clipboard.
+	 * @param text The text to copy
+	 */
+	public static void setClipboardString(String text) {
+		GuiFunctions.setClipboardString(text);
 	}
 }

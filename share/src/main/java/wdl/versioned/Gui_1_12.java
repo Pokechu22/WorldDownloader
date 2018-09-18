@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017 Pokechu22, julialy
+ * Copyright (c) 2017-2018 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -12,7 +12,7 @@
  *
  * Do not redistribute (in modified or unmodified form) without prior permission.
  */
-package wdl.gui;
+package wdl.versioned;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -20,41 +20,38 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import wdl.WDL;
 
-public class LocalUtils {
-	private static final Minecraft mc = Minecraft.getInstance();
-	private LocalUtils() { throw new AssertionError(); }
+/**
+ * Versioned functions related to GUIs.
+ */
+class GuiFunctions {
+	private GuiFunctions() { throw new AssertionError(); }
 
-	/**
-	 * Creates a new instance of {@link EntityPlayerSP}.
+	/* (non-javadoc)
+	 * @see VersionedFunctions#makePlayer
 	 */
-	public static EntityPlayerSP makePlayer() {
+	static EntityPlayerSP makePlayer() {
 		return new EntityPlayerSP(WDL.minecraft, WDL.worldClient,
-				WDL.thePlayer.connection, WDL.thePlayer.getStats());
+				WDL.thePlayer.connection, WDL.thePlayer.getStats(),
+				WDL.thePlayer.getRecipeBook());
 	}
 
-	/**
-	 * Draws a dark background, similar to {@link GuiScreen#drawBackground(int)} but darker.
-	 * Same appearance as the background in lists.
-	 *
-	 * @param top Where to start drawing (usually, 0)
-	 * @param left Where to start drawing (usually, 0)
-	 * @param bottom Where to stop drawing (usually, height).
-	 * @param right Where to stop drawing (usually, width)
+	/* (non-javadoc)
+	 * @see VersionedFunctions#drawDarkBackground
 	 */
-	public static void drawDarkBackground(int top, int left, int bottom, int right) {
+	static void drawDarkBackground(int top, int left, int bottom, int right) {
 		GlStateManager.disableLighting();
 		GlStateManager.disableFog();
 
 		Tessellator t = Tessellator.getInstance();
-		VertexBuffer b = t.getBuffer();
+		BufferBuilder b = t.getBuffer();
 
-		mc.getTextureManager().bindTexture(Gui.OPTIONS_BACKGROUND);
+		Minecraft.getInstance().getTextureManager().bindTexture(Gui.OPTIONS_BACKGROUND);
 		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 		float textureSize = 32.0F;
@@ -70,34 +67,22 @@ public class LocalUtils {
 		t.draw();
 	}
 
-	/**
-	 * Draws the top and bottom borders found on gui lists (but no background).
-	 * <br/>
-	 * Based off of
-	 * {@link net.minecraft.client.gui.GuiSlot#overlayBackground(int, int, int, int)}.
-	 *
-	 * Note that there is an additional 4-pixel padding on the margins for the gradient.
-	 *
-	 * @param topMargin Amount of space to give for the upper box.
-	 * @param bottomMargin Amount of space to give for the lower box.
-	 * @param top Where to start drawing (usually, 0)
-	 * @param left Where to start drawing (usually, 0)
-	 * @param bottom Where to stop drawing (usually, height).
-	 * @param right Where to stop drawing (usually, width)
+	/* (non-javadoc)
+	 * @see VersionedFunctions#drawBorder
 	 */
-	public static void drawBorder(int topMargin, int bottomMargin, int top, int left, int bottom, int right) {
+	static void drawBorder(int topMargin, int bottomMargin, int top, int left, int bottom, int right) {
 		GlStateManager.disableLighting();
 		GlStateManager.disableFog();
 		GlStateManager.disableDepthTest();
 		byte padding = 4;
 
-		mc.getTextureManager().bindTexture(Gui.OPTIONS_BACKGROUND);
+		Minecraft.getInstance().getTextureManager().bindTexture(Gui.OPTIONS_BACKGROUND);
 		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 		float textureSize = 32.0F;
 
 		Tessellator t = Tessellator.getInstance();
-		VertexBuffer b = t.getBuffer();
+		BufferBuilder b = t.getBuffer();
 
 		//Box code is GuiSlot.overlayBackground
 		//Upper box
@@ -165,12 +150,10 @@ public class LocalUtils {
 		GlStateManager.disableBlend();
 	}
 
-	/**
-	 * Copies the given text into the system clipboard.
-	 * @param text The text to copy
+	/* (non-javadoc)
+	 * @see VersionedFunctions#setClipboardString
 	 */
-	public static void setClipboardString(String text) {
+	static void setClipboardString(String text) {
 		GuiScreen.setClipboardString(text);
 	}
 }
-
