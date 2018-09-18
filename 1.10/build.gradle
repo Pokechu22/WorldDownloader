@@ -77,6 +77,7 @@ sourceSets {
             srcDir project(':share').file("src/main/java")
             exclude "wdl/handler/block/ShulkerBoxHandler.java"
             exclude "wdl/WDLChunkLoader_1_13.java"
+            exclude "wdl/handler/block/BaseLargeChestHandler_1_13.java"
             exclude "wdl/versioned/GameRules_1_13.java"
             exclude "wdl/versioned/Generator_1_13.java"
             exclude "wdl/versioned/Handlers_1_9_2.java"
