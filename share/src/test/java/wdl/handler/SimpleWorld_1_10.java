@@ -43,7 +43,7 @@ abstract class SimpleWorld extends World {
 	/** Places a block, creating the proper state. */
 	public void placeBlockAt(BlockPos pos, Block block, EntityPlayer player, EnumFacing direction) {
 		player.rotationYaw = direction.getHorizontalAngle();
-		IBlockState state = block.func_180642_a(this, pos, direction, 0, 0, 0, 0, player);
+		IBlockState state = block.getStateForPlacement(this, pos, direction, 0, 0, 0, 0, player);
 		this.setBlockState(pos, state);
 	}
 

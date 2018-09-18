@@ -76,8 +76,8 @@ abstract class BaseLargeChestHandler extends BlockHandler<TileEntityChest, Conta
 		pos2 = pos1.add(0, 0, 1);
 		te2 = world.getTileEntity(pos2);
 		if (te2 instanceof TileEntityChest &&
-				((TileEntityChest) te2).func_145980_j() ==
-				((TileEntityChest) te1).func_145980_j()) {
+				((TileEntityChest) te2).getChestType() ==
+				((TileEntityChest) te1).getChestType()) {
 
 			chest1 = (TileEntityChest) te1;
 			chest2 = (TileEntityChest) te2;
@@ -89,8 +89,8 @@ abstract class BaseLargeChestHandler extends BlockHandler<TileEntityChest, Conta
 		pos2 = pos1.add(0, 0, -1);
 		te2 = world.getTileEntity(pos2);
 		if (te2 instanceof TileEntityChest &&
-				((TileEntityChest) te2).func_145980_j() ==
-				((TileEntityChest) te1).func_145980_j()) {
+				((TileEntityChest) te2).getChestType() ==
+				((TileEntityChest) te1).getChestType()) {
 
 			chest1 = (TileEntityChest) te2;
 			chest2 = (TileEntityChest) te1;
@@ -102,8 +102,8 @@ abstract class BaseLargeChestHandler extends BlockHandler<TileEntityChest, Conta
 		pos2 = pos1.add(1, 0, 0);
 		te2 = world.getTileEntity(pos2);
 		if (te2 instanceof TileEntityChest &&
-				((TileEntityChest) te2).func_145980_j() ==
-				((TileEntityChest) te1).func_145980_j()) {
+				((TileEntityChest) te2).getChestType() ==
+				((TileEntityChest) te1).getChestType()) {
 			chest1 = (TileEntityChest) te1;
 			chest2 = (TileEntityChest) te2;
 
@@ -114,8 +114,8 @@ abstract class BaseLargeChestHandler extends BlockHandler<TileEntityChest, Conta
 		pos2 = pos1.add(-1, 0, 0);
 		te2 = world.getTileEntity(pos2);
 		if (te2 instanceof TileEntityChest &&
-				((TileEntityChest) te2).func_145980_j() ==
-				((TileEntityChest) te1).func_145980_j()) {
+				((TileEntityChest) te2).getChestType() ==
+				((TileEntityChest) te1).getChestType()) {
 			chest1 = (TileEntityChest) te2;
 			chest2 = (TileEntityChest) te1;
 
