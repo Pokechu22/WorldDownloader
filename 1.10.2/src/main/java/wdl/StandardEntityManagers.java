@@ -22,9 +22,6 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAreaEffectCloud;
@@ -63,10 +60,13 @@ import net.minecraft.entity.projectile.EntityPotion;
 import net.minecraft.entity.projectile.EntityShulkerBullet;
 import net.minecraft.entity.projectile.EntitySmallFireball;
 import net.minecraft.entity.projectile.EntitySnowball;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import wdl.EntityUtils.SpigotEntityType;
 import wdl.api.IEntityManager;
 
-import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
@@ -291,7 +291,7 @@ public enum StandardEntityManagers implements IEntityManager {
 			}
 		} catch (Throwable ex) {
 			LOGGER.error("[WDL] Failed to set up entity mappings: ", ex);
-			throw Throwables.propagate(ex);
+			throw new RuntimeException(ex);
 		}
 	}
 
@@ -325,7 +325,7 @@ public enum StandardEntityManagers implements IEntityManager {
 			PROVIDED_ENTITIES = builder.build();
 		} catch (Throwable ex) {
 			LOGGER.error("[WDL] Failed to load entity list: ", ex);
-			throw Throwables.propagate(ex);
+			throw new RuntimeException(ex);
 		}
 	}
 	public static final List<? extends IEntityManager> DEFAULTS = ImmutableList.copyOf(values());
