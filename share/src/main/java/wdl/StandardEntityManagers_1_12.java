@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017 Pokechu22, julialy
+ * Copyright (c) 2017-2018 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -14,13 +14,17 @@
  */
 package wdl;
 
-import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.google.common.collect.ImmutableSet;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
@@ -54,24 +58,29 @@ import net.minecraft.entity.passive.EntitySquid;
 import net.minecraft.entity.passive.IAnimals;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.entity.projectile.EntityEgg;
+import net.minecraft.entity.projectile.EntityEvokerFangs;
 import net.minecraft.entity.projectile.EntityFireball;
 import net.minecraft.entity.projectile.EntityFishHook;
+import net.minecraft.entity.projectile.EntityLlamaSpit;
 import net.minecraft.entity.projectile.EntityPotion;
 import net.minecraft.entity.projectile.EntityShulkerBullet;
 import net.minecraft.entity.projectile.EntitySmallFireball;
 import net.minecraft.entity.projectile.EntitySnowball;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.RegistryNamespaced;
+import wdl.EntityUtils.ISpigotEntityManager;
 import wdl.EntityUtils.SpigotEntityType;
 import wdl.api.IEntityManager;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
+/**
+ * Standard implementations of IEntityManager. These implementations are used on
+ * 1.11 and 1.12, where entities use namespaced identifiers for their IDs (and
+ * forge modifies the registry).
+ */
+class StandardEntityManagers {
+	private StandardEntityManagers() { throw new AssertionError(); }
 
-public enum StandardEntityManagers implements IEntityManager {
-	SPIGOT {
+	public static final ISpigotEntityManager SPIGOT = new ISpigotEntityManager() {
 		@Override
 		public Set<String> getProvidedEntities() {
 			if (WDL.isSpigot()) {
@@ -92,8 +101,67 @@ public enum StandardEntityManagers implements IEntityManager {
 		public int getTrackDistance(String identifier, Entity entity) {
 			return getSpigotType(identifier).getDefaultRange();
 		}
-	},
-	VANILLA {
+
+		@Nonnull
+		@Override
+		public SpigotEntityType getSpigotType(String identifier) {
+			Class<? extends Entity> c = entityClassFor(this, identifier);
+			if (c == null) {
+				return SpigotEntityType.UNKNOWN;
+			}
+
+			// Spigot's mapping, which is based off of bukkit inheritance (which
+			// doesn't match vanilla)
+			if (EntityMob.class.isAssignableFrom(c) ||
+					EntitySlime.class.isAssignableFrom(c)) {
+				return SpigotEntityType.MONSTER;
+			} else if (EntityCreature.class.isAssignableFrom(c) ||
+					EntityAmbientCreature.class.isAssignableFrom(c)) {
+				return SpigotEntityType.ANIMAL;
+			} else if (EntityItemFrame.class.isAssignableFrom(c) ||
+					EntityPainting.class.isAssignableFrom(c) ||
+					EntityItem.class.isAssignableFrom(c) ||
+					EntityXPOrb.class.isAssignableFrom(c)) {
+				return SpigotEntityType.MISC;
+			} else {
+				return SpigotEntityType.OTHER;
+			}
+		}
+
+		// Not intended to be used as a regular extension, so don't worry about
+		// these methods
+		@Override
+		public boolean isValidEnvironment(String version) {
+			return true;
+		}
+		@Override
+		public String getEnvironmentErrorMessage(String version) {
+			return null;
+		}
+
+		// For most entities, we want them to be enabled by default.
+		@Override
+		public boolean enabledByDefault(String identifier) {
+			return true;
+		}
+
+		@Override
+		public String getGroup(String identifier) {
+			return null;
+		}
+
+		@Override
+		public String getDisplayIdentifier(String identifier) {
+			return null;
+		}
+
+		@Override
+		public String getDisplayGroup(String group) {
+			return null;
+		}
+	};
+
+	public static final IEntityManager VANILLA = new IEntityManager() {
 		@Override
 		public Set<String> getProvidedEntities() {
 			return PROVIDED_ENTITIES;
@@ -101,12 +169,12 @@ public enum StandardEntityManagers implements IEntityManager {
 
 		@Override
 		public String getIdentifierFor(Entity entity) {
-			String id = EntityList.getEntityString(entity);
-			if (id == null) {
-				// Happens with players.  This check isn't needed in 1.10 though
+			ResourceLocation loc = EntityList.getKey(entity);
+			if (loc == null) {
+				// Eg players
 				return null;
 			} else {
-				return id;
+				return loc.toString();
 			}
 		}
 
@@ -125,7 +193,7 @@ public enum StandardEntityManagers implements IEntityManager {
 		 */
 		@Override
 		public int getTrackDistance(String identifier, Entity entity) {
-			Class<? extends Entity> c = entityClassFor(identifier);
+			Class<? extends Entity> c = entityClassFor(this, identifier);
 			if (c == null) {
 				return -1;
 			}
@@ -139,6 +207,8 @@ public enum StandardEntityManagers implements IEntityManager {
 			} else if (EntityFireball.class.isAssignableFrom(c)) {
 				return 64;
 			} else if (EntitySnowball.class.isAssignableFrom(c)) {
+				return 64;
+			} else if (EntityLlamaSpit.class.isAssignableFrom(c)) {
 				return 64;
 			} else if (EntityEnderPearl.class.isAssignableFrom(c)) {
 				return 64;
@@ -184,6 +254,8 @@ public enum StandardEntityManagers implements IEntityManager {
 				return 160;
 			} else if (EntityEnderCrystal.class.isAssignableFrom(c)) {
 				return 256;
+			} else if (EntityEvokerFangs.class.isAssignableFrom(c)) {
+				return 160;
 			} else {
 				return -1;
 			}
@@ -191,7 +263,7 @@ public enum StandardEntityManagers implements IEntityManager {
 
 		@Override
 		public String getGroup(String identifier) {
-			Class<? extends Entity> c = entityClassFor(identifier);
+			Class<? extends Entity> c = entityClassFor(this, identifier);
 			if (c == null) {
 				return null;
 			}
@@ -222,105 +294,91 @@ public enum StandardEntityManagers implements IEntityManager {
 			// TODO
 			return null;
 		}
-	};
-	// Not intended to be used as a regular extension, so don't worry about
-	// these methods
-	@Override
-	public boolean isValidEnvironment(String version) {
-		return true;
-	}
-	@Override
-	public String getEnvironmentErrorMessage(String version) {
-		return null;
-	}
 
-	// For most entities, we want them to be enabled by default.
-	@Override
-	public boolean enabledByDefault(String identifier) {
-		return true;
-	}
-
-	@Override
-	public String getGroup(String identifier) {
-		return null;
-	}
-
-	@Override
-	public String getDisplayIdentifier(String identifier) {
-		return null;
-	}
-
-	@Override
-	public String getDisplayGroup(String group) {
-		return null;
-	}
-
-	private static final Logger LOGGER = LogManager.getLogger();
-
-	/**
-	 * @see EntityList#field_75625_b
-	 */
-	private static final Map<String, Class<? extends Entity>> typeToClassMap;
-	static {
-		// Unfortunately there is no getter for what we need
-
-		try {
-			Map<String, Class<? extends Entity>> result = null;
-
-			for (Field field : EntityList.class.getDeclaredFields()) {
-				if (field.getType().equals(Map.class)) {
-					field.setAccessible(true);
-					Map<?, ?> map = (Map<?, ?>) field.get(null);
-					// We know it's the right map if the keys are strings and
-					// the values are classes
-					Map.Entry<?, ?> item = map.entrySet().iterator().next();
-					if (item.getKey() instanceof String
-							&& item.getValue() instanceof Class<?>) {
-						@SuppressWarnings("unchecked")
-						Map<String, Class<? extends Entity>> temp =
-						(Map<String, Class<? extends Entity>>) map;
-						result = temp;
-						break;
-					}
-				}
-			}
-			if (result == null) {
-				throw new RuntimeException("Couldn't find type to class map");
-			} else {
-				typeToClassMap = result;
-			}
-		} catch (Throwable ex) {
-			LOGGER.error("[WDL] Failed to set up entity mappings: ", ex);
-			throw new RuntimeException(ex);
+		// Not intended to be used as a regular extension, so don't worry about
+		// these methods
+		@Override
+		public boolean isValidEnvironment(String version) {
+			return true;
 		}
-	}
+		@Override
+		public String getEnvironmentErrorMessage(String version) {
+			return null;
+		}
+
+		// For most entities, we want them to be enabled by default.
+		@Override
+		public boolean enabledByDefault(String identifier) {
+			return true;
+		}
+	};
 
 	/**
 	 * Gets the entity class for that identifier.
 	 */
-	protected Class<? extends Entity> entityClassFor(String identifier) {
-		if (!EntityList.getEntityNameList().contains(identifier)) {
+	private static Class<? extends Entity> entityClassFor(IEntityManager manager, String identifier) {
+		ResourceLocation loc = new ResourceLocation(identifier);
+
+		if (!EntityList.getEntityNameList().contains(loc)) {
 			return null;
 		}
-		assert getProvidedEntities().contains(identifier);
+		assert manager.getProvidedEntities().contains(identifier);
 
-		Class<? extends Entity> c = typeToClassMap.get(identifier);
+		Class<? extends Entity> c;
+		if (ENTITY_REGISTRY != null) {
+			c = ENTITY_REGISTRY.get(loc);
+		} else {
+			c = EntityList_forge_getClass(loc);
+		}
 		assert c != null;
 
 		return c;
 	}
 
+	private static final Logger LOGGER = LogManager.getLogger();
+
+	/**
+	 * Reference to {@link EntityList#REGISTRY}. May be null under forge. If
+	 * null, indicates that the fallback method needs to be used.
+	 */
+	@Nullable
+	private static final RegistryNamespaced<ResourceLocation, Class <? extends Entity>> ENTITY_REGISTRY;
+	/**
+	 * Forge adds a replacement method when {@link EntityList#REGISTRY} is not
+	 * present; this is a reference to that. If ENTITY_REGISTRY is null, this
+	 * will not be null.
+	 * <p>
+	 * Returns a Class, and takes a ResourceLocation.
+	 *
+	 * @see #EntityList_forge_getClass()
+	 */
+	@Nullable
+	private static final Method FORGE_FALLBACK_METHOD;
 	/**
 	 * As returned by {@link #getProvidedEntities()}
 	 */
 	private static final Set<String> PROVIDED_ENTITIES;
 	static {
 		try {
-			ImmutableSet.Builder<String> builder = ImmutableSet.builder();
-			for (String loc : EntityList.getEntityNameList()) {
-				if (loc.equals("LightningBolt")) continue;
+			RegistryNamespaced<ResourceLocation, Class <? extends Entity>> registry;
+			Method forgeMethod;
+			try {
+				registry = EntityList.REGISTRY;
+				forgeMethod = null;
+			} catch (NoSuchFieldError ex) {
+				// Yay, incompatible changes!
+				LOGGER.info("[WDL] NoSuchFieldException due to forge; switching to fallback. This is (sadly) expected: ", ex);
+				registry = null;
+				forgeMethod = EntityList.class.getMethod("getClass", ResourceLocation.class);
+			}
+			ENTITY_REGISTRY = registry;
+			FORGE_FALLBACK_METHOD = forgeMethod;
 
-				builder.add(loc);
+			ImmutableSet.Builder<String> builder = ImmutableSet.builder();
+			for (ResourceLocation loc : EntityList.getEntityNameList()) {
+				if (EntityList.LIGHTNING_BOLT.equals(loc)) continue;
+
+				builder.add(loc.toString());
 			}
 			PROVIDED_ENTITIES = builder.build();
 		} catch (Throwable ex) {
@@ -328,31 +386,13 @@ public enum StandardEntityManagers implements IEntityManager {
 			throw new RuntimeException(ex);
 		}
 	}
-	public static final List<? extends IEntityManager> DEFAULTS = ImmutableList.copyOf(values());
-
-	// XXX This should be in the SPIGOT constant, but can't be due to access reasons
-	@Nonnull
-	public SpigotEntityType getSpigotType(String identifier) {
-		Class<? extends Entity> c = entityClassFor(identifier);
-		if (c == null) {
-			return SpigotEntityType.UNKNOWN;
-		}
-
-		// Spigot's mapping, which is based off of bukkit inheritance (which
-		// doesn't match vanilla)
-		if (EntityMob.class.isAssignableFrom(c) ||
-				EntitySlime.class.isAssignableFrom(c)) {
-			return SpigotEntityType.MONSTER;
-		} else if (EntityCreature.class.isAssignableFrom(c) ||
-				EntityAmbientCreature.class.isAssignableFrom(c)) {
-			return SpigotEntityType.ANIMAL;
-		} else if (EntityItemFrame.class.isAssignableFrom(c) ||
-				EntityPainting.class.isAssignableFrom(c) ||
-				EntityItem.class.isAssignableFrom(c) ||
-				EntityXPOrb.class.isAssignableFrom(c)) {
-			return SpigotEntityType.MISC;
-		} else {
-			return SpigotEntityType.OTHER;
+	@SuppressWarnings("unchecked")
+	private static Class<? extends Entity> EntityList_forge_getClass(ResourceLocation key) {
+		try {
+			return (Class<? extends Entity>) FORGE_FALLBACK_METHOD.invoke(null, key);
+		} catch (Exception ex) {
+			LOGGER.error("[WDL] Exception calling forge fallback method: ", ex);
+			throw new RuntimeException(ex);
 		}
 	}
 }

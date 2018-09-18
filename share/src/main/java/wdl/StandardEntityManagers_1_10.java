@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017 Pokechu22, julialy
+ * Copyright (c) 2017-2018 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -16,11 +16,15 @@ package wdl;
 
 import java.lang.reflect.Field;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.google.common.collect.ImmutableSet;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
@@ -60,18 +64,19 @@ import net.minecraft.entity.projectile.EntityPotion;
 import net.minecraft.entity.projectile.EntityShulkerBullet;
 import net.minecraft.entity.projectile.EntitySmallFireball;
 import net.minecraft.entity.projectile.EntitySnowball;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
+import wdl.EntityUtils.ISpigotEntityManager;
 import wdl.EntityUtils.SpigotEntityType;
 import wdl.api.IEntityManager;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
+/**
+ * Standard implementations of IEntityManager. These implementations are used on
+ * 1.10 and below, before entities were refactored to use namespaced identifiers
+ * (and before forge made any changes to EntityList).
+ */
+class StandardEntityManagers {
+	private StandardEntityManagers() { throw new AssertionError(); }
 
-public enum StandardEntityManagers implements IEntityManager {
-	SPIGOT {
+	public static final ISpigotEntityManager SPIGOT = new ISpigotEntityManager() {
 		@Override
 		public Set<String> getProvidedEntities() {
 			if (WDL.isSpigot()) {
@@ -92,8 +97,67 @@ public enum StandardEntityManagers implements IEntityManager {
 		public int getTrackDistance(String identifier, Entity entity) {
 			return getSpigotType(identifier).getDefaultRange();
 		}
-	},
-	VANILLA {
+
+		@Nonnull
+		@Override
+		public SpigotEntityType getSpigotType(String identifier) {
+			Class<? extends Entity> c = entityClassFor(this, identifier);
+			if (c == null) {
+				return SpigotEntityType.UNKNOWN;
+			}
+
+			// Spigot's mapping, which is based off of bukkit inheritance (which
+			// doesn't match vanilla)
+			if (EntityMob.class.isAssignableFrom(c) ||
+					EntitySlime.class.isAssignableFrom(c)) {
+				return SpigotEntityType.MONSTER;
+			} else if (EntityCreature.class.isAssignableFrom(c) ||
+					EntityAmbientCreature.class.isAssignableFrom(c)) {
+				return SpigotEntityType.ANIMAL;
+			} else if (EntityItemFrame.class.isAssignableFrom(c) ||
+					EntityPainting.class.isAssignableFrom(c) ||
+					EntityItem.class.isAssignableFrom(c) ||
+					EntityXPOrb.class.isAssignableFrom(c)) {
+				return SpigotEntityType.MISC;
+			} else {
+				return SpigotEntityType.OTHER;
+			}
+		}
+
+		// Not intended to be used as a regular extension, so don't worry about
+		// these methods
+		@Override
+		public boolean isValidEnvironment(String version) {
+			return true;
+		}
+		@Override
+		public String getEnvironmentErrorMessage(String version) {
+			return null;
+		}
+
+		// For most entities, we want them to be enabled by default.
+		@Override
+		public boolean enabledByDefault(String identifier) {
+			return true;
+		}
+
+		@Override
+		public String getGroup(String identifier) {
+			return null;
+		}
+
+		@Override
+		public String getDisplayIdentifier(String identifier) {
+			return null;
+		}
+
+		@Override
+		public String getDisplayGroup(String group) {
+			return null;
+		}
+	};
+
+	public static final IEntityManager VANILLA = new IEntityManager() {
 		@Override
 		public Set<String> getProvidedEntities() {
 			return PROVIDED_ENTITIES;
@@ -125,7 +189,7 @@ public enum StandardEntityManagers implements IEntityManager {
 		 */
 		@Override
 		public int getTrackDistance(String identifier, Entity entity) {
-			Class<? extends Entity> c = entityClassFor(identifier);
+			Class<? extends Entity> c = entityClassFor(this, identifier);
 			if (c == null) {
 				return -1;
 			}
@@ -191,7 +255,7 @@ public enum StandardEntityManagers implements IEntityManager {
 
 		@Override
 		public String getGroup(String identifier) {
-			Class<? extends Entity> c = entityClassFor(identifier);
+			Class<? extends Entity> c = entityClassFor(this, identifier);
 			if (c == null) {
 				return null;
 			}
@@ -222,38 +286,24 @@ public enum StandardEntityManagers implements IEntityManager {
 			// TODO
 			return null;
 		}
+
+		// Not intended to be used as a regular extension, so don't worry about
+		// these methods
+		@Override
+		public boolean isValidEnvironment(String version) {
+			return true;
+		}
+		@Override
+		public String getEnvironmentErrorMessage(String version) {
+			return null;
+		}
+
+		// For most entities, we want them to be enabled by default.
+		@Override
+		public boolean enabledByDefault(String identifier) {
+			return true;
+		}
 	};
-	// Not intended to be used as a regular extension, so don't worry about
-	// these methods
-	@Override
-	public boolean isValidEnvironment(String version) {
-		return true;
-	}
-	@Override
-	public String getEnvironmentErrorMessage(String version) {
-		return null;
-	}
-
-	// For most entities, we want them to be enabled by default.
-	@Override
-	public boolean enabledByDefault(String identifier) {
-		return true;
-	}
-
-	@Override
-	public String getGroup(String identifier) {
-		return null;
-	}
-
-	@Override
-	public String getDisplayIdentifier(String identifier) {
-		return null;
-	}
-
-	@Override
-	public String getDisplayGroup(String group) {
-		return null;
-	}
 
 	private static final Logger LOGGER = LogManager.getLogger();
 
@@ -298,11 +348,11 @@ public enum StandardEntityManagers implements IEntityManager {
 	/**
 	 * Gets the entity class for that identifier.
 	 */
-	protected Class<? extends Entity> entityClassFor(String identifier) {
+	private static Class<? extends Entity> entityClassFor(IEntityManager manager, String identifier) {
 		if (!EntityList.getEntityNameList().contains(identifier)) {
 			return null;
 		}
-		assert getProvidedEntities().contains(identifier);
+		assert manager.getProvidedEntities().contains(identifier);
 
 		Class<? extends Entity> c = typeToClassMap.get(identifier);
 		assert c != null;
@@ -326,33 +376,6 @@ public enum StandardEntityManagers implements IEntityManager {
 		} catch (Throwable ex) {
 			LOGGER.error("[WDL] Failed to load entity list: ", ex);
 			throw new RuntimeException(ex);
-		}
-	}
-	public static final List<? extends IEntityManager> DEFAULTS = ImmutableList.copyOf(values());
-
-	// XXX This should be in the SPIGOT constant, but can't be due to access reasons
-	@Nonnull
-	public SpigotEntityType getSpigotType(String identifier) {
-		Class<? extends Entity> c = entityClassFor(identifier);
-		if (c == null) {
-			return SpigotEntityType.UNKNOWN;
-		}
-
-		// Spigot's mapping, which is based off of bukkit inheritance (which
-		// doesn't match vanilla)
-		if (EntityMob.class.isAssignableFrom(c) ||
-				EntitySlime.class.isAssignableFrom(c)) {
-			return SpigotEntityType.MONSTER;
-		} else if (EntityCreature.class.isAssignableFrom(c) ||
-				EntityAmbientCreature.class.isAssignableFrom(c)) {
-			return SpigotEntityType.ANIMAL;
-		} else if (EntityItemFrame.class.isAssignableFrom(c) ||
-				EntityPainting.class.isAssignableFrom(c) ||
-				EntityItem.class.isAssignableFrom(c) ||
-				EntityXPOrb.class.isAssignableFrom(c)) {
-			return SpigotEntityType.MISC;
-		} else {
-			return SpigotEntityType.OTHER;
 		}
 	}
 }

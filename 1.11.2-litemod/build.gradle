@@ -82,6 +82,8 @@ sourceSets {
         java {
             srcDir project(':1.11.2').file("src/main/java")
             srcDir project(':share').file("src/main/java")
+            exclude "wdl/StandardEntityManagers_1_10.java"
+            exclude "wdl/StandardEntityManagers_1_13.java"
             exclude "wdl/WDLChunkLoader_1_13.java"
             exclude "wdl/handler/block/BaseLargeChestHandler_1_13.java"
             exclude "wdl/versioned/GameRules_1_13.java"

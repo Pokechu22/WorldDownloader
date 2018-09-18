@@ -24,7 +24,6 @@ import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraft.client.resources.I18n;
 import wdl.EntityUtils;
 import wdl.EntityUtils.SpigotEntityType;
-import wdl.StandardEntityManagers;
 import wdl.WDL;
 import wdl.WDLPluginChannels;
 import wdl.config.IConfiguration;
@@ -124,13 +123,13 @@ public class GuiWDLEntityRangePresets extends Screen implements GuiYesNoCallback
 			Set<String> entities = EntityUtils.getEntityTypes();
 
 			if (id == ID_VANILLA) {
-				for (String entity : StandardEntityManagers.VANILLA.getProvidedEntities()) {
+				for (String entity : EntityUtils.STANDARD_VANILLA_MANAGER.getProvidedEntities()) {
 					config.setUserEntityTrackDistance(entity,
-							StandardEntityManagers.VANILLA.getTrackDistance(entity, null));
+							EntityUtils.STANDARD_VANILLA_MANAGER.getTrackDistance(entity, null));
 				}
 			} else if (id == ID_SPIGOT) {
-				for (String entity : StandardEntityManagers.SPIGOT.getProvidedEntities()) {
-					SpigotEntityType type = StandardEntityManagers.SPIGOT.getSpigotType(entity);
+				for (String entity : EntityUtils.STANDARD_SPIGOT_MANAGER.getProvidedEntities()) {
+					SpigotEntityType type = EntityUtils.STANDARD_SPIGOT_MANAGER.getSpigotType(entity);
 					// XXX Allow specifying the range for each type instead of the default
 					config.setUserEntityTrackDistance(entity,
 							type.getDefaultRange());

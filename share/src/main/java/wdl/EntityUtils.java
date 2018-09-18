@@ -45,6 +45,11 @@ import wdl.config.settings.EntitySettings.TrackDistanceMode;
 public class EntityUtils {
 	private static final Logger LOGGER = LogManager.getLogger();
 
+	/** The entity manager used on vanilla. */
+	public static final IEntityManager STANDARD_VANILLA_MANAGER = StandardEntityManagers.VANILLA;
+	/** The entity manager used on spigot. */
+	public static final ISpigotEntityManager STANDARD_SPIGOT_MANAGER = StandardEntityManagers.SPIGOT;
+
 	/**
 	 * Gets a collection of all types of entities, both basic ones and special
 	 * entities.
@@ -69,7 +74,8 @@ public class EntityUtils {
 		for (ModInfo<IEntityManager> info : WDLApi.getImplementingExtensions(IEntityManager.class)) {
 			managers.add(info.mod);
 		}
-		managers.addAll(StandardEntityManagers.DEFAULTS);
+		managers.add(STANDARD_SPIGOT_MANAGER);
+		managers.add(STANDARD_VANILLA_MANAGER);
 		return managers;
 	}
 
@@ -321,6 +327,11 @@ public class EntityUtils {
 				entity, distance, player, dx, dz, trackDistance, viewDistance, maxRange, (distance > threshold));
 
 		return distance > threshold;
+	}
+
+	public static interface ISpigotEntityManager extends IEntityManager {
+		@Nonnull
+		public abstract SpigotEntityType getSpigotType(String identifier);
 	}
 
 	/**
