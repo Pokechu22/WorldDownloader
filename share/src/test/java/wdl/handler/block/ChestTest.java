@@ -18,6 +18,7 @@ import static wdl.versioned.VersionedFunctions.customName;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
+import static org.junit.Assume.*;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -26,9 +27,11 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import wdl.VersionConstants;
 import wdl.handler.HandlerException;
 
 /**
@@ -290,6 +293,7 @@ public class ChestTest extends AbstractBlockHandlerTest<TileEntityChest, Contain
 	@Test
 	@Ignore("Known failure")
 	public void testQuintupleChest() throws HandlerException {
+		assumeTrue("Only applies in non-flattened versions", VersionConstants.getDataVersion() < 1451 /* FLATTENING */);
 		makeMockWorld();
 
 		BlockPos center = new BlockPos(0, 0, 0);
@@ -310,5 +314,44 @@ public class ChestTest extends AbstractBlockHandlerTest<TileEntityChest, Contain
 		runHandler(center, container);
 		// Fails due to only handling 2 of the chests
 		checkAllTEs();
+	}
+
+	/**
+	 * Checks behavior of multiple large chests near each other.
+	 */
+	@Test
+	public void testMultipleDoubleChests() throws HandlerException {
+		assumeTrue("Only applies in flattened versions", VersionConstants.getDataVersion() >= 1451 /* FLATTENING */);
+		for (EnumFacing direction : EnumFacing.Plane.HORIZONTAL) {
+			EnumFacing[] orientations = { direction.rotateY(), direction.rotateYCCW() };
+			for (EnumFacing orientation : orientations) {
+				makeMockWorld();
+
+				BlockPos center = new BlockPos(0, 0, 0);
+				BlockPos offset = center.offset(direction);
+
+				// Prepare a 6x3 grid
+				for (int row = -1; row <= 1; row++) {
+					for (int col = -2; col < 4; col++) {
+						BlockPos pos = center.offset(direction, col).offset(orientation, row);
+						placeBlockAt(pos, Blocks.CHEST, orientation);
+						TileEntityChest te = new TileEntityChest();
+						te.setInventorySlotContents(13, new ItemStack(Items.NAME_TAG).setDisplayName(customName(pos.toString())));
+						placeTEAt(pos, te);
+					}
+				}
+	
+				ContainerChest container = (ContainerChest) makeClientContainer(center);
+				TileEntity te1 = serverWorld.getTileEntity(center);
+				TileEntity te2 = serverWorld.getTileEntity(offset);
+	
+				runHandler(center, container);
+	
+				// Only those two were saved
+				assertThat(tileEntities.keySet(), containsInAnyOrder(center, offset));
+				assertSameNBT(tileEntities.get(center), te1);
+				assertSameNBT(tileEntities.get(offset), te2);
+			}
+		}
 	}
 }
