@@ -102,9 +102,9 @@ public class GuiWDLChunkOverrides extends Screen {
 	public GuiWDLChunkOverrides(GuiScreen parent) {
 		this.parent = parent;
 
-		if (WDL.thePlayer != null) {
-			this.scrollX = WDL.thePlayer.chunkCoordX;
-			this.scrollZ = WDL.thePlayer.chunkCoordZ;
+		if (WDL.player != null) {
+			this.scrollX = WDL.player.chunkCoordX;
+			this.scrollZ = WDL.player.chunkCoordZ;
 		}
 	}
 
@@ -252,8 +252,8 @@ public class GuiWDLChunkOverrides extends Screen {
 		}
 
 		// Player position.
-		int playerPosX = (int)(((WDL.thePlayer.posX / 16.0D) - scrollX) * SCALE + (width / 2));
-		int playerPosZ = (int)(((WDL.thePlayer.posZ / 16.0D) - scrollZ) * SCALE + (height / 2));
+		int playerPosX = (int)(((WDL.player.posX / 16.0D) - scrollX) * SCALE + (width / 2));
+		int playerPosZ = (int)(((WDL.player.posZ / 16.0D) - scrollZ) * SCALE + (height / 2));
 
 		drawHorizontalLine(playerPosX - 3, playerPosX + 3, playerPosZ, 0xFFFFFFFF);
 		// Vertical is 1px taller because it seems to be needed to make it proportional

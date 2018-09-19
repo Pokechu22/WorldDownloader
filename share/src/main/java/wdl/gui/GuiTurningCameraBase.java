@@ -74,9 +74,9 @@ public abstract class GuiTurningCameraBase extends Screen {
 	public void initGui() {
 		if (!initializedCamera) {
 			this.cam = VersionedFunctions.makePlayer();
-			this.cam.setLocationAndAngles(WDL.thePlayer.posX, WDL.thePlayer.posY,
-					WDL.thePlayer.posZ, WDL.thePlayer.rotationYaw, 0.0F);
-			this.yaw = WDL.thePlayer.rotationYaw;
+			this.cam.setLocationAndAngles(WDL.player.posX, WDL.player.posY,
+					WDL.player.posZ, WDL.player.rotationYaw, 0.0F);
+			this.yaw = WDL.player.rotationYaw;
 			this.oldCameraMode = WDL.minecraft.gameSettings.thirdPersonView;
 			this.oldHideHud = WDL.minecraft.gameSettings.hideGUI;
 			this.oldShowDebug = WDL.minecraft.gameSettings.showDebugInfo;
@@ -131,9 +131,9 @@ public abstract class GuiTurningCameraBase extends Screen {
 			double z = Math.sin((yaw - 90) / 180.0D * Math.PI);
 
 			double distance = truncateDistanceIfBlockInWay(x, z, .5);
-			this.cam.posY = WDL.thePlayer.posY;
-			this.cam.posX = WDL.thePlayer.posX - distance * x;
-			this.cam.posZ = WDL.thePlayer.posZ + distance * z;
+			this.cam.posY = WDL.player.posY;
+			this.cam.posX = WDL.player.posX - distance * x;
+			this.cam.posZ = WDL.player.posZ + distance * z;
 
 			this.cam.chunkCoordX = MathHelper.floor(this.cam.posX / 16.0D);
 			this.cam.chunkCoordY = MathHelper.floor(this.cam.posY / 16.0D);
@@ -154,8 +154,8 @@ public abstract class GuiTurningCameraBase extends Screen {
 	 * @return A new distance, equal to or less than <code>currentDistance</code>.
 	 */
 	private double truncateDistanceIfBlockInWay(double camX, double camZ, double currentDistance) {
-		Vec3d playerPos = WDL.thePlayer.getPositionVector().add(0, WDL.thePlayer.getEyeHeight(), 0);
-		Vec3d offsetPos = new Vec3d(WDL.thePlayer.posX - currentDistance * camX, WDL.thePlayer.posY + WDL.thePlayer.getEyeHeight(), WDL.thePlayer.posZ + camZ);
+		Vec3d playerPos = WDL.player.getPositionVector().add(0, WDL.player.getEyeHeight(), 0);
+		Vec3d offsetPos = new Vec3d(WDL.player.posX - currentDistance * camX, WDL.player.posY + WDL.player.getEyeHeight(), WDL.player.posZ + camZ);
 
 		// NOTE: Vec3.addVector and Vec3.add return new vectors and leave the
 		// current vector unmodified.

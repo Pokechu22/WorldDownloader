@@ -230,8 +230,8 @@ public class WDLPluginChannels {
 
 		if (receivedPackets.contains(1)) {
 			if (!canCacheChunks && saveRadius >= 0) {
-				int distanceX = chunk.x - WDL.thePlayer.chunkCoordX;
-				int distanceZ = chunk.z - WDL.thePlayer.chunkCoordZ;
+				int distanceX = chunk.x - WDL.player.chunkCoordX;
+				int distanceZ = chunk.z - WDL.player.chunkCoordZ;
 
 				if (Math.abs(distanceX) > saveRadius ||
 						Math.abs(distanceZ) > saveRadius) {

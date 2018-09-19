@@ -157,7 +157,7 @@ public class WDLEvents {
 			return true;
 		}
 
-		Entity ridingEntity = WDL.thePlayer.getRidingEntity();
+		Entity ridingEntity = WDL.player.getRidingEntity();
 		if (ridingEntity != null) {
 			// Check for ridden entities.  See EntityHandler.checkRiding for
 			// more info about why this is useful.
@@ -250,7 +250,7 @@ public class WDLEvents {
 			}
 		} else if (WDL.windowContainer instanceof ContainerChest
 				&& te instanceof TileEntityEnderChest) {
-			InventoryEnderChest inventoryEnderChest = WDL.thePlayer
+			InventoryEnderChest inventoryEnderChest = WDL.player
 					.getInventoryEnderChest();
 			int inventorySize = inventoryEnderChest.getSizeInventory();
 			int containerSize = WDL.windowContainer.inventorySlots.size();
@@ -356,13 +356,13 @@ public class WDLEvents {
 
 			int serverViewDistance = 10; // XXX hardcoded for now
 
-			if (EntityUtils.isWithinSavingDistance(entity, WDL.thePlayer,
+			if (EntityUtils.isWithinSavingDistance(entity, WDL.player,
 					threshold, serverViewDistance)) {
 				WDLMessages.chatMessageTranslated(
 						WDL.baseProps,
 						WDLMessageTypes.REMOVE_ENTITY,
 						"wdl.messages.removeEntity.savingDistance", entity,
-						entity.getPositionVector().toString(), WDL.thePlayer.getPositionVector(), threshold, serverViewDistance);
+						entity.getPositionVector().toString(), WDL.player.getPositionVector(), threshold, serverViewDistance);
 				WDL.newEntities.put(new ChunkPos(entity.chunkCoordX,
 						entity.chunkCoordZ), entity);
 			} else {
@@ -370,7 +370,7 @@ public class WDLEvents {
 						WDL.baseProps,
 						WDLMessageTypes.REMOVE_ENTITY,
 						"wdl.messages.removeEntity.allowingRemoveDistance", entity,
-						entity.getPositionVector().toString(), WDL.thePlayer.getPositionVector(), threshold, serverViewDistance);
+						entity.getPositionVector().toString(), WDL.player.getPositionVector(), threshold, serverViewDistance);
 			}
 		}
 	}

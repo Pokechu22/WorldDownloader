@@ -36,8 +36,8 @@ class GuiFunctions {
 	 */
 	static EntityPlayerSP makePlayer() {
 		return new EntityPlayerSP(WDL.minecraft, WDL.worldClient,
-				WDL.thePlayer.connection, WDL.thePlayer.getStats(),
-				WDL.thePlayer.getRecipeBook());
+				WDL.player.connection, WDL.player.getStats(),
+				WDL.player.getRecipeBook());
 	}
 
 	/* (non-javadoc)

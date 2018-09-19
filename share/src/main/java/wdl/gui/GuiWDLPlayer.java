@@ -167,8 +167,8 @@ public class GuiWDLPlayer extends Screen {
 	}
 
 	private void setPlayerPosToPlayerPosition() {
-		this.posX.setValue((int)WDL.thePlayer.posX);
-		this.posY.setValue((int)WDL.thePlayer.posY);
-		this.posZ.setValue((int)WDL.thePlayer.posZ);
+		this.posX.setValue((int)WDL.player.posX);
+		this.posY.setValue((int)WDL.player.posY);
+		this.posZ.setValue((int)WDL.player.posZ);
 	}
 }

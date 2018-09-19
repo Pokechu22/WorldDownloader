@@ -25,7 +25,7 @@ public interface IPlayerInfoEditor extends IWDLMod {
 	 * Edits the world info NBT before it is saved.
 	 *
 	 * @param player
-	 *            The player that is being saved ({@link wdl.WDL#thePlayer})
+	 *            The player that is being saved ({@link wdl.WDL#player})
 	 * @param saveHandler
 	 *            The current saveHandler ({@link wdl.WDL#saveHandler}).
 	 * @param tag

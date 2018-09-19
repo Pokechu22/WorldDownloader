@@ -95,9 +95,9 @@ public class WDLHooks {
 				if (ENABLE_PROFILER) PROFILER.endSection();  // "onWorldLoad"
 			} else {
 				if (ENABLE_PROFILER) PROFILER.startSection("inventoryCheck");
-				if (WDL.downloading && WDL.thePlayer != null) {
-					if (WDL.thePlayer.openContainer != WDL.windowContainer) {
-						if (WDL.thePlayer.openContainer == WDL.thePlayer.inventoryContainer) {
+				if (WDL.downloading && WDL.player != null) {
+					if (WDL.player.openContainer != WDL.windowContainer) {
+						if (WDL.player.openContainer == WDL.player.inventoryContainer) {
 							boolean handled;
 
 							if (ENABLE_PROFILER) PROFILER.startSection("onItemGuiClosed");
@@ -105,7 +105,7 @@ public class WDLHooks {
 							handled = WDLEvents.onItemGuiClosed();
 							if (ENABLE_PROFILER) PROFILER.endSection();  // "Core"
 
-							Container container = WDL.thePlayer.openContainer;
+							Container container = WDL.player.openContainer;
 							if (WDL.lastEntity != null) {
 								Entity entity = WDL.lastEntity;
 
@@ -158,7 +158,7 @@ public class WDLHooks {
 							if (ENABLE_PROFILER) PROFILER.endSection();  // "onItemGuiOpened"
 						}
 
-						WDL.windowContainer = WDL.thePlayer.openContainer;
+						WDL.windowContainer = WDL.player.openContainer;
 					}
 				}
 				if (ENABLE_PROFILER) PROFILER.endSection();  // "inventoryCheck"

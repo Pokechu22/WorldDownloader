@@ -124,12 +124,9 @@ public class WDL {
 	 */
 	public static NetworkManager networkManager = null;
 	/**
-	 * The current player. <br/>
-	 * In 1.7.10, a net.minecraft.client.entity.EntityClientPlayerMP was used
-	 * here, but now that does not exist, and it appears that the SinglePlayer
-	 * type is what is supposed to be used instead.
+	 * The current player.
 	 */
-	public static EntityPlayerSP thePlayer;
+	public static EntityPlayerSP player;
 
 	/**
 	 * Reference to the place where all the item stacks end up after receiving
@@ -457,11 +454,11 @@ public class WDL {
 	public static boolean loadWorld() {
 		worldName = ""; // The new (multi-)world name is unknown at the moment
 		worldClient = minecraft.world;
-		thePlayer = minecraft.player;
-		windowContainer = thePlayer.openContainer;
+		player = minecraft.player;
+		windowContainer = player.openContainer;
 		overrideLastModifiedCheck = false;
 
-		NetworkManager newNM = thePlayer.connection.getNetworkManager();
+		NetworkManager newNM = player.connection.getNetworkManager();
 
 		// Handle checking if the server changes here so that
 		// messages are loaded FIRST.
@@ -483,12 +480,12 @@ public class WDL {
 				WDLMessages.chatMessageTranslated(
 						WDL.baseProps,
 						WDLMessageTypes.ON_WORLD_LOAD,
-						"wdl.messages.onWorldLoad.spigot", thePlayer.getServerBrand());
+						"wdl.messages.onWorldLoad.spigot", player.getServerBrand());
 			} else {
 				WDLMessages.chatMessageTranslated(
 						WDL.baseProps,
 						WDLMessageTypes.ON_WORLD_LOAD,
-						"wdl.messages.onWorldLoad.vanilla", thePlayer.getServerBrand());
+						"wdl.messages.onWorldLoad.vanilla", player.getServerBrand());
 			}
 
 			startOnChange = false;
@@ -503,12 +500,12 @@ public class WDL {
 				WDLMessages.chatMessageTranslated(
 						WDL.baseProps,
 						WDLMessageTypes.ON_WORLD_LOAD,
-						"wdl.messages.onWorldLoad.spigot", thePlayer.getServerBrand());
+						"wdl.messages.onWorldLoad.spigot", player.getServerBrand());
 			} else {
 				WDLMessages.chatMessageTranslated(
 						WDL.baseProps,
 						WDLMessageTypes.ON_WORLD_LOAD,
-						"wdl.messages.onWorldLoad.vanilla", thePlayer.getServerBrand());
+						"wdl.messages.onWorldLoad.vanilla", player.getServerBrand());
 			}
 
 			if (startOnChange) {
@@ -657,7 +654,7 @@ public class WDL {
 				I18n.format("wdl.saveProgress.playerData.creatingNBT"), 1);
 
 		NBTTagCompound playerNBT = new NBTTagCompound();
-		thePlayer.writeWithoutTypeId(playerNBT);
+		player.writeWithoutTypeId(playerNBT);
 
 		progressScreen.setMinorTaskProgress(
 				I18n.format("wdl.saveProgress.playerData.editingNBT"), 2);
@@ -670,7 +667,7 @@ public class WDL {
 					I18n.format("wdl.saveProgress.playerData.extension",
 							info.getDisplayName()), taskNum);
 
-			info.mod.editPlayerInfo(thePlayer, saveHandler, playerNBT);
+			info.mod.editPlayerInfo(player, saveHandler, playerNBT);
 
 			taskNum++;
 		}
@@ -681,9 +678,9 @@ public class WDL {
 		File playersDirectory = new File(saveHandler.getWorldDirectory(),
 				"playerdata");
 		playersDirectory.mkdirs();
-		File playerFileTmp = new File(playersDirectory, thePlayer
+		File playerFileTmp = new File(playersDirectory, player
 				.getUniqueID().toString() + ".dat.tmp");
-		File playerFile = new File(playersDirectory, thePlayer
+		File playerFile = new File(playersDirectory, player
 				.getUniqueID().toString() + ".dat");
 
 		try (FileOutputStream stream = new FileOutputStream(playerFileTmp)) {
@@ -1099,7 +1096,7 @@ public class WDL {
 
 		if (gametypeOption == WorldSettings.GameMode.KEEP) {
 			// XXX Do we want this?  Or should it just use the actual mode without overriding?
-			if (thePlayer.capabilities.isCreativeMode) { // capabilities
+			if (player.capabilities.isCreativeMode) { // capabilities
 				worldInfoNBT.setInt("GameType", 1); // Creative
 			} else {
 				worldInfoNBT.setInt("GameType", 0); // Survival
@@ -1159,9 +1156,9 @@ public class WDL {
 		WorldSettings.SpawnMode spawn = worldProps.getValue(WorldSettings.SPAWN);
 
 		if (spawn != WorldSettings.SpawnMode.AUTO) {
-			int x = spawn.getX(thePlayer, worldProps);
-			int y = spawn.getY(thePlayer, worldProps);
-			int z = spawn.getZ(thePlayer, worldProps);
+			int x = spawn.getX(player, worldProps);
+			int y = spawn.getY(player, worldProps);
+			int z = spawn.getZ(player, worldProps);
 			worldInfoNBT.setInt("SpawnX", x);
 			worldInfoNBT.setInt("SpawnY", y);
 			worldInfoNBT.setInt("SpawnZ", z);
@@ -1448,8 +1445,8 @@ public class WDL {
 	 * This is detected based off of the server brand.
 	 */
 	public static boolean isSpigot() {
-		if (thePlayer != null && thePlayer.getServerBrand() != null) {
-			String brand = thePlayer.getServerBrand().toLowerCase();
+		if (player != null && player.getServerBrand() != null) {
+			String brand = player.getServerBrand().toLowerCase();
 			return brand.contains("spigot") || brand.contains("paper");
 		}
 		return false;
@@ -1513,7 +1510,7 @@ public class WDL {
 		state.addDetail("minecraft", minecraft);
 		state.addDetail("worldClient", worldClient);
 		state.addDetail("networkManager", networkManager);
-		state.addDetail("thePlayer", thePlayer);
+		state.addDetail("thePlayer", player);
 		state.addDetail("windowContainer", windowContainer);
 		state.addDetail("lastClickedBlock", lastClickedBlock);
 		state.addDetail("lastEntity", lastEntity);
