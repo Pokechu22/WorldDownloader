@@ -16,7 +16,7 @@ package wdl.config.settings;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
-import static wdl.config.settings.TestUtils.*;
+import static wdl.config.settings.SettingTestUtils.*;
 
 import java.util.function.BooleanSupplier;
 

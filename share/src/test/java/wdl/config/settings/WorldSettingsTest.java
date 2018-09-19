@@ -17,7 +17,7 @@ package wdl.config.settings;
 import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
-import static wdl.config.settings.TestUtils.*;
+import static wdl.config.settings.SettingTestUtils.*;
 
 import org.junit.Test;
 

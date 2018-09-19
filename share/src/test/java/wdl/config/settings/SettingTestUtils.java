@@ -29,8 +29,8 @@ import wdl.config.Setting;
 /**
  * Utilities for testing settings.
  */
-final class TestUtils {
-	private TestUtils() { throw new AssertionError(); }
+public final class SettingTestUtils {
+	private SettingTestUtils() { throw new AssertionError(); }
 
 	/**
 	 * Verifies that all translation strings used by the given setting exist.
