@@ -14,7 +14,8 @@
  */
 package wdl;
 
-import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import wdl.api.IWDLMessageType;
 import wdl.config.CyclableSetting;
 import wdl.config.settings.MessageSettings;
@@ -42,12 +43,12 @@ public abstract class MessageTypeCategory {
 	/**
 	 * Gets the user-facing display name.
 	 */
-	public abstract String getDisplayName();
+	public abstract ITextComponent getDisplayName();
 
 	/**
 	 * Gets the user-facing description.
 	 */
-	public abstract String getDescription();
+	public abstract ITextComponent getDescription();
 
 	@Override
 	public String toString() {
@@ -101,13 +102,13 @@ public abstract class MessageTypeCategory {
 		}
 
 		@Override
-		public String getDisplayName() {
-			return I18n.format(titleKey);
+		public ITextComponent getDisplayName() {
+			return new TextComponentTranslation(titleKey);
 		}
 
 		@Override
-		public String getDescription() {
-			return I18n.format(descKey);
+		public ITextComponent getDescription() {
+			return new TextComponentTranslation(descKey);
 		}
 
 	}

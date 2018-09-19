@@ -26,6 +26,9 @@ import com.google.common.collect.ImmutableMap;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import wdl.EntityRealigner;
 import wdl.HologramHandler;
 import wdl.MessageTypeCategory;
@@ -192,13 +195,13 @@ class APIImpl implements WDLApi.APIInstance {
 		}
 
 		@Override
-		public String getDisplayName() {
-			return mod.getDisplayName();
+		public ITextComponent getDisplayName() {
+			return new TextComponentString(mod.getDisplayName());
 		}
 
 		@Override
-		public String getDescription() {
-			return "Messages for " + mod.getDisplayName(); // XXX Not translated
+		public ITextComponent getDescription() {
+			return new TextComponentTranslation("Messages for " + mod.getDisplayName()); // XXX Not translated
 		}
 	}
 

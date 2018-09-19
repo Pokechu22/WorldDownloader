@@ -17,7 +17,6 @@ package wdl.config.settings;
 import java.util.Optional;
 
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import wdl.MessageTypeCategory;
 import wdl.WDLMessages.MessageRegistration;
@@ -92,7 +91,7 @@ public final class MessageSettings {
 
 		@Override
 		public ITextComponent getDescription() {
-			return new TextComponentString(category.getDescription());
+			return category.getDescription();
 		}
 	}
 
