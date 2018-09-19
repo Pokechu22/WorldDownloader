@@ -18,7 +18,8 @@ package wdl;
 import static net.minecraft.util.text.TextFormatting.*;
 import static wdl.MessageTypeCategory.*;
 
-import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import wdl.api.IMessageTypeAdder;
 import wdl.api.IWDLMessageType;
@@ -94,8 +95,8 @@ public enum WDLMessageTypes implements IWDLMessageType {
 	final MessageTypeCategory category;
 
 	@Override
-	public String getDisplayName() {
-		return I18n.format(displayTextKey);
+	public ITextComponent getDisplayName() {
+		return new TextComponentTranslation(displayTextKey);
 	}
 
 	@Override
@@ -109,8 +110,8 @@ public enum WDLMessageTypes implements IWDLMessageType {
 	}
 
 	@Override
-	public String getDescription() {
-		return I18n.format(descriptionKey);
+	public ITextComponent getDescription() {
+		return new TextComponentTranslation(descriptionKey);
 	}
 
 	@Override

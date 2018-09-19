@@ -13,13 +13,14 @@
  */
 package wdl.api;
 
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
 
 /**
  * Represents a message type capable of being used in WDL logging.
  * <br/>
- * It is recomended that an enum is used to implement this.  See
+ * It is recommended that an enum is used to implement this.  See
  * {@link wdl.WDLMessageTypes} for an example.
  */
 public interface IWDLMessageType {
@@ -40,13 +41,13 @@ public interface IWDLMessageType {
 	/**
 	 * Gets the name to use on buttons and such.
 	 */
-	public abstract String getDisplayName();
+	public abstract ITextComponent getDisplayName();
 	/**
 	 * Gets the description text for this message, used in the messages GUI.
 	 * <br/>
 	 * If you want to include a newline, use <code>\n</code>.
 	 */
-	public abstract String getDescription();
+	public abstract ITextComponent getDescription();
 	/**
 	 * Wheter this type of message should be enabled by default.
 	 */

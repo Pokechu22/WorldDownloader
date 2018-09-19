@@ -154,7 +154,7 @@ public final class MessageSettings {
 
 		@Override
 		public ITextComponent getDescription() {
-			return new TextComponentString(registration.type.getDescription());
+			return registration.type.getDescription();
 		}
 	}
 }
