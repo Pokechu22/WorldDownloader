@@ -266,7 +266,7 @@ public class WDL {
 			LOGGER.debug("Failed to load global properties", e);
 		}
 		baseProps = new Configuration(globalProps);
-		worldProps = new Configuration(baseProps);
+		worldProps = baseProps;
 	}
 
 	/**
@@ -928,7 +928,7 @@ public class WDL {
 
 		if (baseProps.getValue(MiscSettings.LINKED_WORLDS).isEmpty()) {
 			isMultiworld = false;
-			worldProps = new Configuration(baseProps);
+			worldProps = baseProps;
 		} else {
 			isMultiworld = true;
 		}
