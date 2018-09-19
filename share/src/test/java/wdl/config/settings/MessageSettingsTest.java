@@ -27,6 +27,6 @@ public class MessageSettingsTest extends MaybeMixinTest {
 		checkAllText(MessageSettings.ENABLE_ALL_MESSAGES);
 	}
 
-	// MessageCategorySetting and MessageTypeSetting will be handled by the WDLMessages test
+	// MessageCategorySetting and MessageTypeSetting are handled by WDLMessageTypesTest
 
 }
