@@ -194,8 +194,6 @@ public class WDLHooks {
 				if (ENABLE_PROFILER) PROFILER.endSection();  // "Core"
 
 				if (ENABLE_PROFILER) PROFILER.endSection();  // "onChunkNoLongerNeeded"
-			} else {
-				LOGGER.debug("Adding new empty chunk at " + x + ", " + z + " (already has: " + (sender.getChunkProvider().getLoadedChunk(x, z) != null) + ")");
 			}
 
 			if (ENABLE_PROFILER) PROFILER.endSection();
