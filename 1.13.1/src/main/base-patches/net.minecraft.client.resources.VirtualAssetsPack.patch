@@ -1,6 +1,6 @@
 --- net/minecraft/client/resources/VirtualAssetsPack.java
 +++ net/minecraft/client/resources/VirtualAssetsPack.java
-@@ -17,7 +17,7 @@
+@@ -16,7 +16,7 @@
  	private final ResourceIndex field_195785_b;
  
  	public VirtualAssetsPack(ResourceIndex p_i48115_1_) {
