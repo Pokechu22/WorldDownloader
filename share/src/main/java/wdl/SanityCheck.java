@@ -20,6 +20,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.InventoryBasic;
 import wdl.ducks.INetworkNameable;
+import wdl.versioned.VersionedFunctions;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -39,7 +40,7 @@ enum SanityCheck {
 		 */
 		@Override
 		public void run() throws Exception {
-			int wireID = Block.REGISTRY.getId(Blocks.TRIPWIRE);
+			int wireID = VersionedFunctions.getBlockId(Blocks.TRIPWIRE);
 			for (int meta = 0; meta <= 15; meta++) {
 				int id = wireID << 4 | meta;
 				// Note: Deprecated but supported under forge, and this is

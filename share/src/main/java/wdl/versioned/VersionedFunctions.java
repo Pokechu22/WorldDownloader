@@ -48,6 +48,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.ILockableContainer;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.storage.MapData;
 import net.minecraft.world.storage.SaveHandler;
@@ -61,6 +62,8 @@ import wdl.handler.entity.EntityHandler;
  * as whether a world has skylight.
  */
 public class VersionedFunctions {
+	private VersionedFunctions() { throw new AssertionError(); }
+
 	/**
 	 * Returns true if the given world has skylight data.
 	 *
@@ -388,5 +391,21 @@ public class VersionedFunctions {
 	 */
 	public static void setClipboardString(String text) {
 		GuiFunctions.setClipboardString(text);
+	}
+
+	/**
+	 * Gets the numeric ID for the given block.
+	 * @return A numeric ID, the meaning and value of which is unspecified.
+	 */
+	public static int getBlockId(Block block) {
+		return RegistryFunctions.getBlockId(block);
+	}
+
+	/**
+	 * Gets the numeric ID for the given biome.
+	 * @return A numeric ID, the meaning and value of which is unspecified.
+	 */
+	public static int getBiomeId(Biome biome) {
+		return RegistryFunctions.getBiomeId(biome);
 	}
 }

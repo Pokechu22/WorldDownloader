@@ -185,7 +185,7 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 		Biome[] biomes = chunk.getBiomes();
 		int[] biomeData = new int[biomes.length];
 		for (int i = 0; i < biomes.length; ++i) {
-			biomeData[i] = Biome.REGISTRY.getId(biomes[i]);
+			biomeData[i] = VersionedFunctions.getBiomeId(biomes[i]);
 		}
 
 		compound.setIntArray("Biomes", biomeData);

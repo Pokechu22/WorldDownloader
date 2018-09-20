@@ -103,6 +103,7 @@ sourceSets {
             srcDir project(':share').file("src/main/java")
             exclude "wdl/StandardEntityManagers_1_12.java"
             exclude "wdl/StandardEntityManagers_1_13.java"
+            exclude "wdl/StandardEntityManagers_1_13_1.java"
             exclude "wdl/WDLChunkLoader_1_13.java"
             exclude "wdl/handler/block/ShulkerBoxHandler.java"
             exclude "wdl/handler/block/BaseLargeChestHandler_1_13.java"
@@ -114,6 +115,7 @@ sourceSets {
             exclude "wdl/versioned/Handlers_1_12.java"
             exclude "wdl/versioned/Handlers_1_13.java"
             exclude "wdl/versioned/Packets_1_13.java"
+            exclude "wdl/versioned/Registries_1_13_1.java"
             exclude "wdl/gui/widget/ExtButton_1_12.java"
             exclude "wdl/gui/widget/ExtButton_1_13.java"
             exclude "wdl/gui/widget/ExtGuiList_1_12.java"
@@ -146,6 +148,7 @@ sourceSets {
             srcDir project(':share').file("src/test/java")
             exclude "wdl/handler/SimpleWorld_1_12.java"
             exclude "wdl/handler/SimpleWorld_1_13.java"
+            exclude "wdl/handler/SimpleWorld_1_13_1.java"
             exclude "wdl/handler/block/ShulkerBoxTest.java"
         }
     }
