@@ -284,7 +284,7 @@ public class WDLMessages {
 
 		// Can't use a TextComponentTranslation here because it doesn't like new lines.
 		String tooltipText = I18n.format("wdl.messages.tooltip",
-				type.getDisplayName()).replace("\r", "");
+				type.getDisplayName().getFormattedText()).replace("\\n", "\n");
 		ITextComponent tooltip = new TextComponentString(tooltipText);
 
 		ITextComponent text = new TextComponentString("");
