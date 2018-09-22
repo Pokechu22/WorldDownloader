@@ -17,12 +17,12 @@ package wdl.config;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.annotation.CheckForSigned;
 
 import net.minecraft.crash.CrashReportCategory;
+import wdl.EntityUtils;
 
 /**
  * An immutable default configuration.
@@ -102,12 +102,9 @@ public class DefaultConfiguration implements IConfiguration {
 		throw new UnsupportedOperationException("Cannot change entity track settings on the default configuration (" + entityType + "->" + value + ")");
 	}
 
-	// XXX this is a bit of an ugly hack.  Set in WDL.<clinit>.
-	public static final Set<String> DANGEROUS_ENTITY_TYPES = new HashSet<>();
-
 	@Override
 	public boolean isEntityTypeEnabled(String entityType) {
-		return !DANGEROUS_ENTITY_TYPES.contains(entityType);
+		return EntityUtils.isEntityEnabledByDefault(entityType);
 	}
 
 	@Override

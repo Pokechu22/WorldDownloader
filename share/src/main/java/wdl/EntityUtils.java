@@ -329,6 +329,27 @@ public class EntityUtils {
 		return distance > threshold;
 	}
 
+	/**
+	 * Checks if the given entity type is specified as being enabled by default.
+	 * A few dangerous entities are disabled by default.
+	 *
+	 * This method is used by the default configuration.
+	 *
+	 * @param identifier The type of entity.
+	 * @return True if the entity is enabled by default, false if it isn't.
+	 */
+	public static boolean isEntityEnabledByDefault(String identifier) {
+		for (IEntityManager manager : getEntityManagers()) {
+			if (!manager.getProvidedEntities().contains(identifier)) {
+				continue;
+			}
+			return manager.enabledByDefault(identifier);
+		}
+		// XXX Should an unknown entity be enabled by default?  Currently returning true,
+		// but it'll when the track distance is -1
+		return true;
+	}
+
 	public static interface ISpigotEntityManager extends IEntityManager {
 		@Nonnull
 		public abstract SpigotEntityType getSpigotType(String identifier);

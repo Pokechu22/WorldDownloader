@@ -77,6 +77,14 @@ import wdl.api.IEntityManager;
 class StandardEntityManagers {
 	private StandardEntityManagers() { throw new AssertionError(); }
 
+	// For most entities, we want them to be enabled by default. A few dangerous
+	// entities should't be saved, though.
+	private static final Set<String> DANGEROUS_ENTITIES = ImmutableSet.of(
+			"FireworksRocketEntity",
+			"EnderDragon",
+			"WitherBoss",
+			"PrimedTnt");
+
 	public static final ISpigotEntityManager SPIGOT = new ISpigotEntityManager() {
 		@Override
 		public Set<String> getProvidedEntities() {
@@ -125,6 +133,11 @@ class StandardEntityManagers {
 			}
 		}
 
+		@Override
+		public boolean enabledByDefault(String identifier) {
+			return !DANGEROUS_ENTITIES.contains(identifier);
+		}
+
 		// Not intended to be used as a regular extension, so don't worry about
 		// these methods
 		@Override
@@ -134,12 +147,6 @@ class StandardEntityManagers {
 		@Override
 		public String getEnvironmentErrorMessage(String version) {
 			return null;
-		}
-
-		// For most entities, we want them to be enabled by default.
-		@Override
-		public boolean enabledByDefault(String identifier) {
-			return true;
 		}
 
 		@Override
@@ -289,6 +296,11 @@ class StandardEntityManagers {
 			return null;
 		}
 
+		@Override
+		public boolean enabledByDefault(String identifier) {
+			return !DANGEROUS_ENTITIES.contains(identifier);
+		}
+
 		// Not intended to be used as a regular extension, so don't worry about
 		// these methods
 		@Override
@@ -298,12 +310,6 @@ class StandardEntityManagers {
 		@Override
 		public String getEnvironmentErrorMessage(String version) {
 			return null;
-		}
-
-		// For most entities, we want them to be enabled by default.
-		@Override
-		public boolean enabledByDefault(String identifier) {
-			return true;
 		}
 	};
 
