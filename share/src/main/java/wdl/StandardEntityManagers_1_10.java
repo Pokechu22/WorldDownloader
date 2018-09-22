@@ -24,6 +24,7 @@ import javax.annotation.Nonnull;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableSet;
 
 import net.minecraft.client.resources.I18n;
@@ -348,11 +349,13 @@ class StandardEntityManagers {
 	/**
 	 * Gets the entity class for that identifier.
 	 */
-	private static Class<? extends Entity> entityClassFor(IEntityManager manager, String identifier) {
+	@VisibleForTesting
+	static Class<? extends Entity> entityClassFor(IEntityManager manager, String identifier) {
+		assert manager.getProvidedEntities().contains(identifier);
+
 		if (!EntityList.getEntityNameList().contains(identifier)) {
 			return null;
 		}
-		assert manager.getProvidedEntities().contains(identifier);
 
 		Class<? extends Entity> c = typeToClassMap.get(identifier);
 		assert c != null;

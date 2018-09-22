@@ -22,6 +22,7 @@ import javax.annotation.Nonnull;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableSet;
 
 import net.minecraft.client.resources.I18n;
@@ -313,13 +314,15 @@ class StandardEntityManagers {
 	/**
 	 * Gets the entity class for that identifier.
 	 */
-	private static Class<? extends Entity> entityClassFor(IEntityManager manager, String identifier) {
+	@VisibleForTesting
+	static Class<? extends Entity> entityClassFor(IEntityManager manager, String identifier) {
+		assert manager.getProvidedEntities().contains(identifier);
+
 		ResourceLocation loc = new ResourceLocation(identifier);
 
 		if (!IRegistry.field_212629_r.func_212607_c(loc)) {
 			return null;
 		}
-		assert manager.getProvidedEntities().contains(identifier);
 
 		Class<? extends Entity> c = IRegistry.field_212629_r.get(loc).getEntityClass();
 		assert c != null;
