@@ -280,12 +280,14 @@ class StandardEntityManagers {
 
 		@Override
 		public String getDisplayIdentifier(String identifier) {
-			String i18nKey = "entity." + identifier + ".name";
+			String translationKey = EntityList.func_191302_a(new ResourceLocation(identifier));
+			String i18nKey = "entity." + translationKey + ".name";
 			if (I18n.hasKey(i18nKey)) {
 				return I18n.format(i18nKey);
 			} else {
 				// We want to be clear that there is no result, rather than returning
 				// the key (the default for failed formatting)
+				// Note that some entities do not have translation strings (https://bugs.mojang.com/browse/MC-68446)
 				return null;
 			}
 		}

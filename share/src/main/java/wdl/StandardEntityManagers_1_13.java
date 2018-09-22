@@ -276,12 +276,14 @@ class StandardEntityManagers {
 
 		@Override
 		public String getDisplayIdentifier(String identifier) {
-			String i18nKey = "entity." + identifier + ".name";
+			String i18nKey = EntityType.getById(identifier).getTranslationKey();
 			if (I18n.hasKey(i18nKey)) {
 				return I18n.format(i18nKey);
 			} else {
 				// We want to be clear that there is no result, rather than returning
 				// the key (the default for failed formatting)
+				// Since MC-68446 has been fixed, this shouldn't be hit normally,
+				// but it's best to still be careful.
 				return null;
 			}
 		}

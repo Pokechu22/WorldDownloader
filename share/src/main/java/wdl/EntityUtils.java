@@ -255,7 +255,7 @@ public class EntityUtils {
 
 	/**
 	 * Gets the display name for the given entity type. As a last resort,
-	 * returns the type itself.
+	 * returns the type itself (this may be hit due to MC-68446).
 	 */
 	@Nonnull
 	public static String getDisplayType(@Nonnull String identifier) {

@@ -23,7 +23,6 @@ import static org.mockito.Mockito.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -69,15 +68,6 @@ public class StandardEntityManagersTest {
 		Entity entity = cls.getConstructor(World.class).newInstance(world);
 		assertThat(StandardEntityManagers.VANILLA.getIdentifierFor(entity), is(identifier));
 		world.close();
-	}
-
-	/**
-	 * Checks that the display name is present.
-	 */
-	@Test
-	@Ignore("Currently broken on some versions; vanilla data is also bad")
-	public void testDisplayName() {
-		assertNotNull(StandardEntityManagers.VANILLA.getDisplayIdentifier(identifier));
 	}
 
 	/**

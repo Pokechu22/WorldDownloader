@@ -278,6 +278,7 @@ class StandardEntityManagers {
 			} else {
 				// We want to be clear that there is no result, rather than returning
 				// the key (the default for failed formatting)
+				// Note that some entities do not have translation strings (https://bugs.mojang.com/browse/MC-68446)
 				return null;
 			}
 		}
