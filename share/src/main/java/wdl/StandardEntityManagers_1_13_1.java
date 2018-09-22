@@ -332,7 +332,7 @@ class StandardEntityManagers {
 			return null;
 		}
 
-		Class<? extends Entity> c = IRegistry.field_212629_r.get(loc).getEntityClass();
+		Class<? extends Entity> c = IRegistry.field_212629_r.func_212608_b(loc).getEntityClass();
 		assert c != null;
 
 		return c;
