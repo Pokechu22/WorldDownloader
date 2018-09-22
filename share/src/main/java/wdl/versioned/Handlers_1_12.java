@@ -22,7 +22,6 @@ import com.google.common.collect.ImmutableList;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBeacon;
 import net.minecraft.block.BlockBrewingStand;
@@ -144,21 +143,6 @@ final class HandlerFunctions {
 		} else {
 			return false;
 		}
-	}
-
-	/* (non-javadoc)
-	 * @see VersionedFunctions#getChunkListClass
-	 */
-	@SuppressWarnings("rawtypes")
-	static Class<Long2ObjectMap> getChunkListClass() {
-		return Long2ObjectMap.class;
-	}
-
-	/* (non-javadoc)
-	 * @see VersionedFunctions#customName
-	 */
-	static String customName(String name) {
-		return name;
 	}
 
 	/* (non-javadoc)

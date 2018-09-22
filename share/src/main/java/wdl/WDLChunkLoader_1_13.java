@@ -21,7 +21,6 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import net.minecraft.nbt.INBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -54,12 +53,6 @@ import wdl.versioned.VersionedFunctions;
  */
 abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 
-	/**
-	 * The class that is used for the {@linkplain AnvilChunkLoader#chunksToSave} field.
-	 */
-	@SuppressWarnings("rawtypes")
-	static final Class<Object2ObjectMap> CHUNKS_TO_SAVE_CLASS = Object2ObjectMap.class;
-
 	private static final Logger LOGGER = LogManager.getLogger();
 	/**
 	 * Gets the save folder for the given WorldProvider, respecting Forge's
@@ -89,8 +82,8 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 	protected WDLChunkLoaderBase(File file) {
 		super(file, null);
 		@SuppressWarnings("unchecked")
-		Object2ObjectMap<ChunkPos, NBTTagCompound> chunksToSave =
-				ReflectionUtils.findAndGetPrivateField(this, AnvilChunkLoader.class, CHUNKS_TO_SAVE_CLASS);
+		Map<ChunkPos, NBTTagCompound> chunksToSave =
+				ReflectionUtils.findAndGetPrivateField(this, AnvilChunkLoader.class, VersionedFunctions.getChunksToSaveClass());
 		this.chunksToSave = chunksToSave;
 		this.chunkSaveLocation = file;
 	}

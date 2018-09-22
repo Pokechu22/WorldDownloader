@@ -69,10 +69,10 @@ public class ReflectionUtilsUsageTest {
 		ReflectionUtils.findField(ChunkProviderClient.class, VersionedFunctions.getChunkListClass());
 	}
 
-	/** Handles {@link WDLChunkLoader#WDLChunkLoader(File)} */
+	/** Handles {@link WDLChunkLoaderBase#WDLChunkLoaderBase(File)} */
 	@Test
 	public void testWDLChunkLoaderInit() {
-		ReflectionUtils.findField(AnvilChunkLoader.class, WDLChunkLoaderBase.CHUNKS_TO_SAVE_CLASS);
+		ReflectionUtils.findField(AnvilChunkLoader.class, VersionedFunctions.getChunksToSaveClass());
 	}
 
 	/** Handles {@link BrewingStandHandler#handle} */

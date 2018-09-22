@@ -20,6 +20,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 import javax.annotation.MatchesPattern;
@@ -50,6 +51,7 @@ import net.minecraft.world.ILockableContainer;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.storage.AnvilChunkLoader;
 import net.minecraft.world.storage.MapData;
 import net.minecraft.world.storage.SaveHandler;
 import wdl.config.settings.GeneratorSettings.Generator;
@@ -113,28 +115,6 @@ public class VersionedFunctions {
 	public static boolean shouldImportBlockEntity(String entityID, BlockPos pos,
 			Block block, NBTTagCompound blockEntityNBT, Chunk chunk) {
 		return HandlerFunctions.shouldImportBlockEntity(entityID, pos, block, blockEntityNBT, chunk);
-	}
-
-	/**
-	 * Gets the class used to store the list of chunks in ChunkProviderClient.
-	 */
-	public static Class<?> getChunkListClass() {
-		return HandlerFunctions.getChunkListClass();
-	}
-
-	/**
-	 * (EVIL) Converts name to the appropriate type for a custom name on this
-	 * version.
-	 *
-	 * @param name The name. Non-null.
-	 * @param <T> The type that is expected to be returned, based on the method
-	 *             being called.
-	 * @return Either a String or a TextComponentString, depending on the version; T
-	 *         should be inferred to the right one of those.
-	 */
-	@SuppressWarnings("unchecked")
-	public static <T> T customName(String name) {
-		return (T)HandlerFunctions.customName(name);
 	}
 
 	/**
@@ -407,5 +387,37 @@ public class VersionedFunctions {
 	 */
 	public static int getBiomeId(Biome biome) {
 		return RegistryFunctions.getBiomeId(biome);
+	}
+
+	/**
+	 * Gets the class used to store the list of chunks in ChunkProviderClient
+	 * ({@link ChunkProviderClient#loadedChunks}).
+	 */
+	public static Class<?> getChunkListClass() {
+		return TypeFunctions.getChunkListClass();
+	}
+
+	/**
+	 * Gets the class used to store the list of chunks in pending saving in AnvilChunkLoader
+	 * ({@link AnvilChunkLoader#chunksToSave}).
+	 */
+	@SuppressWarnings("rawtypes")
+	public static Class<? extends Map> getChunksToSaveClass() {
+		return TypeFunctions.getChunksToSaveClass();
+	}
+
+	/**
+	 * (EVIL) Converts name to the appropriate type for a custom name on this
+	 * version.
+	 *
+	 * @param name The name. Non-null.
+	 * @param <T> The type that is expected to be returned, based on the method
+	 *             being called.
+	 * @return Either a String or a TextComponentString, depending on the version; T
+	 *         should be inferred to the right one of those.
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T customName(String name) {
+		return (T)TypeFunctions.customName(name);
 	}
 }

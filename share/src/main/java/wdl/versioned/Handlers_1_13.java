@@ -22,7 +22,6 @@ import com.google.common.collect.ImmutableList;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBeacon;
 import net.minecraft.block.BlockBrewingStand;
@@ -41,7 +40,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityCommandBlock;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.ILockableContainer;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -143,21 +141,6 @@ final class HandlerFunctions {
 		} else {
 			return false;
 		}
-	}
-
-	/* (non-javadoc)
-	 * @see VersionedFunctions#getChunkListClass
-	 */
-	@SuppressWarnings("rawtypes")
-	static Class<Long2ObjectMap> getChunkListClass() {
-		return Long2ObjectMap.class;
-	}
-
-	/* (non-javadoc)
-	 * @see VersionedFunctions#customName
-	 */
-	static TextComponentString customName(String name) {
-		return new TextComponentString(name);
 	}
 
 	/* (non-javadoc)

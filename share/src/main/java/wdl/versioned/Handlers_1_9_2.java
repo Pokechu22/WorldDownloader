@@ -14,8 +14,6 @@
  */
 package wdl.versioned;
 
-import java.util.List;
-
 import javax.annotation.Nullable;
 
 import com.google.common.collect.BiMap;
@@ -141,21 +139,6 @@ final class HandlerFunctions {
 		} else {
 			return false;
 		}
-	}
-
-	/* (non-javadoc)
-	 * @see VersionedFunctions#getChunkListClass
-	 */
-	@SuppressWarnings("rawtypes")
-	static Class<List> getChunkListClass() {
-		return List.class;
-	}
-
-	/* (non-javadoc)
-	 * @see VersionedFunctions#customName
-	 */
-	static String customName(String name) {
-		return name;
 	}
 
 	/* (non-javadoc)
