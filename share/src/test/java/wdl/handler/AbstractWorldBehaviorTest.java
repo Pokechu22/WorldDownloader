@@ -17,8 +17,6 @@ package wdl.handler;
 import static org.junit.Assume.*;
 import static org.mockito.Mockito.*;
 
-import java.util.UUID;
-
 import javax.annotation.Nullable;
 
 import org.apache.logging.log4j.LogManager;
@@ -27,7 +25,6 @@ import org.apache.logging.log4j.Logger;
 import junit.framework.ComparisonFailure;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
@@ -42,14 +39,10 @@ import net.minecraft.inventory.ContainerHopper;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.profiler.Profiler;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.dimension.Dimension;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.storage.ISaveHandler;
-import net.minecraft.world.storage.WorldInfo;
 import wdl.MaybeMixinTest;
+import wdl.TestWorld;
 import wdl.ducks.INetworkNameable;
 
 /**
@@ -61,8 +54,8 @@ import wdl.ducks.INetworkNameable;
 public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	/** Worlds corresponding to what the server and client know */
-	protected TestWorld serverWorld, clientWorld;
+	protected TestWorld.ClientWorld clientWorld;
+	protected TestWorld.ServerWorld serverWorld;
 	/** Player entities.  Both have valid, empty inventories. */
 	protected EntityPlayer clientPlayer, serverPlayer;
 
@@ -73,8 +66,8 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 		clientPlayer = mock(EntityPlayer.class, "Client player");
 		serverPlayer = mock(EntityPlayer.class, "Server player");
 
-		clientWorld = TestWorld.create(true);
-		serverWorld = TestWorld.create(false);
+		clientWorld = TestWorld.makeClient();
+		serverWorld = TestWorld.makeServer();
 
 		clientPlayer.inventory = new InventoryPlayer(clientPlayer);
 		serverPlayer.inventory = new InventoryPlayer(serverPlayer);
@@ -82,38 +75,6 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 		when(serverPlayer.getHorizontalFacing()).thenCallRealMethod();
 		clientPlayer.world = clientWorld;
 		serverPlayer.world = serverWorld;
-	}
-
-	protected static class TestWorld extends SimpleWorld {
-		public static TestWorld create(boolean client) {
-			ISaveHandler saveHandler = mock(ISaveHandler.class);
-			WorldInfo info = mock(WorldInfo.class);
-			Dimension dimension = mock(Dimension.class);
-			when(dimension.getType()).thenReturn(DimensionType.OVERWORLD);
-
-			String name = client ? "Client world" : "Server world";
-
-			return new TestWorld(saveHandler, info, dimension, new Profiler(), client, name);
-		}
-
-		private TestWorld(ISaveHandler saveHandlerIn, WorldInfo info, Dimension dimension, Profiler profilerIn, boolean client, String name) {
-			super(saveHandlerIn, info, dimension, profilerIn, client);
-			this.name = name;
-		}
-
-		private final String name;
-
-		@Override
-		public String toString() {
-			return this.name;
-		}
-
-		public void addEntity(Entity e, int eid) {
-			e.setEntityId(eid);
-			e.setUniqueId(new UUID(0, eid));
-			this.spawnEntity(e);
-			this.entitiesById.addKey(eid, e);
-		}
 	}
 
 	/**

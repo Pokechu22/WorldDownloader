@@ -14,10 +14,11 @@
  */
 package wdl;
 
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -37,13 +38,9 @@ import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.NetHandlerPlayServer;
-import net.minecraft.profiler.Profiler;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
-import net.minecraft.world.storage.ISaveHandler;
-import net.minecraft.world.storage.WorldInfo;
+import wdl.TestWorld.ServerWorld;
 
 /**
  * An experimental test around the entity tracking code.  Not particularly complete.
@@ -90,8 +87,7 @@ public class EntityUtilsTest extends MaybeMixinTest {
 	 */
 	protected void runTrackerTest(Function<World, ? extends Entity> entitySupplier, int threshold,
 			int serverViewDistance, int numTicks, BiPredicate<Integer, Entity> keepEntity, IntFunction<Vec3d> posFunc) {
-		WorldServer world = mock(WorldServer.class, withSettings().defaultAnswer(RETURNS_MOCKS)
-				.useConstructor(mock(MinecraftServer.class, RETURNS_MOCKS), mock(ISaveHandler.class), mock(WorldInfo.class), 0, mock(Profiler.class)));
+		ServerWorld world = TestWorld.makeServer();
 
 		EntityPlayerMP player = mock(EntityPlayerMP.class, RETURNS_DEEP_STUBS);
 		List<Entity> trackedEntities = new ArrayList<>();
@@ -153,6 +149,8 @@ public class EntityUtilsTest extends MaybeMixinTest {
 			}
 			tracker.tick();
 		}
+
+		world.close();
 	}
 
 }
