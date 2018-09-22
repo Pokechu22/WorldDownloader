@@ -287,7 +287,7 @@ class StandardEntityManagers {
 
 		@Override
 		public String getDisplayIdentifier(String identifier) {
-			String translationKey = EntityList.func_191302_a(new ResourceLocation(identifier));
+			String translationKey = EntityList.getTranslationName(new ResourceLocation(identifier));
 			String i18nKey = "entity." + translationKey + ".name";
 			if (I18n.hasKey(i18nKey)) {
 				return I18n.format(i18nKey);

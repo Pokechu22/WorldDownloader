@@ -37,7 +37,8 @@ func_71359_d,getSaveLoader,0,
 func_73869_a,keyTyped,0,
 func_146201_a,textboxKeyTyped,0,
 func_180124_b,getEntityNameList,0,
-func_75621_b,getEntityString,0,
+func_75621_b,getEntityString,0,"Returns the string that identifies this Entity's class"
+func_191302_a,getTranslationName,0,"Gets the original name for the entity, used in versions prior to 1.11. This name is also used for translation strings.\n \n@return The entity's original name, or null if the given entity's type is not known."
 func_191301_a,getKey,0,
 func_191306_a,getKey,0,
 func_110545_a,reloadResourcePack,0,

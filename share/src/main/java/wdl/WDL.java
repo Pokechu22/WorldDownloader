@@ -1085,7 +1085,7 @@ public class WDL {
 
 		if (gametypeOption == WorldSettings.GameMode.KEEP) {
 			// XXX Do we want this?  Or should it just use the actual mode without overriding?
-			if (player.capabilities.isCreativeMode) { // capabilities
+			if (player.abilities.isCreativeMode) { // capabilities
 				worldInfoNBT.setInt("GameType", 1); // Creative
 			} else {
 				worldInfoNBT.setInt("GameType", 0); // Survival

@@ -55,14 +55,14 @@ abstract class ExtGuiScreen extends GuiScreen implements IExtGuiScreen {
 	@Override
 	public final <T extends GuiList<E>, E extends GuiListEntry<E>> T addList(T list) {
 		this.listList.add(list);
-		this.eventListeners.add(list);
+		this.children.add(list);
 		return list;
 	}
 
 	@Override
 	public final <T extends GuiTextField> T addTextField(T field) {
 		this.textFieldList.add(field);
-		this.eventListeners.add(field);
+		this.children.add(field);
 		return field;
 	}
 
