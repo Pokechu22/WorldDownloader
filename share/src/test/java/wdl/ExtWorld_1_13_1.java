@@ -34,6 +34,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.profiler.Profiler;
+import net.minecraft.scoreboard.Scoreboard;
+import net.minecraft.scoreboard.ServerScoreboard;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -80,10 +82,16 @@ abstract class ExtWorldClient extends WorldClient {
 	}
 
 	private final RecipeManager recipeManager = mock(RecipeManager.class);
+	private final Scoreboard scoreboard = mock(Scoreboard.class);
 
 	@Override
 	public RecipeManager getRecipeManager() {
 		return this.recipeManager;
+	}
+
+	@Override
+	public Scoreboard getScoreboard() {
+		return this.scoreboard;
 	}
 
 	/** Places a block, creating the proper state. */
@@ -144,10 +152,16 @@ abstract class ExtWorldServer extends WorldServer {
 	}
 
 	private final RecipeManager recipeManager = mock(RecipeManager.class);
+	private final ServerScoreboard scoreboard = mock(ServerScoreboard.class);
 
 	@Override
 	public RecipeManager getRecipeManager() {
 		return this.recipeManager;
+	}
+
+	@Override
+	public ServerScoreboard getScoreboard() {
+		return this.scoreboard;
 	}
 
 	/** Places a block, creating the proper state. */

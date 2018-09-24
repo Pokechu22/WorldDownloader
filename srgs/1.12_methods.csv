@@ -50,6 +50,8 @@ func_82763_b,getRules,0,
 func_146383_a,setPreset,0,
 func_146384_e,getPreset,0,
 func_192035_E,getRecipeBook,0,
+func_95999_t,getCustomName,0,
+func_96094_a,setCustomName,0,
 func_190575_a,setCustomName,0,
 func_110133_a,setCustomName,0,
 func_145999_a,setCustomName,0,(Was setName)
