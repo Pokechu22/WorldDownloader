@@ -97,10 +97,10 @@ public class HorseTest<T extends EquineEntity> extends AbstractEntityHandlerTest
 		public NBTTagCompound getNBT(boolean addChests) {
 			NBTTagCompound tag = new NBTTagCompound();
 			if (this.typeID != null && HAS_NAMESPACED_ENTITIES) {
-				tag.setInt("Type", typeID);
+				tag.putInt("Type", typeID);
 			}
 			if (this.chestable) {
-				tag.setBoolean("ChestedHorse", addChests);
+				tag.putBoolean("ChestedHorse", addChests);
 			} else {
 				assertFalse(addChests);
 			}

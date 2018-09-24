@@ -313,8 +313,8 @@ public abstract class AbstractEntityHandlerTest<E extends Entity, C extends Cont
 		NBTTagCompound actualNBT = new NBTTagCompound();
 		actual.writeWithoutTypeId(actualNBT);
 		for (String key : getIgnoreTags()) {
-			expectedNBT.removeTag(key);
-			actualNBT.removeTag(key);
+			expectedNBT.remove(key);
+			actualNBT.remove(key);
 		}
 		assertSameNBT(expectedNBT, actualNBT);
 	}

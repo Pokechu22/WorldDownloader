@@ -729,7 +729,7 @@ public class WDL {
 
 		// There's a root tag that stores the above one.
 		NBTTagCompound rootWorldInfoNBT = new NBTTagCompound();
-		rootWorldInfoNBT.setTag("Data", worldInfoNBT);
+		rootWorldInfoNBT.put("Data", worldInfoNBT);
 
 		progressScreen.setMinorTaskProgress(
 				I18n.format("wdl.saveProgress.worldMetadata.editingNBT"), 2);
@@ -1012,17 +1012,17 @@ public class WDL {
 		PlayerSettings.Health health = worldProps.getValue(PlayerSettings.HEALTH);
 
 		if (health != PlayerSettings.Health.KEEP) {
-			playerNBT.setShort("Health", health.healthValue);
+			playerNBT.putShort("Health", health.healthValue);
 		}
 
 		// foodLevel, foodTimer, foodSaturationLevel, foodExhaustionLevel
 		PlayerSettings.Hunger food = worldProps.getValue(PlayerSettings.HUNGER);
 
 		if (food != PlayerSettings.Hunger.KEEP) {
-			playerNBT.setInt("foodLevel", food.foodLevel);
-			playerNBT.setInt("foodTickTimer", food.foodTickTimer);
-			playerNBT.setFloat("foodSaturationLevel", food.foodSaturationLevel);
-			playerNBT.setFloat("foodExhaustionLevel", food.foodExhaustionLevel);
+			playerNBT.putInt("foodLevel", food.foodLevel);
+			playerNBT.putInt("foodTickTimer", food.foodTickTimer);
+			playerNBT.putFloat("foodSaturationLevel", food.foodSaturationLevel);
+			playerNBT.putFloat("foodExhaustionLevel", food.foodExhaustionLevel);
 		}
 
 		// Player Position
@@ -1038,23 +1038,23 @@ public class WDL {
 			pos.add(new NBTTagDouble(x + 0.5D));
 			pos.add(new NBTTagDouble(y + 0.621D));
 			pos.add(new NBTTagDouble(z + 0.5D));
-			playerNBT.setTag("Pos", pos);
+			playerNBT.put("Pos", pos);
 			NBTTagList motion = new NBTTagList();
 			motion.add(new NBTTagDouble(0.0D));
 			//Force them to land on the ground?
 			motion.add(new NBTTagDouble(-0.0001D));
 			motion.add(new NBTTagDouble(0.0D));
-			playerNBT.setTag("Motion", motion);
+			playerNBT.put("Motion", motion);
 			NBTTagList rotation = new NBTTagList();
 			rotation.add(new NBTTagFloat(0.0f));
 			rotation.add(new NBTTagFloat(0.0f));
-			playerNBT.setTag("Rotation", rotation);
+			playerNBT.put("Rotation", rotation);
 		}
 
 		// If the player is able to fly, spawn them flying.
 		// Helps ensure they don't fall out of the world.
 		if (playerNBT.getCompound("abilities").getBoolean("mayfly")) {
-			playerNBT.getCompound("abilities").setBoolean("flying", true);
+			playerNBT.getCompound("abilities").putBoolean("flying", true);
 		}
 	}
 
@@ -1071,14 +1071,14 @@ public class WDL {
 		String worldName = worldProps.getValue(MiscSettings.WORLD_NAME);
 
 		if (worldName.isEmpty()) {
-			worldInfoNBT.setString("LevelName", baseName);
+			worldInfoNBT.putString("LevelName", baseName);
 		} else {
-			worldInfoNBT.setString("LevelName", baseName + " - " + worldName);
+			worldInfoNBT.putString("LevelName", baseName + " - " + worldName);
 		}
 
 		// Cheats
 		boolean allowCommands = worldProps.getValue(WorldSettings.ALLOW_CHEATS);
-		worldInfoNBT.setBoolean("allowCommands", allowCommands);
+		worldInfoNBT.putBoolean("allowCommands", allowCommands);
 
 		// GameType
 		WorldSettings.GameMode gametypeOption = worldProps.getValue(WorldSettings.GAME_MODE);
@@ -1086,20 +1086,20 @@ public class WDL {
 		if (gametypeOption == WorldSettings.GameMode.KEEP) {
 			// XXX Do we want this?  Or should it just use the actual mode without overriding?
 			if (player.abilities.isCreativeMode) { // capabilities
-				worldInfoNBT.setInt("GameType", 1); // Creative
+				worldInfoNBT.putInt("GameType", 1); // Creative
 			} else {
-				worldInfoNBT.setInt("GameType", 0); // Survival
+				worldInfoNBT.putInt("GameType", 0); // Survival
 			}
 		} else {
-			worldInfoNBT.setInt("GameType", gametypeOption.gamemodeID);
-			worldInfoNBT.setBoolean("hardcore", gametypeOption.hardcore);
+			worldInfoNBT.putInt("GameType", gametypeOption.gamemodeID);
+			worldInfoNBT.putBoolean("hardcore", gametypeOption.hardcore);
 		}
 
 		// Time
 		WorldSettings.Time timeOption = worldProps.getValue(WorldSettings.TIME);
 
 		if (timeOption != WorldSettings.Time.KEEP) {
-			worldInfoNBT.setLong("Time", timeOption.timeValue);
+			worldInfoNBT.putLong("Time", timeOption.timeValue);
 		}
 
 		// RandomSeed
@@ -1115,30 +1115,30 @@ public class WDL {
 			}
 		}
 
-		worldInfoNBT.setLong("RandomSeed", seed);
+		worldInfoNBT.putLong("RandomSeed", seed);
 
 		// MapFeatures
 		boolean mapFeatures = worldProps.getValue(GeneratorSettings.GENERATE_STRUCTURES);
-		worldInfoNBT.setBoolean("MapFeatures", mapFeatures);
+		worldInfoNBT.putBoolean("MapFeatures", mapFeatures);
 		// generatorName
 		String generatorName = worldProps.getValue(GeneratorSettings.GENERATOR_NAME);
-		worldInfoNBT.setString("generatorName", generatorName);
+		worldInfoNBT.putString("generatorName", generatorName);
 		// generatorOptions
 		String generatorOptions = worldProps.getValue(GeneratorSettings.GENERATOR_OPTIONS);
 		// NOTE: The type varies between versions; in 1.12.2 it's a string tag and in 1.13 it's a compound.
-		worldInfoNBT.setTag("generatorOptions", VersionedFunctions.createGeneratorOptionsTag(generatorOptions));
+		worldInfoNBT.put("generatorOptions", VersionedFunctions.createGeneratorOptionsTag(generatorOptions));
 		// generatorVersion
 		int generatorVersion = worldProps.getValue(GeneratorSettings.GENERATOR_VERSION);
-		worldInfoNBT.setInt("generatorVersion", generatorVersion);
+		worldInfoNBT.putInt("generatorVersion", generatorVersion);
 
 		// Weather
 		WorldSettings.Weather weather = worldProps.getValue(WorldSettings.WEATHER);
 
 		if (weather != WorldSettings.Weather.KEEP) {
-			worldInfoNBT.setBoolean("raining", weather.raining);
-			worldInfoNBT.setInt("rainTime", weather.rainTime);
-			worldInfoNBT.setBoolean("thundering", weather.thundering);
-			worldInfoNBT.setInt("thunderTime", weather.thunderTime);
+			worldInfoNBT.putBoolean("raining", weather.raining);
+			worldInfoNBT.putInt("rainTime", weather.rainTime);
+			worldInfoNBT.putBoolean("thundering", weather.thundering);
+			worldInfoNBT.putInt("thunderTime", weather.thunderTime);
 		}
 
 		// Spawn
@@ -1148,16 +1148,16 @@ public class WDL {
 			int x = spawn.getX(player, worldProps);
 			int y = spawn.getY(player, worldProps);
 			int z = spawn.getZ(player, worldProps);
-			worldInfoNBT.setInt("SpawnX", x);
-			worldInfoNBT.setInt("SpawnY", y);
-			worldInfoNBT.setInt("SpawnZ", z);
-			worldInfoNBT.setBoolean("initialized", true);
+			worldInfoNBT.putInt("SpawnX", x);
+			worldInfoNBT.putInt("SpawnY", y);
+			worldInfoNBT.putInt("SpawnZ", z);
+			worldInfoNBT.putBoolean("initialized", true);
 		}
 
 		// Gamerules (most of these are already populated)
 		NBTTagCompound gamerules = worldInfoNBT.getCompound("GameRules");
 		for (String rule : worldProps.getGameRules()) {
-			gamerules.setString(rule, worldProps.getGameRule(rule));
+			gamerules.putString(rule, worldProps.getGameRule(rule));
 		}
 
 		// Forge (TODO: move this elsewhere!)
@@ -1226,7 +1226,7 @@ public class WDL {
 
 			e.getValue().write(data);
 
-			mapNBT.setTag("data", data);
+			mapNBT.put("data", data);
 
 			try (FileOutputStream stream = new FileOutputStream(mapFile)) {
 				CompressedStreamTools.writeCompressed(mapNBT, stream);
