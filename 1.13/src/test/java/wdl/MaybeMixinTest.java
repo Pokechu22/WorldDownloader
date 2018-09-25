@@ -14,19 +14,21 @@
  */
 package wdl;
 
+import java.io.IOException;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import net.minecraft.resources.IResourcePack;
-import net.minecraft.resources.ResourcePackType;
-import net.minecraft.resources.SimpleReloadableResourceManager;
 import net.minecraft.client.resources.LanguageManager;
 import net.minecraft.client.resources.ResourceIndex;
 import net.minecraft.client.resources.VirtualAssetsPack;
 import net.minecraft.init.Bootstrap;
+import net.minecraft.resources.IResourcePack;
+import net.minecraft.resources.ResourcePackType;
+import net.minecraft.resources.SimpleReloadableResourceManager;
 
 /**
  * This is a more or less empty class that is used to specify the runner that
@@ -63,6 +65,11 @@ public abstract class MaybeMixinTest {
 		IResourcePack pack = new VirtualAssetsPack(new ResourceIndex() {}); // needs modified VirtualAssetsPack, I think
 		resourceManager.addResourcePack(pack);
 		languageManager.onResourceManagerReload(resourceManager);
+		try {
+			pack.close(); // Does nothing (call is only present to suppress warnings)
+		} catch (IOException ex) {
+			throw new AssertionError(ex); // Should not happen
+		}
 		LOGGER.debug("Set up I18n.");
 	}
 }

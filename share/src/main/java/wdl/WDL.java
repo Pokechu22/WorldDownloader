@@ -797,11 +797,10 @@ public class WDL {
 		WDLMessages.chatMessageTranslated(WDL.baseProps,
 				WDLMessageTypes.SAVING, "wdl.messages.saving.savingChunks");
 
-		// Get the ChunkProviderClient from WorldClient
-		ChunkProviderClient chunkProvider = worldClient
-				.getChunkProvider();
 		// Get the list of loaded chunks
-		Object obj = ReflectionUtils.findAndGetPrivateField(chunkProvider, VersionedFunctions.getChunkListClass());
+		Object obj = ReflectionUtils.findAndGetPrivateField(worldClient.getChunkProvider(),
+				ChunkProviderClient.class,
+				VersionedFunctions.getChunkListClass());
 		List<Chunk> chunks;
 		if (obj instanceof List<?>) {
 			@SuppressWarnings("unchecked")
