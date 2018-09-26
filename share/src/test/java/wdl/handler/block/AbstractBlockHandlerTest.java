@@ -22,19 +22,13 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 
 import net.minecraft.block.BlockChest;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.player.inventory.ContainerLocalMenu;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryBasic;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -52,8 +46,6 @@ import wdl.versioned.VersionedFunctions;
  */
 public abstract class AbstractBlockHandlerTest<B extends TileEntity, C extends Container, H extends BlockHandler<B, C>>
 		extends AbstractWorldBehaviorTest {
-
-	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
 	 * Constructor.
@@ -168,38 +160,7 @@ public abstract class AbstractBlockHandlerTest<B extends TileEntity, C extends C
 		}
 		String guiID = ((IInteractionObject) serverTE).getGuiID();
 
-		// Now do stuff as the client would see it...
-		// NetHandlerPlayClient.handleOpenWindow(SPacketOpenWindow)
-		IInventory clientInv;
-		if (guiID.equals("minecraft:container")) {
-			// Ender chest -- don't know if we can actually get here
-			clientInv = new InventoryBasic(serverInv.getDisplayName(),
-					serverInv.getSizeInventory());
-		} else { // skip a few
-			clientInv = new ContainerLocalMenu(guiID, serverInv.getDisplayName(),
-					serverInv.getSizeInventory());
-		}
-		// Copy items and fields (this normally happens later, but whatever)
-		for (int i = 0; i < serverInv.getSizeInventory(); i++) {
-			ItemStack serverItem = serverInv.getStackInSlot(i);
-			if (serverItem == null) {
-				// In older versions with nullable items
-				continue;
-			}
-			clientInv.setInventorySlotContents(i, serverItem.copy());
-		}
-		for (int i = 0; i < serverInv.getFieldCount(); i++) {
-			clientInv.setField(i, serverInv.getField(i));
-		}
-
-		Container container = makeContainer(guiID, clientPlayer, clientInv);
-		if (container == null) {
-			// Unknown -- i.e. minecraft:container
-			LOGGER.warn("Unknown container type {} for {} at {}", guiID, serverTE, pos);
-			return new ContainerChest(clientPlayer.inventory, clientInv, clientPlayer);
-		} else {
-			return container;
-		}
+		return makeContainer(guiID, serverInv);
 	}
 
 	/**
@@ -241,5 +202,12 @@ public abstract class AbstractBlockHandlerTest<B extends TileEntity, C extends C
 		NBTTagCompound actualNBT = new NBTTagCompound();
 		actual.write(actualNBT);
 		assertSameNBT(expectedNBT, actualNBT);
+	}
+
+	@Override
+	public void resetState() {
+		super.resetState();
+		origTEPoses = null;
+		tileEntities = null;
 	}
 }

@@ -19,15 +19,12 @@ import static org.junit.Assert.*;
 
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableList;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import net.minecraft.client.player.inventory.ContainerLocalMenu;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IMerchant;
@@ -36,7 +33,6 @@ import net.minecraft.entity.item.EntityMinecartContainer;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.passive.EquineEntity;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.ContainerHorseChest;
 import net.minecraft.inventory.ContainerHorseInventory;
 import net.minecraft.inventory.ContainerMerchant;
@@ -62,8 +58,6 @@ import wdl.versioned.VersionedFunctions;
  */
 public abstract class AbstractEntityHandlerTest<E extends Entity, C extends Container, H extends EntityHandler<? super E, ? super C>>
 		extends AbstractWorldBehaviorTest {
-
-	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
 	 * Constructor.
@@ -252,29 +246,8 @@ public abstract class AbstractEntityHandlerTest<E extends Entity, C extends Cont
 		IInventory serverInv = minecart;
 		String guiID = minecart.getGuiID();
 		assertThat(guiID, is(not("minecraft:container")));
-		IInventory clientInv = new ContainerLocalMenu(guiID, serverInv.getDisplayName(),
-				serverInv.getSizeInventory());
 
-		for (int i = 0; i < serverInv.getSizeInventory(); i++) {
-			ItemStack serverItem = serverInv.getStackInSlot(i);
-			if (serverItem == null) {
-				// In older versions with nullable items
-				continue;
-			}
-			clientInv.setInventorySlotContents(i, serverItem.copy());
-		}
-		for (int i = 0; i < serverInv.getFieldCount(); i++) {
-			clientInv.setField(i, serverInv.getField(i));
-		}
-
-		Container container = makeContainer(guiID, clientPlayer, clientInv);
-		if (container == null) {
-			// Unknown -- i.e. minecraft:container
-			LOGGER.warn("Unknown container type {} for {}", guiID, minecart);
-			return new ContainerChest(clientPlayer.inventory, clientInv, clientPlayer);
-		} else {
-			return container;
-		}
+		return makeContainer(guiID, serverInv);
 	}
 
 	/**
@@ -345,5 +318,13 @@ public abstract class AbstractEntityHandlerTest<E extends Entity, C extends Cont
 		entity.writeWithoutTypeId(tag);
 		tag.merge(update);
 		entity.read(tag);
+	}
+
+	@Override
+	public void resetState() {
+		super.resetState();
+		nextEID = 0;
+		serverEntities = null;
+		clientEntities = null;
 	}
 }

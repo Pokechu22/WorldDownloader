@@ -14,34 +14,37 @@
  */
 package wdl.handler;
 
+import static org.junit.Assert.*;
 import static org.junit.Assume.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
-
-import javax.annotation.Nullable;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.junit.After;
+import org.mockito.AdditionalAnswers;
 
 import junit.framework.ComparisonFailure;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.player.inventory.ContainerLocalMenu;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Bootstrap;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ContainerBeacon;
-import net.minecraft.inventory.ContainerBrewingStand;
-import net.minecraft.inventory.ContainerChest;
-import net.minecraft.inventory.ContainerDispenser;
-import net.minecraft.inventory.ContainerFurnace;
-import net.minecraft.inventory.ContainerHopper;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryBasic;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import wdl.MaybeMixinTest;
+import wdl.ReflectionUtils;
 import wdl.TestWorld;
 import wdl.ducks.INetworkNameable;
 
@@ -57,14 +60,18 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 	protected TestWorld.ClientWorld clientWorld;
 	protected TestWorld.ServerWorld serverWorld;
 	/** Player entities.  Both have valid, empty inventories. */
-	protected EntityPlayer clientPlayer, serverPlayer;
+	protected EntityPlayerSP clientPlayer;
+	protected EntityPlayerMP serverPlayer;
+
+	protected Minecraft mc;
+	private final Container[] openContainerReference = { null };
 
 	/**
 	 * Creates a mock world, returning air for blocks and null for TEs.
 	 */
 	protected void makeMockWorld() {
-		clientPlayer = mock(EntityPlayer.class, "Client player");
-		serverPlayer = mock(EntityPlayer.class, "Server player");
+		clientPlayer = mock(EntityPlayerSP.class, "Client player");
+		serverPlayer = mock(EntityPlayerMP.class, "Server player");
 
 		clientWorld = TestWorld.makeClient();
 		serverWorld = TestWorld.makeServer();
@@ -75,6 +82,18 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 		when(serverPlayer.getHorizontalFacing()).thenCallRealMethod();
 		clientPlayer.world = clientWorld;
 		serverPlayer.world = serverWorld;
+		doCallRealMethod().when(clientPlayer).displayGUIChest(any());
+		doCallRealMethod().when(serverPlayer).displayGUIChest(any());
+
+		mc = mock(Minecraft.class);
+		ReflectionUtils.findAndSetPrivateField(null, Minecraft.class, Minecraft.class, mc);
+
+		openContainerReference[0] = null;
+		doAnswer(AdditionalAnswers.<GuiScreen>answerVoid(screen -> {
+			GuiContainer container = (GuiContainer)screen;
+			openContainerReference[0] = container.inventorySlots;
+		})).when(mc).displayGuiScreen(any());
+		ReflectionUtils.findAndSetPrivateField(clientPlayer, EntityPlayerSP.class, Minecraft.class, mc);
 	}
 
 	/**
@@ -111,34 +130,38 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 	}
 
 	/**
-	 * Creates a container with the given GUI ID. This method is needed to implement
-	 * shulker boxes (as we can't reference them in older versions), but is a fairly
-	 * ugly hack.
+	 * Creates a container with the given GUI id.
 	 *
 	 * @param guiID
 	 *            The ID
-	 * @param player
-	 *            The player for the GUI
-	 * @param clientInv
-	 *            The other inventory
-	 * @return the container, or null if it can't be figured out
+	 * @param serverInv
+	 *            The inventory for the container (will be copied in this method).
+	 * @return The container.  If it can't be figured out, throws an exception.
 	 */
-	@Nullable
-	protected Container makeContainer(String guiID, EntityPlayer player, IInventory clientInv) {
-		if ("minecraft:chest".equals(guiID)) {
-			return new ContainerChest(player.inventory, clientInv, player);
-		} else if ("minecraft:hopper".equals(guiID)) {
-			return new ContainerHopper(player.inventory, clientInv, player);
-		} else if ("minecraft:furnace".equals(guiID)) {
-			return new ContainerFurnace(player.inventory, clientInv);
-		} else if ("minecraft:brewing_stand".equals(guiID)) {
-			return new ContainerBrewingStand(player.inventory, clientInv);
-		} else if ("minecraft:beacon".equals(guiID)) {
-			return new ContainerBeacon(player.inventory, clientInv);
-		} else if ("minecraft:dispenser".equals(guiID) || "minecraft:dropper".equals(guiID)) {
-			return new ContainerDispenser(player.inventory, clientInv);
+	protected Container makeContainer(String guiID, IInventory serverInv) {
+		ContainerLocalMenu m = new ContainerLocalMenu(guiID, serverInv.getDisplayName(), serverInv.getSizeInventory());
+
+		// Defer to displayGUIChest for actual creation logic
+		clientPlayer.displayGUIChest(m);
+		Container container = openContainerReference[0];
+		openContainerReference[0] = null;
+
+		assertNotNull("Should have created a container with ID " + guiID, container);
+
+		// Copy items and fields.
+		for (int i = 0; i < serverInv.getSizeInventory(); i++) {
+			ItemStack serverItem = serverInv.getStackInSlot(i);
+			if (serverItem == null) {
+				// In older versions with nullable items
+				continue;
+			}
+			m.setInventorySlotContents(i, serverItem.copy());
 		}
-		return null;
+		for (int i = 0; i < serverInv.getFieldCount(); i++) {
+			m.setField(i, serverInv.getField(i));
+		}
+
+		return container;
 	}
 
 	/**
@@ -177,5 +200,16 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 			LOGGER.warn("Mixins were not applied; skipping this test");
 		}
 		assumeTrue("Expected mixins to be applied", applied);
+	}
+
+	@After
+	public void resetState() {
+		// Just to avoid dangling references to mocks
+		clientWorld = null;
+		serverWorld = null;
+		clientPlayer = null;
+		serverPlayer = null;
+		mc = null;
+		ReflectionUtils.findAndSetPrivateField(null, Minecraft.class, Minecraft.class, null);
 	}
 }

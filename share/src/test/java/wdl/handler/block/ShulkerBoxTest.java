@@ -14,16 +14,13 @@
  */
 package wdl.handler.block;
 
-import static wdl.versioned.VersionedFunctions.customName;
+import static wdl.versioned.VersionedFunctions.*;
 
 import org.junit.Test;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ContainerShulkerBox;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityShulkerBox;
 import net.minecraft.util.math.BlockPos;
@@ -33,15 +30,6 @@ public class ShulkerBoxTest extends AbstractBlockHandlerTest<TileEntityShulkerBo
 
 	public ShulkerBoxTest() {
 		super(TileEntityShulkerBox.class, ContainerShulkerBox.class, ShulkerBoxHandler.class);
-	}
-
-	@Override
-	protected Container makeContainer(String guiID, EntityPlayer player, IInventory clientInv) {
-		if ("minecraft:shulker_box".equals(guiID)) {
-			return new ContainerShulkerBox(player.inventory, clientInv, player);
-		} else {
-			return super.makeContainer(guiID, player, clientInv);
-		}
 	}
 
 	@Test
