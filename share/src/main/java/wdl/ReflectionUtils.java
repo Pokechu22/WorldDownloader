@@ -162,7 +162,7 @@ public class ReflectionUtils {
 	 * Uses Java's reflection API to get access to an inaccessible field
 	 *
 	 * @param object
-	 *            Object that the field should be read from or null if the field
+	 *            Object that the field should be set on or null if the field
 	 *            is static
 	 * @param typeOfObject
 	 *            The type of the object to use, for fields on (potentially)
@@ -188,7 +188,7 @@ public class ReflectionUtils {
 	 * Uses Java's reflection API to set the value of an inaccessible field
 	 *
 	 * @param object
-	 *            Object that the field should be read from or null if the field
+	 *            Object that the field should be set on or null if the field
 	 *            is static
 	 * @param typeOfObject
 	 *            The type of the object to use, for fields on (potentially)
