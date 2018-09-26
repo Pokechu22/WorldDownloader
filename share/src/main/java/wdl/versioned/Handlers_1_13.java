@@ -36,6 +36,7 @@ import net.minecraft.block.BlockShulkerBox;
 import net.minecraft.block.BlockTrappedChest;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.nbt.INBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityCommandBlock;
@@ -199,5 +200,12 @@ final class HandlerFunctions {
 		VANILLA_VILLAGER_CAREERS.put(3, blacksmith);
 		VANILLA_VILLAGER_CAREERS.put(4, butcher);
 		VANILLA_VILLAGER_CAREERS.put(5, nitwit);
+	}
+
+	/* (non-javadoc)
+	 * @see VersionedFunctions#nbtString
+	 */
+	static String nbtString(INBTBase tag) {
+		return tag.toFormattedComponent("    ", 0).getString();
 	}
 }

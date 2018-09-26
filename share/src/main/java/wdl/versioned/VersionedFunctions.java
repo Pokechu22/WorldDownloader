@@ -171,6 +171,17 @@ public class VersionedFunctions {
 	public static final Int2ObjectMap<BiMap<String, Integer>> VANILLA_VILLAGER_CAREERS = HandlerFunctions.VANILLA_VILLAGER_CAREERS;
 
 	/**
+	 * Returns a well-formated String version of the tag, suitable for tests and logging.
+	 * This will usually be multiple lines long.
+	 *
+	 * @param tag The tag to use
+	 * @return The string version.
+	 */
+	public static String nbtString(INBTBase tag) {
+		return HandlerFunctions.nbtString(tag);
+	}
+
+	/**
 	 * A regex that indicates whether a name is valid for a plugin channel.
 	 * In 1.13, channels are namespaced identifiers; in 1.12 they are not.
 	 */

@@ -47,6 +47,7 @@ import wdl.MaybeMixinTest;
 import wdl.ReflectionUtils;
 import wdl.TestWorld;
 import wdl.ducks.INetworkNameable;
+import wdl.versioned.VersionedFunctions;
 
 /**
  * Base logic shared between all tests that use blocks.
@@ -174,18 +175,8 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 		// Don't use real AssertionError, but instead use a special JUnit one,
 		// which has an interactive comparison tool
 		if (!expected.equals(actual)) {
-			throw new ComparisonFailure("Mismatched NBT!", nbtString(expected), nbtString(actual));
+			throw new ComparisonFailure("Mismatched NBT!", VersionedFunctions.nbtString(expected), VersionedFunctions.nbtString(actual));
 		}
-	}
-
-	/**
-	 * Produces a formatted NBT string.
-	 */
-	private String nbtString(NBTTagCompound tag) {
-		String result = tag.toString();
-		result = result.replaceAll("\\{", "\\{\n");
-		result = result.replaceAll("\\}", "\n\\}");
-		return result;
 	}
 
 	/**
