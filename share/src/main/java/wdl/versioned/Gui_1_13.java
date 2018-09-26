@@ -19,11 +19,12 @@ import static org.lwjgl.opengl.GL11.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import wdl.WDL;
+import net.minecraft.world.World;
 
 /**
  * Versioned functions related to GUIs.
@@ -34,10 +35,9 @@ class GuiFunctions {
 	/* (non-javadoc)
 	 * @see VersionedFunctions#makePlayer
 	 */
-	static EntityPlayerSP makePlayer() {
-		return new EntityPlayerSP(WDL.minecraft, WDL.worldClient,
-				WDL.player.connection, WDL.player.getStats(),
-				WDL.player.getRecipeBook());
+	static EntityPlayerSP makePlayer(Minecraft minecraft, World world, NetHandlerPlayClient nhpc, EntityPlayerSP base) {
+		return new EntityPlayerSP(minecraft, world, nhpc,
+				base.getStats(), base.getRecipeBook());
 	}
 
 	/* (non-javadoc)

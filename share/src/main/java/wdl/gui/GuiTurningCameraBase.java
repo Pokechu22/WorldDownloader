@@ -73,7 +73,7 @@ public abstract class GuiTurningCameraBase extends Screen {
 	@OverridingMethodsMustInvokeSuper
 	public void initGui() {
 		if (!initializedCamera) {
-			this.cam = VersionedFunctions.makePlayer();
+			this.cam = VersionedFunctions.makePlayer(WDL.minecraft, WDL.worldClient, WDL.player.connection, WDL.player);
 			this.cam.setLocationAndAngles(WDL.player.posX, WDL.player.posY,
 					WDL.player.posZ, WDL.player.rotationYaw, 0.0F);
 			this.yaw = WDL.player.rotationYaw;

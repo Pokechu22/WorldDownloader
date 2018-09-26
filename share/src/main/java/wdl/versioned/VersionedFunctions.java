@@ -39,6 +39,8 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.multiplayer.ChunkProviderClient;
+import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.nbt.INBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -328,9 +330,14 @@ public class VersionedFunctions {
 
 	/**
 	 * Creates a new instance of {@link EntityPlayerSP}.
+	 *
+	 * @param minecraft The minecraft instance
+	 * @param world The world
+	 * @param nhpc The connection
+	 * @param base The original player to copy other data from
 	 */
-	public static EntityPlayerSP makePlayer() {
-		return GuiFunctions.makePlayer();
+	public static EntityPlayerSP makePlayer(Minecraft minecraft, World world, NetHandlerPlayClient nhpc, EntityPlayerSP base) {
+		return GuiFunctions.makePlayer(minecraft, world, nhpc, base);
 	}
 
 	/**
