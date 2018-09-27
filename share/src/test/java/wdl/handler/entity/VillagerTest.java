@@ -101,6 +101,10 @@ public class VillagerTest extends AbstractEntityHandlerTest<EntityVillager, Cont
 		Object[][][][] tradesByProf = (Object[][][][]) field.get(null);
 		int numProfessions = tradesByProf.length;
 		for (int prof = 0; prof < numProfessions; prof++) {
+			if (prof == 5) {
+				// Skip nitwit, as it does not have any trades and thus no trade GUI
+				continue;
+			}
 			int numCareers = tradesByProf[prof].length;
 			for (int career = 1; career <= numCareers; career++) { // careers start at 1
 				makeMockWorld();

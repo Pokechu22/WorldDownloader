@@ -21,6 +21,7 @@ import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.WorldSettings;
 import net.minecraft.world.WorldType;
@@ -79,6 +80,11 @@ public final class TestWorld {
 			e.setUniqueId(new UUID(0, eid));
 			this.spawnEntity(e);
 			this.entitiesById.addKey(eid, e);
+		}
+
+		@Override
+		public BlockPos getSpawnPoint() {
+			return BlockPos.ORIGIN;
 		}
 
 		// Provided for 1.13 support.  Does nothing.

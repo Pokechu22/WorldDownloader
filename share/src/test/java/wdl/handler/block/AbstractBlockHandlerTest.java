@@ -24,15 +24,12 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import net.minecraft.block.BlockChest;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IInteractionObject;
 import wdl.handler.AbstractWorldBehaviorTest;
 import wdl.handler.HandlerException;
 import wdl.versioned.VersionedFunctions;
@@ -143,24 +140,15 @@ public abstract class AbstractBlockHandlerTest<B extends TileEntity, C extends C
 	 * @param pos Position of the container to open
 	 */
 	protected Container makeClientContainer(BlockPos pos) {
-		// This is a bit of a mess, but inventories are a bit of a mess.
-		// First, prepare an IInventory as the server would see it:
-		TileEntity serverTE = serverWorld.getTileEntity(pos);
-		// Preconditions for this to make sense
-		assertNotNull(serverTE);
-		assertTrue(serverTE instanceof IInventory);
+		serverPlayer.closeScreen();
+		assertSame(clientPlayer.openContainer, clientPlayer.inventoryContainer);
+		assertSame(serverPlayer.openContainer, serverPlayer.inventoryContainer);
+		serverWorld.interactBlock(pos, serverPlayer);
+		assertNotNull(clientPlayer.openContainer);
+		assertNotNull(serverPlayer.openContainer);
+		serverPlayer.sendContainerToPlayer(serverPlayer.openContainer);
 
-		IInventory serverInv;
-		if (serverWorld.getBlockState(pos).getBlock() instanceof BlockChest) {
-			// Special-casing for large chests
-			BlockChest chest = (BlockChest) serverWorld.getBlockState(pos).getBlock();
-			serverInv = VersionedFunctions.getLargeChest(chest, serverWorld, pos, false);
-		} else {
-			serverInv = (IInventory) serverTE;
-		}
-		String guiID = ((IInteractionObject) serverTE).getGuiID();
-
-		return makeContainer(guiID, serverInv);
+		return clientPlayer.openContainer;
 	}
 
 	/**

@@ -27,24 +27,12 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.IMerchant;
-import net.minecraft.entity.NpcMerchant;
-import net.minecraft.entity.item.EntityMinecartContainer;
-import net.minecraft.entity.passive.EntityVillager;
-import net.minecraft.entity.passive.EquineEntity;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ContainerHorseChest;
-import net.minecraft.inventory.ContainerHorseInventory;
-import net.minecraft.inventory.ContainerMerchant;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.World;
-import wdl.ReflectionUtils;
 import wdl.handler.AbstractWorldBehaviorTest;
 import wdl.handler.HandlerException;
 import wdl.versioned.VersionedFunctions;
@@ -170,84 +158,16 @@ public abstract class AbstractEntityHandlerTest<E extends Entity, C extends Cont
 		assertThat("Entity is not known to the server!", serverWorld.getEntityByID(eid), is(serverEntity));
 		assertThat("Entity is not known to the client!", clientWorld.getEntityByID(eid), is(notNullValue()));
 
-		// This is a bit of a mess, but entities are a bit of a mess.
-		// First, check if this is a villager, because they're a whole different
-		// kind of mess.
-		if (serverEntity instanceof EntityVillager) {
-			return createVillagerContainer((EntityVillager) serverEntity);
-		} else if (serverEntity instanceof EquineEntity) {
-			return createHorseContainer((EquineEntity) serverEntity);
-		} else if (serverEntity instanceof EntityMinecartContainer) {
-			return createMinecartContainer((EntityMinecartContainer) serverEntity);
-		} else {
-			throw new AssertionError("Unexpected entity " + serverEntity);
-		}
-	}
+		serverPlayer.setSneaking(true);
+		serverPlayer.closeScreen();
+		assertSame("Should have reset server open container", serverPlayer.openContainer, serverPlayer.inventoryContainer);
+		assertSame("Should have reset client open container", clientPlayer.openContainer, clientPlayer.inventoryContainer);
+		serverWorld.interactEntity(serverEntity, serverPlayer);
+		assertNotSame("Should have updated server open container", serverPlayer.openContainer, serverPlayer.inventoryContainer);
+		assertNotSame("Should have updated client open container", clientPlayer.openContainer, clientPlayer.inventoryContainer);
+		serverPlayer.sendContainerToPlayer(serverPlayer.openContainer);
 
-	/**
-	 * Creates a villager container.  This process is ugly.
-	 */
-	private Container createVillagerContainer(EntityVillager serverVillager) {
-		// EntityPlayerMP.displayVillagerTradeGui(IMerchant), part 1 (before recipes)
-
-		// We don't actually need to use the merchant inventory, as it's always blank
-		// when opened:
-		// ContainerMerchant serverContainer = new ContainerMerchant(serverPlayer.inventory, serverVillager, serverWorld);
-		// IInventory serverMerchentInventory = serverContainer.getMerchantInventory();
-		ITextComponent serverDispName = serverVillager.getDisplayName();
-
-		// NHPC.handleOpenWindow, and GuiMerchant.<init>
-		IMerchant clientMerchant = new NpcMerchant(this.clientPlayer, serverDispName);
-		ContainerMerchant clientContainer = new ContainerMerchant(clientPlayer.inventory, clientMerchant, clientWorld);
-
-		// NHPC.handleCustomPayload
-		// NOTE: the villager code never actually uses the player
-		MerchantRecipeList serverRecipes = serverVillager.getRecipes(this.serverPlayer);
-		// Normalize the recipe list (NBT serialization can mess with the
-		// damage tag in 1.13; just make sure that the server one is also messed like that)
-		serverRecipes.forEach(recipe -> recipe.readFromTags(recipe.writeToTags()));
-		// Substitute for network stuff
-		MerchantRecipeList clientRecipes = new MerchantRecipeList(serverRecipes.write());
-
-		clientMerchant.setRecipes(clientRecipes);
-
-		return clientContainer;
-	}
-
-	private Container createHorseContainer(EquineEntity serverHorse) {
-		// No getter -_-
-		// Also, ContainerHorseChest is not a Container -_-
-		ContainerHorseChest serverInv = ReflectionUtils.findAndGetPrivateField(serverHorse, EquineEntity.class, ContainerHorseChest.class);
-		// EquineEntity.openGui
-		serverInv.setCustomName(serverHorse.getName());
-
-		// NHPC.handleOpenWindow
-		IInventory clientInv = new ContainerHorseChest(serverInv.getDisplayName(), serverInv.getSizeInventory());
-		// Copy items and fields (this normally happens later, but whatever)
-		for (int i = 0; i < serverInv.getSizeInventory(); i++) {
-			ItemStack serverItem = serverInv.getStackInSlot(i);
-			if (serverItem == null) {
-				// In older versions with nullable items
-				continue;
-			}
-			clientInv.setInventorySlotContents(i, serverItem.copy());
-		}
-		for (int i = 0; i < serverInv.getFieldCount(); i++) {
-			clientInv.setField(i, serverInv.getField(i));
-		}
-		Entity clientHorse_ = clientWorld.getEntityByID(serverHorse.getEntityId());
-		assertThat(clientHorse_, is(instanceOf(EquineEntity.class)));
-		EquineEntity clientHorse = (EquineEntity) clientHorse_;
-		// GuiScreenHorseInventory
-		return new ContainerHorseInventory(clientPlayer.inventory, clientInv, clientHorse, clientPlayer);
-	}
-
-	private Container createMinecartContainer(EntityMinecartContainer minecart) {
-		IInventory serverInv = minecart;
-		String guiID = minecart.getGuiID();
-		assertThat(guiID, is(not("minecraft:container")));
-
-		return makeContainer(guiID, serverInv);
+		return clientPlayer.openContainer;
 	}
 
 	/**

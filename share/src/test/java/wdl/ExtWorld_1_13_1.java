@@ -38,6 +38,7 @@ import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.scoreboard.ServerScoreboard;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
@@ -82,7 +83,7 @@ abstract class ExtWorldClient extends WorldClient {
 	}
 
 	private final RecipeManager recipeManager = mock(RecipeManager.class);
-	private final Scoreboard scoreboard = mock(Scoreboard.class);
+	private final Scoreboard scoreboard = mock(Scoreboard.class, withSettings().useConstructor());
 
 	@Override
 	public RecipeManager getRecipeManager() {
@@ -152,7 +153,7 @@ abstract class ExtWorldServer extends WorldServer {
 	}
 
 	private final RecipeManager recipeManager = mock(RecipeManager.class);
-	private final ServerScoreboard scoreboard = mock(ServerScoreboard.class);
+	private final ServerScoreboard scoreboard = mock(ServerScoreboard.class, withSettings().useConstructor(new Object[] {null}));
 
 	@Override
 	public RecipeManager getRecipeManager() {
@@ -171,6 +172,23 @@ abstract class ExtWorldServer extends WorldServer {
 				new ItemUseContext(player, new ItemStack(block), pos, direction, 0, 0, 0));
 		IBlockState state = block.getStateForPlacement(context);
 		setBlockState(pos, state);
+	}
+
+	/** Left-clicks a block. */
+	public void clickBlock(BlockPos pos, EntityPlayer player) {
+		IBlockState state = this.getBlockState(pos);
+		state.onBlockClicked(this, pos, player);
+	}
+
+	/** Right-clicks a block. */
+	public void interactBlock(BlockPos pos, EntityPlayer player) {
+		IBlockState state = this.getBlockState(pos);
+		state.onBlockActivated(this, pos, player, EnumHand.MAIN_HAND, EnumFacing.DOWN, 0, 0, 0);
+	}
+
+	/** Right-clicks an entity. */
+	public void interactEntity(Entity entity, EntityPlayer player) {
+		entity.processInitialInteract(player, EnumHand.MAIN_HAND);
 	}
 
 	private static final Biome[] NO_BIOMES = new Biome[16*16];
@@ -201,6 +219,16 @@ abstract class ExtWorldServer extends WorldServer {
 		@Override
 		public String makeString() {
 			return this.toString();
+		}
+
+		@Override
+		public int getLoadedChunkCount() {
+			return map.size();
+		}
+
+		@Override
+		public boolean chunkExists(int x, int z) {
+			return true;
 		}
 
 		@Override

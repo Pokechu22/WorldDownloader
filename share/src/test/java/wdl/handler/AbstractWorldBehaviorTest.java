@@ -14,15 +14,18 @@
  */
 package wdl.handler;
 
-import static org.junit.Assert.*;
 import static org.junit.Assume.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
+
+import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.After;
 import org.mockito.AdditionalAnswers;
+
+import com.mojang.authlib.GameProfile;
 
 import junit.framework.ComparisonFailure;
 import net.minecraft.block.Block;
@@ -31,16 +34,18 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.player.inventory.ContainerLocalMenu;
+import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Bootstrap;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryBasic;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetHandlerPlayServer;
+import net.minecraft.network.Packet;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.management.PlayerInteractionManager;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import wdl.MaybeMixinTest;
@@ -65,36 +70,45 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 	protected EntityPlayerMP serverPlayer;
 
 	protected Minecraft mc;
-	private final Container[] openContainerReference = { null };
 
 	/**
 	 * Creates a mock world, returning air for blocks and null for TEs.
 	 */
 	protected void makeMockWorld() {
-		clientPlayer = mock(EntityPlayerSP.class, "Client player");
-		serverPlayer = mock(EntityPlayerMP.class, "Server player");
+		mc = mock(Minecraft.class, withSettings().defaultAnswer(RETURNS_DEEP_STUBS));
+		ReflectionUtils.findAndSetPrivateField(null, Minecraft.class, Minecraft.class, mc);
+
+		doAnswer(AdditionalAnswers.<GuiScreen>answerVoid(screen -> {
+			if (screen instanceof GuiContainer) {
+				clientPlayer.openContainer = ((GuiContainer)screen).inventorySlots;
+			} else {
+				clientPlayer.openContainer = clientPlayer.inventoryContainer;
+			}
+			mc.currentScreen = screen;
+		})).when(mc).displayGuiScreen(any());
+		when(mc.isCallingFromMinecraftThread()).thenReturn(true);
 
 		clientWorld = TestWorld.makeClient();
 		serverWorld = TestWorld.makeServer();
 
-		clientPlayer.inventory = new InventoryPlayer(clientPlayer);
+		NetHandlerPlayClient nhpc = new NetHandlerPlayClient(mc, null, null, new GameProfile(UUID.randomUUID(), "ClientPlayer"));
+		ReflectionUtils.findAndSetPrivateField(nhpc, WorldClient.class, clientWorld);
+		clientPlayer = VersionedFunctions.makePlayer(mc, clientWorld, nhpc,
+				mock(EntityPlayerSP.class, withSettings().defaultAnswer(RETURNS_DEEP_STUBS))); // Use a mock for the rest of the defaults
+		mc.player = clientPlayer;
+
+		NetHandlerPlayServer nhps = mock(NetHandlerPlayServer.class);
+		doAnswer(AdditionalAnswers.<Packet<NetHandlerPlayClient>>answerVoid(
+				packet -> packet.processPacket(nhpc)))
+				.when(nhps).sendPacket(any());
+		serverPlayer = new EntityPlayerMP(mock(MinecraftServer.class, withSettings().defaultAnswer(RETURNS_DEEP_STUBS)),
+				serverWorld, new GameProfile(UUID.randomUUID(), "ServerPlayer"),
+				mock(PlayerInteractionManager.class));
+		serverPlayer.connection = nhps;
+
 		serverPlayer.inventory = new InventoryPlayer(serverPlayer);
-		when(clientPlayer.getHorizontalFacing()).thenCallRealMethod();
-		when(serverPlayer.getHorizontalFacing()).thenCallRealMethod();
 		clientPlayer.world = clientWorld;
 		serverPlayer.world = serverWorld;
-		doCallRealMethod().when(clientPlayer).displayGUIChest(any());
-		doCallRealMethod().when(serverPlayer).displayGUIChest(any());
-
-		mc = mock(Minecraft.class);
-		ReflectionUtils.findAndSetPrivateField(null, Minecraft.class, Minecraft.class, mc);
-
-		openContainerReference[0] = null;
-		doAnswer(AdditionalAnswers.<GuiScreen>answerVoid(screen -> {
-			GuiContainer container = (GuiContainer)screen;
-			openContainerReference[0] = container.inventorySlots;
-		})).when(mc).displayGuiScreen(any());
-		ReflectionUtils.findAndSetPrivateField(clientPlayer, EntityPlayerSP.class, Minecraft.class, mc);
 	}
 
 	/**
@@ -128,41 +142,6 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 	protected void placeBlockAt(BlockPos pos, Block block, EnumFacing facing) {
 		clientWorld.placeBlockAt(pos, block, clientPlayer, facing);
 		serverWorld.placeBlockAt(pos, block, serverPlayer, facing);
-	}
-
-	/**
-	 * Creates a container with the given GUI id.
-	 *
-	 * @param guiID
-	 *            The ID
-	 * @param serverInv
-	 *            The inventory for the container (will be copied in this method).
-	 * @return The container.  If it can't be figured out, throws an exception.
-	 */
-	protected Container makeContainer(String guiID, IInventory serverInv) {
-		ContainerLocalMenu m = new ContainerLocalMenu(guiID, serverInv.getDisplayName(), serverInv.getSizeInventory());
-
-		// Defer to displayGUIChest for actual creation logic
-		clientPlayer.displayGUIChest(m);
-		Container container = openContainerReference[0];
-		openContainerReference[0] = null;
-
-		assertNotNull("Should have created a container with ID " + guiID, container);
-
-		// Copy items and fields.
-		for (int i = 0; i < serverInv.getSizeInventory(); i++) {
-			ItemStack serverItem = serverInv.getStackInSlot(i);
-			if (serverItem == null) {
-				// In older versions with nullable items
-				continue;
-			}
-			m.setInventorySlotContents(i, serverItem.copy());
-		}
-		for (int i = 0; i < serverInv.getFieldCount(); i++) {
-			m.setField(i, serverInv.getField(i));
-		}
-
-		return container;
 	}
 
 	/**

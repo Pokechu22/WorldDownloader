@@ -151,6 +151,7 @@ public class HorseTest<T extends EquineEntity> extends AbstractEntityHandlerTest
 		try {
 			T entity = this.entityClass.getConstructor(World.class).newInstance(this.serverWorld);
 			applyNBT(entity, this.type.getNBT(this.chests));
+			entity.setHorseTamed(true);
 			return entity;
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
 				| NoSuchMethodException | SecurityException e) {
