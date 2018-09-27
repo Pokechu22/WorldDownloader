@@ -123,13 +123,13 @@ abstract class ExtWorldServer extends WorldServer {
 	/** Left-clicks a block. */
 	public void clickBlock(BlockPos pos, EntityPlayer player) {
 		IBlockState state = this.getBlockState(pos);
-		state.getBlock().func_180649_a(this, pos, player);
+		state.getBlock().onBlockClicked(this, pos, player);
 	}
 
 	/** Right-clicks a block. */
 	public void interactBlock(BlockPos pos, EntityPlayer player) {
 		IBlockState state = this.getBlockState(pos);
-		state.getBlock().func_180639_a(this, pos, state, player, EnumHand.MAIN_HAND, player.getHeldItemMainhand(), EnumFacing.DOWN, 0, 0, 0);
+		state.getBlock().onBlockActivated(this, pos, state, player, EnumHand.MAIN_HAND, player.getHeldItemMainhand(), EnumFacing.DOWN, 0, 0, 0);
 	}
 
 	/** Right-clicks an entity. */
