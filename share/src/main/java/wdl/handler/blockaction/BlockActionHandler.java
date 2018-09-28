@@ -24,6 +24,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IBlockReader;
+import wdl.handler.BaseHandler;
 import wdl.handler.HandlerException;
 import wdl.versioned.VersionedFunctions;
 
@@ -34,7 +35,7 @@ import wdl.versioned.VersionedFunctions;
  * @param <B> The type of block to handle.
  * @param <E> The type of block entity to handle.
  */
-public abstract class BlockActionHandler<B extends Block, E extends TileEntity> {
+public abstract class BlockActionHandler<B extends Block, E extends TileEntity> extends BaseHandler {
 	/**
 	 * Constructor.
 	 *

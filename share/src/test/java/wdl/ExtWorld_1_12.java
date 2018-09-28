@@ -14,9 +14,12 @@
  */
 package wdl;
 
+import java.util.function.Consumer;
+
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockEventData;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.multiplayer.ChunkProviderClient;
 import net.minecraft.client.multiplayer.WorldClient;
@@ -140,6 +143,13 @@ abstract class ExtWorldServer extends WorldServer {
 	/** Right-clicks an entity. */
 	public void interactEntity(Entity entity, EntityPlayer player) {
 		entity.processInitialInteract(player, EnumHand.MAIN_HAND);
+	}
+
+	public Consumer<BlockEventData> onBlockEvent = (e -> super.addBlockEvent(e.getPosition(), e.getBlock(), e.getEventID(), e.getEventParameter()));
+
+	@Override
+	public void addBlockEvent(BlockPos pos, Block blockIn, int eventID, int eventParam) {
+		onBlockEvent.accept(new BlockEventData(pos, blockIn, eventID, eventParam));
 	}
 
 	@Override
