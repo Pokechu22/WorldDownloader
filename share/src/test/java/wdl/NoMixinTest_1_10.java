@@ -14,16 +14,11 @@
  */
 package wdl;
 
-import java.util.Collections;
-import java.util.Set;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
-import org.spongepowered.lwts.runner.LaunchWrapperTestRunner;
-
-import com.google.common.collect.Sets;
+import org.junit.runners.JUnit4;
 
 import net.minecraft.client.resources.DefaultResourcePack;
 import net.minecraft.client.resources.IResourcePack;
@@ -41,8 +36,8 @@ import net.minecraft.init.Bootstrap;
  * The only purpose is to make use of the {@link RunWith @RunWith} annotation,
  * which is inherited into subclasses.
  */
-@RunWith(LaunchWrapperTestRunner.class)
-public abstract class MaybeMixinTest {
+@RunWith(JUnit4.class)
+abstract class MaybeMixinTestBase {
 	private static final Logger LOGGER = LogManager.getLogger();
 	private static boolean ran = false;
 
@@ -59,22 +54,15 @@ public abstract class MaybeMixinTest {
 		LOGGER.debug("Initializing bootstrap...");
 		Bootstrap.register();
 		LOGGER.debug("Initialized bootstrap.");
-		if (Bootstrap.hasErrored) {
-			LOGGER.warn("Bootstrap errored!");
-		}
+		// Note: not checking Bootstrap.hasErrored as that didn't exist in this version
 
 		LOGGER.debug("Setting up I18n...");
 		// Prepare I18n by constructing a LanguageManager and preparing it...
 		// (some tests depend on it)
 		MetadataSerializer metadataSerializer = new MetadataSerializer();
-		LanguageManager languageManager = new LanguageManager(metadataSerializer, "en_us");
+		LanguageManager languageManager = new LanguageManager(metadataSerializer, "en_US");
 		SimpleReloadableResourceManager resourceManager = new SimpleReloadableResourceManager(metadataSerializer);
-		IResourcePack pack = new DefaultResourcePack(new ResourceIndex() {}) {
-			@Override
-			public Set<String> getResourceDomains() {
-				return Sets.union(super.getResourceDomains(), Collections.singleton("wdl"));
-			}
-		};
+		IResourcePack pack = new DefaultResourcePack(new ResourceIndex() {});
 		resourceManager.reloadResourcePack(pack);
 		languageManager.onResourceManagerReload(resourceManager);
 		LOGGER.debug("Set up I18n.");

@@ -42,7 +42,7 @@ import net.minecraft.init.Bootstrap;
  * which is inherited into subclasses.
  */
 @RunWith(LaunchWrapperTestRunner.class)
-public abstract class MaybeMixinTest {
+abstract class MaybeMixinTestBase {
 	private static final Logger LOGGER = LogManager.getLogger();
 	private static boolean ran = false;
 
@@ -59,13 +59,15 @@ public abstract class MaybeMixinTest {
 		LOGGER.debug("Initializing bootstrap...");
 		Bootstrap.register();
 		LOGGER.debug("Initialized bootstrap.");
-		// Note: not checking Bootstrap.hasErrored as that didn't exist in this version
+		if (Bootstrap.hasErrored) {
+			LOGGER.warn("Bootstrap errored!");
+		}
 
 		LOGGER.debug("Setting up I18n...");
 		// Prepare I18n by constructing a LanguageManager and preparing it...
 		// (some tests depend on it)
 		MetadataSerializer metadataSerializer = new MetadataSerializer();
-		LanguageManager languageManager = new LanguageManager(metadataSerializer, "en_US");
+		LanguageManager languageManager = new LanguageManager(metadataSerializer, "en_us");
 		SimpleReloadableResourceManager resourceManager = new SimpleReloadableResourceManager(metadataSerializer);
 		IResourcePack pack = new DefaultResourcePack(new ResourceIndex() {}) {
 			@Override

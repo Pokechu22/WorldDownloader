@@ -149,6 +149,10 @@ sourceSets {
             runtimeClasspath += sourceSets.mixin.output
             srcDir "src/test/java"
             srcDir project(':share').file("src/test/java")
+            exclude "wdl/NoMixinTest**.java"
+            exclude "wdl/MixinTest_1_11.java"
+            exclude "wdl/MixinTest_1_12.java"
+            exclude "wdl/MixinTest_1_13.java"
             exclude "wdl/ExtWorld_1_12.java"
             exclude "wdl/ExtWorld_1_13.java"
             exclude "wdl/ExtWorld_1_13_1.java"

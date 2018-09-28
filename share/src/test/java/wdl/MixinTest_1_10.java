@@ -42,7 +42,7 @@ import net.minecraft.init.Bootstrap;
  * which is inherited into subclasses.
  */
 @RunWith(LaunchWrapperTestRunner.class)
-public abstract class MaybeMixinTest {
+abstract class MaybeMixinTestBase {
 	private static final Logger LOGGER = LogManager.getLogger();
 	private static boolean ran = false;
 
