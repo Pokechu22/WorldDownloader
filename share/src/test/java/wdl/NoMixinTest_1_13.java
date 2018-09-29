@@ -18,7 +18,6 @@ import java.io.IOException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
@@ -43,8 +42,7 @@ abstract class MaybeMixinTestBase {
 	private static final Logger LOGGER = LogManager.getLogger();
 	private static boolean ran = false;
 
-	@BeforeClass
-	public static void init() {
+	static void init0() {
 		if (ran) {
 			return;
 		}

@@ -19,7 +19,6 @@ import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.spongepowered.lwts.runner.LaunchWrapperTestRunner;
 
@@ -46,8 +45,7 @@ abstract class MaybeMixinTestBase {
 	private static final Logger LOGGER = LogManager.getLogger();
 	private static boolean ran = false;
 
-	@BeforeClass
-	public static void init() {
+	static void init0() {
 		if (ran) {
 			return;
 		}

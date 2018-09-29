@@ -14,6 +14,7 @@
  */
 package wdl;
 
+import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 
 /**
@@ -26,4 +27,11 @@ import org.junit.runner.RunWith;
  *
  * This version specifically is responsible for making the class public.
  */
-public abstract class MaybeMixinTest extends MaybeMixinTestBase { }
+public abstract class MaybeMixinTest extends MaybeMixinTestBase {
+	// This method needs to exist because junit can't call methods from non-public classes,
+	// even if inherited via a public class
+	@BeforeClass
+	public static void init() {
+		MaybeMixinTestBase.init0();
+	}
+}
