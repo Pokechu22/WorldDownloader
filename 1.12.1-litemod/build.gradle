@@ -124,6 +124,7 @@ sourceSets {
             exclude "wdl/ExtWorld_1_10.java"
             exclude "wdl/ExtWorld_1_13.java"
             exclude "wdl/ExtWorld_1_13_1.java"
+            exclude "wdl/lwts/WDLTestTweaker_1_9.java"
         }
     }
     api {

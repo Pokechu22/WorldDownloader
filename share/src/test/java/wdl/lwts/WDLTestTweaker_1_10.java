@@ -12,7 +12,7 @@ import org.spongepowered.lwts.AbstractTestTweaker;
 
 import net.minecraft.launchwrapper.LaunchClassLoader;
 
-public class WDLTestTweaker extends AbstractTestTweaker {
+class WDLTestTweakerBase extends AbstractTestTweaker {
 
 	@Override
 	public void injectIntoClassLoader(LaunchClassLoader loader) {

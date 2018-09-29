@@ -11,7 +11,8 @@ import org.spongepowered.lwts.AbstractTestTweaker;
 
 import net.minecraft.launchwrapper.LaunchClassLoader;
 
-public class WDLTestTweaker extends AbstractTestTweaker {
+// Used in 1.9.0 only (not 1.9.4), when MixinEnvironment.addConfiguration was the only available method
+class WDLTestTweakerBase extends AbstractTestTweaker {
 
 	@Override
 	public void injectIntoClassLoader(LaunchClassLoader loader) {
