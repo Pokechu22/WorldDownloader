@@ -49,3 +49,15 @@ allprojects {
         options.encoding = 'UTF-8'
     }
 }
+
+subprojects {
+    if (tasks.findByPath("eclipse") != null) {
+        task regenEclipse {
+            // Delete the eclipse classpath and project and then recreate it, without doing any of the slower bits.
+            dependsOn 'cleanEclipseProject'
+            dependsOn 'cleanEclipseClasspath'
+            dependsOn 'eclipseProject'
+            dependsOn 'eclipseClasspath'
+        }
+    }
+}
