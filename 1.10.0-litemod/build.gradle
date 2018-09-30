@@ -17,7 +17,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
         classpath 'commons-io:commons-io:2.5'
         classpath 'com.googlecode.java-diff-utils:diffutils:1.3.0'
         classpath 'pokechu22.test.begradle:begradle:0.1.4-SNAPSHOT@jar'
@@ -55,12 +55,14 @@ dependencies {
 }
 
 minecraft {
-    version = "1.12"
+    version = "1.10"
     mappings = "snapshot_20180927"
     runDir = "run"
 
     // We don't currently want a source jar (doesn't work well for base edits, and the version info doesn't work yet)
     makeObfSourceJar = false
+    // en_us.lang to en_US.lang
+    ext.capitalizeLangFiles = true
     // Copy one language to its variants
     ext.langMap = [
         'es_es': ['es_ar', 'es_mx', 'es_uy', 'es_ve'],
@@ -69,39 +71,44 @@ minecraft {
 }
 
 extraSrgs {
-    addSrg file('../srgs/AbstractHorseToEquineEntity.srg')
+    addSrg file('../srgs/EntityHorseToEquineEntity.srg')
+    addSrg file('../srgs/AnimalChestToContainerHorseChest.srg')
     addSrg file('../srgs/1.13.srg')
     addMethods file('../srgs/1.12_methods.csv')
+    addMethods file('../srgs/liteloader_1.10_methods.csv')
+    addMethods file('../srgs/old_inventory_methods.csv')
+    addMethods file('../srgs/1.11_gui_methods.csv')
     addFields file('../srgs/1.12_fields.csv')
-    addPatch('net.minecraft.nbt.JsonToNBT.java', file('../srgs/JsonToNBT_1.12.patch'))
+    addFields file('../srgs/old_inventory_fields.csv')
+    addPatch('net.minecraft.entity.passive.EquineEntity.java', file('../srgs/EE_1.10.x.patch'))
 }
 
 sourceSets {
     main {
         java {
-            srcDir "src/main/java"
-            srcDir project(':1.12').file("src/main/java")
+            srcDir project(':1.10.0').file("src/main/java")
             srcDir project(':share').file("src/main/java")
-            exclude "wdl/StandardEntityManagers_1_10.java"
+            exclude "wdl/StandardEntityManagers_1_12.java"
             exclude "wdl/StandardEntityManagers_1_13.java"
             exclude "wdl/StandardEntityManagers_1_13_1.java"
             exclude "wdl/WDLChunkLoader_1_13.java"
+            exclude "wdl/handler/block/ShulkerBoxHandler.java"
             exclude "wdl/handler/block/BaseLargeChestHandler_1_13.java"
             exclude "wdl/versioned/GameRules_1_13.java"
             exclude "wdl/versioned/Generator_1_13.java"
-            exclude "wdl/versioned/Gui_1_11.java"
+            exclude "wdl/versioned/Gui_1_12.java"
             exclude "wdl/versioned/Gui_1_13.java"
             exclude "wdl/versioned/Handlers_1_9_2.java"
-            exclude "wdl/versioned/Handlers_1_10.java"
+            exclude "wdl/versioned/Handlers_1_12.java"
             exclude "wdl/versioned/Handlers_1_13.java"
             exclude "wdl/versioned/Packets_1_13.java"
             exclude "wdl/versioned/Registries_1_13_1.java"
             exclude "wdl/versioned/Types_1_9_2.java"
             exclude "wdl/versioned/Types_1_13.java"
             exclude "wdl/versioned/Types_1_13_1.java"
-            exclude "wdl/gui/widget/ExtButton_1_11.java"
+            exclude "wdl/gui/widget/ExtButton_1_12.java"
             exclude "wdl/gui/widget/ExtButton_1_13.java"
-            exclude "wdl/gui/widget/ExtGuiList_1_11.java"
+            exclude "wdl/gui/widget/ExtGuiList_1_12.java"
             exclude "wdl/gui/widget/ExtGuiList_1_13.java"
             exclude "wdl/gui/widget/ExtGuiScreen_1_9.java"
             exclude "wdl/gui/widget/ExtGuiScreen_1_13.java"
@@ -110,20 +117,32 @@ sourceSets {
             srcDir "src/main/resources"
             srcDir project(':share').file("src/main/resources")
         }
+    }
+    mixin {
+        java {
+            srcDir "src/java6/java"
+            compileClasspath += sourceSets.main.output
+            compileClasspath += sourceSets.main.compileClasspath
+            runtimeClasspath += sourceSets.main.output
+            runtimeClasspath += sourceSets.main.runtimeClasspath
+        }
         // Refmap declaration must match the refmap name specified in the json config
         ext.refMap = "mixins.LiteModWDL.refmap.json"
     }
     test {
         java {
+            compileClasspath += sourceSets.mixin.output
+            runtimeClasspath += sourceSets.mixin.output
             srcDir "src/test/java"
             srcDir project(':share').file("src/test/java")
             exclude "wdl/NoMixinTest**.java"
-            exclude "wdl/MixinTest_1_10.java"
             exclude "wdl/MixinTest_1_11.java"
+            exclude "wdl/MixinTest_1_12.java"
             exclude "wdl/MixinTest_1_13.java"
-            exclude "wdl/ExtWorld_1_10.java"
+            exclude "wdl/ExtWorld_1_12.java"
             exclude "wdl/ExtWorld_1_13.java"
             exclude "wdl/ExtWorld_1_13_1.java"
+            exclude "wdl/handler/block/ShulkerBoxTest.java"
             exclude "wdl/lwts/WDLTestTweaker_1_9.java"
         }
     }
@@ -131,21 +150,6 @@ sourceSets {
         java {
             srcDir project(':share').file("src/api/java")
         }
-    }
-}
-
-mixin {
-    defaultObfuscationEnv notch
-}
-
-litemod {
-    json {
-        name = "LiteModWDL"
-        displayName = "World Downloader for Liteloader"
-        author = "uyjulian, pokechu22"
-        mcversion = "1.12"
-        mixinConfigs += "mixins.LiteModWDL.json"
-        version = project.version
     }
 }
 
@@ -158,13 +162,35 @@ tasks.withType(JavaCompile) { javaTask ->
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
 
+// Mixins need to be in Java 6 for this version of MC
+compileMixinJava {
+    sourceCompatibility = "1.6"
+    targetCompatibility = "1.6"
+}
+
+mixin {
+    defaultObfuscationEnv notch
+}
+
+litemod {
+    json {
+        name = "LiteModWDL"
+        displayName = "World Downloader for Liteloader"
+        author = "uyjulian, pokechu22"
+        mcversion = "1.10"
+        mixinConfigs += "mixins.LiteModWDL.json"
+        version = project.version
+    }
+}
+
 // Use tabs instead of spaces
 fixMcSources {
     astyleConfig = "../astyle.cfg"
 }
 
-// Ensure that the API code and litemod JSON in the jar
+// Ensure that the API code, Java 6 mixin code, and litemod JSON are in the jar
 jar {
+    from sourceSets.mixin.output
     from sourceSets.api.output
     from litemod.outputs
 }

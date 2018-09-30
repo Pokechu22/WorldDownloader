@@ -80,7 +80,7 @@ extraSrgs {
 sourceSets {
     main {
         java {
-            srcDir project(':1.11').file("src/main/java")
+            srcDir project(':1.11.0').file("src/main/java")
             srcDir project(':share').file("src/main/java")
             exclude "wdl/StandardEntityManagers_1_10.java"
             exclude "wdl/StandardEntityManagers_1_13.java"

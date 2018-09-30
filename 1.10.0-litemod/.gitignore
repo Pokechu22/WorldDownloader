@@ -9,8 +9,8 @@ build.number
 # Eclipse
 .project
 .classpath
-1.12-litemod_Client.launch
+1.10.0-litemod_Client.launch
 /.settings/
 
 # Idea
-1.12-litemod.iml
+1.10.0-litemod.iml

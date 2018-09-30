@@ -3,14 +3,13 @@
 /build/
 /logs/
 /run/
-/.mixin.out/
-build.number
+/src/main/base
 
 # Eclipse
 .project
 .classpath
-1.09-litemod_Client.launch
+1.09.0_Client.launch
 /.settings/
 
 # Idea
-1.09-litemod.iml
+1.09.0.iml
