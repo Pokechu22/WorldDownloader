@@ -122,7 +122,7 @@ abstract class ExtWorldClient extends WorldClient {
 		}
 
 		@Override
-		public Chunk provideChunk(int x, int z, boolean p_186025_3_, boolean p_186025_4_) {
+		public Chunk getChunk(int x, int z, boolean p_186025_3_, boolean p_186025_4_) {
 			return map.computeIfAbsent(ChunkPos.asLong(x, z), k -> new Chunk(ExtWorldClient.this, x, z, NO_BIOMES));
 		}
 
@@ -216,7 +216,7 @@ abstract class ExtWorldServer extends WorldServer {
 		}
 
 		@Override
-		public Chunk provideChunk(int x, int z, boolean p_186025_3_, boolean p_186025_4_) {
+		public Chunk getChunk(int x, int z, boolean p_186025_3_, boolean p_186025_4_) {
 			return map.computeIfAbsent(ChunkPos.asLong(x, z), k -> new Chunk(ExtWorldServer.this, x, z, NO_BIOMES));
 		}
 

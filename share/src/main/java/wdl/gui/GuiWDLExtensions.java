@@ -144,7 +144,7 @@ public class GuiWDLExtensions extends Screen {
 				if (selectedEntry != this) {
 					selectedEntry = this;
 
-					mc.getSoundHandler().play(PositionedSoundRecord.getMasterRecord(
+					mc.getSoundHandler().play(PositionedSoundRecord.master(
 							SoundEvents.UI_BUTTON_CLICK, 1.0F));
 
 					updateDetailsList(mod);

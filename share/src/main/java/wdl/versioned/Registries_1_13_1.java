@@ -31,12 +31,12 @@ final class RegistryFunctions {
 	 * @see VersionedFunctions#getBlockId
 	 */
 	static final int getBlockId(Block block) {
-		return IRegistry.field_212618_g.getId(block);
+		return IRegistry.BLOCK.getId(block);
 	}
 	/* (non-javadoc)
 	 * @see VersionedFunctions#getBiomeId
 	 */
 	static final int getBiomeId(Biome biome) {
-		return IRegistry.field_212624_m.getId(biome);
+		return IRegistry.BIOME.getId(biome);
 	}
 }

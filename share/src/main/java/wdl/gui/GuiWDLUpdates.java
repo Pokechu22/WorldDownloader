@@ -116,7 +116,7 @@ public class GuiWDLUpdates extends Screen {
 					mc.displayGuiScreen(new GuiWDLSingleUpdate(GuiWDLUpdates.this,
 							this.release));
 
-					mc.getSoundHandler().play(PositionedSoundRecord.getMasterRecord(
+					mc.getSoundHandler().play(PositionedSoundRecord.master(
 							SoundEvents.UI_BUTTON_CLICK, 1.0f));
 					return true;
 				}

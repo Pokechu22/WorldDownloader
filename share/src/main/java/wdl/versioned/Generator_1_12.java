@@ -161,8 +161,8 @@ final class GeneratorFunctions {
 	static {
 		// Make sure that the void biome exists
 		// (this check partially exists so that this class will not compile in versions without it)
-		if (Biome.getIdForBiome(Biomes.THE_VOID) != 127) {
-			LOGGER.warn("[WDL] Mismatched ID for void biome: " + Biomes.THE_VOID + " = " + Biome.getIdForBiome(Biomes.THE_VOID));
+		if (Biome.func_185362_a(Biomes.THE_VOID) != 127) {
+			LOGGER.warn("[WDL] Mismatched ID for void biome: " + Biomes.THE_VOID + " = " + Biome.func_185362_a(Biomes.THE_VOID));
 		}
 	}
 

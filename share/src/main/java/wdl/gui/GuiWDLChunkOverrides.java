@@ -189,17 +189,17 @@ public class GuiWDLChunkOverrides extends Screen {
 					partiallyRequested = true;
 				}
 
-				mc.getSoundHandler().play(PositionedSoundRecord.getMasterRecord(
+				mc.getSoundHandler().play(PositionedSoundRecord.master(
 								SoundEvents.UI_BUTTON_CLICK, 1.0F));
 				break;
 			case ERASING:
 				// TODO
-				mc.getSoundHandler().play(PositionedSoundRecord.getMasterRecord(
+				mc.getSoundHandler().play(PositionedSoundRecord.master(
 						SoundEvents.BLOCK_DISPENSER_FAIL, 1.0F));
 				break;
 			case MOVING:
 				// TODO
-				mc.getSoundHandler().play(PositionedSoundRecord.getMasterRecord(
+				mc.getSoundHandler().play(PositionedSoundRecord.master(
 						SoundEvents.BLOCK_DISPENSER_FAIL, 1.0F));
 				break;
 			}

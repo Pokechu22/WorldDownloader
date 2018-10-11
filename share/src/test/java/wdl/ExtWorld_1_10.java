@@ -89,13 +89,13 @@ abstract class ExtWorldClient extends WorldClient {
 		}
 
 		@Override
-		public Chunk provideChunk(int x, int z) {
+		public Chunk getChunk(int x, int z) {
 			return map.computeIfAbsent(ChunkPos.asLong(x, z), k -> new Chunk(ExtWorldClient.this, x, z));
 		}
 
 		@Override
-		public Chunk getLoadedChunk(int x, int z) {
-			return provideChunk(x, z);
+		public Chunk func_186026_b(int x, int z) {
+			return getChunk(x, z);
 		}
 
 		@Override
@@ -163,13 +163,13 @@ abstract class ExtWorldServer extends WorldServer {
 		}
 
 		@Override
-		public Chunk provideChunk(int x, int z) {
+		public Chunk getChunk(int x, int z) {
 			return map.computeIfAbsent(ChunkPos.asLong(x, z), k -> new Chunk(ExtWorldServer.this, x, z));
 		}
 
 		@Override
-		public Chunk getLoadedChunk(int x, int z) {
-			return provideChunk(x, z);
+		public Chunk func_186026_b(int x, int z) {
+			return getChunk(x, z);
 		}
 
 		@Override
