@@ -214,7 +214,7 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 
 			for (NextTickListEntry entry : updateList) {
 				NBTTagCompound entryTag = new NBTTagCompound();
-				ResourceLocation location = Block.field_149771_c
+				ResourceLocation location = Block.REGISTRY
 						.getKey(entry.getTarget());
 				entryTag.putString("i",
 						location == null ? "" : location.toString());

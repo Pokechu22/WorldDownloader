@@ -71,3 +71,7 @@ func_180642_a,getStateForPlacement,0,
 func_145980_j,getChestType,0,
 func_180649_a,onBlockClicked,0,
 func_180639_a,onBlockActivated,0,
+func_82594_a,get,0,Became getOrDefault in 1.13 due to SRG naming mishap
+func_148741_d,containsKey,0,
+func_73158_c,loadChunk,0,
+func_73025_a,doPreChunk,0,

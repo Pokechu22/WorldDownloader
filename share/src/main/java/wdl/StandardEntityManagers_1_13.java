@@ -327,11 +327,11 @@ class StandardEntityManagers {
 
 		ResourceLocation loc = new ResourceLocation(identifier);
 
-		if (!EntityType.field_200787_a.func_148741_d(loc)) {
+		if (!EntityType.REGISTRY.containsKey(loc)) {
 			return null;
 		}
 
-		Class<? extends Entity> c = EntityType.field_200787_a.getOrDefault(loc).getEntityClass();
+		Class<? extends Entity> c = EntityType.REGISTRY.get(loc).getEntityClass();
 		assert c != null;
 
 		return c;
@@ -347,7 +347,7 @@ class StandardEntityManagers {
 	private static final Set<String> PROVIDED_ENTITIES;
 	static {
 		try {
-			PROVIDED_ENTITIES = EntityType.field_200787_a.stream()
+			PROVIDED_ENTITIES = EntityType.REGISTRY.stream()
 					.filter(EntityType::isSerializable)
 					.filter(EntityType::isSummonable)
 					.map(EntityType::getId)

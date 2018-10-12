@@ -337,7 +337,7 @@ class StandardEntityManagers {
 
 		Class<? extends Entity> c;
 		if (ENTITY_REGISTRY != null) {
-			c = ENTITY_REGISTRY.getOrDefault(loc);
+			c = ENTITY_REGISTRY.get(loc);
 		} else {
 			c = EntityList_forge_getClass(loc);
 		}
