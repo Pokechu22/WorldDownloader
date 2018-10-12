@@ -327,11 +327,11 @@ class StandardEntityManagers {
 
 		ResourceLocation loc = new ResourceLocation(identifier);
 
-		if (!EntityType.field_200787_a.containsKey(loc)) {
+		if (!EntityType.field_200787_a.func_148741_d(loc)) {
 			return null;
 		}
 
-		Class<? extends Entity> c = EntityType.field_200787_a.get(loc).getEntityClass();
+		Class<? extends Entity> c = EntityType.field_200787_a.getOrDefault(loc).getEntityClass();
 		assert c != null;
 
 		return c;

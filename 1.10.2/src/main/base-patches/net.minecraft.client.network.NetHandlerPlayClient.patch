@@ -25,7 +25,7 @@
 @@ -1201,6 +1209,10 @@
  		MapData mapdata = ItemMap.loadMapData(packetIn.getMapId(), this.client.world);
  		packetIn.setMapdataTo(mapdata);
- 		this.client.entityRenderer.getMapItemRenderer().updateMapTexture(mapdata);
+ 		this.client.gameRenderer.getMapItemRenderer().updateMapTexture(mapdata);
 +
 +		/* WDL >>> */
 +		wdl.WDLHooks.onNHPCHandleMaps(this, packetIn);
