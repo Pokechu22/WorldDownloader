@@ -292,10 +292,17 @@ class StandardEntityManagers {
 			if (I18n.hasKey(i18nKey)) {
 				return I18n.format(i18nKey);
 			} else {
-				// We want to be clear that there is no result, rather than returning
-				// the key (the default for failed formatting)
 				// Note that some entities do not have translation strings (https://bugs.mojang.com/browse/MC-68446)
-				return null;
+				// Return the partial translation key, and not the full thing with the "entity."
+				// prefix.
+				// For most entities that are above, this is still useful, and this key is
+				// definitely more similar-looking than the namespaced ID.
+				// This only makes sense in 1.11 and 1.12, where entities have both a namespaced
+				// ID and one of these keys;
+				// in 1.10 and below it only is this type of ID (so the default in
+				// EntityUtils.getDisplayType is fine) and in 1.13 this no longer exists (and
+				// the above bug was fixed).
+				return translationKey;
 			}
 		}
 
