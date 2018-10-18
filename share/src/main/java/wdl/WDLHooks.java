@@ -312,16 +312,37 @@ public class WDLHooks {
 			if (!Minecraft.getInstance().isCallingFromMinecraftThread()) {
 				return;
 			}
-			if (!packet.getBufferData().isReadable()) {
-				return;
-			}
 			if (ENABLE_PROFILER) PROFILER.startSection("wdl.onPluginMessage");
 
 			if (ENABLE_PROFILER) PROFILER.startSection("Parse");
 			String channel = packet.getChannelName().toString(); // 1.13: ResourceLocation -> String; otherwise no-op
 			ByteBuf buf = packet.getBufferData();
+			int refCnt = buf.refCnt();
+			if (refCnt <= 0) {
+				// The buffer has already been released.  Just break out now.
+				// This happens with e.g. the MC|TrList packet (villager trade list),
+				// which closes the buffer after reading it.
+				if (ENABLE_PROFILER) PROFILER.endSection();  // "Parse"
+				if (ENABLE_PROFILER) PROFILER.endSection();  // "wdl.onPluginMessage"
+				return;
+			}
+
+			// Something else may have already read the payload; return to the start
+			buf.markReaderIndex();
+			buf.readerIndex(0);
 			byte[] payload = new byte[buf.readableBytes()];
 			buf.readBytes(payload);
+			// OK, now that we've done our reading, return to where it was before
+			// (which could be the end, or other code might not have read it yet)
+			buf.resetReaderIndex();
+			// buf will be released by the packet handler, eventually.
+			// It definitely is NOT our responsibility to release it, as
+			// doing so would probably break other code outside of WDL.
+			// Perhaps we might want to call retain once at the start of this method
+			// and then release at the end, but that feels excessive (since there
+			// _shouldn't_ be multiple threads at play at this point, and if there
+			// were we'd be in trouble anyways).
+
 			if (ENABLE_PROFILER) PROFILER.endSection();  // "Parse"
 
 			if (ENABLE_PROFILER) PROFILER.startSection("Core");
