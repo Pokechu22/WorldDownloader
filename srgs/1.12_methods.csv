@@ -75,3 +75,11 @@ func_82594_a,get,0,Became getOrDefault in 1.13 due to SRG naming mishap
 func_148741_d,containsKey,0,
 func_73158_c,loadChunk,0,
 func_73025_a,doPreChunk,0,
+func_147119_ah,updateFramebufferSize,0,Name required by liteloader
+func_71411_J,runGameLoop,0,Name required by liteloader
+func_175068_a,renderWorldPass,0,Name required by liteloader
+func_180437_a,renderCloudsCheck,0,Name required by liteloader
+func_146230_a,drawChat,0,Name required by liteloader; was render
+func_175239_b,renderDebugInfoRight,0,Name required by liteloader
+func_180784_a,onBlockClicked,0,Name required by liteloader
+func_135058_a,getPackMetadata,0,Name required by liteloader
