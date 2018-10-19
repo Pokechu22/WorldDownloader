@@ -18,30 +18,22 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiIngameMenu;
 import net.minecraft.client.gui.GuiScreen;
 
-import java.util.function.Consumer;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import com.uyjulian.LiteModWDL.AddButtonCallback;
+
 @Mixin(GuiIngameMenu.class)
-public abstract class MixinGuiIngameMenu extends GuiScreen implements Consumer<GuiButton> {
+public abstract class MixinGuiIngameMenu extends GuiScreen {
 
 	@Inject(method="initGui", at=@At("RETURN"))
 	private void onInitGui(CallbackInfo ci) {
-		wdl.WDLHooks.injectWDLButtons((GuiIngameMenu)(Object)this, buttons, this);
+		wdl.WDLHooks.injectWDLButtons((GuiIngameMenu)(Object)this, buttons, new AddButtonCallback(this.buttons));
 	}
 	@Inject(method="actionPerformed", at=@At("HEAD"))
 	private void onActionPerformed(GuiButton guibutton, CallbackInfo ci) {
 		wdl.WDLHooks.handleWDLButtonClick((GuiIngameMenu)(Object)this, guibutton);
-	}
-
-	// I would use a lambda, but this must be java 6;
-	// I would use an inner class, but those don't work in mixins
-	// Thus, implementation of Consumer...
-	@Override
-	public void accept(GuiButton button) {
-		this.buttons.add(button);
 	}
 }
