@@ -1,6 +1,17 @@
 --- net/minecraft/client/network/NetHandlerPlayClient.java
 +++ net/minecraft/client/network/NetHandlerPlayClient.java
-@@ -796,6 +796,10 @@
+@@ -748,6 +748,10 @@
+ 	 * Invoked when disconnecting, the parameter is a ChatComponent describing the reason for termination
+ 	 */
+ 	public void onDisconnect(ITextComponent reason) {
++		/* WDL >>> */
++		wdl.WDLHooks.onNHPCDisconnect(this, reason);
++		/* <<< WDL */
++
+ 		this.client.loadWorld((WorldClient)null);
+ 
+ 		if (this.guiScreenServer != null) {
+@@ -796,6 +800,10 @@
  	public void handleChat(SPacketChat packetIn) {
  		PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.client);
  		this.client.ingameGUI.addChatMessage(packetIn.getType(), packetIn.getChatComponent());
@@ -11,7 +22,7 @@
  	}
  
  	/**
-@@ -1175,6 +1179,10 @@
+@@ -1175,6 +1183,10 @@
  	public void handleBlockAction(SPacketBlockAction packetIn) {
  		PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.client);
  		this.client.world.addBlockEvent(packetIn.getBlockPosition(), packetIn.getBlockType(), packetIn.getData1(), packetIn.getData2());
@@ -22,7 +33,7 @@
  	}
  
  	/**
-@@ -1263,6 +1271,10 @@
+@@ -1263,6 +1275,10 @@
  
  		packetIn.setMapdataTo(mapdata);
  		mapitemrenderer.updateMapTexture(mapdata);
@@ -33,7 +44,7 @@
  	}
  
  	public void handleEffect(SPacketEffect packetIn) {
-@@ -1685,6 +1697,10 @@
+@@ -1685,6 +1701,10 @@
  			String s1 = packetbuffer3.readString(256);
  			this.client.getSoundHandler().func_189520_a(s1, SoundCategory.func_187950_a(s));
  		}

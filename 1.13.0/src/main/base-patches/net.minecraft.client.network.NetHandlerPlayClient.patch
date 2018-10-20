@@ -1,6 +1,17 @@
 --- net/minecraft/client/network/NetHandlerPlayClient.java
 +++ net/minecraft/client/network/NetHandlerPlayClient.java
-@@ -826,6 +826,10 @@
+@@ -778,6 +778,10 @@
+ 	 * Invoked when disconnecting, the parameter is a ChatComponent describing the reason for termination
+ 	 */
+ 	public void onDisconnect(ITextComponent reason) {
++		/* WDL >>> */
++		wdl.WDLHooks.onNHPCDisconnect(this, reason);
++		/* <<< WDL */
++
+ 		this.client.loadWorld((WorldClient)null);
+ 
+ 		if (this.guiScreenServer != null) {
+@@ -826,6 +830,10 @@
  	public void handleChat(SPacketChat packetIn) {
  		PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.client);
  		this.client.ingameGUI.addChatMessage(packetIn.getType(), packetIn.getChatComponent());
@@ -11,7 +22,7 @@
  	}
  
  	/**
-@@ -1205,6 +1209,10 @@
+@@ -1205,6 +1213,10 @@
  	public void handleBlockAction(SPacketBlockAction packetIn) {
  		PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.client);
  		this.client.world.addBlockEvent(packetIn.getBlockPosition(), packetIn.getBlockType(), packetIn.getData1(), packetIn.getData2());
@@ -22,7 +33,7 @@
  	}
  
  	/**
-@@ -1297,6 +1305,10 @@
+@@ -1297,6 +1309,10 @@
  
  		packetIn.setMapdataTo(mapdata);
  		mapitemrenderer.updateMapTexture(mapdata);
@@ -33,7 +44,7 @@
  	}
  
  	public void handleEffect(SPacketEffect packetIn) {
-@@ -1816,7 +1828,10 @@
+@@ -1816,7 +1832,10 @@
  				((DebugRendererWorldGenAttempts)this.client.debugRenderer.worldGenAttempts).addAttempt(packetbuffer.readBlockPos(), packetbuffer.readFloat(), packetbuffer.readFloat(), packetbuffer.readFloat(), packetbuffer.readFloat(), packetbuffer.readFloat());
  				LOGGER.warn("Unknown custom packed identifier: {}", (Object)resourcelocation);
  			} else {

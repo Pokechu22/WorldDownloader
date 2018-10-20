@@ -14,17 +14,6 @@
  */
 package com.uyjulian.LiteModWDL.mixin;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.network.NetHandlerPlayClient;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.INetHandlerPlayClient;
-import net.minecraft.network.play.server.SPacketBlockAction;
-import net.minecraft.network.play.server.SPacketChat;
-import net.minecraft.network.play.server.SPacketCustomPayload;
-import net.minecraft.network.play.server.SPacketMaps;
-import wdl.ReflectionUtils;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -34,6 +23,17 @@ import com.mojang.authlib.GameProfile;
 import com.uyjulian.LiteModWDL.PassCustomPayloadHandler;
 
 import io.netty.channel.Channel;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.network.NetHandlerPlayClient;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.INetHandlerPlayClient;
+import net.minecraft.network.play.server.SPacketBlockAction;
+import net.minecraft.network.play.server.SPacketChat;
+import net.minecraft.network.play.server.SPacketCustomPayload;
+import net.minecraft.network.play.server.SPacketMaps;
+import net.minecraft.util.text.ITextComponent;
+import wdl.ReflectionUtils;
 
 @Mixin(NetHandlerPlayClient.class)
 public abstract class MixinNetHandlerPlayClient implements INetHandlerPlayClient {
@@ -52,6 +52,13 @@ public abstract class MixinNetHandlerPlayClient implements INetHandlerPlayClient
 		}
 	}
 
+	@Inject(method="onDisconnect", at=@At("HEAD"))
+	private void onDisconnect(ITextComponent reason, CallbackInfo ci) {
+		/* WDL >>> */
+		wdl.WDLHooks.onNHPCDisconnect((NetHandlerPlayClient)(Object)this, reason);
+		/* <<< WDL */
+		//more down here
+	}
 	@Inject(method="handleChat", at=@At("RETURN"))
 	private void onHandleChat(SPacketChat p_147251_1_, CallbackInfo ci) {
 		//more up here

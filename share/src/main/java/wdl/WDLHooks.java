@@ -38,6 +38,7 @@ import net.minecraft.network.play.server.SPacketCustomPayload;
 import net.minecraft.network.play.server.SPacketMaps;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.storage.MapData;
 import wdl.api.IBlockEventListener;
@@ -403,6 +404,28 @@ public class WDLHooks {
 		} catch (Throwable e) {
 			WDL.crashed(e,
 					"WDL mod: exception in onNHPCHandleBlockAction event");
+		}
+	}
+
+	/**
+	 * Called when {@link NetHandlerPlayClient#onDisconnect(ITextComponent)} is called.
+	 * <br/>
+	 * Should be at the start of the method.
+	 *
+	 * @param reason The reason for the disconnect, as passed to onDisconnect.
+	 */
+	public static void onNHPCDisconnect(NetHandlerPlayClient sender, ITextComponent reason) {
+		if (WDL.downloading) {
+			// This is likely to be called from an unexpected thread, so queue a task
+			Minecraft.getInstance().addScheduledTask(WDL::stopDownload);
+
+			// This code was present on older versions of WDL which weren't missing
+			// the onDisconnect handler before.
+			// It presumably makes sure that the disconnect doesn't propagate to other state variables,
+			// but I don't completely trust it
+			try {
+				Thread.sleep(2000L);
+			} catch (InterruptedException e) { }
 		}
 	}
 

@@ -1,6 +1,17 @@
 --- net/minecraft/client/network/NetHandlerPlayClient.java
 +++ net/minecraft/client/network/NetHandlerPlayClient.java
-@@ -753,6 +753,10 @@
+@@ -704,6 +704,10 @@
+ 	 * Invoked when disconnecting, the parameter is a ChatComponent describing the reason for termination
+ 	 */
+ 	public void onDisconnect(ITextComponent reason) {
++		/* WDL >>> */
++		wdl.WDLHooks.onNHPCDisconnect(this, reason);
++		/* <<< WDL */
++
+ 		this.client.loadWorld((WorldClient)null);
+ 
+ 		if (this.guiScreenServer != null) {
+@@ -753,6 +757,10 @@
  		} else {
  			this.client.ingameGUI.getChatGUI().printChatMessage(packetIn.getChatComponent());
  		}
@@ -11,7 +22,7 @@
  	}
  
  	/**
-@@ -1139,6 +1143,10 @@
+@@ -1139,6 +1147,10 @@
  	public void handleBlockAction(SPacketBlockAction packetIn) {
  		PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.client);
  		this.client.world.addBlockEvent(packetIn.getBlockPosition(), packetIn.getBlockType(), packetIn.getData1(), packetIn.getData2());
@@ -22,7 +33,7 @@
  	}
  
  	/**
-@@ -1208,6 +1216,10 @@
+@@ -1208,6 +1220,10 @@
  		MapData mapdata = ItemMap.loadMapData(packetIn.getMapId(), this.client.world);
  		packetIn.setMapdataTo(mapdata);
  		this.client.gameRenderer.getMapItemRenderer().updateMapTexture(mapdata);
@@ -33,7 +44,7 @@
  	}
  
  	public void handleEffect(SPacketEffect packetIn) {
-@@ -1568,6 +1580,10 @@
+@@ -1568,6 +1584,10 @@
  			PathEntity pathentity = PathEntity.read(packetbuffer1);
  			this.client.debugRenderer.pathfinding.addPath(j, pathentity, f);
  		}
