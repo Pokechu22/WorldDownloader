@@ -11,18 +11,7 @@
  	}
  
  	/**
-@@ -179,6 +183,10 @@
- 	}
- 
- 	public void doPreChunk(int p_73025_1_, int p_73025_2_, boolean p_73025_3_) {
-+		/* WDL >>> */
-+		wdl.WDLHooks.onWorldClientDoPreChunk(this, p_73025_1_, p_73025_2_, p_73025_3_);
-+		/* <<< WDL */
-+
- 		if (p_73025_3_) {
- 			this.clientChunkProvider.loadChunk(p_73025_1_, p_73025_2_);
- 		} else {
-@@ -262,6 +270,10 @@
+@@ -262,6 +266,10 @@
  	}
  
  	public Entity removeEntityFromWorld(int entityID) {

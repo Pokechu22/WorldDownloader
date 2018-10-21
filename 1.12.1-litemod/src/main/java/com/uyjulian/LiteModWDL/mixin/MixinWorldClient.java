@@ -44,14 +44,6 @@ public abstract class MixinWorldClient extends World {
 		/* <<< WDL */
 	}
 
-	@Inject(method="doPreChunk", at=@At("HEAD"))
-	private void onDoPreChunk(int p_73025_1_, int p_73025_2_, boolean p_73025_3_, CallbackInfo ci) {
-		/* WDL >>> */
-		wdl.WDLHooks.onWorldClientDoPreChunk((WorldClient)(Object)this, p_73025_1_, p_73025_2_, p_73025_3_);
-		/* <<< WDL */
-		//more down here
-	}
-
 	@Inject(method="removeEntityFromWorld", at=@At("HEAD"))
 	private void onRemoveEntityFromWorld(int p_73028_1_, CallbackInfoReturnable<Entity> ci) {
 		/* WDL >>> */

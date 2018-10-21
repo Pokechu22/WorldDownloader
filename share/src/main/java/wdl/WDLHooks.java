@@ -40,6 +40,7 @@ import net.minecraft.network.play.server.SPacketBlockAction;
 import net.minecraft.network.play.server.SPacketChat;
 import net.minecraft.network.play.server.SPacketCustomPayload;
 import net.minecraft.network.play.server.SPacketMaps;
+import net.minecraft.network.play.server.SPacketUnloadChunk;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -190,39 +191,6 @@ public class WDLHooks {
 	}
 
 	/**
-	 * Called when {@link WorldClient#doPreChunk(int, int, boolean)} is called.
-	 * <br/>
-	 * Should be at the start of the method.
-	 */
-	public static void onWorldClientDoPreChunk(WorldClient sender, int x,
-			int z, boolean loading) {
-		INSTANCE.onWorldClientDoPreChunk0(sender, x, z, loading);
-	}
-	protected void onWorldClientDoPreChunk0(WorldClient sender, int x,
-			int z, boolean loading) {
-		try {
-			if (!WDL.downloading) { return; }
-
-			if (ENABLE_PROFILER) PROFILER.startSection("wdl");
-
-			if (!loading) {
-				if (ENABLE_PROFILER) PROFILER.startSection("onChunkNoLongerNeeded");
-				Chunk c = sender.getChunk(x, z);
-
-				if (ENABLE_PROFILER) PROFILER.startSection("Core");
-				wdl.WDLEvents.onChunkNoLongerNeeded(c);
-				if (ENABLE_PROFILER) PROFILER.endSection();  // "Core"
-
-				if (ENABLE_PROFILER) PROFILER.endSection();  // "onChunkNoLongerNeeded"
-			}
-
-			if (ENABLE_PROFILER) PROFILER.endSection();
-		} catch (Throwable e) {
-			WDL.crashed(e, "WDL mod: exception in onWorldDoPreChunk event");
-		}
-	}
-
-	/**
 	 * Called when {@link WorldClient#removeEntityFromWorld(int)} is called.
 	 * <br/>
 	 * Should be at the start of the method.
@@ -251,6 +219,37 @@ public class WDLHooks {
 		} catch (Throwable e) {
 			WDL.crashed(e,
 					"WDL mod: exception in onWorldRemoveEntityFromWorld event");
+		}
+	}
+
+	/**
+	 * Called when {@link NetHandlerPlayClient#processChunkUnload(SPacketUnloadChunk)} is called.
+	 * <br/>
+	 * Should be at the start of the method.
+	 */
+	public static void onNHPCHandleChunkUnload(NetHandlerPlayClient sender,
+			WorldClient world, SPacketUnloadChunk packet) {
+		INSTANCE.onNHPCHandleChunkUnload0(sender, world, packet);
+	}
+	protected void onNHPCHandleChunkUnload0(NetHandlerPlayClient sender,
+			WorldClient world, SPacketUnloadChunk packet) {
+		try {
+			if (!Minecraft.getInstance().isCallingFromMinecraftThread()) {
+				return;
+			}
+
+			if (!WDL.downloading) { return; }
+
+			if (ENABLE_PROFILER) PROFILER.startSection("wdl.onChunkNoLongerNeeded");
+			Chunk chunk = world.getChunk(packet.getX(), packet.getZ());
+
+			if (ENABLE_PROFILER) PROFILER.startSection("Core");
+			WDLEvents.onChunkNoLongerNeeded(chunk);
+			if (ENABLE_PROFILER) PROFILER.endSection();  // "Core"
+
+			if (ENABLE_PROFILER) PROFILER.endSection();  // "wdl.onChunkNoLongerNeeded"
+		} catch (Throwable e) {
+			WDL.crashed(e, "WDL mod: exception in onNHPCHandleChunkUnload event");
 		}
 	}
 

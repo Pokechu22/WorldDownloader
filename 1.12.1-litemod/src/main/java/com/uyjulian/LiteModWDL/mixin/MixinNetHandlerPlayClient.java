@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017 Pokechu22, julialy
+ * Copyright (c) 2017-2018Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -15,6 +15,7 @@
 package com.uyjulian.LiteModWDL.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -25,6 +26,7 @@ import com.uyjulian.LiteModWDL.PassCustomPayloadHandler;
 import io.netty.channel.Channel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.INetHandlerPlayClient;
@@ -32,6 +34,7 @@ import net.minecraft.network.play.server.SPacketBlockAction;
 import net.minecraft.network.play.server.SPacketChat;
 import net.minecraft.network.play.server.SPacketCustomPayload;
 import net.minecraft.network.play.server.SPacketMaps;
+import net.minecraft.network.play.server.SPacketUnloadChunk;
 import net.minecraft.util.text.ITextComponent;
 import wdl.ReflectionUtils;
 
@@ -52,6 +55,16 @@ public abstract class MixinNetHandlerPlayClient implements INetHandlerPlayClient
 		}
 	}
 
+	@Shadow
+	private WorldClient world;
+
+	@Inject(method="processChunkUnload", at=@At("HEAD"))
+	private void onProcessChunkUnload(SPacketUnloadChunk packetIn, CallbackInfo ci) {
+		/* WDL >>> */
+		wdl.WDLHooks.onNHPCHandleChunkUnload((NetHandlerPlayClient)(Object)this, this.world, packetIn);
+		/* <<< WDL */
+		//more down here
+	}
 	@Inject(method="onDisconnect", at=@At("HEAD"))
 	private void onDisconnect(ITextComponent reason, CallbackInfo ci) {
 		/* WDL >>> */

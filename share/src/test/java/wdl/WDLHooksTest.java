@@ -27,6 +27,7 @@ import net.minecraft.network.play.server.SPacketBlockAction;
 import net.minecraft.network.play.server.SPacketChat;
 import net.minecraft.network.play.server.SPacketCustomPayload;
 import net.minecraft.network.play.server.SPacketMaps;
+import net.minecraft.network.play.server.SPacketUnloadChunk;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import wdl.handler.AbstractWorldBehaviorTest;
@@ -57,12 +58,13 @@ public class WDLHooksTest extends AbstractWorldBehaviorTest {
 	}
 
 	@Test
-	public void testWorldClientDoPreChunk() {
+	public void testHandleChunkUnload() {
 		doWithMockHooks(mock -> {
 			makeMockWorld();
-			clientWorld.doPreChunk(0, 0, false);
+			SPacketUnloadChunk packet = new SPacketUnloadChunk(4, 4);
+			clientPlayer.connection.processChunkUnload(packet);
 
-			verify(mock).onWorldClientDoPreChunk0(clientWorld, 0, 0, false);
+			verify(mock).onNHPCHandleChunkUnload0(same(clientPlayer.connection), any(), same(packet));
 		});
 	}
 

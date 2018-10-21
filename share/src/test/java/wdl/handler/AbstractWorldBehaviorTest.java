@@ -33,6 +33,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiIngame;
+import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.MapItemRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -92,6 +93,7 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 		})).when(mc).displayGuiScreen(any());
 		when(mc.isCallingFromMinecraftThread()).thenReturn(true);
 		mc.ingameGUI = mock(GuiIngame.class);
+		when(mc.ingameGUI.getChatGUI()).thenReturn(mock(GuiNewChat.class));
 
 		clientWorld = TestWorld.makeClient();
 		serverWorld = TestWorld.makeServer();
