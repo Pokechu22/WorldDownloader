@@ -81,7 +81,7 @@ public class WDLHooksTest extends AbstractWorldBehaviorTest {
 	public void testHandleBlockAction() {
 		doWithMockHooks(mock -> {
 			makeMockWorld();
-			SPacketBlockAction packet = new SPacketBlockAction(BlockPos.ORIGIN, Blocks.NOTEBLOCK, 0, 0);
+			SPacketBlockAction packet = new SPacketBlockAction(BlockPos.ORIGIN, Blocks.NOTE_BLOCK, 0, 0);
 			clientPlayer.connection.handleBlockAction(packet);
 
 			verify(mock).onNHPCHandleBlockAction0(clientPlayer.connection, packet);

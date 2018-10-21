@@ -39,7 +39,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.renderer.EntityRenderer;
-import net.minecraft.client.settings.GameSettings;
+import net.minecraft.client.GameSettings;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
@@ -102,8 +102,9 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 				mock(EntityPlayerSP.class, withSettings().defaultAnswer(RETURNS_DEEP_STUBS))); // Use a mock for the rest of the defaults
 		mc.player = clientPlayer;
 		mc.gameRenderer = mock(EntityRenderer.class);
-		MapItemRenderer mockMapRenderer = mock(MapItemRenderer.class, withSettings().useConstructor(new Object[] {null})); // We need to use the constructor, as otherwise getMapInstanceIfExists will fail (it cannot be mocked due to the return type)
-		when(mc.gameRenderer.getMapItemRenderer()).thenReturn(mockMapRenderer);
+		// We need to use the constructor, as otherwise getMapInstanceIfExists will fail (it cannot be mocked due to the return type)
+		when(mc.gameRenderer.getMapItemRenderer()).thenReturn(
+				mock(MapItemRenderer.class, withSettings().useConstructor(new Object[] {null})));
 		mc.world = clientWorld;
 
 		mc.gameSettings = new GameSettings();
