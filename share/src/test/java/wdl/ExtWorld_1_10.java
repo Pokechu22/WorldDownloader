@@ -51,7 +51,10 @@ abstract class ExtWorldClient extends WorldClient {
 
 	@Override
 	protected ChunkProviderClient createChunkProvider() {
-		return new SimpleChunkProvider();
+		ChunkProviderClient provider = new SimpleChunkProvider();
+		// Update WorldClient.clientChunkProvider which is a somewhat redundant field
+		ReflectionUtils.findAndSetPrivateField(this, WorldClient.class, ChunkProviderClient.class, provider);
+		return provider;
 	}
 
 	@Override

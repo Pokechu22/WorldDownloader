@@ -17,8 +17,12 @@ package wdl;
 import java.util.Collection;
 import java.util.function.Consumer;
 
+import javax.annotation.Nonnull;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.google.common.annotations.VisibleForTesting;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
@@ -60,6 +64,14 @@ import wdl.versioned.VersionedFunctions;
  * All of these should be called regardless of any WDL state variables.
  */
 public class WDLHooks {
+	/**
+	 * Instance which should receive event calls.
+	 * Only exists (and is mutable) for the purpose of testing.
+	 */
+	@VisibleForTesting
+	@Nonnull
+	static WDLHooks INSTANCE = new WDLHooks();
+
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
@@ -83,6 +95,9 @@ public class WDLHooks {
 	 * Should be at end of the method.
 	 */
 	public static void onWorldClientTick(WorldClient sender) {
+		INSTANCE.onWorldClientTick0(sender);
+	}
+	protected void onWorldClientTick0(WorldClient sender) {
 		try {
 			if (ENABLE_PROFILER) PROFILER.startSection("wdl");
 
@@ -181,6 +196,10 @@ public class WDLHooks {
 	 */
 	public static void onWorldClientDoPreChunk(WorldClient sender, int x,
 			int z, boolean loading) {
+		INSTANCE.onWorldClientDoPreChunk0(sender, x, z, loading);
+	}
+	protected void onWorldClientDoPreChunk0(WorldClient sender, int x,
+			int z, boolean loading) {
 		try {
 			if (!WDL.downloading) { return; }
 
@@ -213,6 +232,10 @@ public class WDLHooks {
 	 */
 	public static void onWorldClientRemoveEntityFromWorld(WorldClient sender,
 			int eid) {
+		INSTANCE.onWorldClientRemoveEntityFromWorld0(sender, eid);
+	}
+	protected void onWorldClientRemoveEntityFromWorld0(WorldClient sender,
+			int eid) {
 		try {
 			if (!WDL.downloading) { return; }
 
@@ -238,6 +261,10 @@ public class WDLHooks {
 	 * Should be at the end of the method.
 	 */
 	public static void onNHPCHandleChat(NetHandlerPlayClient sender,
+			SPacketChat packet) {
+		INSTANCE.onNHPCHandleChat0(sender, packet);
+	}
+	protected void onNHPCHandleChat0(NetHandlerPlayClient sender,
 			SPacketChat packet) {
 		try {
 			if (!Minecraft.getInstance().isCallingFromMinecraftThread()) {
@@ -275,6 +302,10 @@ public class WDLHooks {
 	 */
 	public static void onNHPCHandleMaps(NetHandlerPlayClient sender,
 			SPacketMaps packet) {
+		INSTANCE.onNHPCHandleMaps0(sender, packet);
+	}
+	protected void onNHPCHandleMaps0(NetHandlerPlayClient sender,
+			SPacketMaps packet) {
 		try {
 			if (!Minecraft.getInstance().isCallingFromMinecraftThread()) {
 				return;
@@ -308,6 +339,10 @@ public class WDLHooks {
 	 * Should be at the end of the method.
 	 */
 	public static void onNHPCHandleCustomPayload(NetHandlerPlayClient sender,
+			SPacketCustomPayload packet) {
+		INSTANCE.onNHPCHandleCustomPayload0(sender, packet);
+	}
+	protected void onNHPCHandleCustomPayload0(NetHandlerPlayClient sender,
 			SPacketCustomPayload packet) {
 		try {
 			if (!Minecraft.getInstance().isCallingFromMinecraftThread()) {
@@ -374,6 +409,10 @@ public class WDLHooks {
 	 */
 	public static void onNHPCHandleBlockAction(NetHandlerPlayClient sender,
 			SPacketBlockAction packet) {
+		INSTANCE.onNHPCHandleBlockAction0(sender, packet);
+	}
+	protected void onNHPCHandleBlockAction0(NetHandlerPlayClient sender,
+			SPacketBlockAction packet) {
 		try {
 			if (!Minecraft.getInstance().isCallingFromMinecraftThread()) {
 				return;
@@ -415,6 +454,9 @@ public class WDLHooks {
 	 * @param reason The reason for the disconnect, as passed to onDisconnect.
 	 */
 	public static void onNHPCDisconnect(NetHandlerPlayClient sender, ITextComponent reason) {
+		INSTANCE.onNHPCDisconnect0(sender, reason);
+	}
+	protected void onNHPCDisconnect0(NetHandlerPlayClient sender, ITextComponent reason) {
 		if (WDL.downloading) {
 			// This is likely to be called from an unexpected thread, so queue a task
 			Minecraft.getInstance().addScheduledTask(WDL::stopDownload);
@@ -436,6 +478,9 @@ public class WDLHooks {
 	 * @param report
 	 */
 	public static void onCrashReportPopulateEnvironment(CrashReport report) {
+		INSTANCE.onCrashReportPopulateEnvironment0(report);
+	}
+	protected void onCrashReportPopulateEnvironment0(CrashReport report) {
 		WDL.addInfoToCrash(report);
 	}
 
@@ -560,6 +605,10 @@ public class WDLHooks {
 	 */
 	public static void injectWDLButtons(GuiIngameMenu gui, Collection<GuiButton> buttonList,
 			Consumer<GuiButton> addButton) {
+		INSTANCE.injectWDLButtons0(gui, buttonList, addButton);
+	}
+	protected void injectWDLButtons0(GuiIngameMenu gui, Collection<GuiButton> buttonList,
+			Consumer<GuiButton> addButton) {
 		int insertAtYPos = 0;
 
 		for (GuiButton btn : buttonList) {
@@ -593,6 +642,9 @@ public class WDLHooks {
 	 * @param button The button that was clicked.
 	 */
 	public static void handleWDLButtonClick(GuiIngameMenu gui, GuiButton button) {
+		INSTANCE.handleWDLButtonClick0(gui, button);
+	}
+	protected void handleWDLButtonClick0(GuiIngameMenu gui, GuiButton button) {
 		if (button.id == 1) { // "Disconnect", from vanilla
 			WDL.stopDownload();
 			// Disable the button to prevent double-clicks

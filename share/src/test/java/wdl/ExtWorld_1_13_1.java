@@ -64,7 +64,10 @@ abstract class ExtWorldClient extends WorldClient {
 
 	@Override
 	protected ChunkProviderClient createChunkProvider() {
-		return new SimpleChunkProvider();
+		ChunkProviderClient provider = new SimpleChunkProvider();
+		// Update WorldClient.clientChunkProvider which is a somewhat redundant field
+		ReflectionUtils.findAndSetPrivateField(this, WorldClient.class, ChunkProviderClient.class, provider);
+		return provider;
 	}
 
 	@Override
@@ -104,6 +107,11 @@ abstract class ExtWorldClient extends WorldClient {
 				new ItemUseContext(player, new ItemStack(block), pos, direction, 0, 0, 0));
 		IBlockState state = block.getStateForPlacement(context);
 		setBlockState(pos, state);
+	}
+
+	/** Defers to the 1.13.1-specific tick method */
+	public void tick() {
+		this.tick(() -> true);
 	}
 
 	private static final Biome[] NO_BIOMES = new Biome[16*16];
@@ -198,6 +206,11 @@ abstract class ExtWorldServer extends WorldServer {
 	@Override
 	public void addBlockEvent(BlockPos pos, Block blockIn, int eventID, int eventParam) {
 		onBlockEvent.accept(new BlockEventData(pos, blockIn, eventID, eventParam));
+	}
+
+	/** Defers to the 1.13.1-specific tick method */
+	public void tick() {
+		this.tick(() -> true);
 	}
 
 	private static final Biome[] NO_BIOMES = new Biome[16*16];

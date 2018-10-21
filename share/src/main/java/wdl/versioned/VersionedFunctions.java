@@ -45,6 +45,7 @@ import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.nbt.INBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.client.CPacketCustomPayload;
+import net.minecraft.network.play.server.SPacketCustomPayload;
 import net.minecraft.network.play.server.SPacketMaps;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -205,6 +206,16 @@ public class VersionedFunctions {
 	 */
 	public static CPacketCustomPayload makePluginMessagePacket(@ChannelName String channel, byte[] bytes) {
 		return PacketFunctions.makePluginMessagePacket(channel, bytes);
+	}
+
+	/**
+	 * Creates a server plugin message packet.  Intended for use in tests.
+	 * @param channel The channel to send on.
+	 * @param bytes The payload.
+	 * @return The new packet.
+	 */
+	public static SPacketCustomPayload makeServerPluginMessagePacket(@ChannelName String channel, byte[] bytes) {
+		return PacketFunctions.makeServerPluginMessagePacket(channel, bytes);
 	}
 
 	/**

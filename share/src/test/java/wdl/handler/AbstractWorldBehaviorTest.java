@@ -32,10 +32,14 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.gui.GuiIngame;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.MapItemRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.network.NetHandlerPlayClient;
+import net.minecraft.client.renderer.EntityRenderer;
+import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
@@ -87,15 +91,22 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 			mc.currentScreen = screen;
 		})).when(mc).displayGuiScreen(any());
 		when(mc.isCallingFromMinecraftThread()).thenReturn(true);
+		mc.ingameGUI = mock(GuiIngame.class);
 
 		clientWorld = TestWorld.makeClient();
 		serverWorld = TestWorld.makeServer();
 
-		NetHandlerPlayClient nhpc = new NetHandlerPlayClient(mc, null, null, new GameProfile(UUID.randomUUID(), "ClientPlayer"));
+		NetHandlerPlayClient nhpc = new NetHandlerPlayClient(mc, new GuiScreen() {}, null, new GameProfile(UUID.randomUUID(), "ClientPlayer"));
 		ReflectionUtils.findAndSetPrivateField(nhpc, WorldClient.class, clientWorld);
 		clientPlayer = VersionedFunctions.makePlayer(mc, clientWorld, nhpc,
 				mock(EntityPlayerSP.class, withSettings().defaultAnswer(RETURNS_DEEP_STUBS))); // Use a mock for the rest of the defaults
 		mc.player = clientPlayer;
+		mc.gameRenderer = mock(EntityRenderer.class);
+		MapItemRenderer mockMapRenderer = mock(MapItemRenderer.class, withSettings().useConstructor(new Object[] {null})); // We need to use the constructor, as otherwise getMapInstanceIfExists will fail (it cannot be mocked due to the return type)
+		when(mc.gameRenderer.getMapItemRenderer()).thenReturn(mockMapRenderer);
+		mc.world = clientWorld;
+
+		mc.gameSettings = new GameSettings();
 
 		NetHandlerPlayServer nhps = mock(NetHandlerPlayServer.class);
 		doAnswer(AdditionalAnswers.<Packet<NetHandlerPlayClient>>answerVoid(

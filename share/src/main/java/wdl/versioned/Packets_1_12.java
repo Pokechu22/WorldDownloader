@@ -20,6 +20,7 @@ import io.netty.buffer.Unpooled;
 import net.minecraft.item.ItemMap;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.client.CPacketCustomPayload;
+import net.minecraft.network.play.server.SPacketCustomPayload;
 import net.minecraft.network.play.server.SPacketMaps;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.MapData;
@@ -44,6 +45,13 @@ final class PacketFunctions {
 	 */
 	static CPacketCustomPayload makePluginMessagePacket(@ChannelName String channel, byte[] bytes) {
 		return new CPacketCustomPayload(channel, new PacketBuffer(Unpooled.copiedBuffer(bytes)));
+	}
+
+	/* (non-javadoc)
+	 * @see VersionedFunctions#makeServerPluginMessagePacket
+	 */
+	static SPacketCustomPayload makeServerPluginMessagePacket(@ChannelName String channel, byte[] bytes) {
+		return new SPacketCustomPayload(channel, new PacketBuffer(Unpooled.copiedBuffer(bytes)));
 	}
 
 	/* (non-javadoc)
