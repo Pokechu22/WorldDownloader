@@ -3,6 +3,9 @@
 # No reference issue
 CL: net/minecraft/world/IBlockAccess net/minecraft/world/IBlockReader
 
+# No reference issue, but my fault for confusing lex with regards to package access (I didn't know about some of the other access changes)
+CL: net/minecraft/client/settings/GameSettings net/minecraft/client/GameSettings
+
 # https://github.com/ModCoderPack/MCPBot-Issues/issues/625 (ish)
 CL: net/minecraft/world/MinecraftException net/minecraft/world/storage/SessionLockException
 
