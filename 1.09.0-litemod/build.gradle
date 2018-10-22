@@ -32,7 +32,7 @@ configurations {
 
 apply plugin: 'java'
 
-version = "4.0.3.2"
+version = "4.0.3.3-SNAPSHOT"
 group = "wdl"
 archivesBaseName = "LiteModWDL"
 libsDirName = "../../libs/${version}"
