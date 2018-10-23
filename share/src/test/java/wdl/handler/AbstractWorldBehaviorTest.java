@@ -40,7 +40,6 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.renderer.EntityRenderer;
-import net.minecraft.client.GameSettings;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
@@ -109,7 +108,7 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 				mock(MapItemRenderer.class, withSettings().useConstructor(new Object[] {null})));
 		mc.world = clientWorld;
 
-		mc.gameSettings = new GameSettings();
+		mc.gameSettings = VersionedFunctions.createNewGameSettings();
 
 		NetHandlerPlayServer nhps = mock(NetHandlerPlayServer.class);
 		doAnswer(AdditionalAnswers.<Packet<NetHandlerPlayClient>>answerVoid(

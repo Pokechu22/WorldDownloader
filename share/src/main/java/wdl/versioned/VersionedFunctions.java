@@ -449,4 +449,21 @@ public class VersionedFunctions {
 	public static <T> T customName(String name) {
 		return (T)TypeFunctions.customName(name);
 	}
+
+	/**
+	 * (EVIL) Returns a new instance of GameSettings. This class was repackaged in
+	 * 1.13, partially due to my own request out of confusion of how remapping
+	 * works. Unfortunately, we can't actually update our own mappings for 1.12,
+	 * because liteloader uses this class in various mixins.
+	 *
+	 * Intended for use in unit tests.
+	 *
+	 * @param <T> The type that is expected to be returned, which is inferred.
+	 * @return A GameSettings instance, but the package containing GameSettings
+	 *         might vary.
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T createNewGameSettings() {
+		return (T)TypeFunctions.createNewGameSettings();
+	}
 }

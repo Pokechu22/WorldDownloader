@@ -17,6 +17,7 @@ package wdl.versioned;
 import java.util.Map;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
+import net.minecraft.client.settings.GameSettings;
 
 /**
  * Functions that help deal with things that vary in type between versions.
@@ -43,5 +44,12 @@ class TypeFunctions {
 	 */
 	static String customName(String name) {
 		return name;
+	}
+
+	/* (non-javadoc)
+	 * @see VersionedFunctions#createNewGameSettings
+	 */
+	static GameSettings createNewGameSettings() {
+		return new GameSettings();
 	}
 }

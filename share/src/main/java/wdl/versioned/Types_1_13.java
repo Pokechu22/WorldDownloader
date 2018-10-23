@@ -16,6 +16,7 @@ package wdl.versioned;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
+import net.minecraft.client.GameSettings;
 import net.minecraft.util.text.TextComponentString;
 
 /**
@@ -43,5 +44,12 @@ class TypeFunctions {
 	 */
 	static TextComponentString customName(String name) {
 		return new TextComponentString(name);
+	}
+
+	/* (non-javadoc)
+	 * @see VersionedFunctions#createNewGameSettings
+	 */
+	static GameSettings createNewGameSettings() {
+		return new GameSettings();
 	}
 }
