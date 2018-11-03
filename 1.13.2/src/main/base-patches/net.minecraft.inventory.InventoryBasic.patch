@@ -1,0 +1,38 @@
+--- net/minecraft/inventory/InventoryBasic.java
++++ net/minecraft/inventory/InventoryBasic.java
+@@ -9,7 +9,7 @@
+ import net.minecraft.util.NonNullList;
+ import net.minecraft.util.text.ITextComponent;
+ 
+-public class InventoryBasic implements IInventory, IRecipeHelperPopulator {
++public class InventoryBasic implements IInventory, IRecipeHelperPopulator/* WDL >>> */, wdl.ducks.INetworkNameable/* <<< WDL */ {
+ 	private final ITextComponent inventoryTitle;
+ 	private final int slotsCount;
+ 	private final NonNullList<ItemStack> inventoryContents;
+@@ -17,11 +17,26 @@
+ 	private List<IInventoryChangedListener> listeners;
+ 	/** The custom name of this inventory, or null if it doesn't have one and {@link inventoryTitle} should be used instead */
+ 	private ITextComponent customName;
++	/* WDL >>> */
++	@Nullable
++	private String networkCustomName;
+ 
++	@Nullable
++	@Override
++	public String getCustomDisplayName() {
++		return networkCustomName;
++	}
++	/* <<< WDL */
++
+ 	public InventoryBasic(ITextComponent title, int slotCount) {
+ 		this.inventoryTitle = title;
+ 		this.slotsCount = slotCount;
+ 		this.inventoryContents = NonNullList.<ItemStack>withSize(slotCount, ItemStack.EMPTY);
++		/* WDL >>> */
++		if (title instanceof net.minecraft.util.text.TextComponentString) {
++			this.networkCustomName = title.getString();
++		}
++		/* <<< WDL */
+ 	}
+ 
+ 	/**

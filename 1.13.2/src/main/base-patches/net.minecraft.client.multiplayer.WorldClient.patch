@@ -1,0 +1,24 @@
+--- net/minecraft/client/multiplayer/WorldClient.java
++++ net/minecraft/client/multiplayer/WorldClient.java
+@@ -114,6 +114,10 @@
+ 		this.profiler.endStartSection("blocks");
+ 		this.tickBlocks();
+ 		this.profiler.endSection();
++
++		/* WDL >>> */
++		wdl.WDLHooks.onWorldClientTick(this);
++		/* <<< WDL */
+ 	}
+ 
+ 	/**
+@@ -252,6 +256,10 @@
+ 	}
+ 
+ 	public Entity removeEntityFromWorld(int entityID) {
++		/* WDL >>> */
++		wdl.WDLHooks.onWorldClientRemoveEntityFromWorld(this, entityID);
++		/* <<< WDL */
++
+ 		Entity entity = this.entitiesById.removeObject(entityID);
+ 
+ 		if (entity != null) {
