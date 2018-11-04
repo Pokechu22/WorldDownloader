@@ -16,7 +16,7 @@ package wdl.gui;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
@@ -144,7 +144,7 @@ public class GuiWDLExtensions extends Screen {
 				if (selectedEntry != this) {
 					selectedEntry = this;
 
-					mc.getSoundHandler().play(PositionedSoundRecord.master(
+					mc.getSoundHandler().play(SimpleSound.master(
 							SoundEvents.UI_BUTTON_CLICK, 1.0F));
 
 					updateDetailsList(mod);

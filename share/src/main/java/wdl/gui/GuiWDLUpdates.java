@@ -16,7 +16,7 @@ package wdl.gui;
 
 import java.util.List;
 
-import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.SoundEvents;
@@ -116,7 +116,7 @@ public class GuiWDLUpdates extends Screen {
 					mc.displayGuiScreen(new GuiWDLSingleUpdate(GuiWDLUpdates.this,
 							this.release));
 
-					mc.getSoundHandler().play(PositionedSoundRecord.master(
+					mc.getSoundHandler().play(SimpleSound.master(
 							SoundEvents.UI_BUTTON_CLICK, 1.0f));
 					return true;
 				}

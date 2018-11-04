@@ -16,7 +16,7 @@ package wdl.gui;
 
 import com.google.common.collect.Multimap;
 
-import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
@@ -189,17 +189,17 @@ public class GuiWDLChunkOverrides extends Screen {
 					partiallyRequested = true;
 				}
 
-				mc.getSoundHandler().play(PositionedSoundRecord.master(
+				mc.getSoundHandler().play(SimpleSound.master(
 								SoundEvents.UI_BUTTON_CLICK, 1.0F));
 				break;
 			case ERASING:
 				// TODO
-				mc.getSoundHandler().play(PositionedSoundRecord.master(
+				mc.getSoundHandler().play(SimpleSound.master(
 						SoundEvents.BLOCK_DISPENSER_FAIL, 1.0F));
 				break;
 			case MOVING:
 				// TODO
-				mc.getSoundHandler().play(PositionedSoundRecord.master(
+				mc.getSoundHandler().play(SimpleSound.master(
 						SoundEvents.BLOCK_DISPENSER_FAIL, 1.0F));
 				break;
 			}

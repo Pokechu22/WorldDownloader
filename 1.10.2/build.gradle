@@ -43,7 +43,7 @@ dependencies {
 minecraft {
     suppressMappingVersionWarnings = true
     version = "1.10.2"
-    mappings = "snapshot_20181020"
+    mappings = "snapshot_20181103"
     runDir = "run"
 
     // We don't currently want a source jar (doesn't work well for base edits, and the version info doesn't work yet)
@@ -59,6 +59,7 @@ minecraft {
 
 extraSrgs {
     addSrg file('../srgs/EntityHorseToEquineEntity.srg')
+    addSrg file('../srgs/PositionedSound.srg')
     addSrg file('../srgs/AnimalChestToContainerHorseChest.srg')
     addSrg file('../srgs/1.13.srg')
     addMethods file('../srgs/1.12_methods.csv')
