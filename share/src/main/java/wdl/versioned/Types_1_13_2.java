@@ -18,7 +18,7 @@ import java.util.Map;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.minecraft.client.GameSettings;
-import net.minecraft.client.renderer.EntityRenderer;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.util.text.TextComponentString;
 
 /**
@@ -58,7 +58,7 @@ class TypeFunctions {
 	/* (non-javadoc)
 	 * @see VersionedFunctions#getGameRendererClass
 	 */
-	static Class<EntityRenderer> getGameRendererClass() {
-		return EntityRenderer.class;
+	static Class<GameRenderer> getGameRendererClass() {
+		return GameRenderer.class;
 	}
 }

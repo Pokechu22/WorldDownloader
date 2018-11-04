@@ -466,4 +466,21 @@ public class VersionedFunctions {
 	public static <T> T createNewGameSettings() {
 		return (T)TypeFunctions.createNewGameSettings();
 	}
+
+	/**
+	 * Gets the class used for GameRenderer, né EntityRenderer. This was renamed in
+	 * 1.13.2. However, since liteloader uses it, we can't remap it in older
+	 * versions.
+	 *
+	 * Intended for use in unit tests. Unfortunately, we can't use mock(...)
+	 * directly on this class, since we don't have mockito on actual release code
+	 * (which this file is). We also can't do the ugly <T> thing here, since that
+	 * won't carry through the call to mock. And because this is a wildcard,
+	 * mock(...) doesn't necessarily match what we've got either (as far as the
+	 * compiler knows).  The only real solution is raw types, though that's ugly.
+	 */
+	@SuppressWarnings("rawtypes")
+	public static Class getGameRendererClass() {
+		return TypeFunctions.getGameRendererClass();
+	}
 }

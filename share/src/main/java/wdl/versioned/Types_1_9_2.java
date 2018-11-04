@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.minecraft.client.settings.GameSettings;
+import net.minecraft.client.renderer.EntityRenderer;
 
 /**
  * Functions that help deal with things that vary in type between versions.
@@ -51,5 +52,12 @@ class TypeFunctions {
 	 */
 	static GameSettings createNewGameSettings() {
 		return new GameSettings();
+	}
+
+	/* (non-javadoc)
+	 * @see VersionedFunctions#getGameRendererClass
+	 */
+	static Class<EntityRenderer> getGameRendererClass() {
+		return EntityRenderer.class;
 	}
 }

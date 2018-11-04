@@ -39,7 +39,6 @@ import net.minecraft.client.gui.MapItemRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.network.NetHandlerPlayClient;
-import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
@@ -78,6 +77,7 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 	/**
 	 * Creates a mock world, returning air for blocks and null for TEs.
 	 */
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	protected void makeMockWorld() {
 		mc = mock(Minecraft.class, withSettings().defaultAnswer(RETURNS_DEEP_STUBS));
 		ReflectionUtils.findAndSetPrivateField(null, Minecraft.class, Minecraft.class, mc);
@@ -102,7 +102,9 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 		clientPlayer = VersionedFunctions.makePlayer(mc, clientWorld, nhpc,
 				mock(EntityPlayerSP.class, withSettings().defaultAnswer(RETURNS_DEEP_STUBS))); // Use a mock for the rest of the defaults
 		mc.player = clientPlayer;
-		mc.gameRenderer = mock(EntityRenderer.class);
+		Class gameRendererClass = VersionedFunctions.getGameRendererClass();
+		Object mockGameRenderer = mock(gameRendererClass);
+		ReflectionUtils.findAndSetPrivateField(mc, Minecraft.class, gameRendererClass, mockGameRenderer); // UGLY WORKAROUND, see getGameRendererClass for more info
 		// We need to use the constructor, as otherwise getMapInstanceIfExists will fail (it cannot be mocked due to the return type)
 		when(mc.gameRenderer.getMapItemRenderer()).thenReturn(
 				mock(MapItemRenderer.class, withSettings().useConstructor(new Object[] {null})));

@@ -100,6 +100,7 @@ sourceSets {
             exclude "wdl/versioned/Types_1_9_2.java"
             exclude "wdl/versioned/Types_1_13.java"
             exclude "wdl/versioned/Types_1_13_1.java"
+            exclude "wdl/versioned/Types_1_13_2.java"
             exclude "wdl/gui/widget/ExtButton_1_12.java"
             exclude "wdl/gui/widget/ExtButton_1_13.java"
             exclude "wdl/gui/widget/ExtGuiList_1_12.java"

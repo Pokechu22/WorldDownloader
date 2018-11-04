@@ -17,6 +17,7 @@ package wdl.versioned;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import net.minecraft.client.GameSettings;
+import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.util.text.TextComponentString;
 
 /**
@@ -51,5 +52,12 @@ class TypeFunctions {
 	 */
 	static GameSettings createNewGameSettings() {
 		return new GameSettings();
+	}
+
+	/* (non-javadoc)
+	 * @see VersionedFunctions#getGameRendererClass
+	 */
+	static Class<EntityRenderer> getGameRendererClass() {
+		return EntityRenderer.class;
 	}
 }
