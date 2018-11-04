@@ -668,7 +668,11 @@ public class WDLPluginChannels {
 	private static String deferredInitState = null;
 
 	public static void sendInitPacket(String state) {
-		NetHandlerPlayClient nhpc = Minecraft.getInstance().getConnection();
+		sendInitPacket(Minecraft.getInstance().getConnection(), state);
+	}
+	private static void sendInitPacket(NetHandlerPlayClient nhpc, String state) {
+		assert nhpc != null : "Unexpected null nhpc: state=" + state + ", chans=" + REGISTERED_CHANNELS;
+
 		final String channel;
 		if (isRegistered(nhpc, INIT_CHANNEL_NEW)) {
 			channel = INIT_CHANNEL_NEW;
@@ -752,7 +756,7 @@ public class WDLPluginChannels {
 
 		if (deferredInitState != null) {
 			LOGGER.debug("[WDL] REGISTER: Trying to resolve deferred {}", deferredInitState);
-			sendInitPacket(deferredInitState);
+			sendInitPacket(nhpc, deferredInitState);
 		}
 	}
 
