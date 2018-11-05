@@ -27,7 +27,7 @@ buildscript {
 
 apply plugin: 'java'
 
-version = "4.0.3.3-SNAPSHOT"
+version = "4.0.3.3"
 group = "wdl"
 archivesBaseName = "LiteModWDL"
 libsDirName = "../../libs/${version}"
