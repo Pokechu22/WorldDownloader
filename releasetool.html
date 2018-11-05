@@ -13,12 +13,13 @@
 
 <body>
 <header>Internal tool to simplify release hidden JSON creation</header>
-<p><label><span class="form-label">choose a zip file</span><input type="file" accept="application/zip" id="file-input" multiple="multiple"/></label></p>
+<p><label><span class="form-label">choose a zip file</span><input type="file" accept=".zip,.litemod,application/zip" id="file-input" multiple="multiple"/></label></p>
 <p><label>Loader / type<input type="text" id="loader" /></label></p>
 <p><label>Forum comment link<input type="text" id="post" /></label></p>
 <p><label>Installed minecraft version</label></p>
 <p><select id="main-version">
 <optgroup label="-- select --"><option disabled selected> -- </option></optgroup>
+<optgroup label="Protocol 404"><option>1.13.2</option></optgroup>
 <optgroup label="Protocol 401"><option>1.13.1</option></optgroup>
 <optgroup label="Protocol 393"><option>1.13</option></optgroup>
 <optgroup label="Protocol 340"><option>1.12.2</option></optgroup>
@@ -37,6 +38,7 @@
 <p><label>Supported minecraft versions (hold shift or control)</label></p>
 <p><select id="supported-versions" size="23" multiple>
 <optgroup label="-- select --"><option disabled selected> -- </option></optgroup>
+<optgroup label="Protocol 404"><option>1.13.2</option></optgroup>
 <optgroup label="Protocol 401"><option>1.13.1</option></optgroup>
 <optgroup label="Protocol 393"><option>1.13</option></optgroup>
 <optgroup label="Protocol 340"><option>1.12.2</option></optgroup>
