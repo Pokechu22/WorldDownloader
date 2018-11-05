@@ -509,8 +509,6 @@ public class WDL {
 	 * Called after saving has finished.
 	 */
 	public static void onSaveComplete() {
-		WDL.minecraft.getSaveLoader().flushCache();
-		WDL.saveHandler.flush();
 		WDL.worldClient = null;
 
 		worldLoadingDeferred = false;
@@ -590,6 +588,8 @@ public class WDL {
 		} catch (Exception e) {
 			throw new RuntimeException("Threw exception waiting for asynchronous IO to finish. Hmmm.", e);
 		}
+		saveHandler.flush();
+		minecraft.getSaveLoader().flushCache();
 
 		if (backupType != WorldBackupType.NONE) {
 			WDLMessages.chatMessageTranslated(WDL.baseProps,
@@ -610,14 +610,22 @@ public class WDL {
 					progressScreen.setMinorTaskProgress(
 							I18n.format("wdl.saveProgress.backingUp.file", name), curFile++);
 				}
+				@Override
+				public boolean shouldCancel() {
+					// TODO
+					return false;
+				}
 			}
 
 			try {
 				WorldBackup.backupWorld(saveHandler.getWorldDirectory(),
-						getWorldFolderName(worldName), backupType, new BackupState());
-			} catch (IOException e) {
+						getWorldFolderName(worldName), backupType, new BackupState(),
+						baseProps.getValue(MiscSettings.BACKUP_COMMAND_TEMPLATE),
+						baseProps.getValue(MiscSettings.BACKUP_EXTENSION));
+			} catch (IOException ex) {
 				WDLMessages.chatMessageTranslated(WDL.baseProps,
-						WDLMessageTypes.ERROR, "wdl.messages.generalError.failedToBackUp");
+						WDLMessageTypes.ERROR, "wdl.messages.generalError.failedToBackUp", ex);
+				VersionedFunctions.makeBackupFailedToast(ex);
 			}
 		}
 

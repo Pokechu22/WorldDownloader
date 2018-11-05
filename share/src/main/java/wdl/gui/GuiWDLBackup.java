@@ -14,9 +14,20 @@
  */
 package wdl.gui;
 
+import java.io.File;
+
+import javax.annotation.Nullable;
+
+import com.google.common.io.Files;
+
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.resources.I18n;
 import wdl.WDL;
+import wdl.WorldBackup;
+import wdl.WorldBackup.IBackupProgressMonitor;
 import wdl.WorldBackup.WorldBackupType;
 import wdl.config.IConfiguration;
 import wdl.config.settings.MiscSettings;
@@ -34,10 +45,22 @@ public class GuiWDLBackup extends Screen {
 	private String description;
 
 	private WorldBackupType backupType;
+	private GuiButton doneButton;
+	private GuiTextField customBackupCommandTemplateFld;
+	private String customBackupCommandTemplate;
+	private GuiTextField customBackupExtensionFld;
+	private String customBackupExtension;
+	private long checkValidTime = 0;
+	private boolean isCommandValid = true;
+	private @Nullable String commandInvalidReason;
 
 	public GuiWDLBackup(GuiScreen parent) {
 		this.parent = parent;
 		this.config = WDL.baseProps;
+
+		this.backupType = config.getValue(MiscSettings.BACKUP_TYPE);
+		this.customBackupCommandTemplate = config.getValue(MiscSettings.BACKUP_COMMAND_TEMPLATE);
+		this.customBackupExtension = config.getValue(MiscSettings.BACKUP_EXTENSION);
 
 		this.description = I18n.format("wdl.gui.backup.description1") + "\n\n"
 				+ I18n.format("wdl.gui.backup.description2") + "\n\n"
@@ -46,23 +69,33 @@ public class GuiWDLBackup extends Screen {
 
 	@Override
 	public void initGui() {
-		backupType = config.getValue(MiscSettings.BACKUP_TYPE);
-
 		this.addButton(new Button(this.width / 2 - 100, 32,
 				200, 20, getBackupButtonText()) {
 			public @Override void performAction() {
 				switch (backupType) {
 				case NONE: backupType = WorldBackupType.FOLDER; break;
 				case FOLDER: backupType = WorldBackupType.ZIP; break;
-				case ZIP: backupType = WorldBackupType.NONE; break;
+				case ZIP: backupType = WorldBackupType.CUSTOM; break;
+				case CUSTOM: backupType = WorldBackupType.NONE; break;
 				}
 
+				updateFieldVisibility();
 				this.displayString = getBackupButtonText();
 			}
 		});
 
-		this.addButton(new ButtonDisplayGui(this.width / 2 - 100, height - 29,
-				200, 20, this.parent));
+		customBackupCommandTemplateFld = this.addTextField(new GuiTextField(1, fontRenderer,
+				width / 2 - 100, 54, 200, 20));
+		customBackupCommandTemplateFld.setMaxStringLength(255);
+		customBackupCommandTemplateFld.setText(this.customBackupCommandTemplate);
+		customBackupExtensionFld = this.addTextField(new GuiTextField(2, fontRenderer,
+				width / 2 + 160, 54, 40, 20));
+		customBackupExtensionFld.setText(this.customBackupExtension);
+
+		updateFieldVisibility();
+
+		doneButton = this.addButton(new ButtonDisplayGui(this.width / 2 - 100, height - 29,
+				200, 20, this::getParentOrWarning));
 	}
 
 	private String getBackupButtonText() {
@@ -70,11 +103,104 @@ public class GuiWDLBackup extends Screen {
 				backupType.getDescription());
 	}
 
+	private void updateFieldVisibility() {
+		boolean isCustom = (backupType == WorldBackupType.CUSTOM);
+		customBackupCommandTemplateFld.setVisible(isCustom);
+		customBackupExtensionFld.setVisible(isCustom);
+		if (isCustom) {
+			isCommandValid = false;
+			checkValidTime = System.currentTimeMillis();
+		} else {
+			// Non-custom ones are always valid
+			isCommandValid = true;
+			checkValidTime = 0;
+		}
+	}
+
+	@Override
+	public void charTyped(char keyChar) {
+		customBackupCommandTemplate = customBackupCommandTemplateFld.getText();
+		customBackupExtension = customBackupExtensionFld.getText();
+		if (customBackupCommandTemplateFld.getVisible()) {
+			isCommandValid = false;
+			checkValidTime = System.currentTimeMillis() + 1000; // 1 second later
+		}
+	}
+
 	@Override
 	public void onGuiClosed() {
-		config.setValue(MiscSettings.BACKUP_TYPE, backupType);
+		if (isCommandValid) {
+			config.setValue(MiscSettings.BACKUP_TYPE, backupType);
+			config.setValue(MiscSettings.BACKUP_COMMAND_TEMPLATE, customBackupCommandTemplate);
+			config.setValue(MiscSettings.BACKUP_EXTENSION, customBackupExtension);
 
-		WDL.saveProps();
+			WDL.saveProps();
+		}
+	}
+
+	@Override
+	public void tick() {
+		super.tick();
+
+		// Used to cancel an in-progress test backup... though there isn't much point right
+		// now given that this all happens on one thread
+		class ProgressMonitor implements IBackupProgressMonitor {
+			public ProgressMonitor() {
+				this.origCommandTemplate = customBackupCommandTemplate;
+				this.origExtension = customBackupExtension;
+				this.endTime = System.currentTimeMillis() + 5000; // 5 seconds later
+			}
+			public final String origCommandTemplate, origExtension;
+			public final long endTime;
+			@Override
+			public void setNumberOfFiles(int num) { }
+			@Override
+			public void onNextFile(String name) { }
+			@Override
+			public boolean shouldCancel() {
+				// True if too much time passed or the command changed
+				return !origCommandTemplate.equals(customBackupCommandTemplate) ||
+						!origExtension.equals(customBackupExtension) ||
+						System.currentTimeMillis() >= endTime;
+			}
+		}
+
+		long now = System.currentTimeMillis();
+		if (checkValidTime != 0 && now >= checkValidTime) {
+			File tempDir = null, tempOptions = null, tempDest = null;
+			try {
+				tempDir = Files.createTempDir();
+				File optionsTxt = new File(mc.gameDir, "options.txt"); // Should exist
+				tempOptions = new File(tempDir, "options.txt");
+				Files.copy(optionsTxt, tempOptions);
+				tempDest = File.createTempFile("wdlbackuptest", "." + customBackupExtension);
+				tempDest.delete(); // We only want it for the file name; the empty file actually causes other problems
+
+				WorldBackup.runCustomBackup(customBackupCommandTemplate, tempDir, tempDest, new ProgressMonitor());
+
+				isCommandValid = true;
+				commandInvalidReason = null;
+			} catch (Exception ex) {
+				isCommandValid = false;
+				commandInvalidReason = ex.getMessage();
+			}
+			if (tempOptions != null) tempOptions.delete();
+			if (tempDir != null) tempDir.delete();
+			if (tempDest != null) tempDest.delete();
+			checkValidTime = 0;
+		}
+
+		doneButton.enabled = (checkValidTime == 0);
+
+		int color = 0x40E040;
+		if (checkValidTime != 0) {
+			color = 0xE0E040; // Pending checking
+		} else if (!isCommandValid) {
+			color = 0xE04040; // Invalid
+		}
+
+		customBackupCommandTemplateFld.setTextColor(color);
+		customBackupExtensionFld.setTextColor(color);
 	}
 
 	@Override
@@ -87,7 +213,49 @@ public class GuiWDLBackup extends Screen {
 
 		super.render(mouseX, mouseY, partialTicks);
 
-		Utils.drawGuiInfoBox(description, width - 50, 3 * this.height / 5, width,
-				height, 48);
+		if (customBackupCommandTemplateFld.getVisible()) {
+			String text = I18n.format("wdl.gui.backup.customCommandTemplate");
+			int x = customBackupCommandTemplateFld.x - 3 - fontRenderer.getStringWidth(text);
+			int y = customBackupCommandTemplateFld.y + 6;
+			this.drawString(fontRenderer, text, x, y, 0xFFFFFF);
+		}
+		if (customBackupExtensionFld.getVisible()) {
+			String text = I18n.format("wdl.gui.backup.customExtension");
+			int x = customBackupExtensionFld.x - 3 - fontRenderer.getStringWidth(text);
+			int y = customBackupExtensionFld.y + 6;
+			this.drawString(fontRenderer, text, x, y, 0xFFFFFF);
+			if (customBackupExtensionFld.getText().equalsIgnoreCase("rar")) {
+				x = customBackupExtensionFld.x + customBackupExtensionFld.getWidth() + 14;
+				this.drawString(fontRenderer, "ಠ_ಠ", x, y, 0xFF0000); // See some of my experiences with dealing with rar files.  Use a non-proprietary format, please, it's for your own good!
+			}
+		}
+		if (!isCommandValid) {
+			this.drawCenteredString(fontRenderer, commandInvalidReason, this.width / 2, 76, 0xFF0000);
+		}
+
+		if (Utils.isMouseOverTextBox(mouseX, mouseY, customBackupCommandTemplateFld)) {
+			Utils.drawGuiInfoBox(I18n.format("wdl.gui.backup.customCommandTemplate.description"), width, height, 48);
+		} else if (Utils.isMouseOverTextBox(mouseX, mouseY, customBackupExtensionFld)) {
+			Utils.drawGuiInfoBox(I18n.format("wdl.gui.backup.customExtension.description"), width, height, 48);
+		} else {
+			Utils.drawGuiInfoBox(description, width - 50, 3 * this.height / 5, width,
+					height, 48);
+		}
+	}
+
+	private GuiScreen getParentOrWarning() {
+		if (this.isCommandValid) {
+			return parent;
+		} else {
+			return new GuiYesNo((result, id) -> {
+				if (result) {
+					mc.displayGuiScreen(parent);
+				} else {
+					mc.displayGuiScreen(GuiWDLBackup.this);
+				}
+			}, I18n.format("wdl.gui.backup.customCommandFailed.line1"),
+					I18n.format("wdl.gui.backup.customCommandFailed.line2"),
+					I18n.format("gui.yes"), I18n.format("gui.cancel"), 0);
+		}
 	}
 }

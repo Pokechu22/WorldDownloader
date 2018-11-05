@@ -16,6 +16,7 @@ package wdl;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -23,15 +24,20 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.SignStyle;
 import java.time.temporal.ChronoField;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
+import javax.annotation.Nullable;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import wdl.versioned.VersionedFunctions;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 
 /**
  * Performs backup of worlds.
@@ -52,7 +58,11 @@ public class WorldBackup {
 		/**
 		 * The world folder is copied to a zip folder.
 		 */
-		ZIP("wdl.backup.zip", "wdl.saveProgress.backingUp.title.zip");
+		ZIP("wdl.backup.zip", "wdl.saveProgress.backingUp.title.zip"),
+		/**
+		 * Backup via an external command.
+		 */
+		CUSTOM("wdl.backup.custom", "wdl.saveProgress.backingUp.title.custom");
 
 		/**
 		 * I18n key for the description (used on buttons).
@@ -98,6 +108,10 @@ public class WorldBackup {
 		 * @param name Name of the new file.
 		 */
 		public abstract void onNextFile(String name);
+		/**
+		 * Called to check if the backup should be canceled.
+		 */
+		public abstract boolean shouldCancel();
 	}
 
 	/**
@@ -116,6 +130,14 @@ public class WorldBackup {
 			.appendLiteral('-')
 			.appendValue(ChronoField.SECOND_OF_MINUTE, 2)
 			.toFormatter();
+
+	/** Exists only so that there is a subclass of IOException that looks more general */
+	private static final class BackupFailedException extends IOException {
+		private static final long serialVersionUID = 0;
+		public BackupFailedException(String message) {
+			super(message);
+		}
+	}
 
 	/**
 	 * Gets the .minecraft/backups folder.
@@ -138,6 +160,25 @@ public class WorldBackup {
 	 */
 	public static void backupWorld(File worldFolder, String worldName,
 			WorldBackupType type, IBackupProgressMonitor monitor) throws IOException {
+		assert type != WorldBackupType.CUSTOM;
+		backupWorld(worldFolder, worldName, type, monitor, null, null);
+	}
+
+	/**
+	 * Backs up the given world with the selected type.
+	 *
+	 * @param worldFolder The folder that contains the world to backup.
+	 * @param worldName The name of the world.
+	 * @param type The type to backup with.
+	 * @param monitor A monitor.
+	 * @param customCommand The command to run for the custom backup type.
+	 * @param customExtension The extension to use for the custom backup type.
+	 *
+	 * @throws IOException
+	 */
+	public static void backupWorld(File worldFolder, String worldName,
+			WorldBackupType type, IBackupProgressMonitor monitor,
+			@Nullable String customCommand, @Nullable String customExtension) throws IOException {
 
 		switch (type) {
 		case NONE: {
@@ -150,7 +191,7 @@ public class WorldBackup {
 					newWorldName);
 
 			if (destination.exists()) {
-				throw new IOException("Backup folder (" + destination +
+				throw new BackupFailedException("Backup folder (" + destination +
 						") already exists!");
 			}
 
@@ -165,11 +206,32 @@ public class WorldBackup {
 					archiveName);
 
 			if (destination.exists()) {
-				throw new IOException("Backup file (" + destination +
+				throw new BackupFailedException("Backup file (" + destination +
 						") already exists!");
 			}
 
 			long size = zipDirectory(worldFolder, destination, monitor);
+			VersionedFunctions.makeBackupToast(worldName, size);
+			return;
+		}
+		case CUSTOM: {
+			if (customCommand == null || customExtension == null) {
+				// This will be hit only for a specific method call, not the user not specifying one.
+				// (It will also cause a crash, which is why that matters; this shouldn't happen regardless of what the user does)
+				throw new BackupFailedException("Cannot use the custom backup type without a command and extension: command=" + customCommand + ", extension=" + customExtension);
+			}
+
+			String archiveName = LocalDateTime.now().format(DATE_FORMAT) + "_" + worldName + "." + customExtension;
+
+			File destination = new File(getBackupsFolder(),
+					archiveName);
+
+			if (destination.exists()) {
+				throw new BackupFailedException("Backup file (" + destination +
+						") already exists!");
+			}
+
+			long size = runCustomBackup(customCommand, worldFolder, destination, monitor);
 			VersionedFunctions.makeBackupToast(worldName, size);
 			return;
 		}
@@ -202,6 +264,67 @@ public class WorldBackup {
 		}
 
 		return destination.length();
+	}
+
+	/**
+	 * Runs the user-specified custom backup command.
+	 *
+	 * @param template The template to use to create the command to run.
+	 * @param src The source folder.
+	 * @param destination The destination file.
+	 * @param monitor Uses to decide to cancel the process.
+	 *
+	 * @return The size of the created file.
+	 */
+	public static long runCustomBackup(String template, File src, File destination,
+			IBackupProgressMonitor monitor) throws IOException {
+		if (!template.contains("${source}")) {
+			throw new BackupFailedException("Command template must specify ${source}");
+		}
+		if (!template.contains("${destination}")) {
+			throw new BackupFailedException("Command template must specify ${destination}");
+		}
+		String command = template
+				.replaceAll(Pattern.quote("${source}"), '"' + Matcher.quoteReplacement(src.getAbsolutePath()) + '"')
+				.replaceAll(Pattern.quote("${destination}"), '"' + Matcher.quoteReplacement(destination.getAbsolutePath()) + '"');
+
+		Process process = Runtime.getRuntime().exec(command);
+
+		try {
+			while (!process.waitFor(1, TimeUnit.SECONDS)) {
+				if (monitor.shouldCancel()) {
+					process.destroyForcibly();
+					throw new BackupFailedException("Backup was canceled");
+				}
+			}
+		} catch (InterruptedException e) {
+			try {
+				process.destroyForcibly().waitFor();
+			} catch (InterruptedException e2) {}
+		}
+
+		int exit = process.exitValue();
+		/*String message = IOUtils.toString(process.getInputStream(), StandardCharsets.UTF_8);
+		String errMessage = IOUtils.toString(process.getErrorStream(), StandardCharsets.UTF_8);
+		System.out.println(message);
+		System.out.println(errMessage);*/
+		if (exit != 0) {
+			throw new BackupFailedException("Exit status " + exit + " from backup program isn't 0");
+		}
+
+		if (!destination.exists()) {
+			throw new FileNotFoundException("Destination file wasn't created");
+		}
+
+		long size = destination.length();
+		if (size < 128) {
+			// If the file size is too small, it probably didn't actually compress anything
+			// (for instance, 7-zip makes an empty archive if it can't find the input)
+			// Granted, it _could_ actually have created something, but this almost
+			// certainly indicates something went wrong
+			throw new IOException(size + " bytes file was created; this is suspiciously small");
+		}
+		return size;
 	}
 
 	/**

@@ -14,6 +14,7 @@
  */
 package wdl.versioned;
 
+import java.io.IOException;
 import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
@@ -35,6 +36,7 @@ import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import wdl.config.settings.GeneratorSettings.Generator;
 
@@ -151,10 +153,26 @@ final class GeneratorFunctions {
 	 */
 	static void makeBackupToast(String name, long fileSize) {
 		// See GuiWorldEdit.createBackup
-		GuiToast guitoast = Minecraft.getInstance().getToastGui();
-		ITextComponent top = new TextComponentTranslation("selectWorld.edit.backupCreated", name);
-		ITextComponent bot = new TextComponentTranslation("selectWorld.edit.backupSize", MathHelper.ceil(fileSize / 1048576.0));
-		guitoast.add(new SystemToast(SystemToast.Type.WORLD_BACKUP, top, bot));
+		Minecraft.getInstance().addScheduledTask(() -> {
+			GuiToast guitoast = Minecraft.getInstance().getToastGui();
+			ITextComponent top = new TextComponentTranslation("selectWorld.edit.backupCreated", name);
+			ITextComponent bot = new TextComponentTranslation("selectWorld.edit.backupSize", MathHelper.ceil(fileSize / 1048576.0));
+			guitoast.add(new SystemToast(SystemToast.Type.WORLD_BACKUP, top, bot));
+		});
+	}
+
+	/* (non-javadoc)
+	 * @see VersionedFunctions#makeBackupFailedToast
+	 */
+	static void makeBackupFailedToast(IOException ex) {
+		// See GuiWorldEdit.createBackup
+		String message = ex.getMessage();
+		Minecraft.getInstance().addScheduledTask(() -> {
+			GuiToast guitoast = Minecraft.getInstance().getToastGui();
+			ITextComponent top = new TextComponentTranslation("selectWorld.edit.backupFailed");
+			ITextComponent bot = new TextComponentString(message);
+			guitoast.add(new SystemToast(SystemToast.Type.WORLD_BACKUP, top, bot));
+		});
 	}
 
 	/* (non-javadoc)

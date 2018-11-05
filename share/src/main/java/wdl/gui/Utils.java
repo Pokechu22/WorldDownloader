@@ -147,6 +147,10 @@ public class Utils {
 	 */
 	public static boolean isMouseOverTextBox(int mouseX, int mouseY,
 			GuiTextField textBox) {
+		if (!textBox.getVisible()) {
+			return false;
+		}
+
 		int scaledX = mouseX - textBox.x;
 		int scaledY = mouseY - textBox.y;
 

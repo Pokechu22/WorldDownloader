@@ -154,6 +154,13 @@ final class GeneratorFunctions {
 	}
 
 	/* (non-javadoc)
+	 * @see VersionedFunctions#makeBackupFailedToast
+	 */
+	static void makeBackupFailedToast(IOException ex) {
+		// No toasts in this version
+	}
+
+	/* (non-javadoc)
 	 * @see VersionedFunctions#VOID_FLAT_CONFIG
 	 */
 	static final String VOID_FLAT_CONFIG = "3;minecraft:air;127";

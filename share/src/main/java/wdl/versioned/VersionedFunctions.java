@@ -14,6 +14,7 @@
  */
 package wdl.versioned;
 
+import java.io.IOException;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -329,6 +330,15 @@ public class VersionedFunctions {
 	 */
 	public static void makeBackupToast(String name, long fileSize) {
 		GeneratorFunctions.makeBackupToast(name, fileSize);
+	}
+
+	/**
+	 * Makes a backup failed toast, on versions that support it.
+	 *
+	 * @param ex The exception.
+	 */
+	public static void makeBackupFailedToast(IOException ex) {
+		GeneratorFunctions.makeBackupFailedToast(ex);
 	}
 
 	/**

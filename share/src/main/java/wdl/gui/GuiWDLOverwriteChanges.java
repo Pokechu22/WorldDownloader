@@ -14,6 +14,8 @@
  */
 package wdl.gui;
 
+import java.io.IOException;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import wdl.WDL;
@@ -23,6 +25,7 @@ import wdl.WorldBackup;
 import wdl.WorldBackup.IBackupProgressMonitor;
 import wdl.WorldBackup.WorldBackupType;
 import wdl.gui.widget.Button;
+import wdl.versioned.VersionedFunctions;
 
 /**
  * GUI shown before possibly overwriting data in the world.
@@ -53,9 +56,10 @@ IBackupProgressMonitor {
 				WorldBackup.backupWorld(WDL.saveHandler.getWorldDirectory(),
 						WDL.getWorldFolderName(WDL.worldName) + "_user", type,
 						GuiWDLOverwriteChanges.this);
-			} catch (Exception e) {
+			} catch (IOException ex) {
 				WDLMessages.chatMessageTranslated(WDL.baseProps,
-						WDLMessageTypes.ERROR, "wdl.messages.generalError.failedToBackUp");
+						WDLMessageTypes.ERROR, "wdl.messages.generalError.failedToBackUp", ex);
+				VersionedFunctions.makeBackupFailedToast(ex);
 			} finally {
 				backingUp = false;
 
@@ -259,5 +263,10 @@ IBackupProgressMonitor {
 	public void onNextFile(String name) {
 		backupCurrent++;
 		backupFile = name;
+	}
+
+	@Override
+	public boolean shouldCancel() {
+		return false;
 	}
 }
