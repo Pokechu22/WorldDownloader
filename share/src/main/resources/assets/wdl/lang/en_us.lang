@@ -413,6 +413,8 @@ wdl.messages.generalError.failedToSetUpEntityUI=Error setting up Entity List UI:
 wdl.messages.generalError.failedToSaveEntity=Failed to save entity %s for chunk at %s, %s: %s
 wdl.messages.generalError.failedToSaveTE=Failed to save tile entity %s at %s for chunk at %s, %s: %s
 
+wdl.toast.backupFailed=Backup Failed!
+
 wdl.messages.updates.releaseCount=Found %s releases.
 wdl.messages.updates.failedToFindMatchingRelease=Could not find a release matching %s.  You may be running a full version that hasn't been released yet, or the update info has not been finished.  This should not generally happen; consider redownloading the mod.
 wdl.messages.updates.failedToFindMatchingRelease.snapshot=Could not find a release matching %s.  You are running a development snapshot version for %s.  Note that development snapshots are unsupported.

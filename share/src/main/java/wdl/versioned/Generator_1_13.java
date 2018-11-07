@@ -169,7 +169,8 @@ final class GeneratorFunctions {
 		String message = ex.getMessage();
 		Minecraft.getInstance().addScheduledTask(() -> {
 			GuiToast guitoast = Minecraft.getInstance().getToastGui();
-			ITextComponent top = new TextComponentTranslation("selectWorld.edit.backupFailed");
+			// NOTE: vanilla translation string is missing (MC-137308)
+			ITextComponent top = new TextComponentTranslation("wdl.toast.backupFailed");
 			ITextComponent bot = new TextComponentString(message);
 			guitoast.add(new SystemToast(SystemToast.Type.WORLD_BACKUP, top, bot));
 		});
