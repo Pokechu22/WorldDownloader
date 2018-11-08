@@ -72,7 +72,7 @@ public final class MiscSettings {
 	public static final Setting<WorldBackupType> BACKUP_TYPE =
 			new BaseSetting<>("Backup", WorldBackupType.ZIP, WorldBackupType::valueOf, WorldBackupType::name);
 	public static final StringSetting BACKUP_COMMAND_TEMPLATE =
-			new StringSetting("BackupCommand", "7z a ${target} ${source}");
+			new StringSetting("BackupCommand", "7z a ${destination} ${source}");
 	public static final StringSetting BACKUP_EXTENSION  =
 			new StringSetting("BackupExtension", "7z");
 
