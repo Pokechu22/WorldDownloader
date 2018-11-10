@@ -56,6 +56,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.AnvilChunkLoader;
+import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.storage.MapData;
 import net.minecraft.world.storage.SaveHandler;
 import wdl.config.settings.GeneratorSettings.Generator;
@@ -229,6 +230,21 @@ public class VersionedFunctions {
 	@Nullable
 	public static MapData getMapData(World world, SPacketMaps mapPacket) {
 		return PacketFunctions.getMapData(world, mapPacket);
+	}
+
+	/**
+	 * Makes sure that the given map its dimension set to the given dimension.
+	 *
+	 * In 1.13.0 and earlier, this value is a byte, and defaults to 0; this
+	 * sort of works but causes incorrect behavior for the player indicator.
+	 *
+	 * In 1.13.1 and later, the value is a DimensionType instance, which defaults
+	 * to null.  This causes crashes if not set.
+	 *
+	 * In either case, we should be setting the dimension.
+	 */
+	public static void setMapDimension(MapData map, Dimension dimension) {
+		PacketFunctions.setMapDimension(map, dimension);
 	}
 
 	/**

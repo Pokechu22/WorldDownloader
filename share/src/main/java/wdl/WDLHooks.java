@@ -318,6 +318,7 @@ public class WDLHooks {
 
 			if (mapData != null) {
 				if (ENABLE_PROFILER) PROFILER.startSection("Core");
+				VersionedFunctions.setMapDimension(mapData, WDL.worldClient.dimension);
 				WDLEvents.onMapDataLoaded(packet.getMapId(), mapData);
 				if (ENABLE_PROFILER) PROFILER.endSection();  // "Core"
 			} else {

@@ -23,6 +23,7 @@ import net.minecraft.network.play.client.CPacketCustomPayload;
 import net.minecraft.network.play.server.SPacketCustomPayload;
 import net.minecraft.network.play.server.SPacketMaps;
 import net.minecraft.world.World;
+import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.storage.MapData;
 import wdl.versioned.VersionedFunctions.ChannelName;
 
@@ -60,6 +61,13 @@ final class PacketFunctions {
 	@Nullable
 	static MapData getMapData(World world, SPacketMaps mapPacket) {
 		return ItemMap.loadMapData(mapPacket.getMapId(), world);
+	}
+
+	/* (non-javadoc)
+	 * {@see VersionedFunctions#setMapDimension}
+	 */
+	static void setMapDimension(MapData map, Dimension dim) {
+		map.dimension = (byte)dim.getType().getId();
 	}
 
 	/* (non-javadoc)
