@@ -82,6 +82,8 @@ sourceSets {
             exclude "wdl/versioned/Handlers_1_9_2.java"
             exclude "wdl/versioned/Handlers_1_10.java"
             exclude "wdl/versioned/Handlers_1_13.java"
+            exclude "wdl/versioned/Maps_1_13.java"
+            exclude "wdl/versioned/Maps_1_13_1.java"
             exclude "wdl/versioned/Packets_1_13.java"
             exclude "wdl/versioned/Registries_1_13_1.java"
             exclude "wdl/versioned/Types_1_9_2.java"

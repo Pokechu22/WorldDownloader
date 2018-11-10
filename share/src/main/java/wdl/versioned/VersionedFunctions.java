@@ -229,7 +229,7 @@ public class VersionedFunctions {
 	 */
 	@Nullable
 	public static MapData getMapData(World world, SPacketMaps mapPacket) {
-		return PacketFunctions.getMapData(world, mapPacket);
+		return MapFunctions.getMapData(world, mapPacket);
 	}
 
 	/**
@@ -244,7 +244,7 @@ public class VersionedFunctions {
 	 * In either case, we should be setting the dimension.
 	 */
 	public static void setMapDimension(MapData map, Dimension dimension) {
-		PacketFunctions.setMapDimension(map, dimension);
+		MapFunctions.setMapDimension(map, dimension);
 	}
 
 	/**
