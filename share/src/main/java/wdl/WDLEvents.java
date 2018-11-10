@@ -41,6 +41,7 @@ import wdl.handler.block.BlockHandler;
 import wdl.handler.blockaction.BlockActionHandler;
 import wdl.handler.entity.EntityHandler;
 import wdl.update.WDLUpdateChecker;
+import wdl.versioned.VersionedFunctions;
 
 /**
  * Handles all of the events for WDL.
@@ -304,14 +305,14 @@ public class WDLEvents {
 	 * Must be called when a Map Data packet is received, to store the image on
 	 * the map item.
 	 */
-	public static void onMapDataLoaded(int mapID,
-			MapData mapData) {
+	public static void onMapDataLoaded(int mapID, MapData mapData) {
 		if (!WDL.downloading) { return; }
 
 		if (!WDLPluginChannels.canSaveMaps()) {
 			return;
 		}
 
+		VersionedFunctions.setMapDimension(mapData, WDL.worldClient.dimension);
 		WDL.newMapDatas.put(mapID, mapData);
 
 		WDLMessages.chatMessageTranslated(WDL.baseProps,
