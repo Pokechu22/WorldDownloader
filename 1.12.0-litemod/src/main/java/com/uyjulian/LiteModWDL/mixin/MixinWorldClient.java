@@ -21,6 +21,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.storage.ISaveHandler;
 import net.minecraft.world.storage.WorldInfo;
+import wdl.ducks.IBaseChangesApplied;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -29,7 +30,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(WorldClient.class)
-public abstract class MixinWorldClient extends World {
+public abstract class MixinWorldClient extends World implements IBaseChangesApplied {
 
 	protected MixinWorldClient(ISaveHandler saveHandlerIn, WorldInfo info, Dimension providerIn,
 			Profiler profilerIn, boolean client) {

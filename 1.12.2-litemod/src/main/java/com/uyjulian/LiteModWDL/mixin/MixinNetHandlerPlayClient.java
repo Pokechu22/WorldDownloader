@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017-2018Pokechu22, julialy
+ * Copyright (c) 2017-2018 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -37,9 +37,10 @@ import net.minecraft.network.play.server.SPacketMaps;
 import net.minecraft.network.play.server.SPacketUnloadChunk;
 import net.minecraft.util.text.ITextComponent;
 import wdl.ReflectionUtils;
+import wdl.ducks.IBaseChangesApplied;
 
 @Mixin(NetHandlerPlayClient.class)
-public abstract class MixinNetHandlerPlayClient implements INetHandlerPlayClient {
+public abstract class MixinNetHandlerPlayClient implements INetHandlerPlayClient, IBaseChangesApplied {
 	@Inject(method="<init>", at=@At("RETURN"))
 	private void init(Minecraft mcIn, GuiScreen p_i46300_2_, NetworkManager networkManagerIn, GameProfile profileIn, CallbackInfo ci) {
 		if (networkManagerIn == null) return; // Happens during unit tests

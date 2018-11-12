@@ -1,5 +1,14 @@
 --- net/minecraft/client/gui/GuiIngameMenu.java
 +++ net/minecraft/client/gui/GuiIngameMenu.java
+@@ -6,7 +6,7 @@
+ import net.minecraft.client.resources.I18n;
+ import net.minecraft.realms.RealmsBridge;
+ 
+-public class GuiIngameMenu extends GuiScreen {
++public class GuiIngameMenu extends GuiScreen/* WDL >>> */ implements wdl.ducks.IBaseChangesApplied/* <<< WDL */ {
+ 	/**
+ 	 * Adds the buttons (and other controls) to the screen in question. Called when the GUI is displayed and when the
+ 	 * window resizes, the buttonList is cleared beforehand.
 @@ -19,6 +19,10 @@
  			 * Called when the left mouse button is pressed over this button. This method is specific to GuiButton.
  			 */

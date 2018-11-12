@@ -1,5 +1,14 @@
 --- net/minecraft/client/network/NetHandlerPlayClient.java
 +++ net/minecraft/client/network/NetHandlerPlayClient.java
+@@ -237,7 +237,7 @@
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
+ 
+-public class NetHandlerPlayClient implements INetHandlerPlayClient {
++public class NetHandlerPlayClient implements INetHandlerPlayClient/* WDL >>> */, wdl.ducks.IBaseChangesApplied/* <<< WDL */ {
+ 	private static final Logger LOGGER = LogManager.getLogger();
+ 	/**
+ 	 * The NetworkManager instance used to communicate with the server, used to respond to various packets (primarilly
 @@ -697,6 +697,10 @@
  	}
  

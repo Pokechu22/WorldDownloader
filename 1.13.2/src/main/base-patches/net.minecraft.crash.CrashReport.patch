@@ -1,5 +1,14 @@
 --- net/minecraft/crash/CrashReport.java
 +++ net/minecraft/crash/CrashReport.java
+@@ -18,7 +18,7 @@
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
+ 
+-public class CrashReport {
++public class CrashReport/* WDL >>> */ implements wdl.ducks.IBaseChangesApplied/* <<< WDL */ {
+ 	private static final Logger LOGGER = LogManager.getLogger();
+ 	/** Description of the crash report. */
+ 	private final String description;
 @@ -71,6 +71,21 @@
  			List<String> list = (List)Util.getJvmFlags().collect(Collectors.toList());
  			return String.format("%d total; %s", list.size(), list.stream().collect(Collectors.joining(" ")));

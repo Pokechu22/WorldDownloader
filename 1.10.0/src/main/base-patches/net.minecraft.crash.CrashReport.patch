@@ -1,5 +1,14 @@
 --- net/minecraft/crash/CrashReport.java
 +++ net/minecraft/crash/CrashReport.java
+@@ -17,7 +17,7 @@
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
+ 
+-public class CrashReport {
++public class CrashReport/* WDL >>> */ implements wdl.ducks.IBaseChangesApplied/* <<< WDL */ {
+ 	private static final Logger LOGGER = LogManager.getLogger();
+ 	/** Description of the crash report. */
+ 	private final String description;
 @@ -101,6 +101,22 @@
  				return IntCache.func_85144_b();
  			}

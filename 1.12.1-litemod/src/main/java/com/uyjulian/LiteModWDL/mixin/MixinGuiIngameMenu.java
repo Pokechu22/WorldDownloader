@@ -17,6 +17,7 @@ package com.uyjulian.LiteModWDL.mixin;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiIngameMenu;
 import net.minecraft.client.gui.GuiScreen;
+import wdl.ducks.IBaseChangesApplied;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -24,7 +25,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(GuiIngameMenu.class)
-public abstract class MixinGuiIngameMenu extends GuiScreen {
+public abstract class MixinGuiIngameMenu extends GuiScreen implements IBaseChangesApplied {
 
 	@Inject(method="initGui", at=@At("RETURN"))
 	private void onInitGui(CallbackInfo ci) {
