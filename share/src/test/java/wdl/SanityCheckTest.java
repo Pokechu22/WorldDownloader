@@ -42,9 +42,33 @@ public class SanityCheckTest extends MaybeMixinTest {
 	}
 
 	@Test
-	public void testMixin() throws Exception {
-		assumeTrue(SanityCheck.MIXIN.canRun());
-		SanityCheck.MIXIN.run();
+	public void testMixinInventoryBasic() throws Exception {
+		assumeTrue(SanityCheck.MIXIN_INVENTORYBASIC.canRun());
+		SanityCheck.MIXIN_INVENTORYBASIC.run();
+	}
+
+	@Test
+	public void testMixinGuiIngameMenu() throws Exception {
+		assumeTrue(SanityCheck.MIXIN_GUIINGAMEMENU.canRun());
+		SanityCheck.MIXIN_GUIINGAMEMENU.run();
+	}
+
+	@Test
+	public void testMixinWorldClient() throws Exception {
+		assumeTrue(SanityCheck.MIXIN_WORLDCLIENT.canRun());
+		SanityCheck.MIXIN_WORLDCLIENT.run();
+	}
+
+	@Test
+	public void testMixinNHPC() throws Exception {
+		assumeTrue(SanityCheck.MIXIN_NHPC.canRun());
+		SanityCheck.MIXIN_NHPC.run();
+	}
+
+	@Test
+	public void testMixinCrashReport() throws Exception {
+		assumeTrue(SanityCheck.MIXIN_CRASHREPORT.canRun());
+		SanityCheck.MIXIN_CRASHREPORT.run();
 	}
 
 	@Test

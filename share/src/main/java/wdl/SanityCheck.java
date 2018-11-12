@@ -14,16 +14,21 @@
  */
 package wdl;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.init.Blocks;
-import net.minecraft.inventory.InventoryBasic;
-import wdl.ducks.INetworkNameable;
-import wdl.versioned.VersionedFunctions;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.gui.GuiIngameMenu;
+import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.client.network.NetHandlerPlayClient;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.crash.CrashReport;
+import net.minecraft.init.Blocks;
+import net.minecraft.inventory.InventoryBasic;
+import wdl.ducks.IBaseChangesApplied;
+import wdl.ducks.INetworkNameable;
+import wdl.versioned.VersionedFunctions;
 
 /**
  * Sanity checks, run at compile and run time.
@@ -87,7 +92,8 @@ enum SanityCheck {
 			}
 		}
 	},
-	MIXIN("wdl.sanity.mixin") {
+	// Separately list all of these so that we know exactly which ones failed (otherwise an exception would only indicate the first failure)
+	MIXIN_INVENTORYBASIC("wdl.sanity.mixin") {
 		@Override
 		public void run() throws Exception {
 			if (!INetworkNameable.class.isAssignableFrom(InventoryBasic.class)) {
@@ -95,6 +101,40 @@ enum SanityCheck {
 			}
 		}
 	},
+	MIXIN_GUIINGAMEMENU("wdl.sanity.mixin") {
+		@Override
+		public void run() throws Exception {
+			if (!IBaseChangesApplied.class.isAssignableFrom(GuiIngameMenu.class)) {
+				// This one almost certainly can't happen at runtime, since the button isn't reachable
+				throw new Exception("GuiIngameMenu is missing base changes!");
+			}
+		}
+	},
+	MIXIN_WORLDCLIENT("wdl.sanity.mixin") {
+		@Override
+		public void run() throws Exception {
+			if (!IBaseChangesApplied.class.isAssignableFrom(WorldClient.class)) {
+				throw new Exception("WorldClient is missing base changes!");
+			}
+		}
+	},
+	MIXIN_NHPC("wdl.sanity.mixin") {
+		@Override
+		public void run() throws Exception {
+			if (!IBaseChangesApplied.class.isAssignableFrom(NetHandlerPlayClient.class)) {
+				throw new Exception("NetHandlerPlayClient is missing base changes!");
+			}
+		}
+	},
+	MIXIN_CRASHREPORT("wdl.sanity.mixin") {
+		@Override
+		public void run() throws Exception {
+			if (!IBaseChangesApplied.class.isAssignableFrom(CrashReport.class)) {
+				throw new Exception("CrashReport is missing base changes!");
+			}
+		}
+	},
+	// n.b. ClientBrandRetriever and DefaultResourcePack changes aren't needed/present on liteloader, so don't check them
 	ENCODING("wdl.sanity.encoding") {
 		@Override
 		public void run() throws Exception {

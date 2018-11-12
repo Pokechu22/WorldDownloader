@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017 Pokechu22, julialy
+ * Copyright (c) 2017-2018 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
 /**
  * Interface to get the actual name of a thing as sent over a network.
  */
-public interface INetworkNameable {
+public interface INetworkNameable extends IBaseChangesApplied {
 	/**
 	 * Gets the "true" custom display name of this item. For instance, a furnace
 	 * that has not been renamed will return null, but a furnace that has been named
