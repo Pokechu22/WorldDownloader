@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
 import net.minecraft.item.ItemMap;
 import net.minecraft.network.play.server.SPacketMaps;
 import net.minecraft.world.World;
-import net.minecraft.world.dimension.Dimension;
+import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.storage.MapData;
 
 /**
@@ -38,9 +38,16 @@ class MapFunctions {
 	}
 
 	/* (non-javadoc)
+	 * {@see VersionedFunctions#isMapDimensionNull}
+	 */
+	static boolean isMapDimensionNull(MapData map) {
+		return map.dimension == null;
+	}
+
+	/* (non-javadoc)
 	 * {@see VersionedFunctions#setMapDimension}
 	 */
-	static void setMapDimension(MapData map, Dimension dim) {
-		map.dimension = dim.getType();
+	static void setMapDimension(MapData map, DimensionType dim) {
+		map.dimension = dim;
 	}
 }

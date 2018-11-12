@@ -56,7 +56,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.AnvilChunkLoader;
-import net.minecraft.world.dimension.Dimension;
+import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.storage.MapData;
 import net.minecraft.world.storage.SaveHandler;
 import wdl.config.settings.GeneratorSettings.Generator;
@@ -233,18 +233,23 @@ public class VersionedFunctions {
 	}
 
 	/**
-	 * Makes sure that the given map its dimension set to the given dimension.
-	 *
-	 * In 1.13.0 and earlier, this value is a byte, and defaults to 0; this
-	 * sort of works but causes incorrect behavior for the player indicator.
-	 *
-	 * In 1.13.1 and later, the value is a DimensionType instance, which defaults
-	 * to null.  This causes crashes if not set.
-	 *
-	 * In either case, we should be setting the dimension.
+	 * Returns true if the map has a null dimension.  This can happen in 1.13.1 and later.
 	 */
-	public static void setMapDimension(MapData map, Dimension dimension) {
-		MapFunctions.setMapDimension(map, dimension);
+	public static boolean isMapDimensionNull(MapData map) {
+		// n.b. this could be written as return (Object)mapData.dimension == null
+		// but that's rather awkward and we already need versioned code for other reasons
+		// (And, if that's not extracted to its own method, it can create
+		// (true, but unwanted) dead code warnings)
+		return MapFunctions.isMapDimensionNull(map);
+	}
+
+	/**
+	 * Sets the map's dimension to the given dimension.  In some versions,
+	 * the {@link MapData#dimension} field is a byte, while in other ones it is
+	 * a DimensionType (which might start out null).
+	 */
+	public static void setMapDimension(MapData map, DimensionType dim) {
+		MapFunctions.setMapDimension(map, dim);
 	}
 
 	/**
