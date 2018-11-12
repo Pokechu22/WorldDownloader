@@ -162,4 +162,5 @@ fixMcSources {
 // Ensure that the API code is in the jar
 jar {
     from sourceSets.api.output
+    classifier = 'mc1.10.0' // For sorting purposes
 }

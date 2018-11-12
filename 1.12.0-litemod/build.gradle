@@ -172,6 +172,7 @@ fixMcSources {
 jar {
     from sourceSets.api.output
     from litemod.outputs
+    classifier = 'mc1.12.0' // For sorting purposes
 }
 
 test {

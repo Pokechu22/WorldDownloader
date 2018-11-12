@@ -217,6 +217,7 @@ jar {
             exclude 'META-INF', 'META-INF/**'
         }
     }
+    classifier = 'mc1.09.0' // For sorting purposes
 }
 
 test {
