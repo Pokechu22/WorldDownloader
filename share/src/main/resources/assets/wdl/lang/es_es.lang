@@ -294,7 +294,8 @@ wdl.messages.onWorldLoad.spigot=Marca del servidor = %s.  Usando renderizados de
 wdl.messages.onWorldLoad.vanilla=Marca del servidor = %s.  Usando renderizados de Minecraft vanilla.
 
 wdl.messages.onBlockEvent.noteblock=onBlockEvent: Bloque musical: %s tono: %s - %s
-wdl.messages.onMapSaved=onMapDataLoaded: Guardé imagen de mapa %s.
+
+wdl.messages.onMapSaved=onMapDataLoaded: Guardé imagen de mapa %s; %s.
 
 wdl.messages.onChunkNoLongerNeeded.saved=onChunkNoLongerNeeded: Guardé chunk en %s, %s
 wdl.messages.onChunkNoLongerNeeded.didNotSave=onChunkNoLongerNeeded: ¡No puedo guardar chunk en %s, %s porque es prohibido!

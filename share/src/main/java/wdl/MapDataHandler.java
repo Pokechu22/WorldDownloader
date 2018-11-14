@@ -20,6 +20,8 @@ import javax.annotation.Nullable;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.play.server.SPacketMaps;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.storage.MapData;
 import wdl.versioned.VersionedFunctions;
@@ -57,10 +59,10 @@ public final class MapDataHandler {
 	 * @param player {@link WDL#player}.
 	 * @return The MapData to save, though currently it is the same reference as the parameter.
 	 */
-	public static MapData repairMapData(int mapID, @Nonnull MapData mapData, @Nonnull EntityPlayerSP player) {
+	public static MapDataResult repairMapData(int mapID, @Nonnull MapData mapData, @Nonnull EntityPlayerSP player) {
 		// (assume player is the owner for the moment)
-		fixDimension(mapData, player);
-		return mapData;
+		DimensionType dim = fixDimension(mapData, player); 
+		return new MapDataResult(mapData, null, null, dim);
 	}
 
 	/**
@@ -69,17 +71,72 @@ public final class MapDataHandler {
 	 *
 	 * @param mapData The MapData.
 	 * @param confirmedOwner An entity that is known to be holding that map, or null.
-	 * @return true if the dimension was identified.
+	 * @return the dimension that was identified if one was found, or null otherwise
 	 */
-	static boolean fixDimension(MapData mapData, @Nullable Entity confirmedOwner) {
+	@Nullable
+	static DimensionType fixDimension(MapData mapData, @Nullable Entity confirmedOwner) {
 		if (confirmedOwner != null) {
 			assert confirmedOwner.world != null;
-			VersionedFunctions.setMapDimension(mapData, confirmedOwner.world.dimension.getType());
-			return true;
+			DimensionType dim = confirmedOwner.world.dimension.getType();
+			assert dim != null;
+			VersionedFunctions.setMapDimension(mapData, dim);
+			return dim;
 		} else if (VersionedFunctions.isMapDimensionNull(mapData)) {
 			// Ensure that some dimension is set, so that the game doesn't crash.
 			VersionedFunctions.setMapDimension(mapData, DimensionType.OVERWORLD);
+			// The dimension wasn't confirmed, so return null
 		}
-		return false;
+		return null;
+	}
+
+	public static class MapDataResult {
+		private MapDataResult(MapData map, @Nullable Integer xCenter, @Nullable Integer zCenter, @Nullable DimensionType dim) {
+			assert (xCenter == null) == (zCenter == null); // Either both should be null or neither should be
+			this.map = map;
+			this.xCenter = xCenter;
+			this.zCenter = zCenter;
+			this.dim = dim;
+		}
+		/**
+		 * The associated created MapData.
+		 */
+		public final MapData map;
+		/**
+		 * The computed x center value, or null if it couldn't be computed.
+		 */
+		@Nullable
+		public final Integer xCenter;
+		/**
+		 * The computed z center value, or null if it couldn't be computed. Note that
+		 * this is only null if xCenter is.
+		 */
+		@Nullable
+		public final Integer zCenter;
+		/**
+		 * The dimension found.
+		 */
+		@Nullable
+		public final DimensionType dim;
+
+		/**
+		 * Makes a string component version of what's known about the result.
+		 */
+		public ITextComponent toComponent() {
+			boolean hasCenter = (xCenter != null) && (zCenter != null);
+			boolean hasDim = (dim != null);
+			if (hasDim) {
+				if (hasCenter) {
+					return new TextComponentTranslation("wdl.messages.onMapSaved.dimAndCenterKnown", dim, xCenter, zCenter);
+				} else {
+					return new TextComponentTranslation("wdl.messages.onMapSaved.onlyDimKnown", dim);
+				}
+			} else {
+				if (hasCenter) {
+					return new TextComponentTranslation("wdl.messages.onMapSaved.onlyCenterKnown", xCenter, zCenter);
+				} else {
+					return new TextComponentTranslation("wdl.messages.onMapSaved.neitherKnown");
+				}
+			}
+		}
 	}
 }

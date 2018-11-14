@@ -35,6 +35,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.storage.MapData;
+import wdl.MapDataHandler.MapDataResult;
 import wdl.api.IWorldLoadListener;
 import wdl.api.WDLApi;
 import wdl.api.WDLApi.ModInfo;
@@ -317,12 +318,12 @@ public class WDLEvents {
 		// Assume that the current dimension is the right one
 		EntityPlayerSP player = WDL.player;
 		assert player != null;
-		MapData fixed = MapDataHandler.repairMapData(mapID, mapData, WDL.player);
+		MapDataResult result = MapDataHandler.repairMapData(mapID, mapData, WDL.player);
 
-		WDL.newMapDatas.put(mapID, fixed);
+		WDL.newMapDatas.put(mapID, result.map);
 
 		WDLMessages.chatMessageTranslated(WDL.baseProps,
-				WDLMessageTypes.ON_MAP_SAVED, "wdl.messages.onMapSaved", mapID);
+				WDLMessageTypes.ON_MAP_SAVED, "wdl.messages.onMapSaved", mapID, result.toComponent());
 	}
 
 	/**

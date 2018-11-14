@@ -308,7 +308,8 @@ wdl.messages.onWorldLoad.spigot=Server brand = %s.  Using spigot track distances
 wdl.messages.onWorldLoad.vanilla=Server brand = %s.  Using vanilla track distances.
 
 wdl.messages.onBlockEvent.noteblock=onBlockEvent: Note Block: %s pitch: %s - %s
-wdl.messages.onMapSaved=onMapDataLoaded: Carte enregistrée %s.
+
+wdl.messages.onMapSaved=onMapDataLoaded: Carte enregistrée %s; %s.
 
 wdl.messages.onChunkNoLongerNeeded.saved=onChunkNoLongerNeeded: Chunk enregsitré à %s, %s
 wdl.messages.onChunkNoLongerNeeded.didNotSave.null=onChunkNoLongerNeeded: Impossible d'enregistrer Chunk at %s, %s car il est null!?

@@ -362,7 +362,13 @@ wdl.messages.onWorldLoad.spigot=Server brand = %s.  Using spigot track distances
 wdl.messages.onWorldLoad.vanilla=Server brand = %s.  Using vanilla track distances.
 
 wdl.messages.onBlockEvent.noteblock=onBlockEvent: Note Block: %s pitch: %s - %s
-wdl.messages.onMapSaved=onMapDataLoaded: Saved map %s.
+
+# First value is map ID.  Second value is more detailed info
+wdl.messages.onMapSaved=onMapDataLoaded: Saved map %s; %s
+wdl.messages.onMapSaved.neitherKnown=neither the dimension nor the center could be found.
+wdl.messages.onMapSaved.onlyCenterKnown=the center is (%s, %s) but the dimension is unknown.
+wdl.messages.onMapSaved.onlyDimKnown=the dimension is %s but the center is unknown.
+wdl.messages.onMapSaved.dimAndCenterKnown=the dimension is %s and the center is (%s, %s).
 
 wdl.messages.onChunkNoLongerNeeded.saved=onChunkNoLongerNeeded: Saved chunk at %s, %s
 wdl.messages.onChunkNoLongerNeeded.didNotSave=onChunkNoLongerNeeded: Could not save chunk at %s, %s due to server restrictions!
