@@ -24,6 +24,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.storage.MapData;
+import net.minecraft.world.storage.MapDecoration;
 import wdl.versioned.VersionedFunctions;
 
 /**
@@ -60,69 +61,113 @@ public final class MapDataHandler {
 	 * @return The MapData to save, though currently it is the same reference as the parameter.
 	 */
 	public static MapDataResult repairMapData(int mapID, @Nonnull MapData mapData, @Nonnull EntityPlayerSP player) {
-		// (assume player is the owner for the moment)
-		DimensionType dim = fixDimension(mapData, player); 
-		return new MapDataResult(mapData, null, null, dim);
-	}
-
-	/**
-	 * Sets the dimension of the map, assuming that it's known. The game crashes if
-	 * this isn't set in 1.13.1 or 1.13.2.
-	 *
-	 * @param mapData The MapData.
-	 * @param confirmedOwner An entity that is known to be holding that map, or null.
-	 * @return the dimension that was identified if one was found, or null otherwise
-	 */
-	@Nullable
-	static DimensionType fixDimension(MapData mapData, @Nullable Entity confirmedOwner) {
-		if (confirmedOwner != null) {
-			assert confirmedOwner.world != null;
-			DimensionType dim = confirmedOwner.world.dimension.getType();
-			assert dim != null;
-			VersionedFunctions.setMapDimension(mapData, dim);
-			return dim;
-		} else if (VersionedFunctions.isMapDimensionNull(mapData)) {
-			// Ensure that some dimension is set, so that the game doesn't crash.
-			VersionedFunctions.setMapDimension(mapData, DimensionType.OVERWORLD);
-			// The dimension wasn't confirmed, so return null
+		// Assume the player is the owner and the only thing on the map (may not be true)
+		EntityPlayerSP confirmedOwner = player;
+		MapDecoration playerDecoration = null;
+		for (MapDecoration decoration : mapData.mapDecorations.values()) {
+			if (decoration.getImage() == 0) { // i.e. player
+				// There should only be 1
+				if (playerDecoration == null) {
+					playerDecoration = decoration;
+				} else {
+					// Already more than one
+					confirmedOwner = null;
+					playerDecoration = null;
+				}
+			}
 		}
-		return null;
+
+		MapDataResult result = new MapDataResult(mapData, confirmedOwner, playerDecoration);
+		result.fixDimension();
+		result.fixCenter();
+
+		return result;
 	}
 
 	public static class MapDataResult {
-		private MapDataResult(MapData map, @Nullable Integer xCenter, @Nullable Integer zCenter, @Nullable DimensionType dim) {
-			assert (xCenter == null) == (zCenter == null); // Either both should be null or neither should be
+		private MapDataResult(MapData map, @Nullable Entity confirmedOwner, @Nullable MapDecoration decoration) {
 			this.map = map;
-			this.xCenter = xCenter;
-			this.zCenter = zCenter;
-			this.dim = dim;
+			this.confirmedOwner = confirmedOwner;
+			this.decoration = decoration;
 		}
 		/**
 		 * The associated created MapData.
 		 */
 		public final MapData map;
 		/**
-		 * The computed x center value, or null if it couldn't be computed.
+		 * An entity that is known to be holding the map, or null.
 		 */
 		@Nullable
-		public final Integer xCenter;
+		public final Entity confirmedOwner;
 		/**
-		 * The computed z center value, or null if it couldn't be computed. Note that
-		 * this is only null if xCenter is.
+		 * The decoration associated with the owner.
 		 */
 		@Nullable
-		public final Integer zCenter;
+		public final MapDecoration decoration;
 		/**
-		 * The dimension found.
+		 * True if the x and z center values were successfully computed.
+		 */
+		public boolean hasCenter;
+		/**
+		 * The computed x center value, if known.
+		 */
+		public int xCenter;
+		/**
+		 * The computed z center value, if known.
+		 */
+		public int zCenter;
+		/**
+		 * The dimension found, or null if it wasn't.
 		 */
 		@Nullable
-		public final DimensionType dim;
+		public DimensionType dim = null;
+
+		/**
+		 * Sets the dimension of the map, assuming that it's known. The game crashes if
+		 * this isn't set in 1.13.1 or 1.13.2.
+		 */
+		void fixDimension() {
+			if (confirmedOwner != null) {
+				assert confirmedOwner.world != null;
+				DimensionType dim = confirmedOwner.world.dimension.getType();
+				assert dim != null;
+				VersionedFunctions.setMapDimension(map, dim);
+				this.dim = dim;
+			} else if (VersionedFunctions.isMapDimensionNull(map)) {
+				// Ensure that some dimension is set, so that the game doesn't crash.
+				VersionedFunctions.setMapDimension(map, DimensionType.OVERWORLD);
+				// The dimension wasn't confirmed, so don't notify this in chat
+			}
+		}
+
+		void fixCenter() {
+			if (confirmedOwner != null && decoration != null) {
+				// // 0: 1 block per pixel, 4: 16 blocks per pixel 
+				byte iconX = decoration.getX();
+				byte iconZ = decoration.getY();
+				if (iconX == -128 || iconX == 127 || iconZ == -128 || iconZ == 127) {
+					// Boundary case; we don't actually know where the player is
+					return;
+				}
+
+				int scale = 1 << map.scale;
+				int xOffset = iconX * scale;
+				int zOffset = iconZ * scale;
+
+				// This value is approximate, within like scale.
+				hasCenter = true;
+				xCenter = (int)confirmedOwner.posX - xOffset; 
+				zCenter = (int)confirmedOwner.posZ - zOffset;
+
+				map.xCenter = xCenter;
+				map.zCenter = zCenter;
+			}
+		}
 
 		/**
 		 * Makes a string component version of what's known about the result.
 		 */
 		public ITextComponent toComponent() {
-			boolean hasCenter = (xCenter != null) && (zCenter != null);
 			boolean hasDim = (dim != null);
 			if (hasDim) {
 				if (hasCenter) {
