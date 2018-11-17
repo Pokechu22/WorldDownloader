@@ -56,7 +56,7 @@ dependencies {
 
 minecraft {
     version = "1.10"
-    mappings = "snapshot_20181112"
+    mappings = "snapshot_20181117"
     runDir = "run"
 
     // We don't currently want a source jar (doesn't work well for base edits, and the version info doesn't work yet)
