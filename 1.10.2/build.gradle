@@ -61,6 +61,7 @@ extraSrgs {
     addSrg file('../srgs/EntityHorseToEquineEntity.srg')
     addSrg file('../srgs/PositionedSound.srg')
     addSrg file('../srgs/AnimalChestToContainerHorseChest.srg')
+    addSrg file('../srgs/Vec4bToMapDecoration.srg')
     addSrg file('../srgs/1.13.srg')
     addMethods file('../srgs/1.12_methods.csv')
     addMethods file('../srgs/liteloader_1.10_methods.csv')
