@@ -60,25 +60,11 @@ public abstract class AbstractBlockHandlerTest<B extends TileEntity, C extends C
 		this.blockEntityClass = blockEntityClass;
 		this.containerClass = containerClass;
 		this.handlerClass = handlerClass;
-
-		try {
-			// TODO: may in the future want to have other constructors, which
-			// wouldn't work with this
-			this.handler = handlerClass.newInstance();
-		} catch (InstantiationException | IllegalAccessException e) {
-			throw new RuntimeException(e);
-		}
 	}
 
 	protected final Class<B> blockEntityClass;
 	protected final Class<C> containerClass;
 	protected final Class<H> handlerClass;
-
-	/**
-	 * Handler under test.  Will be a new object, not the handler registered in
-	 * {@link VersionedFunctions}.
-	 */
-	protected final H handler;
 
 	/** A set containing all original TEs. */
 	private Set<BlockPos> origTEPoses;
@@ -86,9 +72,7 @@ public abstract class AbstractBlockHandlerTest<B extends TileEntity, C extends C
 	protected Map<BlockPos, TileEntity> tileEntities;
 
 	/**
-	 * Verifies that the handler is registered.
-	 *
-	 * Note that this does not actually use the {@link #handler} instance.
+	 * Verifies that the handler is registered, preemptively.
 	 */
 	@Test
 	public final void testHandlerExists() {
@@ -160,6 +144,11 @@ public abstract class AbstractBlockHandlerTest<B extends TileEntity, C extends C
 	 */
 	protected void runHandler(BlockPos pos, Container container) throws HandlerException {
 		TileEntity te = clientWorld.getTileEntity(pos);
+		BlockHandler<?, ?> handler = BlockHandler.getHandler(te.getClass(), container.getClass());
+		assertThat("Unexpected null handler",
+				handler, is(notNullValue()));
+		assertThat("Unexpected handler; should be the one tested by this class",
+				handler, is(instanceOf(handlerClass)));
 		handler.handleCasting(pos, container, te, clientWorld, tileEntities::put);
 	}
 
