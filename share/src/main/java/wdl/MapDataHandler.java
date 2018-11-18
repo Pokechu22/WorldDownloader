@@ -148,21 +148,18 @@ public final class MapDataHandler {
 				byte iconX = decoration.getX();
 				byte iconZ = decoration.getY();
 				if (iconX == -128 || iconX == 127 || iconZ == -128 || iconZ == 127) {
-					// Boundary case; we don't actually know where the player is
+					// Boundary case; if they're right on the edge we can't be completely sure
 					return;
 				}
 
-				int scale = 1 << map.scale;
-				int xOffset = iconX * scale / 2;
-				int zOffset = iconZ * scale / 2;
+				// Maps are always snapped to a grid based on the player position when it's created
+				// If the player is on the map, there's only one possible center position and the
+				// built-in function calculates it.
+				map.calculateMapCenter(confirmedOwner.posX, confirmedOwner.posZ, map.scale);
 
-				// This value is approximate, within like scale.
 				hasCenter = true;
-				xCenter = (int)(confirmedOwner.posX - xOffset); 
-				zCenter = (int)(confirmedOwner.posZ - zOffset);
-
-				map.xCenter = xCenter;
-				map.zCenter = zCenter;
+				xCenter = map.xCenter;
+				zCenter = map.zCenter;
 			}
 		}
 
