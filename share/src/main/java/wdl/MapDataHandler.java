@@ -142,7 +142,9 @@ public final class MapDataHandler {
 
 		void fixCenter() {
 			if (confirmedOwner != null && decoration != null) {
-				// // 0: 1 block per pixel, 4: 16 blocks per pixel 
+				// Maps have 128 pixels but the icon unit is a byte (256 values)
+				// 0: 128 blocks -> .5 blocks/icon unit, 1/pixel
+				// 4: 2048 blocks -> 8 blocks/icon unit, 16/pixel
 				byte iconX = decoration.getX();
 				byte iconZ = decoration.getY();
 				if (iconX == -128 || iconX == 127 || iconZ == -128 || iconZ == 127) {
@@ -151,13 +153,13 @@ public final class MapDataHandler {
 				}
 
 				int scale = 1 << map.scale;
-				int xOffset = iconX * scale;
-				int zOffset = iconZ * scale;
+				int xOffset = iconX * scale / 2;
+				int zOffset = iconZ * scale / 2;
 
 				// This value is approximate, within like scale.
 				hasCenter = true;
-				xCenter = (int)confirmedOwner.posX - xOffset; 
-				zCenter = (int)confirmedOwner.posZ - zOffset;
+				xCenter = (int)(confirmedOwner.posX - xOffset); 
+				zCenter = (int)(confirmedOwner.posZ - zOffset);
 
 				map.xCenter = xCenter;
 				map.zCenter = zCenter;
