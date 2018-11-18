@@ -18,8 +18,8 @@ import net.minecraft.init.Blocks;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.tileentity.TileEntityChest;
 
-public class ChestTest extends BaseChestTest<TileEntityChest, ContainerChest, ChestHandler> {
-	public ChestTest() {
-		super(Blocks.CHEST, Blocks.TRAPPED_CHEST, TileEntityChest.class, ContainerChest.class, ChestHandler.class);
+public class TrappedChestTest extends BaseChestTest<TileEntityChest, ContainerChest, ChestHandler> {
+	public TrappedChestTest() {
+		super(Blocks.TRAPPED_CHEST, Blocks.CHEST, TileEntityChest.class, ContainerChest.class, ChestHandler.class);
 	}
 }

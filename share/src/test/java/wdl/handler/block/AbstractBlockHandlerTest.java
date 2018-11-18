@@ -111,6 +111,7 @@ public abstract class AbstractBlockHandlerTest<B extends TileEntity, C extends C
 		IBlockState curState = clientWorld.getBlockState(pos);
 		BlockContainer curBlock = (BlockContainer)(curState.getBlock());
 		TileEntity defaultAtPos = VersionedFunctions.createNewBlockEntity(clientWorld, curBlock, curState);
+		assertEquals("The created default TE should match the manually specified one", te.getClass(), defaultAtPos.getClass());
 
 		serverWorld.setTileEntity(pos, te);
 		clientWorld.setTileEntity(pos, defaultAtPos);
