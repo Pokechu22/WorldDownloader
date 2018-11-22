@@ -29,6 +29,8 @@ import net.minecraft.world.storage.MapData;
  * DimensionType.
  */
 class MapFunctions {
+	private MapFunctions() { throw new AssertionError(); }
+
 	/* (non-javadoc)
 	 * {@see VersionedFunctions#getMapData}
 	 */

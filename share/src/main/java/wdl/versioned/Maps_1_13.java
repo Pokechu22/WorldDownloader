@@ -29,6 +29,8 @@ import net.minecraft.world.storage.MapData;
  * byte.
  */
 class MapFunctions {
+	private MapFunctions() { throw new AssertionError(); }
+
 	/* (non-javadoc)
 	 * {@see VersionedFunctions#getMapData}
 	 */
