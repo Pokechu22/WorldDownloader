@@ -15,11 +15,19 @@
 package wdl.handler.block;
 
 import net.minecraft.init.Blocks;
-import net.minecraft.inventory.ContainerChest;
 import net.minecraft.tileentity.TileEntityChest;
 
-public class TrappedChestTest extends BaseChestTest<TileEntityChest, ContainerChest, ChestHandler> {
-	public TrappedChestTest() {
-		super(Blocks.TRAPPED_CHEST, Blocks.CHEST, TileEntityChest.class, ContainerChest.class, ChestHandler.class);
+/**
+ * This weird wrapper is to have a public class but the file with a different name.
+ * JUnit refuses to use non-public test classes, but it's fine with this.
+ *
+ * Kinda awful, but IMO better than introducing a third file; this setup is already getting
+ * rather enterprise-grade...
+ */
+class TrappedChestTest {
+	public static class TestImpl extends BaseChestTest<TileEntityChest, ChestHandler> {
+		public TestImpl() {
+			super(Blocks.TRAPPED_CHEST, Blocks.CHEST, TileEntityChest.class, ChestHandler.class);
+		}
 	}
 }

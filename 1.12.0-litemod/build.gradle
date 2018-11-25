@@ -88,6 +88,7 @@ sourceSets {
             exclude "wdl/StandardEntityManagers_1_13_1.java"
             exclude "wdl/WDLChunkLoader_1_13.java"
             exclude "wdl/handler/block/BaseLargeChestHandler_1_13.java"
+            exclude "wdl/handler/block/TrappedChestHandler.java"
             exclude "wdl/versioned/GameRules_1_13.java"
             exclude "wdl/versioned/Generator_1_13.java"
             exclude "wdl/versioned/Gui_1_11.java"
@@ -129,6 +130,7 @@ sourceSets {
             exclude "wdl/ExtWorld_1_10.java"
             exclude "wdl/ExtWorld_1_13.java"
             exclude "wdl/ExtWorld_1_13_1.java"
+            exclude "wdl/handler/block/TrappedChestTest_1_13.java"
             exclude "wdl/lwts/WDLTestTweaker_1_9.java"
         }
     }

@@ -14,14 +14,20 @@
  */
 package wdl.handler.block;
 
-import net.minecraft.tileentity.TileEntityChest;
+import net.minecraft.init.Blocks;
+import net.minecraft.tileentity.TileEntityTrappedChest;
 
 /**
- * Handles regular chests.  Additionally handles trapped chests in versions where
- * both use TileEntityChest (1.12 and below).
+ * This weird wrapper is to have a public class but the file with a different name.
+ * JUnit refuses to use non-public test classes, but it's fine with this.
+ *
+ * Kinda awful, but IMO better than introducing a third file; this setup is already getting
+ * rather enterprise-grade...
  */
-public class ChestHandler extends BaseChestHandler<TileEntityChest> {
-	public ChestHandler() {
-		super(TileEntityChest.class, "container.chest", "container.chestDouble");
+class TrappedChestTest {
+	public static class TestImpl extends BaseChestTest<TileEntityTrappedChest, TrappedChestHandler> {
+		public TestImpl() {
+			super(Blocks.TRAPPED_CHEST, Blocks.CHEST, TileEntityTrappedChest.class, TrappedChestHandler.class);
+		}
 	}
 }

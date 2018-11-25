@@ -38,11 +38,11 @@ import wdl.handler.block.BlockHandler;
  *
  * This version simply uses information in the block state, which is now available in 1.13.
  *
- * It is also important to note that sometimes, this logic is flipped from the behavior in 1.13,
+ * It is also important to note that sometimes, this logic is flipped from the behavior in 1.12,
  * as chests now are rotated properly.
  */
-abstract class BaseLargeChestHandler extends BlockHandler<TileEntityChest, ContainerChest> {
-	protected BaseLargeChestHandler(Class<TileEntityChest> blockEntityClass, Class<ContainerChest> containerClass,
+abstract class BaseLargeChestHandler<B extends TileEntityChest> extends BlockHandler<B, ContainerChest> {
+	protected BaseLargeChestHandler(Class<B> blockEntityClass, Class<ContainerChest> containerClass,
 			String... defaultNames) {
 		super(blockEntityClass, containerClass, defaultNames);
 	}
@@ -60,8 +60,8 @@ abstract class BaseLargeChestHandler extends BlockHandler<TileEntityChest, Conta
 	 * @throws HandlerException As per {@link #handle}
 	 */
 	protected void saveDoubleChest(BlockPos clickedPos, ContainerChest container,
-			TileEntityChest blockEntity, IBlockReader world,
-			BiConsumer<BlockPos, TileEntityChest> saveMethod,
+			B blockEntity, IBlockReader world,
+			BiConsumer<BlockPos, B> saveMethod,
 			@Nullable String displayName) throws HandlerException {
 		IBlockState state = world.getBlockState(clickedPos);
 		ChestType type = state.get(BlockChest.TYPE);
@@ -80,12 +80,12 @@ abstract class BaseLargeChestHandler extends BlockHandler<TileEntityChest, Conta
 		TileEntity te1 = world.getTileEntity(chestPos1);
 		TileEntity te2 = world.getTileEntity(chestPos2);
 
-		if (!(te1 instanceof TileEntityChest && te2 instanceof TileEntityChest)) {
+		if (!(blockEntityClass.isInstance(te1) && blockEntityClass.isInstance(te2))) {
 			throw new HandlerException("wdl.messages.onGuiClosedWarning.failedToFindDoubleChest", WDLMessageTypes.ERROR);
 		}
 
-		TileEntityChest chest1 = (TileEntityChest) te1;
-		TileEntityChest chest2 = (TileEntityChest) te2;
+		B chest1 = blockEntityClass.cast(te1);
+		B chest2 = blockEntityClass.cast(te2);
 
 		saveContainerItems(container, chest1, 0);
 		saveContainerItems(container, chest2, 27);

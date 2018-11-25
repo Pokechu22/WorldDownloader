@@ -37,19 +37,18 @@ import wdl.handler.HandlerException;
 /**
  * Tests single and double chests.
  */
-public abstract class BaseChestTest<B extends TileEntityChest, C extends ContainerChest, H extends BlockHandler<B, C>> extends AbstractBlockHandlerTest<B, C, H> {
+public abstract class BaseChestTest<B extends TileEntityChest, H extends BaseChestHandler<B>> extends AbstractBlockHandlerTest<B, ContainerChest, H> {
 	private final Block ownBlock, otherBlock;
 
 	/**
 	 * @param ownBlock The block used by this class (e.g. regular chests)
 	 * @param otherBlock The block not used by this class (e.g. trapped chests)
 	 * @param blockEntityClass As per AbstractBlockHandlerTest
-	 * @param containerClass As per AbstractBlockHandlerTest
 	 * @param handlerClass As per AbstractBlockHandlerTest
 	 */
 	protected BaseChestTest(Block ownBlock, Block otherBlock,
-			Class<B> blockEntityClass, Class<C> containerClass, Class<H> handlerClass) {
-		super(blockEntityClass, containerClass, handlerClass);
+			Class<B> blockEntityClass, Class<H> handlerClass) {
+		super(blockEntityClass, ContainerChest.class, handlerClass);
 		this.ownBlock = ownBlock;
 		this.otherBlock = otherBlock;
 	}

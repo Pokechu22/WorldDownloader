@@ -34,9 +34,11 @@ import wdl.handler.HandlerException;
  *
  * This version works by checking all surrounding blocks and checking for a
  * (single) matching chest, which works for 1.12 and earlier.
+ *
+ * @param <B> The type of chest.  In 1.12, this will only be TileEntityChest in practice.
  */
-abstract class BaseLargeChestHandler extends BlockHandler<TileEntityChest, ContainerChest> {
-	protected BaseLargeChestHandler(Class<TileEntityChest> blockEntityClass, Class<ContainerChest> containerClass,
+abstract class BaseLargeChestHandler<B extends TileEntityChest> extends BlockHandler<B, ContainerChest> {
+	protected BaseLargeChestHandler(Class<B> blockEntityClass, Class<ContainerChest> containerClass,
 			String... defaultNames) {
 		super(blockEntityClass, containerClass, defaultNames);
 	}
@@ -54,8 +56,8 @@ abstract class BaseLargeChestHandler extends BlockHandler<TileEntityChest, Conta
 	 * @throws HandlerException As per {@link #handle}
 	 */
 	protected void saveDoubleChest(BlockPos clickedPos, ContainerChest container,
-			TileEntityChest blockEntity, IBlockReader world,
-			BiConsumer<BlockPos, TileEntityChest> saveMethod,
+			B blockEntity, IBlockReader world,
+			BiConsumer<BlockPos, B> saveMethod,
 			@Nullable String displayName) throws HandlerException {
 		// This is messy, but it needs to be like this because
 		// the left and right chests must be in the right positions.
@@ -65,7 +67,7 @@ abstract class BaseLargeChestHandler extends BlockHandler<TileEntityChest, Conta
 
 		pos1 = clickedPos;
 		te1 = world.getTileEntity(clickedPos);
-		assert te1 instanceof TileEntityChest;
+		assert blockEntityClass.isInstance(te1);
 
 		// We need separate variables for the above reason --
 		// pos1 isn't always the same as chestPos1 (and thus
@@ -138,7 +140,9 @@ abstract class BaseLargeChestHandler extends BlockHandler<TileEntityChest, Conta
 			chest2.setCustomName(customName(displayName));
 		}
 
-		saveMethod.accept(chestPos1, chest1);
-		saveMethod.accept(chestPos2, chest2);
+		// Note that the only type of chest we know of is TileEntityChest in 1.12, so
+		// these casts should always succeed.
+		saveMethod.accept(chestPos1, blockEntityClass.cast(chest1));
+		saveMethod.accept(chestPos2, blockEntityClass.cast(chest2));
 	}
 }

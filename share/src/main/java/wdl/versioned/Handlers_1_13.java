@@ -54,6 +54,7 @@ import wdl.handler.block.DropperHandler;
 import wdl.handler.block.FurnaceHandler;
 import wdl.handler.block.HopperHandler;
 import wdl.handler.block.ShulkerBoxHandler;
+import wdl.handler.block.TrappedChestHandler;
 import wdl.handler.blockaction.BlockActionHandler;
 import wdl.handler.entity.EntityHandler;
 import wdl.handler.entity.HopperMinecartHandler;
@@ -83,7 +84,8 @@ final class HandlerFunctions {
 			new DropperHandler(),
 			new FurnaceHandler(),
 			new HopperHandler(),
-			new ShulkerBoxHandler()
+			new ShulkerBoxHandler(),
+			new TrappedChestHandler()
 	);
 
 	/* (non-javadoc)
