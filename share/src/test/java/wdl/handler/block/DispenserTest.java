@@ -36,10 +36,9 @@ public class DispenserTest extends AbstractBlockHandlerTest<TileEntityDispenser,
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.DISPENSER);
-		TileEntityDispenser te = new TileEntityDispenser();
+		TileEntityDispenser te = makeBlockEntity(pos);
 		te.setInventorySlotContents(0, new ItemStack(Blocks.TNT));
 		te.setInventorySlotContents(8, new ItemStack(Blocks.TNT));
-		placeTEAt(pos, te);
 
 		runHandler(pos, makeClientContainer(pos));
 		checkAllTEs();
@@ -50,9 +49,8 @@ public class DispenserTest extends AbstractBlockHandlerTest<TileEntityDispenser,
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.DISPENSER);
-		TileEntityDispenser te = new TileEntityDispenser();
+		TileEntityDispenser te = makeBlockEntity(pos);
 		te.setCustomName(customName("Something"));
-		placeTEAt(pos, te);
 
 		runHandler(pos, makeClientContainer(pos));
 		checkAllTEs();
@@ -65,9 +63,8 @@ public class DispenserTest extends AbstractBlockHandlerTest<TileEntityDispenser,
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.DISPENSER);
-		TileEntityDispenser te = new TileEntityDispenser();
+		TileEntityDispenser te = makeBlockEntity(pos);
 		te.setCustomName(customName("Dispenser"));
-		placeTEAt(pos, te);
 
 		runHandler(pos, makeClientContainer(pos));
 		checkAllTEs();

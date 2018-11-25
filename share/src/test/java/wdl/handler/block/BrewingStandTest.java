@@ -40,13 +40,12 @@ public class BrewingStandTest extends AbstractBlockHandlerTest<TileEntityBrewing
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.BREWING_STAND);
-		TileEntityBrewingStand te = new TileEntityBrewingStand();
+		TileEntityBrewingStand te = makeBlockEntity(pos);
 		te.setInventorySlotContents(0, new ItemStack(Items.GLASS_BOTTLE));
 		te.setInventorySlotContents(1, new ItemStack(Items.GLASS_BOTTLE));
 		te.setInventorySlotContents(2, new ItemStack(Items.GLASS_BOTTLE));
 		te.setInventorySlotContents(3, new ItemStack(Items.SPIDER_EYE));
 		te.setInventorySlotContents(4, new ItemStack(Items.BLAZE_POWDER));
-		placeTEAt(pos, te);
 
 		runHandler(pos, makeClientContainer(pos));
 		checkAllTEs();
@@ -60,10 +59,9 @@ public class BrewingStandTest extends AbstractBlockHandlerTest<TileEntityBrewing
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.BREWING_STAND);
-		TileEntityBrewingStand te = new TileEntityBrewingStand();
+		TileEntityBrewingStand te = makeBlockEntity(pos);
 		te.setField(0, 10); // brew time
 		te.setField(1, 13); // fuel
-		placeTEAt(pos, te);
 
 		runHandler(pos, makeClientContainer(pos));
 		checkAllTEs();
@@ -77,9 +75,8 @@ public class BrewingStandTest extends AbstractBlockHandlerTest<TileEntityBrewing
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.BREWING_STAND);
-		TileEntityBrewingStand te = new TileEntityBrewingStand();
+		TileEntityBrewingStand te = makeBlockEntity(pos);
 		te.setCustomName(customName("Potion maker"));
-		placeTEAt(pos, te);
 
 		runHandler(pos, makeClientContainer(pos));
 		checkAllTEs();
@@ -95,9 +92,8 @@ public class BrewingStandTest extends AbstractBlockHandlerTest<TileEntityBrewing
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.BREWING_STAND);
-		TileEntityBrewingStand te = new TileEntityBrewingStand();
+		TileEntityBrewingStand te = makeBlockEntity(pos);
 		te.setCustomName(customName("Brewing Stand"));
-		placeTEAt(pos, te);
 
 		runHandler(pos, makeClientContainer(pos));
 		checkAllTEs();

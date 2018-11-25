@@ -1,3 +1,4 @@
+
 /*
  * This file is part of World Downloader: A mod to make backups of your
  * multiplayer worlds.
@@ -41,7 +42,7 @@ public class BeaconTest extends AbstractBlockHandlerTest<TileEntityBeacon, Conta
 		BlockPos center = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(center, Blocks.BEACON);
-		placeTEAt(center, new TileEntityBeacon());
+		makeBlockEntity(center);
 
 		runHandler(center, makeClientContainer(center));
 		checkAllTEs();
@@ -55,7 +56,7 @@ public class BeaconTest extends AbstractBlockHandlerTest<TileEntityBeacon, Conta
 		BlockPos center = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(center, Blocks.BEACON);
-		TileEntityBeacon te = placeTEAt(center, new TileEntityBeacon());
+		TileEntityBeacon te = makeBlockEntity(center);
 		te.setField(1, Potion.getIdFromPotion(MobEffects.JUMP_BOOST));
 
 		runHandler(center, makeClientContainer(center));
@@ -70,7 +71,7 @@ public class BeaconTest extends AbstractBlockHandlerTest<TileEntityBeacon, Conta
 		BlockPos center = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(center, Blocks.BEACON);
-		TileEntityBeacon te = placeTEAt(center, new TileEntityBeacon());
+		TileEntityBeacon te = makeBlockEntity(center);
 		te.setField(1, Potion.getIdFromPotion(MobEffects.JUMP_BOOST));
 		te.setField(2, Potion.getIdFromPotion(MobEffects.REGENERATION));
 

@@ -37,14 +37,13 @@ public class HopperTest extends AbstractBlockHandlerTest<TileEntityHopper, Conta
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.HOPPER);
-		TileEntityHopper te = new TileEntityHopper();
+		TileEntityHopper te = makeBlockEntity(pos);
 		te.setInventorySlotContents(0, new ItemStack(Items.DIAMOND));
 		// Old reference, and not just to the SethBling short
 		te.setInventorySlotContents(1, new ItemStack(Items.PAPER).setDisplayName(customName("This is the filler! //")));
 		te.setInventorySlotContents(2, new ItemStack(Items.PAPER).setDisplayName(customName("Fi-ll-er dance! //")));
 		te.setInventorySlotContents(3, new ItemStack(Items.PAPER).setDisplayName(customName("When ya don't have 'nuff stuff")));
 		te.setInventorySlotContents(4, new ItemStack(Items.PAPER).setDisplayName(customName("for a whole hopper slot! //")));
-		placeTEAt(pos, te);
 
 		runHandler(pos, makeClientContainer(pos));
 		checkAllTEs();
@@ -55,9 +54,8 @@ public class HopperTest extends AbstractBlockHandlerTest<TileEntityHopper, Conta
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.HOPPER);
-		TileEntityHopper te = new TileEntityHopper();
+		TileEntityHopper te = makeBlockEntity(pos);
 		te.setCustomName(customName("Bin"));
-		placeTEAt(pos, te);
 
 		runHandler(pos, makeClientContainer(pos));
 		checkAllTEs();
@@ -68,9 +66,8 @@ public class HopperTest extends AbstractBlockHandlerTest<TileEntityHopper, Conta
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.HOPPER);
-		TileEntityHopper te = new TileEntityHopper();
+		TileEntityHopper te = makeBlockEntity(pos);
 		te.setCustomName(customName("Hopper"));
-		placeTEAt(pos, te);
 
 		runHandler(pos, makeClientContainer(pos));
 		checkAllTEs();

@@ -37,10 +37,9 @@ public class DropperTest extends AbstractBlockHandlerTest<TileEntityDropper, Con
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.DROPPER);
-		TileEntityDropper te = new TileEntityDropper();
+		TileEntityDropper te = makeBlockEntity(pos);
 		te.setInventorySlotContents(0, new ItemStack(Items.COD)); // something something flopper
 		te.setInventorySlotContents(8, new ItemStack(Items.COD));
-		placeTEAt(pos, te);
 
 		runHandler(pos, makeClientContainer(pos));
 		checkAllTEs();
@@ -51,9 +50,8 @@ public class DropperTest extends AbstractBlockHandlerTest<TileEntityDropper, Con
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.DROPPER);
-		TileEntityDropper te = new TileEntityDropper();
+		TileEntityDropper te = makeBlockEntity(pos);
 		te.setCustomName(customName("Something"));
-		placeTEAt(pos, te);
 
 		runHandler(pos, makeClientContainer(pos));
 		checkAllTEs();
@@ -66,9 +64,8 @@ public class DropperTest extends AbstractBlockHandlerTest<TileEntityDropper, Con
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.DROPPER);
-		TileEntityDropper te = new TileEntityDropper();
+		TileEntityDropper te = makeBlockEntity(pos);
 		te.setCustomName(customName("Dropper"));
-		placeTEAt(pos, te);
 
 		runHandler(pos, makeClientContainer(pos));
 		checkAllTEs();

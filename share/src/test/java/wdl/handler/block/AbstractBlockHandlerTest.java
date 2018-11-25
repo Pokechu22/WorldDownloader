@@ -93,30 +93,35 @@ public abstract class AbstractBlockHandlerTest<B extends TileEntity, C extends C
 	}
 
 	/**
-	 * Puts the given block entity into the mock worlds at the given position.
-	 * The server world gets the exact block entity; the client gets a default one.
-	 *
-	 * The block entity may be modified after this method is called; in fact, this method
-	 * needs to be called first in some cases (some block entities such as beacons
-	 * require a world before properties can be changed on them)
+	 * Creates a new block entity at the given position and returns the server-sided
+	 * version, for modification. The client-side one will be the default block
+	 * entity for that block.
 	 *
 	 * @param pos The position
-	 * @param te The block entity to put
+	 * @param     <T> The type of block entity at the position, automatically
+	 *            inferred.  Calling code will throw an exception if it doesn't match.
 	 *
-	 * @return The same block entity that was passed in.
+	 * @return The server-sided block entity at that position.
 	 */
-	protected <T extends TileEntity> T placeTEAt(BlockPos pos, T te) {
+	@SuppressWarnings("unchecked")
+	protected <T extends TileEntity> T makeBlockEntity(BlockPos pos) {
 		origTEPoses.add(pos);
 
-		IBlockState curState = clientWorld.getBlockState(pos);
-		BlockContainer curBlock = (BlockContainer)(curState.getBlock());
-		TileEntity defaultAtPos = VersionedFunctions.createNewBlockEntity(clientWorld, curBlock, curState);
-		assertEquals("The created default TE should match the manually specified one", te.getClass(), defaultAtPos.getClass());
+		IBlockState serverState = clientWorld.getBlockState(pos);
+		BlockContainer serverBlock = (BlockContainer)(serverState.getBlock());
+		TileEntity serverBE = VersionedFunctions.createNewBlockEntity(clientWorld, serverBlock, serverState);
 
-		serverWorld.setTileEntity(pos, te);
-		clientWorld.setTileEntity(pos, defaultAtPos);
+		IBlockState clientState = clientWorld.getBlockState(pos);
+		BlockContainer clientBlock = (BlockContainer)(clientState.getBlock());
+		TileEntity clientBE = VersionedFunctions.createNewBlockEntity(clientWorld, clientBlock, clientState);
 
-		return te;
+		assertNotNull(clientBE);
+		assertNotNull(serverBE);
+
+		serverWorld.setTileEntity(pos, serverBE);
+		clientWorld.setTileEntity(pos, clientBE);
+
+		return (T)serverBE;
 	}
 
 	/**

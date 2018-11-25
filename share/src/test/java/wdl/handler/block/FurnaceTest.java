@@ -37,7 +37,7 @@ public class FurnaceTest extends AbstractBlockHandlerTest<TileEntityFurnace, Con
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.FURNACE);
-		TileEntityFurnace te = placeTEAt(pos, new TileEntityFurnace());
+		TileEntityFurnace te = makeBlockEntity(pos);
 		te.setInventorySlotContents(0, new ItemStack(Blocks.COAL_ORE));
 		te.setInventorySlotContents(1, new ItemStack(Items.WOODEN_HOE));
 		te.setInventorySlotContents(2, new ItemStack(Items.COAL));
@@ -51,7 +51,7 @@ public class FurnaceTest extends AbstractBlockHandlerTest<TileEntityFurnace, Con
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.FURNACE);
-		TileEntityFurnace te = placeTEAt(pos, new TileEntityFurnace());
+		TileEntityFurnace te = makeBlockEntity(pos);
 		te.setInventorySlotContents(0, new ItemStack(Blocks.COAL_ORE));
 		te.setInventorySlotContents(1, new ItemStack(Items.WOODEN_HOE));
 		te.setInventorySlotContents(2, new ItemStack(Items.COAL));
@@ -69,9 +69,8 @@ public class FurnaceTest extends AbstractBlockHandlerTest<TileEntityFurnace, Con
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.FURNACE);
-		TileEntityFurnace te = new TileEntityFurnace();
+		TileEntityFurnace te = makeBlockEntity(pos);
 		te.setCustomName(customName("Furni"));
-		placeTEAt(pos, te);
 
 		runHandler(pos, makeClientContainer(pos));
 		checkAllTEs();
@@ -84,9 +83,8 @@ public class FurnaceTest extends AbstractBlockHandlerTest<TileEntityFurnace, Con
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.FURNACE);
-		TileEntityFurnace te = new TileEntityFurnace();
+		TileEntityFurnace te = makeBlockEntity(pos);
 		te.setCustomName(customName("Furnace"));
-		placeTEAt(pos, te);
 
 		runHandler(pos, makeClientContainer(pos));
 		checkAllTEs();

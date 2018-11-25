@@ -37,9 +37,8 @@ public class ShulkerBoxTest extends AbstractBlockHandlerTest<TileEntityShulkerBo
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.RED_SHULKER_BOX);
-		TileEntityShulkerBox te = new TileEntityShulkerBox();
+		TileEntityShulkerBox te = makeBlockEntity(pos);
 		te.setInventorySlotContents(0, new ItemStack(Blocks.REDSTONE_BLOCK, 64));
-		placeTEAt(pos, te);
 
 		runHandler(pos, makeClientContainer(pos));
 		checkAllTEs();
@@ -50,10 +49,9 @@ public class ShulkerBoxTest extends AbstractBlockHandlerTest<TileEntityShulkerBo
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.LIME_SHULKER_BOX);
-		TileEntityShulkerBox te = new TileEntityShulkerBox();
+		TileEntityShulkerBox te = makeBlockEntity(pos);
 		te.setCustomName(customName("Favorite things"));
 		te.setInventorySlotContents(13, new ItemStack(Items.POISONOUS_POTATO, 64));
-		placeTEAt(pos, te);
 
 		runHandler(pos, makeClientContainer(pos));
 		checkAllTEs();
@@ -66,9 +64,8 @@ public class ShulkerBoxTest extends AbstractBlockHandlerTest<TileEntityShulkerBo
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.PURPLE_SHULKER_BOX);
-		TileEntityShulkerBox te = new TileEntityShulkerBox();
+		TileEntityShulkerBox te = makeBlockEntity(pos);
 		te.setCustomName(customName("Shulker Box"));
-		placeTEAt(pos, te);
 
 		runHandler(pos, makeClientContainer(pos));
 		checkAllTEs();
