@@ -14,6 +14,9 @@
  */
 package wdl;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -62,19 +65,20 @@ public final class MapDataHandler {
 	 */
 	public static MapDataResult repairMapData(int mapID, @Nonnull MapData mapData, @Nonnull EntityPlayerSP player) {
 		// Assume the player is the owner and the only thing on the map (may not be true)
-		EntityPlayerSP confirmedOwner = player;
-		MapDecoration playerDecoration = null;
-		for (MapDecoration decoration : mapData.mapDecorations.values()) {
-			if (decoration.getImage() == 0) { // i.e. player
-				// There should only be 1
-				if (playerDecoration == null) {
-					playerDecoration = decoration;
-				} else {
-					// Already more than one
-					confirmedOwner = null;
-					playerDecoration = null;
-				}
-			}
+		Entity confirmedOwner;
+		MapDecoration playerDecoration;
+
+		List<MapDecoration> playerDecorations = mapData.mapDecorations.values().stream()
+				.filter(dec -> dec.getImage() == 0) // i.e. player
+				.collect(Collectors.toList());
+
+		if (playerDecorations.size() == 1) {
+			// If there's only one decoration, assume that it's our player
+			confirmedOwner = player;
+			playerDecoration = playerDecorations.get(0);
+		} else {
+			confirmedOwner = null;
+			playerDecoration = null;
 		}
 
 		MapDataResult result = new MapDataResult(mapData, confirmedOwner, playerDecoration);
