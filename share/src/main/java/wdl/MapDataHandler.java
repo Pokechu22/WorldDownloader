@@ -57,7 +57,7 @@ public final class MapDataHandler {
 	private MapDataHandler() { throw new AssertionError(); }
 
 	/**
-	 * Fills in more 
+	 * Fills in more information about a map based on existing marker information.
 	 * @param mapID The ID of the map.
 	 * @param mapData The MapData to fix.
 	 * @param player {@link WDL#player}.

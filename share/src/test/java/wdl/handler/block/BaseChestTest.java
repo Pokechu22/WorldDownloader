@@ -77,20 +77,20 @@ public abstract class BaseChestTest<B extends TileEntityChest, H extends BaseChe
 			EnumFacing[] orientations = { direction.rotateY(), direction.rotateYCCW() };
 			for (EnumFacing orientation : orientations) {
 				makeMockWorld();
-	
+
 				BlockPos offset = center.offset(direction);
-	
+
 				placeBlockAt(center, ownBlock, orientation);
 				placeBlockAt(offset, ownBlock, orientation);
 				TileEntityChest te1 = makeBlockEntity(center);
 				te1.setInventorySlotContents(2, new ItemStack(Items.BEEF));
 				TileEntityChest te2 = makeBlockEntity(offset);
 				te2.setInventorySlotContents(8, new ItemStack(Items.COOKED_BEEF));
-	
+
 				ContainerChest container = (ContainerChest) makeClientContainer(center);
-	
+
 				runHandler(center, container);
-	
+
 				checkAllTEs();
 			}
 		}
@@ -108,16 +108,16 @@ public abstract class BaseChestTest<B extends TileEntityChest, H extends BaseChe
 			EnumFacing[] orientations = { direction.rotateY(), direction.rotateYCCW() };
 			for (EnumFacing orientation : orientations) {
 				makeMockWorld();
-	
+
 				BlockPos offset = center.offset(direction);
-	
+
 				placeBlockAt(center, ownBlock, orientation);
 				placeBlockAt(offset, ownBlock, orientation);
 				TileEntityChest te1 = makeBlockEntity(center);
 				te1.setInventorySlotContents(2, new ItemStack(Items.BEEF));
 				TileEntityChest te2 = makeBlockEntity(offset);
 				te2.setInventorySlotContents(8, new ItemStack(Items.COOKED_BEEF));
-	
+
 				for (EnumFacing direction2 : EnumFacing.Plane.HORIZONTAL) {
 					if (direction2 == direction) continue;
 					BlockPos offset2 = center.offset(direction2);
@@ -125,14 +125,14 @@ public abstract class BaseChestTest<B extends TileEntityChest, H extends BaseChe
 					TileEntityChest badTE = makeBlockEntity(offset2);
 					badTE.setInventorySlotContents(0, new ItemStack(Blocks.TNT));
 				}
-	
+
 				ContainerChest container = (ContainerChest) makeClientContainer(center);
-	
+
 				runHandler(center, container);
-	
+
 				// Only those two were saved
 				assertThat(tileEntities.keySet(), containsInAnyOrder(center, offset));
-	
+
 				assertSameNBT(tileEntities.get(center), te1);
 				assertSameNBT(tileEntities.get(offset), te2);
 			}
@@ -334,13 +334,13 @@ public abstract class BaseChestTest<B extends TileEntityChest, H extends BaseChe
 						te.setInventorySlotContents(13, new ItemStack(Items.NAME_TAG).setDisplayName(customName(pos.toString())));
 					}
 				}
-	
+
 				ContainerChest container = (ContainerChest) makeClientContainer(center);
 				TileEntity te1 = serverWorld.getTileEntity(center);
 				TileEntity te2 = serverWorld.getTileEntity(offset);
-	
+
 				runHandler(center, container);
-	
+
 				// Only those two were saved
 				assertThat(tileEntities.keySet(), containsInAnyOrder(center, offset));
 				assertSameNBT(tileEntities.get(center), te1);
