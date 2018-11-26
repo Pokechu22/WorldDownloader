@@ -33,9 +33,12 @@ public final class TestWorld {
 	private TestWorld() { throw new AssertionError(); }
 
 	public static ClientWorld makeClient() {
+		return makeClient(DimensionType.OVERWORLD);
+	}
+
+	public static ClientWorld makeClient(DimensionType dim) {
 		NetHandlerPlayClient nhpc = mock(NetHandlerPlayClient.class);
 		WorldSettings settings = new WorldSettings(0L, null, false, false, WorldType.DEFAULT);
-		DimensionType dim = DimensionType.OVERWORLD;
 		EnumDifficulty difficulty = EnumDifficulty.NORMAL;
 		Profiler profiler = new Profiler();
 
@@ -43,10 +46,13 @@ public final class TestWorld {
 	}
 
 	public static ServerWorld makeServer() {
+		return makeServer(DimensionType.OVERWORLD);
+	}
+
+	public static ServerWorld makeServer(DimensionType dim) {
 		MinecraftServer server = mock(MinecraftServer.class, withSettings().defaultAnswer(RETURNS_MOCKS));
 		ISaveHandler saveHandler = mock(ISaveHandler.class);
 		WorldInfo info = new WorldInfo() {};
-		DimensionType dim = DimensionType.OVERWORLD;
 		Profiler profiler = new Profiler();
 
 		return new ServerWorld(server, saveHandler, info, dim, profiler);

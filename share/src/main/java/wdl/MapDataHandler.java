@@ -20,8 +20,8 @@ import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.play.server.SPacketMaps;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -63,7 +63,7 @@ public final class MapDataHandler {
 	 * @param player {@link WDL#player}.
 	 * @return The MapData to save, though currently it is the same reference as the parameter.
 	 */
-	public static MapDataResult repairMapData(int mapID, @Nonnull MapData mapData, @Nonnull EntityPlayerSP player) {
+	public static MapDataResult repairMapData(int mapID, @Nonnull MapData mapData, @Nonnull EntityPlayer player) {
 		// Assume the player is the owner and the only thing on the map (may not be true)
 		Entity confirmedOwner;
 		MapDecoration playerDecoration;
@@ -89,7 +89,7 @@ public final class MapDataHandler {
 	}
 
 	public static class MapDataResult {
-		private MapDataResult(MapData map, @Nullable Entity confirmedOwner, @Nullable MapDecoration decoration) {
+		MapDataResult(MapData map, @Nullable Entity confirmedOwner, @Nullable MapDecoration decoration) {
 			this.map = map;
 			this.confirmedOwner = confirmedOwner;
 			this.decoration = decoration;
