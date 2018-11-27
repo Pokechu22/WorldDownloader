@@ -40,7 +40,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityCommandBlock;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ILockableContainer;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.storage.SaveHandler;
@@ -148,14 +147,6 @@ final class HandlerFunctions {
 	@Nullable
 	static TileEntity createNewBlockEntity(World world, BlockContainer block, IBlockState state) {
 		return block.createNewTileEntity(world, block.getMetaFromState(state));
-	}
-
-	/* (non-javadoc)
-	 * @see VersionedFunctions#getLargeChest
-	 */
-	@Nullable
-	static ILockableContainer getLargeChest(BlockChest block, World world, BlockPos pos, boolean allowBlockedChest) {
-		return block.getContainer(world, pos, allowBlockedChest);
 	}
 
 	/* (non-javadoc)

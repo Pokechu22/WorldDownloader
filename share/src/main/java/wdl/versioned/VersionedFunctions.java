@@ -34,7 +34,6 @@ import com.google.common.collect.ImmutableList;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockChest;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -51,7 +50,6 @@ import net.minecraft.network.play.server.SPacketMaps;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameRules;
-import net.minecraft.world.ILockableContainer;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
@@ -133,24 +131,6 @@ public class VersionedFunctions {
 	@Nullable
 	public static TileEntity createNewBlockEntity(World world, BlockContainer block, IBlockState state) {
 		return HandlerFunctions.createNewBlockEntity(world, block, state);
-	}
-
-	/**
-	 * Gets the container for a large chest. For use in testing only.
-	 *
-	 * @param block             The chest
-	 * @param world             The world
-	 * @param pos               The position to check
-	 * @param allowBlockedChest If false, then if the chest is blocked then
-	 *                          <code>null</code> will be returned. If true, ignores
-	 *                          blocking for the chest at the given position (but,
-	 *                          due to
-	 *                          <a href="https://bugs.mojang.com/browse/MC-99321">a
-	 *                          bug</a>, still checks if the neighbor is blocked in
-	 *                          versions before 1.13).
-	 */
-	public static ILockableContainer getLargeChest(BlockChest block, World world, BlockPos pos, boolean allowBlockedChest) {
-		return HandlerFunctions.getLargeChest(block, world, pos, allowBlockedChest);
 	}
 
 	/**
