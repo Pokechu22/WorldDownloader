@@ -28,7 +28,7 @@ import net.minecraft.world.storage.MapData;
  * In 1.13.0, loadMapData was changed to a string, but the dimension was still a
  * byte.
  */
-class MapFunctions {
+final class MapFunctions {
 	private MapFunctions() { throw new AssertionError(); }
 
 	/* (non-javadoc)

@@ -24,7 +24,7 @@ import net.minecraft.util.text.TextComponentString;
 /**
  * Functions that help deal with things that vary in type between versions.
  */
-class TypeFunctions {
+final class TypeFunctions {
 	/* (non-javadoc)
 	 * @see VersionedFunctions#getChunkListClass
 	 */

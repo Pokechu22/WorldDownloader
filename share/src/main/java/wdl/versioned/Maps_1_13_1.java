@@ -28,7 +28,7 @@ import net.minecraft.world.storage.MapData;
  * In 1.13.1 and later, loadMapData takes a string and the dimension field is a
  * DimensionType.
  */
-class MapFunctions {
+final class MapFunctions {
 	private MapFunctions() { throw new AssertionError(); }
 
 	/* (non-javadoc)

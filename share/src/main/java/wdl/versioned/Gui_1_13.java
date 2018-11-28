@@ -29,7 +29,7 @@ import net.minecraft.world.World;
 /**
  * Versioned functions related to GUIs.
  */
-class GuiFunctions {
+final class GuiFunctions {
 	private GuiFunctions() { throw new AssertionError(); }
 
 	/* (non-javadoc)

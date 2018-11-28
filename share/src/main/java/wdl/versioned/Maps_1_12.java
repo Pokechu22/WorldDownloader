@@ -32,7 +32,7 @@ import net.minecraft.world.storage.MapData;
  * In 1.12.2 and earlier, loadMapData takes an int and the dimension field is a
  * byte.
  */
-class MapFunctions {
+final class MapFunctions {
 	private MapFunctions() { throw new AssertionError(); }
 	private static final Logger LOGGER = LogManager.getLogger();
 

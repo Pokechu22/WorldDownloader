@@ -66,7 +66,7 @@ import wdl.handler.entity.EntityHandler;
  * Helper that determines version-specific information about things, such
  * as whether a world has skylight.
  */
-public class VersionedFunctions {
+public final class VersionedFunctions {
 	private VersionedFunctions() { throw new AssertionError(); }
 
 	/**
