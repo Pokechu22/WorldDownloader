@@ -58,6 +58,23 @@ public class MapDataHandlerTest extends MaybeMixinTest {
 	}
 
 	/**
+	 * Tests that a default dimension is present, even if the player is not known.
+	 * See #106.
+	 */
+	@Test
+	public void testDefaultDimension() {
+		EntityPlayer owner = new EntityOtherPlayerMP(TestWorld.makeClient(), mock(GameProfile.class));
+		owner.inventory.setInventorySlotContents(10, SOME_MAP_ITEM);
+		MapData map = new MapData("test");
+		map.trackingPosition = true;
+		map.updateVisiblePlayers(owner, SOME_MAP_ITEM);
+		MapData client = copyMapData(map);
+
+		MapDataHandler.repairMapData(0, client, owner);
+		assertFalse(VersionedFunctions.isMapDimensionNull(client));
+	}
+
+	/**
 	 * Tests that the map dimension is copied successfully.
 	 */
 	@Test
@@ -90,6 +107,54 @@ public class MapDataHandlerTest extends MaybeMixinTest {
 				assertEquals(map.xCenter, client.xCenter);
 				assertEquals(map.zCenter, client.zCenter);
 			}
+		}
+	}
+
+	/**
+	 * Tests that the map dimension is copied successfully.
+	 */
+	@Test
+	public void testPlayerOffMap() {
+		for (byte scale = 0; scale <= 4; scale++) {
+			MapData map = new MapData("test");
+			map.scale = scale;
+			map.trackingPosition = true;
+
+			EntityPlayer owner = new EntityOtherPlayerMP(TestWorld.makeClient(), mock(GameProfile.class));
+			owner.inventory.setInventorySlotContents(10, SOME_MAP_ITEM);
+			owner.posX = 900;
+			owner.posZ = 0;
+			map.scale = scale;
+			VersionedFunctions.setMapDimension(map, DimensionType.OVERWORLD);
+			map.calculateMapCenter(owner.posX, owner.posZ, map.scale);
+
+			owner.posX += 68 * (1 << scale); // i.e. a bit off the top
+			map.updateVisiblePlayers(owner, SOME_MAP_ITEM);
+
+			assertEquals("Should be no player markers", 0, map.mapDecorations.values().stream()
+					.filter(dec -> dec.getImage() == 0) // i.e. player
+					.count());
+			assertEquals("Should be one far player marker", 1, map.mapDecorations.values().stream()
+					.filter(dec -> dec.getImage() == 6) // i.e. player
+					.count());
+
+			MapData client = copyMapData(map);
+			MapDataResult result = MapDataHandler.repairMapData(0, client, owner);
+			assertFalse(result.hasCenter);
+
+			owner.posX += 360 * (1 << scale); // i.e. VERY far away
+			map.updateVisiblePlayers(owner, SOME_MAP_ITEM);
+
+			assertEquals("Should be no player markers", 0, map.mapDecorations.values().stream()
+					.filter(dec -> dec.getImage() == 0) // i.e. player
+					.count());
+			assertEquals("Should be no far player markers", 0, map.mapDecorations.values().stream()
+					.filter(dec -> dec.getImage() == 6) // i.e. player
+					.count());
+
+			client = copyMapData(map);
+			result = MapDataHandler.repairMapData(0, client, owner);
+			assertFalse(result.hasCenter);
 		}
 	}
 
