@@ -19,14 +19,16 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.SignStyle;
 import java.time.temporal.ChronoField;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -266,6 +268,7 @@ public class WorldBackup {
 		return destination.length();
 	}
 
+	private static final String REPLACE_SOURCE = "${source}", REPLACE_DESTINATION = "${destination}";
 	/**
 	 * Runs the user-specified custom backup command.
 	 *
@@ -278,25 +281,41 @@ public class WorldBackup {
 	 */
 	public static long runCustomBackup(String template, File src, File destination,
 			IBackupProgressMonitor monitor) throws IOException {
-		if (!template.contains("${source}")) {
-			throw new BackupFailedException("Command template must specify ${source}");
+		if (!template.contains(REPLACE_SOURCE)) {
+			throw new BackupFailedException("Command template must specify " + REPLACE_SOURCE);
 		}
-		if (!template.contains("${destination}")) {
-			throw new BackupFailedException("Command template must specify ${destination}");
+		if (!template.contains(REPLACE_DESTINATION)) {
+			throw new BackupFailedException("Command template must specify " + REPLACE_DESTINATION);
 		}
-		String command = template
-				.replaceAll(Pattern.quote("${source}"), '"' + Matcher.quoteReplacement(src.getAbsolutePath()) + '"')
-				.replaceAll(Pattern.quote("${destination}"), '"' + Matcher.quoteReplacement(destination.getAbsolutePath()) + '"');
+		// As per Runtime.exec(String, String[], File)
+		StringTokenizer tokenizer = new StringTokenizer(template);
+		List<String> args = new ArrayList<>();
+		while (tokenizer.hasMoreTokens()) {
+			String arg = tokenizer.nextToken();
+			arg = arg.replace(REPLACE_SOURCE, src.getAbsolutePath());
+			arg = arg.replace(REPLACE_DESTINATION, destination.getAbsolutePath());
+			args.add(arg);
+		}
+		Process process = new ProcessBuilder(args)
+				.redirectErrorStream(true)
+				.start();
 
-		Process process = Runtime.getRuntime().exec(command);
-
-		try {
+		try (InputStream processOutput = process.getInputStream()) {
 			while (!process.waitFor(1, TimeUnit.SECONDS)) {
+				/*int avail = processOutput.available();
+				System.out.println("Available: " + avail);
+				byte[] bytes = new byte[avail];
+				int read = processOutput.read(bytes);
+				System.out.println("Read: " + read);
+				System.out.println(java.util.Arrays.toString(bytes));
+				System.out.println(new String(bytes, 0, avail, StandardCharsets.UTF_8));*/
 				if (monitor.shouldCancel()) {
 					process.destroyForcibly();
 					throw new BackupFailedException("Backup was canceled");
 				}
 			}
+			/*String message = IOUtils.toString(processOutput, StandardCharsets.UTF_8);
+			System.out.println(message);*/
 		} catch (InterruptedException e) {
 			try {
 				process.destroyForcibly().waitFor();
@@ -304,10 +323,6 @@ public class WorldBackup {
 		}
 
 		int exit = process.exitValue();
-		/*String message = IOUtils.toString(process.getInputStream(), StandardCharsets.UTF_8);
-		String errMessage = IOUtils.toString(process.getErrorStream(), StandardCharsets.UTF_8);
-		System.out.println(message);
-		System.out.println(errMessage);*/
 		if (exit != 0) {
 			throw new BackupFailedException("Exit status " + exit + " from backup program isn't 0");
 		}
