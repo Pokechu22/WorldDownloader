@@ -339,7 +339,10 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 				this.showNewWorldTextBox = false;
 			}
 		}
+	}
 
+	@Override
+	public void anyKeyPressed() {
 		if (this.searchField.isFocused()) {
 			this.searchText = searchField.getText();
 			rebuildFilteredWorlds();

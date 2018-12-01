@@ -118,12 +118,14 @@ public class GuiWDLBackup extends Screen {
 	}
 
 	@Override
-	public void charTyped(char keyChar) {
-		customBackupCommandTemplate = customBackupCommandTemplateFld.getText();
-		customBackupExtension = customBackupExtensionFld.getText();
-		if (customBackupCommandTemplateFld.getVisible()) {
-			isCommandValid = false;
-			checkValidTime = System.currentTimeMillis() + 1000; // 1 second later
+	public void anyKeyPressed() {
+		if (customBackupCommandTemplateFld.isFocused()) {
+			customBackupCommandTemplate = customBackupCommandTemplateFld.getText();
+			customBackupExtension = customBackupExtensionFld.getText();
+			if (customBackupCommandTemplateFld.getVisible()) {
+				isCommandValid = false;
+				checkValidTime = System.currentTimeMillis() + 1000; // 1 second later
+			}
 		}
 	}
 

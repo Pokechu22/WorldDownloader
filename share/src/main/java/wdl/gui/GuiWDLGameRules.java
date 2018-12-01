@@ -147,8 +147,10 @@ public class GuiWDLGameRules extends Screen {
 			}
 
 			@Override
-			public void charTyped(char keyChar) {
-				setRule(ruleName, Integer.toString(this.field.getValue()));
+			public void anyKeyPressed() {
+				if (this.field.isFocused()) {
+					setRule(ruleName, Integer.toString(this.field.getValue()));
+				}
 			}
 
 			@Override

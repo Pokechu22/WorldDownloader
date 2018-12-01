@@ -38,6 +38,9 @@ public abstract class GuiList<T extends GuiListEntry<T>> extends ExtGuiList<T> {
 		public void charTyped(char keyChar) { }
 
 		@Override
+		public void anyKeyPressed() { };
+
+		@Override
 		public boolean isSelected() {
 			return false;
 		}

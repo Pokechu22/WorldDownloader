@@ -100,30 +100,42 @@ public class GuiWDLPermissionRequest extends Screen {
 
 	@Override
 	public void charTyped(char keyChar) {
-		String request = requestField.getText();
-		boolean isValid = false;
+		if (requestField.isFocused()) {
+			String request = requestField.getText();
+			if (isValidRequest(request) && keyChar == '\n') {
+				String[] requestData = request.split("=", 2);
+				String key = requestData[0];
+				String value = requestData[1];
 
+				WDLPluginChannels.addRequest(key, value);
+				list.addLine("Requesting '" + key + "' to be '"
+						+ value + "'.");
+				submitButton.enabled = true;
+
+				requestField.setText("");
+			}
+		}
+	}
+
+	@Override
+	public void anyKeyPressed() {
+		if (requestField.isFocused()) {
+			String request = requestField.getText();
+			requestField.setTextColor(isValidRequest(request) ? 0x40E040 : 0xE04040);
+		}
+	}
+
+	private boolean isValidRequest(String request) {
 		if (request.contains("=")) {
 			String[] requestData = request.split("=", 2);
 			if (requestData.length == 2) {
 				String key = requestData[0];
 				String value = requestData[1];
 
-				isValid = WDLPluginChannels.isValidRequest(key, value);
-
-				if (isValid && keyChar == '\n') {
-					requestField.setText("");
-					isValid = false;
-
-					WDLPluginChannels.addRequest(key, value);
-					list.addLine("Requesting '" + key + "' to be '"
-							+ value + "'.");
-					submitButton.enabled = true;
-				}
+				return WDLPluginChannels.isValidRequest(key, value);
 			}
 		}
-
-		requestField.setTextColor(isValid ? 0x40E040 : 0xE04040);
+		return false;
 	}
 
 	@Override

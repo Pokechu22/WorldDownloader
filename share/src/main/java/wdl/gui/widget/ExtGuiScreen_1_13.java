@@ -104,6 +104,7 @@ abstract class ExtGuiScreen extends GuiScreen implements IExtGuiScreen {
 		if (key == GLFW.GLFW_KEY_ENTER || key == GLFW.GLFW_KEY_KP_ENTER) {
 			this.charTyped('\n');
 		}
+		this.anyKeyPressed();
 		return result;
 	}
 
@@ -111,6 +112,7 @@ abstract class ExtGuiScreen extends GuiScreen implements IExtGuiScreen {
 	public final boolean charTyped(char c, int modifiers) {
 		boolean result = super.charTyped(c, modifiers);
 		this.charTyped(c);
+		this.anyKeyPressed();
 		return result;
 	}
 

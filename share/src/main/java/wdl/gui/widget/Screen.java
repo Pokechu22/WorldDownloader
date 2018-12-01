@@ -32,6 +32,9 @@ public class Screen extends ExtGuiScreen {
 	public void charTyped(char keyChar) { }
 
 	@Override
+	public void anyKeyPressed() { }
+
+	@Override
 	public boolean onCloseAttempt() {
 		return true;
 	}

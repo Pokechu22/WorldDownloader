@@ -86,6 +86,12 @@ interface IExtGuiList<T extends IExtGuiList.IExtGuiListEntry<T>> {
 		public abstract void charTyped(char keyChar);
 
 		/**
+		 * Called when any key is pressed, even keys that don't correspond to a char.
+		 * Will be called after {@link #charTyped}, if charTyped is called at all.
+		 */
+		public abstract void anyKeyPressed();
+
+		/**
 		 * Checks if this entry is selected.
 		 *
 		 * @return True if the entry is selected and a black box should be drawn around it.

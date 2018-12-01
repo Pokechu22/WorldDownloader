@@ -190,6 +190,12 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended 
 		}
 	}
 
+	final void anyKeyPressed() {
+		for (T t : this.entries) {
+			t.anyKeyPressed();
+		}
+	}
+
 	@Override
 	public final int getListWidth() {
 		return this.getEntryWidth();

@@ -70,6 +70,12 @@ public interface IExtGuiScreen {
 	public abstract void charTyped(char keyChar);
 
 	/**
+	 * Called when any key is pressed, even keys that don't correspond to a char.
+	 * Will be called after {@link #charTyped}, if charTyped is called at all.
+	 */
+	public abstract void anyKeyPressed();
+
+	/**
 	 * Called when escape is pressed, which normally closes the GUI.
 	 *
 	 * @return True if the attempt should go through.

@@ -133,6 +133,7 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended<
 				field.field.charTyped(p_charTyped_1_, p_charTyped_2_);
 			}
 			this.charTyped(p_charTyped_1_);
+			this.anyKeyPressed();
 			return false;
 		}
 
@@ -144,6 +145,7 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended<
 			if (p_keyPressed_1_ == GLFW.GLFW_KEY_ENTER || p_keyPressed_1_ == GLFW.GLFW_KEY_KP_ENTER) {
 				this.charTyped('\n');
 			}
+			this.anyKeyPressed();
 			return false;
 		}
 

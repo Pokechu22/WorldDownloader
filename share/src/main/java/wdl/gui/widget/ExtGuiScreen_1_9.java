@@ -110,6 +110,7 @@ abstract class ExtGuiScreen extends GuiScreen implements IExtGuiScreen {
 		super.keyTyped(typedChar, keyCode);
 		for (GuiList<?> list : this.listList) {
 			list.keyTyped(typedChar, keyCode);
+			list.anyKeyPressed();
 		}
 		for (GuiTextField field : this.textFieldList) {
 			if (field.getVisible()) {
@@ -122,6 +123,7 @@ abstract class ExtGuiScreen extends GuiScreen implements IExtGuiScreen {
 		if (typedChar != 0) {
 			this.charTyped(typedChar);
 		}
+		this.anyKeyPressed();
 	}
 
 	@Override
