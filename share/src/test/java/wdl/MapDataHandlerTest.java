@@ -132,10 +132,10 @@ public class MapDataHandlerTest extends MaybeMixinTest {
 			map.updateVisiblePlayers(owner, SOME_MAP_ITEM);
 
 			assertEquals("Should be no player markers", 0, map.mapDecorations.values().stream()
-					.filter(dec -> dec.getImage() == 0) // i.e. player
+					.filter(dec -> dec.getImage() == MapDataHandler.DECORATION_PLAYER)
 					.count());
 			assertEquals("Should be one far player marker", 1, map.mapDecorations.values().stream()
-					.filter(dec -> dec.getImage() == 6) // i.e. player
+					.filter(dec -> dec.getImage() == MapDataHandler.DECORATION_OFF_PLAYER)
 					.count());
 
 			MapData client = copyMapData(map);
@@ -146,10 +146,10 @@ public class MapDataHandlerTest extends MaybeMixinTest {
 			map.updateVisiblePlayers(owner, SOME_MAP_ITEM);
 
 			assertEquals("Should be no player markers", 0, map.mapDecorations.values().stream()
-					.filter(dec -> dec.getImage() == 0) // i.e. player
+					.filter(dec -> dec.getImage() == MapDataHandler.DECORATION_PLAYER)
 					.count());
 			assertEquals("Should be no far player markers", 0, map.mapDecorations.values().stream()
-					.filter(dec -> dec.getImage() == 6) // i.e. player
+					.filter(dec -> dec.getImage() == MapDataHandler.DECORATION_OFF_PLAYER)
 					.count());
 
 			client = copyMapData(map);

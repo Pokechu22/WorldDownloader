@@ -20,6 +20,8 @@ import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.google.common.annotations.VisibleForTesting;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.play.server.SPacketMaps;
@@ -57,6 +59,20 @@ public final class MapDataHandler {
 	private MapDataHandler() { throw new AssertionError(); }
 
 	/**
+	 * Various map decoration values.
+	 *
+	 * Note that we can't use the enum in MapDecoration because it didn't exist
+	 * in 1.9.
+	 */
+	@VisibleForTesting
+	static final byte DECORATION_PLAYER = 0, DECORATION_ITEM_FRAME = 1, DECORATION_OFF_PLAYER = 6;
+	/**
+	 * Additionally, note that this decoration was added in 1.11.
+	 */
+	@VisibleForTesting
+	static final byte DECORATION_FAR_OFF_PLAYER = 7;
+
+	/**
 	 * Fills in more information about a map based on existing marker information.
 	 * @param mapID The ID of the map.
 	 * @param mapData The MapData to fix.
@@ -69,7 +85,7 @@ public final class MapDataHandler {
 		MapDecoration playerDecoration;
 
 		List<MapDecoration> playerDecorations = mapData.mapDecorations.values().stream()
-				.filter(dec -> dec.getImage() == 0) // i.e. player
+				.filter(dec -> dec.getImage() == DECORATION_PLAYER)
 				.collect(Collectors.toList());
 
 		if (playerDecorations.size() == 1) {
