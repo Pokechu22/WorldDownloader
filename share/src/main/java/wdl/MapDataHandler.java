@@ -23,10 +23,15 @@ import javax.annotation.Nullable;
 import com.google.common.annotations.VisibleForTesting;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItemFrame;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.server.SPacketMaps;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.storage.MapData;
 import net.minecraft.world.storage.MapDecoration;
@@ -80,28 +85,125 @@ public final class MapDataHandler {
 	 * @return The MapData to save, though currently it is the same reference as the parameter.
 	 */
 	public static MapDataResult repairMapData(int mapID, @Nonnull MapData mapData, @Nonnull EntityPlayer player) {
-		// Assume the player is the owner and the only thing on the map (may not be true)
-		Entity confirmedOwner;
-		MapDecoration playerDecoration;
+		MapDataResult result = checkPlayerHasMap(mapID, mapData, player);
+		if (result == null) result = checkFrameHasMap(mapID, mapData, player.world);
+		if (result == null) result = new MapDataResult(mapData, null, null);
 
-		List<MapDecoration> playerDecorations = mapData.mapDecorations.values().stream()
-				.filter(dec -> dec.getImage() == DECORATION_PLAYER)
-				.collect(Collectors.toList());
-
-		if (playerDecorations.size() == 1) {
-			// If there's only one decoration, assume that it's our player
-			confirmedOwner = player;
-			playerDecoration = playerDecorations.get(0);
-		} else {
-			confirmedOwner = null;
-			playerDecoration = null;
-		}
-
-		MapDataResult result = new MapDataResult(mapData, confirmedOwner, playerDecoration);
 		result.fixDimension();
 		result.fixCenter();
 
 		return result;
+	}
+
+	@Nullable
+	private static MapDataResult checkPlayerHasMap(int mapID, MapData mapData, EntityPlayer player) {
+		// If there's only one decoration, and our player has the map in their inventory,
+		// assume that the icon is our player (which might not be the case all the time)
+		List<MapDecoration> playerDecorations = mapData.mapDecorations.values().stream()
+				.filter(dec -> dec.getImage() == DECORATION_PLAYER)
+				.collect(Collectors.toList());
+
+		if (playerDecorations.size() != 1) {
+			return null;
+		}
+		MapDecoration playerDecoration = playerDecorations.get(0);
+
+		boolean mapInInventory = false;
+		// Note: mainInventory does NOT contain the offhand or armor
+		// Thus, we need an explicit offhand check later.  Maps shoudln't ever be in armor though.
+		for (ItemStack stack : player.inventory.mainInventory) {
+			if (isMapWithID(stack, mapID)) {
+				mapInInventory = true;
+				break;
+			}
+		}
+		if (!mapInInventory) mapInInventory = isMapWithID(player.getHeldItemOffhand(), mapID);
+
+		if (mapInInventory) {
+			return new MapDataResult(mapData, player, playerDecoration);
+		} else {
+			return null;
+		}
+	}
+
+	@Nullable
+	private static MapDataResult checkFrameHasMap(int mapID, MapData mapData, World world) {
+		List<MapDecoration> frameDecorations = mapData.mapDecorations.values().stream()
+				.filter(dec -> dec.getImage() == DECORATION_ITEM_FRAME)
+				.collect(Collectors.toList());
+		if (frameDecorations.isEmpty()) {
+			// No frames on the map?  No reason to look for any frames in the world.
+			return null;
+		}
+
+		List<EntityItemFrame> actualFrames = world.getEntities(
+				EntityItemFrame.class, frameWithMapID(mapID));
+		for (EntityItemFrame frame : actualFrames) {
+			// Since not all frames on the map are necessarily loaded by the client,
+			// look for frames in the world that aren't on the map instead.
+			// However, it's entirely possible to also have frames that just aren't on the map...
+
+			// Find the center assuming this frame is on the map
+			// (copied from MapData.computeMapCenter)
+			int size = 128 * (1 << mapData.scale);
+			int x = MathHelper.floor((frame.posX + 64.0D) / (double)size);
+			int z = MathHelper.floor((frame.posZ + 64.0D) / (double)size);
+			int xCenter = x * size + size / 2 - 64;
+			int zCenter = z * size + size / 2 - 64;
+			// Now find the icon position on the map...
+			// (copied from MapData.updateDecorations)
+			float iconX = (float)(frame.posX - (double)xCenter) / (float)size;
+			float iconZ = (float)(frame.posZ - (double)zCenter) / (float)size;
+			byte byteIconX = (byte)((int)((double)(iconX * 2.0F) + 0.5D)); // I like these casts...
+			byte byteIconZ = (byte)((int)((double)(iconZ * 2.0F) + 0.5D));
+
+			// Now we'd check if there's a frame at that position.
+			// Could be ambiguous...  There could also be multiple possibilities...
+			// Probably should check whether other icons still make sense in this case.
+			for (MapDecoration decoration : frameDecorations) {
+				if (decoration.getX() == byteIconX && decoration.getY() == byteIconZ) {
+					return new MapDataResult(mapData, frame, decoration);
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Needed since different MC versions use either guava's or java 8's predicate
+	 * (and in versions < 1.12, the union of them still has 2 abstract methods).
+	 */
+	@FunctionalInterface
+	private static interface FramePredicate extends java.util.function.Predicate<EntityItemFrame>,
+			com.google.common.base.Predicate<EntityItemFrame> {
+		@Override
+		public default boolean apply(EntityItemFrame frame) {
+			return test(frame);
+		}
+
+		@Override
+		public abstract boolean test(EntityItemFrame frame);
+	}
+
+	private static FramePredicate frameWithMapID(int mapID) {
+		return frame -> {
+			ItemStack stack = frame.getDisplayedItem();
+			return isMapWithID(stack, mapID);
+		};
+	}
+
+	private static boolean isMapWithID(@Nullable ItemStack stack, int mapID) {
+		if (stack == null) {
+			// Applies to 1.10 and earlier.
+			// In later versions, getItem() will return Items.AIR, which means the next check fails instead
+			return false;
+		}
+		if (stack.getItem() != Items.FILLED_MAP) {
+			return false;
+		}
+		int id = VersionedFunctions.getMapId(stack);
+
+		return id == mapID;
 	}
 
 	public static class MapDataResult {

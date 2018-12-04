@@ -83,3 +83,10 @@ func_146230_a,drawChat,0,Name required by liteloader; was render
 func_175239_b,renderDebugInfoRight,0,Name required by liteloader
 func_180784_a,onBlockClicked,0,Name required by liteloader
 func_135058_a,getPackMetadata,0,Name required by liteloader
+func_77873_a,getMapData,0,
+func_190906_a,setupNewMap,0,
+func_72943_a,loadData,0,
+func_72823_a,setData,0,
+func_72841_b,getUniqueDataId,0,
+func_77964_b,setMetadata,0,
+func_77960_j,getMetadata,0,

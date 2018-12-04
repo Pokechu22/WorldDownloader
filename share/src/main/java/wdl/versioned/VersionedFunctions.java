@@ -42,6 +42,8 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.ChunkProviderClient;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.entity.passive.EntityVillager;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.INBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.client.CPacketCustomPayload;
@@ -210,6 +212,18 @@ public final class VersionedFunctions {
 	@Nullable
 	public static MapData getMapData(World world, SPacketMaps mapPacket) {
 		return MapFunctions.getMapData(world, mapPacket);
+	}
+
+	/**
+	 * Gets the ID of the map associated with the given item stack.
+	 * Assumes that the item is a map in the first place.
+	 *
+	 * @param stack The map item stack.
+	 * @return The map ID
+	 */
+	public static int getMapId(ItemStack stack) {
+		assert stack.getItem() == Items.FILLED_MAP;
+		return MapFunctions.getMapID(stack);
 	}
 
 	/**
