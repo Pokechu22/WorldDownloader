@@ -76,6 +76,11 @@ public final class MapDataHandler {
 	 */
 	@VisibleForTesting
 	static final byte DECORATION_FAR_OFF_PLAYER = 7;
+	/**
+	 * Range of values for map icons. If computed to be out of this range, then the
+	 * icon isn't on the map.
+	 */
+	private static final int MIN_ICON_POS = Byte.MIN_VALUE, MAX_ICON_POS = Byte.MAX_VALUE;
 
 	/**
 	 * Fills in more information about a map based on existing marker information.
@@ -136,37 +141,74 @@ public final class MapDataHandler {
 			return null;
 		}
 
+		byte scale = mapData.scale;
+
 		List<EntityItemFrame> actualFrames = world.getEntities(
 				EntityItemFrame.class, frameWithMapID(mapID));
 		for (EntityItemFrame frame : actualFrames) {
 			// Since not all frames on the map are necessarily loaded by the client,
 			// look for frames in the world that aren't on the map instead.
-			// However, it's entirely possible to also have frames that just aren't on the map...
+			// However, it's entirely possible to also have frames that just beyond the edge of the map...
 
 			// Find the center assuming this frame is on the map
-			// (copied from MapData.computeMapCenter)
-			int size = 128 * (1 << mapData.scale);
-			int x = MathHelper.floor((frame.posX + 64.0D) / (double)size);
-			int z = MathHelper.floor((frame.posZ + 64.0D) / (double)size);
-			int xCenter = x * size + size / 2 - 64;
-			int zCenter = z * size + size / 2 - 64;
+			int xCenter = worldCoordToMapCenter(frame.posX, mapData.scale);
+			int zCenter = worldCoordToMapCenter(frame.posZ, mapData.scale);
 			// Now find the icon position on the map...
 			// (copied from MapData.updateDecorations)
-			float iconX = (float)(frame.posX - (double)xCenter) / (float)size;
-			float iconZ = (float)(frame.posZ - (double)zCenter) / (float)size;
-			byte byteIconX = (byte)((int)((double)(iconX * 2.0F) + 0.5D)); // I like these casts...
-			byte byteIconZ = (byte)((int)((double)(iconZ * 2.0F) + 0.5D));
+			int iconX = worldCoordToIconPos(frame.posX, xCenter, scale);
+			int iconZ = worldCoordToIconPos(frame.posZ, zCenter, scale);
+			// If we just calculated the center from the frame, the frame's
+			// icon should definitely be on the map.
+			assert iconX >= MIN_ICON_POS && iconX <= MAX_ICON_POS;
+			assert iconZ >= MIN_ICON_POS && iconZ <= MAX_ICON_POS;
 
-			// Now we'd check if there's a frame at that position.
+			// Now we'd check if there's a frame icon at that position.
 			// Could be ambiguous...  There could also be multiple possibilities...
 			// Probably should check whether other icons still make sense in this case.
 			for (MapDecoration decoration : frameDecorations) {
-				if (decoration.getX() == byteIconX && decoration.getY() == byteIconZ) {
+				if (decoration.getX() == iconX && decoration.getY() == iconZ) {
 					return new MapDataResult(mapData, frame, decoration);
 				}
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Converts a world coordinate to a map center (also in world coordinates)
+	 *
+	 * @see MapData#calculateMapCenter
+	 * @param coord The real world coordinate.
+	 * @param scale The scale of the map.
+	 * @return A grid-aligned map center.
+	 */
+	private static int worldCoordToMapCenter(double coord, byte scale) {
+		int size = 128 * (1 << scale);
+		int pos = MathHelper.floor((coord + 64.0D) / (double)size);
+		int center = pos * size + size / 2 - 64;
+		return center;
+	}
+
+	/**
+	 * Converts a world position to a map icon position.
+	 *
+	 * @see MapData#updateDecorations
+	 * @param coord  The world coordinate.
+	 * @param center The computed center of the map.
+	 * @param scale  The scale of the map.
+	 * @return A map icon coordinate. Normally ranges from {@value #MIN_ICON_POS} to
+	 *         {@value #MAX_ICON_POS} for icons on map; this function returns
+	 *         something out of that range if the icon isn't actually on the map.
+	 */
+	private static int worldCoordToIconPos(double coord, int center, byte scale) {
+		int size = 1 << scale;
+		// From -63 to +63 (ish) if on map
+		float scaledPos = (float)(coord - (double)center) / (float)size;
+		// From -127 to +127 (ish)
+		// I like the original amount of casts, but we don't want the byte part
+		// byte iconCoord = (byte)((int)((double)(scaledPos * 2.0F) + 0.5D));
+		int iconCoord = (int)((double)(scaledPos * 2.0F) + 0.5D);
+		return iconCoord;
 	}
 
 	/**
@@ -275,13 +317,13 @@ public final class MapDataHandler {
 				}
 
 				// Maps are always snapped to a grid based on the player position when it's created
-				// If the player is on the map, there's only one possible center position and the
-				// built-in function calculates it.
-				map.calculateMapCenter(confirmedOwner.posX, confirmedOwner.posZ, map.scale);
-
+				// If the player is on the map, there's only one possible center position
 				hasCenter = true;
-				xCenter = map.xCenter;
-				zCenter = map.zCenter;
+				xCenter = worldCoordToMapCenter(confirmedOwner.posX, map.scale);
+				zCenter = worldCoordToMapCenter(confirmedOwner.posZ, map.scale);
+
+				map.xCenter = xCenter;
+				map.zCenter = zCenter;
 			}
 		}
 
