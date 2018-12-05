@@ -28,6 +28,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.server.SPacketMaps;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -150,13 +151,14 @@ public final class MapDataHandler {
 			// look for frames in the world that aren't on the map instead.
 			// However, it's entirely possible to also have frames that just beyond the edge of the map...
 
+			BlockPos framePos = frame.getHangingPosition();
 			// Find the center assuming this frame is on the map
-			int xCenter = worldCoordToMapCenter(frame.posX, mapData.scale);
-			int zCenter = worldCoordToMapCenter(frame.posZ, mapData.scale);
+			int xCenter = worldCoordToMapCenter(framePos.getX(), mapData.scale);
+			int zCenter = worldCoordToMapCenter(framePos.getZ(), mapData.scale);
 			// Now find the icon position on the map...
 			// (copied from MapData.updateDecorations)
-			int iconX = worldCoordToIconPos(frame.posX, xCenter, scale);
-			int iconZ = worldCoordToIconPos(frame.posZ, zCenter, scale);
+			int iconX = worldCoordToIconPos(framePos.getX(), xCenter, scale);
+			int iconZ = worldCoordToIconPos(framePos.getZ(), zCenter, scale);
 			// If we just calculated the center from the frame, the frame's
 			// icon should definitely be on the map.
 			assert iconX >= MIN_ICON_POS && iconX <= MAX_ICON_POS;
