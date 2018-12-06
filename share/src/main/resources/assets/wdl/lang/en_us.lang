@@ -452,6 +452,7 @@ wdl.saveProgress.title=Saving downloaded world
 wdl.saveProgress.chunk.title=Saving chunks
 wdl.saveProgress.chunk.saving=Saving chunk at %s, %s
 wdl.saveProgress.map.title=Saving map item data
+wdl.saveProgress.map.idcounts=Writing idcounts.dat
 wdl.saveProgress.map.saving=Writing map #%s
 wdl.saveProgress.playerData.title=Saving player data
 wdl.saveProgress.playerData.creatingNBT=Creating player NBT

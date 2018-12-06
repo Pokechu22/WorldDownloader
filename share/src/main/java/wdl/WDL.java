@@ -14,6 +14,8 @@
  */
 package wdl;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -24,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.annotation.Nullable;
 
@@ -1200,10 +1203,8 @@ public class WDL {
 	}
 
 	/**
-	 * Saves existing map data.  Map data refering to the items
+	 * Saves existing map data.  Map data referring to the items
 	 * that contain pictures.
-	 *
-	 * TODO: Overwrite / create IDCounts.dat.
 	 */
 	public static void saveMapData(GuiWDLSaveProgress progressScreen) {
 		if (!WDLPluginChannels.canSaveMaps()) { return; }
@@ -1217,6 +1218,42 @@ public class WDL {
 
 		WDLMessages.chatMessageTranslated(WDL.baseProps,
 				WDLMessageTypes.SAVING, "wdl.messages.saving.savingMapItemData");
+
+		Optional<Integer> highestCurrent = newMapDatas.keySet().stream().max(Integer::compare);
+
+		highestCurrent.ifPresent(current -> {
+			progressScreen.setMinorTaskProgress(I18n.format("wdl.saveProgress.map.idcounts"), 0);
+
+			// In 1.13, idcounts.dat changed from storing shorts to ints.
+			// Note that older versions are VERY particular about it being a short.
+			boolean isInt = (VersionConstants.getDataVersion() >= 1451); // 17w47a
+
+			// Compute the highest known map data ID, taking into account the highest
+			// one we saved and any existing version idcounts data.
+			int overallCount = current;
+			File idcountsFile = new File(dataDirectory, "idcounts.dat");
+			NBTTagCompound tag = new NBTTagCompound();
+			if (idcountsFile.exists()) {
+				try (DataInputStream stream = new DataInputStream(new FileInputStream(idcountsFile))) {
+					tag = CompressedStreamTools.read(stream);
+					int currentCount = (isInt ? tag.getInt("map") : tag.getShort("map"));
+					overallCount = Math.max(currentCount, current);
+				} catch (Exception ex) {
+					LOGGER.warn("[WDL] Failed to load existing idcounts.dat; this shouldn't happen", ex);
+					return;
+				}
+			}
+			if (isInt) {
+				tag.putInt("map", overallCount);
+			} else {
+				tag.putShort("map", (short)overallCount);
+			}
+			try (DataOutputStream stream = new DataOutputStream(new FileOutputStream(idcountsFile))) {
+				CompressedStreamTools.write(tag, stream);
+			} catch (Exception ex) {
+				throw new RuntimeException("[WDL] Failed to save idcounts.dat with count " + overallCount + "!");
+			}
+		});
 
 		int count = 0;
 		for (Map.Entry<Integer, MapData> e : newMapDatas.entrySet()) {
@@ -1234,6 +1271,10 @@ public class WDL {
 			e.getValue().write(data);
 
 			mapNBT.put("data", data);
+			if (VersionConstants.getDataVersion() >= 1484) { // 18w19a
+				// MapData has a data version in 1.13+
+				mapNBT.putInt("DataVersion", VersionConstants.getDataVersion());
+			}
 
 			try (FileOutputStream stream = new FileOutputStream(mapFile)) {
 				CompressedStreamTools.writeCompressed(mapNBT, stream);
