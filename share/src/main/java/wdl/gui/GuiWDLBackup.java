@@ -15,6 +15,7 @@
 package wdl.gui;
 
 import java.io.File;
+import java.util.List;
 
 import javax.annotation.Nullable;
 
@@ -27,7 +28,7 @@ import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.resources.I18n;
 import wdl.WDL;
 import wdl.WorldBackup;
-import wdl.WorldBackup.IBackupProgressMonitor;
+import wdl.WorldBackup.ICustomBackupProgressMonitor;
 import wdl.WorldBackup.WorldBackupType;
 import wdl.config.IConfiguration;
 import wdl.config.settings.MiscSettings;
@@ -45,6 +46,7 @@ public class GuiWDLBackup extends Screen {
 	private String description;
 
 	private WorldBackupType backupType;
+	private GuiButton backupTypeButton;
 	private GuiButton doneButton;
 	private GuiTextField customBackupCommandTemplateFld;
 	private String customBackupCommandTemplate;
@@ -69,7 +71,7 @@ public class GuiWDLBackup extends Screen {
 
 	@Override
 	public void initGui() {
-		this.addButton(new Button(this.width / 2 - 100, 32,
+		backupTypeButton = this.addButton(new Button(this.width / 2 - 100, 32,
 				200, 20, getBackupButtonText()) {
 			public @Override void performAction() {
 				switch (backupType) {
@@ -119,10 +121,16 @@ public class GuiWDLBackup extends Screen {
 
 	@Override
 	public void anyKeyPressed() {
-		if (customBackupCommandTemplateFld.isFocused()) {
-			customBackupCommandTemplate = customBackupCommandTemplateFld.getText();
-			customBackupExtension = customBackupExtensionFld.getText();
-			if (customBackupCommandTemplateFld.getVisible()) {
+		if (customBackupCommandTemplateFld.getVisible() &&
+				(customBackupCommandTemplateFld.isFocused() || customBackupExtensionFld.isFocused())) {
+			String newTemplate = customBackupCommandTemplateFld.getText();
+			String newExt = customBackupExtensionFld.getText();
+			if (checkValidTime != 0 || !newTemplate.equals(customBackupCommandTemplate) ||
+					!newExt.equals(customBackupExtension)) {
+				customBackupCommandTemplate = newTemplate;
+				customBackupExtension = newExt;
+				// If a check is already queued, delay it until the user stops typing, even if the typing isn't changing anything.
+				// Otherwise, only recheck if the typing changes something.
 				isCommandValid = false;
 				checkValidTime = System.currentTimeMillis() + 1000; // 1 second later
 			}
@@ -146,18 +154,28 @@ public class GuiWDLBackup extends Screen {
 
 		// Used to cancel an in-progress test backup... though there isn't much point right
 		// now given that this all happens on one thread
-		class ProgressMonitor implements IBackupProgressMonitor {
+		class ProgressMonitor implements ICustomBackupProgressMonitor {
 			public ProgressMonitor() {
 				this.origCommandTemplate = customBackupCommandTemplate;
 				this.origExtension = customBackupExtension;
 				this.endTime = System.currentTimeMillis() + 5000; // 5 seconds later
 			}
 			public final String origCommandTemplate, origExtension;
+			public StringBuilder output = new StringBuilder();
 			public final long endTime;
 			@Override
-			public void setNumberOfFiles(int num) { }
+			public void incrementNumerator() { }
 			@Override
-			public void onNextFile(String name) { }
+			public void onTextUpdate(String text) {
+				if (output.length() != 0) {
+					output.append("\n");
+				}
+				output.append(text);
+			}
+			@Override
+			public void setDenominator(int value) { }
+			@Override
+			public void setNumerator(int value) { }
 			@Override
 			public boolean shouldCancel() {
 				// True if too much time passed or the command changed
@@ -170,6 +188,7 @@ public class GuiWDLBackup extends Screen {
 		long now = System.currentTimeMillis();
 		if (checkValidTime != 0 && now >= checkValidTime) {
 			File tempDir = null, tempOptions = null, tempDest = null;
+			ProgressMonitor monitor = new ProgressMonitor();
 			try {
 				tempDir = Files.createTempDir();
 				File optionsTxt = new File(mc.gameDir, "options.txt"); // Should exist
@@ -178,13 +197,13 @@ public class GuiWDLBackup extends Screen {
 				tempDest = File.createTempFile("wdlbackuptest", "." + customBackupExtension);
 				tempDest.delete(); // We only want it for the file name; the empty file actually causes other problems
 
-				WorldBackup.runCustomBackup(customBackupCommandTemplate, tempDir, tempDest, new ProgressMonitor());
+				WorldBackup.runCustomBackup(customBackupCommandTemplate, tempDir, tempDest, monitor);
 
 				isCommandValid = true;
 				commandInvalidReason = null;
 			} catch (Exception ex) {
 				isCommandValid = false;
-				commandInvalidReason = ex.getMessage();
+				commandInvalidReason = ex.getMessage() + "\n\n" + monitor.output.toString();
 			}
 			if (tempOptions != null) tempOptions.delete();
 			if (tempDir != null) tempDir.delete();
@@ -231,15 +250,22 @@ public class GuiWDLBackup extends Screen {
 				this.drawString(fontRenderer, "ಠ_ಠ", x, y, 0xFF0000); // See some of my experiences with dealing with rar files.  Use a non-proprietary format, please, it's for your own good!
 			}
 		}
-		if (!isCommandValid) {
-			this.drawCenteredString(fontRenderer, commandInvalidReason, this.width / 2, 76, 0xFF0000);
+		if (commandInvalidReason != null) {
+			List<String> lines = Utils.wordWrap(commandInvalidReason, this.width - 50);
+			int y = 80;
+			for (String line : lines) {
+				this.drawString(fontRenderer, line, 50, y, 0xFF0000);
+				y += fontRenderer.FONT_HEIGHT;
+			}
 		}
 
 		if (Utils.isMouseOverTextBox(mouseX, mouseY, customBackupCommandTemplateFld)) {
 			Utils.drawGuiInfoBox(I18n.format("wdl.gui.backup.customCommandTemplate.description"), width, height, 48);
 		} else if (Utils.isMouseOverTextBox(mouseX, mouseY, customBackupExtensionFld)) {
 			Utils.drawGuiInfoBox(I18n.format("wdl.gui.backup.customExtension.description"), width, height, 48);
-		} else {
+		} else if (commandInvalidReason == null || backupTypeButton.isMouseOver()) {
+			// Only draw the large description if the command is valid (i.e. there isn't other text)
+			// or the mouse is directly over the backup type button (i.e. the info is useful)
 			Utils.drawGuiInfoBox(description, width - 50, 3 * this.height / 5, width,
 					height, 48);
 		}

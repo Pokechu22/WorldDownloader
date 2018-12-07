@@ -30,8 +30,7 @@ import wdl.versioned.VersionedFunctions;
 /**
  * GUI shown before possibly overwriting data in the world.
  */
-public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements
-IBackupProgressMonitor {
+public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements IBackupProgressMonitor {
 	private class BackupThread extends Thread {
 		public BackupThread(boolean zip) {
 			this.zip = zip;

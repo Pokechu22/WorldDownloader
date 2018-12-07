@@ -20,6 +20,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
@@ -29,6 +30,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -117,6 +120,37 @@ public class WorldBackup {
 	}
 
 	/**
+	 * A more generalized backup progress monitor, which supports custom backups.
+	 */
+	public static interface ICustomBackupProgressMonitor extends IBackupProgressMonitor {
+		@Override
+		public default void setNumberOfFiles(int num) {
+			setDenominator(num);
+		}
+		@Override
+		public default void onNextFile(String name) {
+			incrementNumerator();
+			onTextUpdate(I18n.format("wdl.saveProgress.backingUp.file", name));
+		}
+
+		/**
+		 * Sets the denominator for the progress bar.
+		 * Used for e.g. cases where only a percentage is known.
+		 */
+		public abstract void setDenominator(int value);
+		public abstract void incrementNumerator();
+		/**
+		 * Sets the numerator for the progress bar.
+		 */
+		public abstract void setNumerator(int value);
+		/**
+		 * A more general function used when there is new information to display.
+		 * @param text The text to display.
+		 */
+		public abstract void onTextUpdate(String text);
+	}
+
+	/**
 	 * The format that is used for world date saving.
 	 */
 	private static final DateTimeFormatter DATE_FORMAT = new DateTimeFormatterBuilder()
@@ -163,7 +197,7 @@ public class WorldBackup {
 	public static void backupWorld(File worldFolder, String worldName,
 			WorldBackupType type, IBackupProgressMonitor monitor) throws IOException {
 		assert type != WorldBackupType.CUSTOM;
-		backupWorld(worldFolder, worldName, type, monitor, null, null);
+		backupWorld0(worldFolder, worldName, type, monitor, null, null);
 	}
 
 	/**
@@ -179,9 +213,17 @@ public class WorldBackup {
 	 * @throws IOException
 	 */
 	public static void backupWorld(File worldFolder, String worldName,
+			WorldBackupType type, ICustomBackupProgressMonitor monitor,
+			@Nullable String customCommand, @Nullable String customExtension) throws IOException {
+		backupWorld0(worldFolder, worldName, type, monitor, customCommand, customExtension);
+	}
+
+	/**
+	 * Backs up the world, requiring that for the custom type, monitor is a custom monitor.
+	 */
+	private static void backupWorld0(File worldFolder, String worldName,
 			WorldBackupType type, IBackupProgressMonitor monitor,
 			@Nullable String customCommand, @Nullable String customExtension) throws IOException {
-
 		switch (type) {
 		case NONE: {
 			return;
@@ -217,6 +259,7 @@ public class WorldBackup {
 			return;
 		}
 		case CUSTOM: {
+			ICustomBackupProgressMonitor customMonitor = (ICustomBackupProgressMonitor)monitor;
 			if (customCommand == null || customExtension == null) {
 				// This will be hit only for a specific method call, not the user not specifying one.
 				// (It will also cause a crash, which is why that matters; this shouldn't happen regardless of what the user does)
@@ -233,7 +276,7 @@ public class WorldBackup {
 						") already exists!");
 			}
 
-			long size = runCustomBackup(customCommand, worldFolder, destination, monitor);
+			long size = runCustomBackup(customCommand, worldFolder, destination, customMonitor);
 			VersionedFunctions.makeBackupToast(worldName, size);
 			return;
 		}
@@ -280,7 +323,7 @@ public class WorldBackup {
 	 * @return The size of the created file.
 	 */
 	public static long runCustomBackup(String template, File src, File destination,
-			IBackupProgressMonitor monitor) throws IOException {
+			ICustomBackupProgressMonitor monitor) throws IOException {
 		if (!template.contains(REPLACE_SOURCE)) {
 			throw new BackupFailedException("Command template must specify " + REPLACE_SOURCE);
 		}
@@ -301,21 +344,15 @@ public class WorldBackup {
 				.start();
 
 		try (InputStream processOutput = process.getInputStream()) {
-			while (!process.waitFor(1, TimeUnit.SECONDS)) {
-				/*int avail = processOutput.available();
-				System.out.println("Available: " + avail);
-				byte[] bytes = new byte[avail];
-				int read = processOutput.read(bytes);
-				System.out.println("Read: " + read);
-				System.out.println(java.util.Arrays.toString(bytes));
-				System.out.println(new String(bytes, 0, avail, StandardCharsets.UTF_8));*/
+			while (!process.waitFor(100, TimeUnit.MILLISECONDS)) { // .1 seconds / 2 ticks
 				if (monitor.shouldCancel()) {
 					process.destroyForcibly();
 					throw new BackupFailedException("Backup was canceled");
 				}
+
+				updateProcessOutput(processOutput, monitor);
 			}
-			/*String message = IOUtils.toString(processOutput, StandardCharsets.UTF_8);
-			System.out.println(message);*/
+			updateProcessOutput(processOutput, monitor);
 		} catch (InterruptedException e) {
 			try {
 				process.destroyForcibly().waitFor();
@@ -340,6 +377,66 @@ public class WorldBackup {
 			throw new IOException(size + " bytes file was created; this is suspiciously small");
 		}
 		return size;
+	}
+
+	/**
+	 * A pattern matching 7-Zip percentage progress output.
+	 *
+	 * This contains several groups in the normal case:
+	 * <dl>
+	 * <dt>percent</dt>
+	 * <dd>The percentage of compression done, which can include sub-file
+	 * progress.</dd>
+	 * <dt>files</dt>
+	 * <dd>The number of files that have finished processing. Might not be
+	 * present.</dd>
+	 * <dt>action</dt>
+	 * <dd>A symbol that indicates what's happening. + means new file, U means
+	 * existing file. See https://git.io/fpStn. Note that "Header creation" can also
+	 * occur, but that lacks a file name so we don't handle it beyond capturing the
+	 * percentage. Additionally, note that WDL doesn't actually do anything with the
+	 * action.</dd>
+	 * <dt>file</dt>
+	 * <dd>The name of the file.</dd>
+	 * </dl>
+	 *
+	 * This is tied directly to 7-zip, and really will only work with it. But 7-zip
+	 * is the default choice, so that's fine.
+	 */
+	private static final Pattern SEVENZIP_PERCENTAGE_OUTPUT = Pattern.compile(
+			"^(?<percent>\\d+)%(?: (?<files>\\d+))?(?: (?<action>[+UA=R.D]) (?<file>.+)| Header creation)?$");
+	/**
+	 * Updates the monitor with the last line of the process' output, without blocking.
+	 */
+	private static void updateProcessOutput(InputStream processOutput, ICustomBackupProgressMonitor monitor) throws IOException {
+		int avail = processOutput.available();
+		if (avail <= 0) return;
+
+		byte[] bytes = new byte[avail];
+		int read = processOutput.read(bytes);
+		if (read <= 0) return;
+
+		// Get the last line, allowing for newlines and backspaces
+		// (assume any backspaces are a complete erasure of the current line)
+		String message = new String(bytes, StandardCharsets.UTF_8);
+		String[] parts = message.split("[\b\r\n]+");
+		for (String part : parts) {
+			String str = part.trim();
+			if (!str.isEmpty()) {
+				Matcher matcher = SEVENZIP_PERCENTAGE_OUTPUT.matcher(str);
+				if (matcher.matches()) {
+					int percent = Integer.parseInt(matcher.group("percent"));
+					String file = matcher.group("file");
+					if (file != null) {
+						monitor.onNextFile(file);
+					}
+					monitor.setNumerator(percent);
+					monitor.setDenominator(100);
+				} else {
+					monitor.onTextUpdate(str);
+				}
+			}
+		}
 	}
 
 	/**

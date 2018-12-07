@@ -602,16 +602,25 @@ public class WDL {
 			progressScreen.setMinorTaskProgress(
 					I18n.format("wdl.saveProgress.backingUp.preparing"), 1);
 
-			class BackupState implements WorldBackup.IBackupProgressMonitor {
+			class BackupState implements WorldBackup.ICustomBackupProgressMonitor {
 				int curFile = 0;
 				@Override
-				public void setNumberOfFiles(int num) {
-					progressScreen.setMinorTaskCount(num);
+				public void setDenominator(int value) {
+					progressScreen.setMinorTaskCount(value);
 				}
 				@Override
-				public void onNextFile(String name) {
-					progressScreen.setMinorTaskProgress(
-							I18n.format("wdl.saveProgress.backingUp.file", name), curFile++);
+				public void incrementNumerator() {
+					curFile++;
+					progressScreen.setMinorTaskProgress(curFile);
+				}
+				@Override
+				public void setNumerator(int value) {
+					curFile = value;
+					progressScreen.setMinorTaskProgress(value);
+				}
+				@Override
+				public void onTextUpdate(String text) {
+					progressScreen.setMinorTaskProgress(text, curFile);
 				}
 				@Override
 				public boolean shouldCancel() {
