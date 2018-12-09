@@ -37,6 +37,8 @@ public class GuiWDLSaveProgress extends GuiTurningCameraBase {
 
 	private volatile boolean doneWorking = false;
 
+	private volatile boolean cancelAttempted = false;
+
 	/**
 	 * Creates a new GuiWDLSaveProgress.
 	 *
@@ -194,7 +196,12 @@ public class GuiWDLSaveProgress extends GuiTurningCameraBase {
 
 	@Override
 	public boolean onCloseAttempt() {
+		this.cancelAttempted = true;
 		// Don't allow closing this GUI with escape
 		return false;
+	}
+
+	public boolean cancelAttempted() {
+		return this.cancelAttempted;
 	}
 }

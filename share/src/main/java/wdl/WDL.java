@@ -624,8 +624,7 @@ public class WDL {
 				}
 				@Override
 				public boolean shouldCancel() {
-					// TODO
-					return false;
+					return progressScreen.cancelAttempted();
 				}
 			}
 
