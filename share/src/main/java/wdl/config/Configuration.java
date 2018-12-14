@@ -21,16 +21,12 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.annotation.CheckForSigned;
 import javax.annotation.Nonnegative;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import com.google.common.collect.Sets;
 
 import net.minecraft.crash.CrashReportCategory;
 
@@ -116,45 +112,6 @@ public class Configuration implements IConfiguration {
 	}
 
 	// Wrap-around things -- should be removed later, but needed to be ready for release
-	private static final String GAME_RULE_PREFIX = "GameRule.";
-
-	@Override
-	public Set<String> getGameRules() {
-		return Sets.union(this.properties.stringPropertyNames().stream()
-				.filter(s -> s.startsWith(GAME_RULE_PREFIX))
-				.map(s -> s.substring(GAME_RULE_PREFIX.length()))
-				.collect(Collectors.toSet()), this.parent.getGameRules());
-	}
-
-	@Override
-	public String getGameRule(String name) {
-		String key = GAME_RULE_PREFIX + name;
-		if (this.properties.containsKey(key)) {
-			return this.properties.getProperty(key);
-		} else {
-			return parent.getGameRule(name);
-		}
-	}
-
-	@Override
-	public void setGameRule(String name, String value) {
-		String key = GAME_RULE_PREFIX + name;
-		this.properties.setProperty(key, value);
-	}
-
-	@Override
-	public void clearGameRule(String name) {
-		String key = GAME_RULE_PREFIX + name;
-		this.properties.remove(key);
-		this.parent.clearGameRule(name);
-	}
-
-	@Override
-	public boolean hasGameRule(String name) {
-		String key = GAME_RULE_PREFIX + name;
-		return properties.containsKey(key) || parent.hasGameRule(name);
-	}
-
 	private static final String ENTITY_TRACK_PREFIX = "Entity.", ENTITY_TRACK_SUFFIX = ".TrackDistance";
 
 	@Override

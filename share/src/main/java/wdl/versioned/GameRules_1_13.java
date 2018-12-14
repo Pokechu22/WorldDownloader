@@ -14,11 +14,12 @@
  */
 package wdl.versioned;
 
-import java.util.List;
+import java.util.Collections;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
-
-import com.google.common.collect.ImmutableList;
 
 import net.minecraft.world.GameRules;
 
@@ -56,9 +57,26 @@ final class GameRuleFunctions {
 	}
 
 	/* (non-javadoc)
+	 * @see VersionedFunctions#setRuleValue
+	 */
+	static void setRuleValue(GameRules rules, String rule, String value) {
+		if (getRuleType(rules, rule) == null) {
+			throw new IllegalArgumentException("No rule named " + rule + " exists in " + rules + " (setting to " + value + ", rules list is " + getGameRules(rules) + ")");
+		}
+		rules.setOrCreateGameRule(rule, value, null); // Server argument is for changecallbacks and can be null
+	}
+
+	/* (non-javadoc)
 	 * @see VersionedFunctions#getGameRules
 	 */
-	static List<String> getGameRules(GameRules rules) {
-		return ImmutableList.copyOf(GameRules.getDefinitions().keySet()); // Static now for some reason
+	static Map<String, String> getGameRules(GameRules rules) {
+		Map<String, String> result = GameRules.getDefinitions()
+				.keySet().stream()
+				.collect(Collectors.toMap(
+						rule -> rule,
+						rule -> getRuleValue(rules, rule),
+						(a, b) -> {throw new IllegalArgumentException("Mutliple rules with the same name!  " + a + "," + b);},
+						TreeMap::new));
+		return Collections.unmodifiableMap(result);
 	}
 }

@@ -20,7 +20,6 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -304,11 +303,21 @@ public final class VersionedFunctions {
 	}
 
 	/**
-	 * Gets a list of all game rules.
+	 * Sets the given rule to the given value.  If the rule doesn't exist, throws an exception.
 	 * @param rules The rules object.
-	 * @return A list of all rule names.
+	 * @param rule The rule's name
+	 * @param value The new value
 	 */
-	public static List<String> getGameRules(GameRules rules) {
+	public static void setRuleValue(GameRules rules, String rule, String value) {
+		GameRuleFunctions.setRuleValue(rules, rule, value);
+	}
+
+	/**
+	 * Gets a collection of gamerules and their values.
+	 * @param rules The rules object.
+	 * @return A map of all rule names to their values.
+	 */
+	public static Map<String, String> getGameRules(GameRules rules) {
 		return GameRuleFunctions.getGameRules(rules);
 	}
 

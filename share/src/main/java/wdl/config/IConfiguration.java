@@ -16,7 +16,6 @@ package wdl.config;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Set;
 
 import javax.annotation.CheckForSigned;
 import javax.annotation.Nonnegative;
@@ -116,32 +115,6 @@ public interface IConfiguration {
 
 	// XXX Older things that should be moved to the Setting system eventually, but
 	// I don't have time to do for this release
-	/**
-	 * Gets a set of defined gamerules.  The resultant set is not backed by this collection.
-	 * This includes rules defined by the parent.
-	 */
-	public abstract Set<String> getGameRules();
-
-	/**
-	 * Queries the value of a gamerule.
-	 */
-	public abstract String getGameRule(String name);
-
-	/**
-	 * Sets the value of a gamerule.
-	 */
-	public abstract void setGameRule(String name, String value);
-
-	/**
-	 * Removes the value for the given gamerule, even if it's set in a parent.
-	 */
-	public abstract void clearGameRule(String name);
-
-	/**
-	 * True if the given rule is present in this config or a parent of it.
-	 */
-	public abstract boolean hasGameRule(String name);
-
 	/**
 	 * Queries the track distance for the given entity type.
 	 * @return The distance if configured, or else -1.

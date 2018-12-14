@@ -16,8 +16,6 @@ package wdl.config;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Set;
 
 import javax.annotation.CheckForSigned;
 
@@ -61,33 +59,6 @@ public class DefaultConfiguration implements IConfiguration {
 	@Deprecated
 	public void store(File file, String comments) throws IOException {
 		throw new UnsupportedOperationException("Cannot save the default configuration!");
-	}
-
-	@Override
-	public Set<String> getGameRules() {
-		return Collections.emptySet();
-	}
-
-	@Override
-	public String getGameRule(String name) {
-		throw new IllegalArgumentException("No custom value specified for gamerule " + name); // XXX Is this the best behavior?
-	}
-
-	@Override
-	@Deprecated
-	public void setGameRule(String name, String value) {
-		throw new UnsupportedOperationException("Cannot change gamerule settings on the default configuration (" + name + "->" + value + ")");
-	}
-
-	@Override
-	@Deprecated
-	public void clearGameRule(String name) {
-		// This is allowed, as clearGameRule is recursive, but it shouldn't generally be used directly.
-	}
-
-	@Override
-	public boolean hasGameRule(String name) {
-		return false;
 	}
 
 	@Override

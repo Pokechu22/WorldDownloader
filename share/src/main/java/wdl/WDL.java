@@ -63,6 +63,7 @@ import net.minecraft.realms.RealmsScreen;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkSection;
 import net.minecraft.world.chunk.EmptyChunk;
@@ -237,6 +238,10 @@ public class WDL {
 	 * Default properties that are used to create the global properites.
 	 */
 	public static final IConfiguration defaultProps;
+	/**
+	 * Gamerules associated with the current world.  Loaded at the same time as worldProps.
+	 */
+	public static GameRules gameRules;
 
 	private static final Logger LOGGER = LogManager.getLogger();
 
@@ -256,6 +261,7 @@ public class WDL {
 		}
 		baseProps = new Configuration(globalProps);
 		worldProps = baseProps;
+		gameRules = new GameRules();
 	}
 
 	/**
@@ -341,6 +347,7 @@ public class WDL {
 		}
 
 		worldProps = loadWorldProps(worldName);
+		// Don't load the gamerules now since that might clobber other changes
 		saveHandler = VersionedFunctions.getSaveHandler(minecraft, getWorldFolderName(worldName));
 
 		long lastSaved = worldProps.getValue(MiscSettings.LAST_SAVED);
@@ -936,6 +943,7 @@ public class WDL {
 		if (baseProps.getValue(MiscSettings.LINKED_WORLDS).isEmpty()) {
 			isMultiworld = false;
 			worldProps = baseProps;
+			gameRules = loadGameRules("");
 		} else {
 			isMultiworld = true;
 		}
@@ -969,6 +977,40 @@ public class WDL {
 		}
 
 		return ret;
+	}
+
+	/**
+	 * Gets the gamerules associated with the given world.
+	 *
+	 * @param theWorldName The name of the world, for multiworld.  Otherwise empty.
+	 * @return The rules for that world, or a new default rules instance if the
+	 *         rules couldn't be found (e.g. a new world)
+	 */
+	public static GameRules loadGameRules(String theWorldName) {
+		File savesDir = new File(minecraft.gameDir, "saves");
+
+		String folder = getWorldFolderName(theWorldName);
+		File worldFolder = new File(savesDir, folder);
+		File levelDatFile = new File(worldFolder, "level.dat");
+
+		GameRules rules = new GameRules();
+
+		if (!levelDatFile.exists()) {
+			return rules;
+		}
+
+		NBTTagCompound gameRules;
+		try (FileInputStream stream = new FileInputStream(levelDatFile)) {
+			NBTTagCompound compound = CompressedStreamTools.readCompressed(stream);
+			gameRules = compound.getCompound("Data").getCompound("GameRules");
+		} catch (Exception e) {
+			LOGGER.warn("[WDL] Error while loading existing gamerules; the defaults will be used instead: ", e);
+
+			return rules;
+		}
+
+		rules.read(gameRules);
+		return rules;
 	}
 
 	/**
@@ -1175,10 +1217,18 @@ public class WDL {
 			worldInfoNBT.putBoolean("initialized", true);
 		}
 
-		// Gamerules (most of these are already populated)
-		NBTTagCompound gamerules = worldInfoNBT.getCompound("GameRules");
-		for (String rule : worldProps.getGameRules()) {
-			gamerules.putString(rule, worldProps.getGameRule(rule));
+		// Compute an entire new set of gamerules
+		// (based on what we loaded from level.dat earlier)
+		NBTTagCompound vanillaRules = worldInfoNBT.getCompound("GameRules");
+		Map<String, String> ourRules = VersionedFunctions.getGameRules(gameRules);
+		if (!vanillaRules.keySet().equals(ourRules.keySet())) {
+			LOGGER.warn("[WDL] Mismatched custom/vanilla game rule list!  We have " + ourRules +
+					" and vanilla has " + VersionedFunctions.nbtString(vanillaRules) + ".  " +
+					"(only differences in keys matter; values are expected to differ)");
+		}
+		NBTTagCompound gamerules = new NBTTagCompound();
+		for (Map.Entry<String, String> e : ourRules.entrySet()) {
+			gamerules.putString(e.getKey(), e.getValue());
 		}
 
 		// Forge (TODO: move this elsewhere!)

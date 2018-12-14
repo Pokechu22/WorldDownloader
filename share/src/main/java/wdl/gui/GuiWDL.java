@@ -130,6 +130,7 @@ public class GuiWDL extends Screen {
 					WDL.propsFound = true;
 
 					WDL.worldProps = WDL.loadWorldProps(selectedWorld);
+					WDL.gameRules = WDL.loadGameRules(selectedWorld);
 					mc.displayGuiScreen(GuiWDL.this);
 				}
 
@@ -160,6 +161,7 @@ public class GuiWDL extends Screen {
 								WDL.propsFound = true;
 
 								WDL.worldProps = WDL.loadWorldProps(selectedWorld);
+								WDL.gameRules = WDL.loadGameRules(selectedWorld);
 								mc.displayGuiScreen(GuiWDL.this);
 							}
 

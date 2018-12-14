@@ -15,6 +15,7 @@
 package wdl.gui;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -27,7 +28,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.GameRules.ValueType;
 import wdl.WDL;
-import wdl.config.IConfiguration;
 import wdl.gui.widget.Button;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.GuiList;
@@ -61,7 +61,7 @@ public class GuiWDLGameRules extends Screen {
 					GuiWDLGameRules.this.height, 39,
 					GuiWDLGameRules.this.height - 32, 24);
 			List<RuleEntry> entries = this.getEntries();
-			for (String rule : vanillaGameRules) {
+			for (String rule : vanillaGameRules.keySet()) {
 				GameRules.ValueType type = VersionedFunctions.getRuleType(rules, rule);
 				if (type == ValueType.NUMERICAL_VALUE) {
 					entries.add(new IntRuleEntry(rule));
@@ -90,7 +90,7 @@ public class GuiWDLGameRules extends Screen {
 
 			@Override
 			public void drawEntry(int x, int y, int width, int height, int mouseX, int mouseY) {
-				this.resetButton.enabled = isRuleSet(this.ruleName);
+				this.resetButton.enabled = isRuleNonDefault(this.ruleName);
 
 				super.drawEntry(x, y, width, height, mouseX, mouseY);
 
@@ -139,7 +139,7 @@ public class GuiWDLGameRules extends Screen {
 				if (!this.isSelected()) {
 					field.setFocused(false);
 				}
-				if (isRuleSet(this.ruleName)) {
+				if (isRuleNonDefault(this.ruleName)) {
 					field.setTextColor(SET_TEXT_FIELD);
 				} else {
 					field.setTextColor(DEFAULT_TEXT_FIELD);
@@ -199,15 +199,14 @@ public class GuiWDLGameRules extends Screen {
 	private String title;
 	@Nullable
 	private final GuiScreen parent;
-	private final IConfiguration config;
 
+	/** The gamerules object to modify */
 	private GameRules rules;
-	/** All vanilla game rules; this list is immutable. */
-	private final List<String> vanillaGameRules;
+	/** All vanilla game rules and their default values; this list is immutable. */
+	private final Map<String, String> vanillaGameRules;
 
 	/**
-	 * Gets the value of the given rule, using WDL's overriden value if set,
-	 * otherwise the default.
+	 * Gets the value of the given rule.
 	 *
 	 * @param ruleName
 	 *            The name of the rule.
@@ -215,15 +214,11 @@ public class GuiWDLGameRules extends Screen {
 	 */
 	@Nullable
 	private String getRule(@Nonnull String ruleName) {
-		if (isRuleSet(ruleName)) {
-			return config.getGameRule(ruleName);
-		} else {
-			return VersionedFunctions.getRuleValue(rules, ruleName);
-		}
+		return VersionedFunctions.getRuleValue(rules, ruleName);
 	}
 
 	/**
-	 * Overrides the given rule in WDL's settings.
+	 * Updates the value of the given rule.
 	 *
 	 * @param ruleName
 	 *            The name of the rule.
@@ -232,18 +227,17 @@ public class GuiWDLGameRules extends Screen {
 	 *            {@link #clearRule(String)}.
 	 */
 	private void setRule(@Nonnull String ruleName, @Nonnull String value) {
-		config.setGameRule(ruleName, value);
+		VersionedFunctions.setRuleValue(rules, ruleName, value);
 	}
 
 	/**
-	 * Un-overrides the given rule. If the rule is not currently overridden, or
-	 * does not exist at all, nothing happens.
+	 * Returns the given rule to its default value.
 	 *
 	 * @param ruleName
 	 *            The name of the rule.
 	 */
 	private void clearRule(@Nonnull String ruleName) {
-		config.clearGameRule(ruleName);
+		setRule(ruleName, vanillaGameRules.get(ruleName));
 	}
 
 	/**
@@ -254,15 +248,17 @@ public class GuiWDLGameRules extends Screen {
 	 * @return True if the rule is overriden; false otherwise (not overriden or
 	 *         no such rule exists).
 	 */
-	private boolean isRuleSet(@Nonnull String ruleName) {
-		return config.hasGameRule(ruleName);
+	private boolean isRuleNonDefault(@Nonnull String ruleName) {
+		return !vanillaGameRules.get(ruleName).equals(getRule(ruleName));
 	}
 
 	public GuiWDLGameRules(@Nullable GuiScreen parent) {
 		this.parent = parent;
-		this.config = WDL.worldProps;
-		this.rules = WDL.worldClient.getGameRules();
-		this.vanillaGameRules = VersionedFunctions.getGameRules(rules);
+		this.rules = WDL.gameRules;
+		// We're not currently modifying the rules on worldClient itself, so they can be considered
+		// to be the defaults... probably.
+		GameRules defaultRules = WDL.worldClient.getGameRules();
+		this.vanillaGameRules = VersionedFunctions.getGameRules(defaultRules);
 	}
 
 	@Override
@@ -289,6 +285,6 @@ public class GuiWDLGameRules extends Screen {
 
 	@Override
 	public void onGuiClosed() {
-		WDL.saveProps();
+		// Can't save anywhere until the download actually occurs...
 	}
 }
