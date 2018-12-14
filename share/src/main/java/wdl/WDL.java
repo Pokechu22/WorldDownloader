@@ -348,13 +348,16 @@ public class WDL {
 		// Can't directly use worldClient.getWorldInfo, as that doesn't use
 		// the saved version.
 		File levelDatFile = new File(saveHandler.getWorldDirectory(), "level.dat");
-		try (FileInputStream stream = new FileInputStream(levelDatFile)) {
-			NBTTagCompound compound = CompressedStreamTools.readCompressed(stream);
-			lastPlayed = compound.getCompound("Data").getLong("LastPlayed");
-		} catch (Exception e) {
-			LOGGER.warn("Error while checking if the map has been played and " +
-					"needs to be backed up (this is normal if this world " +
-					"has not been saved before): ", e);
+		if (levelDatFile.exists()) {
+			try (FileInputStream stream = new FileInputStream(levelDatFile)) {
+				NBTTagCompound compound = CompressedStreamTools.readCompressed(stream);
+				lastPlayed = compound.getCompound("Data").getLong("LastPlayed");
+			} catch (Exception e) {
+				LOGGER.warn("Error while checking if the map has been played and " +
+						"needs to be backed up: ", e);
+				lastPlayed = -1;
+			}
+		} else {
 			lastPlayed = -1;
 		}
 		if (!overrideLastModifiedCheck && lastPlayed > lastSaved) {
