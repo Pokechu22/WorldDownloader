@@ -46,7 +46,7 @@ public abstract class MixinNetHandlerPlayClient implements INetHandlerPlayClient
 		if (networkManagerIn == null) return; // Happens during unit tests
 
 		// Litemod-only: work around forge issue
-		Channel channel = ReflectionUtils.findAndGetPrivateField(networkManagerIn, Channel.class);
+		Channel channel = ReflectionUtils.findAndGetPrivateField(networkManagerIn, NetworkManager.class, Channel.class);
 		if (channel.pipeline().names().contains("fml:packet_handler")) {
 			channel.pipeline().addBefore("fml:packet_handler", "wdl:packet_handler",
 					new PassCustomPayloadHandler(mcIn, (NetHandlerPlayClient)(Object)this, true));
