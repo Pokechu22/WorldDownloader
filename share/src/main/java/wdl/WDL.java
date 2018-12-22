@@ -213,11 +213,11 @@ public class WDL {
 	/**
 	 * The current world name, if the world is multiworld.
 	 */
-	public static String worldName = "WorldDownloaderERROR";
+	public static String worldName;
 	/**
 	 * The folder in which worlds are being saved.
 	 */
-	public static String baseFolderName = "WorldDownloaderERROR";
+	public static String baseFolderName;
 
 	// Properties:
 	/**
