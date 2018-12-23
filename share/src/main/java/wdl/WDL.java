@@ -1652,6 +1652,17 @@ public class WDL {
 		} else {
 			global.addDetail("-", "null");
 		}
+
+		CrashReportCategory sanity = report.makeCategoryDepth("Sanity checks", stSize);
+		for (SanityCheck check : SanityCheck.values()) {
+			sanity.addDetail(check.name(), () -> {
+				if (!check.canRun()) {
+					return "Skipped";
+				}
+				check.run();
+				return "Passed";
+			});
+		}
 	}
 
 	/**
