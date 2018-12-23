@@ -47,7 +47,11 @@ public abstract class MixinNetHandlerPlayClient implements INetHandlerPlayClient
 
 		// Litemod-only: work around forge issue
 		Channel channel = ReflectionUtils.findAndGetPrivateField(networkManagerIn, NetworkManager.class, Channel.class);
-		if (channel.pipeline().names().contains("fml:packet_handler")) {
+		if (channel.pipeline().names().contains("wdl:packet_handler")) {
+			// Already registered, do nothing.
+			// Shoudln't happen in normal cases, but some mods do strange stuff like
+			// creating/allowing creation of multiple NetHandlerPlayClient instances.
+		} else if (channel.pipeline().names().contains("fml:packet_handler")) {
 			channel.pipeline().addBefore("fml:packet_handler", "wdl:packet_handler",
 					new PassCustomPayloadHandler(mcIn, (NetHandlerPlayClient)(Object)this, true));
 		} else {
