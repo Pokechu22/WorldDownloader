@@ -1230,6 +1230,7 @@ public class WDL {
 		for (Map.Entry<String, String> e : ourRules.entrySet()) {
 			gamerules.putString(e.getKey(), e.getValue());
 		}
+		worldInfoNBT.put("GameRules", gamerules);
 
 		// Forge (TODO: move this elsewhere!)
 		try {
