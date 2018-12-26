@@ -23,6 +23,7 @@ import javax.annotation.Nullable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.world.GameRules;
@@ -205,6 +206,8 @@ public class GuiWDLGameRules extends Screen {
 	/** All vanilla game rules and their default values; this list is immutable. */
 	private final Map<String, String> vanillaGameRules;
 
+	private GuiButton doneButton;
+
 	/**
 	 * Gets the value of the given rule.
 	 *
@@ -266,7 +269,7 @@ public class GuiWDLGameRules extends Screen {
 		this.title = I18n.format("wdl.gui.gamerules.title");
 		this.addList(new GuiGameRuleList());
 
-		this.addButton(new ButtonDisplayGui(this.width / 2 - 100,
+		this.doneButton = this.addButton(new ButtonDisplayGui(this.width / 2 - 100,
 				this.height - 29, 200, 20, this.parent));
 	}
 
@@ -278,7 +281,10 @@ public class GuiWDLGameRules extends Screen {
 
 		this.drawCenteredString(fontRenderer, title, width / 2, 4, 0xFFFFFF);
 
-		if (hoveredToolTip != null) {
+		if (this.doneButton.isMouseOver()) {
+			Utils.drawGuiInfoBox(I18n.format("wdl.gui.gamerules.doneInfo"),
+					width, height, 48);
+		} else if (hoveredToolTip != null) {
 			Utils.drawGuiInfoBox(hoveredToolTip, width, height, 48);
 		}
 	}

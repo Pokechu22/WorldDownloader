@@ -258,6 +258,7 @@ wdl.gui.permissions.overrides=Chunk Overrides
 
 wdl.gui.gamerules.title=World Downloader mod: Game rules
 wdl.gui.gamerules.resetRule=Reset
+wdl.gui.gamerules.doneInfo=Note: Rules are only saved once the world has been downloaded and saved, and will be lost if you disconnect without saving.
 
 # Descriptions of individual rules, using their (case-sensitive) name.  Based off of the wiki article: https://minecraft.gamepedia.com/Commands#gamerule
 wdl.gui.gamerules.rules.announceAdvancements=Should advancements should be announced?
