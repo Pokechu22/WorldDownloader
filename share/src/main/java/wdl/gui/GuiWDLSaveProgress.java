@@ -19,6 +19,7 @@ import java.util.function.Supplier;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.math.MathHelper;
 
 /**
  * GUI screen shown while the world is being saved.
@@ -34,6 +35,13 @@ public class GuiWDLSaveProgress extends GuiTurningCameraBase {
 	private final int majorTaskCount;
 	private volatile int minorTaskProgress;
 	private volatile int minorTaskMaximum;
+
+	// Actually used for rendering
+	private static final int FULL_BAR_WIDTH = 182;
+
+	// Vary between 0 and 1.  prev values are from the previous tick, for interpolation
+	private float majorBar, prevMajorBar;
+	private float minorBar, prevMinorBar;
 
 	private volatile boolean doneWorking = false;
 
@@ -108,6 +116,22 @@ public class GuiWDLSaveProgress extends GuiTurningCameraBase {
 		this.doneWorking = true;
 	}
 
+	@Override
+	public void tick() {
+		super.tick();
+		prevMajorBar = majorBar;
+		prevMinorBar = minorBar;
+		if (minorTaskMaximum > 0) {
+			// Make the major bar also reflect the minor bar.
+			majorBar = (float)((majorTaskNumber * minorTaskMaximum) + minorTaskProgress) /
+					((majorTaskCount + 1) * minorTaskMaximum);
+		} else {
+			majorBar = (float)majorTaskNumber / majorTaskCount;
+		}
+
+		minorBar = (float)minorTaskProgress / minorTaskMaximum;
+	}
+
 	/**
 	 * Draws the screen and all the components in it. Args : mouseX, mouseY,
 	 * renderPartialTicks
@@ -139,19 +163,13 @@ public class GuiWDLSaveProgress extends GuiTurningCameraBase {
 
 			this.drawCenteredString(this.fontRenderer,
 					majorTaskInfo, this.width / 2, 100, 0xFFFFFF);
-
-			if (minorTaskMaximum > 0) {
-				this.drawProgressBar(110, 84, 89,
-						(majorTaskNumber * minorTaskMaximum) + minorTaskProgress,
-						(majorTaskCount + 1) * minorTaskMaximum);
-			} else {
-				this.drawProgressBar(110, 84, 89, majorTaskNumber,
-						majorTaskCount);
-			}
+			this.drawProgressBar(110, 84, 89,
+						prevMajorBar + (majorBar - prevMajorBar) * partialTicks);
 
 			this.drawCenteredString(this.fontRenderer, minorTaskInfo,
 					this.width / 2, 130, 0xFFFFFF);
-			this.drawProgressBar(140, 64, 69, minorTaskProgress, minorTaskMaximum);
+			this.drawProgressBar(140, 64, 69,
+					prevMinorBar + (minorBar - prevMinorBar) * partialTicks);
 
 			super.render(mouseX, mouseY, partialTicks);
 		}
@@ -171,27 +189,20 @@ public class GuiWDLSaveProgress extends GuiTurningCameraBase {
 	 *            The vertical coordinate of the full part in the icon map
 	 *            (icons.png)
 	 * @param progress
-	 *            The progress into the bar.
-	 * @param maximum
-	 *            The maximum value of progress.
+	 *            The progress value of the bar, between 0 and 1
 	 */
-	private void drawProgressBar(int y, int emptyV, int filledV,
-			int progress, int maximum) {
-		if (maximum == 0) {
-			return;
-		}
+	private void drawProgressBar(int y, int emptyV, int filledV, float progress) {
+		progress = MathHelper.clamp(progress, 0, 1);
 
 		this.mc.getTextureManager().bindTexture(Gui.ICONS);
 
-		final int fullWidth = 182;
-		final int currentWidth = (progress * fullWidth) / maximum;
 		final int height = 5;
 
-		final int x = (this.width / 2) - (fullWidth / 2);
+		final int x = (this.width / 2) - (FULL_BAR_WIDTH / 2);
 		final int u = 0; //Texture position.
 
-		drawTexturedModalRect(x, y, u, emptyV, fullWidth, height);
-		drawTexturedModalRect(x, y, u, filledV, currentWidth, height);
+		drawTexturedModalRect(x, y, u, emptyV, FULL_BAR_WIDTH, height);
+		drawTexturedModalRect(x, y, u, filledV, (int)(FULL_BAR_WIDTH * progress), height);
 	}
 
 	@Override
