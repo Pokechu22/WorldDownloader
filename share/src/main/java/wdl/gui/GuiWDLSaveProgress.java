@@ -29,12 +29,12 @@ import net.minecraft.util.math.MathHelper;
  */
 public class GuiWDLSaveProgress extends GuiTurningCameraBase {
 	private final String title;
-	private volatile String majorTaskMessage = "";
-	private volatile Supplier<String> minorTaskMessageProvider = () -> "";
-	private volatile int majorTaskNumber;
+	private String majorTaskMessage = "";
+	private Supplier<String> minorTaskMessageProvider = () -> "";
+	private int majorTaskNumber;
 	private final int majorTaskCount;
-	private volatile int minorTaskProgress;
-	private volatile int minorTaskMaximum;
+	private int minorTaskProgress;
+	private int minorTaskMaximum;
 
 	// Actually used for rendering
 	private static final int FULL_BAR_WIDTH = 182;
@@ -43,9 +43,9 @@ public class GuiWDLSaveProgress extends GuiTurningCameraBase {
 	private float majorBar, prevMajorBar;
 	private float minorBar, prevMinorBar;
 
-	private volatile boolean doneWorking = false;
+	private boolean doneWorking = false;
 
-	private volatile boolean cancelAttempted = false;
+	private boolean cancelAttempted = false;
 
 	/**
 	 * Creates a new GuiWDLSaveProgress.
@@ -62,7 +62,7 @@ public class GuiWDLSaveProgress extends GuiTurningCameraBase {
 	/**
 	 * Starts a new major task with the given message.
 	 */
-	public void startMajorTask(String message, int minorTaskMaximum) {
+	public synchronized void startMajorTask(String message, int minorTaskMaximum) {
 		this.majorTaskMessage = message;
 		this.majorTaskNumber++;
 
@@ -79,7 +79,7 @@ public class GuiWDLSaveProgress extends GuiTurningCameraBase {
 	 *            the current position and maximum and the percent are
 	 *            automatically appended after it.
 	 */
-	public void setMinorTaskProgress(String message, int progress) {
+	public synchronized void setMinorTaskProgress(String message, int progress) {
 		this.minorTaskMessageProvider = () -> message;
 		this.minorTaskProgress = progress;
 	}
@@ -90,7 +90,7 @@ public class GuiWDLSaveProgress extends GuiTurningCameraBase {
 	 * @param messageProvider
 	 *            Provides the message to be displayed.
 	 */
-	public void setMinorTaskProgress(Supplier<String> messageProvider, int progress) {
+	public synchronized void setMinorTaskProgress(Supplier<String> messageProvider, int progress) {
 		this.minorTaskMessageProvider = messageProvider;
 		this.minorTaskProgress = progress;
 	}
@@ -98,26 +98,26 @@ public class GuiWDLSaveProgress extends GuiTurningCameraBase {
 	/**
 	 * Updates the progress on the minor task.
 	 */
-	public void setMinorTaskProgress(int progress) {
+	public synchronized void setMinorTaskProgress(int progress) {
 		this.minorTaskProgress = progress;
 	}
 
 	/**
 	 * Updates the number of minor tasks.
 	 */
-	public void setMinorTaskCount(int count) {
+	public synchronized void setMinorTaskCount(int count) {
 		this.minorTaskMaximum = count;
 	}
 
 	/**
 	 * Sets the GUI as done working, meaning it will be closed next tick.
 	 */
-	public void setDoneWorking() {
+	public synchronized void setDoneWorking() {
 		this.doneWorking = true;
 	}
 
 	@Override
-	public void tick() {
+	public synchronized void tick() {
 		super.tick();
 		prevMajorBar = majorBar;
 		prevMinorBar = minorBar;
@@ -137,7 +137,7 @@ public class GuiWDLSaveProgress extends GuiTurningCameraBase {
 	 * renderPartialTicks
 	 */
 	@Override
-	public void render(int mouseX, int mouseY, float partialTicks) {
+	public synchronized void render(int mouseX, int mouseY, float partialTicks) {
 		this.drawDefaultBackground();
 
 		if (this.doneWorking) {
