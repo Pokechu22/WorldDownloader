@@ -261,8 +261,8 @@ public class WorldBackup {
 		case CUSTOM: {
 			ICustomBackupProgressMonitor customMonitor = (ICustomBackupProgressMonitor)monitor;
 			if (customCommand == null || customExtension == null) {
-				// This will be hit only for a specific method call, not the user not specifying one.
-				// (It will also cause a crash, which is why that matters; this shouldn't happen regardless of what the user does)
+				// This should only be hit when backupWorld(File, String, WorldBackupType) is called,
+				// not for the user using custom backup without specifying a value.
 				throw new BackupFailedException("Cannot use the custom backup type without a command and extension: command=" + customCommand + ", extension=" + customExtension);
 			}
 
