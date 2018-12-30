@@ -1631,6 +1631,7 @@ public class WDL {
 		state.addDetail("worldProps", worldProps);
 		state.addDetail("globalProps", globalProps);
 		state.addDetail("defaultProps", defaultProps);
+		state.addDetail("gameRules", gameRules);
 
 		CrashReportCategory base = report.makeCategoryDepth(
 				"World Downloader Mod - Base properties", stSize);
