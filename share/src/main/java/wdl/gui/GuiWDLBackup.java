@@ -173,7 +173,7 @@ public class GuiWDLBackup extends Screen {
 				output.append(text);
 			}
 			@Override
-			public void setDenominator(int value) { }
+			public void setDenominator(int value, boolean show) { }
 			@Override
 			public void setNumerator(int value) { }
 			@Override

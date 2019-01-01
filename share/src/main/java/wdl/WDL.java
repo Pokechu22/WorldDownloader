@@ -616,8 +616,8 @@ public class WDL {
 			class BackupState implements WorldBackup.ICustomBackupProgressMonitor {
 				int curFile = 0;
 				@Override
-				public void setDenominator(int value) {
-					progressScreen.setMinorTaskCount(value);
+				public void setDenominator(int value, boolean show) {
+					progressScreen.setMinorTaskCount(value, show);
 				}
 				@Override
 				public void incrementNumerator() {

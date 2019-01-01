@@ -35,6 +35,7 @@ public class GuiWDLSaveProgress extends GuiTurningCameraBase {
 	private final int majorTaskCount;
 	private int minorTaskProgress;
 	private int minorTaskMaximum;
+	private boolean includeProgressInMinorTask = true;
 
 	// Actually used for rendering
 	private static final int FULL_BAR_WIDTH = 182;
@@ -107,6 +108,16 @@ public class GuiWDLSaveProgress extends GuiTurningCameraBase {
 	 */
 	public synchronized void setMinorTaskCount(int count) {
 		this.minorTaskMaximum = count;
+		this.includeProgressInMinorTask = true;
+	}
+
+	/**
+	 * Updates the number of minor tasks, possibly hiding display of the actual
+	 * number.
+	 */
+	public synchronized void setMinorTaskCount(int count, boolean show) {
+		this.minorTaskMaximum = count;
+		this.includeProgressInMinorTask = show;
 	}
 
 	/**
@@ -152,7 +163,7 @@ public class GuiWDLSaveProgress extends GuiTurningCameraBase {
 						majorTaskNumber, majorTaskCount);
 			}
 			String minorTaskInfo = minorTaskMessageProvider.get();
-			if (minorTaskMaximum > 1) {
+			if (minorTaskMaximum > 1 && includeProgressInMinorTask) {
 				minorTaskInfo = I18n.format(
 						"wdl.gui.saveProgress.progressInfo", minorTaskInfo,
 						minorTaskProgress, minorTaskMaximum);

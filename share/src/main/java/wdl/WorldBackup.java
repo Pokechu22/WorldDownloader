@@ -125,7 +125,7 @@ public class WorldBackup {
 	public static interface ICustomBackupProgressMonitor extends IBackupProgressMonitor {
 		@Override
 		public default void setNumberOfFiles(int num) {
-			setDenominator(num);
+			setDenominator(num, true);
 		}
 		@Override
 		public default void onNextFile(String name) {
@@ -137,7 +137,7 @@ public class WorldBackup {
 		 * Sets the denominator for the progress bar.
 		 * Used for e.g. cases where only a percentage is known.
 		 */
-		public abstract void setDenominator(int value);
+		public abstract void setDenominator(int value, boolean show);
 		public abstract void incrementNumerator();
 		/**
 		 * Sets the numerator for the progress bar.
@@ -431,7 +431,7 @@ public class WorldBackup {
 						monitor.onNextFile(file);
 					}
 					monitor.setNumerator(percent);
-					monitor.setDenominator(100);
+					monitor.setDenominator(100, false);
 				} else {
 					monitor.onTextUpdate(str);
 				}
