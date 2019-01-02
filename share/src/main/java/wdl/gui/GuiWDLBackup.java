@@ -53,8 +53,9 @@ public class GuiWDLBackup extends Screen {
 	private GuiTextField customBackupExtensionFld;
 	private String customBackupExtension;
 	private long checkValidTime = 0;
-	private boolean isCommandValid = true;
-	private @Nullable String commandInvalidReason;
+	private volatile boolean checkingCommandValid = false;
+	private volatile boolean isCommandValid = true;
+	private volatile @Nullable String commandInvalidReason;
 
 	public GuiWDLBackup(GuiScreen parent) {
 		this.parent = parent;
@@ -152,10 +153,35 @@ public class GuiWDLBackup extends Screen {
 	public void tick() {
 		super.tick();
 
-		// Used to cancel an in-progress test backup... though there isn't much point right
-		// now given that this all happens on one thread
-		class ProgressMonitor implements ICustomBackupProgressMonitor {
-			public ProgressMonitor() {
+		long now = System.currentTimeMillis();
+		if (checkValidTime != 0 && now >= checkValidTime) {
+			checkCustomBackupConfig();
+		}
+
+		// A check is neither queued nor in progress
+		doneButton.enabled = (checkValidTime == 0 && !checkingCommandValid);
+
+		int color = 0x40E040;
+		if (checkValidTime != 0 || checkingCommandValid) {
+			color = 0xE0E040; // Pending checking
+		} else if (!isCommandValid) {
+			color = 0xE04040; // Invalid
+		}
+
+		customBackupCommandTemplateFld.setTextColor(color);
+		customBackupExtensionFld.setTextColor(color);
+	}
+
+	/**
+	 * Checks if the configuration for the custom backup is correct.
+	 */
+	private void checkCustomBackupConfig() {
+		// Now in progress, no longer queueud
+		checkValidTime = 0;
+		checkingCommandValid = true;
+
+		class BackupTestRunnable implements ICustomBackupProgressMonitor, Runnable {
+			public BackupTestRunnable() {
 				this.origCommandTemplate = customBackupCommandTemplate;
 				this.origExtension = customBackupExtension;
 				this.endTime = System.currentTimeMillis() + 5000; // 5 seconds later
@@ -179,49 +205,50 @@ public class GuiWDLBackup extends Screen {
 			@Override
 			public boolean shouldCancel() {
 				// True if too much time passed or the command changed
-				return !origCommandTemplate.equals(customBackupCommandTemplate) ||
-						!origExtension.equals(customBackupExtension) ||
+				return customSettingsChanged() ||
 						System.currentTimeMillis() >= endTime;
 			}
-		}
 
-		long now = System.currentTimeMillis();
-		if (checkValidTime != 0 && now >= checkValidTime) {
-			File tempDir = null, tempOptions = null, tempDest = null;
-			ProgressMonitor monitor = new ProgressMonitor();
-			try {
-				tempDir = Files.createTempDir();
-				File optionsTxt = new File(mc.gameDir, "options.txt"); // Should exist
-				tempOptions = new File(tempDir, "options.txt");
-				Files.copy(optionsTxt, tempOptions);
-				tempDest = File.createTempFile("wdlbackuptest", "." + customBackupExtension);
-				tempDest.delete(); // We only want it for the file name; the empty file actually causes other problems
-
-				WorldBackup.runCustomBackup(customBackupCommandTemplate, tempDir, tempDest, monitor);
-
-				isCommandValid = true;
-				commandInvalidReason = null;
-			} catch (Exception ex) {
-				isCommandValid = false;
-				commandInvalidReason = ex.getMessage() + "\n\n" + monitor.output.toString();
+			private boolean customSettingsChanged() {
+				return !origCommandTemplate.equals(customBackupCommandTemplate) ||
+						!origExtension.equals(customBackupExtension);
 			}
-			if (tempOptions != null) tempOptions.delete();
-			if (tempDir != null) tempDir.delete();
-			if (tempDest != null) tempDest.delete();
-			checkValidTime = 0;
+
+			@Override
+			public void run() {
+				File tempDir = null, tempOptions = null, tempDest = null;
+				boolean valid;
+				String invalidReason;
+
+				try {
+					tempDir = Files.createTempDir();
+					File optionsTxt = new File(mc.gameDir, "options.txt"); // Should exist
+					tempOptions = new File(tempDir, "options.txt");
+					Files.copy(optionsTxt, tempOptions);
+					tempDest = File.createTempFile("wdlbackuptest", "." + customBackupExtension);
+					tempDest.delete(); // We only want it for the file name; the empty file actually causes other problems
+
+					WorldBackup.runCustomBackup(customBackupCommandTemplate, tempDir, tempDest, this);
+
+					valid = true;
+					invalidReason = null;
+				} catch (Exception ex) {
+					valid = false;
+					invalidReason = ex.getMessage() + "\n\n" + output.toString();
+				}
+				if (tempOptions != null) tempOptions.delete();
+				if (tempDir != null) tempDir.delete();
+				if (tempDest != null) tempDest.delete();
+
+				if (!customSettingsChanged()) {
+					isCommandValid = valid;
+					commandInvalidReason = invalidReason;
+					checkingCommandValid = false;
+				}
+			}
 		}
 
-		doneButton.enabled = (checkValidTime == 0);
-
-		int color = 0x40E040;
-		if (checkValidTime != 0) {
-			color = 0xE0E040; // Pending checking
-		} else if (!isCommandValid) {
-			color = 0xE04040; // Invalid
-		}
-
-		customBackupCommandTemplateFld.setTextColor(color);
-		customBackupExtensionFld.setTextColor(color);
+		new Thread(new BackupTestRunnable()).start();
 	}
 
 	@Override
