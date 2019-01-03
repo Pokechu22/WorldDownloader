@@ -204,9 +204,10 @@ public class GuiWDLBackup extends Screen {
 			public void setNumerator(int value) { }
 			@Override
 			public boolean shouldCancel() {
-				// True if too much time passed or the command changed
+				// True if too much time passed, the command changed, or the GUI was closed.
 				return customSettingsChanged() ||
-						System.currentTimeMillis() >= endTime;
+						System.currentTimeMillis() >= endTime ||
+						mc.currentScreen != GuiWDLBackup.this;
 			}
 
 			private boolean customSettingsChanged() {
