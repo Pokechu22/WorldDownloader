@@ -452,6 +452,9 @@ public class WorldBackup {
 	private static void zipFolder(File folder, ZipOutputStream stream,
 			int pathStartIndex, IBackupProgressMonitor monitor) throws IOException {
 		for (File file : folder.listFiles()) {
+			if (monitor.shouldCancel()) {
+				throw new BackupFailedException("Backup was canceled");
+			}
 			if (file.isFile()) {
 				String name = file.getPath().substring(pathStartIndex);
 				monitor.onNextFile(name);
@@ -479,6 +482,9 @@ public class WorldBackup {
 	 */
 	private static long copy(File from, File to, int pathStartIndex,
 			IBackupProgressMonitor monitor) throws IOException {
+		if (monitor.shouldCancel()) {
+			throw new BackupFailedException("Backup was canceled");
+		}
 		if (from.isDirectory()) {
 			if (!to.exists()) {
 				to.mkdir();
