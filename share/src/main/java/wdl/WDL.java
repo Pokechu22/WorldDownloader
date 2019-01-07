@@ -22,7 +22,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -707,8 +706,11 @@ public class WDL {
 			CompressedStreamTools.writeCompressed(playerNBT, stream);
 
 			// Remove the old player file to make space for the new one.
-			Files.deleteIfExists(playerFile.toPath());
-			Files.move(playerFileTmp.toPath(), playerFile.toPath());
+			if (playerFile.exists()) {
+				playerFile.delete();
+			}
+
+			playerFileTmp.renameTo(playerFile);
 		} catch (Exception e) {
 			throw new RuntimeException("Couldn't save the player!", e);
 		}
@@ -786,16 +788,23 @@ public class WDL {
 		File dataFileOld = new File(saveDirectory, "level.dat");
 
 		try (FileOutputStream stream = new FileOutputStream(dataFile)) {
-			// Make temporary level.dat_new
 			CompressedStreamTools.writeCompressed(rootWorldInfoNBT, stream);
 
-			// level.dat becomes level.dat_old
-			Files.deleteIfExists(dataFileBackup.toPath());
-			Files.move(dataFileOld.toPath(), dataFileBackup.toPath());
+			if (dataFileBackup.exists()) {
+				dataFileBackup.delete();
+			}
 
-			// level.dat_new becomes level.dat
-			Files.deleteIfExists(dataFileOld.toPath());
-			Files.move(dataFile.toPath(), dataFileOld.toPath());
+			dataFileOld.renameTo(dataFileBackup);
+
+			if (dataFileOld.exists()) {
+				dataFileOld.delete();
+			}
+
+			dataFile.renameTo(dataFileOld);
+
+			if (dataFile.exists()) {
+				dataFile.delete();
+			}
 		} catch (Exception e) {
 			throw new RuntimeException("Couldn't save the world metadata!", e);
 		}
