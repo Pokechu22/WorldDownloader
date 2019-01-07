@@ -781,21 +781,24 @@ public class WDL {
 
 		worldProps.setValue(MiscSettings.LAST_SAVED, worldInfoNBT.getLong("LastPlayed"));
 
-		File dataFile = new File(saveDirectory, "level.dat_new");
+		File dataFileTmp = new File(saveDirectory, "level.dat_new");
 		File dataFileBackup = new File(saveDirectory, "level.dat_old");
-		File dataFileOld = new File(saveDirectory, "level.dat");
+		File dataFile = new File(saveDirectory, "level.dat");
 
-		try (FileOutputStream stream = new FileOutputStream(dataFile)) {
+		try (FileOutputStream stream = new FileOutputStream(dataFileTmp)) {
 			// Make temporary level.dat_new
 			CompressedStreamTools.writeCompressed(rootWorldInfoNBT, stream);
 
-			// level.dat becomes level.dat_old
-			Files.deleteIfExists(dataFileBackup.toPath());
-			Files.move(dataFileOld.toPath(), dataFileBackup.toPath());
+			if (dataFile.exists()) {
+				// level.dat becomes level.dat_old
+				// (however it won't exist the first time the world is saved)
+				Files.deleteIfExists(dataFileBackup.toPath());
+				Files.move(dataFile.toPath(), dataFileBackup.toPath());
+			}
 
 			// level.dat_new becomes level.dat
-			Files.deleteIfExists(dataFileOld.toPath());
-			Files.move(dataFile.toPath(), dataFileOld.toPath());
+			Files.deleteIfExists(dataFile.toPath());
+			Files.move(dataFileTmp.toPath(), dataFile.toPath());
 		} catch (Exception e) {
 			throw new RuntimeException("Couldn't save the world metadata!", e);
 		}
