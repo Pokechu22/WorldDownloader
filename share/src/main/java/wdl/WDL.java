@@ -1603,7 +1603,7 @@ public class WDL {
 		state.addDetail("minecraft", minecraft);
 		state.addDetail("worldClient", worldClient);
 		state.addDetail("networkManager", networkManager);
-		state.addDetail("thePlayer", player);
+		state.addDetail("player", player);
 		state.addDetail("windowContainer", windowContainer);
 		state.addDetail("lastClickedBlock", lastClickedBlock);
 		state.addDetail("lastEntity", lastEntity);
