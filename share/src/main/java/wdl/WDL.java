@@ -36,6 +36,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
 import com.mojang.realmsclient.RealmsMainScreen;
 import com.mojang.realmsclient.dto.RealmsServer;
 
@@ -161,18 +162,18 @@ public class WDL {
 	/**
 	 * All tile entities that were saved manually, by chunk and then position.
 	 */
-	public static HashMap<ChunkPos, Map<BlockPos, TileEntity>> newTileEntities = new HashMap<>();
+	public static Map<ChunkPos, Map<BlockPos, TileEntity>> newTileEntities = new HashMap<>();
 
 	/**
 	 * All entities that were downloaded, by chunk.
 	 */
-	public static HashMultimap<ChunkPos, Entity> newEntities = HashMultimap.create();
+	public static Multimap<ChunkPos, Entity> newEntities = HashMultimap.create();
 
 	/**
 	 * All of the {@link MapData}s that were sent to the client in the current
 	 * world.
 	 */
-	public static HashMap<Integer, MapData> newMapDatas = new HashMap<>();
+	public static Map<Integer, MapData> newMapDatas = new HashMap<>();
 
 	// State variables:
 	/**
