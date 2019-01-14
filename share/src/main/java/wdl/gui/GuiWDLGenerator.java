@@ -50,8 +50,7 @@ public class GuiWDLGenerator extends Screen {
 		this.seedText = I18n.format("wdl.gui.generator.seed");
 		int seedWidth = fontRenderer.getStringWidth(seedText + " ");
 
-		this.title = I18n.format("wdl.gui.generator.title",
-				WDL.baseFolderName.replace('@', ':'));
+		this.title = I18n.format("wdl.gui.generator.title", WDL.baseFolderName);
 		int y = this.height / 4 - 15;
 		this.seedField = this.addTextField(new GuiTextField(40, this.fontRenderer,
 				this.width / 2 - (100 - seedWidth), y, 200 - seedWidth, 18));

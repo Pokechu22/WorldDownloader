@@ -187,8 +187,7 @@ public class GuiWDL extends Screen {
 			return;
 		}
 
-		this.title = I18n.format("wdl.gui.wdl.title",
-				WDL.baseFolderName.replace('@', ':'));
+		this.title = I18n.format("wdl.gui.wdl.title", WDL.baseFolderName);
 
 		this.worldname = this.addTextField(new GuiTextField(42, this.fontRenderer,
 				this.width / 2 - 155, 19, 150, 18));

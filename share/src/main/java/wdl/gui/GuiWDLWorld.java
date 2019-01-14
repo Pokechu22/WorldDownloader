@@ -52,8 +52,7 @@ public class GuiWDLWorld extends Screen {
 	 */
 	@Override
 	public void initGui() {
-		this.title = I18n.format("wdl.gui.world.title",
-				WDL.baseFolderName.replace('@', ':'));
+		this.title = I18n.format("wdl.gui.world.title", WDL.baseFolderName);
 
 		int y = this.height / 4 - 15;
 

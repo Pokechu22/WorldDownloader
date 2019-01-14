@@ -50,8 +50,7 @@ public class GuiWDLPlayer extends Screen {
 	 */
 	@Override
 	public void initGui() {
-		this.title = I18n.format("wdl.gui.player.title",
-				WDL.baseFolderName.replace('@', ':'));
+		this.title = I18n.format("wdl.gui.player.title", WDL.baseFolderName);
 		int y = this.height / 4 - 15;
 		this.healthBtn = this.addButton(new SettingButton(
 				PlayerSettings.HEALTH, this.config, this.width / 2 - 100, y));
