@@ -1383,7 +1383,7 @@ public class WDL {
 	 * @return The name of the connected realm, or null.
 	 */
 	@Nullable
-	public static String getRealmName() {
+	private static String getRealmName() {
 		if (!minecraft.isConnectedToRealms()) {
 			LOGGER.warn("getRealmName: Not currently connected to realms!");
 		}
@@ -1443,9 +1443,10 @@ public class WDL {
 
 
 	/**
-	 * Get the base folder name for the server we are connected to.
+	 * Get the base folder name for the server we are connected to,
+	 * which is the server's name with special characters escaped.
 	 */
-	public static String getBaseFolderName() {
+	private static String getBaseFolderName() {
 		return getServerName().replaceAll("\\W+", "_");
 	}
 
