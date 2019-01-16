@@ -952,8 +952,8 @@ public class WDL {
 	 *
 	 * Returns baseProps if there is no multiworld (i.e. the world name is empty).
 	 */
-	public static IConfiguration loadWorldProps(String theWorldName) {
-		if (theWorldName.isEmpty()) {
+	public static IConfiguration loadWorldProps(String worldName) {
+		if (worldName.isEmpty()) {
 			return baseProps;
 		}
 
@@ -961,7 +961,7 @@ public class WDL {
 
 		File savesDir = new File(minecraft.gameDir, "saves");
 
-		String folder = getWorldFolderName(theWorldName);
+		String folder = getWorldFolderName(worldName);
 		File worldFolder = new File(savesDir, folder);
 		File dataFile = new File(worldFolder, "WorldDownloader.txt");
 
@@ -977,14 +977,14 @@ public class WDL {
 	/**
 	 * Gets the gamerules associated with the given world.
 	 *
-	 * @param theWorldName The name of the world, for multiworld.  Otherwise empty.
+	 * @param worldName The name of the world, for multiworld.  Otherwise empty.
 	 * @return The rules for that world, or a new default rules instance if the
 	 *         rules couldn't be found (e.g. a new world)
 	 */
-	public static GameRules loadGameRules(String theWorldName) {
+	public static GameRules loadGameRules(String worldName) {
 		File savesDir = new File(minecraft.gameDir, "saves");
 
-		String folder = getWorldFolderName(theWorldName);
+		String folder = getWorldFolderName(worldName);
 		File worldFolder = new File(savesDir, folder);
 		File levelDatFile = new File(worldFolder, "level.dat");
 
@@ -1020,17 +1020,17 @@ public class WDL {
 	 * Saves the specified world properties, and the base properties, in their
 	 * corresponding folders.
 	 */
-	public static void saveProps(String theWorldName, IConfiguration theWorldProps) {
+	public static void saveProps(String worldName, IConfiguration worldProps) {
 		File savesDir = new File(minecraft.gameDir, "saves");
 
-		if (theWorldName.length() > 0) {
-			String folder = getWorldFolderName(theWorldName);
+		if (worldName.length() > 0) {
+			String folder = getWorldFolderName(worldName);
 
 			File worldFolder = new File(savesDir, folder);
 			worldFolder.mkdirs();
 			File worldPropsFile = new File(worldFolder, "WorldDownloader.txt");
 			try {
-				theWorldProps.store(worldPropsFile, I18n.format("wdl.props.world.title"));
+				worldProps.store(worldPropsFile, I18n.format("wdl.props.world.title"));
 			} catch (Exception e) {
 				LOGGER.warn("Failed to write world props!", e);
 			}
@@ -1453,11 +1453,11 @@ public class WDL {
 	/**
 	 * Get the folder name for the specified world.
 	 */
-	public static String getWorldFolderName(String theWorldName) {
-		if (theWorldName.isEmpty()) {
+	public static String getWorldFolderName(String worldName) {
+		if (worldName.isEmpty()) {
 			return baseFolderName;
 		} else {
-			return baseFolderName + " - " + theWorldName;
+			return baseFolderName + " - " + worldName;
 		}
 	}
 
