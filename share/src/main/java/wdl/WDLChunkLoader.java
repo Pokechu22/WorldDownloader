@@ -129,7 +129,7 @@ public class WDLChunkLoader extends WDLChunkLoaderBase {
 				}
 			} catch (Exception e) {
 				WDLMessages.chatMessageTranslated(
-						WDL.baseProps,
+						WDL.serverProps,
 						WDLMessageTypes.ERROR,
 						"wdl.messages.generalError.failedToSaveEntity", entity, chunk.x, chunk.z, e);
 				LOGGER.warn("Compound: " + entityData);
@@ -183,7 +183,7 @@ public class WDLChunkLoader extends WDLChunkLoaderBase {
 
 		if (!EntityUtils.isEntityEnabled(e)) {
 			WDLMessages.chatMessageTranslated(
-					WDL.baseProps,
+					WDL.serverProps,
 					WDLMessageTypes.REMOVE_ENTITY,
 					"wdl.messages.removeEntity.notSavingUserPreference", e);
 			return false;
@@ -228,7 +228,7 @@ public class WDLChunkLoader extends WDLChunkLoaderBase {
 					te.write(compound);
 				} catch (Exception e) {
 					WDLMessages.chatMessageTranslated(
-							WDL.baseProps,
+							WDL.serverProps,
 							WDLMessageTypes.ERROR,
 							"wdl.messages.generalError.failedToSaveTE", te, pos, chunk.x, chunk.z, e);
 					LOGGER.warn("Compound: " + compound);
@@ -238,7 +238,7 @@ public class WDLChunkLoader extends WDLChunkLoaderBase {
 				String entityType = compound.getString("id") +
 						" (" + te.getClass().getCanonicalName() +")";
 				WDLMessages.chatMessageTranslated(
-						WDL.baseProps,
+						WDL.serverProps,
 						WDLMessageTypes.LOAD_TILE_ENTITY,
 						"wdl.messages.tileEntity.usingNew", entityType, pos);
 
@@ -249,7 +249,7 @@ public class WDLChunkLoader extends WDLChunkLoaderBase {
 				NBTTagCompound compound = oldTEMap.get(pos);
 				String entityType = compound.getString("id");
 				WDLMessages.chatMessageTranslated(
-						WDL.baseProps,
+						WDL.serverProps,
 						WDLMessageTypes.LOAD_TILE_ENTITY,
 						"wdl.messages.tileEntity.usingOld", entityType, pos);
 
@@ -265,7 +265,7 @@ public class WDLChunkLoader extends WDLChunkLoaderBase {
 					te.write(compound);
 				} catch (Exception e) {
 					WDLMessages.chatMessageTranslated(
-							WDL.baseProps,
+							WDL.serverProps,
 							WDLMessageTypes.ERROR,
 							"wdl.messages.generalError.failedToSaveTE", te, pos, chunk.x, chunk.z, e);
 					LOGGER.warn("Compound: " + compound);
@@ -335,14 +335,14 @@ public class WDLChunkLoader extends WDLChunkLoaderBase {
 						// later, we still want the player to know we did not
 						// import something in that chunk.
 						WDLMessages.chatMessageTranslated(
-								WDL.baseProps,
+								WDL.serverProps,
 								WDLMessageTypes.LOAD_TILE_ENTITY,
 								"wdl.messages.tileEntity.notImporting", entityID, pos);
 					}
 				}
 			}
 		} catch (Exception e) {
-			WDLMessages.chatMessageTranslated(WDL.baseProps,
+			WDLMessages.chatMessageTranslated(WDL.serverProps,
 					WDLMessageTypes.ERROR,
 					"wdl.messages.generalError.failedToImportTE", chunk.x, chunk.z, e);
 		}
@@ -399,7 +399,7 @@ public class WDLChunkLoader extends WDLChunkLoaderBase {
 					info.mod.editTileEntity(pos, compound, creationMode);
 
 					WDLMessages.chatMessageTranslated(
-							WDL.baseProps,
+							WDL.serverProps,
 							WDLMessageTypes.LOAD_TILE_ENTITY,
 							"wdl.messages.tileEntity.edited", pos, info.getDisplayName());
 				}

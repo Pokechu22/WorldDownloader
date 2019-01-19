@@ -118,7 +118,7 @@ public class GuiWDLMessages extends Screen {
 
 	public GuiWDLMessages(GuiScreen parent) {
 		this.parent = parent;
-		this.config = WDL.baseProps;
+		this.config = WDL.serverProps;
 	}
 
 	private SettingButton enableAllButton;

@@ -79,7 +79,7 @@ public class WDLEvents {
 			// If not currently saving, stop the current download and start
 			// saving now
 			if (!WDL.saving) {
-				WDLMessages.chatMessageTranslated(WDL.baseProps,
+				WDLMessages.chatMessageTranslated(WDL.serverProps,
 						WDLMessageTypes.INFO, "wdl.messages.generalInfo.worldChanged");
 				WDL.worldLoadingDeferred = true;
 				WDL.startSaveThread();
@@ -115,13 +115,13 @@ public class WDLEvents {
 
 		if (WDLPluginChannels.canSaveChunk(unneededChunk)) {
 			WDLMessages.chatMessageTranslated(
-					WDL.baseProps,
+					WDL.serverProps,
 					WDLMessageTypes.ON_CHUNK_NO_LONGER_NEEDED,
 					"wdl.messages.onChunkNoLongerNeeded.saved", unneededChunk.x, unneededChunk.z);
 			WDL.saveChunk(unneededChunk);
 		} else {
 			WDLMessages.chatMessageTranslated(
-					WDL.baseProps,
+					WDL.serverProps,
 					WDLMessageTypes.ON_CHUNK_NO_LONGER_NEEDED,
 					"wdl.messages.onChunkNoLongerNeeded.didNotSave", unneededChunk.x, unneededChunk.z);
 		}
@@ -174,17 +174,17 @@ public class WDLEvents {
 						// Run this check now that we've confirmed that we're saving
 						// the entity being ridden. If we're riding a pig but opening
 						// a chest in another chunk, that should go to the other check.
-						WDLMessages.chatMessageTranslated(WDL.baseProps,
+						WDLMessages.chatMessageTranslated(WDL.serverProps,
 								WDLMessageTypes.ON_GUI_CLOSED_INFO, "wdl.messages.onGuiClosedInfo.cannotSaveEntities");
 						return true;
 					}
 
 					try {
 						ITextComponent msg = handler.copyDataCasting(windowContainer, ridingEntity, true);
-						WDLMessages.chatMessage(WDL.baseProps, WDLMessageTypes.ON_GUI_CLOSED_INFO, msg);
+						WDLMessages.chatMessage(WDL.serverProps, WDLMessageTypes.ON_GUI_CLOSED_INFO, msg);
 						return true;
 					} catch (HandlerException e) {
-						WDLMessages.chatMessageTranslated(WDL.baseProps, e.messageType, e.translationKey, e.args);
+						WDLMessages.chatMessageTranslated(WDL.serverProps, e.messageType, e.translationKey, e.args);
 						return false;
 					}
 				}
@@ -198,7 +198,7 @@ public class WDLEvents {
 		Entity entity = WDL.lastEntity;
 		if (entity != null) {
 			if (!WDLPluginChannels.canSaveEntities(entity.chunkCoordX, entity.chunkCoordZ)) {
-				WDLMessages.chatMessageTranslated(WDL.baseProps,
+				WDLMessages.chatMessageTranslated(WDL.serverProps,
 						WDLMessageTypes.ON_GUI_CLOSED_INFO, "wdl.messages.onGuiClosedInfo.cannotSaveEntities");
 				return true;
 			}
@@ -207,10 +207,10 @@ public class WDLEvents {
 			if (handler != null) {
 				try {
 					ITextComponent msg = handler.copyDataCasting(windowContainer, entity, true);
-					WDLMessages.chatMessage(WDL.baseProps, WDLMessageTypes.ON_GUI_CLOSED_INFO, msg);
+					WDLMessages.chatMessage(WDL.serverProps, WDLMessageTypes.ON_GUI_CLOSED_INFO, msg);
 					return true;
 				} catch (HandlerException e) {
-					WDLMessages.chatMessageTranslated(WDL.baseProps, e.messageType, e.translationKey, e.args);
+					WDLMessages.chatMessageTranslated(WDL.serverProps, e.messageType, e.translationKey, e.args);
 					return false;
 				}
 			} else {
@@ -226,7 +226,7 @@ public class WDLEvents {
 		if (te == null) {
 			//TODO: Is this a good way to stop?  Is the event truely handled here?
 			WDLMessages.chatMessageTranslated(
-					WDL.baseProps,
+					WDL.serverProps,
 					WDLMessageTypes.ON_GUI_CLOSED_WARNING,
 					"wdl.messages.onGuiClosedWarning.couldNotGetTE", WDL.lastClickedBlock);
 			return true;
@@ -235,7 +235,7 @@ public class WDLEvents {
 		//Permissions check.
 		if (!WDLPluginChannels.canSaveContainers(te.getPos().getX() >> 4, te
 				.getPos().getZ() >> 4)) {
-			WDLMessages.chatMessageTranslated(WDL.baseProps,
+			WDLMessages.chatMessageTranslated(WDL.serverProps,
 					WDLMessageTypes.ON_GUI_CLOSED_INFO, "wdl.messages.onGuiClosedInfo.cannotSaveTileEntities");
 			return true;
 		}
@@ -246,10 +246,10 @@ public class WDLEvents {
 			try {
 				ITextComponent msg = handler.handleCasting(WDL.lastClickedBlock, WDL.windowContainer,
 						te, WDL.worldClient, WDL::saveTileEntity);
-				WDLMessages.chatMessage(WDL.baseProps, WDLMessageTypes.ON_GUI_CLOSED_INFO, msg);
+				WDLMessages.chatMessage(WDL.serverProps, WDLMessageTypes.ON_GUI_CLOSED_INFO, msg);
 				return true;
 			} catch (HandlerException e) {
-				WDLMessages.chatMessageTranslated(WDL.baseProps, e.messageType, e.translationKey, e.args);
+				WDLMessages.chatMessageTranslated(WDL.serverProps, e.messageType, e.translationKey, e.args);
 				return false;
 			}
 		} else if (WDL.windowContainer instanceof ContainerChest
@@ -266,7 +266,7 @@ public class WDLEvents {
 				}
 			}
 
-			WDLMessages.chatMessageTranslated(WDL.baseProps,
+			WDLMessages.chatMessageTranslated(WDL.serverProps,
 					WDLMessageTypes.ON_GUI_CLOSED_INFO, "wdl.messages.onGuiClosedInfo.savedTileEntity.enderChest");
 		} else {
 			return false;
@@ -297,9 +297,9 @@ public class WDLEvents {
 			try {
 				ITextComponent msg = handler.handleCasting(pos, block, blockEntity,
 						data1, data2, WDL.worldClient, WDL::saveTileEntity);
-				WDLMessages.chatMessage(WDL.baseProps, WDLMessageTypes.ON_GUI_CLOSED_INFO, msg);
+				WDLMessages.chatMessage(WDL.serverProps, WDLMessageTypes.ON_GUI_CLOSED_INFO, msg);
 			} catch (HandlerException e) {
-				WDLMessages.chatMessageTranslated(WDL.baseProps, e.messageType, e.translationKey, e.args);
+				WDLMessages.chatMessageTranslated(WDL.serverProps, e.messageType, e.translationKey, e.args);
 			}
 		}
 	}
@@ -322,7 +322,7 @@ public class WDLEvents {
 
 		WDL.newMapDatas.put(mapID, result.map);
 
-		WDLMessages.chatMessageTranslated(WDL.baseProps,
+		WDLMessages.chatMessageTranslated(WDL.serverProps,
 				WDLMessageTypes.ON_MAP_SAVED, "wdl.messages.onMapSaved", mapID, result.toComponent());
 	}
 
@@ -346,7 +346,7 @@ public class WDLEvents {
 						entity.chunkCoordZ)) {
 			if (!EntityUtils.isEntityEnabled(entity)) {
 				WDLMessages.chatMessageTranslated(
-						WDL.baseProps,
+						WDL.serverProps,
 						WDLMessageTypes.REMOVE_ENTITY,
 						"wdl.messages.removeEntity.allowingRemoveUserPref", entity);
 				return;
@@ -356,7 +356,7 @@ public class WDLEvents {
 
 			if (threshold < 0) {
 				WDLMessages.chatMessageTranslated(
-						WDL.baseProps,
+						WDL.serverProps,
 						WDLMessageTypes.REMOVE_ENTITY,
 						"wdl.messages.removeEntity.allowingRemoveUnrecognizedDistance", entity);
 				return;
@@ -367,7 +367,7 @@ public class WDLEvents {
 			if (EntityUtils.isWithinSavingDistance(entity, WDL.player,
 					threshold, serverViewDistance)) {
 				WDLMessages.chatMessageTranslated(
-						WDL.baseProps,
+						WDL.serverProps,
 						WDLMessageTypes.REMOVE_ENTITY,
 						"wdl.messages.removeEntity.savingDistance", entity,
 						entity.getPositionVector().toString(), WDL.player.getPositionVector(), threshold, serverViewDistance);
@@ -375,7 +375,7 @@ public class WDLEvents {
 						entity.chunkCoordZ), entity);
 			} else {
 				WDLMessages.chatMessageTranslated(
-						WDL.baseProps,
+						WDL.serverProps,
 						WDLMessageTypes.REMOVE_ENTITY,
 						"wdl.messages.removeEntity.allowingRemoveDistance", entity,
 						entity.getPositionVector().toString(), WDL.player.getPositionVector(), threshold, serverViewDistance);
@@ -402,10 +402,10 @@ public class WDLEvents {
 				WDL.worldProps.setValue(GeneratorSettings.GENERATOR,
 						GeneratorSettings.Generator.DEFAULT);
 
-				WDLMessages.chatMessageTranslated(WDL.baseProps,
+				WDLMessages.chatMessageTranslated(WDL.serverProps,
 						WDLMessageTypes.INFO, "wdl.messages.generalInfo.seedAndGenSet", seed);
 			} else {
-				WDLMessages.chatMessageTranslated(WDL.baseProps,
+				WDLMessages.chatMessageTranslated(WDL.serverProps,
 						WDLMessageTypes.INFO, "wdl.messages.generalInfo.seedSet", seed);
 			}
 		}

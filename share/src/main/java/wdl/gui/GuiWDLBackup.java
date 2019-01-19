@@ -59,7 +59,7 @@ public class GuiWDLBackup extends Screen {
 
 	public GuiWDLBackup(GuiScreen parent) {
 		this.parent = parent;
-		this.config = WDL.baseProps;
+		this.config = WDL.serverProps;
 
 		this.backupType = config.getValue(MiscSettings.BACKUP_TYPE);
 		this.customBackupCommandTemplate = config.getValue(MiscSettings.BACKUP_COMMAND_TEMPLATE);

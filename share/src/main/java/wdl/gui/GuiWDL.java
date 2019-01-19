@@ -111,7 +111,7 @@ public class GuiWDL extends Screen {
 
 	public GuiWDL(GuiScreen parent) {
 		this.parent = parent;
-		this.config = WDL.baseProps;
+		this.config = WDL.serverProps;
 	}
 
 	/**
@@ -171,7 +171,7 @@ public class GuiWDL extends Screen {
 							}
 						}));
 					} else {
-						WDL.baseProps.setValue(MiscSettings.LINKED_WORLDS, "");
+						WDL.serverProps.setValue(MiscSettings.LINKED_WORLDS, "");
 						WDL.saveProps();
 						WDL.propsFound = true;
 

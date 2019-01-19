@@ -113,13 +113,13 @@ public class GithubInfoGrabber {
 
 			if (connection.getResponseCode() == HttpURLConnection.HTTP_NOT_MODIFIED) {
 				// 304 not modified; use the cached version.
-				WDLMessages.chatMessageTranslated(WDL.baseProps,
+				WDLMessages.chatMessageTranslated(WDL.serverProps,
 						WDLMessageTypes.UPDATE_DEBUG, "wdl.messages.updates.usingCachedUpdates");
 
 				stream = new FileInputStream(CACHED_RELEASES_FILE);
 			} else if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
 				// 200 OK
-				WDLMessages.chatMessageTranslated(WDL.baseProps,
+				WDLMessages.chatMessageTranslated(WDL.serverProps,
 						WDLMessageTypes.UPDATE_DEBUG, "wdl.messages.updates.grabingUpdatesFromGithub");
 
 				stream = connection.getInputStream();

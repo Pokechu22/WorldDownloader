@@ -226,11 +226,11 @@ public class WDLUpdateChecker extends Thread {
 				TextComponentTranslation stolenBeware = new TextComponentTranslation(
 						"wdl.intro.stolenBeware", smr);
 
-				WDLMessages.chatMessage(WDL.baseProps, WDLMessageTypes.UPDATES, success);
-				WDLMessages.chatMessage(WDL.baseProps, WDLMessageTypes.UPDATES, usage);
-				WDLMessages.chatMessage(WDL.baseProps, WDLMessageTypes.UPDATES, contribute);
-				WDLMessages.chatMessage(WDL.baseProps, WDLMessageTypes.UPDATES, stolen);
-				WDLMessages.chatMessage(WDL.baseProps, WDLMessageTypes.UPDATES, stolenBeware);
+				WDLMessages.chatMessage(WDL.serverProps, WDLMessageTypes.UPDATES, success);
+				WDLMessages.chatMessage(WDL.serverProps, WDLMessageTypes.UPDATES, usage);
+				WDLMessages.chatMessage(WDL.serverProps, WDLMessageTypes.UPDATES, contribute);
+				WDLMessages.chatMessage(WDL.serverProps, WDLMessageTypes.UPDATES, stolen);
+				WDLMessages.chatMessage(WDL.serverProps, WDLMessageTypes.UPDATES, stolenBeware);
 
 				WDL.globalProps.setValue(MiscSettings.TUTORIAL_SHOWN, true);
 				WDL.saveGlobalProps();
@@ -239,7 +239,7 @@ public class WDLUpdateChecker extends Thread {
 			sleep(5000);
 
 			releases = GithubInfoGrabber.getReleases();
-			WDLMessages.chatMessageTranslated(WDL.baseProps,
+			WDLMessages.chatMessageTranslated(WDL.serverProps,
 					WDLMessageTypes.UPDATE_DEBUG, "wdl.messages.updates.releaseCount", releases.size());
 
 			if (releases.isEmpty()) {
@@ -260,11 +260,11 @@ public class WDLUpdateChecker extends Thread {
 
 			if (runningRelease == null) {
 				if (!isSnapshot(version)) {
-					WDLMessages.chatMessageTranslated(WDL.baseProps,
+					WDLMessages.chatMessageTranslated(WDL.serverProps,
 							WDLMessageTypes.UPDATES,
 							"wdl.messages.updates.failedToFindMatchingRelease", currentTag);
 				} else {
-					WDLMessages.chatMessageTranslated(WDL.baseProps,
+					WDLMessages.chatMessageTranslated(WDL.serverProps,
 							WDLMessageTypes.UPDATES,
 							"wdl.messages.updates.failedToFindMatchingRelease.snapshot", currentTag, getRealVersion(version));
 				}
@@ -282,7 +282,7 @@ public class WDLUpdateChecker extends Thread {
 								recomendedRelease.URL));
 
 				// Show the new version available message, and give a link.
-				WDLMessages.chatMessageTranslated(WDL.baseProps,
+				WDLMessages.chatMessageTranslated(WDL.serverProps,
 						WDLMessageTypes.UPDATES, "wdl.messages.updates.newRelease",
 						currentTag, recomendedRelease.tag, updateLink);
 			}
@@ -293,7 +293,7 @@ public class WDLUpdateChecker extends Thread {
 						"wdl.intro.githubRepo");
 				githubIssues.getStyle().setColor(TextFormatting.BLUE).setUnderlined(true)
 						.setClickEvent(new ClickEvent(Action.OPEN_URL, GITHUB_ISSUES_LINK));
-				WDLMessages.chatMessageTranslated(WDL.baseProps,
+				WDLMessages.chatMessageTranslated(WDL.serverProps,
 						WDLMessageTypes.UPDATES, "wdl.messages.updates.untestedVersion",
 						VersionConstants.getMinecraftVersion(), githubIssues);
 			}
@@ -304,7 +304,7 @@ public class WDLUpdateChecker extends Thread {
 			}
 
 			if (runningRelease.hiddenInfo == null) {
-				WDLMessages.chatMessageTranslated(WDL.baseProps,
+				WDLMessages.chatMessageTranslated(WDL.serverProps,
 						WDLMessageTypes.UPDATE_DEBUG,
 						"wdl.messages.updates.failedToFindMetadata", currentTag);
 				return;
@@ -325,7 +325,7 @@ public class WDLUpdateChecker extends Thread {
 					}
 
 					WDLMessages.chatMessageTranslated(
-							WDL.baseProps,
+							WDL.serverProps,
 							WDLMessageTypes.UPDATE_DEBUG, "wdl.messages.updates.incorrectHash",
 							data.file, data.relativeTo,
 							Arrays.toString(data.validHashes), hash);
@@ -334,7 +334,7 @@ public class WDLUpdateChecker extends Thread {
 					continue;
 				} catch (Exception e) {
 					WDLMessages.chatMessageTranslated(
-							WDL.baseProps,
+							WDL.serverProps,
 							WDLMessageTypes.UPDATE_DEBUG, "wdl.messages.updates.hashException",
 							data.file, data.relativeTo,
 							Arrays.toString(data.validHashes), e);
@@ -350,11 +350,11 @@ public class WDLUpdateChecker extends Thread {
 				.setUnderlined(true).setClickEvent(
 						new ClickEvent(Action.OPEN_URL,
 								FORUMS_THREAD_USAGE_LINK));
-				WDLMessages.chatMessageTranslated(WDL.baseProps,
+				WDLMessages.chatMessageTranslated(WDL.serverProps,
 						WDLMessageTypes.UPDATES, "wdl.messages.updates.badHashesFound", mcfThread);
 			}
 		} catch (Exception e) {
-			WDLMessages.chatMessageTranslated(WDL.baseProps,
+			WDLMessages.chatMessageTranslated(WDL.serverProps,
 					WDLMessageTypes.UPDATE_DEBUG, "wdl.messages.updates.updateCheckError", e);
 
 			failed = true;

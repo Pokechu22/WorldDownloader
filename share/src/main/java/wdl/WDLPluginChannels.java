@@ -717,7 +717,7 @@ public class WDLPluginChannels {
 		canUseFunctionsUnknownToServer = true;
 
 		WDLMessages.chatMessageTranslated(
-				WDL.baseProps,
+				WDL.serverProps,
 				WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, "wdl.messages.permissions.init");
 
 		// Register the WDL messages.
@@ -787,7 +787,7 @@ public class WDLPluginChannels {
 				canUseFunctionsUnknownToServer = input.readBoolean();
 
 				WDLMessages.chatMessageTranslated(
-						WDL.baseProps,
+						WDL.serverProps,
 						WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
 						"wdl.messages.permissions.packet0", canUseFunctionsUnknownToServer);
 
@@ -801,7 +801,7 @@ public class WDLPluginChannels {
 				canSaveContainers = input.readBoolean();
 
 				WDLMessages.chatMessageTranslated(
-						WDL.baseProps,
+						WDL.serverProps,
 						WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
 						"wdl.messages.permissions.packet1", canDownloadInGeneral,
 						saveRadius, canCacheChunks,
@@ -811,7 +811,7 @@ public class WDLPluginChannels {
 				if (!canDownloadInGeneral) {
 					if (WDL.downloading) {
 						WDLMessages.chatMessageTranslated(
-								WDL.baseProps,
+								WDL.serverProps,
 								WDLMessageTypes.ERROR, "wdl.messages.generalError.forbidden");
 						WDL.cancelDownload();
 					}
@@ -829,7 +829,7 @@ public class WDLPluginChannels {
 				}
 
 				WDLMessages.chatMessageTranslated(
-						WDL.baseProps,
+						WDL.serverProps,
 						WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
 						"wdl.messages.permissions.packet2", entityRanges.size());
 				break;
@@ -838,7 +838,7 @@ public class WDLPluginChannels {
 				requestMessage = input.readUTF();
 
 				WDLMessages.chatMessageTranslated(
-						WDL.baseProps,
+						WDL.serverProps,
 						WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
 						"wdl.messages.permissions.packet3", canRequestPermissions,
 						requestMessage.length(), Integer.toHexString(requestMessage.hashCode()));
@@ -867,7 +867,7 @@ public class WDLPluginChannels {
 				}
 
 				WDLMessages.chatMessageTranslated(
-						WDL.baseProps,
+						WDL.serverProps,
 						WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
 						"wdl.messages.permissions.packet4", numRangeGroups, totalRanges);
 				break;
@@ -892,12 +892,12 @@ public class WDLPluginChannels {
 
 				if (replaceGroups) {
 					WDLMessages.chatMessageTranslated(
-							WDL.baseProps,
+							WDL.serverProps,
 							WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
 							"wdl.messages.permissions.packet5.set", numNewGroups, groupToEdit);
 				} else {
 					WDLMessages.chatMessageTranslated(
-							WDL.baseProps,
+							WDL.serverProps,
 							WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
 							"wdl.messages.permissions.packet5.added", numNewGroups, groupToEdit);
 				}
@@ -919,7 +919,7 @@ public class WDLPluginChannels {
 				}
 
 				WDLMessages.chatMessageTranslated(
-						WDL.baseProps,
+						WDL.serverProps,
 						WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
 						"wdl.messages.permissions.packet6", oldCount, groupToChangeTagsFor, Arrays.toString(tags));
 				break;
@@ -940,18 +940,18 @@ public class WDLPluginChannels {
 				}
 
 				WDLMessages.chatMessageTranslated(
-						WDL.baseProps,
+						WDL.serverProps,
 						WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
 						"wdl.messages.permissions.packet7", numRangesRemoved, groupToSetTagFor, tag, numNewRanges);
 				break;
 			default:
 				WDLMessages.chatMessageTranslated(
-						WDL.baseProps,
+						WDL.serverProps,
 						WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE, "wdl.messages.permissions.unknownPacket", section);
 				dump(bytes);
 			}
 		} catch (Exception ex) {
-			WDLMessages.chatMessageTranslated(WDL.baseProps, WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
+			WDLMessages.chatMessageTranslated(WDL.serverProps, WDLMessageTypes.PLUGIN_CHANNEL_MESSAGE,
 					"wdl.messages.permissions.badPacket", ex);
 		}
 	}

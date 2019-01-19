@@ -140,7 +140,7 @@ public class WDLHooks {
 
 								if (!handled) {
 									WDLMessages.chatMessageTranslated(
-											WDL.baseProps,
+											WDL.serverProps,
 											WDLMessageTypes.ON_GUI_CLOSED_WARNING,
 											"wdl.messages.onGuiClosedWarning.unhandledEntity", entity);
 								}
@@ -160,7 +160,7 @@ public class WDLHooks {
 
 								if (!handled) {
 									WDLMessages.chatMessageTranslated(
-											WDL.baseProps,
+											WDL.serverProps,
 											WDLMessageTypes.ON_GUI_CLOSED_WARNING,
 											"wdl.messages.onGuiClosedWarning.unhandledTileEntity", pos, sender.getTileEntity(pos));
 								}

@@ -234,7 +234,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		this.callback = callback;
 
 		// Build a list of world names.
-		String[] worldNames = WDL.baseProps.getValue(MiscSettings.LINKED_WORLDS)
+		String[] worldNames = WDL.serverProps.getValue(MiscSettings.LINKED_WORLDS)
 				.split("\\|");
 		linkedWorlds = new ArrayList<>();
 
@@ -406,13 +406,13 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 			folderName = folderName.replace(unsafeChar, '_');
 		}
 
-		IConfiguration worldProps = new Configuration(WDL.baseProps);
+		IConfiguration worldProps = new Configuration(WDL.serverProps);
 		worldProps.setValue(MiscSettings.WORLD_NAME, worldName);
 
-		String linkedWorldsProp = WDL.baseProps.getValue(MiscSettings.LINKED_WORLDS);
+		String linkedWorldsProp = WDL.serverProps.getValue(MiscSettings.LINKED_WORLDS);
 		linkedWorldsProp += "|" + folderName;
 
-		WDL.baseProps.setValue(MiscSettings.LINKED_WORLDS, linkedWorldsProp);
+		WDL.serverProps.setValue(MiscSettings.LINKED_WORLDS, linkedWorldsProp);
 		WDL.saveProps(folderName, worldProps);
 
 		linkedWorlds.add(new MultiworldInfo(folderName, worldName));

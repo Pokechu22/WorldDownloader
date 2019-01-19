@@ -225,7 +225,7 @@ public class WDL {
 	/**
 	 * Base properties, shared between each world on a multiworld server.
 	 */
-	public static IConfiguration baseProps;
+	public static IConfiguration serverProps;
 	/**
 	 * Properties for a single world on a multiworld server, or all worlds
 	 * on a single world server.
@@ -261,8 +261,8 @@ public class WDL {
 		} catch (Exception e) {
 			LOGGER.debug("Failed to load global properties", e);
 		}
-		baseProps = new Configuration(globalProps);
-		worldProps = baseProps;
+		serverProps = new Configuration(globalProps);
+		worldProps = serverProps;
 		gameRules = new GameRules();
 	}
 
@@ -330,7 +330,7 @@ public class WDL {
 							}
 						}));
 					} else {
-						baseProps.setValue(MiscSettings.LINKED_WORLDS, "");
+						serverProps.setValue(MiscSettings.LINKED_WORLDS, "");
 						saveProps();
 						propsFound = true;
 
@@ -391,7 +391,7 @@ public class WDL {
 
 		startOnChange = true;
 		downloading = true;
-		WDLMessages.chatMessageTranslated(WDL.baseProps,
+		WDLMessages.chatMessageTranslated(WDL.serverProps,
 				WDLMessageTypes.INFO, "wdl.messages.generalInfo.downloadStarted");
 	}
 
@@ -403,7 +403,7 @@ public class WDL {
 			// Indicate that downloading has stopped
 			downloading = false;
 			startOnChange = false;
-			WDLMessages.chatMessageTranslated(WDL.baseProps,
+			WDLMessages.chatMessageTranslated(WDL.serverProps,
 					WDLMessageTypes.INFO, "wdl.messages.generalInfo.downloadStopped");
 			startSaveThread();
 		}
@@ -423,7 +423,7 @@ public class WDL {
 			downloading = false;
 			worldLoadingDeferred = false;
 
-			WDLMessages.chatMessageTranslated(WDL.baseProps,
+			WDLMessages.chatMessageTranslated(WDL.serverProps,
 					WDLMessageTypes.INFO, "wdl.messages.generalInfo.downloadCanceled");
 		}
 	}
@@ -433,7 +433,7 @@ public class WDL {
 	 */
 	static void startSaveThread() {
 		// Indicate that we are saving
-		WDLMessages.chatMessageTranslated(WDL.baseProps,
+		WDLMessages.chatMessageTranslated(WDL.serverProps,
 				WDLMessageTypes.INFO, "wdl.messages.generalInfo.saveStarted");
 		WDL.saving = true;
 		Thread thread = new Thread(() -> {
@@ -467,7 +467,7 @@ public class WDL {
 		// Handle checking if the server changes here so that
 		// messages are loaded FIRST.
 		if (networkManager != newNM) {
-			loadBaseProps();
+			loadServerProps();
 		}
 
 		WDLPluginChannels.onWorldLoad();
@@ -475,19 +475,19 @@ public class WDL {
 		// Is this a different server?
 		if (networkManager != newNM) {
 			// Different server, different world!
-			WDLMessages.chatMessageTranslated(WDL.baseProps,
+			WDLMessages.chatMessageTranslated(WDL.serverProps,
 					WDLMessageTypes.ON_WORLD_LOAD, "wdl.messages.onWorldLoad.differentServer");
 
 			networkManager = newNM;
 
 			if (isSpigot()) {
 				WDLMessages.chatMessageTranslated(
-						WDL.baseProps,
+						WDL.serverProps,
 						WDLMessageTypes.ON_WORLD_LOAD,
 						"wdl.messages.onWorldLoad.spigot", player.getServerBrand());
 			} else {
 				WDLMessages.chatMessageTranslated(
-						WDL.baseProps,
+						WDL.serverProps,
 						WDLMessageTypes.ON_WORLD_LOAD,
 						"wdl.messages.onWorldLoad.vanilla", player.getServerBrand());
 			}
@@ -497,17 +497,17 @@ public class WDL {
 			return true;
 		} else {
 			// Same server, different world!
-			WDLMessages.chatMessageTranslated(WDL.baseProps,
+			WDLMessages.chatMessageTranslated(WDL.serverProps,
 					WDLMessageTypes.ON_WORLD_LOAD, "wdl.messages.onWorldLoad.sameServer");
 
 			if (isSpigot()) {
 				WDLMessages.chatMessageTranslated(
-						WDL.baseProps,
+						WDL.serverProps,
 						WDLMessageTypes.ON_WORLD_LOAD,
 						"wdl.messages.onWorldLoad.spigot", player.getServerBrand());
 			} else {
 				WDLMessages.chatMessageTranslated(
-						WDL.baseProps,
+						WDL.serverProps,
 						WDLMessageTypes.ON_WORLD_LOAD,
 						"wdl.messages.onWorldLoad.vanilla", player.getServerBrand());
 			}
@@ -530,13 +530,13 @@ public class WDL {
 
 		// If still downloading, load the current world and keep on downloading
 		if (downloading) {
-			WDLMessages.chatMessageTranslated(WDL.baseProps,
+			WDLMessages.chatMessageTranslated(WDL.serverProps,
 					WDLMessageTypes.INFO, "wdl.messages.generalInfo.saveComplete.startingAgain");
 			WDL.loadWorld();
 			return;
 		}
 
-		WDLMessages.chatMessageTranslated(WDL.baseProps,
+		WDLMessages.chatMessageTranslated(WDL.serverProps,
 				WDLMessageTypes.INFO, "wdl.messages.generalInfo.saveComplete.done");
 	}
 
@@ -546,12 +546,12 @@ public class WDL {
 	 */
 	public static void saveEverything() throws Exception {
 		if (!WDLPluginChannels.canDownloadAtAll()) {
-			WDLMessages.chatMessageTranslated(WDL.baseProps,
+			WDLMessages.chatMessageTranslated(WDL.serverProps,
 					WDLMessageTypes.ERROR, "wdl.messages.generalError.forbidden");
 			return;
 		}
 
-		WorldBackupType backupType = baseProps.getValue(MiscSettings.BACKUP_TYPE);
+		WorldBackupType backupType = serverProps.getValue(MiscSettings.BACKUP_TYPE);
 
 		final GuiWDLSaveProgress progressScreen = new GuiWDLSaveProgress(
 				I18n.format("wdl.saveProgress.title"),
@@ -590,7 +590,7 @@ public class WDL {
 		}
 
 		try {
-			WDLMessages.chatMessageTranslated(WDL.baseProps,
+			WDLMessages.chatMessageTranslated(WDL.serverProps,
 					WDLMessageTypes.SAVING, "wdl.messages.saving.flushingIO");
 
 			progressScreen.startMajorTask(
@@ -607,7 +607,7 @@ public class WDL {
 		minecraft.getSaveLoader().flushCache();
 
 		if (backupType != WorldBackupType.NONE) {
-			WDLMessages.chatMessageTranslated(WDL.baseProps,
+			WDLMessages.chatMessageTranslated(WDL.serverProps,
 					WDLMessageTypes.SAVING, "wdl.messages.saving.backingUp");
 			progressScreen.startMajorTask(
 					backupType.getTitle(), 1);
@@ -643,10 +643,10 @@ public class WDL {
 			try {
 				WorldBackup.backupWorld(saveHandler.getWorldDirectory(),
 						getWorldFolderName(worldName), backupType, new BackupState(),
-						baseProps.getValue(MiscSettings.BACKUP_COMMAND_TEMPLATE),
-						baseProps.getValue(MiscSettings.BACKUP_EXTENSION));
+						serverProps.getValue(MiscSettings.BACKUP_COMMAND_TEMPLATE),
+						serverProps.getValue(MiscSettings.BACKUP_EXTENSION));
 			} catch (IOException ex) {
-				WDLMessages.chatMessageTranslated(WDL.baseProps,
+				WDLMessages.chatMessageTranslated(WDL.serverProps,
 						WDLMessageTypes.ERROR, "wdl.messages.generalError.failedToBackUp", ex);
 				VersionedFunctions.makeBackupFailedToast(ex);
 			}
@@ -667,7 +667,7 @@ public class WDL {
 		progressScreen.startMajorTask(
 				I18n.format("wdl.saveProgress.playerData.title"),
 				3 + WDLApi.getImplementingExtensions(IPlayerInfoEditor.class).size());
-		WDLMessages.chatMessageTranslated(WDL.baseProps,
+		WDLMessages.chatMessageTranslated(WDL.serverProps,
 				WDLMessageTypes.SAVING, "wdl.messages.saving.savingPlayer");
 
 		progressScreen.setMinorTaskProgress(
@@ -714,7 +714,7 @@ public class WDL {
 			throw new RuntimeException("Couldn't save the player!", e);
 		}
 
-		WDLMessages.chatMessageTranslated(WDL.baseProps,
+		WDLMessages.chatMessageTranslated(WDL.serverProps,
 				WDLMessageTypes.SAVING, "wdl.messages.saving.playerSaved");
 
 		return playerNBT;
@@ -739,7 +739,7 @@ public class WDL {
 		progressScreen.startMajorTask(
 				I18n.format("wdl.saveProgress.worldMetadata.title"),
 				3 + WDLApi.getImplementingExtensions(IWorldInfoEditor.class).size());
-		WDLMessages.chatMessageTranslated(WDL.baseProps,
+		WDLMessages.chatMessageTranslated(WDL.serverProps,
 				WDLMessageTypes.SAVING, "wdl.messages.saving.savingWorld");
 
 		progressScreen.setMinorTaskProgress(
@@ -804,7 +804,7 @@ public class WDL {
 			throw new RuntimeException("Couldn't save the world metadata!", e);
 		}
 
-		WDLMessages.chatMessageTranslated(WDL.baseProps,
+		WDLMessages.chatMessageTranslated(WDL.serverProps,
 				WDLMessageTypes.SAVING, "wdl.messages.saving.worldSaved");
 	}
 
@@ -818,7 +818,7 @@ public class WDL {
 			throws IllegalArgumentException, IllegalAccessException {
 		if (!WDLPluginChannels.canDownloadAtAll()) { return; }
 
-		WDLMessages.chatMessageTranslated(WDL.baseProps,
+		WDLMessages.chatMessageTranslated(WDL.serverProps,
 				WDLMessageTypes.SAVING, "wdl.messages.saving.savingChunks");
 
 		// Get the list of loaded chunks
@@ -857,7 +857,7 @@ public class WDL {
 				saveChunk(c);
 			}
 		}
-		WDLMessages.chatMessageTranslated(WDL.baseProps,
+		WDLMessages.chatMessageTranslated(WDL.serverProps,
 				WDLMessageTypes.SAVING, "wdl.messages.saving.chunksSaved");
 	}
 
@@ -877,7 +877,7 @@ public class WDL {
 			chunkLoader.saveChunk(worldClient, c);
 		} catch (Exception e) {
 			// Better tell the player that something didn't work:
-			WDLMessages.chatMessageTranslated(WDL.baseProps,
+			WDLMessages.chatMessageTranslated(WDL.serverProps,
 					WDLMessageTypes.ERROR,
 					"wdl.messages.generalError.failedToSaveChunk", c.x, c.z, e);
 		}
@@ -920,24 +920,24 @@ public class WDL {
 	 * Loads the sever-shared properties, which act as a default
 	 * for the properties of each individual world in a multiworld server.
 	 */
-	public static void loadBaseProps() {
+	private static void loadServerProps() {
 		baseFolderName = getBaseFolderName();
-		baseProps = new Configuration(globalProps);
+		serverProps = new Configuration(globalProps);
 
 		File savesFolder = new File(minecraft.gameDir, "saves");
 		File baseFolder = new File(savesFolder, baseFolderName);
 		File dataFile = new File(baseFolder, "WorldDownloader.txt");
 		try {
-			baseProps.load(dataFile);
+			serverProps.load(dataFile);
 			propsFound = true;
 		} catch (Exception e) {
 			propsFound = false;
-			LOGGER.debug("Failed to load base properties", e);
+			LOGGER.debug("Failed to load server properties", e);
 		}
 
-		if (baseProps.getValue(MiscSettings.LINKED_WORLDS).isEmpty()) {
+		if (serverProps.getValue(MiscSettings.LINKED_WORLDS).isEmpty()) {
 			isMultiworld = false;
-			worldProps = baseProps;
+			worldProps = serverProps;
 			gameRules = loadGameRules("");
 		} else {
 			isMultiworld = true;
@@ -947,17 +947,17 @@ public class WDL {
 	/**
 	 * Loads the properties for the given world, and returns it.
 	 *
-	 * Returns an empty Configuration that inherits from baseProps if the specific
+	 * Returns an empty Configuration that inherits from serverProps if the specific
 	 * world cannot be found.
 	 *
 	 * Returns baseProps if there is no multiworld (i.e. the world name is empty).
 	 */
 	public static IConfiguration loadWorldProps(String worldName) {
 		if (worldName.isEmpty()) {
-			return baseProps;
+			return serverProps;
 		}
 
-		IConfiguration ret = new Configuration(baseProps);
+		IConfiguration ret = new Configuration(serverProps);
 
 		File savesDir = new File(minecraft.gameDir, "saves");
 
@@ -1017,7 +1017,7 @@ public class WDL {
 	}
 
 	/**
-	 * Saves the specified world properties, and the base properties, in their
+	 * Saves the specified world properties, and the server properties, in their
 	 * corresponding folders.
 	 */
 	public static void saveProps(String worldName, IConfiguration worldProps) {
@@ -1039,11 +1039,11 @@ public class WDL {
 		File baseFolder = new File(savesDir, baseFolderName);
 		baseFolder.mkdirs();
 
-		File basePropsFile = new File(baseFolder, "WorldDownloader.txt");
+		File serverPropsFile = new File(baseFolder, "WorldDownloader.txt");
 		try {
-			baseProps.store(basePropsFile, I18n.format("wdl.props.base.title"));
+			serverProps.store(serverPropsFile, I18n.format("wdl.props.base.title"));
 		} catch (Exception e) {
-			LOGGER.warn("Failed to write base props!", e);
+			LOGGER.warn("Failed to write server props!", e);
 		}
 
 		saveGlobalProps();
@@ -1125,7 +1125,7 @@ public class WDL {
 	 */
 	public static void applyOverridesToWorldInfo(NBTTagCompound worldInfoNBT, NBTTagCompound rootWorldInfoNBT) {
 		// LevelName
-		String baseName = baseProps.getValue(MiscSettings.SERVER_NAME);
+		String baseName = serverProps.getValue(MiscSettings.SERVER_NAME);
 		String worldName = worldProps.getValue(MiscSettings.WORLD_NAME);
 
 		if (worldName.isEmpty()) {
@@ -1273,7 +1273,7 @@ public class WDL {
 		progressScreen.startMajorTask(
 				I18n.format("wdl.saveProgress.map.title"), newMapDatas.size());
 
-		WDLMessages.chatMessageTranslated(WDL.baseProps,
+		WDLMessages.chatMessageTranslated(WDL.serverProps,
 				WDLMessageTypes.SAVING, "wdl.messages.saving.savingMapItemData");
 
 		Optional<Integer> highestCurrent = newMapDatas.keySet().stream().max(Integer::compare);
@@ -1341,7 +1341,7 @@ public class WDL {
 			}
 		}
 
-		WDLMessages.chatMessageTranslated(WDL.baseProps,
+		WDLMessages.chatMessageTranslated(WDL.serverProps,
 				WDLMessageTypes.SAVING, "wdl.messages.saving.mapItemDataSaved");
 	}
 
@@ -1518,18 +1518,18 @@ public class WDL {
 			}
 		}
 		if (!failures.isEmpty()) {
-			WDLMessages.chatMessageTranslated(WDL.baseProps, WDLMessageTypes.ERROR, "wdl.sanity.failed");
+			WDLMessages.chatMessageTranslated(WDL.serverProps, WDLMessageTypes.ERROR, "wdl.sanity.failed");
 			for (Map.Entry<SanityCheck, Exception> failure : failures.entrySet()) {
-				WDLMessages.chatMessageTranslated(WDL.baseProps, WDLMessageTypes.ERROR, failure.getKey().errorMessage, failure.getValue());
+				WDLMessages.chatMessageTranslated(WDL.serverProps, WDLMessageTypes.ERROR, failure.getKey().errorMessage, failure.getValue());
 			}
 			if (failures.containsKey(SanityCheck.TRANSLATION)) {
 				// Err, we can't put translated stuff into chat.  So redo those messages, without translation.
 				// For obvious reasons these messages aren't translated.
-				WDLMessages.chatMessage(WDL.baseProps, WDLMessageTypes.ERROR, "----- SANITY CHECKS FAILED! -----");
+				WDLMessages.chatMessage(WDL.serverProps, WDLMessageTypes.ERROR, "----- SANITY CHECKS FAILED! -----");
 				for (Map.Entry<SanityCheck, Exception> failure : failures.entrySet()) {
-					WDLMessages.chatMessage(WDL.baseProps, WDLMessageTypes.ERROR, failure.getKey() + ": " + failure.getValue());
+					WDLMessages.chatMessage(WDL.serverProps, WDLMessageTypes.ERROR, failure.getKey() + ": " + failure.getValue());
 				}
-				WDLMessages.chatMessage(WDL.baseProps, WDLMessageTypes.ERROR, "Please check the log for more info.");
+				WDLMessages.chatMessage(WDL.serverProps, WDLMessageTypes.ERROR, "Please check the log for more info.");
 			}
 		}
 	}
@@ -1623,16 +1623,16 @@ public class WDL {
 		state.addDetail("worldLoadingDeferred", worldLoadingDeferred);
 		state.addDetail("worldName", worldName);
 		state.addDetail("baseFolderName", baseFolderName);
-		state.addDetail("baseProps", baseProps);
+		state.addDetail("serverProps", serverProps);
 		state.addDetail("worldProps", worldProps);
 		state.addDetail("globalProps", globalProps);
 		state.addDetail("defaultProps", defaultProps);
 		state.addDetail("gameRules", gameRules);
 
 		CrashReportCategory base = report.makeCategoryDepth(
-				"World Downloader Mod - Base properties", stSize);
-		if (baseProps != null) {
-			baseProps.addToCrashReport(base, "baseProps");
+				"World Downloader Mod - Server properties", stSize);
+		if (serverProps != null) {
+			serverProps.addToCrashReport(base, "serverProps");
 		} else {
 			base.addDetail("-", "null");
 		}
