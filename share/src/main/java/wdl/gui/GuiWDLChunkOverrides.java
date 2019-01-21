@@ -102,9 +102,9 @@ public class GuiWDLChunkOverrides extends Screen {
 	public GuiWDLChunkOverrides(GuiScreen parent) {
 		this.parent = parent;
 
-		if (WDL.player != null) {
-			this.scrollX = WDL.player.chunkCoordX;
-			this.scrollZ = WDL.player.chunkCoordZ;
+		if (WDL.INSTANCE.player != null) {
+			this.scrollX = WDL.INSTANCE.player.chunkCoordX;
+			this.scrollZ = WDL.INSTANCE.player.chunkCoordZ;
 		}
 	}
 
@@ -144,7 +144,7 @@ public class GuiWDLChunkOverrides extends Screen {
 					this.enabled = false;
 					return;
 				}
-				WDL.startDownload();
+				WDL.INSTANCE.startDownload();
 			}
 		});
 		startDownloadButton.enabled = WDLPluginChannels.canDownloadAtAll();
@@ -252,8 +252,8 @@ public class GuiWDLChunkOverrides extends Screen {
 		}
 
 		// Player position.
-		int playerPosX = (int)(((WDL.player.posX / 16.0D) - scrollX) * SCALE + (width / 2));
-		int playerPosZ = (int)(((WDL.player.posZ / 16.0D) - scrollZ) * SCALE + (height / 2));
+		int playerPosX = (int)(((WDL.INSTANCE.player.posX / 16.0D) - scrollX) * SCALE + (width / 2));
+		int playerPosZ = (int)(((WDL.INSTANCE.player.posZ / 16.0D) - scrollZ) * SCALE + (height / 2));
 
 		drawHorizontalLine(playerPosX - 3, playerPosX + 3, playerPosZ, 0xFFFFFFFF);
 		// Vertical is 1px taller because it seems to be needed to make it proportional

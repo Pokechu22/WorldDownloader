@@ -176,8 +176,8 @@ public class GuiWDLWorld extends Screen {
 	}
 
 	private void setSpawnToPlayerPosition() {
-		this.spawnX.setValue((int)WDL.player.posX);
-		this.spawnY.setValue((int)WDL.player.posY);
-		this.spawnZ.setValue((int)WDL.player.posZ);
+		this.spawnX.setValue((int)WDL.INSTANCE.player.posX);
+		this.spawnY.setValue((int)WDL.INSTANCE.player.posY);
+		this.spawnZ.setValue((int)WDL.INSTANCE.player.posZ);
 	}
 }

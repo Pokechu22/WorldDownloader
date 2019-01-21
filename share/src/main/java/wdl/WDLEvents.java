@@ -60,6 +60,9 @@ public class WDLEvents {
 	private static final boolean ENABLE_PROFILER = WDLHooks.ENABLE_PROFILER;
 	private static final Profiler PROFILER = ENABLE_PROFILER ? Minecraft.getInstance().profiler : null;
 
+	// XXX this shoudln't be static
+	private static WDL wdl = WDL.INSTANCE;
+
 	/**
 	 * Must be called after the static World object in Minecraft has been
 	 * replaced.
@@ -82,14 +85,14 @@ public class WDLEvents {
 				WDLMessages.chatMessageTranslated(WDL.serverProps,
 						WDLMessageTypes.INFO, "wdl.messages.generalInfo.worldChanged");
 				WDL.worldLoadingDeferred = true;
-				WDL.startSaveThread();
+				wdl.startSaveThread();
 			}
 
 			if (ENABLE_PROFILER) PROFILER.endSection();  // "Core"
 			return;
 		}
 
-		boolean sameServer = WDL.loadWorld();
+		boolean sameServer = wdl.loadWorld();
 
 		WDLUpdateChecker.startIfNeeded();  // TODO: Always check for updates, even in single player
 
@@ -118,7 +121,7 @@ public class WDLEvents {
 					WDL.serverProps,
 					WDLMessageTypes.ON_CHUNK_NO_LONGER_NEEDED,
 					"wdl.messages.onChunkNoLongerNeeded.saved", unneededChunk.x, unneededChunk.z);
-			WDL.saveChunk(unneededChunk);
+			wdl.saveChunk(unneededChunk);
 		} else {
 			WDLMessages.chatMessageTranslated(
 					WDL.serverProps,
@@ -139,10 +142,10 @@ public class WDLEvents {
 		}
 
 		if (WDL.minecraft.objectMouseOver.type == RayTraceResult.Type.ENTITY) {
-			WDL.lastEntity = WDL.minecraft.objectMouseOver.entity;
+			wdl.lastEntity = WDL.minecraft.objectMouseOver.entity;
 		} else {
-			WDL.lastEntity = null;
-			WDL.lastClickedBlock = WDL.minecraft.objectMouseOver.getBlockPos();
+			wdl.lastEntity = null;
+			wdl.lastClickedBlock = WDL.minecraft.objectMouseOver.getBlockPos();
 		}
 	}
 
@@ -153,7 +156,7 @@ public class WDLEvents {
 	public static boolean onItemGuiClosed() {
 		if (!WDL.downloading) { return true; }
 
-		Container windowContainer = WDL.windowContainer;
+		Container windowContainer = wdl.windowContainer;
 
 		if (windowContainer == null ||
 				ReflectionUtils.isCreativeContainer(windowContainer.getClass())) {
@@ -161,7 +164,7 @@ public class WDLEvents {
 			return true;
 		}
 
-		Entity ridingEntity = WDL.player.getRidingEntity();
+		Entity ridingEntity = wdl.player.getRidingEntity();
 		if (ridingEntity != null) {
 			// Check for ridden entities.  See EntityHandler.checkRiding for
 			// more info about why this is useful.
@@ -195,7 +198,7 @@ public class WDLEvents {
 		}
 
 		// If the last thing clicked was an ENTITY
-		Entity entity = WDL.lastEntity;
+		Entity entity = wdl.lastEntity;
 		if (entity != null) {
 			if (!WDLPluginChannels.canSaveEntities(entity.chunkCoordX, entity.chunkCoordZ)) {
 				WDLMessages.chatMessageTranslated(WDL.serverProps,
@@ -221,14 +224,14 @@ public class WDLEvents {
 		// Else, the last thing clicked was a TILE ENTITY
 
 		// Get the tile entity which we are going to update the inventory for
-		TileEntity te = WDL.worldClient.getTileEntity(WDL.lastClickedBlock);
+		TileEntity te = wdl.worldClient.getTileEntity(wdl.lastClickedBlock);
 
 		if (te == null) {
 			//TODO: Is this a good way to stop?  Is the event truely handled here?
 			WDLMessages.chatMessageTranslated(
 					WDL.serverProps,
 					WDLMessageTypes.ON_GUI_CLOSED_WARNING,
-					"wdl.messages.onGuiClosedWarning.couldNotGetTE", WDL.lastClickedBlock);
+					"wdl.messages.onGuiClosedWarning.couldNotGetTE", wdl.lastClickedBlock);
 			return true;
 		}
 
@@ -241,26 +244,26 @@ public class WDLEvents {
 		}
 
 		BlockHandler<? extends TileEntity, ? extends Container> handler =
-				BlockHandler.getHandler(te.getClass(), WDL.windowContainer.getClass());
+				BlockHandler.getHandler(te.getClass(), wdl.windowContainer.getClass());
 		if (handler != null) {
 			try {
-				ITextComponent msg = handler.handleCasting(WDL.lastClickedBlock, WDL.windowContainer,
-						te, WDL.worldClient, WDL::saveTileEntity);
+				ITextComponent msg = handler.handleCasting(wdl.lastClickedBlock, wdl.windowContainer,
+						te, wdl.worldClient, wdl::saveTileEntity);
 				WDLMessages.chatMessage(WDL.serverProps, WDLMessageTypes.ON_GUI_CLOSED_INFO, msg);
 				return true;
 			} catch (HandlerException e) {
 				WDLMessages.chatMessageTranslated(WDL.serverProps, e.messageType, e.translationKey, e.args);
 				return false;
 			}
-		} else if (WDL.windowContainer instanceof ContainerChest
+		} else if (wdl.windowContainer instanceof ContainerChest
 				&& te instanceof TileEntityEnderChest) {
-			InventoryEnderChest inventoryEnderChest = WDL.player
+			InventoryEnderChest inventoryEnderChest = wdl.player
 					.getInventoryEnderChest();
 			int inventorySize = inventoryEnderChest.getSizeInventory();
-			int containerSize = WDL.windowContainer.inventorySlots.size();
+			int containerSize = wdl.windowContainer.inventorySlots.size();
 
 			for (int i = 0; i < containerSize && i < inventorySize; i++) {
-				Slot slot = WDL.windowContainer.getSlot(i);
+				Slot slot = wdl.windowContainer.getSlot(i);
 				if (slot.getHasStack()) {
 					inventoryEnderChest.setInventorySlotContents(i, slot.getStack());
 				}
@@ -286,7 +289,7 @@ public class WDLEvents {
 			return;
 		}
 
-		TileEntity blockEntity = WDL.worldClient.getTileEntity(pos);
+		TileEntity blockEntity = wdl.worldClient.getTileEntity(pos);
 		if (blockEntity == null) {
 			return;
 		}
@@ -296,7 +299,7 @@ public class WDLEvents {
 		if (handler != null) {
 			try {
 				ITextComponent msg = handler.handleCasting(pos, block, blockEntity,
-						data1, data2, WDL.worldClient, WDL::saveTileEntity);
+						data1, data2, wdl.worldClient, wdl::saveTileEntity);
 				WDLMessages.chatMessage(WDL.serverProps, WDLMessageTypes.ON_GUI_CLOSED_INFO, msg);
 			} catch (HandlerException e) {
 				WDLMessages.chatMessageTranslated(WDL.serverProps, e.messageType, e.translationKey, e.args);
@@ -316,11 +319,11 @@ public class WDLEvents {
 		}
 
 		// Assume that the current dimension is the right one
-		EntityPlayerSP player = WDL.player;
+		EntityPlayerSP player = wdl.player;
 		assert player != null;
-		MapDataResult result = MapDataHandler.repairMapData(mapID, mapData, WDL.player);
+		MapDataResult result = MapDataHandler.repairMapData(mapID, mapData, wdl.player);
 
-		WDL.newMapDatas.put(mapID, result.map);
+		wdl.newMapDatas.put(mapID, result.map);
 
 		WDLMessages.chatMessageTranslated(WDL.serverProps,
 				WDLMessageTypes.ON_MAP_SAVED, "wdl.messages.onMapSaved", mapID, result.toComponent());
@@ -364,21 +367,21 @@ public class WDLEvents {
 
 			int serverViewDistance = 10; // XXX hardcoded for now
 
-			if (EntityUtils.isWithinSavingDistance(entity, WDL.player,
+			if (EntityUtils.isWithinSavingDistance(entity, wdl.player,
 					threshold, serverViewDistance)) {
 				WDLMessages.chatMessageTranslated(
 						WDL.serverProps,
 						WDLMessageTypes.REMOVE_ENTITY,
 						"wdl.messages.removeEntity.savingDistance", entity,
-						entity.getPositionVector().toString(), WDL.player.getPositionVector(), threshold, serverViewDistance);
-				WDL.newEntities.put(new ChunkPos(entity.chunkCoordX,
+						entity.getPositionVector().toString(), wdl.player.getPositionVector(), threshold, serverViewDistance);
+				wdl.newEntities.put(new ChunkPos(entity.chunkCoordX,
 						entity.chunkCoordZ), entity);
 			} else {
 				WDLMessages.chatMessageTranslated(
 						WDL.serverProps,
 						WDLMessageTypes.REMOVE_ENTITY,
 						"wdl.messages.removeEntity.allowingRemoveDistance", entity,
-						entity.getPositionVector().toString(), WDL.player.getPositionVector(), threshold, serverViewDistance);
+						entity.getPositionVector().toString(), wdl.player.getPositionVector(), threshold, serverViewDistance);
 			}
 		}
 	}

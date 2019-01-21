@@ -230,8 +230,8 @@ public class WDLPluginChannels {
 
 		if (receivedPackets.contains(1)) {
 			if (!canCacheChunks && saveRadius >= 0) {
-				int distanceX = chunk.x - WDL.player.chunkCoordX;
-				int distanceZ = chunk.z - WDL.player.chunkCoordZ;
+				int distanceX = chunk.x - WDL.INSTANCE.player.chunkCoordX;
+				int distanceZ = chunk.z - WDL.INSTANCE.player.chunkCoordZ;
 
 				if (Math.abs(distanceX) > saveRadius ||
 						Math.abs(distanceZ) > saveRadius) {
@@ -813,7 +813,7 @@ public class WDLPluginChannels {
 						WDLMessages.chatMessageTranslated(
 								WDL.serverProps,
 								WDLMessageTypes.ERROR, "wdl.messages.generalError.forbidden");
-						WDL.cancelDownload();
+						WDL.INSTANCE.cancelDownload();
 					}
 				}
 				break;

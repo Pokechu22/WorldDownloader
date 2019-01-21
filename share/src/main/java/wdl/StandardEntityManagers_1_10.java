@@ -88,7 +88,7 @@ class StandardEntityManagers {
 	public static final ISpigotEntityManager SPIGOT = new ISpigotEntityManager() {
 		@Override
 		public Set<String> getProvidedEntities() {
-			if (WDL.isSpigot()) {
+			if (WDL.INSTANCE.isSpigot()) {
 				return PROVIDED_ENTITIES;
 			} else {
 				// Don't try to do spigot ranges on non-spigot servers

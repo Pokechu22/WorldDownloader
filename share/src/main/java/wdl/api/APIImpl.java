@@ -60,7 +60,7 @@ class APIImpl implements WDLApi.APIInstance {
 			return;
 		}
 
-		WDL.saveTileEntity(pos, te);
+		WDL.INSTANCE.saveTileEntity(pos, te);
 	}
 
 	@Override

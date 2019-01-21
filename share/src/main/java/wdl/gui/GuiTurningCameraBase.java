@@ -73,10 +73,10 @@ public abstract class GuiTurningCameraBase extends Screen {
 	@OverridingMethodsMustInvokeSuper
 	public void initGui() {
 		if (!initializedCamera) {
-			this.cam = VersionedFunctions.makePlayer(WDL.minecraft, WDL.worldClient, WDL.player.connection, WDL.player);
-			this.cam.setLocationAndAngles(WDL.player.posX, WDL.player.posY,
-					WDL.player.posZ, WDL.player.rotationYaw, 0.0F);
-			this.yaw = WDL.player.rotationYaw;
+			this.cam = VersionedFunctions.makePlayer(WDL.minecraft, WDL.INSTANCE.worldClient, WDL.INSTANCE.player.connection, WDL.INSTANCE.player);
+			this.cam.setLocationAndAngles(WDL.INSTANCE.player.posX, WDL.INSTANCE.player.posY,
+					WDL.INSTANCE.player.posZ, WDL.INSTANCE.player.rotationYaw, 0.0F);
+			this.yaw = WDL.INSTANCE.player.rotationYaw;
 			this.oldCameraMode = WDL.minecraft.gameSettings.thirdPersonView;
 			this.oldHideHud = WDL.minecraft.gameSettings.hideGUI;
 			this.oldShowDebug = WDL.minecraft.gameSettings.showDebugInfo;
@@ -131,9 +131,9 @@ public abstract class GuiTurningCameraBase extends Screen {
 			double z = Math.sin((yaw - 90) / 180.0D * Math.PI);
 
 			double distance = truncateDistanceIfBlockInWay(x, z, .5);
-			this.cam.posY = WDL.player.posY;
-			this.cam.posX = WDL.player.posX - distance * x;
-			this.cam.posZ = WDL.player.posZ + distance * z;
+			this.cam.posY = WDL.INSTANCE.player.posY;
+			this.cam.posX = WDL.INSTANCE.player.posX - distance * x;
+			this.cam.posZ = WDL.INSTANCE.player.posZ + distance * z;
 
 			this.cam.chunkCoordX = MathHelper.floor(this.cam.posX / 16.0D);
 			this.cam.chunkCoordY = MathHelper.floor(this.cam.posY / 16.0D);
@@ -154,8 +154,8 @@ public abstract class GuiTurningCameraBase extends Screen {
 	 * @return A new distance, equal to or less than <code>currentDistance</code>.
 	 */
 	private double truncateDistanceIfBlockInWay(double camX, double camZ, double currentDistance) {
-		Vec3d playerPos = WDL.player.getPositionVector().add(0, WDL.player.getEyeHeight(), 0);
-		Vec3d offsetPos = new Vec3d(WDL.player.posX - currentDistance * camX, WDL.player.posY + WDL.player.getEyeHeight(), WDL.player.posZ + camZ);
+		Vec3d playerPos = WDL.INSTANCE.player.getPositionVector().add(0, WDL.INSTANCE.player.getEyeHeight(), 0);
+		Vec3d offsetPos = new Vec3d(WDL.INSTANCE.player.posX - currentDistance * camX, WDL.INSTANCE.player.posY + WDL.INSTANCE.player.getEyeHeight(), WDL.INSTANCE.player.posZ + camZ);
 
 		// NOTE: Vec3.addVector and Vec3.add return new vectors and leave the
 		// current vector unmodified.

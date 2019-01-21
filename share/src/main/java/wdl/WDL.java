@@ -117,63 +117,67 @@ public class WDL {
 	// much different stuff in here.
 
 	/**
+	 * Instance of WDL, currently a singleton but this will change in the future.
+	 */
+	public static final WDL INSTANCE = new WDL();
+	/**
 	 * Reference to the Minecraft object.
 	 */
 	public static Minecraft minecraft;
 	/**
 	 * Reference to the World object that WDL uses.
 	 */
-	public static WorldClient worldClient;
+	public WorldClient worldClient;
 	/**
 	 * Reference to a connection specific object. Used to detect a new
 	 * connection.
 	 */
-	public static NetworkManager networkManager = null;
+	public NetworkManager networkManager = null;
 	/**
 	 * The current player.
 	 */
-	public static EntityPlayerSP player;
+	public EntityPlayerSP player;
 
 	/**
 	 * Reference to the place where all the item stacks end up after receiving
 	 * them.
 	 */
-	public static Container windowContainer;
+	public Container windowContainer;
 	/**
 	 * The block position clicked most recently.
 	 *
 	 * Needed for TileEntity creation.
 	 */
-	public static BlockPos lastClickedBlock;
+	public BlockPos lastClickedBlock;
 	/**
 	 * Last entity clicked (used for non-block tiles like minecarts with chests)
 	 */
-	public static Entity lastEntity;
+	public Entity lastEntity;
 
 	/**
 	 * For player files and the level.dat file.
 	 */
-	public static SaveHandler saveHandler;
+	public SaveHandler saveHandler;
 	/**
 	 * For the chunks (despite the name it does also SAVE chunks)
 	 */
-	public static WDLChunkLoader chunkLoader;
+	public WDLChunkLoader chunkLoader;
 
 	/**
 	 * All tile entities that were saved manually, by chunk and then position.
 	 */
-	public static Map<ChunkPos, Map<BlockPos, TileEntity>> newTileEntities = new HashMap<>();
+	public Map<ChunkPos, Map<BlockPos, TileEntity>> newTileEntities = new HashMap<>();
 
 	/**
 	 * All entities that were downloaded, by chunk.
 	 */
-	public static Multimap<ChunkPos, Entity> newEntities = HashMultimap.create();
+	public Multimap<ChunkPos, Entity> newEntities = HashMultimap.create();
 
 	/**
 	 * All of the {@link MapData}s that were sent to the client in the current
 	 * world.
 	 */
-	public static Map<Integer, MapData> newMapDatas = new HashMap<>();
+	public Map<Integer, MapData> newMapDatas = new HashMap<>();
 
 	// State variables:
 	/**
@@ -269,7 +273,7 @@ public class WDL {
 	/**
 	 * Starts the download.
 	 */
-	public static void startDownload() {
+	public void startDownload() {
 		worldClient = minecraft.world;
 
 		if (!WDLPluginChannels.canDownloadAtAll()) {
@@ -335,7 +339,7 @@ public class WDL {
 						propsFound = true;
 
 						minecraft.displayGuiScreen(null);
-						WDL.startDownload();
+						startDownload();
 					}
 				}
 
@@ -398,7 +402,7 @@ public class WDL {
 	/**
 	 * Stops the download, and saves.
 	 */
-	public static void stopDownload() {
+	public void stopDownload() {
 		if (downloading) {
 			// Indicate that downloading has stopped
 			downloading = false;
@@ -412,7 +416,7 @@ public class WDL {
 	/**
 	 * Cancels the download.
 	 */
-	public static void cancelDownload() {
+	public void cancelDownload() {
 		boolean wasDownloading = downloading;
 
 		if (wasDownloading) {
@@ -431,17 +435,17 @@ public class WDL {
 	/**
 	 * Starts the asynchronous save thread.
 	 */
-	static void startSaveThread() {
+	void startSaveThread() {
 		// Indicate that we are saving
 		WDLMessages.chatMessageTranslated(WDL.serverProps,
 				WDLMessageTypes.INFO, "wdl.messages.generalInfo.saveStarted");
 		WDL.saving = true;
 		Thread thread = new Thread(() -> {
 			try {
-				WDL.saveEverything();
+				saveEverything();
 				WDL.minecraft.addScheduledTask(() -> {
 					WDL.saving = false;
-					WDL.onSaveComplete();
+					onSaveComplete();
 				});
 			} catch (Throwable e) {
 				WDL.crashed(e, "World Downloader Mod: Saving world");
@@ -455,7 +459,7 @@ public class WDL {
 	 *
 	 * @return Whether on the same server.
 	 */
-	public static boolean loadWorld() {
+	public boolean loadWorld() {
 		worldName = ""; // The new (multi-)world name is unknown at the moment
 		worldClient = minecraft.world;
 		player = minecraft.player;
@@ -523,8 +527,8 @@ public class WDL {
 	/**
 	 * Called after saving has finished.
 	 */
-	public static void onSaveComplete() {
-		WDL.worldClient = null;
+	public void onSaveComplete() {
+		worldClient = null;
 
 		worldLoadingDeferred = false;
 
@@ -532,7 +536,7 @@ public class WDL {
 		if (downloading) {
 			WDLMessages.chatMessageTranslated(WDL.serverProps,
 					WDLMessageTypes.INFO, "wdl.messages.generalInfo.saveComplete.startingAgain");
-			WDL.loadWorld();
+			loadWorld();
 			return;
 		}
 
@@ -544,7 +548,7 @@ public class WDL {
 	 * Saves all remaining chunks, world info and player info. Usually called
 	 * when stopping.
 	 */
-	public static void saveEverything() throws Exception {
+	public void saveEverything() throws Exception {
 		if (!WDLPluginChannels.canDownloadAtAll()) {
 			WDLMessages.chatMessageTranslated(WDL.serverProps,
 					WDLMessageTypes.ERROR, "wdl.messages.generalError.forbidden");
@@ -661,7 +665,7 @@ public class WDL {
 	 *
 	 * @return The player NBT tag.  Needed for later use in the world info.
 	 */
-	private static NBTTagCompound savePlayer(GuiWDLSaveProgress progressScreen) {
+	private NBTTagCompound savePlayer(GuiWDLSaveProgress progressScreen) {
 		if (!WDLPluginChannels.canDownloadAtAll()) { return new NBTTagCompound(); }
 
 		progressScreen.startMajorTask(
@@ -732,7 +736,7 @@ public class WDL {
 	 * Save the world metadata (time, gamemode, seed, ...) into the level.dat
 	 * file.
 	 */
-	private static void saveWorldInfo(GuiWDLSaveProgress progressScreen,
+	private void saveWorldInfo(GuiWDLSaveProgress progressScreen,
 			NBTTagCompound playerInfoNBT) {
 		if (!WDLPluginChannels.canDownloadAtAll()) { return; }
 
@@ -814,7 +818,7 @@ public class WDL {
 	 * @throws IllegalAccessException
 	 * @throws IllegalArgumentException
 	 */
-	private static void saveChunks(GuiWDLSaveProgress progressScreen)
+	private void saveChunks(GuiWDLSaveProgress progressScreen)
 			throws IllegalArgumentException, IllegalAccessException {
 		if (!WDLPluginChannels.canDownloadAtAll()) { return; }
 
@@ -864,7 +868,7 @@ public class WDL {
 	/**
 	 * Import all non-overwritten TileEntities, then save the chunk
 	 */
-	public static void saveChunk(Chunk c) {
+	public void saveChunk(Chunk c) {
 		if (!WDLPluginChannels.canDownloadAtAll()) { return; }
 
 		if (!WDLPluginChannels.canSaveChunk(c)) { return; }
@@ -883,7 +887,7 @@ public class WDL {
 		}
 	}
 
-	private static boolean isEmpty(Chunk c) {
+	private boolean isEmpty(Chunk c) {
 		if (c.isEmpty() || c instanceof EmptyChunk) {
 			return true;
 		}
@@ -920,7 +924,7 @@ public class WDL {
 	 * Loads the sever-shared properties, which act as a default
 	 * for the properties of each individual world in a multiworld server.
 	 */
-	private static void loadServerProps() {
+	private void loadServerProps() {
 		baseFolderName = getBaseFolderName();
 		serverProps = new Configuration(globalProps);
 
@@ -1065,7 +1069,7 @@ public class WDL {
 	 * Change player specific fields according to the overrides found in the
 	 * properties file.
 	 */
-	private static void applyOverridesToPlayer(NBTTagCompound playerNBT) {
+	private void applyOverridesToPlayer(NBTTagCompound playerNBT) {
 		// Health
 		PlayerSettings.Health health = worldProps.getValue(PlayerSettings.HEALTH);
 
@@ -1123,7 +1127,7 @@ public class WDL {
 	 * @param worldInfoNBT The main world info, generated by {@link WorldInfo#cloneNBTCompound}.
 	 * @param rootWorldInfoNBT The root tag containing worldInfoNBT as "<code>Data</code>"
 	 */
-	private static void applyOverridesToWorldInfo(NBTTagCompound worldInfoNBT, NBTTagCompound rootWorldInfoNBT) {
+	private void applyOverridesToWorldInfo(NBTTagCompound worldInfoNBT, NBTTagCompound rootWorldInfoNBT) {
 		// LevelName
 		String baseName = serverProps.getValue(MiscSettings.SERVER_NAME);
 		String worldName = worldProps.getValue(MiscSettings.WORLD_NAME);
@@ -1251,7 +1255,7 @@ public class WDL {
 			Object instance = fmlCommonHandler.getMethod("instance").invoke(null);
 			Method handleWorldDataSave = fmlCommonHandler.getMethod("handleWorldDataSave",
 					SaveHandler.class, WorldInfo.class, NBTTagCompound.class);
-			handleWorldDataSave.invoke(instance, WDL.saveHandler, WDL.worldClient.getWorldInfo(), rootWorldInfoNBT);
+			handleWorldDataSave.invoke(instance, saveHandler, worldClient.getWorldInfo(), rootWorldInfoNBT);
 
 			LOGGER.debug("Called FML handleWorldDataSave!  Keys are now " + rootWorldInfoNBT.keySet());
 		} catch (Throwable ex) {
@@ -1263,7 +1267,7 @@ public class WDL {
 	 * Saves existing map data.  Map data referring to the items
 	 * that contain pictures.
 	 */
-	private static void saveMapData(GuiWDLSaveProgress progressScreen) {
+	private void saveMapData(GuiWDLSaveProgress progressScreen) {
 		if (!WDLPluginChannels.canSaveMaps()) { return; }
 
 		File dataDirectory = new File(saveHandler.getWorldDirectory(),
@@ -1469,7 +1473,7 @@ public class WDL {
 	 * @param te
 	 *            The tile entity to add
 	 */
-	public static void saveTileEntity(BlockPos pos, TileEntity te) {
+	public void saveTileEntity(BlockPos pos, TileEntity te) {
 		int chunkX = pos.getX() >> 4;
 		int chunkZ = pos.getZ() >> 4;
 
@@ -1486,7 +1490,7 @@ public class WDL {
 	 *
 	 * @param pos Location of the chunk
 	 */
-	public static void unloadChunk(ChunkPos pos) {
+	public void unloadChunk(ChunkPos pos) {
 		Map<BlockPos, TileEntity> m = newTileEntities.get(pos);
 		if(m != null) {
 			m.clear();
@@ -1501,7 +1505,7 @@ public class WDL {
 	 *
 	 * @see SanityCheck
 	 */
-	private static void runSanityCheck() {
+	private void runSanityCheck() {
 		Map<SanityCheck, Exception> failures = Maps.newEnumMap(SanityCheck.class);
 
 		for (SanityCheck check : SanityCheck.values()) {
@@ -1539,7 +1543,7 @@ public class WDL {
 	 *
 	 * This is detected based off of the server brand.
 	 */
-	public static boolean isSpigot() {
+	public boolean isSpigot() {
 		if (player != null && player.getServerBrand() != null) {
 			String brand = player.getServerBrand().toLowerCase();
 			return brand.contains("spigot") || brand.contains("paper");
@@ -1550,7 +1554,7 @@ public class WDL {
 	/**
 	 * Gets the current setup information.
 	 */
-	public static String getDebugInfo() {
+	public String getDebugInfo() {
 		Exception ex = new Exception();
 		ex.setStackTrace(new StackTraceElement[0]);
 		CrashReport report = new CrashReport("Wrapper crash report", ex);
@@ -1563,7 +1567,7 @@ public class WDL {
 	 * Adds information to the given crash report.
 	 * @param report The report to add sections to.
 	 */
-	public static void addInfoToCrash(CrashReport report) {
+	public void addInfoToCrash(CrashReport report) {
 		// Trick the crash report handler into not storing a stack trace
 		// (we don't want it)
 		int stSize;

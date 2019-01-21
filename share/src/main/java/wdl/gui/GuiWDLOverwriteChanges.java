@@ -52,7 +52,7 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements IBac
 							.format("wdl.gui.overwriteChanges.backingUp.folder", name);
 				}
 
-				WorldBackup.backupWorld(WDL.saveHandler.getWorldDirectory(),
+				WorldBackup.backupWorld(WDL.INSTANCE.saveHandler.getWorldDirectory(),
 						WDL.getWorldFolderName(WDL.worldName) + "_user", type,
 						GuiWDLOverwriteChanges.this);
 			} catch (IOException ex) {
@@ -66,7 +66,7 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements IBac
 					WDL.overrideLastModifiedCheck = true;
 					mc.displayGuiScreen(null);
 
-					WDL.startDownload();
+					WDL.INSTANCE.startDownload();
 				});
 			}
 		}
@@ -176,7 +176,7 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements IBac
 			public @Override void performAction() {
 				WDL.overrideLastModifiedCheck = true;
 				mc.displayGuiScreen(null);
-				WDL.startDownload();
+				WDL.INSTANCE.startDownload();
 			}
 		});
 		y += 22;

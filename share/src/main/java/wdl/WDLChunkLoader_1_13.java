@@ -76,11 +76,13 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 		return baseFolder;
 	}
 
+	protected final WDL wdl;
 	protected final Map<ChunkPos, NBTTagCompound> chunksToSave;
 	protected final File chunkSaveLocation;
 
-	protected WDLChunkLoaderBase(File file) {
+	protected WDLChunkLoaderBase(WDL wdl, File file) {
 		super(file, null);
+		this.wdl = wdl;
 		@SuppressWarnings("unchecked")
 		Map<ChunkPos, NBTTagCompound> chunksToSave =
 				ReflectionUtils.findAndGetPrivateField(this, AnvilChunkLoader.class, VersionedFunctions.getChunksToSaveClass());
@@ -106,7 +108,7 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 
 		addChunkToPending(chunk.getPos(), rootTag);
 
-		WDL.unloadChunk(chunk.getPos());
+		wdl.unloadChunk(chunk.getPos());
 	}
 
 	/**

@@ -260,7 +260,7 @@ public class GuiWDLGameRules extends Screen {
 		this.rules = WDL.gameRules;
 		// We're not currently modifying the rules on worldClient itself, so they can be considered
 		// to be the defaults... probably.
-		GameRules defaultRules = WDL.worldClient.getGameRules();
+		GameRules defaultRules = WDL.INSTANCE.worldClient.getGameRules();
 		this.vanillaGameRules = VersionedFunctions.getGameRules(defaultRules);
 	}
 

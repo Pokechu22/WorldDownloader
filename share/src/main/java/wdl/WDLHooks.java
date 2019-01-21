@@ -61,7 +61,7 @@ import wdl.gui.widget.Button;
 import wdl.versioned.VersionedFunctions;
 
 /**
- * The various hooks for WDL. <br/>
+ * The various hooks for wdl. <br/>
  * All of these should be called regardless of any WDL state variables.
  */
 public class WDLHooks {
@@ -90,6 +90,8 @@ public class WDLHooks {
 	static final boolean ENABLE_PROFILER = false;
 	private static final Profiler PROFILER = ENABLE_PROFILER ? Minecraft.getInstance().profiler : null;
 
+	private final WDL wdl = WDL.INSTANCE;
+
 	/**
 	 * Called when {@link WorldClient#tick()} is called.
 	 * <br/>
@@ -102,7 +104,7 @@ public class WDLHooks {
 		try {
 			if (ENABLE_PROFILER) PROFILER.startSection("wdl");
 
-			if (sender != WDL.worldClient) {
+			if (sender != wdl.worldClient) {
 				if (ENABLE_PROFILER) PROFILER.startSection("onWorldLoad");
 				if (WDL.worldLoadingDeferred) {
 					return;
@@ -112,9 +114,9 @@ public class WDLHooks {
 				if (ENABLE_PROFILER) PROFILER.endSection();  // "onWorldLoad"
 			} else {
 				if (ENABLE_PROFILER) PROFILER.startSection("inventoryCheck");
-				if (WDL.downloading && WDL.player != null) {
-					if (WDL.player.openContainer != WDL.windowContainer) {
-						if (WDL.player.openContainer == WDL.player.inventoryContainer) {
+				if (WDL.downloading && wdl.player != null) {
+					if (wdl.player.openContainer != wdl.windowContainer) {
+						if (wdl.player.openContainer == wdl.player.inventoryContainer) {
 							boolean handled;
 
 							if (ENABLE_PROFILER) PROFILER.startSection("onItemGuiClosed");
@@ -122,9 +124,9 @@ public class WDLHooks {
 							handled = WDLEvents.onItemGuiClosed();
 							if (ENABLE_PROFILER) PROFILER.endSection();  // "Core"
 
-							Container container = WDL.player.openContainer;
-							if (WDL.lastEntity != null) {
-								Entity entity = WDL.lastEntity;
+							Container container = wdl.player.openContainer;
+							if (wdl.lastEntity != null) {
+								Entity entity = wdl.lastEntity;
 
 								for (ModInfo<IGuiHooksListener> info : WDLApi
 										.getImplementingExtensions(IGuiHooksListener.class)) {
@@ -145,7 +147,7 @@ public class WDLHooks {
 											"wdl.messages.onGuiClosedWarning.unhandledEntity", entity);
 								}
 							} else {
-								BlockPos pos = WDL.lastClickedBlock;
+								BlockPos pos = wdl.lastClickedBlock;
 								for (ModInfo<IGuiHooksListener> info : WDLApi
 										.getImplementingExtensions(IGuiHooksListener.class)) {
 									if (handled) {
@@ -175,7 +177,7 @@ public class WDLHooks {
 							if (ENABLE_PROFILER) PROFILER.endSection();  // "onItemGuiOpened"
 						}
 
-						WDL.windowContainer = WDL.player.openContainer;
+						wdl.windowContainer = wdl.player.openContainer;
 					}
 				}
 				if (ENABLE_PROFILER) PROFILER.endSection();  // "inventoryCheck"
@@ -283,7 +285,7 @@ public class WDLHooks {
 			for (ModInfo<IChatMessageListener> info : WDLApi
 					.getImplementingExtensions(IChatMessageListener.class)) {
 				if (ENABLE_PROFILER) PROFILER.startSection(info.id);
-				info.mod.onChat(WDL.worldClient, chatMessage);
+				info.mod.onChat(wdl.worldClient, chatMessage);
 				if (ENABLE_PROFILER) PROFILER.endSection();  // info.id
 			}
 
@@ -314,7 +316,7 @@ public class WDLHooks {
 
 			if (ENABLE_PROFILER) PROFILER.startSection("wdl.onMapDataLoaded");
 
-			MapData mapData = VersionedFunctions.getMapData(WDL.worldClient, packet);
+			MapData mapData = VersionedFunctions.getMapData(wdl.worldClient, packet);
 
 			if (mapData != null) {
 				if (ENABLE_PROFILER) PROFILER.startSection("Core");
@@ -372,7 +374,7 @@ public class WDLHooks {
 			buf.resetReaderIndex();
 			// buf will be released by the packet handler, eventually.
 			// It definitely is NOT our responsibility to release it, as
-			// doing so would probably break other code outside of WDL.
+			// doing so would probably break other code outside of wdl.
 			// Perhaps we might want to call retain once at the start of this method
 			// and then release at the end, but that feels excessive (since there
 			// _shouldn't_ be multiple threads at play at this point, and if there
@@ -387,7 +389,7 @@ public class WDLHooks {
 			for (ModInfo<IPluginChannelListener> info : WDLApi
 					.getImplementingExtensions(IPluginChannelListener.class)) {
 				if (ENABLE_PROFILER) PROFILER.startSection(info.id);
-				info.mod.onPluginChannelPacket(WDL.worldClient, channel,
+				info.mod.onPluginChannelPacket(wdl.worldClient, channel,
 						payload);
 				if (ENABLE_PROFILER) PROFILER.endSection();  // info.id
 			}
@@ -433,7 +435,7 @@ public class WDLHooks {
 			for (ModInfo<IBlockEventListener> info : WDLApi
 					.getImplementingExtensions(IBlockEventListener.class)) {
 				if (ENABLE_PROFILER) PROFILER.startSection(info.id);
-				info.mod.onBlockEvent(WDL.worldClient, pos, block,
+				info.mod.onBlockEvent(wdl.worldClient, pos, block,
 						data1, data2);
 				if (ENABLE_PROFILER) PROFILER.endSection();  // info.id
 			}
@@ -458,7 +460,7 @@ public class WDLHooks {
 	protected void onNHPCDisconnect0(NetHandlerPlayClient sender, ITextComponent reason) {
 		if (WDL.downloading) {
 			// This is likely to be called from an unexpected thread, so queue a task
-			Minecraft.getInstance().addScheduledTask(WDL::stopDownload);
+			Minecraft.getInstance().addScheduledTask(wdl::stopDownload);
 
 			// This code was present on older versions of WDL which weren't missing
 			// the onDisconnect handler before.
@@ -480,7 +482,7 @@ public class WDLHooks {
 		INSTANCE.onCrashReportPopulateEnvironment0(report);
 	}
 	protected void onCrashReportPopulateEnvironment0(CrashReport report) {
-		WDL.addInfoToCrash(report);
+		wdl.addInfoToCrash(report);
 	}
 
 	/**
@@ -494,7 +496,7 @@ public class WDLHooks {
 	 */
 	private static final int WDLo = ('W' << 24) | ('D' << 16) | ('L' << 8) | ('o');
 
-	private static class StartDownloadButton extends Button {
+	private class StartDownloadButton extends Button {
 		public StartDownloadButton(GuiScreen menu, int x, int y, int width, int height) {
 			super(x, y, width, height, null);
 			this.menu = menu;
@@ -550,7 +552,7 @@ public class WDLHooks {
 			}
 
 			if (WDL.downloading) {
-				WDL.stopDownload();
+				wdl.stopDownload();
 				enabled = false; // Disable to stop double-clicks
 			} else {
 				if (!WDLPluginChannels.canDownloadAtAll()) {
@@ -567,14 +569,14 @@ public class WDLHooks {
 					// the player of limited areas.
 					WDL.minecraft.displayGuiScreen(new GuiWDLChunkOverrides(menu));
 				} else {
-					WDL.startDownload();
+					wdl.startDownload();
 					enabled = false; // Disable to stop double-clicks
 				}
 			}
 		}
 	}
 
-	private static class SettingsButton extends Button {
+	private class SettingsButton extends Button {
 		public SettingsButton(GuiScreen menu, int x, int y, int width, int height, String displayString) {
 			super(x, y, width, height, displayString);
 			this.menu = menu;
@@ -645,7 +647,7 @@ public class WDLHooks {
 	}
 	protected void handleWDLButtonClick0(GuiIngameMenu gui, GuiButton button) {
 		if (button.id == 1) { // "Disconnect", from vanilla
-			WDL.stopDownload();
+			wdl.stopDownload();
 			// Disable the button to prevent double-clicks
 			button.enabled = false;
 		}

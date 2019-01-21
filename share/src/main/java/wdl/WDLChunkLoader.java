@@ -61,11 +61,11 @@ public class WDLChunkLoader extends WDLChunkLoaderBase {
 
 	public static WDLChunkLoader create(SaveHandler handler,
 			Dimension dimension) {
-		return new WDLChunkLoader(getWorldSaveFolder(handler, dimension));
+		return new WDLChunkLoader(WDL.INSTANCE, getWorldSaveFolder(handler, dimension));
 	}
 
-	public WDLChunkLoader(File file) {
-		super(file);
+	public WDLChunkLoader(WDL wdl, File file) {
+		super(wdl, file);
 	}
 
 	/**
@@ -88,7 +88,7 @@ public class WDLChunkLoader extends WDLChunkLoaderBase {
 			entities.addAll(map);
 		}
 		// Add the manually saved entities.
-		for (Entity e : WDL.newEntities.get(chunk.getPos())) {
+		for (Entity e : wdl.newEntities.get(chunk.getPos())) {
 			// "Unkill" the entity, since it is killed when it is unloaded.
 			e.removed = false;
 			entities.add(e);
@@ -206,7 +206,7 @@ public class WDLChunkLoader extends WDLChunkLoaderBase {
 
 		Map<BlockPos, TileEntity> chunkTEMap = chunk.getTileEntityMap();
 		Map<BlockPos, NBTTagCompound> oldTEMap = getOldTileEntities(chunk);
-		Map<BlockPos, TileEntity> newTEMap = WDL.newTileEntities.get(chunk.getPos());
+		Map<BlockPos, TileEntity> newTEMap = wdl.newTileEntities.get(chunk.getPos());
 		if (newTEMap == null) {
 			newTEMap = new HashMap<>();
 		}
