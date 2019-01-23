@@ -82,10 +82,7 @@ public class WDLEvents {
 			// If not currently saving, stop the current download and start
 			// saving now
 			if (!WDL.saving) {
-				WDLMessages.chatMessageTranslated(WDL.serverProps,
-						WDLMessageTypes.INFO, "wdl.messages.generalInfo.worldChanged");
-				WDL.worldLoadingDeferred = true;
-				wdl.startSaveThread();
+				wdl.saveForWorldChange();
 			}
 
 			if (ENABLE_PROFILER) PROFILER.endSection();  // "Core"

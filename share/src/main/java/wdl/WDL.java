@@ -433,9 +433,20 @@ public class WDL {
 	}
 
 	/**
+	 * Saves the current world and defers world loading until saving is finished.
+	 * Used for world/dimension changes.
+	 */
+	public void saveForWorldChange() {
+		WDLMessages.chatMessageTranslated(WDL.serverProps,
+				WDLMessageTypes.INFO, "wdl.messages.generalInfo.worldChanged");
+		WDL.worldLoadingDeferred = true;
+		startSaveThread();
+	}
+
+	/**
 	 * Starts the asynchronous save thread.
 	 */
-	void startSaveThread() {
+	private void startSaveThread() {
 		// Indicate that we are saving
 		WDLMessages.chatMessageTranslated(WDL.serverProps,
 				WDLMessageTypes.INFO, "wdl.messages.generalInfo.saveStarted");
