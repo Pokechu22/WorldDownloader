@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017-2018 Pokechu22, julialy
+ * Copyright (c) 2017-2019 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -243,7 +243,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 				continue;
 			}
 
-			IConfiguration props = WDL.loadWorldProps(worldName);
+			IConfiguration props = WDL.INSTANCE.loadWorldProps(worldName);
 
 			String displayName = props.getValue(MiscSettings.WORLD_NAME);
 			if (displayName.isEmpty()) {
@@ -413,7 +413,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		linkedWorldsProp += "|" + folderName;
 
 		WDL.serverProps.setValue(MiscSettings.LINKED_WORLDS, linkedWorldsProp);
-		WDL.saveProps(folderName, worldProps);
+		WDL.INSTANCE.saveProps(folderName, worldProps);
 
 		linkedWorlds.add(new MultiworldInfo(folderName, worldName));
 

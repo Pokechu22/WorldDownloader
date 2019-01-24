@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017-2018 Pokechu22, julialy
+ * Copyright (c) 2017-2019 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -13,6 +13,8 @@
  * Do not redistribute (in modified or unmodified form) without prior permission.
  */
 package wdl.gui;
+
+import javax.annotation.Nullable;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -28,7 +30,9 @@ import wdl.gui.widget.SettingButton;
 
 public class GuiWDLWorld extends Screen {
 	private String title;
+	@Nullable
 	private final GuiScreen parent;
+	private final WDL wdl;
 	private final IConfiguration config;
 	private SettingButton allowCheatsBtn;
 	private SettingButton gamemodeBtn;
@@ -42,9 +46,10 @@ public class GuiWDLWorld extends Screen {
 	private GuiNumericTextField spawnZ;
 	private int spawnTextY;
 
-	public GuiWDLWorld(GuiScreen parent) {
+	public GuiWDLWorld(@Nullable GuiScreen parent, WDL wdl) {
 		this.parent = parent;
-		this.config = WDL.worldProps;
+		this.wdl = wdl;
+		this.config = wdl.worldProps;
 	}
 
 	/**
@@ -111,7 +116,7 @@ public class GuiWDLWorld extends Screen {
 			this.config.setValue(WorldSettings.SPAWN_Z, spawnZ.getValue());
 		}
 
-		WDL.saveProps();
+		wdl.saveProps();
 	}
 
 	/**
@@ -176,8 +181,8 @@ public class GuiWDLWorld extends Screen {
 	}
 
 	private void setSpawnToPlayerPosition() {
-		this.spawnX.setValue((int)WDL.INSTANCE.player.posX);
-		this.spawnY.setValue((int)WDL.INSTANCE.player.posY);
-		this.spawnZ.setValue((int)WDL.INSTANCE.player.posZ);
+		this.spawnX.setValue((int)wdl.player.posX);
+		this.spawnY.setValue((int)wdl.player.posY);
+		this.spawnZ.setValue((int)wdl.player.posZ);
 	}
 }

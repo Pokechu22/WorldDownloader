@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017-2018 Pokechu22, julialy
+ * Copyright (c) 2017-2019 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -40,7 +40,9 @@ import wdl.gui.widget.Screen;
  * GUI allowing control over the way the world is backed up.
  */
 public class GuiWDLBackup extends Screen {
+	@Nullable
 	private final GuiScreen parent;
+	private final WDL wdl;
 	private final IConfiguration config;
 
 	private String description;
@@ -57,8 +59,9 @@ public class GuiWDLBackup extends Screen {
 	private volatile boolean isCommandValid = true;
 	private volatile @Nullable String commandInvalidReason;
 
-	public GuiWDLBackup(GuiScreen parent) {
+	public GuiWDLBackup(@Nullable GuiScreen parent, WDL wdl) {
 		this.parent = parent;
+		this.wdl = wdl;
 		this.config = WDL.serverProps;
 
 		this.backupType = config.getValue(MiscSettings.BACKUP_TYPE);
@@ -145,7 +148,7 @@ public class GuiWDLBackup extends Screen {
 			config.setValue(MiscSettings.BACKUP_COMMAND_TEMPLATE, customBackupCommandTemplate);
 			config.setValue(MiscSettings.BACKUP_EXTENSION, customBackupExtension);
 
-			WDL.saveProps();
+			wdl.saveProps();
 		}
 	}
 

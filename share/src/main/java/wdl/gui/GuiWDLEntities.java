@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017-2018 Pokechu22, julialy
+ * Copyright (c) 2017-2019 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -17,6 +17,8 @@ package wdl.gui;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 import com.google.common.collect.Multimap;
 
@@ -257,15 +259,18 @@ public class GuiWDLEntities extends Screen {
 		}
 	}
 
+	@Nullable
 	private final GuiScreen parent;
+	private final WDL wdl;
 	private final IConfiguration config;
 
 	private SettingButton rangeModeButton;
 	private GuiButton presetsButton;
 
-	public GuiWDLEntities(GuiScreen parent) {
+	public GuiWDLEntities(@Nullable GuiScreen parent, WDL wdl) {
 		this.parent = parent;
-		this.config = WDL.worldProps;
+		this.wdl = wdl;
+		this.config = wdl.worldProps;
 	}
 
 	@Override
@@ -283,7 +288,7 @@ public class GuiWDLEntities extends Screen {
 		});
 		presetsButton = this.addButton(new ButtonDisplayGui(this.width / 2 + 5, 18, 150, 20,
 				I18n.format("wdl.gui.entities.rangePresets"),
-				() -> new GuiWDLEntityRangePresets(this, config)));
+				() -> new GuiWDLEntityRangePresets(this, wdl, config)));
 
 		this.presetsButton.enabled = this.canEditRanges();
 
@@ -292,7 +297,7 @@ public class GuiWDLEntities extends Screen {
 
 	@Override
 	public void onGuiClosed() {
-		WDL.saveProps();
+		wdl.saveProps();
 	}
 
 	@Override

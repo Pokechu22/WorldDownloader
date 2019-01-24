@@ -17,6 +17,8 @@ package wdl.gui;
 import java.util.Set;
 import java.util.function.Supplier;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiYesNo;
@@ -34,7 +36,9 @@ import wdl.gui.widget.Screen;
  * Provides fast setting for various entity options.
  */
 public class GuiWDLEntityRangePresets extends Screen implements GuiYesNoCallback {
+	@Nullable
 	private final GuiScreen parent;
+	private final WDL wdl;
 	private final IConfiguration config;
 
 	private GuiButton vanillaButton;
@@ -44,8 +48,9 @@ public class GuiWDLEntityRangePresets extends Screen implements GuiYesNoCallback
 
 	private static final int ID_VANILLA = 0, ID_SPIGOT = 1, ID_SERVER = 2;
 
-	public GuiWDLEntityRangePresets(GuiScreen parent, IConfiguration config) {
+	public GuiWDLEntityRangePresets(@Nullable GuiScreen parent, WDL wdl, IConfiguration config) {
 		this.parent = parent;
+		this.wdl = wdl;
 		this.config = config;
 	}
 
@@ -147,6 +152,6 @@ public class GuiWDLEntityRangePresets extends Screen implements GuiYesNoCallback
 
 	@Override
 	public void onGuiClosed() {
-		WDL.saveProps();
+		wdl.saveProps();
 	}
 }

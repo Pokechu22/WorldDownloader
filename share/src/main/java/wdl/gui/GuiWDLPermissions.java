@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017-2018 Pokechu22, julialy
+ * Copyright (c) 2017-2019 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -13,6 +13,8 @@
  * Do not redistribute (in modified or unmodified form) without prior permission.
  */
 package wdl.gui;
+
+import javax.annotation.Nullable;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
@@ -39,10 +41,9 @@ public class GuiWDLPermissions extends Screen {
 	 */
 	private int refreshTicks = -1;
 
-	/**
-	 * Recalculates the {@link #globalEntries} list.
-	 */
+	@Nullable
 	private final GuiScreen parent;
+	private final WDL wdl;
 
 	private TextList list;
 
@@ -51,8 +52,9 @@ public class GuiWDLPermissions extends Screen {
 	 *
 	 * @param parent
 	 */
-	public GuiWDLPermissions(GuiScreen parent) {
+	public GuiWDLPermissions(@Nullable GuiScreen parent, WDL wdl) {
 		this.parent = parent;
+		this.wdl = wdl;
 	}
 
 	@Override
@@ -68,9 +70,9 @@ public class GuiWDLPermissions extends Screen {
 		});
 		if (WDLPluginChannels.canRequestPermissions()) {
 			this.addButton(new ButtonDisplayGui(this.width / 2 - 50, 39, 100, 20,
-					I18n.format("wdl.gui.permissions.request"), () -> new GuiWDLPermissionRequest(this.parent)));
+					I18n.format("wdl.gui.permissions.request"), () -> new GuiWDLPermissionRequest(this.parent, this.wdl)));
 			this.addButton(new ButtonDisplayGui(this.width / 2 + 55, 39, 100, 20,
-					I18n.format("wdl.gui.permissions.overrides"), () -> new GuiWDLChunkOverrides(this.parent)));
+					I18n.format("wdl.gui.permissions.overrides"), () -> new GuiWDLChunkOverrides(this.parent, this.wdl)));
 		}
 
 		this.addButton(new Button((this.width / 2) + 5, 18, 150, 20,
@@ -142,7 +144,7 @@ public class GuiWDLPermissions extends Screen {
 
 	@Override
 	public void onGuiClosed() {
-		WDL.saveProps();
+		wdl.saveProps();
 	}
 
 	@Override

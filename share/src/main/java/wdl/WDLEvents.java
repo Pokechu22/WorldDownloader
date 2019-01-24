@@ -394,12 +394,12 @@ public class WDLEvents {
 				// We don't want those brackets.
 				seed = seed.substring(1, seed.length() - 1);
 			}
-			WDL.worldProps.setValue(GeneratorSettings.SEED, seed);
+			wdl.worldProps.setValue(GeneratorSettings.SEED, seed);
 
-			if (WDL.worldProps.getValue(GeneratorSettings.GENERATOR) ==
+			if (wdl.worldProps.getValue(GeneratorSettings.GENERATOR) ==
 					GeneratorSettings.Generator.VOID) {
 
-				WDL.worldProps.setValue(GeneratorSettings.GENERATOR,
+				wdl.worldProps.setValue(GeneratorSettings.GENERATOR,
 						GeneratorSettings.Generator.DEFAULT);
 
 				WDLMessages.chatMessageTranslated(WDL.serverProps,

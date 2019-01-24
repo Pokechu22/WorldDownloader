@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017-2018 Pokechu22, julialy
+ * Copyright (c) 2017-2019 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -15,7 +15,9 @@
 package wdl.gui;
 
 import java.util.List;
-import java.util.function.Function;
+import java.util.function.BiFunction;
+
+import javax.annotation.Nullable;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
@@ -56,15 +58,15 @@ public class GuiWDL extends Screen {
 			 * @param openFunc
 			 *            Supplier that constructs a GuiScreen to open based off
 			 *            of this screen (the one to open when that screen is
-			 *            closed)
+			 *            closed) and the WDL instance
 			 * @param needsPerms
 			 *            Whether the player needs download permission to use
 			 *            this button.
 			 */
-			public ButtonEntry(String key, Function<GuiScreen, GuiScreen> openFunc, boolean needsPerms) {
+			public ButtonEntry(String key, BiFunction<GuiScreen, WDL, GuiScreen> openFunc, boolean needsPerms) {
 				this.button = this.addButton(new ButtonDisplayGui(0, 0, 200, 20,
 						I18n.format("wdl.gui.wdl." + key + ".name"),
-						() -> openFunc.apply(GuiWDL.this)), -100, 0);
+						() -> openFunc.apply(GuiWDL.this, GuiWDL.this.wdl)), -100, 0);
 				if (needsPerms) {
 					button.enabled = WDLPluginChannels.canDownloadAtAll();
 				}
@@ -104,13 +106,16 @@ public class GuiWDL extends Screen {
 
 	private String title = "";
 
+	@Nullable
 	private final GuiScreen parent;
+	private final WDL wdl;
 	private final IConfiguration config;
 
 	private GuiTextField worldname;
 
-	public GuiWDL(GuiScreen parent) {
+	public GuiWDL(@Nullable GuiScreen parent, WDL wdl) {
 		this.parent = parent;
+		this.wdl = wdl;
 		this.config = WDL.serverProps;
 	}
 
@@ -129,8 +134,8 @@ public class GuiWDL extends Screen {
 					WDL.isMultiworld = true;
 					WDL.propsFound = true;
 
-					WDL.worldProps = WDL.loadWorldProps(selectedWorld);
-					WDL.gameRules = WDL.loadGameRules(selectedWorld);
+					wdl.worldProps = wdl.loadWorldProps(selectedWorld);
+					wdl.gameRules = wdl.loadGameRules(selectedWorld);
 					mc.displayGuiScreen(GuiWDL.this);
 				}
 
@@ -160,8 +165,8 @@ public class GuiWDL extends Screen {
 								WDL.isMultiworld = true;
 								WDL.propsFound = true;
 
-								WDL.worldProps = WDL.loadWorldProps(selectedWorld);
-								WDL.gameRules = WDL.loadGameRules(selectedWorld);
+								wdl.worldProps = wdl.loadWorldProps(selectedWorld);
+								wdl.gameRules = wdl.loadGameRules(selectedWorld);
 								mc.displayGuiScreen(GuiWDL.this);
 							}
 
@@ -172,7 +177,7 @@ public class GuiWDL extends Screen {
 						}));
 					} else {
 						WDL.serverProps.setValue(MiscSettings.LINKED_WORLDS, "");
-						WDL.saveProps();
+						wdl.saveProps();
 						WDL.propsFound = true;
 
 						mc.displayGuiScreen(GuiWDL.this);

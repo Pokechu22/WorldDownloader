@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017-2018 Pokechu22, julialy
+ * Copyright (c) 2017-2019 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -113,11 +113,14 @@ public class GuiWDLMessages extends Screen {
 
 	}
 
+	@Nullable
 	private final GuiScreen parent;
+	private final WDL wdl;
 	private final IConfiguration config;
 
-	public GuiWDLMessages(GuiScreen parent) {
+	public GuiWDLMessages(@Nullable GuiScreen parent, WDL wdl) {
 		this.parent = parent;
+		this.wdl = wdl;
 		this.config = WDL.serverProps;
 	}
 
@@ -166,7 +169,7 @@ public class GuiWDLMessages extends Screen {
 
 	@Override
 	public void onGuiClosed() {
-		WDL.saveProps();
+		wdl.saveProps();
 	}
 
 	@Override

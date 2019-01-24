@@ -14,6 +14,8 @@
  */
 package wdl.gui;
 
+import javax.annotation.Nullable;
+
 import com.google.common.collect.Multimap;
 
 import net.minecraft.client.audio.SimpleSound;
@@ -67,7 +69,9 @@ public class GuiWDLChunkOverrides extends Screen {
 	/**
 	 * Parent GUI screen; displayed when this GUI is closed.
 	 */
+	@Nullable
 	private final GuiScreen parent;
+	private final WDL wdl;
 
 	private GuiButton startDownloadButton;
 
@@ -99,12 +103,13 @@ public class GuiWDLChunkOverrides extends Screen {
 	 */
 	private int lastTickX, lastTickY;
 
-	public GuiWDLChunkOverrides(GuiScreen parent) {
+	public GuiWDLChunkOverrides(@Nullable GuiScreen parent, WDL wdl) {
 		this.parent = parent;
+		this.wdl = wdl;
 
-		if (WDL.INSTANCE.player != null) {
-			this.scrollX = WDL.INSTANCE.player.chunkCoordX;
-			this.scrollZ = WDL.INSTANCE.player.chunkCoordZ;
+		if (wdl.player != null) {
+			this.scrollX = wdl.player.chunkCoordX;
+			this.scrollZ = wdl.player.chunkCoordZ;
 		}
 	}
 
@@ -144,7 +149,7 @@ public class GuiWDLChunkOverrides extends Screen {
 					this.enabled = false;
 					return;
 				}
-				WDL.INSTANCE.startDownload();
+				wdl.startDownload();
 			}
 		});
 		startDownloadButton.enabled = WDLPluginChannels.canDownloadAtAll();
@@ -153,9 +158,9 @@ public class GuiWDLChunkOverrides extends Screen {
 				200, 20, this.parent));
 
 		this.addButton(new ButtonDisplayGui(this.width / 2 - 155, 39, 100, 20,
-				I18n.format("wdl.gui.permissions.current"), () -> new GuiWDLPermissions(this.parent)));
+				I18n.format("wdl.gui.permissions.current"), () -> new GuiWDLPermissions(this.parent, this.wdl)));
 		this.addButton(new ButtonDisplayGui(this.width / 2 - 50, 39, 100, 20,
-				I18n.format("wdl.gui.permissions.request"), () -> new GuiWDLPermissionRequest(this.parent)));
+				I18n.format("wdl.gui.permissions.request"), () -> new GuiWDLPermissionRequest(this.parent, this.wdl)));
 		this.addButton(new Button(this.width / 2 + 55, 39, 100, 20,
 				I18n.format("wdl.gui.permissions.overrides")) {
 			public @Override void performAction() {
@@ -252,8 +257,8 @@ public class GuiWDLChunkOverrides extends Screen {
 		}
 
 		// Player position.
-		int playerPosX = (int)(((WDL.INSTANCE.player.posX / 16.0D) - scrollX) * SCALE + (width / 2));
-		int playerPosZ = (int)(((WDL.INSTANCE.player.posZ / 16.0D) - scrollZ) * SCALE + (height / 2));
+		int playerPosX = (int)(((wdl.player.posX / 16.0D) - scrollX) * SCALE + (width / 2));
+		int playerPosZ = (int)(((wdl.player.posZ / 16.0D) - scrollZ) * SCALE + (height / 2));
 
 		drawHorizontalLine(playerPosX - 3, playerPosX + 3, playerPosZ, 0xFFFFFFFF);
 		// Vertical is 1px taller because it seems to be needed to make it proportional

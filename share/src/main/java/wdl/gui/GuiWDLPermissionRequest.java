@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017-2018 Pokechu22, julialy
+ * Copyright (c) 2017-2019 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -16,10 +16,13 @@ package wdl.gui;
 
 import java.util.Map;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
+import wdl.WDL;
 import wdl.WDLPluginChannels;
 import wdl.gui.widget.Button;
 import wdl.gui.widget.ButtonDisplayGui;
@@ -36,7 +39,9 @@ public class GuiWDLPermissionRequest extends Screen {
 	/**
 	 * Parent GUI screen; displayed when this GUI is closed.
 	 */
+	@Nullable
 	private final GuiScreen parent;
+	private final WDL wdl;
 	/**
 	 * Field in which the wanted request is entered.
 	 */
@@ -46,8 +51,9 @@ public class GuiWDLPermissionRequest extends Screen {
 	 */
 	private GuiButton submitButton;
 
-	public GuiWDLPermissionRequest(GuiScreen parent) {
+	public GuiWDLPermissionRequest(@Nullable GuiScreen parent, WDL wdl) {
 		this.parent = parent;
+		this.wdl = wdl;
 	}
 
 	@Override
@@ -87,7 +93,7 @@ public class GuiWDLPermissionRequest extends Screen {
 				200, 20, this.parent));
 
 		this.addButton(new ButtonDisplayGui(this.width / 2 - 155, 39, 100, 20,
-				I18n.format("wdl.gui.permissions.current"), () -> new GuiWDLPermissions(this.parent)));
+				I18n.format("wdl.gui.permissions.current"), () -> new GuiWDLPermissions(this.parent, this.wdl)));
 		this.addButton(new Button(this.width / 2 - 50, 39, 100, 20,
 				I18n.format("wdl.gui.permissions.request")) {
 			public @Override void performAction() {
@@ -95,7 +101,7 @@ public class GuiWDLPermissionRequest extends Screen {
 			}
 		});
 		this.addButton(new ButtonDisplayGui(this.width / 2 + 55, 39, 100, 20,
-				I18n.format("wdl.gui.permissions.overrides"), () -> new GuiWDLChunkOverrides(this.parent)));
+				I18n.format("wdl.gui.permissions.overrides"), () -> new GuiWDLChunkOverrides(this.parent, this.wdl)));
 	}
 
 	@Override

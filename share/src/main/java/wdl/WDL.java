@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017-2018 Pokechu22, julialy
+ * Copyright (c) 2017-2019 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -234,7 +234,7 @@ public class WDL {
 	 * Properties for a single world on a multiworld server, or all worlds
 	 * on a single world server.
 	 */
-	public static IConfiguration worldProps;
+	public IConfiguration worldProps;
 	/**
 	 * Default properties used for creating baseProps.  Saved and loaded;
 	 * shared between all servers.
@@ -247,7 +247,7 @@ public class WDL {
 	/**
 	 * Gamerules associated with the current world.  Loaded at the same time as worldProps.
 	 */
-	public static GameRules gameRules;
+	public GameRules gameRules;
 
 	private static final Logger LOGGER = LogManager.getLogger();
 
@@ -266,8 +266,8 @@ public class WDL {
 			LOGGER.debug("Failed to load global properties", e);
 		}
 		serverProps = new Configuration(globalProps);
-		worldProps = serverProps;
-		gameRules = new GameRules();
+		INSTANCE.worldProps = serverProps;
+		INSTANCE.gameRules = new GameRules();
 	}
 
 	/**
@@ -967,7 +967,7 @@ public class WDL {
 	 *
 	 * Returns baseProps if there is no multiworld (i.e. the world name is empty).
 	 */
-	public static IConfiguration loadWorldProps(String worldName) {
+	public IConfiguration loadWorldProps(String worldName) {
 		if (worldName.isEmpty()) {
 			return serverProps;
 		}
@@ -996,7 +996,7 @@ public class WDL {
 	 * @return The rules for that world, or a new default rules instance if the
 	 *         rules couldn't be found (e.g. a new world)
 	 */
-	public static GameRules loadGameRules(String worldName) {
+	public GameRules loadGameRules(String worldName) {
 		File savesDir = new File(minecraft.gameDir, "saves");
 
 		String folder = getWorldFolderName(worldName);
@@ -1027,7 +1027,7 @@ public class WDL {
 	 * Saves the currently used base and world properties in their corresponding
 	 * folders.
 	 */
-	public static void saveProps() {
+	public void saveProps() {
 		saveProps(worldName, worldProps);
 	}
 
@@ -1035,7 +1035,7 @@ public class WDL {
 	 * Saves the specified world properties, and the server properties, in their
 	 * corresponding folders.
 	 */
-	public static void saveProps(String worldName, IConfiguration worldProps) {
+	public void saveProps(String worldName, IConfiguration worldProps) {
 		File savesDir = new File(minecraft.gameDir, "saves");
 
 		if (worldName.length() > 0) {

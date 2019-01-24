@@ -158,7 +158,7 @@ public class EntityUtils {
 			return serverDistance;
 		} 
 		case USER: {
-			int value = WDL.worldProps.getUserEntityTrackDistance(type);
+			int value = WDL.INSTANCE.worldProps.getUserEntityTrackDistance(type);
 
 			if (value < 0) {
 				return getEntityTrackDistance(TrackDistanceMode.SERVER, type, entity);
@@ -213,8 +213,8 @@ public class EntityUtils {
 	 * @return
 	 */
 	public static boolean isEntityEnabled(@Nonnull String type) {
-		boolean groupEnabled = WDL.worldProps.isEntityGroupEnabled(getEntityGroup(type));
-		boolean singleEnabled = WDL.worldProps.isEntityTypeEnabled(type);
+		boolean groupEnabled = WDL.INSTANCE.worldProps.isEntityGroupEnabled(getEntityGroup(type));
+		boolean singleEnabled = WDL.INSTANCE.worldProps.isEntityTypeEnabled(type);
 
 		return groupEnabled && singleEnabled;
 	}
@@ -250,7 +250,7 @@ public class EntityUtils {
 	 * Gets the currently selected track distance mode from {@link WDL#worldProps}.
 	 */
 	public static TrackDistanceMode getTrackDistanceMode() {
-		return WDL.worldProps.getValue(EntitySettings.TRACK_DISTANCE_MODE);
+		return WDL.INSTANCE.worldProps.getValue(EntitySettings.TRACK_DISTANCE_MODE);
 	}
 
 	/**

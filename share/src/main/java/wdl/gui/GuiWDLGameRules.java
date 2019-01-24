@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017-2018 Pokechu22, julialy
+ * Copyright (c) 2017-2019 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -200,9 +200,10 @@ public class GuiWDLGameRules extends Screen {
 	private String title;
 	@Nullable
 	private final GuiScreen parent;
+	private final WDL wdl;
 
 	/** The gamerules object to modify */
-	private GameRules rules;
+	private final GameRules rules;
 	/** All vanilla game rules and their default values; this list is immutable. */
 	private final Map<String, String> vanillaGameRules;
 
@@ -255,12 +256,13 @@ public class GuiWDLGameRules extends Screen {
 		return !vanillaGameRules.get(ruleName).equals(getRule(ruleName));
 	}
 
-	public GuiWDLGameRules(@Nullable GuiScreen parent) {
+	public GuiWDLGameRules(@Nullable GuiScreen parent, WDL wdl) {
 		this.parent = parent;
-		this.rules = WDL.gameRules;
+		this.wdl = wdl;
+		this.rules = wdl.gameRules;
 		// We're not currently modifying the rules on worldClient itself, so they can be considered
 		// to be the defaults... probably.
-		GameRules defaultRules = WDL.INSTANCE.worldClient.getGameRules();
+		GameRules defaultRules = this.wdl.worldClient.getGameRules();
 		this.vanillaGameRules = VersionedFunctions.getGameRules(defaultRules);
 	}
 

@@ -559,7 +559,7 @@ public class WDLHooks {
 					// If they don't have any permissions, let the player
 					// request some.
 					if (WDLPluginChannels.canRequestPermissions()) {
-						WDL.minecraft.displayGuiScreen(new GuiWDLPermissions(menu));
+						WDL.minecraft.displayGuiScreen(new GuiWDLPermissions(menu, wdl));
 					} else {
 						// Should never happen
 					}
@@ -567,7 +567,7 @@ public class WDLHooks {
 						&& !WDLPluginChannels.canDownloadInGeneral()) {
 					// Handle the "only has chunk overrides" state - notify
 					// the player of limited areas.
-					WDL.minecraft.displayGuiScreen(new GuiWDLChunkOverrides(menu));
+					WDL.minecraft.displayGuiScreen(new GuiWDLChunkOverrides(menu, wdl));
 				} else {
 					wdl.startDownload();
 					enabled = false; // Disable to stop double-clicks
@@ -589,9 +589,9 @@ public class WDLHooks {
 		@Override
 		public void performAction() {
 			if (WDL.minecraft.isIntegratedServerRunning()) {
-				WDL.minecraft.displayGuiScreen(new GuiWDLAbout(menu));
+				WDL.minecraft.displayGuiScreen(new GuiWDLAbout(menu, wdl));
 			} else {
-				WDL.minecraft.displayGuiScreen(new GuiWDL(menu));
+				WDL.minecraft.displayGuiScreen(new GuiWDL(menu, wdl));
 			}
 		}
 	}

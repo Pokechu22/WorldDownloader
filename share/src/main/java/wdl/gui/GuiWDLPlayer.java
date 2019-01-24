@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017-2018 Pokechu22, julialy
+ * Copyright (c) 2017-2019 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -13,6 +13,8 @@
  * Do not redistribute (in modified or unmodified form) without prior permission.
  */
 package wdl.gui;
+
+import javax.annotation.Nullable;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -28,7 +30,9 @@ import wdl.gui.widget.SettingButton;
 
 public class GuiWDLPlayer extends Screen {
 	private String title;
+	@Nullable
 	private final GuiScreen parent;
+	private final WDL wdl;
 	private final IConfiguration config;
 	private SettingButton healthBtn;
 	private SettingButton hungerBtn;
@@ -40,9 +44,10 @@ public class GuiWDLPlayer extends Screen {
 	private GuiNumericTextField posZ;
 	private int posTextY;
 
-	public GuiWDLPlayer(GuiScreen parent) {
+	public GuiWDLPlayer(@Nullable GuiScreen parent, WDL wdl) {
 		this.parent = parent;
-		this.config = WDL.worldProps;
+		this.wdl = wdl;
+		this.config = wdl.worldProps;
 	}
 
 	/**
@@ -102,7 +107,7 @@ public class GuiWDLPlayer extends Screen {
 			this.config.setValue(PlayerSettings.PLAYER_Z, posZ.getValue());
 		}
 
-		WDL.saveProps();
+		wdl.saveProps();
 	}
 
 	/**
@@ -166,8 +171,8 @@ public class GuiWDLPlayer extends Screen {
 	}
 
 	private void setPlayerPosToPlayerPosition() {
-		this.posX.setValue((int)WDL.INSTANCE.player.posX);
-		this.posY.setValue((int)WDL.INSTANCE.player.posY);
-		this.posZ.setValue((int)WDL.INSTANCE.player.posZ);
+		this.posX.setValue((int)wdl.player.posX);
+		this.posY.setValue((int)wdl.player.posY);
+		this.posZ.setValue((int)wdl.player.posZ);
 	}
 }

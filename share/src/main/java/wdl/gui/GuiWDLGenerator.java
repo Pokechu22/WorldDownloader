@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017-2018 Pokechu22, julialy
+ * Copyright (c) 2017-2019 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -13,6 +13,8 @@
  * Do not redistribute (in modified or unmodified form) without prior permission.
  */
 package wdl.gui;
+
+import javax.annotation.Nullable;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -28,7 +30,9 @@ import wdl.versioned.VersionedFunctions;
 
 public class GuiWDLGenerator extends Screen {
 	private String title;
+	@Nullable
 	private final GuiScreen parent;
+	private final WDL wdl;
 	private final IConfiguration config;
 	private GuiTextField seedField;
 	private SettingButton generatorBtn;
@@ -37,9 +41,10 @@ public class GuiWDLGenerator extends Screen {
 
 	private String seedText;
 
-	public GuiWDLGenerator(GuiScreen parent) {
+	public GuiWDLGenerator(@Nullable GuiScreen parent, WDL wdl) {
 		this.parent = parent;
-		this.config = WDL.worldProps;
+		this.wdl = wdl;
+		this.config = wdl.worldProps;
 	}
 
 	/**
@@ -94,7 +99,7 @@ public class GuiWDLGenerator extends Screen {
 	public void onGuiClosed() {
 		config.setValue(GeneratorSettings.SEED, this.seedField.getText());
 
-		WDL.saveProps();
+		wdl.saveProps();
 	}
 
 	/**

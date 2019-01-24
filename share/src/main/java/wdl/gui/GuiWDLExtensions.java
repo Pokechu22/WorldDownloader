@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017-2018 Pokechu22, julialy
+ * Copyright (c) 2017-2019 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -227,13 +227,14 @@ public class GuiWDLExtensions extends Screen {
 	/**
 	 * Gui to display after this is closed.
 	 */
+	@Nullable
 	private final GuiScreen parent;
 	/**
 	 * Details on the selected mod.
 	 */
 	private ModDetailList detailsList;
 
-	public GuiWDLExtensions(GuiScreen parent) {
+	public GuiWDLExtensions(@Nullable GuiScreen parent) {
 		this.parent = parent;
 	}
 
