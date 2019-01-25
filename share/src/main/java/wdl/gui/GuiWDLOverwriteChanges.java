@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017-2018 Pokechu22, julialy
+ * Copyright (c) 2017-2019 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -52,7 +52,7 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements IBac
 							.format("wdl.gui.overwriteChanges.backingUp.folder", name);
 				}
 
-				WorldBackup.backupWorld(WDL.INSTANCE.saveHandler.getWorldDirectory(),
+				WorldBackup.backupWorld(wdl.saveHandler.getWorldDirectory(),
 						WDL.getWorldFolderName(WDL.worldName) + "_user", type,
 						GuiWDLOverwriteChanges.this);
 			} catch (IOException ex) {
@@ -66,16 +66,20 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements IBac
 					WDL.overrideLastModifiedCheck = true;
 					mc.displayGuiScreen(null);
 
-					WDL.INSTANCE.startDownload();
+					wdl.startDownload();
 				});
 			}
 		}
 	}
 
-	public GuiWDLOverwriteChanges(long lastSaved, long lastPlayed) {
+	public GuiWDLOverwriteChanges(WDL wdl, long lastSaved, long lastPlayed) {
+		super(wdl);
+		this.wdl = wdl;
 		this.lastSaved = lastSaved;
 		this.lastPlayed = lastPlayed;
 	}
+
+	private final WDL wdl;
 
 	/**
 	 * Whether a backup is actively occuring.
@@ -176,7 +180,7 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements IBac
 			public @Override void performAction() {
 				WDL.overrideLastModifiedCheck = true;
 				mc.displayGuiScreen(null);
-				WDL.INSTANCE.startDownload();
+				wdl.startDownload();
 			}
 		});
 		y += 22;

@@ -282,8 +282,8 @@ public class WDL {
 
 		if (isMultiworld && worldName.isEmpty()) {
 			// Ask the user which world is loaded
-			minecraft.displayGuiScreen(new GuiWDLMultiworldSelect(I18n
-					.format("wdl.gui.multiworldSelect.title.startDownload"),
+			minecraft.displayGuiScreen(new GuiWDLMultiworldSelect(this,
+					I18n.format("wdl.gui.multiworldSelect.title.startDownload"),
 					new GuiWDLMultiworldSelect.WorldSelectionCallback() {
 				@Override
 				public void onWorldSelected(String selectedWorld) {
@@ -314,8 +314,8 @@ public class WDL {
 					if (isMultiworld) {
 						// Ask the user which world is loaded
 						// TODO: Copy-pasted code from above -- suboptimal.
-						minecraft.displayGuiScreen(new GuiWDLMultiworldSelect(I18n
-								.format("wdl.gui.multiworldSelect.title.startDownload"),
+						minecraft.displayGuiScreen(new GuiWDLMultiworldSelect(WDL.this,
+								I18n.format("wdl.gui.multiworldSelect.title.startDownload"),
 								new GuiWDLMultiworldSelect.WorldSelectionCallback() {
 							@Override
 							public void onWorldSelected(String selectedWorld) {
@@ -376,7 +376,7 @@ public class WDL {
 		if (!overrideLastModifiedCheck && lastPlayed > lastSaved) {
 			// The world was played later than it was saved; confirm that the
 			// user is willing for possible changes they made to be overwritten.
-			minecraft.displayGuiScreen(new GuiWDLOverwriteChanges(
+			minecraft.displayGuiScreen(new GuiWDLOverwriteChanges(this,
 					lastSaved, lastPlayed));
 			return;
 		}
@@ -568,7 +568,7 @@ public class WDL {
 
 		WorldBackupType backupType = serverProps.getValue(MiscSettings.BACKUP_TYPE);
 
-		final GuiWDLSaveProgress progressScreen = new GuiWDLSaveProgress(
+		final GuiWDLSaveProgress progressScreen = new GuiWDLSaveProgress(this,
 				I18n.format("wdl.saveProgress.title"),
 				(backupType != WorldBackupType.NONE ? 6 : 5)
 				+ WDLApi.getImplementingExtensions(ISaveListener.class).size());

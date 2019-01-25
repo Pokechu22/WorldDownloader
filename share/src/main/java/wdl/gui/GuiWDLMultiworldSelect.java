@@ -168,6 +168,8 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		public abstract void onWorldSelected(String selectedWorld);
 	}
 
+	private final WDL wdl;
+
 	/**
 	 * The callback for when the done button is clicked.
 	 */
@@ -229,7 +231,10 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	 */
 	private String searchText = "";
 
-	public GuiWDLMultiworldSelect(String title, WorldSelectionCallback callback) {
+	public GuiWDLMultiworldSelect(WDL wdl, String title, WorldSelectionCallback callback) {
+		super(wdl);
+
+		this.wdl = wdl;
 		this.title = title;
 		this.callback = callback;
 
@@ -243,7 +248,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 				continue;
 			}
 
-			IConfiguration props = WDL.INSTANCE.loadWorldProps(worldName);
+			IConfiguration props = wdl.loadWorldProps(worldName);
 
 			String displayName = props.getValue(MiscSettings.WORLD_NAME);
 			if (displayName.isEmpty()) {
@@ -413,7 +418,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		linkedWorldsProp += "|" + folderName;
 
 		WDL.serverProps.setValue(MiscSettings.LINKED_WORLDS, linkedWorldsProp);
-		WDL.INSTANCE.saveProps(folderName, worldProps);
+		wdl.saveProps(folderName, worldProps);
 
 		linkedWorlds.add(new MultiworldInfo(folderName, worldName));
 

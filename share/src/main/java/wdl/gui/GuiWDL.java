@@ -125,8 +125,8 @@ public class GuiWDL extends Screen {
 	@Override
 	public void initGui() {
 		if (WDL.isMultiworld && WDL.worldName.isEmpty()) {
-			this.mc.displayGuiScreen(new GuiWDLMultiworldSelect(I18n
-					.format("wdl.gui.multiworldSelect.title.changeOptions"),
+			this.mc.displayGuiScreen(new GuiWDLMultiworldSelect(wdl,
+					I18n.format("wdl.gui.multiworldSelect.title.changeOptions"),
 					new GuiWDLMultiworldSelect.WorldSelectionCallback() {
 				@Override
 				public void onWorldSelected(String selectedWorld) {
@@ -156,8 +156,8 @@ public class GuiWDL extends Screen {
 					if (WDL.isMultiworld) {
 						// Ask the user which world is loaded
 						// TODO: Copy-pasted code from above -- suboptimal.
-						mc.displayGuiScreen(new GuiWDLMultiworldSelect(I18n
-								.format("wdl.gui.multiworldSelect.title.changeOptions"),
+						mc.displayGuiScreen(new GuiWDLMultiworldSelect(wdl,
+								I18n.format("wdl.gui.multiworldSelect.title.changeOptions"),
 								new GuiWDLMultiworldSelect.WorldSelectionCallback() {
 							@Override
 							public void onWorldSelected(String selectedWorld) {

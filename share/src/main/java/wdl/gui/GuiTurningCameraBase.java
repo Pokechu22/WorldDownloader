@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017-2018 Pokechu22, julialy
+ * Copyright (c) 2017-2019 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -32,6 +32,8 @@ import wdl.versioned.VersionedFunctions;
  * entire world.
  */
 public abstract class GuiTurningCameraBase extends Screen {
+	private final WDL wdl;
+
 	/**
 	 * Current yaw.
 	 */
@@ -66,6 +68,10 @@ public abstract class GuiTurningCameraBase extends Screen {
 	 */
 	private boolean initializedCamera = false;
 
+	protected GuiTurningCameraBase(WDL wdl) {
+		this.wdl = wdl;
+	}
+
 	/**
 	 * Adds the buttons (and other controls) to the screen in question.
 	 */
@@ -73,10 +79,10 @@ public abstract class GuiTurningCameraBase extends Screen {
 	@OverridingMethodsMustInvokeSuper
 	public void initGui() {
 		if (!initializedCamera) {
-			this.cam = VersionedFunctions.makePlayer(WDL.minecraft, WDL.INSTANCE.worldClient, WDL.INSTANCE.player.connection, WDL.INSTANCE.player);
-			this.cam.setLocationAndAngles(WDL.INSTANCE.player.posX, WDL.INSTANCE.player.posY,
-					WDL.INSTANCE.player.posZ, WDL.INSTANCE.player.rotationYaw, 0.0F);
-			this.yaw = WDL.INSTANCE.player.rotationYaw;
+			this.cam = VersionedFunctions.makePlayer(WDL.minecraft, wdl.worldClient, wdl.player.connection, wdl.player);
+			this.cam.setLocationAndAngles(wdl.player.posX, wdl.player.posY,
+					wdl.player.posZ, wdl.player.rotationYaw, 0.0F);
+			this.yaw = wdl.player.rotationYaw;
 			this.oldCameraMode = WDL.minecraft.gameSettings.thirdPersonView;
 			this.oldHideHud = WDL.minecraft.gameSettings.hideGUI;
 			this.oldShowDebug = WDL.minecraft.gameSettings.showDebugInfo;
@@ -131,9 +137,9 @@ public abstract class GuiTurningCameraBase extends Screen {
 			double z = Math.sin((yaw - 90) / 180.0D * Math.PI);
 
 			double distance = truncateDistanceIfBlockInWay(x, z, .5);
-			this.cam.posY = WDL.INSTANCE.player.posY;
-			this.cam.posX = WDL.INSTANCE.player.posX - distance * x;
-			this.cam.posZ = WDL.INSTANCE.player.posZ + distance * z;
+			this.cam.posY = wdl.player.posY;
+			this.cam.posX = wdl.player.posX - distance * x;
+			this.cam.posZ = wdl.player.posZ + distance * z;
 
 			this.cam.chunkCoordX = MathHelper.floor(this.cam.posX / 16.0D);
 			this.cam.chunkCoordY = MathHelper.floor(this.cam.posY / 16.0D);
@@ -154,8 +160,8 @@ public abstract class GuiTurningCameraBase extends Screen {
 	 * @return A new distance, equal to or less than <code>currentDistance</code>.
 	 */
 	private double truncateDistanceIfBlockInWay(double camX, double camZ, double currentDistance) {
-		Vec3d playerPos = WDL.INSTANCE.player.getPositionVector().add(0, WDL.INSTANCE.player.getEyeHeight(), 0);
-		Vec3d offsetPos = new Vec3d(WDL.INSTANCE.player.posX - currentDistance * camX, WDL.INSTANCE.player.posY + WDL.INSTANCE.player.getEyeHeight(), WDL.INSTANCE.player.posZ + camZ);
+		Vec3d playerPos = wdl.player.getPositionVector().add(0, wdl.player.getEyeHeight(), 0);
+		Vec3d offsetPos = new Vec3d(wdl.player.posX - currentDistance * camX, wdl.player.posY + wdl.player.getEyeHeight(), wdl.player.posZ + camZ);
 
 		// NOTE: Vec3.addVector and Vec3.add return new vectors and leave the
 		// current vector unmodified.
