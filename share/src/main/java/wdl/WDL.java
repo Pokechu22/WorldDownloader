@@ -385,7 +385,7 @@ public class WDL {
 
 		WDL.minecraft.displayGuiScreen(null);
 
-		chunkLoader = WDLChunkLoader.create(saveHandler, worldClient.dimension);
+		chunkLoader = WDLChunkLoader.create(this, saveHandler, worldClient.dimension);
 		newTileEntities.values().forEach((m) -> {
 			m.clear();
 		});
