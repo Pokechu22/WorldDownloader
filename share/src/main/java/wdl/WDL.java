@@ -280,6 +280,35 @@ public class WDL {
 			return;
 		}
 
+		if (!propsFound) {
+			// Never seen this server before. Ask user about multiworlds:
+			minecraft.displayGuiScreen(new GuiWDLMultiworld(new GuiWDLMultiworld.MultiworldCallback() {
+				@Override
+				public void onSelect(boolean enableMutliworld) {
+					isMultiworld = enableMutliworld;
+
+					if (isMultiworld) {
+						// Call this again, to hit the next check for which world.
+						startDownload();
+					} else {
+						serverProps.setValue(MiscSettings.LINKED_WORLDS, "");
+						saveProps();
+						propsFound = true;
+
+						minecraft.displayGuiScreen(null);
+						startDownload();
+					}
+				}
+
+				@Override
+				public void onCancel() {
+					minecraft.displayGuiScreen(null);
+					cancelDownload();
+				}
+			}));
+			return;
+		}
+
 		if (isMultiworld && worldName.isEmpty()) {
 			// Ask the user which world is loaded
 			minecraft.displayGuiScreen(new GuiWDLMultiworldSelect(this,
@@ -293,54 +322,6 @@ public class WDL {
 
 					minecraft.displayGuiScreen(null);
 					startDownload();
-				}
-
-				@Override
-				public void onCancel() {
-					minecraft.displayGuiScreen(null);
-					cancelDownload();
-				}
-			}));
-			return;
-		}
-
-		if (!propsFound) {
-			// Never seen this server before. Ask user about multiworlds:
-			minecraft.displayGuiScreen(new GuiWDLMultiworld(new GuiWDLMultiworld.MultiworldCallback() {
-				@Override
-				public void onSelect(boolean enableMutliworld) {
-					isMultiworld = enableMutliworld;
-
-					if (isMultiworld) {
-						// Ask the user which world is loaded
-						// TODO: Copy-pasted code from above -- suboptimal.
-						minecraft.displayGuiScreen(new GuiWDLMultiworldSelect(WDL.this,
-								I18n.format("wdl.gui.multiworldSelect.title.startDownload"),
-								new GuiWDLMultiworldSelect.WorldSelectionCallback() {
-							@Override
-							public void onWorldSelected(String selectedWorld) {
-								WDL.worldName = selectedWorld;
-								WDL.isMultiworld = true;
-								WDL.propsFound = true;
-
-								minecraft.displayGuiScreen(null);
-								startDownload();
-							}
-
-							@Override
-							public void onCancel() {
-								minecraft.displayGuiScreen(null);
-								cancelDownload();
-							}
-						}));
-					} else {
-						serverProps.setValue(MiscSettings.LINKED_WORLDS, "");
-						saveProps();
-						propsFound = true;
-
-						minecraft.displayGuiScreen(null);
-						startDownload();
-					}
 				}
 
 				@Override

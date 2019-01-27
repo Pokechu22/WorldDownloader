@@ -124,6 +124,32 @@ public class GuiWDL extends Screen {
 	 */
 	@Override
 	public void initGui() {
+		if (!WDL.propsFound) {
+			mc.displayGuiScreen(new GuiWDLMultiworld(new GuiWDLMultiworld.MultiworldCallback() {
+				@Override
+				public void onSelect(boolean enableMutliworld) {
+					WDL.isMultiworld = enableMutliworld;
+
+					if (WDL.isMultiworld) {
+						// Open it again, to get to the next prompt (ugly)
+						mc.displayGuiScreen(GuiWDL.this);
+					} else {
+						WDL.serverProps.setValue(MiscSettings.LINKED_WORLDS, "");
+						wdl.saveProps();
+						WDL.propsFound = true;
+
+						mc.displayGuiScreen(GuiWDL.this);
+					}
+				}
+
+				@Override
+				public void onCancel() {
+					mc.displayGuiScreen(null);
+				}
+			}));
+			return;
+		}
+
 		if (WDL.isMultiworld && WDL.worldName.isEmpty()) {
 			this.mc.displayGuiScreen(new GuiWDLMultiworldSelect(wdl,
 					I18n.format("wdl.gui.multiworldSelect.title.changeOptions"),
@@ -137,51 +163,6 @@ public class GuiWDL extends Screen {
 					wdl.worldProps = wdl.loadWorldProps(selectedWorld);
 					wdl.gameRules = wdl.loadGameRules(selectedWorld);
 					mc.displayGuiScreen(GuiWDL.this);
-				}
-
-				@Override
-				public void onCancel() {
-					mc.displayGuiScreen(null);
-				}
-			}));
-			return;
-		}
-
-		if (!WDL.propsFound) {
-			mc.displayGuiScreen(new GuiWDLMultiworld(new GuiWDLMultiworld.MultiworldCallback() {
-				@Override
-				public void onSelect(boolean enableMutliworld) {
-					WDL.isMultiworld = enableMutliworld;
-
-					if (WDL.isMultiworld) {
-						// Ask the user which world is loaded
-						// TODO: Copy-pasted code from above -- suboptimal.
-						mc.displayGuiScreen(new GuiWDLMultiworldSelect(wdl,
-								I18n.format("wdl.gui.multiworldSelect.title.changeOptions"),
-								new GuiWDLMultiworldSelect.WorldSelectionCallback() {
-							@Override
-							public void onWorldSelected(String selectedWorld) {
-								WDL.worldName = selectedWorld;
-								WDL.isMultiworld = true;
-								WDL.propsFound = true;
-
-								wdl.worldProps = wdl.loadWorldProps(selectedWorld);
-								wdl.gameRules = wdl.loadGameRules(selectedWorld);
-								mc.displayGuiScreen(GuiWDL.this);
-							}
-
-							@Override
-							public void onCancel() {
-								mc.displayGuiScreen(null);
-							}
-						}));
-					} else {
-						WDL.serverProps.setValue(MiscSettings.LINKED_WORLDS, "");
-						wdl.saveProps();
-						WDL.propsFound = true;
-
-						mc.displayGuiScreen(GuiWDL.this);
-					}
 				}
 
 				@Override
