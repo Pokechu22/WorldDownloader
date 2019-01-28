@@ -317,8 +317,6 @@ public class WDL {
 				@Override
 				public void onWorldSelected(String selectedWorld) {
 					WDL.worldName = selectedWorld;
-					WDL.isMultiworld = true;
-					WDL.propsFound = true;
 
 					minecraft.displayGuiScreen(null);
 					startDownload();

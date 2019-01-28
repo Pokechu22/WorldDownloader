@@ -157,8 +157,6 @@ public class GuiWDL extends Screen {
 				@Override
 				public void onWorldSelected(String selectedWorld) {
 					WDL.worldName = selectedWorld;
-					WDL.isMultiworld = true;
-					WDL.propsFound = true;
 
 					wdl.worldProps = wdl.loadWorldProps(selectedWorld);
 					wdl.gameRules = wdl.loadGameRules(selectedWorld);
