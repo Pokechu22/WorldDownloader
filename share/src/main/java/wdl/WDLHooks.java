@@ -591,6 +591,9 @@ public class WDLHooks {
 			if (WDL.minecraft.isIntegratedServerRunning()) {
 				WDL.minecraft.displayGuiScreen(new GuiWDLAbout(menu, wdl));
 			} else {
+				if (wdl.promptForInfoForSettings("changeOptions", this::performAction, () -> WDL.minecraft.displayGuiScreen(null))) {
+					return;
+				}
 				WDL.minecraft.displayGuiScreen(new GuiWDL(menu, wdl));
 			}
 		}

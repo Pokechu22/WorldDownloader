@@ -271,63 +271,72 @@ public class WDL {
 	}
 
 	/**
+	 * Prompts for specific input that is needed (world name and multiworld status).
+	 *
+	 * @param "startDownload" or "changeOptions"
+	 * @param callback Callback when information is entered.  Should call this method again.  Should also change GUIs.
+	 * @param cancel Callback when canceling.
+	 * @return true when the calling method should exit (this is prompting), false if it should continue
+	 */
+	public boolean promptForInfoForSettings(String context, Runnable callback, Runnable cancel) {
+		if (!propsFound) {
+			minecraft.displayGuiScreen(new GuiWDLMultiworld(new GuiWDLMultiworld.MultiworldCallback() {
+				@Override
+				public void onSelect(boolean enableMutliworld) {
+					isMultiworld = enableMutliworld;
+
+					if (!isMultiworld) {
+						serverProps.setValue(MiscSettings.LINKED_WORLDS, "");
+						saveProps();
+						propsFound = true;
+					}
+
+					callback.run();
+				}
+
+				@Override
+				public void onCancel() {
+					cancel.run();
+				}
+			}));
+			return true;
+		}
+
+		if (isMultiworld && worldName.isEmpty()) {
+			minecraft.displayGuiScreen(new GuiWDLMultiworldSelect(this,
+					I18n.format("wdl.gui.multiworldSelect.title." + context),
+					new GuiWDLMultiworldSelect.WorldSelectionCallback() {
+				@Override
+				public void onWorldSelected(String selectedWorld) {
+					worldName = selectedWorld;
+
+					worldProps = loadWorldProps(selectedWorld);
+					gameRules = loadGameRules(selectedWorld);
+					callback.run();
+				}
+
+				@Override
+				public void onCancel() {
+					cancel.run();
+				}
+			}));
+			return true;
+		}
+		return false;
+	}
+
+	/**
 	 * Starts the download.
 	 */
 	public void startDownload() {
+		minecraft.displayGuiScreen(null);
 		worldClient = minecraft.world;
 
 		if (!WDLPluginChannels.canDownloadAtAll()) {
 			return;
 		}
 
-		if (!propsFound) {
-			// Never seen this server before. Ask user about multiworlds:
-			minecraft.displayGuiScreen(new GuiWDLMultiworld(new GuiWDLMultiworld.MultiworldCallback() {
-				@Override
-				public void onSelect(boolean enableMutliworld) {
-					isMultiworld = enableMutliworld;
-
-					if (isMultiworld) {
-						// Call this again, to hit the next check for which world.
-						startDownload();
-					} else {
-						serverProps.setValue(MiscSettings.LINKED_WORLDS, "");
-						saveProps();
-						propsFound = true;
-
-						minecraft.displayGuiScreen(null);
-						startDownload();
-					}
-				}
-
-				@Override
-				public void onCancel() {
-					minecraft.displayGuiScreen(null);
-					cancelDownload();
-				}
-			}));
-			return;
-		}
-
-		if (isMultiworld && worldName.isEmpty()) {
-			// Ask the user which world is loaded
-			minecraft.displayGuiScreen(new GuiWDLMultiworldSelect(this,
-					I18n.format("wdl.gui.multiworldSelect.title.startDownload"),
-					new GuiWDLMultiworldSelect.WorldSelectionCallback() {
-				@Override
-				public void onWorldSelected(String selectedWorld) {
-					WDL.worldName = selectedWorld;
-
-					minecraft.displayGuiScreen(null);
-					startDownload();
-				}
-
-				@Override
-				public void onCancel() {
-					minecraft.displayGuiScreen(null);
-					cancelDownload();
-				}
-			}));
+		if (promptForInfoForSettings("startDownload", this::startDownload, () -> minecraft.displayGuiScreen(null))) {
 			return;
 		}
 

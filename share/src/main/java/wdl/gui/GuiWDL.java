@@ -124,53 +124,6 @@ public class GuiWDL extends Screen {
 	 */
 	@Override
 	public void initGui() {
-		if (!WDL.propsFound) {
-			mc.displayGuiScreen(new GuiWDLMultiworld(new GuiWDLMultiworld.MultiworldCallback() {
-				@Override
-				public void onSelect(boolean enableMutliworld) {
-					WDL.isMultiworld = enableMutliworld;
-
-					if (WDL.isMultiworld) {
-						// Open it again, to get to the next prompt (ugly)
-						mc.displayGuiScreen(GuiWDL.this);
-					} else {
-						WDL.serverProps.setValue(MiscSettings.LINKED_WORLDS, "");
-						wdl.saveProps();
-						WDL.propsFound = true;
-
-						mc.displayGuiScreen(GuiWDL.this);
-					}
-				}
-
-				@Override
-				public void onCancel() {
-					mc.displayGuiScreen(null);
-				}
-			}));
-			return;
-		}
-
-		if (WDL.isMultiworld && WDL.worldName.isEmpty()) {
-			this.mc.displayGuiScreen(new GuiWDLMultiworldSelect(wdl,
-					I18n.format("wdl.gui.multiworldSelect.title.changeOptions"),
-					new GuiWDLMultiworldSelect.WorldSelectionCallback() {
-				@Override
-				public void onWorldSelected(String selectedWorld) {
-					WDL.worldName = selectedWorld;
-
-					wdl.worldProps = wdl.loadWorldProps(selectedWorld);
-					wdl.gameRules = wdl.loadGameRules(selectedWorld);
-					mc.displayGuiScreen(GuiWDL.this);
-				}
-
-				@Override
-				public void onCancel() {
-					mc.displayGuiScreen(null);
-				}
-			}));
-			return;
-		}
-
 		this.title = I18n.format("wdl.gui.wdl.title", WDL.baseFolderName);
 
 		this.worldname = this.addTextField(new GuiTextField(42, this.fontRenderer,
