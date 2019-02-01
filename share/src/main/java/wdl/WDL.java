@@ -274,11 +274,12 @@ public class WDL {
 	 * Prompts for specific input that is needed (world name and multiworld status).
 	 *
 	 * @param "startDownload" or "changeOptions"
+	 * @param checkLastModified True if the last modified check should be performed.
 	 * @param callback Callback when information is entered.  Should call this method again.  Should also change GUIs.
 	 * @param cancel Callback when canceling.
 	 * @return true when the calling method should exit (this is prompting), false if it should continue
 	 */
-	public boolean promptForInfoForSettings(String context, Runnable callback, Runnable cancel) {
+	public boolean promptForInfoForSettings(String context, boolean checkLastModified, Runnable callback, Runnable cancel) {
 		if (!propsFound) {
 			minecraft.displayGuiScreen(new GuiWDLMultiworld(new GuiWDLMultiworld.MultiworldCallback() {
 				@Override
@@ -322,6 +323,37 @@ public class WDL {
 			}));
 			return true;
 		}
+
+		if (checkLastModified && !overrideLastModifiedCheck) {
+			long lastSaved = worldProps.getValue(MiscSettings.LAST_SAVED);
+			long lastPlayed;
+			// Can't directly use worldClient.getWorldInfo, as that doesn't use
+			// the saved version.
+			File savesDir = new File(minecraft.gameDir, "saves");
+			String folder = getWorldFolderName(worldName);
+			File worldFolder = new File(savesDir, folder);
+			File levelDatFile = new File(worldFolder, "level.dat");
+			if (levelDatFile.exists()) {
+				try (FileInputStream stream = new FileInputStream(levelDatFile)) {
+					NBTTagCompound compound = CompressedStreamTools.readCompressed(stream);
+					lastPlayed = compound.getCompound("Data").getLong("LastPlayed");
+				} catch (Exception e) {
+					LOGGER.warn("Error while checking if the map has been played and " +
+							"needs to be backed up: ", e);
+					lastPlayed = -1;
+				}
+			} else {
+				lastPlayed = -1;
+			}
+			if (lastPlayed > lastSaved) {
+				// The world was played later than it was saved; confirm that the
+				// user is willing for possible changes they made to be overwritten.
+				minecraft.displayGuiScreen(new GuiWDLOverwriteChanges(this,
+						lastSaved, lastPlayed));
+				return true;
+			}
+		}
+
 		return false;
 	}
 
@@ -336,38 +368,11 @@ public class WDL {
 			return;
 		}
 
-		if (promptForInfoForSettings("startDownload", this::startDownload, () -> minecraft.displayGuiScreen(null))) {
+		if (promptForInfoForSettings("startDownload", true, this::startDownload, () -> minecraft.displayGuiScreen(null))) {
 			return;
 		}
 
-		worldProps = loadWorldProps(worldName);
-		// Don't load the gamerules now since that might clobber other changes
 		saveHandler = VersionedFunctions.getSaveHandler(minecraft, getWorldFolderName(worldName));
-
-		long lastSaved = worldProps.getValue(MiscSettings.LAST_SAVED);
-		long lastPlayed;
-		// Can't directly use worldClient.getWorldInfo, as that doesn't use
-		// the saved version.
-		File levelDatFile = new File(saveHandler.getWorldDirectory(), "level.dat");
-		if (levelDatFile.exists()) {
-			try (FileInputStream stream = new FileInputStream(levelDatFile)) {
-				NBTTagCompound compound = CompressedStreamTools.readCompressed(stream);
-				lastPlayed = compound.getCompound("Data").getLong("LastPlayed");
-			} catch (Exception e) {
-				LOGGER.warn("Error while checking if the map has been played and " +
-						"needs to be backed up: ", e);
-				lastPlayed = -1;
-			}
-		} else {
-			lastPlayed = -1;
-		}
-		if (!overrideLastModifiedCheck && lastPlayed > lastSaved) {
-			// The world was played later than it was saved; confirm that the
-			// user is willing for possible changes they made to be overwritten.
-			minecraft.displayGuiScreen(new GuiWDLOverwriteChanges(this,
-					lastSaved, lastPlayed));
-			return;
-		}
 
 		runSanityCheck();
 
