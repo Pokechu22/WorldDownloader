@@ -1235,9 +1235,11 @@ public class WDL {
 		}
 		worldInfoNBT.put("GameRules", gamerules);
 
-		// Forge (TODO: move this elsewhere!)
+		addForgeDataToWorldInfo(rootWorldInfoNBT, worldInfoNBT);
+	}
+
+	private void addForgeDataToWorldInfo(NBTTagCompound rootWorldInfoNBT, NBTTagCompound worldInfoNBT) {
 		try {
-			LOGGER.debug("Trying to call FML writeVersionData");
 			NBTTagCompound versionInfo = worldInfoNBT.getCompound("Version");
 
 			Class<?> fmlCommonHandler = Class.forName("net.minecraftforge.fml.common.FMLCommonHandler");
@@ -1246,22 +1248,16 @@ public class WDL {
 			Method writeVersionData = dataFixer.getClass()
 					.getMethod("writeVersionData", NBTTagCompound.class);
 			writeVersionData.invoke(dataFixer, versionInfo);
-
-			LOGGER.debug("Called FML writeVersionData");
 		} catch (Throwable ex) {
 			LOGGER.info("Failed to call FML writeVersionData", ex);
 		}
 
 		try {
-			LOGGER.debug("Trying to call FML handleWorldDataSave");
-
 			Class<?> fmlCommonHandler = Class.forName("net.minecraftforge.fml.common.FMLCommonHandler");
 			Object instance = fmlCommonHandler.getMethod("instance").invoke(null);
 			Method handleWorldDataSave = fmlCommonHandler.getMethod("handleWorldDataSave",
 					SaveHandler.class, WorldInfo.class, NBTTagCompound.class);
 			handleWorldDataSave.invoke(instance, saveHandler, worldClient.getWorldInfo(), rootWorldInfoNBT);
-
-			LOGGER.debug("Called FML handleWorldDataSave!  Keys are now " + rootWorldInfoNBT.keySet());
 		} catch (Throwable ex) {
 			LOGGER.info("Failed to call FML handleWorldDataSave", ex);
 		}
