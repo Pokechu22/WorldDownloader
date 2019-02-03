@@ -53,7 +53,7 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements IBac
 				}
 
 				WorldBackup.backupWorld(wdl.saveHandler.getWorldDirectory(),
-						WDL.getWorldFolderName(WDL.worldName) + "_user", type,
+						name + "_user", type,
 						GuiWDLOverwriteChanges.this);
 			} catch (IOException ex) {
 				WDLMessages.chatMessageTranslated(WDL.serverProps,
