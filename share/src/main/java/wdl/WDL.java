@@ -349,7 +349,10 @@ public class WDL {
 				// The world was played later than it was saved; confirm that the
 				// user is willing for possible changes they made to be overwritten.
 				minecraft.displayGuiScreen(new GuiWDLOverwriteChanges(this,
-						lastSaved, lastPlayed));
+						lastSaved, lastPlayed, () -> {
+							overrideLastModifiedCheck = true;
+							callback.run();
+						}, cancel));
 				return true;
 			}
 		}

@@ -63,23 +63,24 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements IBac
 				backingUp = false;
 
 				mc.addScheduledTask(() -> {
-					WDL.overrideLastModifiedCheck = true;
-					mc.displayGuiScreen(null);
-
-					wdl.startDownload();
+					callback.run();
 				});
 			}
 		}
 	}
 
-	public GuiWDLOverwriteChanges(WDL wdl, long lastSaved, long lastPlayed) {
+	public GuiWDLOverwriteChanges(WDL wdl, long lastSaved, long lastPlayed, Runnable callback, Runnable cancel) {
 		super(wdl);
 		this.wdl = wdl;
 		this.lastSaved = lastSaved;
 		this.lastPlayed = lastPlayed;
+		this.callback = callback;
+		this.cancel = cancel;
 	}
 
 	private final WDL wdl;
+	private final Runnable callback;
+	private final Runnable cancel;
 
 	/**
 	 * Whether a backup is actively occuring.
@@ -178,16 +179,14 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements IBac
 		downloadNowButton = this.addButton(new Button(x, y, 200, 20,
 				I18n.format("wdl.gui.overwriteChanges.startNow.name")) {
 			public @Override void performAction() {
-				WDL.overrideLastModifiedCheck = true;
-				mc.displayGuiScreen(null);
-				wdl.startDownload();
+				callback.run();
 			}
 		});
 		y += 22;
 		cancelButton = this.addButton(new Button(x, y, 200, 20,
 				I18n.format("wdl.gui.overwriteChanges.cancel.name")) {
 			public @Override void performAction() {
-				mc.displayGuiScreen(null);
+				cancel.run();
 			}
 		});
 
