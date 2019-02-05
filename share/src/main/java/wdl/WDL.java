@@ -18,6 +18,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -262,8 +263,10 @@ public class WDL {
 		File dataFile = new File(minecraft.gameDir, "WorldDownloader.txt");
 		try {
 			globalProps.load(dataFile);
+		} catch (FileNotFoundException e) {
+			LOGGER.debug("Failed to load global properties as they do not exist", e);
 		} catch (Exception e) {
-			LOGGER.debug("Failed to load global properties", e);
+			LOGGER.warn("Failed to load global properties", e);
 		}
 		serverProps = new Configuration(globalProps);
 		INSTANCE.worldProps = serverProps;
@@ -941,9 +944,12 @@ public class WDL {
 		try {
 			serverProps.load(dataFile);
 			propsFound = true;
+		} catch (FileNotFoundException e) {
+			propsFound = false;
+			LOGGER.debug("Failed to load server properties as they do not exist", e);
 		} catch (Exception e) {
 			propsFound = false;
-			LOGGER.debug("Failed to load server properties", e);
+			LOGGER.warn("Failed to load server properties", e);
 		}
 
 		if (serverProps.getValue(MiscSettings.LINKED_WORLDS).isEmpty()) {
@@ -978,8 +984,10 @@ public class WDL {
 
 		try {
 			ret.load(dataFile);
+		} catch (FileNotFoundException e) {
+			LOGGER.debug("Failed to load world props for " + worldName + " as they do not exist", e);
 		} catch (Exception e) {
-			LOGGER.debug("Failed to load world props for " + worldName, e);
+			LOGGER.warn("Failed to load world props for " + worldName, e);
 		}
 
 		return ret;
