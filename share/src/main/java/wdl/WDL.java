@@ -26,9 +26,11 @@ import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.annotation.Nullable;
 
@@ -179,6 +181,11 @@ public class WDL {
 	 * world.
 	 */
 	public Map<Integer, MapData> newMapDatas = new HashMap<>();
+
+	/**
+	 * All chunks that have been saved, for use in a UI.
+	 */
+	public Set<ChunkPos> savedChunks = new HashSet<>();
 
 	// State variables:
 	/**
@@ -391,6 +398,7 @@ public class WDL {
 		newTileEntities.clear();
 		newEntities.clear();
 		newMapDatas.clear();
+		savedChunks.clear();
 
 		startOnChange = true;
 		downloading = true;
@@ -884,6 +892,7 @@ public class WDL {
 		if (!WDLPluginChannels.canSaveChunk(c)) { return; }
 
 		try {
+			savedChunks.add(c.getPos());
 			if (isEmpty(c)) {
 				//LOGGER.warn("[WDL] Tried to save empty chunk! (" + c + "@" + c.x + "," + c.z + ")");
 				return;
