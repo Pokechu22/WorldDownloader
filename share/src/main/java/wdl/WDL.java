@@ -1373,7 +1373,7 @@ public class WDL {
 	 * Gets the name of the server, either from the name in the server list,
 	 * or using the server's IP.
 	 */
-	public static String getServerName() {
+	public String getServerName() {
 		try {
 			if (minecraft.getCurrentServerData() != null) {
 				String name = minecraft.getCurrentServerData().serverName;
@@ -1407,7 +1407,7 @@ public class WDL {
 	 * @return The name of the connected realm, or null.
 	 */
 	@Nullable
-	private static String getRealmName() {
+	private String getRealmName() {
 		if (!minecraft.isConnectedToRealms()) {
 			LOGGER.warn("getRealmName: Not currently connected to realms!");
 		}
@@ -1470,7 +1470,7 @@ public class WDL {
 	 * Get the base folder name for the server we are connected to,
 	 * which is the server's name with special characters escaped.
 	 */
-	private static String getBaseFolderName() {
+	private String getBaseFolderName() {
 		return getServerName().replaceAll("\\W+", "_");
 	}
 

@@ -64,7 +64,7 @@ public final class MiscSettings {
 
 		@Override
 		public String getDefault(IConfiguration context) {
-			return WDL.getServerName();
+			return WDL.INSTANCE.getServerName();
 		}
 	}
 
