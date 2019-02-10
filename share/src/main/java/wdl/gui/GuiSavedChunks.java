@@ -116,6 +116,12 @@ public class GuiSavedChunks extends Screen {
 		this.drawCenteredString(this.fontRenderer, "Saved chunks",
 				this.width / 2, 8, 0xFFFFFF);
 
+		if (mouseY > TOP_MARGIN && mouseY < height - BOTTOM_MARGIN) {
+			this.drawString(this.fontRenderer, "Chunk at " + 
+					displayXToChunkX(mouseX) + " " + displayZToChunkZ(mouseY),
+					12, height - 12, 0xFFFFFF);
+		}
+
 		super.render(mouseX, mouseY, partialTicks);
 	}
 
