@@ -14,7 +14,9 @@
  */
 package wdl.gui;
 
-import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Nullable;
 
@@ -31,6 +33,67 @@ import wdl.versioned.VersionedFunctions;
  */
 public class GuiSavedChunks extends Screen {
 	private static final int TOP_MARGIN = 61, BOTTOM_MARGIN = 32;
+
+	private class RegionPos {
+		private static final int REGION_SIZE = 32;
+
+		public RegionPos(int x, int z) {
+			this.x = x;
+			this.z = z;
+		}
+
+		public final int x, z;
+
+		@Override
+		public int hashCode() {
+			int i = 1664525 * this.x + 1013904223;
+			int j = 1664525 * (this.z ^ -559038737) + 1013904223;
+			return i ^ j;
+		}
+
+		@Override
+		public boolean equals(Object other) {
+			if (this == other) {
+				return true;
+			} else if (!(other instanceof RegionPos)) {
+				return false;
+			} else {
+				RegionPos region = (RegionPos)other;
+				return this.x == region.x && this.z == region.z;
+			}
+		}
+
+		public int getChunkX1() {
+			return this.x * REGION_SIZE;
+		}
+
+		public int getChunkX2() {
+			return getChunkX1() + REGION_SIZE - 1;
+		}
+
+		public int getChunkZ1() {
+			return this.x * REGION_SIZE;
+		}
+
+		public int getChunkZ2() {
+			return getChunkZ1() + REGION_SIZE - 1;
+		}
+
+		@Override
+		public String toString() {
+			return this.getFileName();
+		}
+
+		public String getFileName() {
+			return "r." + this.x + "." + this.z + ".mca";
+		}
+	}
+
+	private static final Set<ChunkPos> ALL_CHUNKS_IN_REGION = null;
+	/**
+	 * Map from region position to chunks in that region that have been saved before.
+	 */
+	private Map<RegionPos, Set<ChunkPos>> checkedRegions = new HashMap<>();
 
 	/**
 	 * Parent GUI screen; displayed when this GUI is closed.
@@ -94,8 +157,12 @@ public class GuiSavedChunks extends Screen {
 		VersionedFunctions.drawDarkBackground(0, 0, height, width);
 
 		// Old chunks (currently not implemented)
-		for (ChunkPos pos : Collections.<ChunkPos>emptySet()) {
-			drawChunk(pos, 0xFFFF0000);
+		for (Map.Entry<RegionPos, Set<ChunkPos>> e : checkedRegions.entrySet()) {
+			if (e.getValue() == ALL_CHUNKS_IN_REGION) {
+				drawRegion(e.getKey(), 0xFFFF0000);
+			} else for (ChunkPos pos : e.getValue()) {
+				drawChunk(pos, 0xFFFF0000);
+			}
 		}
 		// Chunks that have been saved already
 		for (ChunkPos pos : wdl.savedChunks) {
@@ -123,6 +190,22 @@ public class GuiSavedChunks extends Screen {
 		}
 
 		super.render(mouseX, mouseY, partialTicks);
+	}
+
+	private void drawRegion(RegionPos pos, int color) {
+		int x1 = chunkXToDisplayX(pos.getChunkX1());
+		int z1 = chunkZToDisplayZ(pos.getChunkZ1());
+		int x2 = chunkXToDisplayX(pos.getChunkX2()) + SCALE - 1;
+		int z2 = chunkZToDisplayZ(pos.getChunkZ2()) + SCALE - 1;
+
+		drawRect(x1, z1, x2, z2, color);
+
+		int colorDark = darken(color);
+
+		drawVerticalLine(x1, z1, z2, colorDark);
+		drawVerticalLine(x2, z1, z2, colorDark);
+		drawHorizontalLine(x1, x2, z1, colorDark);
+		drawHorizontalLine(x1, x2, z2, colorDark);
 	}
 
 	private void drawChunk(ChunkPos pos, int color) {
