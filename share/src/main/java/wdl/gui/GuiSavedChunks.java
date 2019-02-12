@@ -14,15 +14,16 @@
  */
 package wdl.gui;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.io.File;
+import java.lang.reflect.Field;
 
 import javax.annotation.Nullable;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.chunk.storage.RegionFile;
+import net.minecraft.world.chunk.storage.RegionFileCache;
 import wdl.WDL;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.Screen;
@@ -34,66 +35,7 @@ import wdl.versioned.VersionedFunctions;
 public class GuiSavedChunks extends Screen {
 	private static final int TOP_MARGIN = 61, BOTTOM_MARGIN = 32;
 
-	private class RegionPos {
-		private static final int REGION_SIZE = 32;
-
-		public RegionPos(int x, int z) {
-			this.x = x;
-			this.z = z;
-		}
-
-		public final int x, z;
-
-		@Override
-		public int hashCode() {
-			int i = 1664525 * this.x + 1013904223;
-			int j = 1664525 * (this.z ^ -559038737) + 1013904223;
-			return i ^ j;
-		}
-
-		@Override
-		public boolean equals(Object other) {
-			if (this == other) {
-				return true;
-			} else if (!(other instanceof RegionPos)) {
-				return false;
-			} else {
-				RegionPos region = (RegionPos)other;
-				return this.x == region.x && this.z == region.z;
-			}
-		}
-
-		public int getChunkX1() {
-			return this.x * REGION_SIZE;
-		}
-
-		public int getChunkX2() {
-			return getChunkX1() + REGION_SIZE - 1;
-		}
-
-		public int getChunkZ1() {
-			return this.x * REGION_SIZE;
-		}
-
-		public int getChunkZ2() {
-			return getChunkZ1() + REGION_SIZE - 1;
-		}
-
-		@Override
-		public String toString() {
-			return this.getFileName();
-		}
-
-		public String getFileName() {
-			return "r." + this.x + "." + this.z + ".mca";
-		}
-	}
-
-	private static final Set<ChunkPos> ALL_CHUNKS_IN_REGION = null;
-	/**
-	 * Map from region position to chunks in that region that have been saved before.
-	 */
-	private Map<RegionPos, Set<ChunkPos>> checkedRegions = new HashMap<>();
+	private static final int REGION_SIZE = 32;
 
 	/**
 	 * Parent GUI screen; displayed when this GUI is closed.
@@ -156,12 +98,15 @@ public class GuiSavedChunks extends Screen {
 	public void render(int mouseX, int mouseY, float partialTicks) {
 		VersionedFunctions.drawDarkBackground(0, 0, height, width);
 
-		// Old chunks (currently not implemented)
-		for (Map.Entry<RegionPos, Set<ChunkPos>> e : checkedRegions.entrySet()) {
-			if (e.getValue() == ALL_CHUNKS_IN_REGION) {
-				drawRegion(e.getKey(), 0xFFFF0000);
-			} else for (ChunkPos pos : e.getValue()) {
-				drawChunk(pos, 0xFFFF0000);
+		// Old chunks
+		int regionX = (int)wdl.player.posX >> 9;
+		int regionZ = (int)wdl.player.posZ >> 9;
+		for (int rz = -1; rz <= 1; rz++) {
+			for (int rx = -1; rx <= 1; rx++) {
+				RegionFile region = loadRegion(regionX + rx, regionZ + rz);
+				if (region != null) {
+					drawRegion(region, regionX + rx, regionZ + rz);
+				}
 			}
 		}
 		// Chunks that have been saved already
@@ -192,20 +137,84 @@ public class GuiSavedChunks extends Screen {
 		super.render(mouseX, mouseY, partialTicks);
 	}
 
-	private void drawRegion(RegionPos pos, int color) {
-		int x1 = chunkXToDisplayX(pos.getChunkX1());
-		int z1 = chunkZToDisplayZ(pos.getChunkZ1());
-		int x2 = chunkXToDisplayX(pos.getChunkX2()) + SCALE - 1;
-		int z2 = chunkZToDisplayZ(pos.getChunkZ2()) + SCALE - 1;
+	/**
+	 * Loads a region file if it exists.
+	 *
+	 * @param x Region x coordinate (chunk / 32)
+	 * @param z Region z coordinate (chunk / 32)
+	 * @return The region file if it exists, or else null
+	 */
+	@Nullable
+	private RegionFile loadRegion(int x, int z) {
+		// Impl note: not exactly great, probably all this data should be cached.
+		// Also, I _really_ need to refactor this world folder stuff...
+		File worldFolder = wdl.saveHandler.getWorldDirectory();
+		// 1.12- has func_191065_b or getRegionFileIfExists, but 1.13 doesn't,
+		// so we get this...
+		File regionFolder = new File(worldFolder, "region");
+		File region = new File(regionFolder, "r." + x + "." + z + ".mca");
+		if (region.exists()) {
+			return RegionFileCache.createOrLoadRegionFile(worldFolder, x, z);
+		} else {
+			return null;
+		}
+	}
 
-		drawRect(x1, z1, x2, z2, color);
+	private static final Field CHUNK_TIMESTAMPS_FIELD;
+	static {
+		Field chunkTimestampsField = null;
+		int n = 0;
+		for (Field field : RegionFile.class.getDeclaredFields()) {
+			if (field.getType() == int[].class) {
+				n++;
+				if (n == 2) {
+					chunkTimestampsField = field;
+					break;
+				}
+			}
+		}
+		if (chunkTimestampsField == null) {
+			throw new AssertionError("Failed to find chunkTimestamps field (n=" + n + ")");
+		}
+		CHUNK_TIMESTAMPS_FIELD = chunkTimestampsField;
+		CHUNK_TIMESTAMPS_FIELD.setAccessible(true);
+	}
+	private int[] getChunkTimestamps(RegionFile region) {
+		try {
+			return (int[])CHUNK_TIMESTAMPS_FIELD.get(region);
+		} catch (Exception ex) {
+			throw new RuntimeException(ex);
+		}
+	}
 
-		int colorDark = darken(color);
+	private static final int YELLOW_THRESHOLD = 60 * 60 * 24; // 1 day in seconds
+	private static final int RED_THRESHOLD = 60 * 60 * 24 * 30; // 1 month
 
-		drawVerticalLine(x1, z1, z2, colorDark);
-		drawVerticalLine(x2, z1, z2, colorDark);
-		drawHorizontalLine(x1, x2, z1, colorDark);
-		drawHorizontalLine(x1, x2, z2, colorDark);
+	private void drawRegion(RegionFile region, int regionX, int regionZ) {
+		// n.b. Vanilla doesn't read these values at all, which is odd.
+		int[] chunkTimestamps = getChunkTimestamps(region);
+		int now = (int)(System.currentTimeMillis() / 1000);
+		for (int z = 0; z < REGION_SIZE; z++) {
+			for (int x = 0; x < REGION_SIZE; x++) {
+				int age = now - chunkTimestamps[x + z * REGION_SIZE]; // in seconds
+				int r, g;
+				// Make the color go from red -> yellow in ~1 day and then
+				// yellow -> red in ~1 month
+				if (age <= 0) {
+					r = 0;
+					g = 0xFF;
+				} else if (age <= YELLOW_THRESHOLD) {
+					r = 0x80 * age / YELLOW_THRESHOLD;
+					g = 0xFF - r;
+				} else {
+					r = 0x80 + 0x7F * (age - YELLOW_THRESHOLD) / RED_THRESHOLD;
+					if (r > 0xFF) r = 0xFF;
+					g = 0xFF - r;
+				}
+				int color = 0xFF000000 | r << 16 | g << 8;
+				drawChunk(new ChunkPos(x + regionX * REGION_SIZE, z + regionZ * REGION_SIZE), color);
+			}
+		}
 	}
 
 	private void drawChunk(ChunkPos pos, int color) {
