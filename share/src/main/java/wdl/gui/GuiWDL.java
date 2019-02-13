@@ -93,6 +93,7 @@ public class GuiWDL extends Screen {
 			entries.add(new ButtonEntry("gameruleOptions", GuiWDLGameRules::new, true));
 			entries.add(new ButtonEntry("backupOptions", GuiWDLBackup::new, true));
 			entries.add(new ButtonEntry("messageOptions", GuiWDLMessages::new, false));
+			entries.add(new ButtonEntry("savedChunks", GuiSavedChunks::new, true));
 			entries.add(new ButtonEntry("permissionsInfo", GuiWDLPermissions::new, false));
 			entries.add(new ButtonEntry("about", GuiWDLAbout::new, false));
 			if (WDLUpdateChecker.hasNewVersion()) {
