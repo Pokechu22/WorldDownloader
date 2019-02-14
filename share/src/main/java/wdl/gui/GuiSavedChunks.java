@@ -154,7 +154,7 @@ public class GuiSavedChunks extends Screen {
 		File regionFolder = new File(worldFolder, "region");
 		File region = new File(regionFolder, "r." + x + "." + z + ".mca");
 		if (region.exists()) {
-			return RegionFileCache.createOrLoadRegionFile(worldFolder, x, z);
+			return RegionFileCache.createOrLoadRegionFile(worldFolder, x << 5, z << 5);
 		} else {
 			return null;
 		}
@@ -196,7 +196,11 @@ public class GuiSavedChunks extends Screen {
 		int now = (int)(System.currentTimeMillis() / 1000);
 		for (int z = 0; z < REGION_SIZE; z++) {
 			for (int x = 0; x < REGION_SIZE; x++) {
-				int age = now - chunkTimestamps[x + z * REGION_SIZE]; // in seconds
+				int saveTime = chunkTimestamps[x + z * REGION_SIZE];
+				if (saveTime == 0) {
+					continue;
+				}
+				int age = now - saveTime; // in seconds
 				int r, g;
 				// Make the color go from red -> yellow in ~1 day and then
 				// yellow -> red in ~1 month
