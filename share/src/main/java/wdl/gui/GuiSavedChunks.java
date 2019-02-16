@@ -204,16 +204,12 @@ public class GuiSavedChunks extends Screen {
 				int r, g;
 				// Make the color go from red -> yellow in ~1 day and then
 				// yellow -> red in ~1 month
-				if (age <= 0) {
-					r = 0;
+				if (age <= YELLOW_THRESHOLD) {
+					r = MathHelper.clamp(0xFF * age / YELLOW_THRESHOLD, 0, 0xFF);
 					g = 0xFF;
-				} else if (age <= YELLOW_THRESHOLD) {
-					r = 0x80 * age / YELLOW_THRESHOLD;
-					g = 0xFF - r;
 				} else {
-					r = 0x80 + 0x7F * (age - YELLOW_THRESHOLD) / RED_THRESHOLD;
-					if (r > 0xFF) r = 0xFF;
-					g = 0xFF - r;
+					r = 0xFF;
+					g = 0xFF - MathHelper.clamp((age - YELLOW_THRESHOLD) / RED_THRESHOLD, 0, 0xFF);
 				}
 				int color = 0xFF000000 | r << 16 | g << 8;
 				drawChunk(new ChunkPos(x + regionX * REGION_SIZE, z + regionZ * REGION_SIZE), color);
