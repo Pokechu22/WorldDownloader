@@ -99,13 +99,15 @@ public class GuiSavedChunks extends Screen {
 		VersionedFunctions.drawDarkBackground(0, 0, height, width);
 
 		// Old chunks
-		int regionX = (int)wdl.player.posX >> 9;
-		int regionZ = (int)wdl.player.posZ >> 9;
-		for (int rz = -1; rz <= 1; rz++) {
-			for (int rx = -1; rx <= 1; rx++) {
-				RegionFile region = loadRegion(regionX + rx, regionZ + rz);
+		int minX = MathHelper.floor(displayXToChunkX(0) / 32.0);
+		int maxX = MathHelper.floor(displayXToChunkX(width) / 32.0);
+		int minZ = MathHelper.floor(displayZToChunkZ(0) / 32.0);
+		int maxZ = MathHelper.floor(displayZToChunkZ(height) / 32.0);
+		for (int rx = minX; rx <= maxX; rx++) {
+			for (int rz = minZ; rz <= maxZ; rz++) {
+				RegionFile region = loadRegion(rx, rz);
 				if (region != null) {
-					drawRegion(region, regionX + rx, regionZ + rz);
+					drawRegion(region, rx, rz);
 				}
 			}
 		}
