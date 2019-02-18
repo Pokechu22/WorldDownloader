@@ -131,9 +131,16 @@ public class GuiSavedChunks extends Screen {
 				this.width / 2, 8, 0xFFFFFF);
 
 		if (mouseY > TOP_MARGIN && mouseY < height - BOTTOM_MARGIN) {
-			this.drawString(this.fontRenderer, "Chunk at " + 
-					displayXToChunkX(mouseX) + " " + displayZToChunkZ(mouseY),
-					12, height - 12, 0xFFFFFF);
+			int x = displayXToChunkX(mouseX);
+			int z = displayZToChunkZ(mouseY);
+			RegionFile region = loadRegion(x >> 5, z >> 5);
+			int timestamp = 0;
+			if (region != null) {
+				int[] timestamps = getChunkTimestamps(region);
+				timestamp = timestamps[(x & (REGION_SIZE - 1)) + (z & (REGION_SIZE - 1)) * REGION_SIZE];
+			}
+			this.drawString(this.fontRenderer, "Chunk at " + x + " " + z +
+					": last saved at " + timestamp, 12, height - 12, 0xFFFFFF);
 		}
 
 		super.render(mouseX, mouseY, partialTicks);
