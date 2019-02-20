@@ -20,6 +20,7 @@ import java.lang.reflect.Field;
 import javax.annotation.Nullable;
 
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.chunk.storage.RegionFile;
@@ -127,7 +128,7 @@ public class GuiSavedChunks extends Screen {
 		// Draw the main borders now so that positions are hidden behind it.
 		Utils.drawBorder(TOP_MARGIN, BOTTOM_MARGIN, 0, 0, height, width);
 
-		this.drawCenteredString(this.fontRenderer, "Saved chunks",
+		this.drawCenteredString(this.fontRenderer, I18n.format("wdl.gui.savedChunks.title"),
 				this.width / 2, 8, 0xFFFFFF);
 
 		if (mouseY > TOP_MARGIN && mouseY < height - BOTTOM_MARGIN) {
@@ -140,11 +141,13 @@ public class GuiSavedChunks extends Screen {
 				timestamp = timestamps[(x & (REGION_SIZE - 1)) + (z & (REGION_SIZE - 1)) * REGION_SIZE];
 			}
 			if (timestamp != 0) {
-				this.drawString(this.fontRenderer, "Chunk at " + x + " " + z +
-						": last saved at " + timestamp, 12, height - 12, 0xFFFFFF);
+				this.drawString(this.fontRenderer,
+						I18n.format("wdl.gui.savedChunks.lastSaved", x, z, timestamp * 1000L),
+						12, height - 12, 0xFFFFFF);
 			} else {
-				this.drawString(this.fontRenderer, "Chunk at " + x + " " + z +
-						": never saved", 12, height - 12, 0xFFFFFF);
+				this.drawString(this.fontRenderer,
+						I18n.format("wdl.gui.savedChunks.neverSaved", x, z),
+						12, height - 12, 0xFFFFFF);
 			}
 		}
 
