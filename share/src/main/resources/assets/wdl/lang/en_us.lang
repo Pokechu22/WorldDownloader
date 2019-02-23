@@ -290,6 +290,7 @@ wdl.gui.gamerules.rules.spectatorsGenerateChunks=Should players in spectator mod
 wdl.gui.gamerules.rules.gameLoopFunction=The name of the function to call each tick.  (Deprecated, will be removed in 1.13 and functions are not saved by the mod so this is not useful)
 
 wdl.gui.savedChunks.title=Saved Chunks
+wdl.gui.savedChunks.savedNow=Chunk at %s, %s: saved now
 wdl.gui.savedChunks.lastSaved=Chunk at %s, %s: last saved at %tc
 wdl.gui.savedChunks.neverSaved=Chunk at %s, %s: never saved
 

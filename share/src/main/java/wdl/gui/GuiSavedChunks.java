@@ -134,20 +134,26 @@ public class GuiSavedChunks extends Screen {
 		if (mouseY > TOP_MARGIN && mouseY < height - BOTTOM_MARGIN) {
 			int x = displayXToChunkX(mouseX);
 			int z = displayZToChunkZ(mouseY);
-			RegionFile region = loadRegion(x >> 5, z >> 5);
-			int timestamp = 0;
-			if (region != null) {
-				int[] timestamps = getChunkTimestamps(region);
-				timestamp = timestamps[(x & (REGION_SIZE - 1)) + (z & (REGION_SIZE - 1)) * REGION_SIZE];
-			}
-			if (timestamp != 0) {
+			if (wdl.savedChunks.contains(new ChunkPos(x, z))) {
 				this.drawString(this.fontRenderer,
-						I18n.format("wdl.gui.savedChunks.lastSaved", x, z, timestamp * 1000L),
+						I18n.format("wdl.gui.savedChunks.savedNow", x, z),
 						12, height - 12, 0xFFFFFF);
 			} else {
-				this.drawString(this.fontRenderer,
-						I18n.format("wdl.gui.savedChunks.neverSaved", x, z),
-						12, height - 12, 0xFFFFFF);
+				RegionFile region = loadRegion(x >> 5, z >> 5);
+				int timestamp = 0;
+				if (region != null) {
+					int[] timestamps = getChunkTimestamps(region);
+					timestamp = timestamps[(x & (REGION_SIZE - 1)) + (z & (REGION_SIZE - 1)) * REGION_SIZE];
+				}
+				if (timestamp != 0) {
+					this.drawString(this.fontRenderer,
+							I18n.format("wdl.gui.savedChunks.lastSaved", x, z, timestamp * 1000L),
+							12, height - 12, 0xFFFFFF);
+				} else {
+					this.drawString(this.fontRenderer,
+							I18n.format("wdl.gui.savedChunks.neverSaved", x, z),
+							12, height - 12, 0xFFFFFF);
+				}
 			}
 		}
 
