@@ -219,6 +219,9 @@ public class GuiSavedChunks extends Screen {
 		int now = (int)(System.currentTimeMillis() / 1000);
 		for (int z = 0; z < REGION_SIZE; z++) {
 			for (int x = 0; x < REGION_SIZE; x++) {
+				if (wdl.savedChunks.contains(new ChunkPos(x, z))) {
+					continue;
+				}
 				int saveTime = chunkTimestamps[x + z * REGION_SIZE];
 				if (saveTime == 0) {
 					continue;
