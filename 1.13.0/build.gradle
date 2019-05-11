@@ -14,9 +14,7 @@ buildscript {
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
-        classpath 'commons-io:commons-io:2.5'
-        classpath 'com.googlecode.java-diff-utils:diffutils:1.3.0'
-        classpath 'pokechu22.test.begradle:begradle:0.2.0-SNAPSHOT:fg2@jar'
+        classpath 'pokechu22.test.begradle:begradle:0.2.0-SNAPSHOT:fg2'
         classpath 'de.oceanlabs.mcp:mcinjector:3.7.3' // For proper decompilation
         classpath 'net.minecraftforge:forgeflower:1.5.380.6' // For proper decompilation
     }
