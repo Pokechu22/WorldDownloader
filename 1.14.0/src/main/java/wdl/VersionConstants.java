@@ -16,7 +16,7 @@ package wdl;
 
 import net.minecraft.client.ClientBrandRetriever;
 import net.minecraft.client.Minecraft;
-import net.minecraft.realms.RealmsSharedConstants;
+import net.minecraft.util.SharedConstants;
 
 /**
  * Contains constants that vary between versions of the mod.
@@ -29,7 +29,7 @@ public class VersionConstants {
 	 *         version number</a>, eg <samp>316</samp>.
 	 */
 	public static int getProtocolVersion() {
-		return RealmsSharedConstants.NETWORK_PROTOCOL_VERSION;
+		return SharedConstants.func_215069_a().getProtocolVersion();
 	}
 
 	/**
@@ -39,7 +39,7 @@ public class VersionConstants {
 	 * @return A version string, eg <samp>1.11</samp>.
 	 */
 	public static String getMinecraftVersion() {
-		return RealmsSharedConstants.VERSION_STRING;
+		return SharedConstants.func_215069_a().getName();
 	}
 
 	/**
@@ -50,8 +50,8 @@ public class VersionConstants {
 	 * @return A version number, eg <samp>819</samp>.
 	 */
 	public static int getDataVersion() {
-		// As per AnvilChunkLoader
-		return 1631;
+		// As per MinecraftVersion
+		return 1952;
 	}
 
 	/**
@@ -60,7 +60,7 @@ public class VersionConstants {
 	 * @return A version string, eg <samp>1.11</samp>.
 	 */
 	public static String getExpectedVersion() {
-		return "1.13.2";
+		return "1.14";
 	}
 
 	/**
