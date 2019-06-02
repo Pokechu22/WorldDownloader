@@ -24,6 +24,9 @@ import net.minecraft.util.math.MathHelper;
  * A slider that doesn't require a bunch of interfaces to work.
  *
  * Based off of {@link net.minecraft.client.gui.GuiOptionSlider}.
+ *
+ * XXX: Needs to be rewritten for 1.14, particularly for accessibility. There
+ * seems to be nicer more general slider code now, which should be usable.
  */
 public class GuiSlider extends ExtButton {
 	private float sliderValue;
@@ -45,14 +48,19 @@ public class GuiSlider extends ExtButton {
 		setValue(value);
 	}
 
+	@Override
+	public void performAction() {
+		// Inapplicable
+	}
+
 	/**
 	 * Returns 0 if the button is disabled, 1 if the mouse is NOT hovering over
 	 * this button and 2 if it IS hovering over this button.
 	 */
-	@Override
+	/*@Override
 	protected int getHoverState(boolean mouseOver) {
 		return 0;
-	}
+	}*/
 
 	@Override
 	public void mouseDown(int mouseX, int mouseY) {
@@ -60,7 +68,7 @@ public class GuiSlider extends ExtButton {
 				/ (float)(this.width - 8);
 		this.sliderValue = MathHelper.clamp(this.sliderValue, 0.0F,
 				1.0F);
-		this.displayString = I18n.format(text, getValue());
+		setMessage(I18n.format(text, getValue()));
 	}
 
 	@Override
@@ -73,7 +81,12 @@ public class GuiSlider extends ExtButton {
 		this.sliderValue = MathHelper.clamp(this.sliderValue, 0.0F,
 				1.0F);
 
-		this.displayString = I18n.format(text, getValue());
+		setMessage(I18n.format(text, getValue()));
+	}
+
+	@Override
+	protected String getNarrationMessage() {
+		return I18n.format("gui.narrate.slider", this.getMessage());
 	}
 
 	@Override
@@ -81,21 +94,21 @@ public class GuiSlider extends ExtButton {
 
 	@Override
 	public void midDraw() {
-		Minecraft.getInstance().getTextureManager().bindTexture(BUTTON_TEXTURES);
+		Minecraft.getInstance().getTextureManager().bindTexture(WIDGETS_LOCATION);
 		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-		if (this.enabled) {
-			this.drawTexturedModalRect(this.x
+		if (this.active) {
+			this.blit(this.x
 					+ (int) (this.sliderValue * (this.width - 8)),
 					this.y, 0, 66, 4, 20);
-			this.drawTexturedModalRect(this.x
+			this.blit(this.x
 					+ (int) (this.sliderValue * (this.width - 8))
 					+ 4, this.y, 196, 66, 4, 20);
 		} else {
-			this.drawTexturedModalRect(this.x
+			this.blit(this.x
 					+ (int) (this.sliderValue * (this.width - 8)),
 					this.y, 0, 46, 4, 20);
-			this.drawTexturedModalRect(this.x
+			this.blit(this.x
 					+ (int) (this.sliderValue * (this.width - 8))
 					+ 4, this.y, 196, 46, 4, 20);
 		}
@@ -119,6 +132,6 @@ public class GuiSlider extends ExtButton {
 	public void setValue(int value) {
 		this.sliderValue = value / (float)max;
 
-		this.displayString = I18n.format(text, getValue());
+		setMessage(I18n.format(text, getValue()));
 	}
 }
