@@ -21,7 +21,6 @@ import javax.annotation.Nullable;
 
 import com.google.common.io.Files;
 
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.GuiYesNo;
@@ -48,8 +47,8 @@ public class GuiWDLBackup extends WDLScreen {
 	private String description;
 
 	private WorldBackupType backupType;
-	private GuiButton backupTypeButton;
-	private GuiButton doneButton;
+	private WDLButton backupTypeButton;
+	private WDLButton doneButton;
 	private GuiTextField customBackupCommandTemplateFld;
 	private String customBackupCommandTemplate;
 	private GuiTextField customBackupExtensionFld;
@@ -86,7 +85,7 @@ public class GuiWDLBackup extends WDLScreen {
 				}
 
 				updateFieldVisibility();
-				this.displayString = getBackupButtonText();
+				setMessage(getBackupButtonText());
 			}
 		});
 
@@ -162,7 +161,7 @@ public class GuiWDLBackup extends WDLScreen {
 		}
 
 		// A check is neither queued nor in progress
-		doneButton.enabled = (checkValidTime == 0 && !checkingCommandValid);
+		doneButton.setEnabled(checkValidTime == 0 && !checkingCommandValid);
 
 		int color = 0x40E040;
 		if (checkValidTime != 0 || checkingCommandValid) {

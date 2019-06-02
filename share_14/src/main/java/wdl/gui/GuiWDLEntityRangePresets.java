@@ -73,7 +73,7 @@ public class GuiWDLEntityRangePresets extends WDLScreen implements GuiYesNoCallb
 				I18n.format("wdl.gui.rangePresets.server"),
 				makeYesNoGui("wdl.gui.rangePresets.spigot.warning", ID_SERVER)));
 
-		serverButton.enabled = WDLPluginChannels.hasServerEntityRange();
+		serverButton.setEnabled(WDLPluginChannels.hasServerEntityRange());
 
 		y += 28;
 
@@ -106,7 +106,7 @@ public class GuiWDLEntityRangePresets extends WDLScreen implements GuiYesNoCallb
 		} else if (serverButton.isMouseOver()) {
 			infoText = I18n.format("wdl.gui.rangePresets.server.description") + "\n\n";
 
-			if (serverButton.enabled) {
+			if (serverButton.isEnabled()) {
 				infoText += I18n.format("wdl.gui.rangePresets.server.installed");
 			} else {
 				infoText += I18n.format("wdl.gui.rangePresets.server.notInstalled");

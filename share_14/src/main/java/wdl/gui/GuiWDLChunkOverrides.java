@@ -21,7 +21,6 @@ import com.mojang.blaze3d.platform.GlStateManager;
 
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvents;
@@ -73,7 +72,7 @@ public class GuiWDLChunkOverrides extends WDLScreen {
 	private final Screen parent;
 	private final WDL wdl;
 
-	private Button startDownloadButton;
+	private WDLButton startDownloadButton;
 
 	/**
 	 * The current position.
@@ -127,11 +126,11 @@ public class GuiWDLChunkOverrides extends WDLScreen {
 			}
 		});
 		this.addButton(new RequestModeButton(width / 2 - 105, 18, Mode.ERASING) {
-			{ enabled = false; }
+			{ setEnabled(false); }
 			public @Override void performAction() { }
 		});
 		this.addButton(new RequestModeButton(width / 2 - 80, 18, Mode.MOVING) {
-			{ enabled = false; }
+			{ setEnabled(false); }
 			public @Override void performAction() { }
 		});
 
@@ -146,13 +145,13 @@ public class GuiWDLChunkOverrides extends WDLScreen {
 				"Start download in these ranges") {
 			public @Override void performAction() {
 				if (!WDLPluginChannels.canDownloadAtAll()) {
-					this.enabled = false;
+					setEnabled(false);
 					return;
 				}
 				wdl.startDownload();
 			}
 		});
-		startDownloadButton.enabled = WDLPluginChannels.canDownloadAtAll();
+		startDownloadButton.setEnabled(WDLPluginChannels.canDownloadAtAll());
 
 		this.addButton(new ButtonDisplayGui(width / 2 - 100, height - 29,
 				200, 20, this.parent));

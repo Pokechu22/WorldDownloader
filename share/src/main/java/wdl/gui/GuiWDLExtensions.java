@@ -121,8 +121,8 @@ public class GuiWDLExtensions extends WDLScreen {
 					public @Override void performAction() {
 						mod.toggleEnabled();
 
-						this.displayString = I18n.format("wdl.gui.extensions."
-								+ (mod.isEnabled() ? "enabled" : "disabled"));
+						this.setMessage(I18n.format("wdl.gui.extensions."
+								+ (mod.isEnabled() ? "enabled" : "disabled")));
 
 						if (!mod.isEnabled()) {
 							label = "" + TextFormatting.GRAY

@@ -48,4 +48,16 @@ interface IExtButton {
 	 * Called after the button is drawn.
 	 */
 	abstract void afterDraw();
+	/**
+	 * Sets the message associated with this button.
+	 */
+	abstract void setMessage(String message);
+	/**
+	 * Sets whether or not this button is enabled/active.
+	 */
+	abstract void setEnabled(boolean enabled);
+	/**
+	 * Checks whether or not this button is enabled/active.
+	 */
+	abstract boolean isEnabled();
 }

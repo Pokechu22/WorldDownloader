@@ -19,7 +19,6 @@ import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.gui.GuiYesNoCallback;
@@ -30,6 +29,7 @@ import wdl.WDL;
 import wdl.WDLPluginChannels;
 import wdl.config.IConfiguration;
 import wdl.gui.widget.ButtonDisplayGui;
+import wdl.gui.widget.WDLButton;
 import wdl.gui.widget.WDLScreen;
 
 /**
@@ -41,10 +41,10 @@ public class GuiWDLEntityRangePresets extends WDLScreen implements GuiYesNoCallb
 	private final WDL wdl;
 	private final IConfiguration config;
 
-	private GuiButton vanillaButton;
-	private GuiButton spigotButton;
-	private GuiButton serverButton;
-	private GuiButton cancelButton;
+	private WDLButton vanillaButton;
+	private WDLButton spigotButton;
+	private WDLButton serverButton;
+	private WDLButton cancelButton;
 
 	private static final int ID_VANILLA = 0, ID_SPIGOT = 1, ID_SERVER = 2;
 
@@ -73,7 +73,7 @@ public class GuiWDLEntityRangePresets extends WDLScreen implements GuiYesNoCallb
 				I18n.format("wdl.gui.rangePresets.server"),
 				makeYesNoGui("wdl.gui.rangePresets.spigot.warning", ID_SERVER)));
 
-		serverButton.enabled = WDLPluginChannels.hasServerEntityRange();
+		serverButton.setEnabled(WDLPluginChannels.hasServerEntityRange());
 
 		y += 28;
 
@@ -106,7 +106,7 @@ public class GuiWDLEntityRangePresets extends WDLScreen implements GuiYesNoCallb
 		} else if (serverButton.isMouseOver()) {
 			infoText = I18n.format("wdl.gui.rangePresets.server.description") + "\n\n";
 
-			if (serverButton.enabled) {
+			if (serverButton.isEnabled()) {
 				infoText += I18n.format("wdl.gui.rangePresets.server.installed");
 			} else {
 				infoText += I18n.format("wdl.gui.rangePresets.server.notInstalled");

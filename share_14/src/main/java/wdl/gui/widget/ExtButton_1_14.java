@@ -21,6 +21,17 @@ import net.minecraft.client.Minecraft;
  * The actual implementation is {@link WDLButton}, and methods are declared in {@link IExtButton}.
  */
 abstract class ExtButton extends net.minecraft.client.gui.widget.button.Button implements IExtButton {
+	/**
+	 * @deprecated Do not use; use {@link #setMessage} instead.
+	 */
+	@Deprecated
+	protected static final Void displayString = null;
+	/**
+	 * @deprecated Do not use; use {@link #setEnabled} instead.
+	 */
+	@Deprecated
+	protected static final Void active = null;
+
 	public ExtButton(int x, int y, int widthIn, int heightIn, String buttonText) {
 		super(x, y, widthIn, heightIn, buttonText, (clicked)->((ExtButton)clicked).performAction());
 	}
@@ -75,5 +86,20 @@ abstract class ExtButton extends net.minecraft.client.gui.widget.button.Button i
 	protected final void renderBg(Minecraft mc, int mouseX, int mouseY) {
 		super.renderBg(mc, mouseX, mouseY);
 		this.midDraw();
+	}
+
+	@Override
+	public void setMessage(String message) {
+		super.setMessage(message);
+	}
+
+	@Override
+	public void setEnabled(boolean enabled) {
+		super.active = enabled;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return super.active;
 	}
 }

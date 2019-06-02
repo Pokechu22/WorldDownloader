@@ -34,6 +34,7 @@ import wdl.gui.widget.GuiList;
 import wdl.gui.widget.GuiList.GuiListEntry;
 import wdl.gui.widget.SettingButton;
 import wdl.gui.widget.WDLButton;
+import wdl.gui.widget.WDLScreen;
 
 public class GuiWDLMessages extends WDLScreen {
 	/**
@@ -64,7 +65,7 @@ public class GuiWDLMessages extends WDLScreen {
 
 			@Override
 			public void drawEntry(int x, int y, int width, int height, int mouseX, int mouseY) {
-				button.enabled = config.getValue(MessageSettings.ENABLE_ALL_MESSAGES);
+				button.setEnabled(config.getValue(MessageSettings.ENABLE_ALL_MESSAGES));
 
 				super.drawEntry(x, y, width, height, mouseX, mouseY);
 
@@ -90,7 +91,7 @@ public class GuiWDLMessages extends WDLScreen {
 
 			@Override
 			public void drawEntry(int x, int y, int width, int height, int mouseX, int mouseY) {
-				button.enabled = config.getValue(typeRegistration.category.setting);
+				button.setEnabled(config.getValue(typeRegistration.category.setting));
 
 				super.drawEntry(x, y, width, height, mouseX, mouseY);
 

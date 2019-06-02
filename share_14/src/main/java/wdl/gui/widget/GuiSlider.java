@@ -97,7 +97,7 @@ public class GuiSlider extends ExtButton {
 		Minecraft.getInstance().getTextureManager().bindTexture(WIDGETS_LOCATION);
 		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-		if (this.active) {
+		if (this.isEnabled()) {
 			this.blit(this.x
 					+ (int) (this.sliderValue * (this.width - 8)),
 					this.y, 0, 66, 4, 20);

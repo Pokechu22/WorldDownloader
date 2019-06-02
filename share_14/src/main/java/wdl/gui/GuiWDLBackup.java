@@ -85,7 +85,7 @@ public class GuiWDLBackup extends WDLScreen {
 				}
 
 				updateFieldVisibility();
-				this.displayString = getBackupButtonText();
+				this.setMessage(getBackupButtonText());
 			}
 		});
 
@@ -161,7 +161,7 @@ public class GuiWDLBackup extends WDLScreen {
 		}
 
 		// A check is neither queued nor in progress
-		doneButton.enabled = (checkValidTime == 0 && !checkingCommandValid);
+		doneButton.setEnabled(checkValidTime == 0 && !checkingCommandValid);
 
 		int color = 0x40E040;
 		if (checkValidTime != 0 || checkingCommandValid) {

@@ -16,14 +16,13 @@ package wdl.gui;
 
 import java.util.List;
 
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import wdl.gui.widget.WDLButton;
 import wdl.gui.widget.WDLScreen;
 
 public class GuiWDLMultiworld extends WDLScreen {
 	private final MultiworldCallback callback;
-	private GuiButton multiworldEnabledBtn;
+	private WDLButton multiworldEnabledBtn;
 	private boolean enableMultiworld = false;
 
 	//TODO: Some of these things can be constants, but for consistancy aren't.
@@ -127,7 +126,7 @@ public class GuiWDLMultiworld extends WDLScreen {
 			this.enableMultiworld = true;
 		}
 
-		this.multiworldEnabledBtn.displayString = getMultiworldEnabledText();
+		this.multiworldEnabledBtn.setMessage(getMultiworldEnabledText());
 	}
 
 	/**

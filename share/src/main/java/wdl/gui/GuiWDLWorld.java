@@ -16,7 +16,6 @@ package wdl.gui;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import wdl.WDL;
@@ -39,7 +38,7 @@ public class GuiWDLWorld extends WDLScreen {
 	private SettingButton timeBtn;
 	private SettingButton weatherBtn;
 	private SettingButton spawnBtn;
-	private GuiButton pickSpawnBtn;
+	private WDLButton pickSpawnBtn;
 	private boolean showSpawnFields = false;
 	private GuiNumericTextField spawnX;
 	private GuiNumericTextField spawnY;

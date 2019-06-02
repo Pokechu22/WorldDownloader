@@ -43,11 +43,11 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		public void beforeDraw() {
 			MultiworldInfo info = getWorldInfo();
 			if (info == null) {
-				displayString = "";
-				enabled = false;
+				setMessage(""); // XXX
+				setEnabled(false);
 			} else {
-				displayString = info.displayName;
-				enabled = true;
+				setMessage(info.displayName);
+				setEnabled(true);
 			}
 
 			if (info != null && info == selectedMultiWorld) {
@@ -77,11 +77,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		@Override
 		public void performAction() {
 			selectedMultiWorld = this.getWorldInfo();
-			if (selectedMultiWorld != null) {
-				acceptBtn.enabled = true;
-			} else {
-				acceptBtn.enabled = false;
-			}
+			acceptBtn.setEnabled(selectedMultiWorld != null);
 		}
 	}
 
@@ -288,7 +284,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 				callback.onWorldSelected(selectedMultiWorld.folderName);
 			}
 		});
-		this.acceptBtn.enabled = (selectedMultiWorld != null);
+		this.acceptBtn.setEnabled(selectedMultiWorld != null);
 
 		prevButton = this.addButton(new WDLButton(this.width / 2 - offset, y, 20, 20, "<") {
 			public @Override void performAction() {
@@ -362,15 +358,15 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 
 		if (index >= linkedWorlds.size() - numWorldButtons) {
 			index = linkedWorlds.size() - numWorldButtons;
-			nextButton.enabled = false;
+			nextButton.setEnabled(false);
 		} else {
-			nextButton.enabled = true;
+			nextButton.setEnabled(true);
 		}
 		if (index <= 0) {
 			index = 0;
-			prevButton.enabled = false;
+			prevButton.setEnabled(false);
 		} else {
-			prevButton.enabled = true;
+			prevButton.setEnabled(true);
 		}
 
 		Utils.drawBorder(53, 53, 0, 0, height, width);

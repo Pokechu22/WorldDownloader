@@ -126,7 +126,7 @@ public class GuiWDLMultiworld extends WDLScreen {
 			this.enableMultiworld = true;
 		}
 
-		this.multiworldEnabledBtn.displayString = getMultiworldEnabledText();
+		this.multiworldEnabledBtn.setMessage(getMultiworldEnabledText());
 	}
 
 	/**

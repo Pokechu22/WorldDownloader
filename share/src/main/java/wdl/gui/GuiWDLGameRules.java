@@ -23,7 +23,6 @@ import javax.annotation.Nullable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.world.GameRules;
@@ -91,7 +90,7 @@ public class GuiWDLGameRules extends WDLScreen {
 
 			@Override
 			public void drawEntry(int x, int y, int width, int height, int mouseX, int mouseY) {
-				this.resetButton.enabled = isRuleNonDefault(this.ruleName);
+				this.resetButton.setEnabled(isRuleNonDefault(this.ruleName));
 
 				super.drawEntry(x, y, width, height, mouseX, mouseY);
 
@@ -181,7 +180,7 @@ public class GuiWDLGameRules extends WDLScreen {
 
 			@Override
 			public void drawEntry(int x, int y, int width, int height, int mouseX, int mouseY) {
-				this.button.displayString = getRule(ruleName);
+				this.button.setMessage(getRule(ruleName));
 				super.drawEntry(x, y, width, height, mouseX, mouseY);
 			}
 
@@ -207,7 +206,7 @@ public class GuiWDLGameRules extends WDLScreen {
 	/** All vanilla game rules and their default values; this list is immutable. */
 	private final Map<String, String> vanillaGameRules;
 
-	private GuiButton doneButton;
+	private WDLButton doneButton;
 
 	/**
 	 * Gets the value of the given rule.

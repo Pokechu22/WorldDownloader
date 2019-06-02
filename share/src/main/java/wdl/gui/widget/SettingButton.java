@@ -36,7 +36,7 @@ public class SettingButton extends WDLButton {
 	}
 
 	private void updateDisplayString() {
-		this.displayString = config.getButtonText(setting).getFormattedText();
+		setMessage(config.getButtonText(setting).getFormattedText());
 	}
 
 	@Override

@@ -83,10 +83,10 @@ public class GuiWDLPermissionRequest extends WDLScreen {
 				"Submit request") {
 			public @Override void performAction() {
 				WDLPluginChannels.sendRequests();
-				displayString = "Submitted!";
+				setMessage("Submitted!");
 			}
 		});
-		this.submitButton.enabled = !(WDLPluginChannels.getRequests().isEmpty());
+		this.submitButton.setEnabled(!(WDLPluginChannels.getRequests().isEmpty()));
 
 		this.addButton(new ButtonDisplayGui(width / 2 - 100, height - 29,
 				200, 20, this.parent));
@@ -115,7 +115,7 @@ public class GuiWDLPermissionRequest extends WDLScreen {
 				WDLPluginChannels.addRequest(key, value);
 				list.addLine("Requesting '" + key + "' to be '"
 						+ value + "'.");
-				submitButton.enabled = true;
+				submitButton.setEnabled(true);
 
 				requestField.setText("");
 			}

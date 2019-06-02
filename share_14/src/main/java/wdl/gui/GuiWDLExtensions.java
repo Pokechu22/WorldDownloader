@@ -18,7 +18,6 @@ import javax.annotation.Nullable;
 
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.SoundEvents;
@@ -39,7 +38,7 @@ import wdl.gui.widget.WDLScreen;
  * It's composed of two halves, one that lists enabled extensions that can
  * be clicked, and the other that shows the details on the selected extension.
  * The two halves can be dragged up and down (which is why the logic is so
- * complex here; {@link GuiListExtended} was not designed for that).
+ * complex here; minecraft's lists were not designed for that).
  *
  * @author Pokechu22
  */
@@ -121,8 +120,8 @@ public class GuiWDLExtensions extends WDLScreen {
 					public @Override void performAction() {
 						mod.toggleEnabled();
 
-						this.displayString = I18n.format("wdl.gui.extensions."
-								+ (mod.isEnabled() ? "enabled" : "disabled"));
+						this.setMessage(I18n.format("wdl.gui.extensions."
+								+ (mod.isEnabled() ? "enabled" : "disabled")));
 
 						if (!mod.isEnabled()) {
 							label = "" + TextFormatting.GRAY

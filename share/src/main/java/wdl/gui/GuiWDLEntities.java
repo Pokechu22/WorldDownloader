@@ -23,7 +23,6 @@ import javax.annotation.Nullable;
 import com.google.common.collect.Multimap;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import wdl.EntityUtils;
@@ -125,7 +124,7 @@ public class GuiWDLEntities extends WDLScreen {
 						0, 0, 90, 18, getButtonText()) {
 					public @Override void performAction() {
 						groupEnabled ^= true;
-						this.displayString = getButtonText();
+						setMessage(getButtonText());
 						config.setEntityGroupEnabled(group, groupEnabled);
 					}
 				}, 0, 0);
@@ -133,7 +132,7 @@ public class GuiWDLEntities extends WDLScreen {
 
 			@Override
 			public void drawEntry(int x, int y, int width, int height, int mouseX, int mouseY) {
-				this.enableGroupButton.displayString = getButtonText();
+				this.enableGroupButton.setMessage(getButtonText());
 				super.drawEntry(x, y, width, height, mouseX, mouseY);
 				mc.fontRenderer.drawString(this.displayGroup, (x + 110 / 2)
 						- (this.labelWidth / 2), y + slotHeight
@@ -189,11 +188,11 @@ public class GuiWDLEntities extends WDLScreen {
 						0, 0, 75, 18, getButtonText()) {
 					public @Override void performAction() {
 						entityEnabled ^= true;
-						onOffButton.displayString = getButtonText();
+						setMessage(getButtonText());
 						config.setEntityTypeEnabled(entity, entityEnabled);
 					}
 				}, buttonOffset, 0);
-				this.onOffButton.enabled = category.isGroupEnabled();
+				this.onOffButton.setEnabled(category.isGroupEnabled());
 
 				this.rangeSlider = this.addButton(new GuiSlider(0, 0, 150, 18,
 						"wdl.gui.entities.trackDistance", range, 256),
@@ -201,19 +200,19 @@ public class GuiWDLEntities extends WDLScreen {
 
 				this.cachedMode = config.getValue(EntitySettings.TRACK_DISTANCE_MODE);
 
-				rangeSlider.enabled = (cachedMode == TrackDistanceMode.USER);
+				rangeSlider.setEnabled(cachedMode == TrackDistanceMode.USER);
 			}
 
 			@Override
 			public void drawEntry(int x, int y, int width, int height, int mouseX, int mouseY) {
-				this.onOffButton.enabled = category.isGroupEnabled();
-				this.onOffButton.displayString = getButtonText();
+				this.onOffButton.setEnabled(category.isGroupEnabled());
+				this.onOffButton.setMessage(getButtonText());
 
 				// XXX calculating this each time
 				TrackDistanceMode mode = config.getValue(EntitySettings.TRACK_DISTANCE_MODE);
 				if (this.cachedMode != mode) {
 					cachedMode = mode;
-					rangeSlider.enabled = canEditRanges();
+					rangeSlider.setEnabled(canEditRanges());
 
 					rangeSlider.setValue(EntityUtils
 							.getEntityTrackDistance(entity));
@@ -265,7 +264,7 @@ public class GuiWDLEntities extends WDLScreen {
 	private final IConfiguration config;
 
 	private SettingButton rangeModeButton;
-	private GuiButton presetsButton;
+	private WDLButton presetsButton;
 
 	public GuiWDLEntities(@Nullable GuiScreen parent, WDL wdl) {
 		this.parent = parent;
@@ -283,14 +282,14 @@ public class GuiWDLEntities extends WDLScreen {
 				this.width / 2 - 155, 18, 150, 20) {
 			public @Override void performAction() {
 				super.performAction();
-				presetsButton.enabled = canEditRanges();
+				presetsButton.setEnabled(canEditRanges());
 			}
 		});
 		presetsButton = this.addButton(new ButtonDisplayGui(this.width / 2 + 5, 18, 150, 20,
 				I18n.format("wdl.gui.entities.rangePresets"),
 				() -> new GuiWDLEntityRangePresets(this, wdl, config)));
 
-		this.presetsButton.enabled = this.canEditRanges();
+		this.presetsButton.setEnabled(this.canEditRanges());
 
 		this.addList(new GuiEntityList());
 	}

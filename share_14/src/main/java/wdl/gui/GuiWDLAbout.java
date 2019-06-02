@@ -64,7 +64,7 @@ public class GuiWDLAbout extends WDLScreen {
 				// Copy debug info
 				VersionedFunctions.setClipboardString(wdl.getDebugInfo());
 				// Change text to "copied" once clicked
-				this.displayString = I18n.format("wdl.gui.about.debugInfo.copied");
+				this.setMessage(I18n.format("wdl.gui.about.debugInfo.copied"));
 			}
 		});
 		this.addButton(new ButtonDisplayGui((this.width / 2) - 100, this.height - 29,

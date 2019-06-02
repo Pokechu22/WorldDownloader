@@ -541,8 +541,8 @@ public class WDLHooks {
 						.format("wdl.gui.ingameMenu.downloadStatus.start");
 				enabled = true;
 			}
-			this.enabled = enabled;
-			this.displayString = displayString;
+			this.setEnabled(enabled);
+			this.setMessage(displayString);
 		}
 
 		@Override
@@ -553,7 +553,7 @@ public class WDLHooks {
 
 			if (WDL.downloading) {
 				wdl.stopDownload();
-				enabled = false; // Disable to stop double-clicks
+				setEnabled(false); // Disable to stop double-clicks
 			} else {
 				if (!WDLPluginChannels.canDownloadAtAll()) {
 					// If they don't have any permissions, let the player
@@ -570,7 +570,7 @@ public class WDLHooks {
 					WDL.minecraft.displayGuiScreen(new GuiWDLChunkOverrides(menu, wdl));
 				} else {
 					wdl.startDownload();
-					enabled = false; // Disable to stop double-clicks
+					setEnabled(false); // Disable to stop double-clicks
 				}
 			}
 		}
@@ -652,7 +652,7 @@ public class WDLHooks {
 		if (button.id == 1) { // "Disconnect", from vanilla
 			wdl.stopDownload();
 			// Disable the button to prevent double-clicks
-			button.enabled = false;
+			button.active = false;
 		}
 	}
 }

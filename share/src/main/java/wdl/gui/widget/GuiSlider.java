@@ -59,7 +59,7 @@ public class GuiSlider extends ExtButton {
 				/ (float)(this.width - 8);
 		this.sliderValue = MathHelper.clamp(this.sliderValue, 0.0F,
 				1.0F);
-		this.displayString = I18n.format(text, getValue());
+		setMessage(I18n.format(text, getValue()));
 	}
 
 	@Override
@@ -72,7 +72,7 @@ public class GuiSlider extends ExtButton {
 		this.sliderValue = MathHelper.clamp(this.sliderValue, 0.0F,
 				1.0F);
 
-		this.displayString = I18n.format(text, getValue());
+		setMessage(I18n.format(text, getValue()));
 	}
 
 	@Override
@@ -83,7 +83,7 @@ public class GuiSlider extends ExtButton {
 		Minecraft.getInstance().getTextureManager().bindTexture(BUTTON_TEXTURES);
 		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-		if (this.enabled) {
+		if (this.isEnabled()) {
 			this.drawTexturedModalRect(this.x
 					+ (int) (this.sliderValue * (this.width - 8)),
 					this.y, 0, 66, 4, 20);
@@ -118,6 +118,6 @@ public class GuiSlider extends ExtButton {
 	public void setValue(int value) {
 		this.sliderValue = value / (float)max;
 
-		this.displayString = I18n.format(text, getValue());
+		setMessage(I18n.format(text, getValue()));
 	}
 }

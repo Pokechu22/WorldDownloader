@@ -17,7 +17,6 @@ package wdl.gui;
 import javax.annotation.Nullable;
 
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import wdl.WDL;
 import wdl.config.IConfiguration;
@@ -37,7 +36,7 @@ public class GuiWDLPlayer extends WDLScreen {
 	private SettingButton healthBtn;
 	private SettingButton hungerBtn;
 	private SettingButton playerPosBtn;
-	private Button pickPosBtn;
+	private WDLButton pickPosBtn;
 	private boolean showPosFields = false;
 	private GuiNumericTextField posX;
 	private GuiNumericTextField posY;

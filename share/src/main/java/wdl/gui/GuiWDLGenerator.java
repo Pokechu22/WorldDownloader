@@ -16,7 +16,6 @@ package wdl.gui;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
@@ -26,6 +25,7 @@ import wdl.config.settings.GeneratorSettings;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.WDLScreen;
 import wdl.gui.widget.SettingButton;
+import wdl.gui.widget.WDLButton;
 import wdl.versioned.VersionedFunctions;
 
 public class GuiWDLGenerator extends WDLScreen {
@@ -37,7 +37,7 @@ public class GuiWDLGenerator extends WDLScreen {
 	private GuiTextField seedField;
 	private SettingButton generatorBtn;
 	private SettingButton generateStructuresBtn;
-	private GuiButton settingsPageBtn;
+	private WDLButton settingsPageBtn;
 
 	private String seedText;
 
@@ -137,15 +137,15 @@ public class GuiWDLGenerator extends WDLScreen {
 		switch (this.config.getValue(GeneratorSettings.GENERATOR)) {
 		case FLAT:
 			settingsPageBtn.visible = true;
-			settingsPageBtn.displayString = I18n.format("wdl.gui.generator.flatSettings");
+			settingsPageBtn.setMessage(I18n.format("wdl.gui.generator.flatSettings"));
 			break;
 		case CUSTOMIZED:
 			settingsPageBtn.visible = true;
-			settingsPageBtn.displayString = I18n.format("wdl.gui.generator.customSettings");
+			settingsPageBtn.setMessage(I18n.format("wdl.gui.generator.customSettings"));
 			break;
 		case BUFFET:
 			settingsPageBtn.visible = true;
-			settingsPageBtn.displayString = I18n.format("wdl.gui.generator.buffetSettings");
+			settingsPageBtn.setMessage(I18n.format("wdl.gui.generator.buffetSettings"));
 			break;
 		default:
 			settingsPageBtn.visible = false;

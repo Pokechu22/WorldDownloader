@@ -90,7 +90,7 @@ public class GuiWDLGameRules extends WDLScreen {
 
 			@Override
 			public void drawEntry(int x, int y, int width, int height, int mouseX, int mouseY) {
-				this.resetButton.enabled = isRuleNonDefault(this.ruleName);
+				this.resetButton.setEnabled(isRuleNonDefault(this.ruleName));
 
 				super.drawEntry(x, y, width, height, mouseX, mouseY);
 
@@ -180,7 +180,7 @@ public class GuiWDLGameRules extends WDLScreen {
 
 			@Override
 			public void drawEntry(int x, int y, int width, int height, int mouseX, int mouseY) {
-				this.button.displayString = getRule(ruleName);
+				this.button.setMessage(getRule(ruleName));
 				super.drawEntry(x, y, width, height, mouseX, mouseY);
 			}
 

@@ -68,7 +68,7 @@ public class GuiWDL extends WDLScreen {
 						I18n.format("wdl.gui.wdl." + key + ".name"),
 						() -> openFunc.apply(GuiWDL.this, GuiWDL.this.wdl)), -100, 0);
 				if (needsPerms) {
-					button.enabled = WDLPluginChannels.canDownloadAtAll();
+					button.setEnabled(WDLPluginChannels.canDownloadAtAll());
 				}
 
 				this.tooltip = I18n.format("wdl.gui.wdl." + key + ".description");

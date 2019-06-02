@@ -16,7 +16,6 @@ package wdl.gui;
 
 import java.io.IOException;
 
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import wdl.WDL;
 import wdl.WDLMessageTypes;
@@ -105,10 +104,10 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements IBac
 
 	private int infoBoxX, infoBoxY;
 	private int infoBoxWidth, infoBoxHeight;
-	private GuiButton backupAsZipButton;
-	private GuiButton backupAsFolderButton;
-	private GuiButton downloadNowButton;
-	private GuiButton cancelButton;
+	private WDLButton backupAsZipButton;
+	private WDLButton backupAsFolderButton;
+	private WDLButton downloadNowButton;
+	private WDLButton cancelButton;
 
 	/**
 	 * Time when the world was last saved / last played.

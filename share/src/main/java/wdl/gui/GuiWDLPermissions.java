@@ -81,8 +81,8 @@ public class GuiWDLPermissions extends WDLScreen {
 				// Send the init packet.
 				WDLPluginChannels.sendInitPacket("Refresh?");
 
-				enabled = false;
-				displayString = "Refreshing...";
+				setEnabled(false);
+				setMessage("Refreshing...");
 
 				refreshTicks = 50; // 2.5 seconds
 			}

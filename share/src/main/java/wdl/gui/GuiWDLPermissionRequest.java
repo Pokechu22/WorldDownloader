@@ -18,7 +18,6 @@ import java.util.Map;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
@@ -47,9 +46,9 @@ public class GuiWDLPermissionRequest extends WDLScreen {
 	 */
 	private GuiTextField requestField;
 	/**
-	 * GUIButton for submitting the request.
+	 * Button for submitting the request.
 	 */
-	private GuiButton submitButton;
+	private WDLButton submitButton;
 
 	public GuiWDLPermissionRequest(@Nullable GuiScreen parent, WDL wdl) {
 		this.parent = parent;
@@ -84,10 +83,10 @@ public class GuiWDLPermissionRequest extends WDLScreen {
 				"Submit request") {
 			public @Override void performAction() {
 				WDLPluginChannels.sendRequests();
-				displayString = "Submitted!";
+				setMessage("Submitted!");
 			}
 		});
-		this.submitButton.enabled = !(WDLPluginChannels.getRequests().isEmpty());
+		this.submitButton.setEnabled(!(WDLPluginChannels.getRequests().isEmpty()));
 
 		this.addButton(new ButtonDisplayGui(width / 2 - 100, height - 29,
 				200, 20, this.parent));
@@ -116,7 +115,7 @@ public class GuiWDLPermissionRequest extends WDLScreen {
 				WDLPluginChannels.addRequest(key, value);
 				list.addLine("Requesting '" + key + "' to be '"
 						+ value + "'.");
-				submitButton.enabled = true;
+				submitButton.setEnabled(true);
 
 				requestField.setText("");
 			}
