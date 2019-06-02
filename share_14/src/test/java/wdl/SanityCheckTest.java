@@ -14,7 +14,8 @@
  */
 package wdl;
 
-import static org.junit.Assume.*;
+import org.junit.Test;
+
 
 import org.junit.Test;
 

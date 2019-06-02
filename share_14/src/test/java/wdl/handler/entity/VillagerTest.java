@@ -14,9 +14,18 @@
  */
 package wdl.handler.entity;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
-import static wdl.versioned.VersionedFunctions.*;
+import com.google.common.collect.ImmutableList;
+import java.util.List;
+import net.minecraft.entity.passive.EntityVillager;
+import net.minecraft.init.Items;
+import net.minecraft.inventory.ContainerMerchant;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.village.MerchantRecipe;
+import net.minecraft.village.MerchantRecipeList;
+import org.junit.Test;
+import wdl.handler.HandlerException;
+
 
 import java.lang.reflect.Field;
 import java.util.List;

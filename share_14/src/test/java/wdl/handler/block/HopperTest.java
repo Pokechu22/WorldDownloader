@@ -14,7 +14,15 @@
  */
 package wdl.handler.block;
 
-import static wdl.versioned.VersionedFunctions.customName;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.inventory.ContainerHopper;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntityHopper;
+import net.minecraft.util.math.BlockPos;
+import org.junit.Test;
+import wdl.handler.HandlerException;
+
 
 import org.junit.Test;
 

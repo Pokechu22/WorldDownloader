@@ -14,7 +14,6 @@
  */
 package wdl;
 
-import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
 import java.util.function.BooleanSupplier;

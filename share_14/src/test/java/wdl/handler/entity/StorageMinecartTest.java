@@ -15,6 +15,12 @@
 package wdl.handler.entity;
 
 import org.junit.Test;
+import net.minecraft.entity.item.EntityMinecartChest;
+import net.minecraft.init.Items;
+import net.minecraft.inventory.ContainerChest;
+import net.minecraft.item.ItemStack;
+import wdl.handler.HandlerException;
+
 
 import net.minecraft.entity.item.EntityMinecartChest;
 import net.minecraft.init.Items;

@@ -14,8 +14,19 @@
  */
 package wdl;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import com.mojang.authlib.GameProfile;
+import net.minecraft.client.entity.EntityOtherPlayerMP;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
+import net.minecraft.network.play.server.SPacketMaps;
+import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.storage.MapData;
+import net.minecraft.world.storage.MapData.MapInfo;
+import org.junit.Test;
+import wdl.MapDataHandler.MapDataResult;
+import wdl.versioned.VersionedFunctions;
+
 
 import org.junit.Test;
 

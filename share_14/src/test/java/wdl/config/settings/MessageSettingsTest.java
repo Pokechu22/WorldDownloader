@@ -14,7 +14,9 @@
  */
 package wdl.config.settings;
 
-import static wdl.config.settings.SettingTestUtils.*;
+import org.junit.Test;
+import wdl.MaybeMixinTest;
+
 
 import org.junit.Test;
 

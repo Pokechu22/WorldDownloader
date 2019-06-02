@@ -14,8 +14,17 @@
  */
 package wdl.handler.blockaction;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import java.util.HashMap;
+import java.util.Map;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockEventData;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
+import org.junit.Test;
+import wdl.handler.AbstractWorldBehaviorTest;
+import wdl.handler.HandlerException;
+
 
 import java.util.HashMap;
 import java.util.Map;

@@ -14,8 +14,6 @@
  */
 package wdl.handler.block;
 
-import net.minecraft.init.Blocks;
-import net.minecraft.tileentity.TileEntityTrappedChest;
 
 /**
  * This weird wrapper is to have a public class but the file with a different name.

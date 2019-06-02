@@ -14,8 +14,22 @@
  */
 package wdl.handler.entity;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import com.google.common.collect.ImmutableList;
+import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import java.util.List;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
+import org.junit.Test;
+import wdl.handler.AbstractWorldBehaviorTest;
+import wdl.handler.HandlerException;
+
 
 import java.util.List;
 

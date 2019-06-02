@@ -14,10 +14,13 @@
  */
 package wdl.config.settings;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.Matchers.*;
-import static org.mockito.Mockito.*;
-import static wdl.config.settings.SettingTestUtils.*;
+import net.minecraft.entity.Entity;
+import org.junit.Test;
+import wdl.MaybeMixinTest;
+import wdl.config.Configuration;
+import wdl.config.DefaultConfiguration;
+import wdl.config.settings.WorldSettings.SpawnMode;
+
 
 import org.junit.Test;
 

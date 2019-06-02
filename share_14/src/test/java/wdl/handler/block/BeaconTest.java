@@ -15,9 +15,16 @@
  */
 package wdl.handler.block;
 
-import static org.junit.Assert.*;
-import static org.junit.Assume.*;
-import static wdl.versioned.VersionedFunctions.customName;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.MobEffects;
+import net.minecraft.inventory.ContainerBeacon;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.Potion;
+import net.minecraft.tileentity.TileEntityBeacon;
+import net.minecraft.util.math.BlockPos;
+import org.junit.Test;
+import wdl.handler.HandlerException;
+
 
 import org.junit.Test;
 

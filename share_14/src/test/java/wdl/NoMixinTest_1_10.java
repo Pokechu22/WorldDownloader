@@ -14,10 +14,6 @@
  */
 package wdl;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
 import net.minecraft.client.resources.DefaultResourcePack;
 import net.minecraft.client.resources.IResourcePack;

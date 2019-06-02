@@ -14,7 +14,6 @@
  */
 package wdl;
 
-import java.util.function.Consumer;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;

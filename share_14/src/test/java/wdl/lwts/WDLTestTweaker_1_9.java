@@ -5,9 +5,6 @@
 // NOTE: the package for the tweaker is excluded from tweaks, so it must be in a different one
 package wdl.lwts;
 
-import org.spongepowered.asm.launch.MixinBootstrap;
-import org.spongepowered.asm.mixin.MixinEnvironment;
-import org.spongepowered.lwts.AbstractTestTweaker;
 
 import net.minecraft.launchwrapper.LaunchClassLoader;
 

@@ -15,6 +15,11 @@
 package wdl.handler.blockaction;
 
 import org.junit.Test;
+import net.minecraft.block.BlockNote;
+import net.minecraft.init.Blocks;
+import net.minecraft.util.math.BlockPos;
+import wdl.handler.HandlerException;
+
 
 import net.minecraft.block.BlockNote;
 import net.minecraft.init.Blocks;

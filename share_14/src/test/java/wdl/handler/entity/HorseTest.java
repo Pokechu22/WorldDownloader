@@ -14,7 +14,24 @@
  */
 package wdl.handler.entity;
 
-import static org.junit.Assert.*;
+import java.util.ArrayList;
+import java.util.List;
+import javax.annotation.Nullable;
+import net.minecraft.entity.passive.EquineEntity;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.inventory.ContainerHorseChest;
+import net.minecraft.inventory.ContainerHorseInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
+import wdl.ReflectionUtils;
+import wdl.handler.HandlerException;
+
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;

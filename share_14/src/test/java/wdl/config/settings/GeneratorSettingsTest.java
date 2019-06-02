@@ -14,9 +14,12 @@
  */
 package wdl.config.settings;
 
-import static wdl.config.settings.SettingTestUtils.*;
-import static org.junit.Assert.*;
-import static org.hamcrest.Matchers.*;
+import org.junit.Test;
+import wdl.MaybeMixinTest;
+import wdl.config.Configuration;
+import wdl.config.DefaultConfiguration;
+import wdl.config.IConfiguration;
+
 
 import org.junit.Test;
 

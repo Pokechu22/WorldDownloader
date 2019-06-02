@@ -14,8 +14,14 @@
  */
 package wdl.config.settings;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import java.util.function.Consumer;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
+import wdl.config.CyclableSetting;
+import wdl.config.DefaultConfiguration;
+import wdl.config.Setting;
+
 
 import java.util.function.Consumer;
 

@@ -14,8 +14,17 @@
  */
 package wdl;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import org.junit.Test;
+import wdl.WDLMessages.MessageRegistration;
+import wdl.api.IWDLMessageType;
+import wdl.config.Configuration;
+import wdl.config.DefaultConfiguration;
+import wdl.config.IConfiguration;
+import wdl.config.settings.MessageSettings;
+import wdl.config.settings.MessageSettings.MessageCategorySetting;
+import wdl.config.settings.MessageSettings.MessageTypeSetting;
+import wdl.config.settings.SettingTestUtils;
+
 
 import org.junit.Test;
 
