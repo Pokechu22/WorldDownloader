@@ -205,9 +205,9 @@ public abstract class GuiTurningCameraBase extends WDLScreen {
 	 * graphical issues</a> when there is no world.
 	 */
 	@Override
-	public void drawDefaultBackground() {
+	public void renderBackground() {
 		if (mc.world == null) {
-			this.drawBackground(0);
+			this.renderDirtBackground(0);
 		}
 	}
 

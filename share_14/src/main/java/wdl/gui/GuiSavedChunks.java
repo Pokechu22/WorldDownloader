@@ -121,9 +121,9 @@ public class GuiSavedChunks extends WDLScreen {
 		int playerPosX = (int)(((wdl.player.posX / 16.0D) - scrollX) * SCALE + (width / 2));
 		int playerPosZ = (int)(((wdl.player.posZ / 16.0D) - scrollZ) * SCALE + (height / 2));
 
-		drawHorizontalLine(playerPosX - 3, playerPosX + 3, playerPosZ, 0xFFFFFFFF);
+		hLine(playerPosX - 3, playerPosX + 3, playerPosZ, 0xFFFFFFFF);
 		// Vertical is 1px taller because it seems to be needed to make it proportional
-		drawVerticalLine(playerPosX, playerPosZ - 4, playerPosZ + 4, 0xFFFFFFFF);
+		vLine(playerPosX, playerPosZ - 4, playerPosZ + 4, 0xFFFFFFFF);
 
 		// Draw the main borders now so that positions are hidden behind it.
 		Utils.drawBorder(TOP_MARGIN, BOTTOM_MARGIN, 0, 0, height, width);
@@ -249,14 +249,14 @@ public class GuiSavedChunks extends WDLScreen {
 		int x2 = x1 + SCALE - 1;
 		int z2 = z1 + SCALE - 1;
 
-		drawRect(x1, z1, x2, z2, color);
+		fill(x1, z1, x2, z2, color);
 
 		int colorDark = darken(color);
 
-		drawVerticalLine(x1, z1, z2, colorDark);
-		drawVerticalLine(x2, z1, z2, colorDark);
-		drawHorizontalLine(x1, x2, z1, colorDark);
-		drawHorizontalLine(x1, x2, z2, colorDark);
+		vLine(x1, z1, z2, colorDark);
+		vLine(x2, z1, z2, colorDark);
+		hLine(x1, x2, z1, colorDark);
+		hLine(x1, x2, z2, colorDark);
 	}
 
 	/**

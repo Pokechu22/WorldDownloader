@@ -108,7 +108,7 @@ public class GuiWDLUpdates extends WDLScreen {
 
 				if (mouseX > x && mouseX < x + entryWidth && mouseY > y
 						&& mouseY < y + slotHeight) {
-					drawRect(x - 2, y - 2, x + entryWidth - 3, y + slotHeight + 2,
+					fill(x - 2, y - 2, x + entryWidth - 3, y + slotHeight + 2,
 							0x1FFFFFFF);
 				}
 			}

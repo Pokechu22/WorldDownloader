@@ -87,14 +87,14 @@ public class GuiWDLMultiworld extends WDLScreen {
 	 */
 	@Override
 	public void render(int mouseX, int mouseY, float partialTicks) {
-		this.drawDefaultBackground();
+		this.renderBackground();
 		Utils.drawBorder(32, 32, 0, 0, height, width);
 
 		this.drawCenteredString(this.fontRenderer,
 				I18n.format("wdl.gui.multiworld.title"),
 				this.width / 2, 8, 0xFFFFFF);
 
-		drawRect(infoBoxX, infoBoxY, infoBoxX + infoBoxWidth, infoBoxY
+		fill(infoBoxX, infoBoxY, infoBoxX + infoBoxWidth, infoBoxY
 				+ infoBoxHeight, 0xB0000000);
 
 		int x = infoBoxX + 10;
@@ -106,7 +106,7 @@ public class GuiWDLMultiworld extends WDLScreen {
 		}
 
 		//Red box around "multiworld support" button.
-		drawRect(
+		fill(
 				multiworldEnabledBtn.x - 2,
 				multiworldEnabledBtn.y - 2,
 				multiworldEnabledBtn.x

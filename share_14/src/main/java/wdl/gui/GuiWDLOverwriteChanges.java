@@ -200,10 +200,10 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements IBac
 
 	@Override
 	public void render(int mouseX, int mouseY, float partialTicks) {
-		this.drawDefaultBackground();
+		this.renderBackground();
 
 		if (this.backingUp) {
-			drawBackground(0);
+			renderDirtBackground(0);
 
 			drawCenteredString(fontRenderer, backingUpTitle,
 					width / 2, height / 4 - 40, 0xFFFFFF);
@@ -217,14 +217,14 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements IBac
 						height / 4 + 10, 0xFFFFFF);
 			}
 		} else {
-			drawDefaultBackground();
+			renderBackground();
 			Utils.drawBorder(32, 22, 0, 0, height, width);
 
 			drawCenteredString(fontRenderer, title, width / 2, 8, 0xFFFFFF);
 			drawCenteredString(fontRenderer, footer, width / 2, height - 8
 					- fontRenderer.FONT_HEIGHT, 0xFFFFFF);
 
-			drawRect(infoBoxX - 5, infoBoxY - 5, infoBoxX + infoBoxWidth + 5,
+			fill(infoBoxX - 5, infoBoxY - 5, infoBoxX + infoBoxWidth + 5,
 					infoBoxY + infoBoxHeight + 5, 0xB0000000);
 
 			drawCenteredString(fontRenderer, captionTitle, width / 2,

@@ -176,7 +176,7 @@ public class GuiWDLMessages extends WDLScreen {
 	public void render(int mouseX, int mouseY, float partialTicks) {
 		hoveredButtonTooltip = null;
 
-		this.drawDefaultBackground();
+		this.renderBackground();
 		super.render(mouseX, mouseY, partialTicks);
 
 		this.drawCenteredString(this.fontRenderer,

@@ -259,9 +259,9 @@ public class GuiWDLChunkOverrides extends WDLScreen {
 		int playerPosX = (int)(((wdl.player.posX / 16.0D) - scrollX) * SCALE + (width / 2));
 		int playerPosZ = (int)(((wdl.player.posZ / 16.0D) - scrollZ) * SCALE + (height / 2));
 
-		drawHorizontalLine(playerPosX - 3, playerPosX + 3, playerPosZ, 0xFFFFFFFF);
+		hLine(playerPosX - 3, playerPosX + 3, playerPosZ, 0xFFFFFFFF);
 		// Vertical is 1px taller because it seems to be needed to make it proportional
-		drawVerticalLine(playerPosX, playerPosZ - 4, playerPosZ + 4, 0xFFFFFFFF);
+		vLine(playerPosX, playerPosZ - 4, playerPosZ + 4, 0xFFFFFFFF);
 
 		// Draw the main borders now so that ranges are hidden behind it.
 		Utils.drawBorder(TOP_MARGIN, BOTTOM_MARGIN, 0, 0, height, width);
@@ -298,14 +298,14 @@ public class GuiWDLChunkOverrides extends WDLScreen {
 		int x2 = chunkXToDisplayX(range.x2) + SCALE - 1;
 		int z2 = chunkZToDisplayZ(range.z2) + SCALE - 1;
 
-		drawRect(x1, z1, x2, z2, color + (alpha << 24));
+		fill(x1, z1, x2, z2, color + (alpha << 24));
 
 		int colorDark = darken(color);
 
-		drawVerticalLine(x1, z1, z2, colorDark + (alpha << 24));
-		drawVerticalLine(x2, z1, z2, colorDark + (alpha << 24));
-		drawHorizontalLine(x1, x2, z1, colorDark + (alpha << 24));
-		drawHorizontalLine(x1, x2, z2, colorDark + (alpha << 24));
+		vLine(x1, z1, z2, colorDark + (alpha << 24));
+		vLine(x2, z1, z2, colorDark + (alpha << 24));
+		hLine(x1, x2, z1, colorDark + (alpha << 24));
+		hLine(x1, x2, z2, colorDark + (alpha << 24));
 	}
 
 	/**
@@ -392,7 +392,7 @@ public class GuiWDLChunkOverrides extends WDLScreen {
 		public void beforeDraw() {
 			if (GuiWDLChunkOverrides.this.mode == this.mode) {
 				// Mode is currently selected - draw a green outline.
-				drawRect(this.x - 2, this.y - 2,
+				fill(this.x - 2, this.y - 2,
 						this.x + width + 2, this.y + height + 2,
 						0xFF007F00);
 			}
@@ -404,7 +404,7 @@ public class GuiWDLChunkOverrides extends WDLScreen {
 			GlStateManager.color3f(1.0f, 1.0f, 1.0f);
 			mc.getTextureManager().bindTexture(WIDGET_TEXTURES);
 
-			this.drawTexturedModalRect(this.x + 2, this.y + 2,
+			this.blit(this.x + 2, this.y + 2,
 					mode.overlayU, mode.overlayV, 16, 16);
 		}
 	}

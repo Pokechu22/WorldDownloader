@@ -152,7 +152,7 @@ public class GuiWDLSaveProgress extends GuiTurningCameraBase {
 	 */
 	@Override
 	public synchronized void render(int mouseX, int mouseY, float partialTicks) {
-		this.drawDefaultBackground();
+		this.renderBackground();
 
 		if (this.doneWorking) {
 			this.mc.displayGuiScreen((Screen) null);

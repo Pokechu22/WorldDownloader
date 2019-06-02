@@ -51,7 +51,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 			}
 
 			if (info != null && info == selectedMultiWorld) {
-				drawRect(this.x - 2, this.y - 2,
+				fill(this.x - 2, this.y - 2,
 						this.x + width + 2, this.y + height + 2,
 						0xFF007F00);
 			}
@@ -354,7 +354,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	 */
 	@Override
 	public void render(int mouseX, int mouseY, float partialTicks) {
-		this.drawDefaultBackground();
+		this.renderBackground();
 
 		if (index >= linkedWorlds.size() - numWorldButtons) {
 			index = linkedWorlds.size() - numWorldButtons;
@@ -455,7 +455,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 			}
 		}
 
-		drawRect(2, 61, 5 + maxWidth + 3, height - 61, 0x80000000);
+		fill(2, 61, 5 + maxWidth + 3, height - 61, 0x80000000);
 
 		drawString(fontRenderer, title, 5, 64, 0xFFFFFF);
 

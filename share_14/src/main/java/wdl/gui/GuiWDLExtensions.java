@@ -286,7 +286,7 @@ public class GuiWDLExtensions extends WDLScreen {
 
 	@Override
 	public void render(int mouseX, int mouseY, float partialTicks) {
-		this.drawDefaultBackground();
+		this.renderBackground();
 
 		//Clamp bottomLocation.
 		if (bottomLocation < TOP_HEIGHT + 33) {
