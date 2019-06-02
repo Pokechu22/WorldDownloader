@@ -22,10 +22,10 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.nbt.INBTBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagLongArray;
+import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.nbt.LongArrayNBT;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.ServerTickList;
 import net.minecraft.world.World;
@@ -78,14 +78,14 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 	}
 
 	protected final WDL wdl;
-	protected final Map<ChunkPos, NBTTagCompound> chunksToSave;
+	protected final Map<ChunkPos, CompoundNBT> chunksToSave;
 	protected final File chunkSaveLocation;
 
 	protected WDLChunkLoaderBase(WDL wdl, File file) {
 		super(file, null);
 		this.wdl = wdl;
 		@SuppressWarnings("unchecked")
-		Map<ChunkPos, NBTTagCompound> chunksToSave =
+		Map<ChunkPos, CompoundNBT> chunksToSave =
 				ReflectionUtils.findAndGetPrivateField(this, AnvilChunkLoader.class, VersionedFunctions.getChunksToSaveClass());
 		this.chunksToSave = chunksToSave;
 		this.chunkSaveLocation = file;
@@ -101,9 +101,9 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 	public synchronized void saveChunk(World world, IChunk chunk) throws SessionLockException, IOException {
 		world.checkSessionLock();
 
-		NBTTagCompound levelTag = writeChunkToNBT((Chunk)chunk, world);
+		CompoundNBT levelTag = writeChunkToNBT((Chunk)chunk, world);
 
-		NBTTagCompound rootTag = new NBTTagCompound();
+		CompoundNBT rootTag = new CompoundNBT();
 		rootTag.put("Level", levelTag);
 		rootTag.putInt("DataVersion", VersionConstants.getDataVersion());
 
@@ -116,7 +116,7 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 	 * Writes the given chunk, creating an NBT compound tag.
 	 *
 	 * Note that this does <b>not</b> override the private method
-	 * {@link AnvilChunkLoader#writeChunkToNBT(Chunk, World, NBTCompoundTag)}.
+	 * {@link AnvilChunkLoader#writeChunkToNBT(Chunk, World, NBTCompoundNBT)}.
 	 * That method is private and cannot be overridden; plus, this version
 	 * returns a tag rather than modifying the one passed as an argument.
 	 *
@@ -125,10 +125,10 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 	 * @param world
 	 *            The world the chunk is in, used to determine the modified
 	 *            time.
-	 * @return A new NBTTagCompound
+	 * @return A new CompoundNBT
 	 */
-	private NBTTagCompound writeChunkToNBT(Chunk chunk, World world) {
-		NBTTagCompound compound = new NBTTagCompound();
+	private CompoundNBT writeChunkToNBT(Chunk chunk, World world) {
+		CompoundNBT compound = new CompoundNBT();
 
 		compound.putInt("xPos", chunk.x);
 		compound.putInt("zPos", chunk.z);
@@ -142,12 +142,12 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 		}
 
 		ChunkSection[] chunkSections = chunk.getSections();
-		NBTTagList chunkSectionList = new NBTTagList();
+		ListNBT chunkSectionList = new ListNBT();
 		boolean hasSky = VersionedFunctions.hasSkyLight(world);
 
 		for (ChunkSection chunkSection : chunkSections) {
 			if (chunkSection != Chunk.EMPTY_SECTION) {
-				NBTTagCompound sectionNBT = new NBTTagCompound();
+				CompoundNBT sectionNBT = new CompoundNBT();
 				sectionNBT.putByte("Y",
 						(byte) (chunkSection.getYLocation() >> 4 & 255));
 				chunkSection.getData().writeChunkPalette(sectionNBT, "Palette", "BlockStates");
@@ -172,7 +172,7 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 					sectionNBT.putByteArray("SkyLight", new byte[chunkSection.getBlockLight().getData().length]);
 				}
 
-				chunkSectionList.add((INBTBase) sectionNBT);
+				chunkSectionList.add((INBT) sectionNBT);
 			}
 		}
 
@@ -187,10 +187,10 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 		compound.putIntArray("Biomes", biomeData);
 
 		chunk.setHasEntities(false);
-		NBTTagList entityList = getEntityList(chunk);
+		ListNBT entityList = getEntityList(chunk);
 		compound.put("Entities", entityList);
 
-		NBTTagList tileEntityList = getTileEntityList(chunk);
+		ListNBT tileEntityList = getTileEntityList(chunk);
 		compound.put("TileEntities", tileEntityList);
 
 		if (world.getPendingBlockTicks() instanceof ServerTickList) {
@@ -209,12 +209,12 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 			compound.put("LiquidsToBeTicked", ((ChunkPrimerTickList<?>) chunk.getFluidsToBeTicked()).write());
 		}
 
-		NBTTagCompound heightMaps = new NBTTagCompound();
+		CompoundNBT heightMaps = new CompoundNBT();
 
 		for (Heightmap.Type type : chunk.getHeightmaps()) {
 			if (type.getUsage() == Heightmap.Usage.LIVE_WORLD) {
 				heightMaps.put(type.getId(),
-						new NBTTagLongArray(chunk.getHeightmap(type).getDataArray()));
+						new LongArrayNBT(chunk.getHeightmap(type).getDataArray()));
 			}
 		}
 
@@ -226,8 +226,8 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 		return compound;
 	}
 
-	protected abstract NBTTagList getEntityList(Chunk chunk);
-	protected abstract NBTTagList getTileEntityList(Chunk chunk);
+	protected abstract ListNBT getEntityList(Chunk chunk);
+	protected abstract ListNBT getTileEntityList(Chunk chunk);
 
 	/**
 	 * Gets a count of how many chunks there are that still need to be written to

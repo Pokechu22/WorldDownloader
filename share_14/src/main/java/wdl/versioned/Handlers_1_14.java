@@ -35,8 +35,8 @@ import net.minecraft.block.BlockShulkerBox;
 import net.minecraft.block.BlockTrappedChest;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.INBTBase;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityCommandBlock;
 import net.minecraft.util.math.BlockPos;
@@ -105,7 +105,7 @@ final class HandlerFunctions {
 	 * @see VersionedFunctions#shouldImportBlockEntity
 	 */
 	static boolean shouldImportBlockEntity(String entityID, BlockPos pos,
-			Block block, NBTTagCompound blockEntityNBT, Chunk chunk) {
+			Block block, CompoundNBT blockEntityNBT, Chunk chunk) {
 		// Note blocks do not have a block entity in this version.
 		if (block instanceof BlockChest && entityID.equals("minecraft:chest")) {
 			return true;
@@ -197,7 +197,7 @@ final class HandlerFunctions {
 	/* (non-javadoc)
 	 * @see VersionedFunctions#nbtString
 	 */
-	static String nbtString(INBTBase tag) {
+	static String nbtString(INBT tag) {
 		return tag.toFormattedComponent("    ", 0).getString();
 	}
 }

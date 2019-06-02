@@ -33,7 +33,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.toasts.GuiToast;
 import net.minecraft.client.gui.toasts.SystemToast;
 import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -61,11 +61,11 @@ final class GeneratorFunctions {
 		case FLAT:
 			return new GuiFlatPresets(new GuiCreateFlatWorldProxy(parent, generatorConfig, callback));
 		case BUFFET: {
-			NBTTagCompound generatorNBT;
+			CompoundNBT generatorNBT;
 			try {
 				generatorNBT = JsonToNBT.getTagFromJson(generatorConfig);
 			} catch (CommandSyntaxException ex) {
-				generatorNBT = new NBTTagCompound();
+				generatorNBT = new CompoundNBT();
 			}
 			return new GuiCreateBuffetWorld(new GuiCreateWorldProxy(parent, generatorNBT, callback), generatorNBT);
 		}
@@ -87,7 +87,7 @@ final class GeneratorFunctions {
 		private final Consumer<String> callback;
 
 		public GuiCreateFlatWorldProxy(GuiScreen parent, String generatorConfig, Consumer<String> callback) {
-			super(null, new NBTTagCompound());
+			super(null, new CompoundNBT());
 			this.parent = parent;
 			this.generatorConfig = generatorConfig;
 			this.callback = callback;
@@ -127,7 +127,7 @@ final class GeneratorFunctions {
 		private final GuiScreen parent;
 		private final Consumer<String> callback;
 
-		public GuiCreateWorldProxy(GuiScreen parent, NBTTagCompound generatorNBT, Consumer<String> callback) {
+		public GuiCreateWorldProxy(GuiScreen parent, CompoundNBT generatorNBT, Consumer<String> callback) {
 			super(parent);
 
 			this.parent = parent;
@@ -184,11 +184,11 @@ final class GeneratorFunctions {
 	/* (non-javadoc)
 	 * @see GeneratorFunctions#createGeneratorOptionsTag
 	 */
-	public static NBTTagCompound createGeneratorOptionsTag(String generatorOptions) {
+	public static CompoundNBT createGeneratorOptionsTag(String generatorOptions) {
 		try {
 			return JsonToNBT.getTagFromJson(generatorOptions);
 		} catch (CommandSyntaxException e) {
-			return new NBTTagCompound();
+			return new CompoundNBT();
 		}
 	}
 }
