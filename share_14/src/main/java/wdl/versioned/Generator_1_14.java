@@ -32,6 +32,7 @@ import net.minecraft.client.gui.screen.CreateWorldScreen;
 import net.minecraft.client.gui.screen.FlatPresetsScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.toasts.SystemToast;
+import net.minecraft.client.gui.toasts.ToastGui;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.util.math.MathHelper;
@@ -154,7 +155,7 @@ final class GeneratorFunctions {
 	static void makeBackupToast(String name, long fileSize) {
 		// See GuiWorldEdit.createBackup
 		Minecraft.getInstance().func_212871_a_(() -> {
-			GuiToast guitoast = Minecraft.getInstance().getToastGui();
+			ToastGui guitoast = Minecraft.getInstance().getToastGui();
 			ITextComponent top = new TranslationTextComponent("selectWorld.edit.backupCreated", name);
 			ITextComponent bot = new TranslationTextComponent("selectWorld.edit.backupSize", MathHelper.ceil(fileSize / 1048576.0));
 			guitoast.add(new SystemToast(SystemToast.Type.WORLD_BACKUP, top, bot));
@@ -168,8 +169,8 @@ final class GeneratorFunctions {
 		// See GuiWorldEdit.createBackup
 		String message = ex.getMessage();
 		Minecraft.getInstance().func_212871_a_(() -> {
-			GuiToast guitoast = Minecraft.getInstance().getToastGui();
-			// NOTE: vanilla translation string is missing (MC-137308)
+			ToastGui guitoast = Minecraft.getInstance().getToastGui();
+			// NOTE: vanilla translation string was missing (MC-137308) until 1.14
 			ITextComponent top = new TranslationTextComponent("wdl.toast.backupFailed");
 			ITextComponent bot = new StringTextComponent(message);
 			guitoast.add(new SystemToast(SystemToast.Type.WORLD_BACKUP, top, bot));
