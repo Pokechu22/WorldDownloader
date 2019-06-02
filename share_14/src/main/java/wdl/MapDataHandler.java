@@ -22,6 +22,7 @@ import javax.annotation.Nullable;
 
 import com.google.common.annotations.VisibleForTesting;
 
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemFrameEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -144,9 +145,17 @@ public final class MapDataHandler {
 
 		byte scale = mapData.scale;
 
-		List<ItemFrameEntity> actualFrames = world.getEntities(
-				ItemFrameEntity.class, frameWithMapID(mapID));
-		for (ItemFrameEntity frame : actualFrames) {
+		// No convenient way to filter it seems
+		Iterable<Entity> entities = ((ClientWorld)world).func_217416_b();
+		for (Entity e : entities) {
+			if (!(e instanceof ItemFrameEntity)) {
+				continue;
+			}
+			ItemFrameEntity frame = (ItemFrameEntity)e;
+			ItemStack stack = frame.getDisplayedItem();
+			if (!isMapWithID(stack, mapID)) {
+				continue;
+			}
 			// Since not all frames on the map are necessarily loaded by the client,
 			// look for frames in the world that aren't on the map instead.
 			// However, it's entirely possible to also have frames that just beyond the edge of the map...
@@ -227,13 +236,6 @@ public final class MapDataHandler {
 
 		@Override
 		public abstract boolean test(ItemFrameEntity frame);
-	}
-
-	private static FramePredicate frameWithMapID(int mapID) {
-		return frame -> {
-			ItemStack stack = frame.getDisplayedItem();
-			return isMapWithID(stack, mapID);
-		};
 	}
 
 	private static boolean isMapWithID(@Nullable ItemStack stack, int mapID) {
