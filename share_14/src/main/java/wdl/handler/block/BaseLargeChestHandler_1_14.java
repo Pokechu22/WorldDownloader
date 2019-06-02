@@ -14,17 +14,18 @@
  */
 package wdl.handler.block;
 
+import static wdl.versioned.VersionedFunctions.*;
 
 import java.util.function.BiConsumer;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.BlockChest;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.inventory.ContainerChest;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.ChestBlock;
+import net.minecraft.inventory.container.ChestContainer;
 import net.minecraft.state.properties.ChestType;
+import net.minecraft.tileentity.ChestTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import wdl.WDLMessageTypes;
@@ -39,8 +40,8 @@ import wdl.handler.HandlerException;
  * It is also important to note that sometimes, this logic is flipped from the behavior in 1.12,
  * as chests now are rotated properly.
  */
-abstract class BaseLargeChestHandler<B extends TileEntityChest> extends BlockHandler<B, ContainerChest> {
-	protected BaseLargeChestHandler(Class<B> blockEntityClass, Class<ContainerChest> containerClass,
+abstract class BaseLargeChestHandler<B extends ChestTileEntity> extends BlockHandler<B, ChestContainer> {
+	protected BaseLargeChestHandler(Class<B> blockEntityClass, Class<ChestContainer> containerClass,
 			String... defaultNames) {
 		super(blockEntityClass, containerClass, defaultNames);
 	}
@@ -57,12 +58,12 @@ abstract class BaseLargeChestHandler<B extends TileEntityChest> extends BlockHan
 	 * @param displayName The custom name of the chest, or <code>null</code> if none is set.
 	 * @throws HandlerException As per {@link #handle}
 	 */
-	protected void saveDoubleChest(BlockPos clickedPos, ContainerChest container,
+	protected void saveDoubleChest(BlockPos clickedPos, ChestContainer container,
 			B blockEntity, IBlockReader world,
 			BiConsumer<BlockPos, B> saveMethod,
 			@Nullable String displayName) throws HandlerException {
-		IBlockState state = world.getBlockState(clickedPos);
-		ChestType type = state.get(BlockChest.TYPE);
+		BlockState state = world.getBlockState(clickedPos);
+		ChestType type = state.get(ChestBlock.TYPE);
 
 		boolean right;
 		switch (type) {
@@ -71,7 +72,7 @@ abstract class BaseLargeChestHandler<B extends TileEntityChest> extends BlockHan
 		default: throw new HandlerException("wdl.messages.onGuiClosedWarning.failedToFindDoubleChest", WDLMessageTypes.ERROR);
 		}
 
-		BlockPos otherPos = clickedPos.offset(BlockChest.getDirectionToAttached(state));
+		BlockPos otherPos = clickedPos.offset(ChestBlock.getDirectionToAttached(state));
 
 		BlockPos chestPos1 = (right ? clickedPos : otherPos);
 		BlockPos chestPos2 = (right ? otherPos : clickedPos);
