@@ -94,8 +94,8 @@ final class GeneratorFunctions {
 		}
 
 		@Override
-		public void initGui() {
-			mc.displayGuiScreen(parent);
+		public void init() {
+			minecraft.displayGuiScreen(parent);
 		}
 
 		@Override
@@ -137,9 +137,9 @@ final class GeneratorFunctions {
 		}
 
 		@Override
-		public void initGui() {
+		public void init() {
 			callback.accept(this.chunkProviderSettingsJson.toString());
-			mc.displayGuiScreen(this.parent);
+			minecraft.displayGuiScreen(this.parent);
 		}
 
 		@Override
