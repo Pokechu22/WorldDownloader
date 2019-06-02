@@ -15,30 +15,32 @@
 package wdl.versioned;
 
 
+import javax.annotation.Nullable;
+
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableList;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import net.minecraft.block.BeaconBlock;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockBeacon;
-import net.minecraft.block.BlockBrewingStand;
-import net.minecraft.block.BlockChest;
-import net.minecraft.block.BlockCommandBlock;
-import net.minecraft.block.BlockContainer;
-import net.minecraft.block.BlockDispenser;
-import net.minecraft.block.BlockDropper;
-import net.minecraft.block.BlockFurnace;
-import net.minecraft.block.BlockHopper;
-import net.minecraft.block.BlockShulkerBox;
-import net.minecraft.block.BlockTrappedChest;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.BrewingStandBlock;
+import net.minecraft.block.ChestBlock;
+import net.minecraft.block.CommandBlockBlock;
+import net.minecraft.block.ContainerBlock;
+import net.minecraft.block.DispenserBlock;
+import net.minecraft.block.DropperBlock;
+import net.minecraft.block.FurnaceBlock;
+import net.minecraft.block.HopperBlock;
+import net.minecraft.block.ShulkerBoxBlock;
+import net.minecraft.block.TrappedChestBlock;
 import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
+import net.minecraft.tileentity.CommandBlockTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityCommandBlock;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -106,36 +108,36 @@ final class HandlerFunctions {
 	 */
 	static boolean shouldImportBlockEntity(String entityID, BlockPos pos,
 			Block block, CompoundNBT blockEntityNBT, Chunk chunk) {
-		// Note blocks do not have a block entity in this version.
-		if (block instanceof BlockChest && entityID.equals("minecraft:chest")) {
+		// Note sBlock do not have a block entity in this version.
+		if (block instanceof ChestBlock && entityID.equals("minecraft:chest")) {
 			return true;
-		} else if (block instanceof BlockTrappedChest && entityID.equals("minecraft:trapped_chest")) {
+		} else if (block instanceof TrappedChestBlock && entityID.equals("minecraft:trapped_chest")) {
 			// Separate block entity from regular chests in this version.
 			return true;
-		} else if (block instanceof BlockDispenser && entityID.equals("minecraft:dispenser")) {
+		} else if (block instanceof DispenserBlock && entityID.equals("minecraft:dispenser")) {
 			return true;
-		} else if (block instanceof BlockDropper && entityID.equals("minecraft:dropper")) {
+		} else if (block instanceof DropperBlock && entityID.equals("minecraft:dropper")) {
 			return true;
-		} else if (block instanceof BlockFurnace && entityID.equals("minecraft:furnace")) {
+		} else if (block instanceof FurnaceBlock && entityID.equals("minecraft:furnace")) {
 			return true;
-		} else if (block instanceof BlockBrewingStand && entityID.equals("minecraft:brewing_stand")) {
+		} else if (block instanceof BrewingStandBlock && entityID.equals("minecraft:brewing_stand")) {
 			return true;
-		} else if (block instanceof BlockHopper && entityID.equals("minecraft:hopper")) {
+		} else if (block instanceof HopperBlock && entityID.equals("minecraft:hopper")) {
 			return true;
-		} else if (block instanceof BlockBeacon && entityID.equals("minecraft:beacon")) {
+		} else if (block instanceof BeaconBlock && entityID.equals("minecraft:beacon")) {
 			return true;
-		} else if (block instanceof BlockShulkerBox && entityID.equals("minecraft:shulker_box")) {
+		} else if (block instanceof ShulkerBoxBlock && entityID.equals("minecraft:shulker_box")) {
 			return true;
-		} else if (block instanceof BlockCommandBlock && entityID.equals("minecraft:command_block")) {
-			// Only import command blocks if the current world doesn't have a command set
+		} else if (block instanceof CommandBlockBlock && entityID.equals("minecraft:command_block")) {
+			// Only import command sBlock if the current world doesn't have a command set
 			// for the one there, as WDL doesn't explicitly save them so we need to use the
 			// one currently present in the world.
-			TileEntity temp = chunk.getTileEntity(pos, Chunk.EnumCreateEntityType.CHECK);
-			if (temp == null || !(temp instanceof TileEntityCommandBlock)) {
+			TileEntity temp = chunk.getTileEntity(pos, Chunk.CreateEntityType.CHECK);
+			if (temp == null || !(temp instanceof CommandBlockTileEntity)) {
 				// Bad/missing data currently there, import the old data
 				return true;
 			}
-			TileEntityCommandBlock te = (TileEntityCommandBlock) temp;
+			CommandBlockTileEntity te = (CommandBlockTileEntity) temp;
 			boolean currentBlockHasCommand = !te.getCommandBlockLogic().getCommand().isEmpty();
 			// Only import if the current command block has no command.
 			return !currentBlockHasCommand;
@@ -148,7 +150,7 @@ final class HandlerFunctions {
 	 * @see VersionedFunctions#createNewBlockEntity
 	 */
 	@Nullable
-	static TileEntity createNewBlockEntity(World world, BlockContainer block, IBlockState state) {
+	static TileEntity createNewBlockEntity(World world, ContainerBlock block, BlockState state) {
 		return block.createNewTileEntity(world);
 	}
 

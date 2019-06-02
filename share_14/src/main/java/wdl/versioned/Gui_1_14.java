@@ -14,16 +14,18 @@
  */
 package wdl.versioned;
 
+import static org.lwjgl.opengl.GL11.*;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.network.NetHandlerPlayClient;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.network.play.ClientPlayNetHandler;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.world.World;
 
 /**
@@ -35,8 +37,8 @@ final class GuiFunctions {
 	/* (non-javadoc)
 	 * @see VersionedFunctions#makePlayer
 	 */
-	static EntityPlayerSP makePlayer(Minecraft minecraft, World world, NetHandlerPlayClient nhpc, EntityPlayerSP base) {
-		return new EntityPlayerSP(minecraft, world, nhpc,
+	static ClientPlayerEntity makePlayer(Minecraft minecraft, World world, ClientPlayNetHandler nhpc, ClientPlayerEntity base) {
+		return new ClientPlayerEntity(minecraft, (ClientWorld)world, nhpc,
 				base.getStats(), base.getRecipeBook());
 	}
 
@@ -50,7 +52,7 @@ final class GuiFunctions {
 		Tessellator t = Tessellator.getInstance();
 		BufferBuilder b = t.getBuffer();
 
-		Minecraft.getInstance().getTextureManager().bindTexture(Gui.OPTIONS_BACKGROUND);
+		Minecraft.getInstance().getTextureManager().bindTexture(AbstractGui.BACKGROUND_LOCATION);
 		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 		float textureSize = 32.0F;
@@ -75,7 +77,7 @@ final class GuiFunctions {
 		GlStateManager.disableDepthTest();
 		byte padding = 4;
 
-		Minecraft.getInstance().getTextureManager().bindTexture(Gui.OPTIONS_BACKGROUND);
+		Minecraft.getInstance().getTextureManager().bindTexture(AbstractGui.BACKGROUND_LOCATION);
 		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 		float textureSize = 32.0F;
@@ -121,7 +123,7 @@ final class GuiFunctions {
 				GL_ONE_MINUS_SRC_ALPHA, 0, 1);
 		GlStateManager.disableAlphaTest();
 		GlStateManager.shadeModel(GL_SMOOTH);
-		GlStateManager.disableTexture2D();
+		GlStateManager.disableTexture();
 		b.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
 		b.pos(left, upperBoxEnd + padding, 0.0D).tex(0.0D, 1.0D)
 		.color(0, 0, 0, 0).endVertex();
@@ -143,7 +145,7 @@ final class GuiFunctions {
 		.color(0, 0, 0, 0).endVertex();
 		t.draw();
 
-		GlStateManager.enableTexture2D();
+		GlStateManager.enableTexture();
 		GlStateManager.shadeModel(GL_FLAT);
 		GlStateManager.enableAlphaTest();
 		GlStateManager.disableBlend();

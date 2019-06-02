@@ -15,9 +15,11 @@
 package wdl.versioned;
 
 
-import net.minecraft.item.ItemMap;
+import javax.annotation.Nullable;
+
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.play.server.SPacketMaps;
+import net.minecraft.item.MapItem;
+import net.minecraft.network.play.server.SMapDataPacket;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.storage.MapData;
@@ -35,15 +37,15 @@ final class MapFunctions {
 	 * {@see VersionedFunctions#getMapData}
 	 */
 	@Nullable
-	static MapData getMapData(World world, SPacketMaps mapPacket) {
-		return ItemMap.loadMapData(world, "map_" + mapPacket.getMapId());
+	static MapData getMapData(World world, SMapDataPacket mapPacket) {
+		return MapItem.loadMapData(world, "map_" + mapPacket.getMapId());
 	}
 
 	/* (non-javadoc)
 	 * {@see VersionedFunctions#getMapID}
 	 */
 	static int getMapID(ItemStack stack) {
-		return ItemMap.getMapId(stack);
+		return MapItem.getMapId(stack);
 	}
 
 	/* (non-javadoc)

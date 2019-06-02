@@ -36,13 +36,10 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.multiplayer.ChunkProviderClient;
+import net.minecraft.client.multiplayer.ClientChunkProvider;
 import net.minecraft.client.network.play.ClientPlayNetHandler;
-import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
@@ -56,7 +53,7 @@ import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.storage.AnvilChunkLoader;
+import net.minecraft.world.chunk.ChunkManager;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.storage.MapData;
 import net.minecraft.world.storage.SaveHandler;
@@ -387,7 +384,7 @@ public final class VersionedFunctions {
 	}
 
 	/**
-	 * Creates a new instance of {@link EntityPlayerSP}.
+	 * Creates a new instance of {@link ClientPlayerEntity}.
 	 *
 	 * @param minecraft The minecraft instance
 	 * @param world The world
@@ -455,16 +452,16 @@ public final class VersionedFunctions {
 	}
 
 	/**
-	 * Gets the class used to store the list of chunks in ChunkProviderClient
-	 * ({@link ChunkProviderClient#loadedChunks}).
+	 * Gets the class used to store the list of chunks in ClientChunkProvider
+	 * ({@link ClientChunkProvider#loadedChunks}).
 	 */
 	public static Class<?> getChunkListClass() {
 		return TypeFunctions.getChunkListClass();
 	}
 
 	/**
-	 * Gets the class used to store the list of chunks in pending saving in AnvilChunkLoader
-	 * ({@link AnvilChunkLoader#chunksToSave}).
+	 * Gets the class used to store the list of chunks in pending saving in ChunkManager
+	 * ({@link ChunkManager#chunksToSave}).
 	 */
 	@SuppressWarnings("rawtypes")
 	public static Class<? extends Map> getChunksToSaveClass() {
