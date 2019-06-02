@@ -49,7 +49,7 @@ public interface IWDLMessageType {
 	 */
 	public abstract ITextComponent getDescription();
 	/**
-	 * Wheter this type of message should be enabled by default.
+	 * Whether this type of message should be enabled by default.
 	 */
 	public abstract boolean isEnabledByDefault();
 }

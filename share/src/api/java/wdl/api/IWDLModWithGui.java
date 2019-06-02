@@ -28,7 +28,7 @@ public interface IWDLModWithGui extends IWDLMod {
 	public abstract String getButtonName();
 
 	/**
-	 * Open the GUI after the coresponding button has been clicked.
+	 * Open the GUI after the corresponding button has been clicked.
 	 *
 	 * @param currentGui
 	 *            The GUI that is currently open (and is calling this method).

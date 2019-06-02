@@ -45,7 +45,7 @@ public interface IWDLModDescripted extends IWDLMod {
 	public abstract String[] getAuthors();
 	/**
 	 * A URL for more information about the extension, EG a github link
-	 * or a minecraftforums link.
+	 * or a minecraftforum link.
 	 *
 	 * @return A URL, or null if there is no URL.
 	 */

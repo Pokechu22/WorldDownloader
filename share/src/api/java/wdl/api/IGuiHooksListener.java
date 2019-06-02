@@ -43,7 +43,7 @@ public interface IGuiHooksListener extends IWDLMod {
 
 	/**
 	 * Called when an entity's GUI closes. <br/>
-	 * Note that the given entity may not have been the one coresponding to the
+	 * Note that the given entity may not have been the one corresponding to the
 	 * entity. Double-check that it is. This can happen if there is lag and the
 	 * player looks at an entity before the GUI opens (or if an entity walks in
 	 * the way).

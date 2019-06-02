@@ -20,12 +20,12 @@ import net.minecraft.util.math.BlockPos;
 public interface IBlockEventListener extends IWDLMod {
 	/**
 	 * Called when a "Block Event" occurs. Some mods use this to send data. (In
-	 * vanilla, noteblocks use this to play a note).
+	 * vanilla, noteblocks used this to play a note until 1.13).
 	 *
 	 * @param world
-	 *            The world in which the event occured.
+	 *            The world in which the event occurred.
 	 * @param pos
-	 *            The position the event occured at.
+	 *            The position the event occurred at.
 	 * @param block
 	 *            The type of block.
 	 * @param data1
