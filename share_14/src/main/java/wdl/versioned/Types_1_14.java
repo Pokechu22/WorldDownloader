@@ -19,6 +19,7 @@ import java.util.Map;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.minecraft.client.GameSettings;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.util.text.StringTextComponent;
 
@@ -53,7 +54,7 @@ final class TypeFunctions {
 	 * @see VersionedFunctions#createNewGameSettings
 	 */
 	static GameSettings createNewGameSettings() {
-		return new GameSettings();
+		return new GameSettings(Minecraft.getInstance(), Minecraft.getInstance().gameDir);
 	}
 
 	/* (non-javadoc)

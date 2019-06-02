@@ -14,21 +14,20 @@
  */
 package wdl.handler.block;
 
-import static wdl.versioned.VersionedFunctions.*;
-
 import java.util.Arrays;
 import java.util.function.BiConsumer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIntArray;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IBlockReader;
+import wdl.ReflectionUtils;
 import wdl.ducks.INetworkNameable;
 import wdl.handler.BaseHandler;
 import wdl.handler.HandlerException;
@@ -134,8 +133,12 @@ public abstract class BlockHandler<B extends TileEntity, C extends Container> ex
 	 */
 	protected static void saveInventoryFields(IInventory inventory,
 			IInventory tileEntity) {
-		for (int i = 0; i < inventory.getFieldCount(); i++) {
-			tileEntity.setField(i, inventory.getField(i));
+		// IIntArray is a SUPER misleading name; it's what stores these inventory fields.
+		// Unfortuantely they're declared on a per-inventory level now.
+		IIntArray input = ReflectionUtils.findAndGetPrivateField(inventory, IIntArray.class);
+		IIntArray output = ReflectionUtils.findAndGetPrivateField(tileEntity, IIntArray.class);
+		for (int i = 0; i < input.func_221478_a(); i++) {
+			output.func_221477_a(i, input.func_221476_a(i));
 		}
 	}
 
@@ -157,16 +160,9 @@ public abstract class BlockHandler<B extends TileEntity, C extends Container> ex
 	protected String getCustomDisplayName(IInventory inventory) {
 		if (inventory instanceof INetworkNameable) {
 			return ((INetworkNameable) inventory).getCustomDisplayName();
+		} else {
+			return null;
 		}
-		// Fallback, will fail for situations where the custom name
-		// is the vanilla name
-		String name = inventory.getDisplayName().getString();
-		for (String key : defaultNames) {
-			if (I18n.format(key).equals(name)) {
-				return null;
-			}
-		}
-		return name;
 	}
 
 	/**
