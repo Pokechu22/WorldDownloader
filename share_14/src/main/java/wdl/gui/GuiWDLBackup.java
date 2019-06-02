@@ -25,6 +25,7 @@ import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.TranslationTextComponent;
 import wdl.WDL;
 import wdl.WorldBackup;
 import wdl.WorldBackup.ICustomBackupProgressMonitor;
@@ -307,15 +308,15 @@ public class GuiWDLBackup extends WDLScreen {
 		if (this.isCommandValid) {
 			return parent;
 		} else {
-			return new ConfirmScreen((result, id) -> {
+			return new ConfirmScreen((result) -> {
 				if (result) {
 					mc.displayGuiScreen(parent);
 				} else {
 					mc.displayGuiScreen(GuiWDLBackup.this);
 				}
-			}, I18n.format("wdl.gui.backup.customCommandFailed.line1"),
-					I18n.format("wdl.gui.backup.customCommandFailed.line2"),
-					I18n.format("gui.yes"), I18n.format("gui.cancel"), 0);
+			}, new TranslationTextComponent("wdl.gui.backup.customCommandFailed.line1"),
+					new TranslationTextComponent("wdl.gui.backup.customCommandFailed.line2"),
+					I18n.format("gui.yes"), I18n.format("gui.cancel"));
 		}
 	}
 }

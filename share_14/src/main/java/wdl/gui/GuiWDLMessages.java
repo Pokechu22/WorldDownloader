@@ -23,6 +23,7 @@ import com.google.common.collect.ListMultimap;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.TranslationTextComponent;
 import wdl.MessageTypeCategory;
 import wdl.WDL;
 import wdl.WDLMessages;
@@ -137,10 +138,9 @@ public class GuiWDLMessages extends WDLScreen {
 		resetButton = this.addButton(new ButtonDisplayGui(
 				(this.width / 2) + 5, 18, 150, 20,
 				I18n.format("wdl.gui.messages.reset"),
-				() -> new ConfirmScreen(this,
-						I18n.format("wdl.gui.messages.reset.confirm.title"),
-						I18n.format("wdl.gui.messages.reset.confirm.subtitle"),
-						ID_RESET_ALL)));
+				() -> new ConfirmScreen(result -> confirmResult(result, ID_RESET_ALL),
+						new TranslationTextComponent("wdl.gui.messages.reset.confirm.title"),
+						new TranslationTextComponent("wdl.gui.messages.reset.confirm.subtitle"))));
 
 		this.addList(new GuiMessageTypeList());
 
@@ -148,8 +148,7 @@ public class GuiWDLMessages extends WDLScreen {
 				200, 20, this.parent));
 	}
 
-	@Override
-	public void confirmResult(boolean result, int id) {
+	private void confirmResult(boolean result, int id) {
 		if (result) {
 			if (id == ID_RESET_ALL) {
 				ListMultimap<MessageTypeCategory, MessageRegistration> registrations = WDLMessages.getRegistrations();

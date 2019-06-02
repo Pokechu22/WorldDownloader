@@ -19,10 +19,11 @@ import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import wdl.EntityUtils;
 import wdl.EntityUtils.SpigotEntityType;
 import wdl.WDL;
@@ -35,7 +36,7 @@ import wdl.gui.widget.WDLScreen;
 /**
  * Provides fast setting for various entity options.
  */
-public class GuiWDLEntityRangePresets extends WDLScreen implements GuiYesNoCallback {
+public class GuiWDLEntityRangePresets extends WDLScreen {
 	@Nullable
 	private final Screen parent;
 	private final WDL wdl;
@@ -83,10 +84,10 @@ public class GuiWDLEntityRangePresets extends WDLScreen implements GuiYesNoCallb
 	}
 
 	private Supplier<ConfirmScreen> makeYesNoGui(String message, int id) {
-		String upper = I18n.format("wdl.gui.rangePresets.upperWarning");
-		String lower = I18n.format(message);
+		ITextComponent upper = new TranslationTextComponent("wdl.gui.rangePresets.upperWarning");
+		ITextComponent lower = new TranslationTextComponent(message);
 
-		return () -> new ConfirmScreen(this, upper, lower, id);
+		return () -> new ConfirmScreen(result -> this.confirmResult(result, id), upper, lower);
 	}
 
 	@Override
@@ -122,8 +123,7 @@ public class GuiWDLEntityRangePresets extends WDLScreen implements GuiYesNoCallb
 		super.render(mouseX, mouseY, partialTicks);
 	}
 
-	@Override
-	public void confirmResult(boolean result, int id) {
+	private void confirmResult(boolean result, int id) {
 		if (result) {
 			Set<String> entities = EntityUtils.getEntityTypes();
 
