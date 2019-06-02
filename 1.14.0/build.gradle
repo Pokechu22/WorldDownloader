@@ -104,7 +104,7 @@ sourceSets {
     main {
         java {
             srcDir "src/main/java"
-            srcDir project(':share').file("src/main/java")
+            srcDir project(':share_14').file("src/main/java")
             exclude "wdl/StandardEntityManagers_1_10.java"
             exclude "wdl/StandardEntityManagers_1_12.java"
             exclude "wdl/StandardEntityManagers_1_13.java"
@@ -170,7 +170,7 @@ sourceSets {
     }
     api {
         java {
-            srcDir project(':share').file("src/api/java")
+            srcDir project(':share_14').file("src/api/java")
         }
     }
 }

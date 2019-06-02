@@ -1,4 +1,4 @@
-include 'share'
+include 'share', 'share_14'
 include '1.09.0', '1.09.0-litemod'
 include '1.09.2' // There never was a 1.9.2 liteloader
 include '1.09.4', '1.09.4-litemod'
