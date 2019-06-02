@@ -14,14 +14,14 @@
  */
 package wdl.handler.block;
 
-import net.minecraft.tileentity.TileEntityChest;
+import net.minecraft.tileentity.ChestTileEntity;
 
 /**
  * Handles regular chests.  Additionally handles trapped chests in versions where
  * both use TileEntityChest (1.12 and below).
  */
-public class ChestHandler extends BaseChestHandler<TileEntityChest> {
+public class ChestHandler extends BaseChestHandler<ChestTileEntity> {
 	public ChestHandler() {
-		super(TileEntityChest.class, "container.chest", "container.chestDouble");
+		super(ChestTileEntity.class, "container.chest", "container.chestDouble");
 	}
 }

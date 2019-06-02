@@ -17,7 +17,7 @@ package wdl;
 import java.util.Set;
 import com.google.common.collect.Sets;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityArmorStand;
+import net.minecraft.entity.item.ArmorStandEntity;
 import wdl.config.settings.EntitySettings.TrackDistanceMode;
 
 
@@ -69,7 +69,7 @@ IWDLModDescripted {
 
 	@Override
 	public String getIdentifierFor(Entity entity) {
-		if (entity instanceof EntityArmorStand &&
+		if (entity instanceof ArmorStandEntity &&
 				entity.isInvisible() &&
 				entity.hasCustomName()) {
 			return "x-extended:hologram";

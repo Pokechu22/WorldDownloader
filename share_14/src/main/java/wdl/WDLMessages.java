@@ -27,8 +27,8 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.util.text.event.HoverEvent.Action;
 import org.apache.logging.log4j.LogManager;
@@ -212,7 +212,7 @@ public class WDLMessages {
 	 */
 	public static void chatMessage(@Nonnull IConfiguration config,
 			@Nonnull IWDLMessageType type, @Nonnull String message) {
-		chatMessage(config, type, new TextComponentString(message));
+		chatMessage(config, type, new StringTextComponent(message));
 	}
 
 	/**
@@ -236,8 +236,8 @@ public class WDLMessages {
 
 		for (int i = 0; i < args.length; i++) {
 			if (args[i] == null) {
-				TextComponentString text = new TextComponentString("null");
-				text.getStyle().setHoverEvent(new HoverEvent(Action.SHOW_TEXT, new TextComponentString("~~null~~")));
+				StringTextComponent text = new StringTextComponent("null");
+				text.getStyle().setHoverEvent(new HoverEvent(Action.SHOW_TEXT, new StringTextComponent("~~null~~")));
 				args[i] = text;
 			} else if (args[i] instanceof Entity) {
 				Entity e = (Entity)args[i];
@@ -257,11 +257,11 @@ public class WDLMessages {
 
 		final ITextComponent component;
 		if (I18n.hasKey(translationKey)) {
-			component = new TextComponentTranslation(translationKey, args);
+			component = new TranslationTextComponent(translationKey, args);
 		} else {
 			// Oh boy, no translation text.  Manually apply parameters.
 			String message = translationKey;
-			component = new TextComponentString(message);
+			component = new StringTextComponent(message);
 			component.appendText("[");
 			for (int i = 0; i < args.length; i++) {
 				if (args[i] instanceof ITextComponent) {
@@ -304,18 +304,18 @@ public class WDLMessages {
 		// Can't use a TextComponentTranslation here because it doesn't like new lines.
 		String tooltipText = I18n.format("wdl.messages.tooltip",
 				type.getDisplayName().getFormattedText()).replace("\\n", "\n");
-		ITextComponent tooltip = new TextComponentString(tooltipText);
+		ITextComponent tooltip = new StringTextComponent(tooltipText);
 
-		ITextComponent text = new TextComponentString("");
+		ITextComponent text = new StringTextComponent("");
 
-		ITextComponent header = new TextComponentString("[WorldDL]");
+		ITextComponent header = new StringTextComponent("[WorldDL]");
 		header.getStyle().setColor(type.getTitleColor());
 		header.getStyle().setHoverEvent(
 				new HoverEvent(Action.SHOW_TEXT, tooltip));
 
 		// If the message has its own style, it'll use that instead.
 		// TODO: Better way?
-		TextComponentString messageFormat = new TextComponentString(" ");
+		StringTextComponent messageFormat = new StringTextComponent(" ");
 		messageFormat.getStyle().setColor(type.getTextColor());
 
 		messageFormat.appendSibling(message);
@@ -338,17 +338,17 @@ public class WDLMessages {
 		try {
 			String identifier = EntityUtils.getEntityType(e);
 			if (identifier == null) {
-				wdlName = new TextComponentTranslation("wdl.messages.entityData.noKnownName");
+				wdlName = new TranslationTextComponent("wdl.messages.entityData.noKnownName");
 			} else {
 				String group = EntityUtils.getEntityGroup(identifier);
 				String displayIdentifier = EntityUtils.getDisplayType(identifier);
 				String displayGroup = EntityUtils.getDisplayGroup(group);
-				wdlName = new TextComponentString(displayIdentifier);
+				wdlName = new StringTextComponent(displayIdentifier);
 
-				ITextComponent hoverText = new TextComponentString("");
-				hoverText.appendSibling(new TextComponentTranslation("wdl.messages.entityData.internalName", identifier));
+				ITextComponent hoverText = new StringTextComponent("");
+				hoverText.appendSibling(new TranslationTextComponent("wdl.messages.entityData.internalName", identifier));
 				hoverText.appendText("\n");
-				hoverText.appendSibling(new TextComponentTranslation("wdl.messages.entityData.group", displayGroup, group));
+				hoverText.appendSibling(new TranslationTextComponent("wdl.messages.entityData.group", displayGroup, group));
 
 				wdlName.getStyle().setHoverEvent(new HoverEvent(Action.SHOW_TEXT, hoverText));
 			}
@@ -363,12 +363,12 @@ public class WDLMessages {
 			displayName = convertThrowableToComponent(ex);
 		}
 
-		return new TextComponentTranslation("wdl.messages.entityData", wdlName, displayName);
+		return new TranslationTextComponent("wdl.messages.entityData", wdlName, displayName);
 	}
 
 	@Nonnull
 	private static ITextComponent convertThrowableToComponent(@Nonnull Throwable t) {
-		ITextComponent component = new TextComponentString(t.toString());
+		ITextComponent component = new StringTextComponent(t.toString());
 
 		// http://stackoverflow.com/a/1149721/3991344
 		StringWriter sw = new StringWriter();
@@ -379,7 +379,7 @@ public class WDLMessages {
 				.replace("\t", "    ");
 
 		HoverEvent event = new HoverEvent(Action.SHOW_TEXT,
-				new TextComponentString(exceptionAsString));
+				new StringTextComponent(exceptionAsString));
 
 		component.getStyle().setHoverEvent(event);
 

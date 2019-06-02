@@ -22,8 +22,8 @@ import com.google.common.collect.ImmutableMap;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import wdl.EntityRealigner;
@@ -213,12 +213,12 @@ class APIImpl implements WDLApi.APIInstance {
 
 		@Override
 		public ITextComponent getDisplayName() {
-			return new TextComponentString(mod.getDisplayName());
+			return new StringTextComponent(mod.getDisplayName());
 		}
 
 		@Override
 		public ITextComponent getDescription() {
-			return new TextComponentTranslation("Messages for " + mod.getDisplayName()); // XXX Not translated
+			return new TranslationTextComponent("Messages for " + mod.getDisplayName()); // XXX Not translated
 		}
 	}
 

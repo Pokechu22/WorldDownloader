@@ -15,7 +15,7 @@
 package wdl;
 
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import wdl.config.CyclableSetting;
 import wdl.config.settings.MessageSettings;
 
@@ -102,12 +102,12 @@ public abstract class MessageTypeCategory {
 
 		@Override
 		public ITextComponent getDisplayName() {
-			return new TextComponentTranslation(titleKey);
+			return new TranslationTextComponent(titleKey);
 		}
 
 		@Override
 		public ITextComponent getDescription() {
-			return new TextComponentTranslation(descKey);
+			return new TranslationTextComponent(descKey);
 		}
 
 	}

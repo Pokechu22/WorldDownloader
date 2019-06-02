@@ -17,13 +17,13 @@ package wdl.versioned;
 import java.io.IOException;
 import java.util.function.Consumer;
 import javax.annotation.Nullable;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiCreateFlatWorld;
 import net.minecraft.client.gui.GuiCreateWorld;
 import net.minecraft.client.gui.GuiFlatPresets;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.init.Biomes;
-import net.minecraft.nbt.NBTTagString;
+import net.minecraft.nbt.StringNBT;
 import net.minecraft.world.biome.Biome;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -99,7 +99,7 @@ final class GeneratorFunctions {
 		}
 
 		@Override
-		protected void actionPerformed(GuiButton button) throws IOException {
+		protected void actionPerformed(Button button) throws IOException {
 			// Do nothing
 		}
 
@@ -151,7 +151,7 @@ final class GeneratorFunctions {
 		}
 
 		@Override
-		protected void actionPerformed(GuiButton button) throws IOException {
+		protected void actionPerformed(Button button) throws IOException {
 			// Do nothing
 		}
 
@@ -191,7 +191,7 @@ final class GeneratorFunctions {
 	/* (non-javadoc)
 	 * @see GeneratorFunctions#createGeneratorOptionsTag
 	 */
-	public static NBTTagString createGeneratorOptionsTag(String generatorOptions) {
-		return new NBTTagString(generatorOptions);
+	public static StringNBT createGeneratorOptionsTag(String generatorOptions) {
+		return new StringNBT(generatorOptions);
 	}
 }

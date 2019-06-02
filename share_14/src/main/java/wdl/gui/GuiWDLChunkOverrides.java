@@ -17,8 +17,8 @@ package wdl.gui;
 import javax.annotation.Nullable;
 import com.google.common.collect.Multimap;
 import net.minecraft.client.audio.SimpleSound;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.SoundEvents;
@@ -90,7 +90,7 @@ public class GuiWDLChunkOverrides extends Screen {
 	private final GuiScreen parent;
 	private final WDL wdl;
 
-	private GuiButton startDownloadButton;
+	private Button startDownloadButton;
 
 	/**
 	 * The current position.

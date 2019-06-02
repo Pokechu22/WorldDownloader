@@ -22,12 +22,12 @@ import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ContainerChest;
-import net.minecraft.inventory.InventoryEnderChest;
+import net.minecraft.inventory.EnderChestInventory;
 import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.container.ChestContainer;
 import net.minecraft.profiler.Profiler;
+import net.minecraft.tileentity.EnderChestTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityEnderChest;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -279,9 +279,9 @@ public class WDLEvents {
 				WDLMessages.chatMessageTranslated(WDL.serverProps, e.messageType, e.translationKey, e.args);
 				return false;
 			}
-		} else if (wdl.windowContainer instanceof ContainerChest
-				&& te instanceof TileEntityEnderChest) {
-			InventoryEnderChest inventoryEnderChest = wdl.player
+		} else if (wdl.windowContainer instanceof ChestContainer
+				&& te instanceof EnderChestTileEntity) {
+			EnderChestInventory inventoryEnderChest = wdl.player
 					.getInventoryEnderChest();
 			int inventorySize = inventoryEnderChest.getSizeInventory();
 			int containerSize = wdl.windowContainer.inventorySlots.size();

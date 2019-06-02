@@ -16,14 +16,14 @@ package wdl.handler.entity;
 
 import net.minecraft.entity.passive.EquineEntity;
 import net.minecraft.inventory.ContainerHorseChest;
-import net.minecraft.inventory.ContainerHorseInventory;
+import net.minecraft.inventory.container.HorseInventoryContainer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import wdl.ReflectionUtils;
 import wdl.handler.HandlerException;
 
-public class HorseHandler extends EntityHandler<EquineEntity, ContainerHorseInventory> {
+public class HorseHandler extends EntityHandler<EquineEntity, HorseInventoryContainer> {
 	/**
 	 * The number of slots used for the player inventory, so that the size
 	 * of the horse's inventory can be computed.
@@ -31,11 +31,11 @@ public class HorseHandler extends EntityHandler<EquineEntity, ContainerHorseInve
 	private static final int PLAYER_INVENTORY_SLOTS = 4 * 9;
 
 	public HorseHandler() {
-		super(EquineEntity.class, ContainerHorseInventory.class);
+		super(EquineEntity.class, HorseInventoryContainer.class);
 	}
 
 	@Override
-	public boolean checkRiding(ContainerHorseInventory container, EquineEntity riddenHorse) {
+	public boolean checkRiding(HorseInventoryContainer container, EquineEntity riddenHorse) {
 		EquineEntity horseInContainer = ReflectionUtils
 				.findAndGetPrivateField(container, EquineEntity.class);
 
@@ -44,7 +44,7 @@ public class HorseHandler extends EntityHandler<EquineEntity, ContainerHorseInve
 	}
 
 	@Override
-	public ITextComponent copyData(ContainerHorseInventory container, EquineEntity horse, boolean riding) throws HandlerException {
+	public ITextComponent copyData(HorseInventoryContainer container, EquineEntity horse, boolean riding) throws HandlerException {
 		ContainerHorseChest horseInventory = new ContainerHorseChest(
 				horse.getName(), // This was hardcoded to "HorseChest" in 1.12, but the name in 1.13.  The actual value is unused.
 				container.inventorySlots.size() - PLAYER_INVENTORY_SLOTS);
@@ -59,9 +59,9 @@ public class HorseHandler extends EntityHandler<EquineEntity, ContainerHorseInve
 		ReflectionUtils.findAndSetPrivateField(horse, EquineEntity.class, ContainerHorseChest.class, horseInventory);
 
 		if (riding) {
-			return new TextComponentTranslation("wdl.messages.onGuiClosedInfo.savedRiddenEntity.horse");
+			return new TranslationTextComponent("wdl.messages.onGuiClosedInfo.savedRiddenEntity.horse");
 		} else {
-			return new TextComponentTranslation("wdl.messages.onGuiClosedInfo.savedEntity.horse");
+			return new TranslationTextComponent("wdl.messages.onGuiClosedInfo.savedEntity.horse");
 		}
 	}
 

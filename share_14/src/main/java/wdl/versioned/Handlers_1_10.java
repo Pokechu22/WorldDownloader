@@ -20,23 +20,23 @@ import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableList;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import net.minecraft.block.BeaconBlock;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockBeacon;
-import net.minecraft.block.BlockBrewingStand;
-import net.minecraft.block.BlockChest;
-import net.minecraft.block.BlockCommandBlock;
-import net.minecraft.block.BlockContainer;
-import net.minecraft.block.BlockDispenser;
-import net.minecraft.block.BlockDropper;
-import net.minecraft.block.BlockFurnace;
-import net.minecraft.block.BlockHopper;
-import net.minecraft.block.BlockNote;
+import net.minecraft.block.BrewingStandBlock;
+import net.minecraft.block.ChestBlock;
+import net.minecraft.block.CommandBlockBlock;
+import net.minecraft.block.ContainerBlock;
+import net.minecraft.block.DispenserBlock;
+import net.minecraft.block.DropperBlock;
+import net.minecraft.block.FurnaceBlock;
+import net.minecraft.block.HopperBlock;
+import net.minecraft.block.NoteBlock;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.INBTBase;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
+import net.minecraft.tileentity.CommandBlockTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityCommandBlock;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -146,35 +146,35 @@ final class HandlerFunctions {
 	 * @see VersionedFunctions#shouldImportBlockEntity
 	 */
 	static boolean shouldImportBlockEntity(String entityID, BlockPos pos,
-			Block block, NBTTagCompound blockEntityNBT, Chunk chunk) {
+			Block block, CompoundNBT blockEntityNBT, Chunk chunk) {
 		// Older (and stranger) block entity IDs.  Note also that
 		// shulker boxes did not exist at this time.
-		if (block instanceof BlockChest && entityID.equals("Chest")) {
+		if (block instanceof ChestBlock && entityID.equals("Chest")) {
 			return true;
-		} else if (block instanceof BlockDispenser && entityID.equals("Trap")) {
+		} else if (block instanceof DispenserBlock && entityID.equals("Trap")) {
 			return true;
-		} else if (block instanceof BlockDropper && entityID.equals("Dropper")) {
+		} else if (block instanceof DropperBlock && entityID.equals("Dropper")) {
 			return true;
-		} else if (block instanceof BlockFurnace && entityID.equals("Furnace")) {
+		} else if (block instanceof FurnaceBlock && entityID.equals("Furnace")) {
 			return true;
-		} else if (block instanceof BlockNote && entityID.equals("Music")) {
+		} else if (block instanceof NoteBlock && entityID.equals("Music")) {
 			return true;
-		} else if (block instanceof BlockBrewingStand && entityID.equals("Cauldron")) {
+		} else if (block instanceof BrewingStandBlock && entityID.equals("Cauldron")) {
 			return true;
-		} else if (block instanceof BlockHopper && entityID.equals("Hopper")) {
+		} else if (block instanceof HopperBlock && entityID.equals("Hopper")) {
 			return true;
-		} else if (block instanceof BlockBeacon && entityID.equals("Beacon")) {
+		} else if (block instanceof BeaconBlock && entityID.equals("Beacon")) {
 			return true;
-		} else if (block instanceof BlockCommandBlock && entityID.equals("Control")) {
+		} else if (block instanceof CommandBlockBlock && entityID.equals("Control")) {
 			// Only import command blocks if the current world doesn't have a command set
 			// for the one there, as WDL doesn't explicitly save them so we need to use the
 			// one currently present in the world.
 			TileEntity temp = chunk.getTileEntity(pos, Chunk.CreateEntityType.CHECK);
-			if (temp == null || !(temp instanceof TileEntityCommandBlock)) {
+			if (temp == null || !(temp instanceof CommandBlockTileEntity)) {
 				// Bad/missing data currently there, import the old data
 				return true;
 			}
-			TileEntityCommandBlock te = (TileEntityCommandBlock) temp;
+			CommandBlockTileEntity te = (CommandBlockTileEntity) temp;
 			boolean currentBlockHasCommand = !te.getCommandBlockLogic().getCommand().isEmpty();
 			// Only import if the current command block has no command.
 			return !currentBlockHasCommand;
@@ -187,7 +187,7 @@ final class HandlerFunctions {
 	 * @see VersionedFunctions#createNewBlockEntity
 	 */
 	@Nullable
-	static TileEntity createNewBlockEntity(World world, BlockContainer block, IBlockState state) {
+	static TileEntity createNewBlockEntity(World world, ContainerBlock block, IBlockState state) {
 		return block.createNewTileEntity(world, block.getMetaFromState(state));
 	}
 
@@ -235,7 +235,7 @@ final class HandlerFunctions {
 	/* (non-javadoc)
 	 * @see VersionedFunctions#nbtString
 	 */
-	static String nbtString(INBTBase tag) {
+	static String nbtString(INBT tag) {
 		// No equivalent of toFormattedComponent or similar, so just try to make a
 		// decent multi-line string
 		String result = tag.toString();

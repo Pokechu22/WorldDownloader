@@ -20,8 +20,8 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 import net.minecraft.block.Block;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.NextTickListEntry;
@@ -114,14 +114,14 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 	}
 
 	protected final WDL wdl;
-	protected final Map<ChunkPos, NBTTagCompound> chunksToSave;
+	protected final Map<ChunkPos, CompoundNBT> chunksToSave;
 	protected final File chunkSaveLocation;
 
 	protected WDLChunkLoaderBase(WDL wdl, File file) {
 		super(file, null);
 		this.wdl = wdl;
 		@SuppressWarnings("unchecked")
-		Map<ChunkPos, NBTTagCompound> chunksToSave =
+		Map<ChunkPos, CompoundNBT> chunksToSave =
 				ReflectionUtils.findAndGetPrivateField(this, AnvilChunkLoader.class, VersionedFunctions.getChunksToSaveClass());
 		this.chunksToSave = chunksToSave;
 		this.chunkSaveLocation = file;
@@ -137,9 +137,9 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 	public void saveChunk(World world, Chunk chunk) throws SessionLockException, IOException {
 		world.checkSessionLock();
 
-		NBTTagCompound levelTag = writeChunkToNBT(chunk, world);
+		CompoundNBT levelTag = writeChunkToNBT(chunk, world);
 
-		NBTTagCompound rootTag = new NBTTagCompound();
+		CompoundNBT rootTag = new CompoundNBT();
 		rootTag.put("Level", levelTag);
 		rootTag.putInt("DataVersion", VersionConstants.getDataVersion());
 
@@ -163,8 +163,8 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 	 *            time.
 	 * @return A new NBTTagCompound
 	 */
-	private NBTTagCompound writeChunkToNBT(Chunk chunk, World world) {
-		NBTTagCompound compound = new NBTTagCompound();
+	private CompoundNBT writeChunkToNBT(Chunk chunk, World world) {
+		CompoundNBT compound = new CompoundNBT();
 
 		compound.putInt("xPos", chunk.x);
 		compound.putInt("zPos", chunk.z);
@@ -175,12 +175,12 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 		compound.putLong("InhabitedTime", chunk.getInhabitedTime());
 
 		ChunkSection[] chunkSections = chunk.getSections();
-		NBTTagList chunkSectionList = new NBTTagList();
+		ListNBT chunkSectionList = new ListNBT();
 		boolean hasSky = VersionedFunctions.hasSkyLight(world);
 
 		for (ChunkSection chunkSection : chunkSections) {
 			if (chunkSection != Chunk.EMPTY_SECTION) {
-				NBTTagCompound sectionNBT = new NBTTagCompound();
+				CompoundNBT sectionNBT = new CompoundNBT();
 				sectionNBT.putByte("Y",
 						(byte) (chunkSection.getYLocation() >> 4 & 255));
 				byte[] buffer = new byte[4096];
@@ -222,20 +222,20 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 		compound.putByteArray("Biomes", chunk.getBiomeArray());
 
 		chunk.setHasEntities(false);
-		NBTTagList entityList = getEntityList(chunk);
+		ListNBT entityList = getEntityList(chunk);
 		compound.put("Entities", entityList);
 
-		NBTTagList tileEntityList = getTileEntityList(chunk);
+		ListNBT tileEntityList = getTileEntityList(chunk);
 		compound.put("TileEntities", tileEntityList);
 
 		List<NextTickListEntry> updateList = world.getPendingBlockUpdates(
 				chunk, false);
 		if (updateList != null) {
 			long worldTime = world.getGameTime();
-			NBTTagList entries = new NBTTagList();
+			ListNBT entries = new ListNBT();
 
 			for (NextTickListEntry entry : updateList) {
-				NBTTagCompound entryTag = new NBTTagCompound();
+				CompoundNBT entryTag = new CompoundNBT();
 				ResourceLocation location = Block.REGISTRY
 						.getKey(entry.getTarget());
 				entryTag.putString("i",
@@ -255,8 +255,8 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 		return compound;
 	}
 
-	protected abstract NBTTagList getEntityList(Chunk chunk);
-	protected abstract NBTTagList getTileEntityList(Chunk chunk);
+	protected abstract ListNBT getEntityList(Chunk chunk);
+	protected abstract ListNBT getTileEntityList(Chunk chunk);
 
 	/**
 	 * Gets a count of how many chunks there are that still need to be written to

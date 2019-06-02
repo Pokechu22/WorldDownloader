@@ -18,10 +18,10 @@ import java.io.File;
 import java.util.List;
 import com.google.common.io.Files;
 import javax.annotation.Nullable;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.GuiYesNo;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import wdl.WDL;
 import wdl.WorldBackup;
@@ -65,8 +65,8 @@ public class GuiWDLBackup extends Screen {
 	private String description;
 
 	private WorldBackupType backupType;
-	private GuiButton backupTypeButton;
-	private GuiButton doneButton;
+	private Button backupTypeButton;
+	private Button doneButton;
 	private GuiTextField customBackupCommandTemplateFld;
 	private String customBackupCommandTemplate;
 	private GuiTextField customBackupExtensionFld;

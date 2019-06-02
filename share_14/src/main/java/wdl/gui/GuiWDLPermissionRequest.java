@@ -16,9 +16,9 @@ package wdl.gui;
 
 import java.util.Map;
 import javax.annotation.Nullable;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import wdl.WDL;
 import wdl.WDLPluginChannels;
@@ -61,7 +61,7 @@ public class GuiWDLPermissionRequest extends Screen {
 	/**
 	 * GUIButton for submitting the request.
 	 */
-	private GuiButton submitButton;
+	private Button submitButton;
 
 	public GuiWDLPermissionRequest(@Nullable GuiScreen parent, WDL wdl) {
 		this.parent = parent;

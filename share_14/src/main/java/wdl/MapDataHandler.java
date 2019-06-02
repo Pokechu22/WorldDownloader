@@ -20,14 +20,14 @@ import com.google.common.annotations.VisibleForTesting;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItemFrame;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.item.ItemFrameEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.storage.MapData;
@@ -108,7 +108,7 @@ public final class MapDataHandler {
 	 * @param player {@link WDL#player}.
 	 * @return The MapData to save, though currently it is the same reference as the parameter.
 	 */
-	public static MapDataResult repairMapData(int mapID, @Nonnull MapData mapData, @Nonnull EntityPlayer player) {
+	public static MapDataResult repairMapData(int mapID, @Nonnull MapData mapData, @Nonnull PlayerEntity player) {
 		MapDataResult result = checkPlayerHasMap(mapID, mapData, player);
 		if (result == null) result = checkFrameHasMap(mapID, mapData, player.world);
 		if (result == null) result = new MapDataResult(mapData, null, null);
@@ -120,7 +120,7 @@ public final class MapDataHandler {
 	}
 
 	@Nullable
-	private static MapDataResult checkPlayerHasMap(int mapID, MapData mapData, EntityPlayer player) {
+	private static MapDataResult checkPlayerHasMap(int mapID, MapData mapData, PlayerEntity player) {
 		// If there's only one decoration, and our player has the map in their inventory,
 		// assume that the icon is our player (which might not be the case all the time)
 		List<MapDecoration> playerDecorations = mapData.mapDecorations.values().stream()
@@ -162,9 +162,9 @@ public final class MapDataHandler {
 
 		byte scale = mapData.scale;
 
-		List<EntityItemFrame> actualFrames = world.getEntities(
-				EntityItemFrame.class, frameWithMapID(mapID));
-		for (EntityItemFrame frame : actualFrames) {
+		List<ItemFrameEntity> actualFrames = world.getEntities(
+				ItemFrameEntity.class, frameWithMapID(mapID));
+		for (ItemFrameEntity frame : actualFrames) {
 			// Since not all frames on the map are necessarily loaded by the client,
 			// look for frames in the world that aren't on the map instead.
 			// However, it's entirely possible to also have frames that just beyond the edge of the map...
@@ -236,15 +236,15 @@ public final class MapDataHandler {
 	 * (and in versions < 1.12, the union of them still has 2 abstract methods).
 	 */
 	@FunctionalInterface
-	private static interface FramePredicate extends java.util.function.Predicate<EntityItemFrame>,
-			com.google.common.base.Predicate<EntityItemFrame> {
+	private static interface FramePredicate extends java.util.function.Predicate<ItemFrameEntity>,
+			com.google.common.base.Predicate<ItemFrameEntity> {
 		@Override
-		public default boolean apply(EntityItemFrame frame) {
+		public default boolean apply(ItemFrameEntity frame) {
 			return test(frame);
 		}
 
 		@Override
-		public abstract boolean test(EntityItemFrame frame);
+		public abstract boolean test(ItemFrameEntity frame);
 	}
 
 	private static FramePredicate frameWithMapID(int mapID) {
@@ -354,15 +354,15 @@ public final class MapDataHandler {
 			boolean hasDim = (dim != null);
 			if (hasDim) {
 				if (hasCenter) {
-					return new TextComponentTranslation("wdl.messages.onMapSaved.dimAndCenterKnown", dim, xCenter, zCenter);
+					return new TranslationTextComponent("wdl.messages.onMapSaved.dimAndCenterKnown", dim, xCenter, zCenter);
 				} else {
-					return new TextComponentTranslation("wdl.messages.onMapSaved.onlyDimKnown", dim);
+					return new TranslationTextComponent("wdl.messages.onMapSaved.onlyDimKnown", dim);
 				}
 			} else {
 				if (hasCenter) {
-					return new TextComponentTranslation("wdl.messages.onMapSaved.onlyCenterKnown", xCenter, zCenter);
+					return new TranslationTextComponent("wdl.messages.onMapSaved.onlyCenterKnown", xCenter, zCenter);
 				} else {
-					return new TextComponentTranslation("wdl.messages.onMapSaved.neitherKnown");
+					return new TranslationTextComponent("wdl.messages.onMapSaved.neitherKnown");
 				}
 			}
 		}

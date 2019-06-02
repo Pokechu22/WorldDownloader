@@ -21,20 +21,20 @@ import io.netty.buffer.ByteBuf;
 import javax.annotation.Nonnull;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiIngameMenu;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.Container;
-import net.minecraft.network.play.server.SPacketBlockAction;
-import net.minecraft.network.play.server.SPacketChat;
+import net.minecraft.network.play.server.SBlockActionPacket;
+import net.minecraft.network.play.server.SChatPacket;
 import net.minecraft.network.play.server.SPacketCustomPayload;
 import net.minecraft.network.play.server.SPacketMaps;
-import net.minecraft.network.play.server.SPacketUnloadChunk;
+import net.minecraft.network.play.server.SUnloadChunkPacket;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -264,11 +264,11 @@ public class WDLHooks {
 	 * Should be at the start of the method.
 	 */
 	public static void onNHPCHandleChunkUnload(NetHandlerPlayClient sender,
-			WorldClient world, SPacketUnloadChunk packet) {
+			WorldClient world, SUnloadChunkPacket packet) {
 		INSTANCE.onNHPCHandleChunkUnload0(sender, world, packet);
 	}
 	protected void onNHPCHandleChunkUnload0(NetHandlerPlayClient sender,
-			WorldClient world, SPacketUnloadChunk packet) {
+			WorldClient world, SUnloadChunkPacket packet) {
 		try {
 			if (!Minecraft.getInstance().isCallingFromMinecraftThread()) {
 				return;
@@ -296,11 +296,11 @@ public class WDLHooks {
 	 * Should be at the end of the method.
 	 */
 	public static void onNHPCHandleChat(NetHandlerPlayClient sender,
-			SPacketChat packet) {
+			SChatPacket packet) {
 		INSTANCE.onNHPCHandleChat0(sender, packet);
 	}
 	protected void onNHPCHandleChat0(NetHandlerPlayClient sender,
-			SPacketChat packet) {
+			SChatPacket packet) {
 		try {
 			if (!Minecraft.getInstance().isCallingFromMinecraftThread()) {
 				return;
@@ -443,11 +443,11 @@ public class WDLHooks {
 	 * Should be at the end of the method.
 	 */
 	public static void onNHPCHandleBlockAction(NetHandlerPlayClient sender,
-			SPacketBlockAction packet) {
+			SBlockActionPacket packet) {
 		INSTANCE.onNHPCHandleBlockAction0(sender, packet);
 	}
 	protected void onNHPCHandleBlockAction0(NetHandlerPlayClient sender,
-			SPacketBlockAction packet) {
+			SBlockActionPacket packet) {
 		try {
 			if (!Minecraft.getInstance().isCallingFromMinecraftThread()) {
 				return;
@@ -641,15 +641,15 @@ public class WDLHooks {
 	 *                   modified directly.
 	 * @param addButton  Method to add a button to the GUI.
 	 */
-	public static void injectWDLButtons(GuiIngameMenu gui, Collection<GuiButton> buttonList,
-			Consumer<GuiButton> addButton) {
+	public static void injectWDLButtons(GuiIngameMenu gui, Collection<Button> buttonList,
+			Consumer<Button> addButton) {
 		INSTANCE.injectWDLButtons0(gui, buttonList, addButton);
 	}
-	protected void injectWDLButtons0(GuiIngameMenu gui, Collection<GuiButton> buttonList,
-			Consumer<GuiButton> addButton) {
+	protected void injectWDLButtons0(GuiIngameMenu gui, Collection<Button> buttonList,
+			Consumer<Button> addButton) {
 		int insertAtYPos = 0;
 
-		for (GuiButton btn : buttonList) {
+		for (Button btn : buttonList) {
 			if (btn.id == 5) { // Button "Achievements"
 				insertAtYPos = btn.y + 24;
 				break;
@@ -657,7 +657,7 @@ public class WDLHooks {
 		}
 
 		// Move other buttons down one slot (= 24 height units)
-		for (GuiButton btn : buttonList) {
+		for (Button btn : buttonList) {
 			if (btn.y >= insertAtYPos) {
 				btn.y += 24;
 			}
@@ -679,10 +679,10 @@ public class WDLHooks {
 	 * @param gui    The GUI
 	 * @param button The button that was clicked.
 	 */
-	public static void handleWDLButtonClick(GuiIngameMenu gui, GuiButton button) {
+	public static void handleWDLButtonClick(GuiIngameMenu gui, Button button) {
 		INSTANCE.handleWDLButtonClick0(gui, button);
 	}
-	protected void handleWDLButtonClick0(GuiIngameMenu gui, GuiButton button) {
+	protected void handleWDLButtonClick0(GuiIngameMenu gui, Button button) {
 		if (button.id == 1) { // "Disconnect", from vanilla
 			wdl.stopDownload();
 			// Disable the button to prevent double-clicks

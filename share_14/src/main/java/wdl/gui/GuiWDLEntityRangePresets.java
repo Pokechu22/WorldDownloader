@@ -17,10 +17,10 @@ package wdl.gui;
 import java.util.Set;
 import java.util.function.Supplier;
 import javax.annotation.Nullable;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.gui.GuiYesNoCallback;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import wdl.EntityUtils;
 import wdl.EntityUtils.SpigotEntityType;
@@ -55,10 +55,10 @@ public class GuiWDLEntityRangePresets extends Screen implements GuiYesNoCallback
 	private final WDL wdl;
 	private final IConfiguration config;
 
-	private GuiButton vanillaButton;
-	private GuiButton spigotButton;
-	private GuiButton serverButton;
-	private GuiButton cancelButton;
+	private Button vanillaButton;
+	private Button spigotButton;
+	private Button serverButton;
+	private Button cancelButton;
 
 	private static final int ID_VANILLA = 0, ID_SPIGOT = 1, ID_SERVER = 2;
 

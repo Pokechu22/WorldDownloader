@@ -15,12 +15,12 @@
 package wdl.handler.block;
 
 import java.util.function.BiConsumer;
-import net.minecraft.inventory.ContainerDispenser;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.tileentity.TileEntityDispenser;
+import net.minecraft.inventory.container.DispenserContainer;
+import net.minecraft.tileentity.DispenserTileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import wdl.ReflectionUtils;
 import wdl.handler.HandlerException;
@@ -38,15 +38,15 @@ import net.minecraft.world.IBlockReader;
 import wdl.ReflectionUtils;
 import wdl.handler.HandlerException;
 
-public class DispenserHandler extends BlockHandler<TileEntityDispenser, ContainerDispenser> {
+public class DispenserHandler extends BlockHandler<DispenserTileEntity, DispenserContainer> {
 	public DispenserHandler() {
-		super(TileEntityDispenser.class, ContainerDispenser.class, "container.dispenser");
+		super(DispenserTileEntity.class, DispenserContainer.class, "container.dispenser");
 	}
 
 	@Override
-	public ITextComponent handle(BlockPos clickedPos, ContainerDispenser container,
-			TileEntityDispenser blockEntity, IBlockReader world,
-			BiConsumer<BlockPos, TileEntityDispenser> saveMethod) throws HandlerException {
+	public ITextComponent handle(BlockPos clickedPos, DispenserContainer container,
+			DispenserTileEntity blockEntity, IBlockReader world,
+			BiConsumer<BlockPos, DispenserTileEntity> saveMethod) throws HandlerException {
 		IInventory dispenserInventory = ReflectionUtils.findAndGetPrivateField(
 				container, IInventory.class);
 		String title = getCustomDisplayName(dispenserInventory);
@@ -55,6 +55,6 @@ public class DispenserHandler extends BlockHandler<TileEntityDispenser, Containe
 		if (title != null) {
 			blockEntity.setCustomName(customName(title));
 		}
-		return new TextComponentTranslation("wdl.messages.onGuiClosedInfo.savedTileEntity.dispenser");
+		return new TranslationTextComponent("wdl.messages.onGuiClosedInfo.savedTileEntity.dispenser");
 	}
 }

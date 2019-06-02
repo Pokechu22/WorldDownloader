@@ -18,8 +18,8 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.GameRules.ValueType;
@@ -225,7 +225,7 @@ public class GuiWDLGameRules extends Screen {
 	/** All vanilla game rules and their default values; this list is immutable. */
 	private final Map<String, String> vanillaGameRules;
 
-	private GuiButton doneButton;
+	private Button doneButton;
 
 	/**
 	 * Gets the value of the given rule.

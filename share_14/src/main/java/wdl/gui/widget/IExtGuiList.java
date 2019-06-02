@@ -15,8 +15,8 @@
 package wdl.gui.widget;
 
 import java.util.List;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.widget.button.Button;
 
 
 import net.minecraft.client.gui.GuiButton;
@@ -35,7 +35,7 @@ interface IExtGuiList<T extends IExtGuiList.IExtGuiListEntry<T>> {
 		 *               negative).
 		 * @param y      y coordinate relative to the top of the entry.
 		 */
-		public abstract <B extends GuiButton> B addButton(B button, int x, int y);
+		public abstract <B extends Button> B addButton(B button, int x, int y);
 
 		/**
 		 * Adds a text field.  Intended for internal use.

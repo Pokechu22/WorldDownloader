@@ -15,12 +15,12 @@
 package wdl.handler.block;
 
 import java.util.function.BiConsumer;
-import net.minecraft.inventory.ContainerHopper;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.tileentity.TileEntityHopper;
+import net.minecraft.inventory.container.HopperContainer;
+import net.minecraft.tileentity.HopperTileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import wdl.ReflectionUtils;
 import wdl.handler.HandlerException;
@@ -38,15 +38,15 @@ import net.minecraft.world.IBlockReader;
 import wdl.ReflectionUtils;
 import wdl.handler.HandlerException;
 
-public class HopperHandler extends BlockHandler<TileEntityHopper, ContainerHopper> {
+public class HopperHandler extends BlockHandler<HopperTileEntity, HopperContainer> {
 	public HopperHandler() {
-		super(TileEntityHopper.class, ContainerHopper.class, "container.hopper");
+		super(HopperTileEntity.class, HopperContainer.class, "container.hopper");
 	}
 
 	@Override
-	public ITextComponent handle(BlockPos clickedPos, ContainerHopper container,
-			TileEntityHopper blockEntity, IBlockReader world,
-			BiConsumer<BlockPos, TileEntityHopper> saveMethod) throws HandlerException {
+	public ITextComponent handle(BlockPos clickedPos, HopperContainer container,
+			HopperTileEntity blockEntity, IBlockReader world,
+			BiConsumer<BlockPos, HopperTileEntity> saveMethod) throws HandlerException {
 		IInventory hopperInventory = ReflectionUtils.findAndGetPrivateField(
 				container, IInventory.class);
 		String title = getCustomDisplayName(hopperInventory);
@@ -55,6 +55,6 @@ public class HopperHandler extends BlockHandler<TileEntityHopper, ContainerHoppe
 		if (title != null) {
 			blockEntity.setCustomName(customName(title));
 		}
-		return new TextComponentTranslation("wdl.messages.onGuiClosedInfo.savedTileEntity.hopper");
+		return new TranslationTextComponent("wdl.messages.onGuiClosedInfo.savedTileEntity.hopper");
 	}
 }

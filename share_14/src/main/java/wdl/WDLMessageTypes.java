@@ -16,8 +16,8 @@
 package wdl;
 
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 
 
 import net.minecraft.util.text.ITextComponent;
@@ -98,7 +98,7 @@ public enum WDLMessageTypes implements IWDLMessageType {
 
 	@Override
 	public ITextComponent getDisplayName() {
-		return new TextComponentTranslation(displayTextKey);
+		return new TranslationTextComponent(displayTextKey);
 	}
 
 	@Override
@@ -113,7 +113,7 @@ public enum WDLMessageTypes implements IWDLMessageType {
 
 	@Override
 	public ITextComponent getDescription() {
-		return new TextComponentTranslation(descriptionKey);
+		return new TranslationTextComponent(descriptionKey);
 	}
 
 	@Override

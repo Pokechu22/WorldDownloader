@@ -15,12 +15,12 @@
 package wdl.handler.block;
 
 import java.util.function.BiConsumer;
-import net.minecraft.inventory.ContainerBrewingStand;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.tileentity.TileEntityBrewingStand;
+import net.minecraft.inventory.container.BrewingStandContainer;
+import net.minecraft.tileentity.BrewingStandTileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import wdl.ReflectionUtils;
 import wdl.handler.HandlerException;
@@ -38,15 +38,15 @@ import net.minecraft.world.IBlockReader;
 import wdl.ReflectionUtils;
 import wdl.handler.HandlerException;
 
-public class BrewingStandHandler extends BlockHandler<TileEntityBrewingStand, ContainerBrewingStand> {
+public class BrewingStandHandler extends BlockHandler<BrewingStandTileEntity, BrewingStandContainer> {
 	public BrewingStandHandler() {
-		super(TileEntityBrewingStand.class, ContainerBrewingStand.class, "container.brewing");
+		super(BrewingStandTileEntity.class, BrewingStandContainer.class, "container.brewing");
 	}
 
 	@Override
-	public ITextComponent handle(BlockPos clickedPos, ContainerBrewingStand container,
-			TileEntityBrewingStand blockEntity, IBlockReader world,
-			BiConsumer<BlockPos, TileEntityBrewingStand> saveMethod) throws HandlerException {
+	public ITextComponent handle(BlockPos clickedPos, BrewingStandContainer container,
+			BrewingStandTileEntity blockEntity, IBlockReader world,
+			BiConsumer<BlockPos, BrewingStandTileEntity> saveMethod) throws HandlerException {
 		IInventory brewingInventory = ReflectionUtils.findAndGetPrivateField(
 				container, IInventory.class);
 		String title = getCustomDisplayName(brewingInventory);
@@ -56,6 +56,6 @@ public class BrewingStandHandler extends BlockHandler<TileEntityBrewingStand, Co
 			blockEntity.setCustomName(customName(title));
 		}
 		saveMethod.accept(clickedPos, blockEntity);
-		return new TextComponentTranslation("wdl.messages.onGuiClosedInfo.savedTileEntity.brewingStand");
+		return new TranslationTextComponent("wdl.messages.onGuiClosedInfo.savedTileEntity.brewingStand");
 	}
 }

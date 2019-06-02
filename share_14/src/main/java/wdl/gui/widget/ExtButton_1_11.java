@@ -15,13 +15,13 @@
 package wdl.gui.widget;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.widget.button.Button;
 
 /**
  * Extendible button, to deal with changing method signatures between versions.
  * The actual implementation is {@link Button}, and methods are declared in {@link IExtButton}.
  */
-abstract class ExtButton extends GuiButton implements IExtButton {
+abstract class ExtButton extends Button implements IExtButton {
 	public ExtButton(int x, int y, int widthIn, int heightIn, String buttonText) {
 		super(-1, x, y, widthIn, heightIn, buttonText);
 	}

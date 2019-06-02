@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
 import javax.annotation.RegEx;
 import javax.annotation.meta.TypeQualifierNickname;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockContainer;
+import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -38,9 +38,9 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.INBTBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.play.client.CPacketCustomPayload;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
+import net.minecraft.network.play.client.CCustomPayloadPacket;
 import net.minecraft.network.play.server.SPacketCustomPayload;
 import net.minecraft.network.play.server.SPacketMaps;
 import net.minecraft.tileentity.TileEntity;
@@ -152,7 +152,7 @@ public final class VersionedFunctions {
 	 * @see wdl.WDLChunkLoader#shouldImportBlockEntity
 	 */
 	public static boolean shouldImportBlockEntity(String entityID, BlockPos pos,
-			Block block, NBTTagCompound blockEntityNBT, Chunk chunk) {
+			Block block, CompoundNBT blockEntityNBT, Chunk chunk) {
 		return HandlerFunctions.shouldImportBlockEntity(entityID, pos, block, blockEntityNBT, chunk);
 	}
 
@@ -165,7 +165,7 @@ public final class VersionedFunctions {
 	 * @return The block entity, or null if the creation function fails.
 	 */
 	@Nullable
-	public static TileEntity createNewBlockEntity(World world, BlockContainer block, IBlockState state) {
+	public static TileEntity createNewBlockEntity(World world, ContainerBlock block, IBlockState state) {
 		return HandlerFunctions.createNewBlockEntity(world, block, state);
 	}
 
@@ -196,7 +196,7 @@ public final class VersionedFunctions {
 	 * @param tag The tag to use
 	 * @return The string version.
 	 */
-	public static String nbtString(INBTBase tag) {
+	public static String nbtString(INBT tag) {
 		return HandlerFunctions.nbtString(tag);
 	}
 
@@ -222,7 +222,7 @@ public final class VersionedFunctions {
 	 * @param bytes The payload.
 	 * @return The new packet.
 	 */
-	public static CPacketCustomPayload makePluginMessagePacket(@ChannelName String channel, byte[] bytes) {
+	public static CCustomPayloadPacket makePluginMessagePacket(@ChannelName String channel, byte[] bytes) {
 		return PacketFunctions.makePluginMessagePacket(channel, bytes);
 	}
 
@@ -415,7 +415,7 @@ public final class VersionedFunctions {
 	 * @param generatorOptions The content.  Either a string or an SNBT representation of the data.
 	 * @return An NBT tag of some type.
 	 */
-	public static INBTBase createGeneratorOptionsTag(String generatorOptions) {
+	public static INBT createGeneratorOptionsTag(String generatorOptions) {
 		return GeneratorFunctions.createGeneratorOptionsTag(generatorOptions);
 	}
 

@@ -16,7 +16,7 @@ package wdl.config.settings;
 
 import java.util.Optional;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import wdl.MessageTypeCategory;
 import wdl.WDLMessages.MessageRegistration;
 import wdl.config.BooleanSetting;
@@ -94,7 +94,7 @@ public final class MessageSettings {
 
 		@Override
 		public ITextComponent getButtonText(Boolean curValue) {
-			return new TextComponentTranslation("wdl.gui.messages.group." + curValue);
+			return new TranslationTextComponent("wdl.gui.messages.group." + curValue);
 		}
 
 		@Override
@@ -156,7 +156,7 @@ public final class MessageSettings {
 
 		@Override
 		public ITextComponent getButtonText(Boolean curValue) {
-			return new TextComponentTranslation("wdl.gui.messages.message." + curValue, registration.type.getDisplayName());
+			return new TranslationTextComponent("wdl.gui.messages.message." + curValue, registration.type.getDisplayName());
 		}
 
 		@Override

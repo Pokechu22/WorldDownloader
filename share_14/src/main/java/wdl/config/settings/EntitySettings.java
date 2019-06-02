@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.function.BooleanSupplier;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import wdl.WDLPluginChannels;
 import wdl.config.CyclableSetting;
 import wdl.config.IConfiguration;
@@ -122,12 +122,12 @@ public final class EntitySettings {
 
 		@Override
 		public ITextComponent getDescription() {
-			return new TextComponentTranslation(key + ".description");
+			return new TranslationTextComponent(key + ".description");
 		}
 
 		@Override
 		public ITextComponent getButtonText(TrackDistanceMode curValue) {
-			return new TextComponentTranslation(key + "." + serializeToString(curValue));
+			return new TranslationTextComponent(key + "." + serializeToString(curValue));
 		}
 	}
 }

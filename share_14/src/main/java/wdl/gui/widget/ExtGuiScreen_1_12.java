@@ -19,9 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.widget.button.Button;
 import wdl.gui.widget.GuiList.GuiListEntry;
 
 
@@ -56,7 +56,7 @@ abstract class ExtGuiScreen extends GuiScreen implements IExtGuiScreen {
 	}
 
 	@Override
-	public final <T extends GuiButton> T addButton(T buttonIn) {
+	public final <T extends Button> T addButton(T buttonIn) {
 		return super.addButton(buttonIn);
 	}
 
@@ -143,7 +143,7 @@ abstract class ExtGuiScreen extends GuiScreen implements IExtGuiScreen {
 	// Not supported
 	@Override
 	@Deprecated
-	protected final void actionPerformed(GuiButton button) { }
+	protected final void actionPerformed(Button button) { }
 
 	@Override
 	@OverridingMethodsMustInvokeSuper

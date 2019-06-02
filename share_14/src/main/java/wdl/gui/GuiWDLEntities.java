@@ -20,8 +20,8 @@ import java.util.List;
 import com.google.common.collect.Multimap;
 import javax.annotation.Nullable;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import wdl.EntityUtils;
 import wdl.WDL;
@@ -286,7 +286,7 @@ public class GuiWDLEntities extends Screen {
 	private final IConfiguration config;
 
 	private SettingButton rangeModeButton;
-	private GuiButton presetsButton;
+	private Button presetsButton;
 
 	public GuiWDLEntities(@Nullable GuiScreen parent, WDL wdl) {
 		this.parent = parent;

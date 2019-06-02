@@ -15,12 +15,12 @@
 package wdl.handler.block;
 
 import java.util.function.BiConsumer;
-import net.minecraft.inventory.ContainerFurnace;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraft.inventory.container.FurnaceContainer;
+import net.minecraft.tileentity.FurnaceTileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import wdl.ReflectionUtils;
 import wdl.handler.HandlerException;
@@ -38,15 +38,15 @@ import net.minecraft.world.IBlockReader;
 import wdl.ReflectionUtils;
 import wdl.handler.HandlerException;
 
-public class FurnaceHandler extends BlockHandler<TileEntityFurnace, ContainerFurnace> {
+public class FurnaceHandler extends BlockHandler<FurnaceTileEntity, FurnaceContainer> {
 	public FurnaceHandler() {
-		super(TileEntityFurnace.class, ContainerFurnace.class, "container.furnace");
+		super(FurnaceTileEntity.class, FurnaceContainer.class, "container.furnace");
 	}
 
 	@Override
-	public ITextComponent handle(BlockPos clickedPos, ContainerFurnace container,
-			TileEntityFurnace blockEntity, IBlockReader world,
-			BiConsumer<BlockPos, TileEntityFurnace> saveMethod) throws HandlerException {
+	public ITextComponent handle(BlockPos clickedPos, FurnaceContainer container,
+			FurnaceTileEntity blockEntity, IBlockReader world,
+			BiConsumer<BlockPos, FurnaceTileEntity> saveMethod) throws HandlerException {
 		IInventory furnaceInventory = ReflectionUtils.findAndGetPrivateField(
 				container, IInventory.class);
 		String title = getCustomDisplayName(furnaceInventory);
@@ -56,6 +56,6 @@ public class FurnaceHandler extends BlockHandler<TileEntityFurnace, ContainerFur
 			blockEntity.setCustomName(customName(title));
 		}
 		saveMethod.accept(clickedPos, blockEntity);
-		return new TextComponentTranslation("wdl.messages.onGuiClosedInfo.savedTileEntity.furnace");
+		return new TranslationTextComponent("wdl.messages.onGuiClosedInfo.savedTileEntity.furnace");
 	}
 }

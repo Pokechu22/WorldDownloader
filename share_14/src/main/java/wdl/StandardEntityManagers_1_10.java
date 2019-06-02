@@ -22,40 +22,40 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableSet;
 import javax.annotation.Nonnull;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.AreaEffectCloudEntity;
+import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityAreaEffectCloud;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityHanging;
-import net.minecraft.entity.boss.EntityDragon;
-import net.minecraft.entity.boss.EntityWither;
-import net.minecraft.entity.item.EntityArmorStand;
-import net.minecraft.entity.item.EntityBoat;
-import net.minecraft.entity.item.EntityEnderCrystal;
-import net.minecraft.entity.item.EntityEnderEye;
-import net.minecraft.entity.item.EntityEnderPearl;
-import net.minecraft.entity.item.EntityExpBottle;
-import net.minecraft.entity.item.EntityFallingBlock;
-import net.minecraft.entity.item.EntityFireworkRocket;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.item.EntityItemFrame;
-import net.minecraft.entity.item.EntityMinecart;
-import net.minecraft.entity.item.EntityPainting;
-import net.minecraft.entity.item.EntityTNTPrimed;
-import net.minecraft.entity.item.EntityXPOrb;
-import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.entity.monster.EntitySlime;
+import net.minecraft.entity.boss.WitherEntity;
+import net.minecraft.entity.boss.dragon.EnderDragonEntity;
+import net.minecraft.entity.item.ArmorStandEntity;
+import net.minecraft.entity.item.BoatEntity;
+import net.minecraft.entity.item.EnderCrystalEntity;
+import net.minecraft.entity.item.EnderPearlEntity;
+import net.minecraft.entity.item.ExperienceBottleEntity;
+import net.minecraft.entity.item.ExperienceOrbEntity;
+import net.minecraft.entity.item.EyeOfEnderEntity;
+import net.minecraft.entity.item.FallingBlockEntity;
+import net.minecraft.entity.item.FireworkRocketEntity;
+import net.minecraft.entity.item.HangingEntity;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.item.ItemFrameEntity;
+import net.minecraft.entity.item.PaintingEntity;
+import net.minecraft.entity.item.TNTEntity;
+import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
 import net.minecraft.entity.monster.IMob;
-import net.minecraft.entity.passive.EntityAmbientCreature;
-import net.minecraft.entity.passive.EntityBat;
-import net.minecraft.entity.passive.EntitySquid;
-import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.entity.projectile.EntityEgg;
-import net.minecraft.entity.projectile.EntityFireball;
-import net.minecraft.entity.projectile.EntityFishHook;
-import net.minecraft.entity.projectile.EntityPotion;
-import net.minecraft.entity.projectile.EntityShulkerBullet;
-import net.minecraft.entity.projectile.EntitySmallFireball;
-import net.minecraft.entity.projectile.EntitySnowball;
+import net.minecraft.entity.monster.MonsterEntity;
+import net.minecraft.entity.monster.SlimeEntity;
+import net.minecraft.entity.passive.AmbientEntity;
+import net.minecraft.entity.passive.BatEntity;
+import net.minecraft.entity.passive.SquidEntity;
+import net.minecraft.entity.projectile.AbstractArrowEntity;
+import net.minecraft.entity.projectile.DamagingProjectileEntity;
+import net.minecraft.entity.projectile.EggEntity;
+import net.minecraft.entity.projectile.FishingBobberEntity;
+import net.minecraft.entity.projectile.PotionEntity;
+import net.minecraft.entity.projectile.ShulkerBulletEntity;
+import net.minecraft.entity.projectile.SmallFireballEntity;
+import net.minecraft.entity.projectile.SnowballEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import wdl.EntityUtils.ISpigotEntityManager;
@@ -160,16 +160,16 @@ class StandardEntityManagers {
 
 			// Spigot's mapping, which is based off of bukkit inheritance (which
 			// doesn't match vanilla)
-			if (EntityMob.class.isAssignableFrom(c) ||
-					EntitySlime.class.isAssignableFrom(c)) {
+			if (MonsterEntity.class.isAssignableFrom(c) ||
+					SlimeEntity.class.isAssignableFrom(c)) {
 				return SpigotEntityType.MONSTER;
-			} else if (EntityCreature.class.isAssignableFrom(c) ||
-					EntityAmbientCreature.class.isAssignableFrom(c)) {
+			} else if (CreatureEntity.class.isAssignableFrom(c) ||
+					AmbientEntity.class.isAssignableFrom(c)) {
 				return SpigotEntityType.ANIMAL;
-			} else if (EntityItemFrame.class.isAssignableFrom(c) ||
-					EntityPainting.class.isAssignableFrom(c) ||
-					EntityItem.class.isAssignableFrom(c) ||
-					EntityXPOrb.class.isAssignableFrom(c)) {
+			} else if (ItemFrameEntity.class.isAssignableFrom(c) ||
+					PaintingEntity.class.isAssignableFrom(c) ||
+					ItemEntity.class.isAssignableFrom(c) ||
+					ExperienceOrbEntity.class.isAssignableFrom(c)) {
 				return SpigotEntityType.MISC;
 			} else {
 				return SpigotEntityType.OTHER;
@@ -245,59 +245,59 @@ class StandardEntityManagers {
 				return -1;
 			}
 
-			if (EntityFishHook.class.isAssignableFrom(c)) {
+			if (FishingBobberEntity.class.isAssignableFrom(c)) {
 				return 64;
-			} else if (EntityArrow.class.isAssignableFrom(c)) {
+			} else if (AbstractArrowEntity.class.isAssignableFrom(c)) {
 				return 64;
-			} else if (EntitySmallFireball.class.isAssignableFrom(c)) {
+			} else if (SmallFireballEntity.class.isAssignableFrom(c)) {
 				return 64;
-			} else if (EntityFireball.class.isAssignableFrom(c)) {
+			} else if (DamagingProjectileEntity.class.isAssignableFrom(c)) {
 				return 64;
-			} else if (EntitySnowball.class.isAssignableFrom(c)) {
+			} else if (SnowballEntity.class.isAssignableFrom(c)) {
 				return 64;
-			} else if (EntityEnderPearl.class.isAssignableFrom(c)) {
+			} else if (EnderPearlEntity.class.isAssignableFrom(c)) {
 				return 64;
-			} else if (EntityEnderEye.class.isAssignableFrom(c)) {
+			} else if (EyeOfEnderEntity.class.isAssignableFrom(c)) {
 				return 64;
-			} else if (EntityEgg.class.isAssignableFrom(c)) {
+			} else if (EggEntity.class.isAssignableFrom(c)) {
 				return 64;
-			} else if (EntityPotion.class.isAssignableFrom(c)) {
+			} else if (PotionEntity.class.isAssignableFrom(c)) {
 				return 64;
-			} else if (EntityExpBottle.class.isAssignableFrom(c)) {
+			} else if (ExperienceBottleEntity.class.isAssignableFrom(c)) {
 				return 64;
-			} else if (EntityFireworkRocket.class.isAssignableFrom(c)) {
+			} else if (FireworkRocketEntity.class.isAssignableFrom(c)) {
 				return 64;
-			} else if (EntityItem.class.isAssignableFrom(c)) {
+			} else if (ItemEntity.class.isAssignableFrom(c)) {
 				return 64;
-			} else if (EntityMinecart.class.isAssignableFrom(c)) {
+			} else if (AbstractMinecartEntity.class.isAssignableFrom(c)) {
 				return 80;
-			} else if (EntityBoat.class.isAssignableFrom(c)) {
+			} else if (BoatEntity.class.isAssignableFrom(c)) {
 				return 80;
-			} else if (EntitySquid.class.isAssignableFrom(c)) {
+			} else if (SquidEntity.class.isAssignableFrom(c)) {
 				return 64;
-			} else if (EntityWither.class.isAssignableFrom(c)) {
+			} else if (WitherEntity.class.isAssignableFrom(c)) {
 				return 80;
-			} else if (EntityShulkerBullet.class.isAssignableFrom(c)) {
+			} else if (ShulkerBulletEntity.class.isAssignableFrom(c)) {
 				return 80;
-			} else if (EntityBat.class.isAssignableFrom(c)) {
+			} else if (BatEntity.class.isAssignableFrom(c)) {
 				return 80;
-			} else if (EntityDragon.class.isAssignableFrom(c)) {
+			} else if (EnderDragonEntity.class.isAssignableFrom(c)) {
 				return 160;
 			} else if (IAnimals.class.isAssignableFrom(c)) {
 				return 80;
-			} else if (EntityTNTPrimed.class.isAssignableFrom(c)) {
+			} else if (TNTEntity.class.isAssignableFrom(c)) {
 				return 160;
-			} else if (EntityFallingBlock.class.isAssignableFrom(c)) {
+			} else if (FallingBlockEntity.class.isAssignableFrom(c)) {
 				return 160;
-			} else if (EntityHanging.class.isAssignableFrom(c)) {
+			} else if (HangingEntity.class.isAssignableFrom(c)) {
 				return 160;
-			} else if (EntityArmorStand.class.isAssignableFrom(c)) {
+			} else if (ArmorStandEntity.class.isAssignableFrom(c)) {
 				return 160;
-			} else if (EntityXPOrb.class.isAssignableFrom(c)) {
+			} else if (ExperienceOrbEntity.class.isAssignableFrom(c)) {
 				return 160;
-			} else if (EntityAreaEffectCloud.class.isAssignableFrom(c)) {
+			} else if (AreaEffectCloudEntity.class.isAssignableFrom(c)) {
 				return 160;
-			} else if (EntityEnderCrystal.class.isAssignableFrom(c)) {
+			} else if (EnderCrystalEntity.class.isAssignableFrom(c)) {
 				return 256;
 			} else {
 				return -1;

@@ -16,7 +16,7 @@ package wdl.config;
 
 import java.util.function.Function;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 
 
 import net.minecraft.util.text.ITextComponent;
@@ -63,11 +63,11 @@ public abstract class BaseCyclableSetting<T> extends BaseSetting<T> implements C
 
 	@Override
 	public ITextComponent getDescription() {
-		return new TextComponentTranslation(key + ".description");
+		return new TranslationTextComponent(key + ".description");
 	}
 
 	@Override
 	public ITextComponent getButtonText(T curValue) {
-		return new TextComponentTranslation(key + "." + serializeToString(curValue));
+		return new TranslationTextComponent(key + "." + serializeToString(curValue));
 	}
 }

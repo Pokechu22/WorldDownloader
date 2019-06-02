@@ -20,9 +20,9 @@ import com.google.common.collect.BiMap;
 import javax.annotation.Nullable;
 import net.minecraft.entity.IMerchant;
 import net.minecraft.entity.passive.EntityVillager;
-import net.minecraft.inventory.ContainerMerchant;
+import net.minecraft.inventory.container.MerchantContainer;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.village.MerchantRecipeList;
 import wdl.ReflectionUtils;
 import wdl.handler.HandlerException;
@@ -44,13 +44,13 @@ import wdl.ReflectionUtils;
 import wdl.handler.HandlerException;
 import wdl.versioned.VersionedFunctions;
 
-public class VillagerHandler extends EntityHandler<EntityVillager, ContainerMerchant> {
+public class VillagerHandler extends EntityHandler<EntityVillager, MerchantContainer> {
 	public VillagerHandler() {
-		super(EntityVillager.class, ContainerMerchant.class);
+		super(EntityVillager.class, MerchantContainer.class);
 	}
 
 	@Override
-	public ITextComponent copyData(ContainerMerchant container, EntityVillager villager, boolean riding) throws HandlerException {
+	public ITextComponent copyData(MerchantContainer container, EntityVillager villager, boolean riding) throws HandlerException {
 		IMerchant merchant = ReflectionUtils.findAndGetPrivateField(
 				container, IMerchant.class);
 		MerchantRecipeList recipes = merchant.getRecipes(merchant.getCustomer()); // note: parameter is ignored by all implementations
@@ -58,13 +58,13 @@ public class VillagerHandler extends EntityHandler<EntityVillager, ContainerMerc
 
 		if (CAREER_ID_FIELD != null) {
 			ITextComponent displayName = merchant.getDisplayName();
-			if (!(displayName instanceof TextComponentTranslation)) {
+			if (!(displayName instanceof TranslationTextComponent)) {
 				// Taking the toString to reflect JSON structure
 				String componentDesc = String.valueOf(displayName);
 				throw new HandlerException("wdl.messages.onGuiClosedWarning.villagerCareer.notAComponent", componentDesc);
 			}
 	
-			TextComponentTranslation displayNameTranslation = ((TextComponentTranslation) displayName);
+			TranslationTextComponent displayNameTranslation = ((TranslationTextComponent) displayName);
 			String key = displayNameTranslation.getKey();
 
 			int profession = villager.getProfession();
@@ -76,9 +76,9 @@ public class VillagerHandler extends EntityHandler<EntityVillager, ContainerMerc
 			} catch (IllegalArgumentException | IllegalAccessException e) {
 				throw new HandlerException("wdl.messages.onGuiClosedWarning.villagerCareer.exception", e);
 			}
-			return new TextComponentTranslation("wdl.messages.onGuiClosedInfo.savedEntity.villager.tradesAndCareer", displayName, profession, career);
+			return new TranslationTextComponent("wdl.messages.onGuiClosedInfo.savedEntity.villager.tradesAndCareer", displayName, profession, career);
 		} else {
-			return new TextComponentTranslation("wdl.messages.onGuiClosedInfo.savedEntity.villager.tradesOnly");
+			return new TranslationTextComponent("wdl.messages.onGuiClosedInfo.savedEntity.villager.tradesOnly");
 		}
 	}
 

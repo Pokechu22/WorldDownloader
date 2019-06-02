@@ -14,7 +14,7 @@
 package wdl.api;
 
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.storage.SaveHandler;
 
 /**
@@ -33,5 +33,5 @@ public interface IPlayerInfoEditor extends IWDLMod {
 	 *            or add info to this.
 	 */
 	public abstract void editPlayerInfo(EntityPlayerSP player,
-			SaveHandler saveHandler, NBTTagCompound tag);
+			SaveHandler saveHandler, CompoundNBT tag);
 }

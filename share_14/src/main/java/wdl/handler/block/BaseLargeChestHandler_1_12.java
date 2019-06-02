@@ -16,9 +16,9 @@ package wdl.handler.block;
 
 import java.util.function.BiConsumer;
 import javax.annotation.Nullable;
-import net.minecraft.inventory.ContainerChest;
+import net.minecraft.inventory.container.ChestContainer;
+import net.minecraft.tileentity.ChestTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import wdl.WDLMessageTypes;
@@ -46,8 +46,8 @@ import wdl.handler.HandlerException;
  *
  * @param <B> The type of chest.  In 1.12, this will only be TileEntityChest in practice.
  */
-abstract class BaseLargeChestHandler<B extends TileEntityChest> extends BlockHandler<B, ContainerChest> {
-	protected BaseLargeChestHandler(Class<B> blockEntityClass, Class<ContainerChest> containerClass,
+abstract class BaseLargeChestHandler<B extends ChestTileEntity> extends BlockHandler<B, ChestContainer> {
+	protected BaseLargeChestHandler(Class<B> blockEntityClass, Class<ChestContainer> containerClass,
 			String... defaultNames) {
 		super(blockEntityClass, containerClass, defaultNames);
 	}
@@ -64,7 +64,7 @@ abstract class BaseLargeChestHandler<B extends TileEntityChest> extends BlockHan
 	 * @param displayName The custom name of the chest, or <code>null</code> if none is set.
 	 * @throws HandlerException As per {@link #handle}
 	 */
-	protected void saveDoubleChest(BlockPos clickedPos, ContainerChest container,
+	protected void saveDoubleChest(BlockPos clickedPos, ChestContainer container,
 			B blockEntity, IBlockReader world,
 			BiConsumer<BlockPos, B> saveMethod,
 			@Nullable String displayName) throws HandlerException {
@@ -82,16 +82,16 @@ abstract class BaseLargeChestHandler<B extends TileEntityChest> extends BlockHan
 		// pos1 isn't always the same as chestPos1 (and thus
 		// chest1 isn't always te1).
 		BlockPos chestPos1 = null, chestPos2 = null;
-		TileEntityChest chest1 = null, chest2 = null;
+		ChestTileEntity chest1 = null, chest2 = null;
 
 		pos2 = pos1.add(0, 0, 1);
 		te2 = world.getTileEntity(pos2);
-		if (te2 instanceof TileEntityChest &&
-				((TileEntityChest) te2).getChestType() ==
-				((TileEntityChest) te1).getChestType()) {
+		if (te2 instanceof ChestTileEntity &&
+				((ChestTileEntity) te2).getChestType() ==
+				((ChestTileEntity) te1).getChestType()) {
 
-			chest1 = (TileEntityChest) te1;
-			chest2 = (TileEntityChest) te2;
+			chest1 = (ChestTileEntity) te1;
+			chest2 = (ChestTileEntity) te2;
 
 			chestPos1 = pos1;
 			chestPos2 = pos2;
@@ -99,12 +99,12 @@ abstract class BaseLargeChestHandler<B extends TileEntityChest> extends BlockHan
 
 		pos2 = pos1.add(0, 0, -1);
 		te2 = world.getTileEntity(pos2);
-		if (te2 instanceof TileEntityChest &&
-				((TileEntityChest) te2).getChestType() ==
-				((TileEntityChest) te1).getChestType()) {
+		if (te2 instanceof ChestTileEntity &&
+				((ChestTileEntity) te2).getChestType() ==
+				((ChestTileEntity) te1).getChestType()) {
 
-			chest1 = (TileEntityChest) te2;
-			chest2 = (TileEntityChest) te1;
+			chest1 = (ChestTileEntity) te2;
+			chest2 = (ChestTileEntity) te1;
 
 			chestPos1 = pos2;
 			chestPos2 = pos1;
@@ -112,11 +112,11 @@ abstract class BaseLargeChestHandler<B extends TileEntityChest> extends BlockHan
 
 		pos2 = pos1.add(1, 0, 0);
 		te2 = world.getTileEntity(pos2);
-		if (te2 instanceof TileEntityChest &&
-				((TileEntityChest) te2).getChestType() ==
-				((TileEntityChest) te1).getChestType()) {
-			chest1 = (TileEntityChest) te1;
-			chest2 = (TileEntityChest) te2;
+		if (te2 instanceof ChestTileEntity &&
+				((ChestTileEntity) te2).getChestType() ==
+				((ChestTileEntity) te1).getChestType()) {
+			chest1 = (ChestTileEntity) te1;
+			chest2 = (ChestTileEntity) te2;
 
 			chestPos1 = pos1;
 			chestPos2 = pos2;
@@ -124,11 +124,11 @@ abstract class BaseLargeChestHandler<B extends TileEntityChest> extends BlockHan
 
 		pos2 = pos1.add(-1, 0, 0);
 		te2 = world.getTileEntity(pos2);
-		if (te2 instanceof TileEntityChest &&
-				((TileEntityChest) te2).getChestType() ==
-				((TileEntityChest) te1).getChestType()) {
-			chest1 = (TileEntityChest) te2;
-			chest2 = (TileEntityChest) te1;
+		if (te2 instanceof ChestTileEntity &&
+				((ChestTileEntity) te2).getChestType() ==
+				((ChestTileEntity) te1).getChestType()) {
+			chest1 = (ChestTileEntity) te2;
+			chest2 = (ChestTileEntity) te1;
 
 			chestPos1 = pos2;
 			chestPos2 = pos1;

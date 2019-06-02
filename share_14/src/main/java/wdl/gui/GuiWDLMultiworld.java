@@ -15,7 +15,7 @@
 package wdl.gui;
 
 import java.util.List;
-import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import wdl.gui.widget.Button;
 import wdl.gui.widget.Screen;
@@ -28,7 +28,7 @@ import wdl.gui.widget.Screen;
 
 public class GuiWDLMultiworld extends Screen {
 	private final MultiworldCallback callback;
-	private GuiButton multiworldEnabledBtn;
+	private Button multiworldEnabledBtn;
 	private boolean enableMultiworld = false;
 
 	//TODO: Some of these things can be constants, but for consistancy aren't.

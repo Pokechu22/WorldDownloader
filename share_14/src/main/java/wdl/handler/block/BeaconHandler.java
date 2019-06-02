@@ -15,12 +15,12 @@
 package wdl.handler.block;
 
 import java.util.function.BiConsumer;
-import net.minecraft.inventory.ContainerBeacon;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.tileentity.TileEntityBeacon;
+import net.minecraft.inventory.container.BeaconContainer;
+import net.minecraft.tileentity.BeaconTileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import wdl.handler.HandlerException;
 
@@ -34,20 +34,20 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IBlockReader;
 import wdl.handler.HandlerException;
 
-public class BeaconHandler extends BlockHandler<TileEntityBeacon, ContainerBeacon> {
+public class BeaconHandler extends BlockHandler<BeaconTileEntity, BeaconContainer> {
 	public BeaconHandler() {
-		super(TileEntityBeacon.class, ContainerBeacon.class, "container.beacon");
+		super(BeaconTileEntity.class, BeaconContainer.class, "container.beacon");
 	}
 
 	@Override
-	public ITextComponent handle(BlockPos clickedPos, ContainerBeacon container,
-			TileEntityBeacon blockEntity, IBlockReader world,
-			BiConsumer<BlockPos, TileEntityBeacon> saveMethod) throws HandlerException {
+	public ITextComponent handle(BlockPos clickedPos, BeaconContainer container,
+			BeaconTileEntity blockEntity, IBlockReader world,
+			BiConsumer<BlockPos, BeaconTileEntity> saveMethod) throws HandlerException {
 		// NOTE: beacons do not have custom names, see https://bugs.mojang.com/browse/MC-124395
 		IInventory beaconInventory = container.getTileEntity();
 		saveContainerItems(container, blockEntity, 0);
 		saveInventoryFields(beaconInventory, blockEntity);
 		saveMethod.accept(clickedPos, blockEntity);
-		return new TextComponentTranslation("wdl.messages.onGuiClosedInfo.savedTileEntity.beacon");
+		return new TranslationTextComponent("wdl.messages.onGuiClosedInfo.savedTileEntity.beacon");
 	}
 }

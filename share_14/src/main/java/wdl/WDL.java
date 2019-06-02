@@ -35,14 +35,14 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import javax.annotation.Nullable;
+import net.minecraft.block.AirBlock;
+import net.minecraft.block.BedBlock;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockAir;
-import net.minecraft.block.BlockBed;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiScreenRealmsProxy;
-import net.minecraft.client.multiplayer.ChunkProviderClient;
+import net.minecraft.client.multiplayer.ClientChunkProvider;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.crash.CrashReport;
@@ -50,11 +50,11 @@ import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.crash.ReportedException;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.Container;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.CompressedStreamTools;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagDouble;
-import net.minecraft.nbt.NBTTagFloat;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.DoubleNBT;
+import net.minecraft.nbt.FloatNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.realms.RealmsScreen;
 import net.minecraft.tileentity.TileEntity;
@@ -399,7 +399,7 @@ public class WDL {
 			File levelDatFile = new File(worldFolder, "level.dat");
 			if (levelDatFile.exists()) {
 				try (FileInputStream stream = new FileInputStream(levelDatFile)) {
-					NBTTagCompound compound = CompressedStreamTools.readCompressed(stream);
+					CompoundNBT compound = CompressedStreamTools.readCompressed(stream);
 					lastPlayed = compound.getCompound("Data").getLong("LastPlayed");
 				} catch (Exception e) {
 					LOGGER.warn("Error while checking if the map has been played and " +
@@ -649,7 +649,7 @@ public class WDL {
 		}
 
 		// Player NBT is stored both in a separate file and level.dat.
-		NBTTagCompound playerNBT = savePlayer(progressScreen);
+		CompoundNBT playerNBT = savePlayer(progressScreen);
 		saveWorldInfo(progressScreen, playerNBT);
 
 		saveMapData(progressScreen);
@@ -737,8 +737,8 @@ public class WDL {
 	 *
 	 * @return The player NBT tag.  Needed for later use in the world info.
 	 */
-	private NBTTagCompound savePlayer(GuiWDLSaveProgress progressScreen) {
-		if (!WDLPluginChannels.canDownloadAtAll()) { return new NBTTagCompound(); }
+	private CompoundNBT savePlayer(GuiWDLSaveProgress progressScreen) {
+		if (!WDLPluginChannels.canDownloadAtAll()) { return new CompoundNBT(); }
 
 		progressScreen.startMajorTask(
 				I18n.format("wdl.saveProgress.playerData.title"),
@@ -749,7 +749,7 @@ public class WDL {
 		progressScreen.setMinorTaskProgress(
 				I18n.format("wdl.saveProgress.playerData.creatingNBT"), 1);
 
-		NBTTagCompound playerNBT = new NBTTagCompound();
+		CompoundNBT playerNBT = new CompoundNBT();
 		player.writeWithoutTypeId(playerNBT);
 
 		progressScreen.setMinorTaskProgress(
@@ -809,7 +809,7 @@ public class WDL {
 	 * file.
 	 */
 	private void saveWorldInfo(GuiWDLSaveProgress progressScreen,
-			NBTTagCompound playerInfoNBT) {
+			CompoundNBT playerInfoNBT) {
 		if (!WDLPluginChannels.canDownloadAtAll()) { return; }
 
 		progressScreen.startMajorTask(
@@ -828,11 +828,11 @@ public class WDL {
 		// cloneNBTCompound takes the PLAYER's nbt file, and puts it in the
 		// right place.
 		// This is needed because single player uses that data.
-		NBTTagCompound worldInfoNBT = worldClient.getWorldInfo()
+		CompoundNBT worldInfoNBT = worldClient.getWorldInfo()
 				.cloneNBTCompound(playerInfoNBT);
 
 		// There's a root tag that stores the above one.
-		NBTTagCompound rootWorldInfoNBT = new NBTTagCompound();
+		CompoundNBT rootWorldInfoNBT = new CompoundNBT();
 		rootWorldInfoNBT.put("Data", worldInfoNBT);
 
 		progressScreen.setMinorTaskProgress(
@@ -899,7 +899,7 @@ public class WDL {
 
 		// Get the list of loaded chunks
 		Object obj = ReflectionUtils.findAndGetPrivateField(worldClient.getChunkProvider(),
-				ChunkProviderClient.class,
+				ClientChunkProvider.class,
 				VersionedFunctions.getChunkListClass());
 		List<Chunk> chunks;
 		if (obj instanceof List<?>) {
@@ -977,7 +977,7 @@ public class WDL {
 				for (int z = 0; z < 16; z++) {
 					for (int x = 0; x < 16; x++) {
 						Block block = array[0].get(x, y, z).getBlock(); 
-						if (!(block instanceof BlockAir || block instanceof BlockBed)) {
+						if (!(block instanceof AirBlock || block instanceof BedBlock)) {
 							// Contains a non-airoid; stop
 							return false;
 						}
@@ -1076,9 +1076,9 @@ public class WDL {
 			return rules;
 		}
 
-		NBTTagCompound gameRules;
+		CompoundNBT gameRules;
 		try (FileInputStream stream = new FileInputStream(levelDatFile)) {
-			NBTTagCompound compound = CompressedStreamTools.readCompressed(stream);
+			CompoundNBT compound = CompressedStreamTools.readCompressed(stream);
 			gameRules = compound.getCompound("Data").getCompound("GameRules");
 		} catch (Exception e) {
 			LOGGER.warn("[WDL] Error while loading existing gamerules; the defaults will be used instead: ", e);
@@ -1147,7 +1147,7 @@ public class WDL {
 	 * Change player specific fields according to the overrides found in the
 	 * properties file.
 	 */
-	private void applyOverridesToPlayer(NBTTagCompound playerNBT) {
+	private void applyOverridesToPlayer(CompoundNBT playerNBT) {
 		// Health
 		PlayerSettings.Health health = worldProps.getValue(PlayerSettings.HEALTH);
 
@@ -1174,20 +1174,20 @@ public class WDL {
 			int z = worldProps.getValue(PlayerSettings.PLAYER_Z);
 			//Positions are offset to center of block,
 			//or player height.
-			NBTTagList pos = new NBTTagList();
-			pos.add(new NBTTagDouble(x + 0.5D));
-			pos.add(new NBTTagDouble(y + 0.621D));
-			pos.add(new NBTTagDouble(z + 0.5D));
+			ListNBT pos = new ListNBT();
+			pos.add(new DoubleNBT(x + 0.5D));
+			pos.add(new DoubleNBT(y + 0.621D));
+			pos.add(new DoubleNBT(z + 0.5D));
 			playerNBT.put("Pos", pos);
-			NBTTagList motion = new NBTTagList();
-			motion.add(new NBTTagDouble(0.0D));
+			ListNBT motion = new ListNBT();
+			motion.add(new DoubleNBT(0.0D));
 			//Force them to land on the ground?
-			motion.add(new NBTTagDouble(-0.0001D));
-			motion.add(new NBTTagDouble(0.0D));
+			motion.add(new DoubleNBT(-0.0001D));
+			motion.add(new DoubleNBT(0.0D));
 			playerNBT.put("Motion", motion);
-			NBTTagList rotation = new NBTTagList();
-			rotation.add(new NBTTagFloat(0.0f));
-			rotation.add(new NBTTagFloat(0.0f));
+			ListNBT rotation = new ListNBT();
+			rotation.add(new FloatNBT(0.0f));
+			rotation.add(new FloatNBT(0.0f));
 			playerNBT.put("Rotation", rotation);
 		}
 
@@ -1205,7 +1205,7 @@ public class WDL {
 	 * @param worldInfoNBT The main world info, generated by {@link WorldInfo#cloneNBTCompound}.
 	 * @param rootWorldInfoNBT The root tag containing worldInfoNBT as "<code>Data</code>"
 	 */
-	private void applyOverridesToWorldInfo(NBTTagCompound worldInfoNBT, NBTTagCompound rootWorldInfoNBT) {
+	private void applyOverridesToWorldInfo(CompoundNBT worldInfoNBT, CompoundNBT rootWorldInfoNBT) {
 		// LevelName
 		String baseName = serverProps.getValue(MiscSettings.SERVER_NAME);
 		String worldName = worldProps.getValue(MiscSettings.WORLD_NAME);
@@ -1296,14 +1296,14 @@ public class WDL {
 
 		// Compute an entire new set of gamerules
 		// (based on what we loaded from level.dat earlier)
-		NBTTagCompound vanillaRules = worldInfoNBT.getCompound("GameRules");
+		CompoundNBT vanillaRules = worldInfoNBT.getCompound("GameRules");
 		Map<String, String> ourRules = VersionedFunctions.getGameRules(gameRules);
 		if (!vanillaRules.keySet().equals(ourRules.keySet())) {
 			LOGGER.warn("[WDL] Mismatched custom/vanilla game rule list!  We have " + ourRules +
 					" and vanilla has " + VersionedFunctions.nbtString(vanillaRules) + ".  " +
 					"(only differences in keys matter; values are expected to differ)");
 		}
-		NBTTagCompound gamerules = new NBTTagCompound();
+		CompoundNBT gamerules = new CompoundNBT();
 		for (Map.Entry<String, String> e : ourRules.entrySet()) {
 			gamerules.putString(e.getKey(), e.getValue());
 		}
@@ -1312,15 +1312,15 @@ public class WDL {
 		addForgeDataToWorldInfo(rootWorldInfoNBT, worldInfoNBT);
 	}
 
-	private void addForgeDataToWorldInfo(NBTTagCompound rootWorldInfoNBT, NBTTagCompound worldInfoNBT) {
+	private void addForgeDataToWorldInfo(CompoundNBT rootWorldInfoNBT, CompoundNBT worldInfoNBT) {
 		try {
-			NBTTagCompound versionInfo = worldInfoNBT.getCompound("Version");
+			CompoundNBT versionInfo = worldInfoNBT.getCompound("Version");
 
 			Class<?> fmlCommonHandler = Class.forName("net.minecraftforge.fml.common.FMLCommonHandler");
 			Object instance = fmlCommonHandler.getMethod("instance").invoke(null);
 			Object dataFixer = fmlCommonHandler.getMethod("getDataFixer").invoke(instance);
 			Method writeVersionData = dataFixer.getClass()
-					.getMethod("writeVersionData", NBTTagCompound.class);
+					.getMethod("writeVersionData", CompoundNBT.class);
 			writeVersionData.invoke(dataFixer, versionInfo);
 		} catch (Throwable ex) {
 			LOGGER.info("Failed to call FML writeVersionData", ex);
@@ -1330,7 +1330,7 @@ public class WDL {
 			Class<?> fmlCommonHandler = Class.forName("net.minecraftforge.fml.common.FMLCommonHandler");
 			Object instance = fmlCommonHandler.getMethod("instance").invoke(null);
 			Method handleWorldDataSave = fmlCommonHandler.getMethod("handleWorldDataSave",
-					SaveHandler.class, WorldInfo.class, NBTTagCompound.class);
+					SaveHandler.class, WorldInfo.class, CompoundNBT.class);
 			handleWorldDataSave.invoke(instance, saveHandler, worldClient.getWorldInfo(), rootWorldInfoNBT);
 		} catch (Throwable ex) {
 			LOGGER.info("Failed to call FML handleWorldDataSave", ex);
@@ -1367,7 +1367,7 @@ public class WDL {
 			// one we saved and any existing version idcounts data.
 			int overallCount = current;
 			File idcountsFile = new File(dataDirectory, "idcounts.dat");
-			NBTTagCompound tag = new NBTTagCompound();
+			CompoundNBT tag = new CompoundNBT();
 			if (idcountsFile.exists()) {
 				try (DataInputStream stream = new DataInputStream(new FileInputStream(idcountsFile))) {
 					tag = CompressedStreamTools.read(stream);
@@ -1400,8 +1400,8 @@ public class WDL {
 
 			File mapFile = new File(dataDirectory, "map_" + e.getKey() + ".dat");
 
-			NBTTagCompound mapNBT = new NBTTagCompound();
-			NBTTagCompound data = new NBTTagCompound();
+			CompoundNBT mapNBT = new CompoundNBT();
+			CompoundNBT data = new CompoundNBT();
 
 			e.getValue().write(data);
 

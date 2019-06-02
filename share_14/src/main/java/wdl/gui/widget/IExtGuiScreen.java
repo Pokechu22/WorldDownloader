@@ -14,7 +14,7 @@
  */
 package wdl.gui.widget;
 
-import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.gui.GuiTextField;
 
 /**
@@ -26,7 +26,7 @@ public interface IExtGuiScreen {
 	 *
 	 * @param button The button to add.
 	 */
-	public abstract <T extends GuiButton> T addButton(T button);
+	public abstract <T extends Button> T addButton(T button);
 
 	/**
 	 * Adds a list to the collection of lists to process.

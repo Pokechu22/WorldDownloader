@@ -15,7 +15,7 @@
 package wdl.versioned;
 
 import javax.annotation.Nullable;
-import net.minecraft.item.ItemMap;
+import net.minecraft.item.FilledMapItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.server.SPacketMaps;
 import net.minecraft.world.World;
@@ -51,7 +51,7 @@ final class MapFunctions {
 	 */
 	@Nullable
 	static MapData getMapData(World world, SPacketMaps mapPacket) {
-		return ItemMap.loadMapData(mapPacket.getMapId(), world);
+		return FilledMapItem.loadMapData(mapPacket.getMapId(), world);
 	}
 
 	/* (non-javadoc)

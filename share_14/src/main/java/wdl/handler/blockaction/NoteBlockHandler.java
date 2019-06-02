@@ -15,10 +15,10 @@
 package wdl.handler.blockaction;
 
 import java.util.function.BiConsumer;
-import net.minecraft.block.BlockNote;
+import net.minecraft.block.NoteBlock;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import wdl.handler.HandlerException;
 
@@ -41,16 +41,16 @@ import wdl.handler.HandlerException;
  * For 1.13, this data is stored in the block state and there is no block entity
  * at all.  As such, this code is not used then.
  */
-public class NoteBlockHandler extends BlockActionHandler<BlockNote, TileEntityNote> {
+public class NoteBlockHandler extends BlockActionHandler<NoteBlock, TileEntityNote> {
 	public NoteBlockHandler() {
-		super(BlockNote.class, TileEntityNote.class);
+		super(NoteBlock.class, TileEntityNote.class);
 	}
 
 	@Override
-	public ITextComponent handle(BlockPos pos, BlockNote block, TileEntityNote blockEntity, int data1, int data2,
+	public ITextComponent handle(BlockPos pos, NoteBlock block, TileEntityNote blockEntity, int data1, int data2,
 			IBlockReader world, BiConsumer<BlockPos, TileEntityNote> saveMethod) throws HandlerException {
 		blockEntity.note = (byte)(data2 % 25);
 		saveMethod.accept(pos, blockEntity);
-		return new TextComponentTranslation("wdl.messages.onBlockEvent.noteblock", pos, data2, blockEntity);
+		return new TranslationTextComponent("wdl.messages.onBlockEvent.noteblock", pos, data2, blockEntity);
 	}
 }

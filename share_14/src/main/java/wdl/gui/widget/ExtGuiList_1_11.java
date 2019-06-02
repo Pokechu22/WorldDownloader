@@ -19,10 +19,10 @@ import java.util.List;
 import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiListExtended.IGuiListEntry;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.GlStateManager;
 import wdl.gui.widget.ExtGuiList.ExtGuiListEntry;
 import wdl.gui.widget.ExtGuiList.ExtGuiListEntry.ButtonWrapper;
@@ -50,10 +50,10 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended 
 		public void setSelected(int p_178011_1_, int p_178011_2_, int p_178011_3_) { }
 
 		private static class ButtonWrapper {
-			public final GuiButton button;
+			public final Button button;
 			public final int x;
 			public final int y;
-			public ButtonWrapper(GuiButton button, int x, int y) {
+			public ButtonWrapper(Button button, int x, int y) {
 				this.button = button;
 				this.x = x;
 				this.y = y;
@@ -76,7 +76,7 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended 
 		private ButtonWrapper activeButton;
 
 		@Override
-		public final <B extends GuiButton> B addButton(B button, int x, int y) {
+		public final <B extends Button> B addButton(B button, int x, int y) {
 			this.buttonList.add(new ButtonWrapper(button, x, y));
 			return button;
 		}

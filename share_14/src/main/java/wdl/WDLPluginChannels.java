@@ -38,7 +38,7 @@ import javax.annotation.Nullable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.client.CPacketCustomPayload;
+import net.minecraft.network.play.client.CCustomPayloadPacket;
 import net.minecraft.world.chunk.Chunk;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -635,7 +635,7 @@ public class WDLPluginChannels {
 		} else {
 			throw new RuntimeException("No request channel has been registered :("); // XXX
 		}
-		CPacketCustomPayload requestPacket = VersionedFunctions.makePluginMessagePacket(channel, output.toByteArray());
+		CCustomPayloadPacket requestPacket = VersionedFunctions.makePluginMessagePacket(channel, output.toByteArray());
 		nhpc.sendPacket(requestPacket);
 	}
 
@@ -716,7 +716,7 @@ public class WDLPluginChannels {
 		object.addProperty("State", state);
 		byte[] bytes = object.toString().getBytes(StandardCharsets.UTF_8);
 
-		CPacketCustomPayload initPacket = VersionedFunctions.makePluginMessagePacket(channel, bytes);
+		CCustomPayloadPacket initPacket = VersionedFunctions.makePluginMessagePacket(channel, bytes);
 
 		nhpc.sendPacket(initPacket);
 
@@ -744,7 +744,7 @@ public class WDLPluginChannels {
 		// Register the WDL messages.
 		byte[] registerBytes = String.join("\0", WDL_CHANNELS).getBytes();
 
-		CPacketCustomPayload registerPacket = VersionedFunctions.makePluginMessagePacket(VersionedFunctions.getRegisterChannel(), registerBytes);
+		CCustomPayloadPacket registerPacket = VersionedFunctions.makePluginMessagePacket(VersionedFunctions.getRegisterChannel(), registerBytes);
 		minecraft.getConnection().sendPacket(registerPacket);
 
 		// Send the init message.

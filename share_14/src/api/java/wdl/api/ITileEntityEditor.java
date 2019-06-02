@@ -13,7 +13,7 @@
  */
 package wdl.api;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
 
 /**
@@ -48,7 +48,7 @@ public interface ITileEntityEditor extends IWDLMod {
 	 *            How the tile entity was created.
 	 * @return Whether it should be edited.
 	 */
-	public abstract boolean shouldEdit(BlockPos pos, NBTTagCompound compound,
+	public abstract boolean shouldEdit(BlockPos pos, CompoundNBT compound,
 			TileEntityCreationMode creationMode);
 
 	/**
@@ -82,7 +82,7 @@ public interface ITileEntityEditor extends IWDLMod {
 	 * @param creationMode
 	 *            How the tile entity was created.
 	 */
-	public abstract void editTileEntity(BlockPos pos, NBTTagCompound compound,
+	public abstract void editTileEntity(BlockPos pos, CompoundNBT compound,
 			TileEntityCreationMode creationMode);
 
 	/**

@@ -14,7 +14,7 @@
 package wdl.api;
 
 import net.minecraft.block.Block;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.chunk.Chunk;
 
@@ -46,5 +46,5 @@ public interface ITileEntityImportationIdentifier extends IWDLMod {
 	 * @return <code>true</code> if that tile entity should be imported.
 	 */
 	public boolean shouldImportTileEntity(String entityID, BlockPos pos,
-			Block block, NBTTagCompound tileEntityNBT, Chunk chunk);
+			Block block, CompoundNBT tileEntityNBT, Chunk chunk);
 }

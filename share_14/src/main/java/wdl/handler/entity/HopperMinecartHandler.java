@@ -14,21 +14,21 @@
  */
 package wdl.handler.entity;
 
-import net.minecraft.entity.item.EntityMinecartHopper;
-import net.minecraft.inventory.ContainerHopper;
+import net.minecraft.entity.item.minecart.HopperMinecartEntity;
+import net.minecraft.inventory.container.HopperContainer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import wdl.handler.HandlerException;
 
-public class HopperMinecartHandler extends EntityHandler<EntityMinecartHopper, ContainerHopper> {
+public class HopperMinecartHandler extends EntityHandler<HopperMinecartEntity, HopperContainer> {
 
 	public HopperMinecartHandler() {
-		super(EntityMinecartHopper.class, ContainerHopper.class);
+		super(HopperMinecartEntity.class, HopperContainer.class);
 	}
 
 	@Override
-	public ITextComponent copyData(ContainerHopper container, EntityMinecartHopper minecart, boolean riding) throws HandlerException {
+	public ITextComponent copyData(HopperContainer container, HopperMinecartEntity minecart, boolean riding) throws HandlerException {
 		for (int i = 0; i < minecart.getSizeInventory(); i++) {
 			Slot slot = container.getSlot(i);
 			if (slot.getHasStack()) {
@@ -36,7 +36,7 @@ public class HopperMinecartHandler extends EntityHandler<EntityMinecartHopper, C
 			}
 		}
 
-		return new TextComponentTranslation("wdl.messages.onGuiClosedInfo.savedEntity.hopperMinecart");
+		return new TranslationTextComponent("wdl.messages.onGuiClosedInfo.savedEntity.hopperMinecart");
 	}
 
 }

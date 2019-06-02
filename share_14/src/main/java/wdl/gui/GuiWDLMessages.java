@@ -17,9 +17,9 @@ package wdl.gui;
 import java.util.stream.Stream;
 import com.google.common.collect.ListMultimap;
 import javax.annotation.Nullable;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiYesNo;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import wdl.MessageTypeCategory;
 import wdl.WDL;
@@ -143,7 +143,7 @@ public class GuiWDLMessages extends Screen {
 	}
 
 	private SettingButton enableAllButton;
-	private GuiButton resetButton;
+	private Button resetButton;
 
 	private static final int ID_RESET_ALL = 101;
 
