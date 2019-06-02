@@ -427,8 +427,9 @@ public class WDL {
 		boolean wasDownloading = downloading;
 
 		if (wasDownloading) {
-			minecraft.getSaveLoader().flushCache();
-			saveHandler.flush();
+			// XXX still needed?
+			//minecraft.getSaveLoader().flushCache();
+			//saveHandler.flush();
 			startOnChange = false;
 			saving = false;
 			downloading = false;
@@ -621,12 +622,14 @@ public class WDL {
 				return I18n.format("wdl.saveProgress.flushingIO.subtitle", chunkLoader.getNumPendingChunks());
 			}, 1);
 
-			ThreadedFileIOBase.getThreadedIOInstance().waitForFinish();
+			// XXX Still needed?
+			//ThreadedFileIOBase.getThreadedIOInstance().waitForFinish();
 		} catch (Exception e) {
 			throw new RuntimeException("Threw exception waiting for asynchronous IO to finish. Hmmm.", e);
 		}
-		saveHandler.flush();
-		minecraft.getSaveLoader().flushCache();
+		// XXX Still needed?
+		//saveHandler.flush();
+		//minecraft.getSaveLoader().flushCache();
 
 		if (backupType != WorldBackupType.NONE) {
 			WDLMessages.chatMessageTranslated(WDL.serverProps,

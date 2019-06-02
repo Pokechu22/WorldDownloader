@@ -14,14 +14,16 @@
  */
 package wdl;
 
-import java.io.DataInputStream;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.annotation.Nullable;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,14 +32,15 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ClassInheritanceMultiMap;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.storage.RegionFileCache;
+import net.minecraft.world.chunk.ChunkManager;
+import net.minecraft.world.chunk.storage.RegionFile;
 import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.storage.SaveHandler;
 import wdl.api.IEntityEditor;
@@ -298,21 +301,12 @@ public class WDLChunkLoader extends WDLChunkLoaderBase {
 		try {
 			CompoundNBT chunkNBT;
 
-			// The reason for the weird syntax here rather than containsKey is because
-			// chunksToSave can be accessed from multiple threads.  Note that this still
-			// doesn't handle the MC-119971-like case of the chunk being in chunksBeingSaved
-			// (but that should be rare, and this condition should not happen in the first place)
-			if ((chunkNBT = chunksToSave.get(chunk.getPos())) != null) {
-				LOGGER.warn("getOldTileEntities (and thus saveChunk) was called while a chunk was already in chunksToSave!  (location: {})", chunk.getPos(), new Exception());
-			} else try (DataInputStream dis = RegionFileCache.getChunkInputStream(
-					chunkSaveLocation, chunk.getPos().x, chunk.getPos().z)) {
-				if (dis == null) {
-					// This happens whenever the chunk hasn't been saved before.
-					// It's a normal case.
-					return returned;
-				}
-
-				chunkNBT = CompressedStreamTools.read(dis);
+			// XXX The cache is gone now (along with MC-119971), right?
+			chunkNBT = this.func_219099_e(chunk.getPos());
+			if (chunkNBT == null) {
+				// This happens whenever the chunk hasn't been saved before.
+				// It's a normal case.
+				return returned;
 			}
 
 			CompoundNBT levelNBT = chunkNBT.getCompound("Level");
@@ -409,6 +403,39 @@ public class WDLChunkLoader extends WDLChunkLoaderBase {
 						+ "initial value, an edited value, or a partially "
 						+ "edited value)", ex);
 			}
+		}
+	}
+
+	@Nullable
+	public RegionFile getRegionFileIfExists(int regionX, int regionZ) {
+		// Based on RegionFileCache.func_219098_a
+		try {
+			long cacheKey = ChunkPos.asLong(regionX, regionZ);
+			RegionFile regionfile = this.field_219102_c.getAndMoveToFirst(cacheKey);
+			if (regionfile != null) {
+				return regionfile;
+			} else {
+				File file = new File(this.chunkSaveLocation, "r." + regionX + "." + regionZ + ".mca");
+				if (!file.exists()) {
+					// This is changed from func_219098_a; we don't want to create the file if it doesn't exist
+					return null;
+				}
+
+				if (this.field_219102_c.size() >= 256) {
+					this.field_219102_c.removeLast();
+				}
+
+				if (!this.chunkSaveLocation.exists()) {
+					this.chunkSaveLocation.mkdirs();
+				}
+
+				regionfile = new RegionFile(file);
+				this.field_219102_c.putAndMoveToFirst(cacheKey, regionfile);
+				return regionfile;
+			}
+		} catch (IOException ex) {
+			LOGGER.warn("[WDL] Failed to get region file", ex);
+			return null;
 		}
 	}
 }

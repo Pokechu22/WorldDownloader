@@ -18,23 +18,15 @@ package wdl;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import it.unimi.dsi.fastutil.shorts.ShortList;
-import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.LongArrayNBT;
 import net.minecraft.nbt.ShortNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.SectionPos;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.LightType;
 import net.minecraft.world.SerializableTickList;
 import net.minecraft.world.ServerTickList;
@@ -42,7 +34,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkManager;
-import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.chunk.ChunkPrimerTickList;
 import net.minecraft.world.chunk.ChunkSection;
 import net.minecraft.world.chunk.ChunkStatus;
@@ -52,7 +43,6 @@ import net.minecraft.world.chunk.UpgradeData;
 import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.dimension.EndDimension;
 import net.minecraft.world.dimension.NetherDimension;
-import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.lighting.WorldLightManager;
 import net.minecraft.world.storage.SaveHandler;
@@ -90,16 +80,11 @@ abstract class WDLChunkLoaderBase extends ChunkManager {
 	}
 
 	protected final WDL wdl;
-	protected final Map<ChunkPos, CompoundNBT> chunksToSave;
 	protected final File chunkSaveLocation;
 
 	protected WDLChunkLoaderBase(WDL wdl, File file) {
-		super(file, null);
+		super(null, file, null, null, null, null, null, null, null, null, 0, 0); // Surely this can't go wrong
 		this.wdl = wdl;
-		@SuppressWarnings("unchecked")
-		Map<ChunkPos, CompoundNBT> chunksToSave =
-				ReflectionUtils.findAndGetPrivateField(this, AnvilChunkLoader.class, VersionedFunctions.getChunksToSaveClass());
-		this.chunksToSave = chunksToSave;
 		this.chunkSaveLocation = file;
 	}
 
@@ -109,9 +94,8 @@ abstract class WDLChunkLoaderBase extends ChunkManager {
 	 * Note that while the normal implementation swallows Exceptions, this
 	 * version does not.
 	 */
-	@Override
 	public synchronized void saveChunk(World world, IChunk chunk) throws SessionLockException, IOException {
-		world.checkSessionLock();
+		wdl.saveHandler.checkSessionLock();
 
 		CompoundNBT levelTag = writeChunkToNBT((Chunk)chunk, world);
 
@@ -119,7 +103,7 @@ abstract class WDLChunkLoaderBase extends ChunkManager {
 		rootTag.func_218657_a("Level", levelTag);
 		rootTag.putInt("DataVersion", VersionConstants.getDataVersion());
 
-		addChunkToPending(chunk.getPos(), rootTag);
+		func_219100_a(chunk.getPos(), rootTag);
 
 		wdl.unloadChunk(chunk.getPos());
 	}
@@ -266,7 +250,7 @@ abstract class WDLChunkLoaderBase extends ChunkManager {
 	 * @return The number of chunks that still need to be written to disk
 	 */
 	public synchronized int getNumPendingChunks() {
-		return this.chunksToSave.size();
+		return this.field_219102_c.size(); // XXX This is actually the number of regions
 	}
 
 	private ListNBT listArrayToTag(ShortList[] list) {
