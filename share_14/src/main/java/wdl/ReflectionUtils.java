@@ -16,17 +16,13 @@ package wdl;
 
 import java.lang.reflect.Field;
 import java.util.Map;
+
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
-import net.minecraft.client.gui.screen.inventory.CreativeScreen;
-import net.minecraft.inventory.container.Container;
-
 
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
-import net.minecraft.inventory.Container;
-
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.Maps;
+import net.minecraft.client.gui.screen.inventory.CreativeScreen;
+import net.minecraft.inventory.container.Container;
 
 /**
  * Reflection utilities, mainly to work with private fields.

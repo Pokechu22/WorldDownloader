@@ -15,12 +15,9 @@
 package wdl.config;
 
 import java.util.function.Function;
+
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-
-
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
 
 /**
  * A cyclable setting is a setting that can be cycled via a button through a

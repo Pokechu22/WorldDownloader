@@ -16,14 +16,22 @@ package wdl;
 
 import java.util.Collection;
 import java.util.function.Consumer;
-import com.google.common.annotations.VisibleForTesting;
-import io.netty.buffer.ByteBuf;
+
 import javax.annotation.Nonnull;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.google.common.annotations.VisibleForTesting;
+
+import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.IngameMenuScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.network.play.ClientPlayNetHandler;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.world.ClientWorld;
@@ -34,47 +42,12 @@ import net.minecraft.network.play.server.SBlockActionPacket;
 import net.minecraft.network.play.server.SChatPacket;
 import net.minecraft.network.play.server.SCustomPayloadPlayPacket;
 import net.minecraft.network.play.server.SMapDataPacket;
-import net.minecraft.network.play.server.SUnloadChunkPacket;
-import net.minecraft.profiler.Profiler;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.storage.MapData;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import wdl.gui.GuiTurningCameraBase;
-import wdl.gui.GuiWDL;
-import wdl.gui.GuiWDLAbout;
-import wdl.gui.GuiWDLChunkOverrides;
-import wdl.gui.GuiWDLPermissions;
-import wdl.gui.widget.Button;
-import wdl.versioned.VersionedFunctions;
-
-
-import javax.annotation.Nonnull;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.google.common.annotations.VisibleForTesting;
-
-import io.netty.buffer.ByteBuf;
-import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiIngameMenu;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.multiplayer.WorldClient;
-import net.minecraft.client.network.NetHandlerPlayClient;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.crash.CrashReport;
-import net.minecraft.entity.Entity;
-import net.minecraft.inventory.Container;
 import net.minecraft.network.play.server.SPacketBlockAction;
 import net.minecraft.network.play.server.SPacketChat;
 import net.minecraft.network.play.server.SPacketCustomPayload;
 import net.minecraft.network.play.server.SPacketMaps;
 import net.minecraft.network.play.server.SPacketUnloadChunk;
+import net.minecraft.network.play.server.SUnloadChunkPacket;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -91,7 +64,6 @@ import wdl.gui.GuiWDL;
 import wdl.gui.GuiWDLAbout;
 import wdl.gui.GuiWDLChunkOverrides;
 import wdl.gui.GuiWDLPermissions;
-import wdl.gui.widget.Button;
 import wdl.versioned.VersionedFunctions;
 
 /**

@@ -16,6 +16,7 @@ package wdl;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -25,20 +26,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.inventory.Inventory;
-import wdl.ducks.IBaseChangesApplied;
-import wdl.ducks.INetworkNameable;
-import wdl.versioned.VersionedFunctions;
-
-
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.gui.GuiIngameMenu;
-import net.minecraft.client.multiplayer.WorldClient;
-import net.minecraft.client.network.NetHandlerPlayClient;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.crash.CrashReport;
-import net.minecraft.init.Blocks;
-import net.minecraft.inventory.InventoryBasic;
 import wdl.ducks.IBaseChangesApplied;
 import wdl.ducks.INetworkNameable;
 import wdl.versioned.VersionedFunctions;

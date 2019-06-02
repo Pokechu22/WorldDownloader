@@ -15,15 +15,9 @@
 package wdl.gui;
 
 import java.util.function.Supplier;
+
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.util.math.MathHelper;
-import wdl.WDL;
-
-
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.MathHelper;
 import wdl.WDL;

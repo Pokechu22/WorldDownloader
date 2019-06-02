@@ -15,7 +15,7 @@
 package wdl.gui.widget;
 
 import net.minecraft.client.Minecraft;
-import wdl.gui.widget.ExtGuiList.ExtGuiListEntry;
+import wdl.gui.widget.GuiList.GuiListEntry;
 
 
 public abstract class GuiList<T extends GuiListEntry<T>> extends ExtGuiList<T> {

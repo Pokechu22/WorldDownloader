@@ -16,8 +16,11 @@ package wdl.gui;
 
 import java.io.File;
 import java.util.List;
-import com.google.common.io.Files;
+
 import javax.annotation.Nullable;
+
+import com.google.common.io.Files;
+
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -29,29 +32,7 @@ import wdl.WorldBackup.ICustomBackupProgressMonitor;
 import wdl.WorldBackup.WorldBackupType;
 import wdl.config.IConfiguration;
 import wdl.config.settings.MiscSettings;
-import wdl.gui.widget.Button;
 import wdl.gui.widget.ButtonDisplayGui;
-import wdl.gui.widget.Screen;
-
-
-import javax.annotation.Nullable;
-
-import com.google.common.io.Files;
-
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.gui.GuiYesNo;
-import net.minecraft.client.resources.I18n;
-import wdl.WDL;
-import wdl.WorldBackup;
-import wdl.WorldBackup.ICustomBackupProgressMonitor;
-import wdl.WorldBackup.WorldBackupType;
-import wdl.config.IConfiguration;
-import wdl.config.settings.MiscSettings;
-import wdl.gui.widget.Button;
-import wdl.gui.widget.ButtonDisplayGui;
-import wdl.gui.widget.Screen;
 
 /**
  * GUI allowing control over the way the world is backed up.

@@ -15,25 +15,13 @@
 package wdl.handler.block;
 
 import java.util.function.BiConsumer;
+
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.BrewingStandContainer;
 import net.minecraft.tileentity.BrewingStandTileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import wdl.ReflectionUtils;
-import wdl.handler.HandlerException;
-
-
-import java.util.function.BiConsumer;
-
-import net.minecraft.inventory.ContainerBrewingStand;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.tileentity.TileEntityBrewingStand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IBlockReader;
 import wdl.ReflectionUtils;
 import wdl.handler.HandlerException;

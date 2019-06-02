@@ -15,6 +15,8 @@
 package wdl.versioned;
 
 
+import java.io.IOException;
+
 import javax.annotation.Nullable;
 
 import org.apache.logging.log4j.LogManager;

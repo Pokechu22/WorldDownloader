@@ -18,19 +18,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
-import javax.annotation.CheckForSigned;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.effect.LightningBoltEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import wdl.config.settings.EntitySettings;
-import wdl.config.settings.EntitySettings.TrackDistanceMode;
-
 
 import javax.annotation.CheckForSigned;
 import javax.annotation.Nonnull;
@@ -44,8 +31,8 @@ import com.google.common.collect.Multimap;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityTrackerEntry;
-import net.minecraft.entity.effect.EntityLightningBolt;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.effect.LightningBoltEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import wdl.api.IEntityManager;
 import wdl.api.WDLApi;
 import wdl.api.WDLApi.ModInfo;

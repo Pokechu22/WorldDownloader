@@ -15,12 +15,9 @@
 package wdl.gui.widget;
 
 import java.util.List;
+
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
-
-
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiTextField;
 
 /**
  * Methods that should be provided or implemented in the implementation-specific ExtGuiList.

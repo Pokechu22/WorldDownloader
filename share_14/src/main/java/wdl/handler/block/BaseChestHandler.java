@@ -15,25 +15,14 @@
 package wdl.handler.block;
 
 import java.util.function.BiConsumer;
+
 import javax.annotation.Nullable;
+
 import net.minecraft.inventory.container.ChestContainer;
 import net.minecraft.tileentity.ChestTileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import wdl.handler.HandlerException;
-
-
-import java.util.function.BiConsumer;
-
-import javax.annotation.Nullable;
-
-import net.minecraft.inventory.ContainerChest;
-import net.minecraft.tileentity.TileEntityChest;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IBlockReader;
 import wdl.handler.HandlerException;
 

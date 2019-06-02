@@ -34,13 +34,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-import javax.annotation.Nullable;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import wdl.versioned.VersionedFunctions;
-
 
 import javax.annotation.Nullable;
 

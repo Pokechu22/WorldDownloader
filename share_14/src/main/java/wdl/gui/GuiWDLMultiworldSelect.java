@@ -17,6 +17,7 @@ package wdl.gui;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
@@ -24,17 +25,6 @@ import wdl.WDL;
 import wdl.config.Configuration;
 import wdl.config.IConfiguration;
 import wdl.config.settings.MiscSettings;
-import wdl.gui.widget.Button;
-
-
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.resources.I18n;
-import wdl.WDL;
-import wdl.config.Configuration;
-import wdl.config.IConfiguration;
-import wdl.config.settings.MiscSettings;
-import wdl.gui.widget.Button;
 
 /**
  * A GUI for selecting which world the player is currently in.

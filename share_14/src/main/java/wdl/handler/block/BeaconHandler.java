@@ -15,22 +15,13 @@
 package wdl.handler.block;
 
 import java.util.function.BiConsumer;
+
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.BeaconContainer;
 import net.minecraft.tileentity.BeaconTileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import wdl.handler.HandlerException;
-
-
-import net.minecraft.inventory.ContainerBeacon;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.tileentity.TileEntityBeacon;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IBlockReader;
 import wdl.handler.HandlerException;
 

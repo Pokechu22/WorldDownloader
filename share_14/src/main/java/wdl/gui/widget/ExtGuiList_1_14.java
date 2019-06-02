@@ -15,16 +15,19 @@
 package wdl.gui.widget;
 
 
+import java.util.ArrayList;
+
 import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import org.lwjgl.glfw.GLFW;
 
+import com.mojang.blaze3d.platform.GlStateManager;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.renderer.GlStateManager;
 import wdl.gui.widget.ExtGuiList.ExtGuiListEntry;
 
 abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended<T> implements IExtGuiList<T> {

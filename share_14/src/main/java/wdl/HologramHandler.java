@@ -15,20 +15,15 @@
 package wdl;
 
 import java.util.Set;
+
 import com.google.common.collect.Sets;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ArmorStandEntity;
-import wdl.config.settings.EntitySettings.TrackDistanceMode;
-
-
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityArmorStand;
 import wdl.api.IEntityManager;
 import wdl.api.IWDLMod;
 import wdl.api.IWDLModDescripted;
 import wdl.config.settings.EntitySettings.TrackDistanceMode;
-
-import com.google.common.collect.Sets;
 
 /**
  * Handles holograms.

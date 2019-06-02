@@ -16,10 +16,6 @@ package wdl.config;
 
 import java.io.File;
 import java.io.IOException;
-import javax.annotation.CheckForSigned;
-import net.minecraft.crash.CrashReportCategory;
-import wdl.EntityUtils;
-
 
 import javax.annotation.CheckForSigned;
 

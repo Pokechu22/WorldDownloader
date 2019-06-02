@@ -15,35 +15,18 @@
 package wdl.gui;
 
 import java.util.List;
+
 import javax.annotation.Nullable;
+
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.SoundEvents;
-import wdl.WDL;
-import wdl.gui.widget.Button;
-import wdl.gui.widget.ButtonDisplayGui;
-import wdl.gui.widget.GuiList;
-import wdl.gui.widget.GuiList.GuiListEntry;
-import wdl.gui.widget.Screen;
-import wdl.gui.widget.TextList;
-import wdl.update.Release;
-import wdl.update.WDLUpdateChecker;
-
-
-import javax.annotation.Nullable;
-
-import net.minecraft.client.audio.SimpleSound;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.init.SoundEvents;
 import wdl.VersionConstants;
 import wdl.WDL;
 import wdl.gui.widget.Button;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.GuiList;
-import wdl.gui.widget.GuiList.GuiListEntry;
-import wdl.gui.widget.Screen;
 import wdl.gui.widget.TextList;
 import wdl.update.Release;
 import wdl.update.WDLUpdateChecker;

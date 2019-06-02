@@ -20,4 +20,5 @@
 package wdl.gui.widget;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+
 import mcp.MethodsReturnNonnullByDefault;

@@ -15,15 +15,9 @@
 package wdl.gui;
 
 import java.util.List;
+
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
-import wdl.gui.widget.Button;
-import wdl.gui.widget.Screen;
-
-
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.resources.I18n;
-import wdl.gui.widget.Button;
 import wdl.gui.widget.Screen;
 
 public class GuiWDLMultiworld extends Screen {

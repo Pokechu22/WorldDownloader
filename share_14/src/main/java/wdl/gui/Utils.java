@@ -16,20 +16,13 @@ package wdl.gui;
 
 import java.net.URI;
 import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import wdl.versioned.VersionedFunctions;
-
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiTextField;
 import wdl.versioned.VersionedFunctions;
 
 public class Utils {

@@ -14,8 +14,8 @@
  */
 package wdl.gui.widget;
 
-import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.gui.widget.button.Button;
 
 /**
  * Shared interface for a GuiScreen variant that can also store buttons and GuiLists.

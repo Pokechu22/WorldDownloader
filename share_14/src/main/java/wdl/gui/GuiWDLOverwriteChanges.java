@@ -15,6 +15,7 @@
 package wdl.gui;
 
 import java.io.IOException;
+
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import wdl.WDL;
@@ -23,19 +24,6 @@ import wdl.WDLMessages;
 import wdl.WorldBackup;
 import wdl.WorldBackup.IBackupProgressMonitor;
 import wdl.WorldBackup.WorldBackupType;
-import wdl.gui.widget.Button;
-import wdl.versioned.VersionedFunctions;
-
-
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.resources.I18n;
-import wdl.WDL;
-import wdl.WDLMessageTypes;
-import wdl.WDLMessages;
-import wdl.WorldBackup;
-import wdl.WorldBackup.IBackupProgressMonitor;
-import wdl.WorldBackup.WorldBackupType;
-import wdl.gui.widget.Button;
 import wdl.versioned.VersionedFunctions;
 
 /**

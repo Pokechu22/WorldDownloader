@@ -22,20 +22,27 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.Map;
 import java.util.function.Consumer;
-import com.google.common.collect.BiMap;
-import com.google.common.collect.ImmutableList;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+
 import javax.annotation.MatchesPattern;
 import javax.annotation.Nullable;
 import javax.annotation.RegEx;
 import javax.annotation.meta.TypeQualifierNickname;
+
+import com.google.common.collect.BiMap;
+import com.google.common.collect.ImmutableList;
+
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.multiplayer.ChunkProviderClient;
 import net.minecraft.client.network.play.ClientPlayNetHandler;
+import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
@@ -43,46 +50,6 @@ import net.minecraft.nbt.INBT;
 import net.minecraft.network.play.client.CCustomPayloadPacket;
 import net.minecraft.network.play.server.SCustomPayloadPlayPacket;
 import net.minecraft.network.play.server.SMapDataPacket;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.storage.MapData;
-import net.minecraft.world.storage.SaveHandler;
-import wdl.config.settings.GeneratorSettings.Generator;
-import wdl.handler.block.BlockHandler;
-import wdl.handler.blockaction.BlockActionHandler;
-import wdl.handler.entity.EntityHandler;
-
-
-import javax.annotation.MatchesPattern;
-import javax.annotation.Nullable;
-import javax.annotation.RegEx;
-import javax.annotation.meta.TypeQualifierNickname;
-
-import com.google.common.collect.BiMap;
-import com.google.common.collect.ImmutableList;
-
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockContainer;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.multiplayer.ChunkProviderClient;
-import net.minecraft.client.network.NetHandlerPlayClient;
-import net.minecraft.entity.passive.EntityVillager;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.INBTBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.play.client.CPacketCustomPayload;
-import net.minecraft.network.play.server.SPacketCustomPayload;
-import net.minecraft.network.play.server.SPacketMaps;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameRules;

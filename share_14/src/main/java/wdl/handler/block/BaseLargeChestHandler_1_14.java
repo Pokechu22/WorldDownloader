@@ -29,7 +29,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import wdl.WDLMessageTypes;
 import wdl.handler.HandlerException;
-import wdl.handler.block.BlockHandler;
 
 /**
  * This class specifically provides support for handling large chests, which

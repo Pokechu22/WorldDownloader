@@ -16,44 +16,23 @@ package wdl.gui;
 
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.GameRules.ValueType;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import wdl.WDL;
-import wdl.gui.widget.Button;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.GuiList;
-import wdl.gui.widget.GuiList.GuiListEntry;
 import wdl.gui.widget.GuiNumericTextField;
-import wdl.gui.widget.Screen;
 import wdl.versioned.VersionedFunctions;
-
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.GameRules.ValueType;
-import wdl.WDL;
-import wdl.gui.widget.Button;
-import wdl.gui.widget.ButtonDisplayGui;
-import wdl.gui.widget.GuiList;
-import wdl.gui.widget.GuiList.GuiListEntry;
-import wdl.versioned.VersionedFunctions;
-import wdl.gui.widget.GuiNumericTextField;
-import wdl.gui.widget.Screen;
 
 public class GuiWDLGameRules extends Screen {
 	private static final Logger LOGGER = LogManager.getLogger();

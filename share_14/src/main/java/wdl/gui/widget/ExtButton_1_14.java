@@ -14,6 +14,7 @@
  */
 package wdl.gui.widget;
 
+import net.minecraft.client.Minecraft;
 
 /**
  * Extendible button, to deal with changing method signatures between versions.

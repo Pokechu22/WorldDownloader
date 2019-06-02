@@ -14,6 +14,7 @@
  */
 package wdl.versioned;
 
+import net.minecraft.world.biome.Biome;
 
 /**
  * Contains functions that interract with registries.

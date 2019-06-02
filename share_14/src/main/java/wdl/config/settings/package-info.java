@@ -20,4 +20,5 @@
 package wdl.config.settings;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+
 import mcp.MethodsReturnNonnullByDefault;
