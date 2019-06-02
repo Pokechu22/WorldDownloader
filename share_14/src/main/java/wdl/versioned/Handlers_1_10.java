@@ -169,7 +169,7 @@ final class HandlerFunctions {
 			// Only import command blocks if the current world doesn't have a command set
 			// for the one there, as WDL doesn't explicitly save them so we need to use the
 			// one currently present in the world.
-			TileEntity temp = chunk.getTileEntity(pos, Chunk.EnumCreateEntityType.CHECK);
+			TileEntity temp = chunk.getTileEntity(pos, Chunk.CreateEntityType.CHECK);
 			if (temp == null || !(temp instanceof TileEntityCommandBlock)) {
 				// Bad/missing data currently there, import the old data
 				return true;
