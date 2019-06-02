@@ -14,7 +14,6 @@
  */
 package wdl.versioned;
 
-import javax.annotation.Nullable;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;

@@ -14,10 +14,6 @@
  */
 package wdl.versioned;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 

@@ -15,6 +15,8 @@
 package wdl.config.settings;
 
 import java.util.function.Function;
+import com.google.common.collect.ImmutableMap;
+
 
 import com.google.common.collect.ImmutableMap;
 

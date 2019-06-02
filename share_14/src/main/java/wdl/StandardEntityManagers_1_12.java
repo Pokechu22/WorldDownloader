@@ -14,9 +14,6 @@
  */
 package wdl;
 
-import java.lang.reflect.Method;
-import java.util.Collections;
-import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

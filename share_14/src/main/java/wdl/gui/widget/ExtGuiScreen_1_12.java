@@ -17,6 +17,13 @@ package wdl.gui.widget;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.OverridingMethodsMustInvokeSuper;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiTextField;
+import wdl.gui.widget.GuiList.GuiListEntry;
+
 
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 

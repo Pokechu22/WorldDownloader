@@ -15,6 +15,14 @@
 package wdl.config.settings;
 
 import java.util.Optional;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
+import wdl.MessageTypeCategory;
+import wdl.WDLMessages.MessageRegistration;
+import wdl.config.BooleanSetting;
+import wdl.config.CyclableSetting;
+import wdl.config.IConfiguration;
+
 
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;

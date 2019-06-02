@@ -15,6 +15,8 @@
 package wdl.versioned;
 
 import java.util.Map;
+import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
+
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.minecraft.client.settings.GameSettings;

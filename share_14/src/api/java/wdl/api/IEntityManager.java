@@ -14,6 +14,10 @@
 package wdl.api;
 
 import java.util.Set;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import net.minecraft.entity.Entity;
+
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -14,20 +14,18 @@
  */
 package wdl.gui.widget;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import org.lwjgl.glfw.GLFW;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiTextField;
 import wdl.gui.widget.GuiList.GuiListEntry;
 
-abstract class ExtGuiScreen extends Screen implements IExtGuiScreen {
+abstract class ExtGuiScreen extends GuiScreen implements IExtGuiScreen {
 
 	/**
 	 * Hide the buttonList field from subclasses.

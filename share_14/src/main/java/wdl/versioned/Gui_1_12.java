@@ -14,7 +14,6 @@
  */
 package wdl.versioned;
 
-import static org.lwjgl.opengl.GL11.*;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;

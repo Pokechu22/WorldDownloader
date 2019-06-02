@@ -14,7 +14,16 @@
  */
 package wdl.config.settings;
 
-import static wdl.config.settings.Utils.*;
+import com.google.common.annotations.VisibleForTesting;
+import java.util.Map;
+import java.util.function.BooleanSupplier;
+import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
+import wdl.WDLPluginChannels;
+import wdl.config.CyclableSetting;
+import wdl.config.IConfiguration;
+
 
 import java.util.Map;
 import java.util.function.BooleanSupplier;

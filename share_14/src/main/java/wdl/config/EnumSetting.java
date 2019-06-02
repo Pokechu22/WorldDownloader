@@ -15,6 +15,8 @@
 package wdl.config;
 
 import java.util.function.Function;
+import net.minecraft.util.IStringSerializable;
+
 
 import net.minecraft.util.IStringSerializable;
 

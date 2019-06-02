@@ -14,7 +14,6 @@
  */
 package wdl.versioned;
 
-import javax.annotation.Nullable;
 
 import net.minecraft.item.ItemMap;
 import net.minecraft.item.ItemStack;

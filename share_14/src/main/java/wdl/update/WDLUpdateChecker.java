@@ -18,6 +18,18 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.ClickEvent.Action;
+import wdl.WDL;
+import wdl.WDLMessageTypes;
+import wdl.WDLMessages;
+import wdl.config.settings.MiscSettings;
+import wdl.update.Release.HashData;
+
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

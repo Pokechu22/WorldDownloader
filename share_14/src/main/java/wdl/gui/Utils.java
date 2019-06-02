@@ -16,6 +16,13 @@ package wdl.gui;
 
 import java.net.URI;
 import java.util.List;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiTextField;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import wdl.versioned.VersionedFunctions;
+
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

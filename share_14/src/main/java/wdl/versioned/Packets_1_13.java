@@ -14,12 +14,6 @@
  */
 package wdl.versioned;
 
-import io.netty.buffer.Unpooled;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.client.CPacketCustomPayload;
-import net.minecraft.network.play.server.SPacketCustomPayload;
-import net.minecraft.util.ResourceLocation;
-import wdl.versioned.VersionedFunctions.ChannelName;
 
 /**
  * Contains functions related to packets. This version is used in Minecraft 1.13

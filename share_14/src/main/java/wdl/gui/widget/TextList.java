@@ -15,6 +15,9 @@
 package wdl.gui.widget;
 
 import java.util.List;
+import net.minecraft.client.Minecraft;
+import wdl.gui.Utils;
+
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiListExtended;

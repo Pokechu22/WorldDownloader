@@ -2,7 +2,6 @@ package wdl.gui.widget;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiListExtended.IGuiListEntry;
 import wdl.gui.Utils;
 
 /**

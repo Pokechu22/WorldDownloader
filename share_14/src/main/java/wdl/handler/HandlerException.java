@@ -15,6 +15,9 @@
 package wdl.handler;
 
 import javax.annotation.Nonnull;
+import net.minecraft.client.resources.I18n;
+import wdl.WDLMessageTypes;
+
 
 import net.minecraft.client.resources.I18n;
 import wdl.WDLMessageTypes;

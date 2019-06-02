@@ -14,7 +14,21 @@
  */
 package wdl.config.settings;
 
-import static wdl.config.settings.Utils.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
+import wdl.config.BooleanSetting;
+import wdl.config.CyclableSetting;
+import wdl.config.IConfiguration;
+import wdl.config.Setting;
+import wdl.config.StringSetting;
+import wdl.versioned.VersionedFunctions;
+
 
 import java.util.Arrays;
 import java.util.List;

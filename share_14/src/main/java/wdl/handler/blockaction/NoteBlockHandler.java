@@ -15,6 +15,13 @@
 package wdl.handler.blockaction;
 
 import java.util.function.BiConsumer;
+import net.minecraft.block.BlockNote;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.IBlockReader;
+import wdl.handler.HandlerException;
+
 
 import net.minecraft.block.BlockNote;
 import net.minecraft.tileentity.TileEntityNote;

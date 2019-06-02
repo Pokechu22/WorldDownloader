@@ -15,6 +15,15 @@
 package wdl.versioned;
 
 import javax.annotation.Nullable;
+import net.minecraft.item.ItemMap;
+import net.minecraft.item.ItemStack;
+import net.minecraft.network.play.server.SPacketMaps;
+import net.minecraft.world.World;
+import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.storage.MapData;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

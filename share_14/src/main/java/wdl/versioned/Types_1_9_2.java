@@ -14,8 +14,6 @@
  */
 package wdl.versioned;
 
-import java.util.List;
-import java.util.Map;
 
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.renderer.EntityRenderer;

@@ -15,6 +15,13 @@
 package wdl.config.settings;
 
 import java.util.Optional;
+import wdl.WDL;
+import wdl.WorldBackup.WorldBackupType;
+import wdl.config.BaseSetting;
+import wdl.config.IConfiguration;
+import wdl.config.Setting;
+import wdl.config.StringSetting;
+
 
 import wdl.WDL;
 import wdl.WorldBackup.WorldBackupType;

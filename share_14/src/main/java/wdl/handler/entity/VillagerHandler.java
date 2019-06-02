@@ -15,6 +15,19 @@
 package wdl.handler.entity;
 
 import java.lang.reflect.Field;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.BiMap;
+import javax.annotation.Nullable;
+import net.minecraft.entity.IMerchant;
+import net.minecraft.entity.passive.EntityVillager;
+import net.minecraft.inventory.ContainerMerchant;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.village.MerchantRecipeList;
+import wdl.ReflectionUtils;
+import wdl.handler.HandlerException;
+import wdl.versioned.VersionedFunctions;
+
 
 import javax.annotation.Nullable;
 

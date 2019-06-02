@@ -21,6 +21,12 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
+import javax.annotation.CheckForSigned;
+import javax.annotation.Nonnegative;
+import net.minecraft.crash.CrashReportCategory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 import javax.annotation.CheckForSigned;
 import javax.annotation.Nonnegative;

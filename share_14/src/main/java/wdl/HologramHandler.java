@@ -15,6 +15,11 @@
 package wdl;
 
 import java.util.Set;
+import com.google.common.collect.Sets;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityArmorStand;
+import wdl.config.settings.EntitySettings.TrackDistanceMode;
+
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityArmorStand;

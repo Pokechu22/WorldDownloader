@@ -14,8 +14,6 @@
  */
 package wdl.versioned;
 
-import java.io.IOException;
-import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 

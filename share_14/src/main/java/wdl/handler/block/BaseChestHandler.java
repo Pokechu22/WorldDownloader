@@ -14,7 +14,16 @@
  */
 package wdl.handler.block;
 
-import static wdl.versioned.VersionedFunctions.customName;
+import java.util.function.BiConsumer;
+import javax.annotation.Nullable;
+import net.minecraft.inventory.ContainerChest;
+import net.minecraft.tileentity.TileEntityChest;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.IBlockReader;
+import wdl.handler.HandlerException;
+
 
 import java.util.function.BiConsumer;
 

@@ -16,6 +16,11 @@ package wdl.config;
 
 import java.io.File;
 import java.io.IOException;
+import javax.annotation.CheckForSigned;
+import javax.annotation.Nonnegative;
+import net.minecraft.crash.CrashReportCategory;
+import net.minecraft.util.text.ITextComponent;
+
 
 import javax.annotation.CheckForSigned;
 import javax.annotation.Nonnegative;

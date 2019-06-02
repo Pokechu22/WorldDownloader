@@ -14,7 +14,11 @@
  */
 package wdl.config.settings;
 
-import static wdl.config.settings.Utils.*;
+import java.util.Map;
+import net.minecraft.util.IStringSerializable;
+import wdl.config.EnumSetting;
+import wdl.config.IntSetting;
+
 
 import java.util.Map;
 

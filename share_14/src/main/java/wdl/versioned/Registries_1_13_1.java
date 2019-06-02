@@ -14,9 +14,6 @@
  */
 package wdl.versioned;
 
-import net.minecraft.block.Block;
-import net.minecraft.util.registry.IRegistry;
-import net.minecraft.world.biome.Biome;
 
 /**
  * Contains functions that interract with registries.

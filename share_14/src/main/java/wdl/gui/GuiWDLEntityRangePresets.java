@@ -16,6 +16,20 @@ package wdl.gui;
 
 import java.util.Set;
 import java.util.function.Supplier;
+import javax.annotation.Nullable;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiYesNo;
+import net.minecraft.client.gui.GuiYesNoCallback;
+import net.minecraft.client.resources.I18n;
+import wdl.EntityUtils;
+import wdl.EntityUtils.SpigotEntityType;
+import wdl.WDL;
+import wdl.WDLPluginChannels;
+import wdl.config.IConfiguration;
+import wdl.gui.widget.ButtonDisplayGui;
+import wdl.gui.widget.Screen;
+
 
 import javax.annotation.Nullable;
 

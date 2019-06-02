@@ -15,9 +15,6 @@
 package wdl;
 
 import net.minecraft.entity.Entity;
-import wdl.api.IEntityEditor;
-import wdl.api.IWDLMod;
-import wdl.api.IWDLModDescripted;
 
 /**
  * Realigns entities to their serverside positions, to mitigate entity drift.

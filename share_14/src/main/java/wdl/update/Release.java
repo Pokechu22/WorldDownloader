@@ -17,6 +17,11 @@ package wdl.update;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;

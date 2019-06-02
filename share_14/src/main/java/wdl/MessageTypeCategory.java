@@ -16,7 +16,6 @@ package wdl;
 
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
-import wdl.api.IWDLMessageType;
 import wdl.config.CyclableSetting;
 import wdl.config.settings.MessageSettings;
 

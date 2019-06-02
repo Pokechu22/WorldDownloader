@@ -14,7 +14,15 @@
  */
 package wdl.config.settings;
 
-import static wdl.config.settings.Utils.*;
+import java.util.Map;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.math.MathHelper;
+import wdl.config.BooleanSetting;
+import wdl.config.EnumSetting;
+import wdl.config.IConfiguration;
+import wdl.config.IntSetting;
+
 
 import java.util.Map;
 
