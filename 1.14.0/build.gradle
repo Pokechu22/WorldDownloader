@@ -105,33 +105,6 @@ sourceSets {
         java {
             srcDir "src/main/java"
             srcDir project(':share_14').file("src/main/java")
-            exclude "wdl/StandardEntityManagers_1_10.java"
-            exclude "wdl/StandardEntityManagers_1_12.java"
-            exclude "wdl/StandardEntityManagers_1_13.java"
-            exclude "wdl/WDLChunkLoader_1_12.java"
-            exclude "wdl/handler/block/BaseLargeChestHandler_1_12.java"
-            exclude "wdl/handler/blockaction/NoteBlockHandler.java"
-            exclude "wdl/versioned/GameRules_1_12.java"
-            exclude "wdl/versioned/Generator_1_12.java"
-            exclude "wdl/versioned/Gui_1_11.java"
-            exclude "wdl/versioned/Gui_1_12.java"
-            exclude "wdl/versioned/Handlers_1_9_2.java"
-            exclude "wdl/versioned/Handlers_1_10.java"
-            exclude "wdl/versioned/Handlers_1_12.java"
-            exclude "wdl/versioned/Maps_1_12.java"
-            exclude "wdl/versioned/Maps_1_13.java"
-            exclude "wdl/versioned/Packets_1_12.java"
-            exclude "wdl/versioned/Registries_1_12.java"
-            exclude "wdl/versioned/Types_1_9_2.java"
-            exclude "wdl/versioned/Types_1_12.java"
-            exclude "wdl/versioned/Types_1_13.java"
-            exclude "wdl/versioned/Types_1_13_1.java"
-            exclude "wdl/gui/widget/ExtButton_1_11.java"
-            exclude "wdl/gui/widget/ExtButton_1_12.java"
-            exclude "wdl/gui/widget/ExtGuiList_1_11.java"
-            exclude "wdl/gui/widget/ExtGuiList_1_12.java"
-            exclude "wdl/gui/widget/ExtGuiScreen_1_9.java"
-            exclude "wdl/gui/widget/ExtGuiScreen_1_12.java"
         }
         resources {
             srcDir project(':share').file("src/main/resources")
