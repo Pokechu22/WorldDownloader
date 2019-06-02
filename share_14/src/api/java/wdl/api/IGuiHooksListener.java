@@ -13,9 +13,9 @@
  */
 package wdl.api;
 
-import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
-import net.minecraft.inventory.Container;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.util.math.BlockPos;
 
 public interface IGuiHooksListener extends IWDLMod {
@@ -38,7 +38,7 @@ public interface IGuiHooksListener extends IWDLMod {
 	 * @return Whether the given mod handled the event (if <code>false</code> is
 	 *         returned, it'll be passed on to the next mod).
 	 */
-	public abstract boolean onBlockGuiClosed(WorldClient world, BlockPos pos,
+	public abstract boolean onBlockGuiClosed(ClientWorld world, BlockPos pos,
 			Container container);
 
 	/**
@@ -58,6 +58,6 @@ public interface IGuiHooksListener extends IWDLMod {
 	 * @return Whether the given mod handled the event (if <code>false</code> is
 	 *         returned, it'll be passed on to the next mod).
 	 */
-	public abstract boolean onEntityGuiClosed(WorldClient world, Entity entity,
+	public abstract boolean onEntityGuiClosed(ClientWorld world, Entity entity,
 			Container container);
 }

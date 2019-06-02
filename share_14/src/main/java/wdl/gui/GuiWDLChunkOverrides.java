@@ -17,12 +17,12 @@ package wdl.gui;
 import javax.annotation.Nullable;
 import com.google.common.collect.Multimap;
 import net.minecraft.client.audio.SimpleSound;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.MathHelper;
 import wdl.WDL;
 import wdl.WDLPluginChannels;
@@ -87,7 +87,7 @@ public class GuiWDLChunkOverrides extends Screen {
 	 * Parent GUI screen; displayed when this GUI is closed.
 	 */
 	@Nullable
-	private final GuiScreen parent;
+	private final Screen parent;
 	private final WDL wdl;
 
 	private Button startDownloadButton;
@@ -120,7 +120,7 @@ public class GuiWDLChunkOverrides extends Screen {
 	 */
 	private int lastTickX, lastTickY;
 
-	public GuiWDLChunkOverrides(@Nullable GuiScreen parent, WDL wdl) {
+	public GuiWDLChunkOverrides(@Nullable Screen parent, WDL wdl) {
 		this.parent = parent;
 		this.wdl = wdl;
 

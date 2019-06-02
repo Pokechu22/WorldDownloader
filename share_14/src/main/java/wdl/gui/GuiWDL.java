@@ -17,8 +17,8 @@ package wdl.gui;
 import java.util.List;
 import java.util.function.BiFunction;
 import javax.annotation.Nullable;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.resources.I18n;
 import wdl.WDL;
 import wdl.WDLPluginChannels;
@@ -77,7 +77,7 @@ public class GuiWDL extends Screen {
 			 *            Whether the player needs download permission to use
 			 *            this button.
 			 */
-			public ButtonEntry(String key, BiFunction<GuiScreen, WDL, GuiScreen> openFunc, boolean needsPerms) {
+			public ButtonEntry(String key, BiFunction<Screen, WDL, Screen> openFunc, boolean needsPerms) {
 				this.button = this.addButton(new ButtonDisplayGui(0, 0, 200, 20,
 						I18n.format("wdl.gui.wdl." + key + ".name"),
 						() -> openFunc.apply(GuiWDL.this, GuiWDL.this.wdl)), -100, 0);
@@ -122,13 +122,13 @@ public class GuiWDL extends Screen {
 	private String title = "";
 
 	@Nullable
-	private final GuiScreen parent;
+	private final Screen parent;
 	private final WDL wdl;
 	private final IConfiguration config;
 
-	private GuiTextField worldname;
+	private TextFieldWidget worldname;
 
-	public GuiWDL(@Nullable GuiScreen parent, WDL wdl) {
+	public GuiWDL(@Nullable Screen parent, WDL wdl) {
 		this.parent = parent;
 		this.wdl = wdl;
 		this.config = WDL.serverProps;
@@ -141,7 +141,7 @@ public class GuiWDL extends Screen {
 	public void initGui() {
 		this.title = I18n.format("wdl.gui.wdl.title", WDL.baseFolderName);
 
-		this.worldname = this.addTextField(new GuiTextField(42, this.fontRenderer,
+		this.worldname = this.addTextField(new TextFieldWidget(42, this.fontRenderer,
 				this.width / 2 - 155, 19, 150, 18));
 		this.worldname.setText(this.config.getValue(MiscSettings.SERVER_NAME));
 

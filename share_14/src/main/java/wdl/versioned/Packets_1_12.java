@@ -17,7 +17,7 @@ package wdl.versioned;
 import io.netty.buffer.Unpooled;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.client.CCustomPayloadPacket;
-import net.minecraft.network.play.server.SPacketCustomPayload;
+import net.minecraft.network.play.server.SCustomPayloadPlayPacket;
 import wdl.versioned.VersionedFunctions.ChannelName;
 
 /**
@@ -44,8 +44,8 @@ final class PacketFunctions {
 	/* (non-javadoc)
 	 * @see VersionedFunctions#makeServerPluginMessagePacket
 	 */
-	static SPacketCustomPayload makeServerPluginMessagePacket(@ChannelName String channel, byte[] bytes) {
-		return new SPacketCustomPayload(channel, new PacketBuffer(Unpooled.copiedBuffer(bytes)));
+	static SCustomPayloadPlayPacket makeServerPluginMessagePacket(@ChannelName String channel, byte[] bytes) {
+		return new SCustomPayloadPlayPacket(channel, new PacketBuffer(Unpooled.copiedBuffer(bytes)));
 	}
 
 	/* (non-javadoc)

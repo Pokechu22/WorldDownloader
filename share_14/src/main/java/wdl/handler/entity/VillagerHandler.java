@@ -18,8 +18,8 @@ import java.lang.reflect.Field;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.BiMap;
 import javax.annotation.Nullable;
-import net.minecraft.entity.IMerchant;
-import net.minecraft.entity.passive.EntityVillager;
+import net.minecraft.entity.merchant.IMerchant;
+import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.inventory.container.MerchantContainer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -44,13 +44,13 @@ import wdl.ReflectionUtils;
 import wdl.handler.HandlerException;
 import wdl.versioned.VersionedFunctions;
 
-public class VillagerHandler extends EntityHandler<EntityVillager, MerchantContainer> {
+public class VillagerHandler extends EntityHandler<VillagerEntity, MerchantContainer> {
 	public VillagerHandler() {
-		super(EntityVillager.class, MerchantContainer.class);
+		super(VillagerEntity.class, MerchantContainer.class);
 	}
 
 	@Override
-	public ITextComponent copyData(MerchantContainer container, EntityVillager villager, boolean riding) throws HandlerException {
+	public ITextComponent copyData(MerchantContainer container, VillagerEntity villager, boolean riding) throws HandlerException {
 		IMerchant merchant = ReflectionUtils.findAndGetPrivateField(
 				container, IMerchant.class);
 		MerchantRecipeList recipes = merchant.getRecipes(merchant.getCustomer()); // note: parameter is ignored by all implementations
@@ -101,7 +101,7 @@ public class VillagerHandler extends EntityHandler<EntityVillager, MerchantConta
 		int fieldIndex = 0;
 		Field careerLevelField = null;
 		Field careerIdField = null;
-		for (Field field : EntityVillager.class.getDeclaredFields()) {
+		for (Field field : VillagerEntity.class.getDeclaredFields()) {
 			if (field.getType().equals(int.class)) {
 				fieldIndex++;
 				if (fieldIndex == 4) {

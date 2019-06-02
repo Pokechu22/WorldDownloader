@@ -15,10 +15,10 @@
 package wdl.versioned;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.network.NetHandlerPlayClient;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.network.play.ClientPlayNetHandler;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -45,8 +45,8 @@ final class GuiFunctions {
 	/* (non-javadoc)
 	 * @see VersionedFunctions#makePlayer
 	 */
-	static EntityPlayerSP makePlayer(Minecraft minecraft, World world, NetHandlerPlayClient nhpc, EntityPlayerSP base) {
-		return new EntityPlayerSP(minecraft, world, nhpc,
+	static ClientPlayerEntity makePlayer(Minecraft minecraft, World world, ClientPlayNetHandler nhpc, ClientPlayerEntity base) {
+		return new ClientPlayerEntity(minecraft, world, nhpc,
 				base.getStats());
 	}
 
@@ -60,7 +60,7 @@ final class GuiFunctions {
 		Tessellator t = Tessellator.getInstance();
 		VertexBuffer b = t.getBuffer();
 
-		Minecraft.getInstance().getTextureManager().bindTexture(Gui.OPTIONS_BACKGROUND);
+		Minecraft.getInstance().getTextureManager().bindTexture(AbstractGui.OPTIONS_BACKGROUND);
 		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 		float textureSize = 32.0F;
@@ -85,7 +85,7 @@ final class GuiFunctions {
 		GlStateManager.disableDepthTest();
 		byte padding = 4;
 
-		Minecraft.getInstance().getTextureManager().bindTexture(Gui.OPTIONS_BACKGROUND);
+		Minecraft.getInstance().getTextureManager().bindTexture(AbstractGui.OPTIONS_BACKGROUND);
 		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 		float textureSize = 32.0F;
@@ -163,6 +163,6 @@ final class GuiFunctions {
 	 * @see VersionedFunctions#setClipboardString
 	 */
 	static void setClipboardString(String text) {
-		GuiScreen.setClipboardString(text);
+		Screen.setClipboardString(text);
 	}
 }

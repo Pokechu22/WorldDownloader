@@ -17,14 +17,14 @@ package wdl.versioned;
 import java.io.IOException;
 import java.util.function.Consumer;
 import javax.annotation.Nullable;
-import net.minecraft.client.gui.GuiCreateFlatWorld;
-import net.minecraft.client.gui.GuiCreateWorld;
-import net.minecraft.client.gui.GuiFlatPresets;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screen.CreateFlatWorldScreen;
+import net.minecraft.client.gui.screen.CreateWorldScreen;
+import net.minecraft.client.gui.screen.FlatPresetsScreen;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.init.Biomes;
 import net.minecraft.nbt.StringNBT;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biomes;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import wdl.config.settings.GeneratorSettings.Generator;
@@ -62,11 +62,11 @@ final class GeneratorFunctions {
 	/* (non-javadoc)
 	 * @see VersionedFunctions#makeGeneratorSettingsGui
 	 */
-	static GuiScreen makeGeneratorSettingsGui(Generator generator, GuiScreen parent,
+	static Screen makeGeneratorSettingsGui(Generator generator, Screen parent,
 			String generatorConfig, Consumer<String> callback) {
 		switch (generator) {
 		case FLAT:
-			return new GuiFlatPresets(new GuiCreateFlatWorldProxy(parent, generatorConfig, callback));
+			return new FlatPresetsScreen(new GuiCreateFlatWorldProxy(parent, generatorConfig, callback));
 		case CUSTOMIZED:
 			return new GuiCustomizeWorldScreen(new GuiCreateWorldProxy(parent, generatorConfig, callback), generatorConfig);
 		default:
@@ -81,12 +81,12 @@ final class GeneratorFunctions {
 	 * to the constructor to forward the information we need and to switch
 	 * back to the main GUI afterwards.
 	 */
-	private static class GuiCreateFlatWorldProxy extends GuiCreateFlatWorld {
-		private final GuiScreen parent;
+	private static class GuiCreateFlatWorldProxy extends CreateFlatWorldScreen {
+		private final Screen parent;
 		private final String generatorConfig;
 		private final Consumer<String> callback;
 
-		public GuiCreateFlatWorldProxy(GuiScreen parent, String generatorConfig, Consumer<String> callback) {
+		public GuiCreateFlatWorldProxy(Screen parent, String generatorConfig, Consumer<String> callback) {
 			super(null, generatorConfig);
 			this.parent = parent;
 			this.generatorConfig = generatorConfig;
@@ -131,11 +131,11 @@ final class GeneratorFunctions {
 	 * to the constructor to forward the information we need and to switch
 	 * back to the main GUI afterwards.
 	 */
-	private static class GuiCreateWorldProxy extends GuiCreateWorld {
-		private final GuiScreen parent;
+	private static class GuiCreateWorldProxy extends CreateWorldScreen {
+		private final Screen parent;
 		private final Consumer<String> callback;
 
-		public GuiCreateWorldProxy(GuiScreen parent, String generatorConfig, Consumer<String> callback) {
+		public GuiCreateWorldProxy(Screen parent, String generatorConfig, Consumer<String> callback) {
 			super(parent);
 
 			this.parent = parent;

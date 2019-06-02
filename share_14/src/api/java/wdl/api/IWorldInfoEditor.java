@@ -13,7 +13,7 @@
  */
 package wdl.api;
 
-import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.storage.SaveHandler;
 import net.minecraft.world.storage.WorldInfo;
@@ -35,6 +35,6 @@ public interface IWorldInfoEditor extends IWDLMod {
 	 *            The current {@link NBTTagCompound} that is being saved. Edit
 	 *            or add info to this.
 	 */
-	public abstract void editWorldInfo(WorldClient world, WorldInfo info,
+	public abstract void editWorldInfo(ClientWorld world, WorldInfo info,
 			SaveHandler saveHandler, CompoundNBT tag);
 }

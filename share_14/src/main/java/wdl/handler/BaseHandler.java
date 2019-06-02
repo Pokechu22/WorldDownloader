@@ -14,9 +14,9 @@
  */
 package wdl.handler;
 
-import net.minecraft.inventory.Container;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.container.Slot;
 
 /**
  * Shared logic between both block and entity handlers.

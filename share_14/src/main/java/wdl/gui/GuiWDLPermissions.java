@@ -15,7 +15,7 @@
 package wdl.gui;
 
 import javax.annotation.Nullable;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resources.I18n;
 import wdl.WDL;
 import wdl.WDLPluginChannels;
@@ -51,7 +51,7 @@ public class GuiWDLPermissions extends Screen {
 	private int refreshTicks = -1;
 
 	@Nullable
-	private final GuiScreen parent;
+	private final Screen parent;
 	private final WDL wdl;
 
 	private TextList list;
@@ -61,7 +61,7 @@ public class GuiWDLPermissions extends Screen {
 	 *
 	 * @param parent
 	 */
-	public GuiWDLPermissions(@Nullable GuiScreen parent, WDL wdl) {
+	public GuiWDLPermissions(@Nullable Screen parent, WDL wdl) {
 		this.parent = parent;
 		this.wdl = wdl;
 	}

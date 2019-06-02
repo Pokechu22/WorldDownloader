@@ -17,8 +17,8 @@ package wdl.gui;
 import java.net.URI;
 import java.util.List;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.widget.TextFieldWidget;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import wdl.versioned.VersionedFunctions;
@@ -79,7 +79,7 @@ public class Utils {
 		int infoY = guiHeight - bottomPadding - infoBoxHeight;
 		int y = infoY + 5;
 
-		Gui.drawRect(infoX, infoY, infoX + infoBoxWidth, infoY
+		AbstractGui.drawRect(infoX, infoY, infoX + infoBoxWidth, infoY
 				+ infoBoxHeight, 0x7F000000);
 
 		List<String> lines = wordWrap(text, infoBoxWidth - 10);
@@ -153,7 +153,7 @@ public class Utils {
 	 * @return Whether the mouse is over the given text box.
 	 */
 	public static boolean isMouseOverTextBox(int mouseX, int mouseY,
-			GuiTextField textBox) {
+			TextFieldWidget textBox) {
 		if (!textBox.getVisible()) {
 			return false;
 		}

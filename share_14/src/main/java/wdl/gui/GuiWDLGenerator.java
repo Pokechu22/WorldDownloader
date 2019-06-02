@@ -15,8 +15,8 @@
 package wdl.gui;
 
 import javax.annotation.Nullable;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import wdl.WDL;
@@ -43,17 +43,17 @@ import wdl.versioned.VersionedFunctions;
 public class GuiWDLGenerator extends Screen {
 	private String title;
 	@Nullable
-	private final GuiScreen parent;
+	private final Screen parent;
 	private final WDL wdl;
 	private final IConfiguration config;
-	private GuiTextField seedField;
+	private TextFieldWidget seedField;
 	private SettingButton generatorBtn;
 	private SettingButton generateStructuresBtn;
 	private Button settingsPageBtn;
 
 	private String seedText;
 
-	public GuiWDLGenerator(@Nullable GuiScreen parent, WDL wdl) {
+	public GuiWDLGenerator(@Nullable Screen parent, WDL wdl) {
 		this.parent = parent;
 		this.wdl = wdl;
 		this.config = wdl.worldProps;
@@ -69,7 +69,7 @@ public class GuiWDLGenerator extends Screen {
 
 		this.title = I18n.format("wdl.gui.generator.title", WDL.baseFolderName);
 		int y = this.height / 4 - 15;
-		this.seedField = this.addTextField(new GuiTextField(40, this.fontRenderer,
+		this.seedField = this.addTextField(new TextFieldWidget(40, this.fontRenderer,
 				this.width / 2 - (100 - seedWidth), y, 200 - seedWidth, 18));
 		this.seedField.setText(config.getValue(GeneratorSettings.SEED));
 		y += 22;
@@ -100,7 +100,7 @@ public class GuiWDLGenerator extends Screen {
 	/**
 	 * Gets the proxy GUI to use for the current settings.
 	 */
-	private GuiScreen makeGeneratorSettingsGui() {
+	private Screen makeGeneratorSettingsGui() {
 		GeneratorSettings.Generator generator = config.getValue(GeneratorSettings.GENERATOR);
 		String generatorConfig = config.getValue(GeneratorSettings.GENERATOR_OPTIONS);
 		return VersionedFunctions.makeGeneratorSettingsGui(generator, this, generatorConfig,

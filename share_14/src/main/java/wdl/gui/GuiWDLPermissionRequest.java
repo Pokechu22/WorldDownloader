@@ -16,8 +16,8 @@ package wdl.gui;
 
 import java.util.Map;
 import javax.annotation.Nullable;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import wdl.WDL;
@@ -52,18 +52,18 @@ public class GuiWDLPermissionRequest extends Screen {
 	 * Parent GUI screen; displayed when this GUI is closed.
 	 */
 	@Nullable
-	private final GuiScreen parent;
+	private final Screen parent;
 	private final WDL wdl;
 	/**
 	 * Field in which the wanted request is entered.
 	 */
-	private GuiTextField requestField;
+	private TextFieldWidget requestField;
 	/**
 	 * GUIButton for submitting the request.
 	 */
 	private Button submitButton;
 
-	public GuiWDLPermissionRequest(@Nullable GuiScreen parent, WDL wdl) {
+	public GuiWDLPermissionRequest(@Nullable Screen parent, WDL wdl) {
 		this.parent = parent;
 		this.wdl = wdl;
 	}
@@ -88,7 +88,7 @@ public class GuiWDLPermissionRequest extends Screen {
 					+ request.getValue() + "'.");
 		}
 
-		this.requestField = this.addTextField(new GuiTextField(0, fontRenderer,
+		this.requestField = this.addTextField(new TextFieldWidget(0, fontRenderer,
 				width / 2 - 155, 18, 150, 20));
 
 		this.submitButton = this.addButton(new Button(

@@ -17,7 +17,7 @@ package wdl.handler.entity;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import net.minecraft.entity.Entity;
-import net.minecraft.inventory.Container;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.util.text.ITextComponent;
 import wdl.handler.BaseHandler;
 import wdl.handler.HandlerException;

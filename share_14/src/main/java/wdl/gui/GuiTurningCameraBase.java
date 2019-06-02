@@ -15,8 +15,8 @@
 package wdl.gui;
 
 import javax.annotation.OverridingMethodsMustInvokeSuper;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer.EnumChatVisibility;
 import net.minecraft.util.math.MathHelper;
@@ -68,7 +68,7 @@ public abstract class GuiTurningCameraBase extends Screen {
 	/**
 	 * The player to preview.
 	 */
-	private EntityPlayerSP cam;
+	private ClientPlayerEntity cam;
 	/**
 	 * The previous render view entity (the entity which Minecraft uses
 	 * for the camera)
@@ -226,7 +226,7 @@ public abstract class GuiTurningCameraBase extends Screen {
 	 * Called when the client world ticks, from a static context.
 	 */
 	public static void onWorldTick() {
-		GuiScreen screen = WDL.minecraft.currentScreen;
+		Screen screen = WDL.minecraft.currentScreen;
 		if (screen instanceof GuiTurningCameraBase) {
 			((GuiTurningCameraBase) screen).onWorldTick0();
 		}

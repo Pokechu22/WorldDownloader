@@ -13,7 +13,7 @@
  */
 package wdl.api;
 
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screen.Screen;
 
 /**
  * {@link IWDLMod} that has an associated GUI that should be opened.
@@ -33,5 +33,5 @@ public interface IWDLModWithGui extends IWDLMod {
 	 * @param currentGui
 	 *            The GUI that is currently open (and is calling this method).
 	 */
-	public abstract void openGui(GuiScreen currentGui);
+	public abstract void openGui(Screen currentGui);
 }

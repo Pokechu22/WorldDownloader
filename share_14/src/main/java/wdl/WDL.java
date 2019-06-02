@@ -39,17 +39,17 @@ import net.minecraft.block.AirBlock;
 import net.minecraft.block.BedBlock;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.GuiScreenRealmsProxy;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.multiplayer.ClientChunkProvider;
-import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.crash.ReportedException;
 import net.minecraft.entity.Entity;
-import net.minecraft.inventory.Container;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.DoubleNBT;
@@ -184,7 +184,7 @@ public class WDL {
 	/**
 	 * Reference to the World object that WDL uses.
 	 */
-	public WorldClient worldClient;
+	public ClientWorld worldClient;
 	/**
 	 * Reference to a connection specific object. Used to detect a new
 	 * connection.
@@ -193,7 +193,7 @@ public class WDL {
 	/**
 	 * The current player.
 	 */
-	public EntityPlayerSP player;
+	public ClientPlayerEntity player;
 
 	/**
 	 * Reference to the place where all the item stacks end up after receiving
@@ -1470,7 +1470,7 @@ public class WDL {
 		// I doubt anyone will need this anyway since Realms support downloading the world out of the box.
 
 		// Try to get the value of NetHandlerPlayClient.guiScreenServer:
-		GuiScreen screen = ReflectionUtils.findAndGetPrivateField(minecraft.getConnection(), GuiScreen.class);
+		Screen screen = ReflectionUtils.findAndGetPrivateField(minecraft.getConnection(), Screen.class);
 
 		// If it is not a GuiScreenRealmsProxy we are not using a Realms server
 		if (!(screen instanceof GuiScreenRealmsProxy)) {

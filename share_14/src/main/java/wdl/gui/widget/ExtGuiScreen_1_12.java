@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import wdl.gui.widget.GuiList.GuiListEntry;
 
@@ -35,7 +35,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import wdl.gui.widget.GuiList.GuiListEntry;
 
-abstract class ExtGuiScreen extends GuiScreen implements IExtGuiScreen {
+abstract class ExtGuiScreen extends Screen implements IExtGuiScreen {
 
 	/**
 	 * Hide the buttonList field from subclasses.
@@ -45,7 +45,7 @@ abstract class ExtGuiScreen extends GuiScreen implements IExtGuiScreen {
 	protected static final Void buttonList = null;
 
 	private final List<GuiList<?>> listList = new ArrayList<>();
-	private final List<GuiTextField> textFieldList = new ArrayList<>();
+	private final List<TextFieldWidget> textFieldList = new ArrayList<>();
 
 	// Called before initGui
 	@Override
@@ -67,7 +67,7 @@ abstract class ExtGuiScreen extends GuiScreen implements IExtGuiScreen {
 	}
 
 	@Override
-	public final <T extends GuiTextField> T addTextField(T field) {
+	public final <T extends TextFieldWidget> T addTextField(T field) {
 		this.textFieldList.add(field);
 		return field;
 	}
@@ -81,7 +81,7 @@ abstract class ExtGuiScreen extends GuiScreen implements IExtGuiScreen {
 		for (GuiList<?> list : this.listList) {
 			list.mouseClicked(mouseX, mouseY, mouseButton);
 		}
-		for (GuiTextField field : this.textFieldList) {
+		for (TextFieldWidget field : this.textFieldList) {
 			if (field.getVisible()) {
 				field.mouseClicked(mouseX, mouseY, mouseButton);
 			}
@@ -118,7 +118,7 @@ abstract class ExtGuiScreen extends GuiScreen implements IExtGuiScreen {
 			list.keyTyped(typedChar, keyCode);
 			list.anyKeyPressed();
 		}
-		for (GuiTextField field : this.textFieldList) {
+		for (TextFieldWidget field : this.textFieldList) {
 			if (field.getVisible()) {
 				field.textboxKeyTyped(typedChar, keyCode);
 			}
@@ -152,7 +152,7 @@ abstract class ExtGuiScreen extends GuiScreen implements IExtGuiScreen {
 		for (GuiList<?> list : this.listList) {
 			list.tick();
 		}
-		for (GuiTextField field : this.textFieldList) {
+		for (TextFieldWidget field : this.textFieldList) {
 			field.tick();
 		}
 	}
@@ -164,7 +164,7 @@ abstract class ExtGuiScreen extends GuiScreen implements IExtGuiScreen {
 			list.drawScreen(mouseX, mouseY, partialTicks);
 		}
 		super.render(mouseX, mouseY, partialTicks);
-		for (GuiTextField field : this.textFieldList) {
+		for (TextFieldWidget field : this.textFieldList) {
 			field.drawTextBox();
 		}
 	}

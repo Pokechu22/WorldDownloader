@@ -17,14 +17,14 @@ package wdl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.gui.GuiIngameMenu;
-import net.minecraft.client.multiplayer.WorldClient;
-import net.minecraft.client.network.NetHandlerPlayClient;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.client.gui.screen.IngameMenuScreen;
+import net.minecraft.client.network.play.ClientPlayNetHandler;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.crash.CrashReport;
-import net.minecraft.init.Blocks;
-import net.minecraft.inventory.InventoryBasic;
+import net.minecraft.inventory.Inventory;
 import wdl.ducks.IBaseChangesApplied;
 import wdl.ducks.INetworkNameable;
 import wdl.versioned.VersionedFunctions;
@@ -63,7 +63,7 @@ enum SanityCheck {
 				int id = wireID << 4 | meta;
 				// Note: Deprecated but supported under forge, and this is
 				// what the game actually uses, so we should too for checking
-				IBlockState state = Block.BLOCK_STATE_IDS.getByValue(id);
+				BlockState state = Block.BLOCK_STATE_IDS.getByValue(id);
 				Block block = (state != null ? state.getBlock() : null);
 				LOGGER.trace("id {} ({}) => {} ({})", id, meta, state, block);
 
@@ -109,7 +109,7 @@ enum SanityCheck {
 	MIXIN_INVENTORYBASIC("wdl.sanity.mixin") {
 		@Override
 		public void run() throws Exception {
-			if (!INetworkNameable.class.isAssignableFrom(InventoryBasic.class)) {
+			if (!INetworkNameable.class.isAssignableFrom(Inventory.class)) {
 				throw new Exception("InventoryBasic does not implement INetworkNameable!");
 			}
 		}
@@ -117,7 +117,7 @@ enum SanityCheck {
 	MIXIN_GUIINGAMEMENU("wdl.sanity.mixin") {
 		@Override
 		public void run() throws Exception {
-			if (!IBaseChangesApplied.class.isAssignableFrom(GuiIngameMenu.class)) {
+			if (!IBaseChangesApplied.class.isAssignableFrom(IngameMenuScreen.class)) {
 				// This one almost certainly can't happen at runtime, since the button isn't reachable
 				throw new Exception("GuiIngameMenu is missing base changes!");
 			}
@@ -126,7 +126,7 @@ enum SanityCheck {
 	MIXIN_WORLDCLIENT("wdl.sanity.mixin") {
 		@Override
 		public void run() throws Exception {
-			if (!IBaseChangesApplied.class.isAssignableFrom(WorldClient.class)) {
+			if (!IBaseChangesApplied.class.isAssignableFrom(ClientWorld.class)) {
 				throw new Exception("WorldClient is missing base changes!");
 			}
 		}
@@ -134,7 +134,7 @@ enum SanityCheck {
 	MIXIN_NHPC("wdl.sanity.mixin") {
 		@Override
 		public void run() throws Exception {
-			if (!IBaseChangesApplied.class.isAssignableFrom(NetHandlerPlayClient.class)) {
+			if (!IBaseChangesApplied.class.isAssignableFrom(ClientPlayNetHandler.class)) {
 				throw new Exception("NetHandlerPlayClient is missing base changes!");
 			}
 		}

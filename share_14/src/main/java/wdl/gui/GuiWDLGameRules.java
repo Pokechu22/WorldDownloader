@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.world.GameRules;
@@ -217,7 +217,7 @@ public class GuiWDLGameRules extends Screen {
 
 	private String title;
 	@Nullable
-	private final GuiScreen parent;
+	private final Screen parent;
 	private final WDL wdl;
 
 	/** The gamerules object to modify */
@@ -274,7 +274,7 @@ public class GuiWDLGameRules extends Screen {
 		return !vanillaGameRules.get(ruleName).equals(getRule(ruleName));
 	}
 
-	public GuiWDLGameRules(@Nullable GuiScreen parent, WDL wdl) {
+	public GuiWDLGameRules(@Nullable Screen parent, WDL wdl) {
 		this.parent = parent;
 		this.wdl = wdl;
 		this.rules = wdl.gameRules;

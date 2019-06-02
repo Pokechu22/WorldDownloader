@@ -13,7 +13,7 @@
  */
 package wdl.api;
 
-import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.client.world.ClientWorld;
 
 public interface IChatMessageListener extends IWDLMod {
 	/**
@@ -26,5 +26,5 @@ public interface IChatMessageListener extends IWDLMod {
 	 * @param message
 	 *            The received message, in raw format.
 	 */
-	public abstract void onChat(WorldClient world, String message);
+	public abstract void onChat(ClientWorld world, String message);
 }

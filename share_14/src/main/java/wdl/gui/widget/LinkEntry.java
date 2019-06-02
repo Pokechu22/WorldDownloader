@@ -1,7 +1,7 @@
 package wdl.gui.widget;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.AbstractGui;
 import wdl.gui.Utils;
 
 /**
@@ -40,7 +40,7 @@ public class LinkEntry extends TextEntry {
 			if (drawX + linkWidth + 4 > width + x) {
 				drawX = width + x - (4 + linkWidth);
 			}
-			Gui.drawRect(drawX, mouseY - 2, drawX + linkWidth + 4,
+			AbstractGui.drawRect(drawX, mouseY - 2, drawX + linkWidth + 4,
 					mouseY + mc.fontRenderer.FONT_HEIGHT + 2, 0x80000000);
 
 			mc.fontRenderer.drawStringWithShadow(link, drawX + 2, mouseY, 0xFFFFFF);

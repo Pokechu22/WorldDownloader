@@ -18,8 +18,8 @@ import java.lang.reflect.Field;
 import java.util.Map;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
-import net.minecraft.client.gui.inventory.GuiContainerCreative;
-import net.minecraft.inventory.Container;
+import net.minecraft.client.gui.screen.inventory.CreativeScreen;
+import net.minecraft.inventory.container.Container;
 
 
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
@@ -232,7 +232,7 @@ public class ReflectionUtils {
 	 */
 	public static boolean isCreativeContainer(Class<? extends Container> containerClass) {
 		try {
-			return GuiContainerCreative.class.equals(containerClass.getEnclosingClass());
+			return CreativeScreen.class.equals(containerClass.getEnclosingClass());
 		} catch (Exception e) {
 			// This one really should never happen (unless maybe an
 			// external mod does some stupid security manager stuff)

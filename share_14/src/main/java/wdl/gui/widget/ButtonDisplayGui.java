@@ -17,7 +17,7 @@ package wdl.gui.widget;
 import java.util.function.Supplier;
 import javax.annotation.Nullable;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resources.I18n;
 
 
@@ -35,33 +35,33 @@ public class ButtonDisplayGui extends Button {
 	/**
 	 * Supplier for the GUI to display.  Allowed to return null.
 	 */
-	private final Supplier<? extends GuiScreen> screenSupplier;
+	private final Supplier<? extends Screen> screenSupplier;
 
 	/**
 	 * Creates a new button that displays the given screen, with "done" as its text.
 	 */
-	public ButtonDisplayGui(int x, int y, int widthIn, int heightIn, @Nullable GuiScreen screen) {
+	public ButtonDisplayGui(int x, int y, int widthIn, int heightIn, @Nullable Screen screen) {
 		this(x, y, widthIn, heightIn, I18n.format("gui.done"), screen);
 	}
 
 	/**
 	 * Creates a new button that displays the given screen, with "done" as its text.
 	 */
-	public ButtonDisplayGui(int x, int y, int widthIn, int heightIn, Supplier<? extends GuiScreen> supplier) {
+	public ButtonDisplayGui(int x, int y, int widthIn, int heightIn, Supplier<? extends Screen> supplier) {
 		this(x, y, widthIn, heightIn, I18n.format("gui.done"), supplier);
 	}
 
 	/**
 	 * Creates a new button that displays the given screen, with the specified text.
 	 */
-	public ButtonDisplayGui(int x, int y, int widthIn, int heightIn, String buttonText, @Nullable GuiScreen screen) {
+	public ButtonDisplayGui(int x, int y, int widthIn, int heightIn, String buttonText, @Nullable Screen screen) {
 		this(x, y, widthIn, heightIn, buttonText, () -> screen);
 	}
 
 	/**
 	 * Creates a new button that displays the given screen, with the specified text.
 	 */
-	public ButtonDisplayGui(int x, int y, int widthIn, int heightIn, String buttonText, Supplier<? extends GuiScreen> supplier) {
+	public ButtonDisplayGui(int x, int y, int widthIn, int heightIn, String buttonText, Supplier<? extends Screen> supplier) {
 		super(x, y, widthIn, heightIn, buttonText);
 		this.screenSupplier = supplier;
 	}

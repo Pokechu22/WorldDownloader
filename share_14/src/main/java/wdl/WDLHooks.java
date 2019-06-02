@@ -21,19 +21,19 @@ import io.netty.buffer.ByteBuf;
 import javax.annotation.Nonnull;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiIngameMenu;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screen.IngameMenuScreen;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.multiplayer.WorldClient;
-import net.minecraft.client.network.NetHandlerPlayClient;
+import net.minecraft.client.network.play.ClientPlayNetHandler;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.entity.Entity;
-import net.minecraft.inventory.Container;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.network.play.server.SBlockActionPacket;
 import net.minecraft.network.play.server.SChatPacket;
-import net.minecraft.network.play.server.SPacketCustomPayload;
-import net.minecraft.network.play.server.SPacketMaps;
+import net.minecraft.network.play.server.SCustomPayloadPlayPacket;
+import net.minecraft.network.play.server.SMapDataPacket;
 import net.minecraft.network.play.server.SUnloadChunkPacket;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.math.BlockPos;
@@ -131,10 +131,10 @@ public class WDLHooks {
 	 * <br/>
 	 * Should be at end of the method.
 	 */
-	public static void onWorldClientTick(WorldClient sender) {
+	public static void onWorldClientTick(ClientWorld sender) {
 		INSTANCE.onWorldClientTick0(sender);
 	}
-	protected void onWorldClientTick0(WorldClient sender) {
+	protected void onWorldClientTick0(ClientWorld sender) {
 		try {
 			if (ENABLE_PROFILER) PROFILER.startSection("wdl");
 
@@ -234,11 +234,11 @@ public class WDLHooks {
 	 * @param eid
 	 *            The entity's unique ID.
 	 */
-	public static void onWorldClientRemoveEntityFromWorld(WorldClient sender,
+	public static void onWorldClientRemoveEntityFromWorld(ClientWorld sender,
 			int eid) {
 		INSTANCE.onWorldClientRemoveEntityFromWorld0(sender, eid);
 	}
-	protected void onWorldClientRemoveEntityFromWorld0(WorldClient sender,
+	protected void onWorldClientRemoveEntityFromWorld0(ClientWorld sender,
 			int eid) {
 		try {
 			if (!WDL.downloading) { return; }
@@ -263,12 +263,12 @@ public class WDLHooks {
 	 * <br/>
 	 * Should be at the start of the method.
 	 */
-	public static void onNHPCHandleChunkUnload(NetHandlerPlayClient sender,
-			WorldClient world, SUnloadChunkPacket packet) {
+	public static void onNHPCHandleChunkUnload(ClientPlayNetHandler sender,
+			ClientWorld world, SUnloadChunkPacket packet) {
 		INSTANCE.onNHPCHandleChunkUnload0(sender, world, packet);
 	}
-	protected void onNHPCHandleChunkUnload0(NetHandlerPlayClient sender,
-			WorldClient world, SUnloadChunkPacket packet) {
+	protected void onNHPCHandleChunkUnload0(ClientPlayNetHandler sender,
+			ClientWorld world, SUnloadChunkPacket packet) {
 		try {
 			if (!Minecraft.getInstance().isCallingFromMinecraftThread()) {
 				return;
@@ -295,11 +295,11 @@ public class WDLHooks {
 	 * <br/>
 	 * Should be at the end of the method.
 	 */
-	public static void onNHPCHandleChat(NetHandlerPlayClient sender,
+	public static void onNHPCHandleChat(ClientPlayNetHandler sender,
 			SChatPacket packet) {
 		INSTANCE.onNHPCHandleChat0(sender, packet);
 	}
-	protected void onNHPCHandleChat0(NetHandlerPlayClient sender,
+	protected void onNHPCHandleChat0(ClientPlayNetHandler sender,
 			SChatPacket packet) {
 		try {
 			if (!Minecraft.getInstance().isCallingFromMinecraftThread()) {
@@ -335,12 +335,12 @@ public class WDLHooks {
 	 * <br/>
 	 * Should be at the end of the method.
 	 */
-	public static void onNHPCHandleMaps(NetHandlerPlayClient sender,
-			SPacketMaps packet) {
+	public static void onNHPCHandleMaps(ClientPlayNetHandler sender,
+			SMapDataPacket packet) {
 		INSTANCE.onNHPCHandleMaps0(sender, packet);
 	}
-	protected void onNHPCHandleMaps0(NetHandlerPlayClient sender,
-			SPacketMaps packet) {
+	protected void onNHPCHandleMaps0(ClientPlayNetHandler sender,
+			SMapDataPacket packet) {
 		try {
 			if (!Minecraft.getInstance().isCallingFromMinecraftThread()) {
 				return;
@@ -373,12 +373,12 @@ public class WDLHooks {
 	 * <br/>
 	 * Should be at the end of the method.
 	 */
-	public static void onNHPCHandleCustomPayload(NetHandlerPlayClient sender,
-			SPacketCustomPayload packet) {
+	public static void onNHPCHandleCustomPayload(ClientPlayNetHandler sender,
+			SCustomPayloadPlayPacket packet) {
 		INSTANCE.onNHPCHandleCustomPayload0(sender, packet);
 	}
-	protected void onNHPCHandleCustomPayload0(NetHandlerPlayClient sender,
-			SPacketCustomPayload packet) {
+	protected void onNHPCHandleCustomPayload0(ClientPlayNetHandler sender,
+			SCustomPayloadPlayPacket packet) {
 		try {
 			if (!Minecraft.getInstance().isCallingFromMinecraftThread()) {
 				return;
@@ -442,11 +442,11 @@ public class WDLHooks {
 	 * <br/>
 	 * Should be at the end of the method.
 	 */
-	public static void onNHPCHandleBlockAction(NetHandlerPlayClient sender,
+	public static void onNHPCHandleBlockAction(ClientPlayNetHandler sender,
 			SBlockActionPacket packet) {
 		INSTANCE.onNHPCHandleBlockAction0(sender, packet);
 	}
-	protected void onNHPCHandleBlockAction0(NetHandlerPlayClient sender,
+	protected void onNHPCHandleBlockAction0(ClientPlayNetHandler sender,
 			SBlockActionPacket packet) {
 		try {
 			if (!Minecraft.getInstance().isCallingFromMinecraftThread()) {
@@ -488,10 +488,10 @@ public class WDLHooks {
 	 *
 	 * @param reason The reason for the disconnect, as passed to onDisconnect.
 	 */
-	public static void onNHPCDisconnect(NetHandlerPlayClient sender, ITextComponent reason) {
+	public static void onNHPCDisconnect(ClientPlayNetHandler sender, ITextComponent reason) {
 		INSTANCE.onNHPCDisconnect0(sender, reason);
 	}
-	protected void onNHPCDisconnect0(NetHandlerPlayClient sender, ITextComponent reason) {
+	protected void onNHPCDisconnect0(ClientPlayNetHandler sender, ITextComponent reason) {
 		if (WDL.downloading) {
 			// This is likely to be called from an unexpected thread, so queue a task
 			Minecraft.getInstance().addScheduledTask(wdl::stopDownload);
@@ -531,14 +531,14 @@ public class WDLHooks {
 	private static final int WDLo = ('W' << 24) | ('D' << 16) | ('L' << 8) | ('o');
 
 	private class StartDownloadButton extends Button {
-		public StartDownloadButton(GuiScreen menu, int x, int y, int width, int height) {
+		public StartDownloadButton(Screen menu, int x, int y, int width, int height) {
 			super(x, y, width, height, null);
 			this.menu = menu;
 			this.id = WDLs; // keep unique, even though this isn't used by WDL
 		}
 
 		// The GuiScreen containing this button, as a parent for other GUIs
-		private final GuiScreen menu;
+		private final Screen menu;
 
 		@Override
 		public void beforeDraw() {
@@ -611,14 +611,14 @@ public class WDLHooks {
 	}
 
 	private class SettingsButton extends Button {
-		public SettingsButton(GuiScreen menu, int x, int y, int width, int height, String displayString) {
+		public SettingsButton(Screen menu, int x, int y, int width, int height, String displayString) {
 			super(x, y, width, height, displayString);
 			this.menu = menu;
 			this.id = WDLo; // keep unique, even though this isn't used by WDL
 		}
 
 		// The GuiScreen containing this button, as a parent for other GUIs
-		private final GuiScreen menu;
+		private final Screen menu;
 
 		@Override
 		public void performAction() {
@@ -641,11 +641,11 @@ public class WDLHooks {
 	 *                   modified directly.
 	 * @param addButton  Method to add a button to the GUI.
 	 */
-	public static void injectWDLButtons(GuiIngameMenu gui, Collection<Button> buttonList,
+	public static void injectWDLButtons(IngameMenuScreen gui, Collection<Button> buttonList,
 			Consumer<Button> addButton) {
 		INSTANCE.injectWDLButtons0(gui, buttonList, addButton);
 	}
-	protected void injectWDLButtons0(GuiIngameMenu gui, Collection<Button> buttonList,
+	protected void injectWDLButtons0(IngameMenuScreen gui, Collection<Button> buttonList,
 			Consumer<Button> addButton) {
 		int insertAtYPos = 0;
 
@@ -679,10 +679,10 @@ public class WDLHooks {
 	 * @param gui    The GUI
 	 * @param button The button that was clicked.
 	 */
-	public static void handleWDLButtonClick(GuiIngameMenu gui, Button button) {
+	public static void handleWDLButtonClick(IngameMenuScreen gui, Button button) {
 		INSTANCE.handleWDLButtonClick0(gui, button);
 	}
-	protected void handleWDLButtonClick0(GuiIngameMenu gui, Button button) {
+	protected void handleWDLButtonClick0(IngameMenuScreen gui, Button button) {
 		if (button.id == 1) { // "Disconnect", from vanilla
 			wdl.stopDownload();
 			// Disable the button to prevent double-clicks

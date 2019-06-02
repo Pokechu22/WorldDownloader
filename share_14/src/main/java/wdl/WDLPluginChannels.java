@@ -36,7 +36,7 @@ import com.google.gson.JsonObject;
 import javax.annotation.CheckForSigned;
 import javax.annotation.Nullable;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.network.NetHandlerPlayClient;
+import net.minecraft.client.network.play.ClientPlayNetHandler;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.client.CCustomPayloadPacket;
 import net.minecraft.world.chunk.Chunk;
@@ -626,7 +626,7 @@ public class WDLPluginChannels {
 			range.writeToOutput(output);
 		}
 
-		NetHandlerPlayClient nhpc = Minecraft.getInstance().getConnection();
+		ClientPlayNetHandler nhpc = Minecraft.getInstance().getConnection();
 		final String channel;
 		if (isRegistered(nhpc, REQUEST_CHANNEL_NEW)) {
 			channel = REQUEST_CHANNEL_NEW;
@@ -667,7 +667,7 @@ public class WDLPluginChannels {
 	/**
 	 * Gets the current set of registered channels for this server.
 	 */
-	private static Set<@ChannelName String> getRegisteredChannels(NetHandlerPlayClient nhpc) {
+	private static Set<@ChannelName String> getRegisteredChannels(ClientPlayNetHandler nhpc) {
 		return REGISTERED_CHANNELS.computeIfAbsent(
 				nhpc.getNetworkManager(),
 				key -> new HashSet<>());
@@ -676,7 +676,7 @@ public class WDLPluginChannels {
 	/**
 	 * Checks if the given channel is registered on this server.
 	 */
-	private static boolean isRegistered(NetHandlerPlayClient nhpc, String channelName) {
+	private static boolean isRegistered(ClientPlayNetHandler nhpc, String channelName) {
 		return getRegisteredChannels(nhpc).contains(channelName);
 	}
 
@@ -691,7 +691,7 @@ public class WDLPluginChannels {
 	public static void sendInitPacket(String state) {
 		sendInitPacket(Minecraft.getInstance().getConnection(), state);
 	}
-	private static void sendInitPacket(NetHandlerPlayClient nhpc, String state) {
+	private static void sendInitPacket(ClientPlayNetHandler nhpc, String state) {
 		assert nhpc != null : "Unexpected null nhpc: state=" + state + ", chans=" + REGISTERED_CHANNELS;
 
 		final String channel;
@@ -751,7 +751,7 @@ public class WDLPluginChannels {
 		sendInitPacket("Init?");
 	}
 
-	static void onPluginChannelPacket(NetHandlerPlayClient sender, @ChannelName String channel, byte[] bytes) {
+	static void onPluginChannelPacket(ClientPlayNetHandler sender, @ChannelName String channel, byte[] bytes) {
 		if ("REGISTER".equals(channel) || "minecraft:register".equals(channel)) {
 			registerChannels(sender, bytes);
 		} else if ("UNREGISTER".equals(channel) || "minecraft:unregister".equals(channel)) {
@@ -761,7 +761,7 @@ public class WDLPluginChannels {
 		}
 	}
 
-	private static void registerChannels(NetHandlerPlayClient nhpc, byte[] bytes) {
+	private static void registerChannels(ClientPlayNetHandler nhpc, byte[] bytes) {
 		String existing = LOGGER.isDebugEnabled() ? REGISTERED_CHANNELS.toString() : null;
 
 		String str = new String(bytes, StandardCharsets.UTF_8);
@@ -781,7 +781,7 @@ public class WDLPluginChannels {
 		}
 	}
 
-	private static void unregisterChannels(NetHandlerPlayClient nhpc, byte[] bytes) {
+	private static void unregisterChannels(ClientPlayNetHandler nhpc, byte[] bytes) {
 		String existing = LOGGER.isDebugEnabled() ? REGISTERED_CHANNELS.toString() : null;
 
 		String str = new String(bytes, StandardCharsets.UTF_8);

@@ -17,7 +17,7 @@ package wdl.gui;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import wdl.WDL;
@@ -194,11 +194,11 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	/**
 	 * The "New name" field.
 	 */
-	private GuiTextField newNameField;
+	private TextFieldWidget newNameField;
 	/**
 	 * The "Search" field.  Allows filtering.
 	 */
-	private GuiTextField searchField;
+	private TextFieldWidget searchField;
 	/**
 	 * The "New world" button.
 	 */
@@ -327,10 +327,10 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 			}
 		});
 
-		this.newNameField = this.addTextField(new GuiTextField(40, this.fontRenderer,
+		this.newNameField = this.addTextField(new TextFieldWidget(40, this.fontRenderer,
 				this.width / 2 - 155, 29, 150, 20));
 
-		this.searchField = this.addTextField(new GuiTextField(41, this.fontRenderer,
+		this.searchField = this.addTextField(new TextFieldWidget(41, this.fontRenderer,
 				this.width / 2 + 5, 29, 150, 20));
 		this.searchField.setText(searchText);
 	}

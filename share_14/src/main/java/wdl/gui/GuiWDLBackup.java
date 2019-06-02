@@ -18,9 +18,9 @@ import java.io.File;
 import java.util.List;
 import com.google.common.io.Files;
 import javax.annotation.Nullable;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.gui.GuiYesNo;
+import net.minecraft.client.gui.screen.ConfirmScreen;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import wdl.WDL;
@@ -58,7 +58,7 @@ import wdl.gui.widget.Screen;
  */
 public class GuiWDLBackup extends Screen {
 	@Nullable
-	private final GuiScreen parent;
+	private final Screen parent;
 	private final WDL wdl;
 	private final IConfiguration config;
 
@@ -67,16 +67,16 @@ public class GuiWDLBackup extends Screen {
 	private WorldBackupType backupType;
 	private Button backupTypeButton;
 	private Button doneButton;
-	private GuiTextField customBackupCommandTemplateFld;
+	private TextFieldWidget customBackupCommandTemplateFld;
 	private String customBackupCommandTemplate;
-	private GuiTextField customBackupExtensionFld;
+	private TextFieldWidget customBackupExtensionFld;
 	private String customBackupExtension;
 	private long checkValidTime = 0;
 	private volatile boolean checkingCommandValid = false;
 	private volatile boolean isCommandValid = true;
 	private volatile @Nullable String commandInvalidReason;
 
-	public GuiWDLBackup(@Nullable GuiScreen parent, WDL wdl) {
+	public GuiWDLBackup(@Nullable Screen parent, WDL wdl) {
 		this.parent = parent;
 		this.wdl = wdl;
 		this.config = WDL.serverProps;
@@ -107,11 +107,11 @@ public class GuiWDLBackup extends Screen {
 			}
 		});
 
-		customBackupCommandTemplateFld = this.addTextField(new GuiTextField(1, fontRenderer,
+		customBackupCommandTemplateFld = this.addTextField(new TextFieldWidget(1, fontRenderer,
 				width / 2 - 100, 54, 200, 20));
 		customBackupCommandTemplateFld.setMaxStringLength(255);
 		customBackupCommandTemplateFld.setText(this.customBackupCommandTemplate);
-		customBackupExtensionFld = this.addTextField(new GuiTextField(2, fontRenderer,
+		customBackupExtensionFld = this.addTextField(new TextFieldWidget(2, fontRenderer,
 				width / 2 + 160, 54, 40, 20));
 		customBackupExtensionFld.setText(this.customBackupExtension);
 
@@ -319,11 +319,11 @@ public class GuiWDLBackup extends Screen {
 		}
 	}
 
-	private GuiScreen getParentOrWarning() {
+	private Screen getParentOrWarning() {
 		if (this.isCommandValid) {
 			return parent;
 		} else {
-			return new GuiYesNo((result, id) -> {
+			return new ConfirmScreen((result, id) -> {
 				if (result) {
 					mc.displayGuiScreen(parent);
 				} else {

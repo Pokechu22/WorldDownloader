@@ -17,8 +17,8 @@ package wdl.gui;
 import java.util.stream.Stream;
 import com.google.common.collect.ListMultimap;
 import javax.annotation.Nullable;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiYesNo;
+import net.minecraft.client.gui.screen.ConfirmScreen;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import wdl.MessageTypeCategory;
@@ -132,11 +132,11 @@ public class GuiWDLMessages extends Screen {
 	}
 
 	@Nullable
-	private final GuiScreen parent;
+	private final Screen parent;
 	private final WDL wdl;
 	private final IConfiguration config;
 
-	public GuiWDLMessages(@Nullable GuiScreen parent, WDL wdl) {
+	public GuiWDLMessages(@Nullable Screen parent, WDL wdl) {
 		this.parent = parent;
 		this.wdl = wdl;
 		this.config = WDL.serverProps;
@@ -155,7 +155,7 @@ public class GuiWDLMessages extends Screen {
 		resetButton = this.addButton(new ButtonDisplayGui(
 				(this.width / 2) + 5, 18, 150, 20,
 				I18n.format("wdl.gui.messages.reset"),
-				() -> new GuiYesNo(this,
+				() -> new ConfirmScreen(this,
 						I18n.format("wdl.gui.messages.reset.confirm.title"),
 						I18n.format("wdl.gui.messages.reset.confirm.subtitle"),
 						ID_RESET_ALL)));

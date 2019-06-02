@@ -13,7 +13,7 @@
  */
 package wdl.api;
 
-import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.client.world.ClientWorld;
 
 public interface IWorldLoadListener extends IWDLMod {
 	/**
@@ -22,5 +22,5 @@ public interface IWorldLoadListener extends IWDLMod {
 	 * @param world The world that has loaded.
 	 * @param sameServer Whether the server is the same one as before.
 	 */
-	public abstract void onWorldLoad(WorldClient world, boolean sameServer);
+	public abstract void onWorldLoad(ClientWorld world, boolean sameServer);
 }

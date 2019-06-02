@@ -15,8 +15,8 @@
 package wdl.gui;
 
 import java.util.function.Supplier;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.MathHelper;
 import wdl.WDL;
@@ -161,7 +161,7 @@ public class GuiWDLSaveProgress extends GuiTurningCameraBase {
 		this.drawDefaultBackground();
 
 		if (this.doneWorking) {
-			this.mc.displayGuiScreen((GuiScreen) null);
+			this.mc.displayGuiScreen((Screen) null);
 		} else {
 			Utils.drawBorder(32, 32, 0, 0, height, width);
 
@@ -214,7 +214,7 @@ public class GuiWDLSaveProgress extends GuiTurningCameraBase {
 	private void drawProgressBar(int y, int emptyV, int filledV, float progress) {
 		progress = MathHelper.clamp(progress, 0, 1);
 
-		this.mc.getTextureManager().bindTexture(Gui.ICONS);
+		this.mc.getTextureManager().bindTexture(AbstractGui.ICONS);
 
 		final int height = 5;
 

@@ -15,7 +15,7 @@
 package wdl.gui;
 
 import javax.annotation.Nullable;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import wdl.WDL;
@@ -43,7 +43,7 @@ import wdl.gui.widget.SettingButton;
 public class GuiWDLPlayer extends Screen {
 	private String title;
 	@Nullable
-	private final GuiScreen parent;
+	private final Screen parent;
 	private final WDL wdl;
 	private final IConfiguration config;
 	private SettingButton healthBtn;
@@ -56,7 +56,7 @@ public class GuiWDLPlayer extends Screen {
 	private GuiNumericTextField posZ;
 	private int posTextY;
 
-	public GuiWDLPlayer(@Nullable GuiScreen parent, WDL wdl) {
+	public GuiWDLPlayer(@Nullable Screen parent, WDL wdl) {
 		this.parent = parent;
 		this.wdl = wdl;
 		this.config = wdl.worldProps;

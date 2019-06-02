@@ -19,10 +19,10 @@ import java.util.List;
 import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiListExtended;
-import net.minecraft.client.gui.GuiListExtended.IGuiListEntry;
-import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.gui.widget.list.ExtendedList;
+import net.minecraft.client.gui.widget.list.ExtendedList.AbstractListEntry;
 import net.minecraft.client.renderer.GlStateManager;
 import wdl.gui.widget.ExtGuiList.ExtGuiListEntry;
 import wdl.gui.widget.ExtGuiList.ExtGuiListEntry.ButtonWrapper;
@@ -42,9 +42,9 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
 import wdl.gui.widget.ExtGuiList.ExtGuiListEntry;
 
-abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended implements IExtGuiList<T> {
+abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends ExtendedList implements IExtGuiList<T> {
 
-	static abstract class ExtGuiListEntry<T extends ExtGuiListEntry<T>> implements IExtGuiListEntry<T>, IGuiListEntry {
+	static abstract class ExtGuiListEntry<T extends ExtGuiListEntry<T>> implements IExtGuiListEntry<T>, AbstractListEntry {
 
 		@Override
 		public void setSelected(int p_178011_1_, int p_178011_2_, int p_178011_3_) { }
@@ -60,10 +60,10 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended 
 			}
 		}
 		private static class TextFieldWrapper {
-			public final GuiTextField field;
+			public final TextFieldWidget field;
 			public final int x;
 			public final int y;
-			public TextFieldWrapper(GuiTextField field, int x, int y) {
+			public TextFieldWrapper(TextFieldWidget field, int x, int y) {
 				this.field = field;
 				this.x = x;
 				this.y = y;
@@ -82,7 +82,7 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended 
 		}
 
 		@Override
-		public final <B extends GuiTextField> B addTextField(B field, int x, int y) {
+		public final <B extends TextFieldWidget> B addTextField(B field, int x, int y) {
 			this.fieldList.add(new TextFieldWrapper(field, x, y));
 			return field;
 		}
@@ -182,7 +182,7 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended 
 	}
 
 	@Override
-	public final IGuiListEntry getListEntry(int index) {
+	public final AbstractListEntry getListEntry(int index) {
 		return entries.get(index);
 	}
 

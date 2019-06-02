@@ -15,7 +15,7 @@
 package wdl.gui.widget;
 
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.widget.TextFieldWidget;
 
 /**
  * Shared interface for a GuiScreen variant that can also store buttons and GuiLists.
@@ -40,7 +40,7 @@ public interface IExtGuiScreen {
 	 *
 	 * @param field The field to add.
 	 */
-	public abstract <T extends GuiTextField> T addTextField(T field);
+	public abstract <T extends TextFieldWidget> T addTextField(T field);
 
 	/**
 	 * Called on click when the mouse is over the button.

@@ -17,9 +17,9 @@ package wdl.gui;
 import java.util.List;
 import javax.annotation.Nullable;
 import net.minecraft.client.audio.SimpleSound;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.init.SoundEvents;
+import net.minecraft.util.SoundEvents;
 import wdl.WDL;
 import wdl.gui.widget.Button;
 import wdl.gui.widget.ButtonDisplayGui;
@@ -53,7 +53,7 @@ import wdl.update.WDLUpdateChecker;
  */
 public class GuiWDLUpdates extends Screen {
 	@Nullable
-	private final GuiScreen parent;
+	private final Screen parent;
 
 	/**
 	 * Margins for the top and the bottom of the list.
@@ -193,7 +193,7 @@ public class GuiWDLUpdates extends Screen {
 
 	private UpdateList list;
 
-	public GuiWDLUpdates(@Nullable GuiScreen parent, WDL wdl) {
+	public GuiWDLUpdates(@Nullable Screen parent, WDL wdl) {
 		this.parent = parent;
 	}
 

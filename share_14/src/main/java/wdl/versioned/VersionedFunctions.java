@@ -30,19 +30,19 @@ import javax.annotation.Nullable;
 import javax.annotation.RegEx;
 import javax.annotation.meta.TypeQualifierNickname;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.network.NetHandlerPlayClient;
-import net.minecraft.init.Items;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.network.play.ClientPlayNetHandler;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.network.play.client.CCustomPayloadPacket;
-import net.minecraft.network.play.server.SPacketCustomPayload;
-import net.minecraft.network.play.server.SPacketMaps;
+import net.minecraft.network.play.server.SCustomPayloadPlayPacket;
+import net.minecraft.network.play.server.SMapDataPacket;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameRules;
@@ -165,7 +165,7 @@ public final class VersionedFunctions {
 	 * @return The block entity, or null if the creation function fails.
 	 */
 	@Nullable
-	public static TileEntity createNewBlockEntity(World world, ContainerBlock block, IBlockState state) {
+	public static TileEntity createNewBlockEntity(World world, ContainerBlock block, BlockState state) {
 		return HandlerFunctions.createNewBlockEntity(world, block, state);
 	}
 
@@ -232,7 +232,7 @@ public final class VersionedFunctions {
 	 * @param bytes The payload.
 	 * @return The new packet.
 	 */
-	public static SPacketCustomPayload makeServerPluginMessagePacket(@ChannelName String channel, byte[] bytes) {
+	public static SCustomPayloadPlayPacket makeServerPluginMessagePacket(@ChannelName String channel, byte[] bytes) {
 		return PacketFunctions.makeServerPluginMessagePacket(channel, bytes);
 	}
 
@@ -244,7 +244,7 @@ public final class VersionedFunctions {
 	 * @return The map data, or null if the underlying function returns null.
 	 */
 	@Nullable
-	public static MapData getMapData(World world, SPacketMaps mapPacket) {
+	public static MapData getMapData(World world, SMapDataPacket mapPacket) {
 		return MapFunctions.getMapData(world, mapPacket);
 	}
 
@@ -376,7 +376,7 @@ public final class VersionedFunctions {
 	 * @param callback        Called with the new generator config.
 	 * @return The new GUI, or the parent if there is no valid GUI.
 	 */
-	public static GuiScreen makeGeneratorSettingsGui(Generator generator, GuiScreen parent,
+	public static Screen makeGeneratorSettingsGui(Generator generator, Screen parent,
 			String generatorConfig, Consumer<String> callback) {
 		return GeneratorFunctions.makeGeneratorSettingsGui(generator, parent, generatorConfig, callback);
 	}
@@ -427,7 +427,7 @@ public final class VersionedFunctions {
 	 * @param nhpc The connection
 	 * @param base The original player to copy other data from
 	 */
-	public static EntityPlayerSP makePlayer(Minecraft minecraft, World world, NetHandlerPlayClient nhpc, EntityPlayerSP base) {
+	public static ClientPlayerEntity makePlayer(Minecraft minecraft, World world, ClientPlayNetHandler nhpc, ClientPlayerEntity base) {
 		return GuiFunctions.makePlayer(minecraft, world, nhpc, base);
 	}
 

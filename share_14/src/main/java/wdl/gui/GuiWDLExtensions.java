@@ -16,9 +16,9 @@ package wdl.gui;
 
 import javax.annotation.Nullable;
 import net.minecraft.client.audio.SimpleSound;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.init.SoundEvents;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.TextFormatting;
 import wdl.gui.widget.Button;
 import wdl.gui.widget.ButtonDisplayGui;
@@ -240,13 +240,13 @@ public class GuiWDLExtensions extends Screen {
 	 * Gui to display after this is closed.
 	 */
 	@Nullable
-	private final GuiScreen parent;
+	private final Screen parent;
 	/**
 	 * Details on the selected mod.
 	 */
 	private ModDetailList detailsList;
 
-	public GuiWDLExtensions(@Nullable GuiScreen parent) {
+	public GuiWDLExtensions(@Nullable Screen parent) {
 		this.parent = parent;
 	}
 

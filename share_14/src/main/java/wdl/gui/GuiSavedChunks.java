@@ -17,7 +17,7 @@ package wdl.gui;
 import java.io.File;
 import java.lang.reflect.Field;
 import javax.annotation.Nullable;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
@@ -54,7 +54,7 @@ public class GuiSavedChunks extends Screen {
 	 * Parent GUI screen; displayed when this GUI is closed.
 	 */
 	@Nullable
-	private final GuiScreen parent;
+	private final Screen parent;
 	private final WDL wdl;
 
 	/**
@@ -71,7 +71,7 @@ public class GuiSavedChunks extends Screen {
 	 */
 	private int lastTickX, lastTickY;
 
-	public GuiSavedChunks(@Nullable GuiScreen parent, WDL wdl) {
+	public GuiSavedChunks(@Nullable Screen parent, WDL wdl) {
 		this.parent = parent;
 		this.wdl = wdl;
 

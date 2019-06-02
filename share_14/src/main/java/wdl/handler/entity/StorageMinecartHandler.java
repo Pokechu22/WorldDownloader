@@ -16,7 +16,7 @@ package wdl.handler.entity;
 
 import net.minecraft.entity.item.minecart.ChestMinecartEntity;
 import net.minecraft.inventory.container.ChestContainer;
-import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import wdl.handler.HandlerException;

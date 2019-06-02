@@ -17,9 +17,9 @@ package wdl.gui;
 import java.util.Set;
 import java.util.function.Supplier;
 import javax.annotation.Nullable;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.gui.GuiYesNoCallback;
+import net.minecraft.client.gui.screen.ConfirmScreen;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import wdl.EntityUtils;
@@ -51,7 +51,7 @@ import wdl.gui.widget.Screen;
  */
 public class GuiWDLEntityRangePresets extends Screen implements GuiYesNoCallback {
 	@Nullable
-	private final GuiScreen parent;
+	private final Screen parent;
 	private final WDL wdl;
 	private final IConfiguration config;
 
@@ -62,7 +62,7 @@ public class GuiWDLEntityRangePresets extends Screen implements GuiYesNoCallback
 
 	private static final int ID_VANILLA = 0, ID_SPIGOT = 1, ID_SERVER = 2;
 
-	public GuiWDLEntityRangePresets(@Nullable GuiScreen parent, WDL wdl, IConfiguration config) {
+	public GuiWDLEntityRangePresets(@Nullable Screen parent, WDL wdl, IConfiguration config) {
 		this.parent = parent;
 		this.wdl = wdl;
 		this.config = config;
@@ -96,11 +96,11 @@ public class GuiWDLEntityRangePresets extends Screen implements GuiYesNoCallback
 				I18n.format("gui.cancel"), this.parent));
 	}
 
-	private Supplier<GuiYesNo> makeYesNoGui(String message, int id) {
+	private Supplier<ConfirmScreen> makeYesNoGui(String message, int id) {
 		String upper = I18n.format("wdl.gui.rangePresets.upperWarning");
 		String lower = I18n.format(message);
 
-		return () -> new GuiYesNo(this, upper, lower, id);
+		return () -> new ConfirmScreen(this, upper, lower, id);
 	}
 
 	@Override

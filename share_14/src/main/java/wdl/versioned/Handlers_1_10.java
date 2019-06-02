@@ -22,6 +22,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.block.BeaconBlock;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.BrewingStandBlock;
 import net.minecraft.block.ChestBlock;
 import net.minecraft.block.CommandBlockBlock;
@@ -31,7 +32,6 @@ import net.minecraft.block.DropperBlock;
 import net.minecraft.block.FurnaceBlock;
 import net.minecraft.block.HopperBlock;
 import net.minecraft.block.NoteBlock;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
@@ -187,7 +187,7 @@ final class HandlerFunctions {
 	 * @see VersionedFunctions#createNewBlockEntity
 	 */
 	@Nullable
-	static TileEntity createNewBlockEntity(World world, ContainerBlock block, IBlockState state) {
+	static TileEntity createNewBlockEntity(World world, ContainerBlock block, BlockState state) {
 		return block.createNewTileEntity(world, block.getMetaFromState(state));
 	}
 

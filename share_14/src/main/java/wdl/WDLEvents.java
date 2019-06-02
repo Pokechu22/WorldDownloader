@@ -17,14 +17,14 @@ package wdl;
 import javax.annotation.Nonnull;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.multiplayer.WorldClient;
-import net.minecraft.client.network.NetHandlerPlayClient;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.network.play.ClientPlayNetHandler;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.EnderChestInventory;
-import net.minecraft.inventory.Slot;
 import net.minecraft.inventory.container.ChestContainer;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.tileentity.EnderChestTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -94,7 +94,7 @@ public class WDLEvents {
 	 * Must be called after the static World object in Minecraft has been
 	 * replaced.
 	 */
-	public static void onWorldLoad(WorldClient world) {
+	public static void onWorldLoad(ClientWorld world) {
 		if (ENABLE_PROFILER) PROFILER.startSection("Core");
 
 		if (WDL.minecraft.isIntegratedServerRunning()) {
@@ -343,7 +343,7 @@ public class WDLEvents {
 		}
 
 		// Assume that the current dimension is the right one
-		EntityPlayerSP player = wdl.player;
+		ClientPlayerEntity player = wdl.player;
 		assert player != null;
 		MapDataResult result = MapDataHandler.repairMapData(mapID, mapData, wdl.player);
 
@@ -357,7 +357,7 @@ public class WDLEvents {
 	 * Must be called whenever a plugin channel message / custom payload packet
 	 * is received.
 	 */
-	public static void onPluginChannelPacket(NetHandlerPlayClient sender,
+	public static void onPluginChannelPacket(ClientPlayNetHandler sender,
 			String channel, byte[] bytes) {
 		WDLPluginChannels.onPluginChannelPacket(sender, channel, bytes);
 	}

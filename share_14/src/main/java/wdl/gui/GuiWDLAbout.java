@@ -15,7 +15,7 @@
 package wdl.gui;
 
 import javax.annotation.Nullable;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resources.I18n;
 import wdl.WDL;
 import wdl.gui.widget.Button;
@@ -43,7 +43,7 @@ public class GuiWDLAbout extends Screen {
 	 * GUI to display afterwards.
 	 */
 	@Nullable
-	private final GuiScreen parent;
+	private final Screen parent;
 	private final WDL wdl;
 
 	private static final String FORUMS_THREAD = "http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465";
@@ -58,7 +58,7 @@ public class GuiWDLAbout extends Screen {
 	/**
 	 * Creates a GUI with the specified parent.
 	 */
-	public GuiWDLAbout(@Nullable GuiScreen parent, WDL wdl) {
+	public GuiWDLAbout(@Nullable Screen parent, WDL wdl) {
 		this.parent = parent;
 		this.wdl = wdl;
 	}
