@@ -61,7 +61,7 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements IBac
 			} finally {
 				backingUp = false;
 
-				mc.addScheduledTask(() -> {
+				mc.func_212871_a_(() -> {
 					callback.run();
 				});
 			}

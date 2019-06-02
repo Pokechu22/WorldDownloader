@@ -153,7 +153,7 @@ final class GeneratorFunctions {
 	 */
 	static void makeBackupToast(String name, long fileSize) {
 		// See GuiWorldEdit.createBackup
-		Minecraft.getInstance().addScheduledTask(() -> {
+		Minecraft.getInstance().func_212871_a_(() -> {
 			GuiToast guitoast = Minecraft.getInstance().getToastGui();
 			ITextComponent top = new TranslationTextComponent("selectWorld.edit.backupCreated", name);
 			ITextComponent bot = new TranslationTextComponent("selectWorld.edit.backupSize", MathHelper.ceil(fileSize / 1048576.0));
@@ -167,7 +167,7 @@ final class GeneratorFunctions {
 	static void makeBackupFailedToast(IOException ex) {
 		// See GuiWorldEdit.createBackup
 		String message = ex.getMessage();
-		Minecraft.getInstance().addScheduledTask(() -> {
+		Minecraft.getInstance().func_212871_a_(() -> {
 			GuiToast guitoast = Minecraft.getInstance().getToastGui();
 			// NOTE: vanilla translation string is missing (MC-137308)
 			ITextComponent top = new TranslationTextComponent("wdl.toast.backupFailed");

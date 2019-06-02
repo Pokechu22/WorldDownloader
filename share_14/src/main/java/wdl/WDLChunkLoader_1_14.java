@@ -104,7 +104,7 @@ abstract class WDLChunkLoaderBase extends ChunkManager {
 		CompoundNBT levelTag = writeChunkToNBT((Chunk)chunk, world);
 
 		CompoundNBT rootTag = new CompoundNBT();
-		rootTag.put("Level", levelTag);
+		rootTag.func_218657_a("Level", levelTag);
 		rootTag.putInt("DataVersion", VersionConstants.getDataVersion());
 
 		addChunkToPending(chunk.getPos(), rootTag);
@@ -138,7 +138,7 @@ abstract class WDLChunkLoaderBase extends ChunkManager {
 		UpgradeData upgradedata = chunk.getUpgradeData();
 
 		if (!upgradedata.isEmpty()) {
-			compound.put("UpgradeData", upgradedata.write());
+			compound.func_218657_a("UpgradeData", upgradedata.write());
 		}
 
 		ChunkSection[] chunkSections = chunk.getSections();
@@ -176,7 +176,7 @@ abstract class WDLChunkLoaderBase extends ChunkManager {
 			}
 		}
 
-		compound.put("Sections", chunkSectionList);
+		compound.func_218657_a("Sections", chunkSectionList);
 
 		Biome[] biomes = chunk.getBiomes();
 		int[] biomeData = new int[biomes.length];
@@ -188,25 +188,25 @@ abstract class WDLChunkLoaderBase extends ChunkManager {
 
 		chunk.setHasEntities(false);
 		ListNBT entityList = getEntityList(chunk);
-		compound.put("Entities", entityList);
+		compound.func_218657_a("Entities", entityList);
 
 		ListNBT tileEntityList = getTileEntityList(chunk);
-		compound.put("TileEntities", tileEntityList);
+		compound.func_218657_a("TileEntities", tileEntityList);
 
 		if (world.getPendingBlockTicks() instanceof ServerTickList) {
-			compound.put("TileTicks", ((ServerTickList<?>) world.getPendingBlockTicks()).write(chunk));
+			compound.func_218657_a("TileTicks", ((ServerTickList<?>) world.getPendingBlockTicks()).write(chunk));
 		}
 		if (world.getPendingFluidTicks() instanceof ServerTickList) {
-			compound.put("LiquidTicks", ((ServerTickList<?>) world.getPendingFluidTicks()).write(chunk));
+			compound.func_218657_a("LiquidTicks", ((ServerTickList<?>) world.getPendingFluidTicks()).write(chunk));
 		}
 
-		compound.put("PostProcessing", listArrayToTag(chunk.getPackedPositions()));
+		compound.func_218657_a("PostProcessing", listArrayToTag(chunk.getPackedPositions()));
 
 		if (chunk.getBlocksToBeTicked() instanceof ChunkPrimerTickList) {
-			compound.put("ToBeTicked", ((ChunkPrimerTickList<?>) chunk.getBlocksToBeTicked()).write());
+			compound.func_218657_a("ToBeTicked", ((ChunkPrimerTickList<?>) chunk.getBlocksToBeTicked()).write());
 		}
 		if (chunk.getFluidsToBeTicked() instanceof ChunkPrimerTickList) {
-			compound.put("LiquidsToBeTicked", ((ChunkPrimerTickList<?>) chunk.getFluidsToBeTicked()).write());
+			compound.func_218657_a("LiquidsToBeTicked", ((ChunkPrimerTickList<?>) chunk.getFluidsToBeTicked()).write());
 		}
 
 		CompoundNBT heightMaps = new CompoundNBT();
@@ -218,9 +218,9 @@ abstract class WDLChunkLoaderBase extends ChunkManager {
 			}
 		}
 
-		compound.put("Heightmaps", heightMaps);
+		compound.func_218657_a("Heightmaps", heightMaps);
 		// TODO
-		//compound.put("Structures",
+		//compound.func_218657_a("Structures",
 		//		this.func_202160_a(chunk.x, chunk.z, chunk.func_201609_c(), chunk.func_201604_d()));
 
 		return compound;

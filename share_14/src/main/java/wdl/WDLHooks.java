@@ -460,7 +460,7 @@ public class WDLHooks {
 	protected void onNHPCDisconnect0(ClientPlayNetHandler sender, ITextComponent reason) {
 		if (WDL.downloading) {
 			// This is likely to be called from an unexpected thread, so queue a task
-			Minecraft.getInstance().addScheduledTask(wdl::stopDownload);
+			Minecraft.getInstance().func_212871_a_(wdl::stopDownload);
 
 			// This code was present on older versions of WDL which weren't missing
 			// the onDisconnect handler before.
