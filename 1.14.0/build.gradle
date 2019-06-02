@@ -126,19 +126,6 @@ sourceSets {
     test {
         java {
             srcDir project(':share_14').file("src/test/java")
-            exclude "wdl/MixinTest**.java"
-            exclude "wdl/NoMixinTest_1_9.java"
-            exclude "wdl/NoMixinTest_1_10.java"
-            exclude "wdl/NoMixinTest_1_11.java"
-            exclude "wdl/NoMixinTest_1_12.java"
-            exclude "wdl/ExtWorld_1_10.java"
-            exclude "wdl/ExtWorld_1_12.java"
-            exclude "wdl/ExtWorld_1_13.java"
-            exclude "wdl/handler/block/TrappedChestTest_1_12.java"
-            exclude "wdl/handler/blockaction/NoteBlockTest.java"
-            exclude "wdl/lwts/WDLTestTweaker_1_9.java"
-            exclude "wdl/lwts/WDLTestTweaker_1_10.java"
-            exclude "wdl/lwts/WDLTestTweaker.java"
         }
     }
     api {
