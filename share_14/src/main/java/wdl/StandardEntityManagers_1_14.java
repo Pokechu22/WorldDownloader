@@ -232,7 +232,8 @@ class StandardEntityManagers {
 			return null;
 		}
 
-		Class<? extends Entity> c = Registry.ENTITY_TYPE.func_218349_b(loc).get().getEntityClass();
+		// XXX: This is not a good way of doing this
+		Class<? extends Entity> c = Registry.ENTITY_TYPE.func_218349_b(loc).get().create(null).getClass();
 		assert c != null;
 
 		return c;
