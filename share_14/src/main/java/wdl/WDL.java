@@ -21,7 +21,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -40,16 +39,12 @@ import org.apache.logging.log4j.Logger;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
-import com.mojang.realmsclient.RealmsMainScreen;
-import com.mojang.realmsclient.dto.RealmsServer;
 
 import net.minecraft.block.AirBlock;
 import net.minecraft.block.BedBlock;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.gui.GuiScreenRealmsProxy;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.multiplayer.ClientChunkProvider;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.world.ClientWorld;
@@ -64,7 +59,6 @@ import net.minecraft.nbt.DoubleNBT;
 import net.minecraft.nbt.FloatNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.realms.RealmsScreen;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -75,7 +69,6 @@ import net.minecraft.world.chunk.EmptyChunk;
 import net.minecraft.world.storage.MapData;
 import net.minecraft.world.storage.SaveHandler;
 import net.minecraft.world.storage.SessionLockException;
-import net.minecraft.world.storage.ThreadedFileIOBase;
 import net.minecraft.world.storage.WorldInfo;
 import wdl.WorldBackup.WorldBackupType;
 import wdl.api.IPlayerInfoEditor;
@@ -1411,7 +1404,8 @@ public class WDL {
 	 */
 	@Nullable
 	private String getRealmName() {
-		if (!minecraft.isConnectedToRealms()) {
+		return null; // TODO
+		/*if (!minecraft.isConnectedToRealms()) {
 			LOGGER.warn("getRealmName: Not currently connected to realms!");
 		}
 		// Is this the only way to get the name of the Realms server? Really Mojang?
@@ -1464,7 +1458,7 @@ public class WDL {
 		}
 
 		// Return its name. Not sure if this is the best naming scheme...
-		return mcos.name;
+		return mcos.name;*/
 	}
 
 
