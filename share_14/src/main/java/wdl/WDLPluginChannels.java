@@ -230,8 +230,8 @@ public class WDLPluginChannels {
 
 		if (receivedPackets.contains(1)) {
 			if (!canCacheChunks && saveRadius >= 0) {
-				int distanceX = chunk.x - WDL.INSTANCE.player.chunkCoordX;
-				int distanceZ = chunk.z - WDL.INSTANCE.player.chunkCoordZ;
+				int distanceX = chunk.getPos().x - WDL.INSTANCE.player.chunkCoordX;
+				int distanceZ = chunk.getPos().z - WDL.INSTANCE.player.chunkCoordZ;
 
 				if (Math.abs(distanceX) > saveRadius ||
 						Math.abs(distanceZ) > saveRadius) {
@@ -464,7 +464,7 @@ public class WDLPluginChannels {
 			return false;
 		}
 
-		return isChunkOverridden(chunk.x, chunk.z);
+		return isChunkOverridden(chunk.getPos().x, chunk.getPos().z);
 	}
 	/**
 	 * Is the given chunk location part of a chunk override?

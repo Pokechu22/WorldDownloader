@@ -873,8 +873,8 @@ public class WDL {
 				}
 
 				progressScreen.setMinorTaskProgress(I18n.format(
-						"wdl.saveProgress.chunk.saving", c.x,
-						c.z), currentChunk);
+						"wdl.saveProgress.chunk.saving", c.getPos().x,
+						c.getPos().z), currentChunk);
 
 				saveChunk(c);
 			}
@@ -902,7 +902,7 @@ public class WDL {
 			// Better tell the player that something didn't work:
 			WDLMessages.chatMessageTranslated(WDL.serverProps,
 					WDLMessageTypes.ERROR,
-					"wdl.messages.generalError.failedToSaveChunk", c.x, c.z, e);
+					"wdl.messages.generalError.failedToSaveChunk", c.getPos().x, c.getPos().z, e);
 		}
 	}
 
@@ -931,10 +931,10 @@ public class WDL {
 				}
 			}
 			// Only composed of airoids; treat as empty
-			LOGGER.warn("[WDL] Skipping airoid empty chunk at " + c.x + ", " + c.z);
+			LOGGER.warn("[WDL] Skipping airoid empty chunk at " + c.getPos().x + ", " + c.getPos().z);
 		} else {
 			// Definitely empty
-			LOGGER.warn("[WDL] Skipping chunk with all null sections at " + c.x + ", " + c.z);
+			LOGGER.warn("[WDL] Skipping chunk with all null sections at " + c.getPos().x + ", " + c.getPos().z);
 		}
 		return true;
 	}

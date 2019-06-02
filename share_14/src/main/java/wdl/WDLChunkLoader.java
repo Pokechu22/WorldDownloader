@@ -131,7 +131,7 @@ public class WDLChunkLoader extends WDLChunkLoaderBase {
 				WDLMessages.chatMessageTranslated(
 						WDL.serverProps,
 						WDLMessageTypes.ERROR,
-						"wdl.messages.generalError.failedToSaveEntity", entity, chunk.x, chunk.z, e);
+						"wdl.messages.generalError.failedToSaveEntity", entity, chunk.getPos().x, chunk.getPos().z, e);
 				LOGGER.warn("Compound: " + entityData);
 				LOGGER.warn("Entity metadata dump:");
 				try {
@@ -230,7 +230,7 @@ public class WDLChunkLoader extends WDLChunkLoaderBase {
 					WDLMessages.chatMessageTranslated(
 							WDL.serverProps,
 							WDLMessageTypes.ERROR,
-							"wdl.messages.generalError.failedToSaveTE", te, pos, chunk.x, chunk.z, e);
+							"wdl.messages.generalError.failedToSaveTE", te, pos, chunk.getPos().x, chunk.getPos().z, e);
 					LOGGER.warn("Compound: " + compound);
 					continue;
 				}
@@ -267,7 +267,7 @@ public class WDLChunkLoader extends WDLChunkLoaderBase {
 					WDLMessages.chatMessageTranslated(
 							WDL.serverProps,
 							WDLMessageTypes.ERROR,
-							"wdl.messages.generalError.failedToSaveTE", te, pos, chunk.x, chunk.z, e);
+							"wdl.messages.generalError.failedToSaveTE", te, pos, chunk.getPos().x, chunk.getPos().z, e);
 					LOGGER.warn("Compound: " + compound);
 					continue;
 				}
@@ -306,7 +306,7 @@ public class WDLChunkLoader extends WDLChunkLoaderBase {
 			if ((chunkNBT = chunksToSave.get(chunk.getPos())) != null) {
 				LOGGER.warn("getOldTileEntities (and thus saveChunk) was called while a chunk was already in chunksToSave!  (location: {})", chunk.getPos(), new Exception());
 			} else try (DataInputStream dis = RegionFileCache.getChunkInputStream(
-					chunkSaveLocation, chunk.x, chunk.z)) {
+					chunkSaveLocation, chunk.getPos().x, chunk.getPos().z)) {
 				if (dis == null) {
 					// This happens whenever the chunk hasn't been saved before.
 					// It's a normal case.
@@ -344,7 +344,7 @@ public class WDLChunkLoader extends WDLChunkLoaderBase {
 		} catch (Exception e) {
 			WDLMessages.chatMessageTranslated(WDL.serverProps,
 					WDLMessageTypes.ERROR,
-					"wdl.messages.generalError.failedToImportTE", chunk.x, chunk.z, e);
+					"wdl.messages.generalError.failedToImportTE", chunk.getPos().x, chunk.getPos().z, e);
 		}
 		return returned;
 	}
