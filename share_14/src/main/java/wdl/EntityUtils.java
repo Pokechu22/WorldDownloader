@@ -30,7 +30,6 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityTrackerEntry;
 import net.minecraft.entity.effect.LightningBoltEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import wdl.api.IEntityManager;
@@ -305,18 +304,18 @@ public class EntityUtils {
 	 *                      {@link #getEntityTrackDistance(Entity)}.
 	 * @param viewDistance  The server's view-distance value, in chunks.
 	 * @return True if the entity should be saved, false if it should be removed.
-	 * @see EntityTrackerEntry#isVisibleTo EntityTrackerEntry.isVisibleTo (source of
+	 * @see TrackedEntity#isVisibleTo TrackedEntity.isVisibleTo (source of
 	 *      this logic)
 	 */
 	public static boolean isWithinSavingDistance(Entity entity, Entity player,
 			int trackDistance, int viewDistance) {
-		// Ref EntityTracker.setViewDistance and PlayerList.getFurthestViewableBlock
+		// Ref TrackedEntity.setViewDistance and PlayerList.getFurthestViewableBlock
 		// (note that PlayerChunkMap.getFurthestViewableBlock is a misleading name)
 		int maxRange = (viewDistance - 1) * 16;
 
 		int threshold = Math.min(trackDistance, maxRange);
 
-		// Entity track distance is a square, see EntityTrackerEntry.isVisibleTo
+		// Entity track distance is a square, see TrackedEntity.isVisibleTo
 		double dx = Math.abs(entity.posX - player.posX);
 		double dz = Math.abs(entity.posZ - player.posZ);
 

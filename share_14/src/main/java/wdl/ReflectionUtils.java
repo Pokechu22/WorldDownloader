@@ -20,7 +20,6 @@ import java.util.Map;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
 
-import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.gui.screen.inventory.CreativeScreen;
 import net.minecraft.inventory.container.Container;
 
@@ -214,11 +213,11 @@ public class ReflectionUtils {
 
 	/**
 	 * Checks if the given class is
-	 * {@link GuiContainerCreative.ContainerCreative}. In 1.12, this class is
+	 * {@link CreativeScreen.ContainerCreative}. In 1.12, this class is
 	 * public, but in older versions (e.g. 1.10) it isn't.
 	 * <p>
 	 * Note that this implementation checks whether it's an inner class of
-	 * {@link GuiContainerCreative}. This implementation works fine for versions
+	 * {@link CreativeScreen}. This implementation works fine for versions
 	 * with <code>InnerClasses</code> data, but older versions of Minecraft
 	 * (1.8, but not 1.8.9) do not contain this data.  If 1.8 is eventually supported,
 	 * this method will not work for it.

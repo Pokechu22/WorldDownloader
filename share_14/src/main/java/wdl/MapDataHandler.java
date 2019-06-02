@@ -27,7 +27,7 @@ import net.minecraft.entity.item.ItemFrameEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.network.play.server.SPacketMaps;
+import net.minecraft.network.play.server.SMapDataPacket;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
@@ -41,7 +41,7 @@ import wdl.versioned.VersionedFunctions;
 /**
  * Attempts to reconstruct information about a MapData that isn't present.
  *
- * From {@link SPacketMaps#setMapdataTo}, we already have:
+ * From {@link SMapDataPacket#setMapdataTo}, we already have:
  *
  * <ul>
  * <li>mapScale (byte for size)
