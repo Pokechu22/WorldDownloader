@@ -22,13 +22,13 @@ import net.minecraft.client.resources.I18n;
 import wdl.WDL;
 import wdl.config.IConfiguration;
 import wdl.config.settings.WorldSettings;
-import wdl.gui.widget.Button;
+import wdl.gui.widget.WDLButton;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.GuiNumericTextField;
-import wdl.gui.widget.Screen;
+import wdl.gui.widget.WDLScreen;
 import wdl.gui.widget.SettingButton;
 
-public class GuiWDLWorld extends Screen {
+public class GuiWDLWorld extends WDLScreen {
 	private String title;
 	@Nullable
 	private final GuiScreen parent;
@@ -95,7 +95,7 @@ public class GuiWDLWorld extends Screen {
 		this.spawnY.setMaxStringLength(7);
 		this.spawnZ.setMaxStringLength(7);
 		y += 18;
-		this.pickSpawnBtn = this.addButton(new Button(this.width / 2, y, 100, 20,
+		this.pickSpawnBtn = this.addButton(new WDLButton(this.width / 2, y, 100, 20,
 				I18n.format("wdl.gui.world.setSpawnToCurrentPosition")) {
 			public @Override void performAction() {
 				setSpawnToPlayerPosition();

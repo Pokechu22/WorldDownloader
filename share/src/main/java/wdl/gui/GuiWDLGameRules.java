@@ -29,15 +29,15 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.GameRules.ValueType;
 import wdl.WDL;
-import wdl.gui.widget.Button;
+import wdl.gui.widget.WDLButton;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.GuiList;
 import wdl.gui.widget.GuiList.GuiListEntry;
 import wdl.versioned.VersionedFunctions;
 import wdl.gui.widget.GuiNumericTextField;
-import wdl.gui.widget.Screen;
+import wdl.gui.widget.WDLScreen;
 
-public class GuiWDLGameRules extends Screen {
+public class GuiWDLGameRules extends WDLScreen {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
@@ -77,11 +77,11 @@ public class GuiWDLGameRules extends Screen {
 		private abstract class RuleEntry extends GuiListEntry<RuleEntry> {
 			@Nonnull
 			protected final String ruleName;
-			private Button resetButton;
+			private WDLButton resetButton;
 
 			public RuleEntry(@Nonnull String ruleName) {
 				this.ruleName = ruleName;
-				resetButton = this.addButton(new Button(0, 0, 50, 20,
+				resetButton = this.addButton(new WDLButton(0, 0, 50, 20,
 						I18n.format("wdl.gui.gamerules.resetRule")) {
 					public @Override void performAction() {
 						performResetAction();
@@ -167,11 +167,11 @@ public class GuiWDLGameRules extends Screen {
 		}
 
 		private class BooleanRuleEntry extends RuleEntry {
-			private Button button;
+			private WDLButton button;
 
 			public BooleanRuleEntry(String ruleName) {
 				super(ruleName);
-				button = this.addButton(new Button(0, 0, 100, 20, "") {
+				button = this.addButton(new WDLButton(0, 0, 100, 20, "") {
 					public @Override void performAction() {
 						boolean oldValue = getRule(ruleName).equals("true");
 						setRule(ruleName, oldValue ? "false" : "true");

@@ -18,7 +18,7 @@ import net.minecraft.client.Minecraft;
 
 /**
  * Extendible button, to deal with changing method signatures between versions.
- * The actual implementation is {@link Button}, and methods are declared in {@link IExtButton}.
+ * The actual implementation is {@link WDLButton}, and methods are declared in {@link IExtButton}.
  */
 abstract class ExtButton extends net.minecraft.client.gui.widget.button.Button implements IExtButton {
 	public ExtButton(int x, int y, int widthIn, int heightIn, String buttonText) {

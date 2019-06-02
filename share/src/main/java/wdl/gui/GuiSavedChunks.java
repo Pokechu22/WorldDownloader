@@ -27,13 +27,13 @@ import net.minecraft.world.chunk.storage.RegionFile;
 import net.minecraft.world.chunk.storage.RegionFileCache;
 import wdl.WDL;
 import wdl.gui.widget.ButtonDisplayGui;
-import wdl.gui.widget.Screen;
+import wdl.gui.widget.WDLScreen;
 import wdl.versioned.VersionedFunctions;
 
 /**
  * A GUI that shows chunks that have been already saved.
  */
-public class GuiSavedChunks extends Screen {
+public class GuiSavedChunks extends WDLScreen {
 	private static final int TOP_MARGIN = 61, BOTTOM_MARGIN = 32;
 
 	private static final int REGION_SIZE = 32;

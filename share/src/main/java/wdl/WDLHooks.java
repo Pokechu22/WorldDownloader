@@ -57,7 +57,7 @@ import wdl.gui.GuiWDL;
 import wdl.gui.GuiWDLAbout;
 import wdl.gui.GuiWDLChunkOverrides;
 import wdl.gui.GuiWDLPermissions;
-import wdl.gui.widget.Button;
+import wdl.gui.widget.WDLButton;
 import wdl.versioned.VersionedFunctions;
 
 /**
@@ -496,7 +496,7 @@ public class WDLHooks {
 	 */
 	private static final int WDLo = ('W' << 24) | ('D' << 16) | ('L' << 8) | ('o');
 
-	private class StartDownloadButton extends Button {
+	private class StartDownloadButton extends WDLButton {
 		public StartDownloadButton(GuiScreen menu, int x, int y, int width, int height) {
 			super(x, y, width, height, null);
 			this.menu = menu;
@@ -576,7 +576,7 @@ public class WDLHooks {
 		}
 	}
 
-	private class SettingsButton extends Button {
+	private class SettingsButton extends WDLButton {
 		public SettingsButton(GuiScreen menu, int x, int y, int width, int height, String displayString) {
 			super(x, y, width, height, displayString);
 			this.menu = menu;

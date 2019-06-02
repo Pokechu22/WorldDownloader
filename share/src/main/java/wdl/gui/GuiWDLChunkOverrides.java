@@ -29,9 +29,9 @@ import net.minecraft.util.math.MathHelper;
 import wdl.WDL;
 import wdl.WDLPluginChannels;
 import wdl.WDLPluginChannels.ChunkRange;
-import wdl.gui.widget.Button;
+import wdl.gui.widget.WDLButton;
 import wdl.gui.widget.ButtonDisplayGui;
-import wdl.gui.widget.Screen;
+import wdl.gui.widget.WDLScreen;
 import wdl.versioned.VersionedFunctions;
 
 /**
@@ -39,7 +39,7 @@ import wdl.versioned.VersionedFunctions;
  *
  * Also, expect a possible minimap integration in the future.
  */
-public class GuiWDLChunkOverrides extends Screen {
+public class GuiWDLChunkOverrides extends WDLScreen {
 	private static final int TOP_MARGIN = 61, BOTTOM_MARGIN = 32;
 
 	/**
@@ -135,14 +135,14 @@ public class GuiWDLChunkOverrides extends Screen {
 			public @Override void performAction() { }
 		});
 
-		this.addButton(new Button(width / 2 - 80, 18, 80, 20,
+		this.addButton(new WDLButton(width / 2 - 80, 18, 80, 20,
 				"Send request") {
 			public @Override void performAction() {
 				WDLPluginChannels.sendRequests();
 			}
 		});
 
-		this.startDownloadButton = this.addButton(new Button(width / 2 + 5, 18, 150, 20,
+		this.startDownloadButton = this.addButton(new WDLButton(width / 2 + 5, 18, 150, 20,
 				"Start download in these ranges") {
 			public @Override void performAction() {
 				if (!WDLPluginChannels.canDownloadAtAll()) {
@@ -161,7 +161,7 @@ public class GuiWDLChunkOverrides extends Screen {
 				I18n.format("wdl.gui.permissions.current"), () -> new GuiWDLPermissions(this.parent, this.wdl)));
 		this.addButton(new ButtonDisplayGui(this.width / 2 - 50, 39, 100, 20,
 				I18n.format("wdl.gui.permissions.request"), () -> new GuiWDLPermissionRequest(this.parent, this.wdl)));
-		this.addButton(new Button(this.width / 2 + 55, 39, 100, 20,
+		this.addButton(new WDLButton(this.width / 2 + 55, 39, 100, 20,
 				I18n.format("wdl.gui.permissions.overrides")) {
 			public @Override void performAction() {
 				// Would open this GUI; do nothing.
@@ -371,7 +371,7 @@ public class GuiWDLChunkOverrides extends Screen {
 	/**
 	 * Button for a mode that displays the icon for the given mode.
 	 */
-	private abstract class RequestModeButton extends Button {
+	private abstract class RequestModeButton extends WDLButton {
 		/**
 		 * The mode for this button.
 		 */

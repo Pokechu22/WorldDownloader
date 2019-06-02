@@ -32,11 +32,11 @@ import wdl.config.IConfiguration;
 import wdl.config.settings.MessageSettings;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.GuiList;
-import wdl.gui.widget.Screen;
+import wdl.gui.widget.WDLScreen;
 import wdl.gui.widget.GuiList.GuiListEntry;
 import wdl.gui.widget.SettingButton;
 
-public class GuiWDLMessages extends Screen {
+public class GuiWDLMessages extends WDLScreen {
 	/**
 	 * Set from inner classes; this is the text to draw.
 	 */

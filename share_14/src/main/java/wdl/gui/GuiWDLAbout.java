@@ -20,7 +20,8 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resources.I18n;
 import wdl.VersionConstants;
 import wdl.WDL;
-import wdl.gui.widget.Button;
+import wdl.gui.widget.WDLButton;
+import wdl.gui.widget.WDLScreen;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.TextList;
 import wdl.versioned.VersionedFunctions;
@@ -28,7 +29,7 @@ import wdl.versioned.VersionedFunctions;
 /**
  * Contains information about the current installation of WDL.
  */
-public class GuiWDLAbout extends Screen {
+public class GuiWDLAbout extends WDLScreen {
 	/**
 	 * GUI to display afterwards.
 	 */
@@ -57,7 +58,7 @@ public class GuiWDLAbout extends Screen {
 	public void initGui() {
 		this.addButton(new ButtonDisplayGui((this.width / 2) - 155, 18, 150, 20,
 				I18n.format("wdl.gui.about.extensions"), () -> new GuiWDLExtensions(this)));
-		this.addButton(new Button((this.width / 2) + 5, 18, 150, 20,
+		this.addButton(new WDLButton((this.width / 2) + 5, 18, 150, 20,
 				I18n.format("wdl.gui.about.debugInfo")) {
 			public @Override void performAction() {
 				// Copy debug info

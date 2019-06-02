@@ -20,7 +20,7 @@ import wdl.config.IConfiguration;
 /**
  * A button that controls a setting.
  */
-public class SettingButton extends Button {
+public class SettingButton extends WDLButton {
 	private final CyclableSetting<?> setting;
 	private final IConfiguration config;
 

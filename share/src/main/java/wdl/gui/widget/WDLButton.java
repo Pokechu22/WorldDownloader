@@ -17,8 +17,8 @@ package wdl.gui.widget;
 /**
  * A Button class that works across versions.
  */
-public abstract class Button extends ExtButton {
-	public Button(int x, int y, int widthIn, int heightIn, String buttonText) {
+public abstract class WDLButton extends ExtButton {
+	public WDLButton(int x, int y, int widthIn, int heightIn, String buttonText) {
 		super(x, y, widthIn, heightIn, buttonText);
 	}
 

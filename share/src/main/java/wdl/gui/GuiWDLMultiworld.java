@@ -18,10 +18,10 @@ import java.util.List;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
-import wdl.gui.widget.Button;
-import wdl.gui.widget.Screen;
+import wdl.gui.widget.WDLButton;
+import wdl.gui.widget.WDLScreen;
 
-public class GuiWDLMultiworld extends Screen {
+public class GuiWDLMultiworld extends WDLScreen {
 	private final MultiworldCallback callback;
 	private GuiButton multiworldEnabledBtn;
 	private boolean enableMultiworld = false;
@@ -60,7 +60,7 @@ public class GuiWDLMultiworld extends Screen {
 		infoBoxX = this.width / 2 - infoBoxWidth / 2;
 		infoBoxY = this.height / 2 - infoBoxHeight / 2;
 
-		this.multiworldEnabledBtn = this.addButton(new Button(
+		this.multiworldEnabledBtn = this.addButton(new WDLButton(
 				this.width / 2 - 100, infoBoxY + infoBoxHeight - 30, 200, 20,
 				this.getMultiworldEnabledText()) {
 			public @Override void performAction() {
@@ -68,14 +68,14 @@ public class GuiWDLMultiworld extends Screen {
 			}
 		});
 
-		this.addButton(new Button(this.width / 2 - 155,
+		this.addButton(new WDLButton(this.width / 2 - 155,
 				this.height - 29, 150, 20, I18n.format("gui.cancel")) {
 			public @Override void performAction() {
 				callback.onCancel();
 			}
 		});
 
-		this.addButton(new Button(this.width / 2 + 5,
+		this.addButton(new WDLButton(this.width / 2 + 5,
 				this.height - 29, 150, 20, I18n.format("gui.done")) {
 			public @Override void performAction() {
 				callback.onSelect(enableMultiworld);

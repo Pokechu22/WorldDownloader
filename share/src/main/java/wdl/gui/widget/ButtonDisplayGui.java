@@ -25,7 +25,7 @@ import net.minecraft.client.resources.I18n;
 /**
  * A button that displays another GUI when it is clicked.
  */
-public class ButtonDisplayGui extends Button {
+public class ButtonDisplayGui extends WDLButton {
 
 	/**
 	 * Supplier for the GUI to display.  Allowed to return null.

@@ -25,9 +25,10 @@ import wdl.config.IConfiguration;
 import wdl.config.settings.GeneratorSettings;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.SettingButton;
+import wdl.gui.widget.WDLScreen;
 import wdl.versioned.VersionedFunctions;
 
-public class GuiWDLGenerator extends Screen {
+public class GuiWDLGenerator extends WDLScreen {
 	private String title;
 	@Nullable
 	private final Screen parent;

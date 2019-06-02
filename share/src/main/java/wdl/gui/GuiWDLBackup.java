@@ -32,14 +32,14 @@ import wdl.WorldBackup.ICustomBackupProgressMonitor;
 import wdl.WorldBackup.WorldBackupType;
 import wdl.config.IConfiguration;
 import wdl.config.settings.MiscSettings;
-import wdl.gui.widget.Button;
+import wdl.gui.widget.WDLButton;
 import wdl.gui.widget.ButtonDisplayGui;
-import wdl.gui.widget.Screen;
+import wdl.gui.widget.WDLScreen;
 
 /**
  * GUI allowing control over the way the world is backed up.
  */
-public class GuiWDLBackup extends Screen {
+public class GuiWDLBackup extends WDLScreen {
 	@Nullable
 	private final GuiScreen parent;
 	private final WDL wdl;
@@ -75,7 +75,7 @@ public class GuiWDLBackup extends Screen {
 
 	@Override
 	public void initGui() {
-		backupTypeButton = this.addButton(new Button(this.width / 2 - 100, 32,
+		backupTypeButton = this.addButton(new WDLButton(this.width / 2 - 100, 32,
 				200, 20, getBackupButtonText()) {
 			public @Override void performAction() {
 				switch (backupType) {

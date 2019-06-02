@@ -24,7 +24,7 @@ import wdl.WDLMessages;
 import wdl.WorldBackup;
 import wdl.WorldBackup.IBackupProgressMonitor;
 import wdl.WorldBackup.WorldBackupType;
-import wdl.gui.widget.Button;
+import wdl.gui.widget.WDLButton;
 import wdl.versioned.VersionedFunctions;
 
 /**
@@ -158,7 +158,7 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements IBac
 		int x = (this.width / 2) - 100;
 		int y = infoBoxY + 22;
 
-		backupAsZipButton = this.addButton(new Button(x, y, 200, 20,
+		backupAsZipButton = this.addButton(new WDLButton(x, y, 200, 20,
 				I18n.format("wdl.gui.overwriteChanges.asZip.name")) {
 			public @Override void performAction() {
 				if (backingUp) return;
@@ -167,7 +167,7 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements IBac
 			}
 		});
 		y += 22;
-		backupAsFolderButton = this.addButton(new Button(x, y, 200, 20,
+		backupAsFolderButton = this.addButton(new WDLButton(x, y, 200, 20,
 				I18n.format("wdl.gui.overwriteChanges.asFolder.name")) {
 			public @Override void performAction() {
 				if (backingUp) return;
@@ -176,14 +176,14 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements IBac
 			}
 		});
 		y += 22;
-		downloadNowButton = this.addButton(new Button(x, y, 200, 20,
+		downloadNowButton = this.addButton(new WDLButton(x, y, 200, 20,
 				I18n.format("wdl.gui.overwriteChanges.startNow.name")) {
 			public @Override void performAction() {
 				callback.run();
 			}
 		});
 		y += 22;
-		cancelButton = this.addButton(new Button(x, y, 200, 20,
+		cancelButton = this.addButton(new WDLButton(x, y, 200, 20,
 				I18n.format("wdl.gui.overwriteChanges.cancel.name")) {
 			public @Override void performAction() {
 				cancel.run();

@@ -24,14 +24,14 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import wdl.WDL;
-import wdl.gui.widget.Screen;
+import wdl.gui.widget.WDLScreen;
 import wdl.versioned.VersionedFunctions;
 
 /**
  * Base GUI with the player in the background turning slowly to show the
  * entire world.
  */
-public abstract class GuiTurningCameraBase extends Screen {
+public abstract class GuiTurningCameraBase extends WDLScreen {
 	private final WDL wdl;
 
 	/**

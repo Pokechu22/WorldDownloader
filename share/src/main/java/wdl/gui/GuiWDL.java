@@ -26,13 +26,13 @@ import wdl.WDL;
 import wdl.WDLPluginChannels;
 import wdl.config.IConfiguration;
 import wdl.config.settings.MiscSettings;
-import wdl.gui.widget.Button;
+import wdl.gui.widget.WDLButton;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.GuiList;
-import wdl.gui.widget.Screen;
+import wdl.gui.widget.WDLScreen;
 import wdl.update.WDLUpdateChecker;
 
-public class GuiWDL extends Screen {
+public class GuiWDL extends WDLScreen {
 	/**
 	 * Tooltip to display on the given frame.
 	 */
@@ -45,7 +45,7 @@ public class GuiWDL extends Screen {
 		}
 
 		private class ButtonEntry extends GuiList.GuiListEntry<ButtonEntry> {
-			private final Button button;
+			private final WDLButton button;
 
 			private final String tooltip;
 

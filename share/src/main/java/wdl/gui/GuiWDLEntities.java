@@ -33,18 +33,18 @@ import wdl.WDLMessages;
 import wdl.config.IConfiguration;
 import wdl.config.settings.EntitySettings;
 import wdl.config.settings.EntitySettings.TrackDistanceMode;
-import wdl.gui.widget.Button;
+import wdl.gui.widget.WDLButton;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.GuiList;
 import wdl.gui.widget.GuiList.GuiListEntry;
 import wdl.gui.widget.GuiSlider;
-import wdl.gui.widget.Screen;
+import wdl.gui.widget.WDLScreen;
 import wdl.gui.widget.SettingButton;
 
 /**
  * GUI that controls what entities are saved.
  */
-public class GuiWDLEntities extends Screen {
+public class GuiWDLEntities extends WDLScreen {
 	private class GuiEntityList extends GuiList<GuiEntityList.Entry> {
 		/**
 		 * Width of the largest entry.
@@ -111,7 +111,7 @@ public class GuiWDLEntities extends Screen {
 			private final String displayGroup;
 			private final int labelWidth;
 
-			private final Button enableGroupButton;
+			private final WDLButton enableGroupButton;
 
 			private boolean groupEnabled;
 
@@ -121,7 +121,7 @@ public class GuiWDLEntities extends Screen {
 
 				this.groupEnabled = config.isEntityGroupEnabled(group);
 
-				this.enableGroupButton = this.addButton(new Button(
+				this.enableGroupButton = this.addButton(new WDLButton(
 						0, 0, 90, 18, getButtonText()) {
 					public @Override void performAction() {
 						groupEnabled ^= true;
@@ -167,7 +167,7 @@ public class GuiWDLEntities extends Screen {
 			private final String entity;
 			private final String displayEntity;
 
-			private final Button onOffButton;
+			private final WDLButton onOffButton;
 			private final GuiSlider rangeSlider;
 
 			private boolean entityEnabled;
@@ -185,7 +185,7 @@ public class GuiWDLEntities extends Screen {
 
 				int buttonOffset = -(totalWidth / 2) + largestWidth + 10;
 
-				this.onOffButton = this.addButton(new Button(
+				this.onOffButton = this.addButton(new WDLButton(
 						0, 0, 75, 18, getButtonText()) {
 					public @Override void performAction() {
 						entityEnabled ^= true;

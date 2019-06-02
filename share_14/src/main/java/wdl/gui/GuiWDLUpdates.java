@@ -24,7 +24,8 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.SoundEvents;
 import wdl.VersionConstants;
 import wdl.WDL;
-import wdl.gui.widget.Button;
+import wdl.gui.widget.WDLButton;
+import wdl.gui.widget.WDLScreen;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.GuiList;
 import wdl.gui.widget.TextList;
@@ -34,7 +35,7 @@ import wdl.update.WDLUpdateChecker;
 /**
  * Gui that lists updates fetched via {@link wdl.update.GithubInfoGrabber}.
  */
-public class GuiWDLUpdates extends Screen {
+public class GuiWDLUpdates extends WDLScreen {
 	@Nullable
 	private final Screen parent;
 
@@ -298,7 +299,7 @@ public class GuiWDLUpdates extends Screen {
 
 		@Override
 		public void initGui() {
-			this.addButton(new Button(
+			this.addButton(new WDLButton(
 					this.width / 2 - 155, 18, 150, 20,
 					I18n.format("wdl.gui.updates.update.viewOnline")) {
 				public @Override void performAction() {
@@ -306,7 +307,7 @@ public class GuiWDLUpdates extends Screen {
 				}
 			});
 			if (release.hiddenInfo != null) {
-				this.addButton(new Button(
+				this.addButton(new WDLButton(
 						this.width / 2 + 5, 18, 150, 20,
 						I18n.format("wdl.gui.updates.update.viewForumPost")) {
 					public @Override void performAction() {

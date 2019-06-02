@@ -26,11 +26,11 @@ import net.minecraft.util.text.TextFormatting;
 import wdl.api.IWDLModWithGui;
 import wdl.api.WDLApi;
 import wdl.api.WDLApi.ModInfo;
-import wdl.gui.widget.Button;
+import wdl.gui.widget.WDLButton;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.GuiList;
 import wdl.gui.widget.GuiList.GuiListEntry;
-import wdl.gui.widget.Screen;
+import wdl.gui.widget.WDLScreen;
 import wdl.gui.widget.TextList;
 
 /**
@@ -43,7 +43,7 @@ import wdl.gui.widget.TextList;
  *
  * @author Pokechu22
  */
-public class GuiWDLExtensions extends Screen {
+public class GuiWDLExtensions extends WDLScreen {
 	/**
 	 * Top of the bottom list.
 	 */
@@ -106,7 +106,7 @@ public class GuiWDLExtensions extends Screen {
 						buttonName = I18n.format("wdl.gui.extensions.defaultSettingsButtonText");
 					}
 
-					this.addButton(new Button(0, 0, 80, 20, guiMod.getButtonName()) {
+					this.addButton(new WDLButton(0, 0, 80, 20, guiMod.getButtonName()) {
 						public @Override void performAction() {
 							if (mod.mod instanceof IWDLModWithGui) {
 								((IWDLModWithGui) mod.mod).openGui(GuiWDLExtensions.this);
@@ -115,7 +115,7 @@ public class GuiWDLExtensions extends Screen {
 					}, (GuiWDLExtensions.this.width / 2) - 180, -1);
 				}
 
-				this.addButton(new Button(0, 0, 80, 20,
+				this.addButton(new WDLButton(0, 0, 80, 20,
 						I18n.format("wdl.gui.extensions."
 								+ (mod.isEnabled() ? "enabled" : "disabled"))) {
 					public @Override void performAction() {

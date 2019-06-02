@@ -30,11 +30,12 @@ import wdl.WDL;
 import wdl.WDLPluginChannels;
 import wdl.config.IConfiguration;
 import wdl.gui.widget.ButtonDisplayGui;
+import wdl.gui.widget.WDLScreen;
 
 /**
  * Provides fast setting for various entity options.
  */
-public class GuiWDLEntityRangePresets extends Screen implements GuiYesNoCallback {
+public class GuiWDLEntityRangePresets extends WDLScreen implements GuiYesNoCallback {
 	@Nullable
 	private final Screen parent;
 	private final WDL wdl;

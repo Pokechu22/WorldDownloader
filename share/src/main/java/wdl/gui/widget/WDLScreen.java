@@ -17,7 +17,7 @@ package wdl.gui.widget;
 /**
  * A specialty screen that can store text fields and lists.
  */
-public class Screen extends ExtGuiScreen {
+public class WDLScreen extends ExtGuiScreen {
 
 	@Override
 	public void mouseDown(int mouseX, int mouseY) { }

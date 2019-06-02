@@ -24,15 +24,15 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 import wdl.WDL;
 import wdl.WDLPluginChannels;
-import wdl.gui.widget.Button;
+import wdl.gui.widget.WDLButton;
 import wdl.gui.widget.ButtonDisplayGui;
-import wdl.gui.widget.Screen;
+import wdl.gui.widget.WDLScreen;
 import wdl.gui.widget.TextList;
 
 /**
  * GUI for requesting permissions.  Again, this is a work in progress.
  */
-public class GuiWDLPermissionRequest extends Screen {
+public class GuiWDLPermissionRequest extends WDLScreen {
 	private static final int TOP_MARGIN = 61, BOTTOM_MARGIN = 32;
 
 	private TextList list;
@@ -79,7 +79,7 @@ public class GuiWDLPermissionRequest extends Screen {
 		this.requestField = this.addTextField(new GuiTextField(0, fontRenderer,
 				width / 2 - 155, 18, 150, 20));
 
-		this.submitButton = this.addButton(new Button(
+		this.submitButton = this.addButton(new WDLButton(
 				width / 2 + 5, 18, 150, 20,
 				"Submit request") {
 			public @Override void performAction() {
@@ -94,7 +94,7 @@ public class GuiWDLPermissionRequest extends Screen {
 
 		this.addButton(new ButtonDisplayGui(this.width / 2 - 155, 39, 100, 20,
 				I18n.format("wdl.gui.permissions.current"), () -> new GuiWDLPermissions(this.parent, this.wdl)));
-		this.addButton(new Button(this.width / 2 - 50, 39, 100, 20,
+		this.addButton(new WDLButton(this.width / 2 - 50, 39, 100, 20,
 				I18n.format("wdl.gui.permissions.request")) {
 			public @Override void performAction() {
 				// Would open this GUI; do nothing.
