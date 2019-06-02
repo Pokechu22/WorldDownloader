@@ -21,6 +21,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.ChatVisibility;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import wdl.WDL;
@@ -180,13 +181,11 @@ public abstract class GuiTurningCameraBase extends WDLScreen {
 			Vec3d from = playerPos.add(offsetX, offsetY, offsetZ);
 			Vec3d to = offsetPos.add(offsetX, offsetY, offsetZ);
 
-			RayTraceResult pos = mc.world.rayTraceBlocks(from, to);
+			RayTraceResult pos = mc.world.func_217299_a(new RayTraceContext(from, to, RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, wdl.player));
 
-			if (pos != null) {
-				double distance = pos.hitVec.distanceTo(playerPos);
-				if (distance < currentDistance && distance > 0) {
-					currentDistance = distance;
-				}
+			double distance = pos.func_216347_e().distanceTo(playerPos);
+			if (distance < currentDistance && distance > 0) {
+				currentDistance = distance;
 			}
 		}
 

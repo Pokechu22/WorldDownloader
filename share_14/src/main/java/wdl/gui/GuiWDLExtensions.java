@@ -67,7 +67,7 @@ public class GuiWDLExtensions extends WDLScreen {
 		public ModList() {
 			super(GuiWDLExtensions.this.mc, GuiWDLExtensions.this.width,
 					bottomLocation, TOP_HEIGHT, bottomLocation, 22);
-			this.showSelectionBox = true;
+			this.renderSelection = true;
 		}
 
 		@Nullable
@@ -175,10 +175,10 @@ public class GuiWDLExtensions extends WDLScreen {
 		}
 
 		@Override
-		public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-			this.height = this.bottom = bottomLocation;
+		public void render(int mouseX, int mouseY, float partialTicks) {
+			this.height = this.y1 = bottomLocation;
 
-			super.drawScreen(mouseX, mouseY, partialTicks);
+			super.render(mouseX, mouseY, partialTicks);
 		}
 
 		@Override
@@ -200,12 +200,12 @@ public class GuiWDLExtensions extends WDLScreen {
 		}
 
 		@Override
-		public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		public void render(int mouseX, int mouseY, float partialTicks) {
 			this.setY(bottomLocation);
 			this.height = GuiWDLExtensions.this.height - bottomLocation;
-			this.bottom = this.height - 32;
+			this.y1 = this.height - 32;
 
-			super.drawScreen(mouseX, mouseY, partialTicks);
+			super.render(mouseX, mouseY, partialTicks);
 
 			drawCenteredString(fontRenderer,
 					I18n.format("wdl.gui.extensions.detailsCaption"),

@@ -65,6 +65,7 @@ public class GuiWDLUpdates extends WDLScreen {
 
 			private final int fontHeight;
 			private int y;
+			private int entryHeight;
 
 			public VersionEntry(Release release) {
 				this.release = release;
@@ -73,7 +74,7 @@ public class GuiWDLUpdates extends WDLScreen {
 				this.title = buildReleaseTitle(release);
 				this.caption = buildVersionInfo(release);
 
-				List<String> body = Utils.wordWrap(release.textOnlyBody, getListWidth());
+				List<String> body = Utils.wordWrap(release.textOnlyBody, getEntryWidth());
 
 				body1 = (body.size() >= 1 ? body.get(0) : "");
 				body2 = (body.size() >= 2 ? body.get(1) : "");
@@ -86,6 +87,7 @@ public class GuiWDLUpdates extends WDLScreen {
 			public void drawEntry(int x, int y, int entryWidth, int entryHeight,
 					int mouseX, int mouseY) {
 				this.y = y;
+				this.entryHeight = getEntryWidth();
 
 				String title;
 				//The 'isSelected' parameter is actually 'isMouseOver'
@@ -107,15 +109,15 @@ public class GuiWDLUpdates extends WDLScreen {
 				fontRenderer.drawString(time, x, y + fontHeight * 5, 0x808080);
 
 				if (mouseX > x && mouseX < x + entryWidth && mouseY > y
-						&& mouseY < y + slotHeight) {
-					fill(x - 2, y - 2, x + entryWidth - 3, y + slotHeight + 2,
+						&& mouseY < y + entryHeight) {
+					fill(x - 2, y - 2, x + entryWidth - 3, y + entryHeight + 2,
 							0x1FFFFFFF);
 				}
 			}
 
 			@Override
 			public boolean mouseDown(int x, int y, int mouseButton) {
-				if (y > this.y && y < this.y + slotHeight) {
+				if (y > this.y && y < this.y + entryHeight) {
 					mc.displayGuiScreen(new GuiWDLSingleUpdate(GuiWDLUpdates.this,
 							this.release));
 

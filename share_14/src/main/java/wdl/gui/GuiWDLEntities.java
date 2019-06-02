@@ -124,7 +124,7 @@ public class GuiWDLEntities extends WDLScreen {
 						0, 0, 90, 18, getButtonText()) {
 					public @Override void performAction() {
 						groupEnabled ^= true;
-						this.displayString = getButtonText();
+						this.setMessage(getButtonText());
 						config.setEntityGroupEnabled(group, groupEnabled);
 					}
 				}, 0, 0);
@@ -135,7 +135,7 @@ public class GuiWDLEntities extends WDLScreen {
 				this.enableGroupButton.setMessage(getButtonText());
 				super.drawEntry(x, y, width, height, mouseX, mouseY);
 				mc.fontRenderer.drawString(this.displayGroup, (x + 110 / 2)
-						- (this.labelWidth / 2), y + slotHeight
+						- (this.labelWidth / 2), y + height
 						- mc.fontRenderer.FONT_HEIGHT - 1, 0xFFFFFF);
 			}
 

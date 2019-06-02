@@ -71,7 +71,7 @@ public class GuiWDLMessages extends WDLScreen {
 				super.drawEntry(x, y, width, height, mouseX, mouseY);
 
 				drawCenteredString(fontRenderer, category.getDisplayName().getFormattedText(),
-						GuiWDLMessages.this.width / 2 - 40, y + slotHeight
+						GuiWDLMessages.this.width / 2 - 40, y + height
 						- mc.fontRenderer.FONT_HEIGHT - 1, 0xFFFFFF);
 
 				if (button.isMouseOver()) {
