@@ -19,7 +19,7 @@ import javax.annotation.OverridingMethodsMustInvokeSuper;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer.EnumChatVisibility;
+import net.minecraft.entity.player.ChatVisibility;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
@@ -53,7 +53,7 @@ public abstract class GuiTurningCameraBase extends WDLScreen {
 	/**
 	 * The previous chat visibility.
 	 */
-	private EnumChatVisibility oldChatVisibility;
+	private ChatVisibility oldChatVisibility;
 	/**
 	 * The player to preview.
 	 */
@@ -241,7 +241,7 @@ public abstract class GuiTurningCameraBase extends WDLScreen {
 		WDL.minecraft.gameSettings.thirdPersonView = 0;
 		WDL.minecraft.gameSettings.hideGUI = true;
 		WDL.minecraft.gameSettings.showDebugInfo = false;
-		WDL.minecraft.gameSettings.chatVisibility = EnumChatVisibility.HIDDEN;
+		WDL.minecraft.gameSettings.chatVisibility = ChatVisibility.HIDDEN;
 		WDL.minecraft.setRenderViewEntity(this.cam);
 	}
 

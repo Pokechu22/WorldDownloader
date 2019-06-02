@@ -22,7 +22,6 @@ import com.google.common.collect.ListMultimap;
 
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import wdl.MessageTypeCategory;
 import wdl.WDL;
@@ -32,7 +31,9 @@ import wdl.config.IConfiguration;
 import wdl.config.settings.MessageSettings;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.GuiList;
+import wdl.gui.widget.GuiList.GuiListEntry;
 import wdl.gui.widget.SettingButton;
+import wdl.gui.widget.WDLButton;
 
 public class GuiWDLMessages extends WDLScreen {
 	/**
@@ -123,7 +124,7 @@ public class GuiWDLMessages extends WDLScreen {
 	}
 
 	private SettingButton enableAllButton;
-	private Button resetButton;
+	private WDLButton resetButton;
 
 	private static final int ID_RESET_ALL = 101;
 

@@ -20,10 +20,10 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resources.I18n;
 import wdl.VersionConstants;
 import wdl.WDL;
-import wdl.gui.widget.WDLButton;
-import wdl.gui.widget.WDLScreen;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.TextList;
+import wdl.gui.widget.WDLButton;
+import wdl.gui.widget.WDLScreen;
 import wdl.versioned.VersionedFunctions;
 
 /**

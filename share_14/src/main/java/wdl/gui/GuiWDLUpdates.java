@@ -28,6 +28,7 @@ import wdl.gui.widget.WDLButton;
 import wdl.gui.widget.WDLScreen;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.GuiList;
+import wdl.gui.widget.GuiList.GuiListEntry;
 import wdl.gui.widget.TextList;
 import wdl.update.Release;
 import wdl.update.WDLUpdateChecker;
@@ -288,7 +289,7 @@ public class GuiWDLUpdates extends WDLScreen {
 	/**
 	 * Gui that shows a single update.
 	 */
-	private class GuiWDLSingleUpdate extends Screen {
+	private class GuiWDLSingleUpdate extends WDLScreen {
 		private final GuiWDLUpdates parent;
 		private final Release release;
 

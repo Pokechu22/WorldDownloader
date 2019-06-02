@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import wdl.WDL;
 import wdl.config.Configuration;
@@ -181,7 +180,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	/**
 	 * The accept button.
 	 */
-	private Button acceptBtn;
+	private WDLButton acceptBtn;
 	/**
 	 * The "New name" field.
 	 */
@@ -193,7 +192,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	/**
 	 * The "New world" button.
 	 */
-	private Button newWorldButton;
+	private WDLButton newWorldButton;
 	/**
 	 * Should the {@link #newNameField} be shown?
 	 */
@@ -217,11 +216,11 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	/**
 	 * The next button (scrolls the list right).
 	 */
-	private Button nextButton;
+	private WDLButton nextButton;
 	/**
 	 * The previous button (scrolls the list left).
 	 */
-	private Button prevButton;
+	private WDLButton prevButton;
 	/**
 	 * The number of world buttons there are.
 	 */

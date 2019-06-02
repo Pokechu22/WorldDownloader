@@ -26,10 +26,10 @@ import wdl.WDL;
 import wdl.WDLPluginChannels;
 import wdl.config.IConfiguration;
 import wdl.config.settings.MiscSettings;
-import wdl.gui.widget.WDLButton;
-import wdl.gui.widget.WDLScreen;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.GuiList;
+import wdl.gui.widget.WDLButton;
+import wdl.gui.widget.WDLScreen;
 import wdl.update.WDLUpdateChecker;
 
 public class GuiWDL extends WDLScreen {

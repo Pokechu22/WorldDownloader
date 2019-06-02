@@ -31,6 +31,12 @@ abstract class ExtButton extends net.minecraft.client.gui.widget.button.Button i
 	 */
 	public abstract void performAction();
 
+	// Renamed
+	@Deprecated
+	public boolean isMouseOver() {
+		return this.isHovered();
+	}
+
 	@Override
 	public boolean mouseClicked(double arg0, double arg1, int arg2) {
 		boolean result = super.mouseClicked(arg0, arg1, arg2);

@@ -24,7 +24,6 @@ import com.google.common.io.Files;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import wdl.WDL;
 import wdl.WorldBackup;
@@ -48,8 +47,8 @@ public class GuiWDLBackup extends WDLScreen {
 	private String description;
 
 	private WorldBackupType backupType;
-	private Button backupTypeButton;
-	private Button doneButton;
+	private WDLButton backupTypeButton;
+	private WDLButton doneButton;
 	private TextFieldWidget customBackupCommandTemplateFld;
 	private String customBackupCommandTemplate;
 	private TextFieldWidget customBackupExtensionFld;

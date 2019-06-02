@@ -35,6 +35,7 @@ import wdl.config.settings.EntitySettings;
 import wdl.config.settings.EntitySettings.TrackDistanceMode;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.GuiList;
+import wdl.gui.widget.GuiList.GuiListEntry;
 import wdl.gui.widget.GuiSlider;
 import wdl.gui.widget.SettingButton;
 import wdl.gui.widget.WDLButton;

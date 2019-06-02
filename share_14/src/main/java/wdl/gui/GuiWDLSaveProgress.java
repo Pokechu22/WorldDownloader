@@ -208,15 +208,15 @@ public class GuiWDLSaveProgress extends GuiTurningCameraBase {
 	private void drawProgressBar(int y, int emptyV, int filledV, float progress) {
 		progress = MathHelper.clamp(progress, 0, 1);
 
-		this.mc.getTextureManager().bindTexture(AbstractGui.ICONS);
+		this.mc.getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
 
 		final int height = 5;
 
 		final int x = (this.width / 2) - (FULL_BAR_WIDTH / 2);
 		final int u = 0; //Texture position.
 
-		drawTexturedModalRect(x, y, u, emptyV, FULL_BAR_WIDTH, height);
-		drawTexturedModalRect(x, y, u, filledV, (int)(FULL_BAR_WIDTH * progress), height);
+		blit(x, y, u, emptyV, FULL_BAR_WIDTH, height);
+		blit(x, y, u, filledV, (int)(FULL_BAR_WIDTH * progress), height);
 	}
 
 	@Override

@@ -26,6 +26,7 @@ import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.GuiNumericTextField;
 import wdl.gui.widget.SettingButton;
 import wdl.gui.widget.WDLButton;
+import wdl.gui.widget.WDLScreen;
 
 public class GuiWDLPlayer extends WDLScreen {
 	private String title;

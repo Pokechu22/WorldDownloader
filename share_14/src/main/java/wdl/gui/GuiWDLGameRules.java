@@ -24,13 +24,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.GameRules.ValueType;
 import wdl.WDL;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.GuiList;
+import wdl.gui.widget.GuiList.GuiListEntry;
 import wdl.gui.widget.GuiNumericTextField;
 import wdl.gui.widget.WDLButton;
 import wdl.gui.widget.WDLScreen;
@@ -76,7 +76,7 @@ public class GuiWDLGameRules extends WDLScreen {
 		private abstract class RuleEntry extends GuiListEntry<RuleEntry> {
 			@Nonnull
 			protected final String ruleName;
-			private Button resetButton;
+			private WDLButton resetButton;
 
 			public RuleEntry(@Nonnull String ruleName) {
 				this.ruleName = ruleName;
@@ -166,7 +166,7 @@ public class GuiWDLGameRules extends WDLScreen {
 		}
 
 		private class BooleanRuleEntry extends RuleEntry {
-			private Button button;
+			private WDLButton button;
 
 			public BooleanRuleEntry(String ruleName) {
 				super(ruleName);
@@ -206,7 +206,7 @@ public class GuiWDLGameRules extends WDLScreen {
 	/** All vanilla game rules and their default values; this list is immutable. */
 	private final Map<String, String> vanillaGameRules;
 
-	private Button doneButton;
+	private WDLButton doneButton;
 
 	/**
 	 * Gets the value of the given rule.

@@ -20,7 +20,6 @@ import javax.annotation.Nullable;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import wdl.WDL;
 import wdl.WDLPluginChannels;
@@ -47,9 +46,9 @@ public class GuiWDLPermissionRequest extends WDLScreen {
 	 */
 	private TextFieldWidget requestField;
 	/**
-	 * GUIButton for submitting the request.
+	 * Button for submitting the request.
 	 */
-	private Button submitButton;
+	private WDLButton submitButton;
 
 	public GuiWDLPermissionRequest(@Nullable Screen parent, WDL wdl) {
 		this.parent = parent;

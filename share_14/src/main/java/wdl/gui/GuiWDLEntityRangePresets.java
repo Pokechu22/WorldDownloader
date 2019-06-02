@@ -22,7 +22,6 @@ import javax.annotation.Nullable;
 import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import wdl.EntityUtils;
 import wdl.EntityUtils.SpigotEntityType;
@@ -30,6 +29,7 @@ import wdl.WDL;
 import wdl.WDLPluginChannels;
 import wdl.config.IConfiguration;
 import wdl.gui.widget.ButtonDisplayGui;
+import wdl.gui.widget.WDLButton;
 import wdl.gui.widget.WDLScreen;
 
 /**
@@ -41,10 +41,10 @@ public class GuiWDLEntityRangePresets extends WDLScreen implements GuiYesNoCallb
 	private final WDL wdl;
 	private final IConfiguration config;
 
-	private Button vanillaButton;
-	private Button spigotButton;
-	private Button serverButton;
-	private Button cancelButton;
+	private WDLButton vanillaButton;
+	private WDLButton spigotButton;
+	private WDLButton serverButton;
+	private WDLButton cancelButton;
 
 	private static final int ID_VANILLA = 0, ID_SPIGOT = 1, ID_SERVER = 2;
 

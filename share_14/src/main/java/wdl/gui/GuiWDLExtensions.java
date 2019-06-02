@@ -26,11 +26,12 @@ import net.minecraft.util.text.TextFormatting;
 import wdl.api.IWDLModWithGui;
 import wdl.api.WDLApi;
 import wdl.api.WDLApi.ModInfo;
-import wdl.gui.widget.WDLButton;
-import wdl.gui.widget.WDLScreen;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.GuiList;
+import wdl.gui.widget.GuiList.GuiListEntry;
 import wdl.gui.widget.TextList;
+import wdl.gui.widget.WDLButton;
+import wdl.gui.widget.WDLScreen;
 
 /**
  * GUI showing the currently enabled mods, and their information.

@@ -371,7 +371,7 @@ public class GuiWDLChunkOverrides extends WDLScreen {
 	/**
 	 * Button for a mode that displays the icon for the given mode.
 	 */
-	private abstract class RequestModeButton extends Button {
+	private abstract class RequestModeButton extends WDLButton {
 		/**
 		 * The mode for this button.
 		 */
