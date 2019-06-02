@@ -485,22 +485,10 @@ public class WDLHooks {
 		wdl.addInfoToCrash(report);
 	}
 
-	/**
-	 * Start button ID. Ascii-encoded 'WDLs' (World Downloader Start).
-	 * Chosen to be unique.
-	 */
-	private static final int WDLs = ('W' << 24) | ('D' << 16) | ('L' << 8) | ('s');
-	/**
-	 * Options button ID. Ascii-encoded 'WDLo' (World Downloader Options).
-	 * Chosen to be unique.
-	 */
-	private static final int WDLo = ('W' << 24) | ('D' << 16) | ('L' << 8) | ('o');
-
 	private class StartDownloadButton extends WDLButton {
 		public StartDownloadButton(Screen menu, int x, int y, int width, int height) {
 			super(x, y, width, height, null);
 			this.menu = menu;
-			this.id = WDLs; // keep unique, even though this isn't used by WDL
 		}
 
 		// The GuiScreen containing this button, as a parent for other GUIs
@@ -580,7 +568,6 @@ public class WDLHooks {
 		public SettingsButton(Screen menu, int x, int y, int width, int height, String displayString) {
 			super(x, y, width, height, displayString);
 			this.menu = menu;
-			this.id = WDLo; // keep unique, even though this isn't used by WDL
 		}
 
 		// The GuiScreen containing this button, as a parent for other GUIs
@@ -615,8 +602,9 @@ public class WDLHooks {
 			Consumer<Button> addButton) {
 		int insertAtYPos = 0;
 
+		String advancementsText = I18n.format("gui.advancements");
 		for (Button btn : buttonList) {
-			if (btn.id == 5) { // Button "Achievements"
+			if (btn.getMessage().equals(advancementsText)) { // Button "Achievements"
 				insertAtYPos = btn.y + 24;
 				break;
 			}
@@ -649,7 +637,7 @@ public class WDLHooks {
 		INSTANCE.handleWDLButtonClick0(gui, button);
 	}
 	protected void handleWDLButtonClick0(IngameMenuScreen gui, Button button) {
-		if (button.id == 1) { // "Disconnect", from vanilla
+		if (button.getMessage().equals(I18n.format("menu.disconnect"))) { // "Disconnect", from vanilla
 			wdl.stopDownload();
 			// Disable the button to prevent double-clicks
 			button.active = false;
