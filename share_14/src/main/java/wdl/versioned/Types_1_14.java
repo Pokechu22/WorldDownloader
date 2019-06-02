@@ -20,7 +20,7 @@ import java.util.Map;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.minecraft.client.GameSettings;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.StringTextComponent;
 
 /**
  * Functions that help deal with things that vary in type between versions.
@@ -45,8 +45,8 @@ final class TypeFunctions {
 	/* (non-javadoc)
 	 * @see VersionedFunctions#customName
 	 */
-	static TextComponentString customName(String name) {
-		return new TextComponentString(name);
+	static StringTextComponent customName(String name) {
+		return new StringTextComponent(name);
 	}
 
 	/* (non-javadoc)

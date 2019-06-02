@@ -36,8 +36,8 @@ import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import wdl.config.settings.GeneratorSettings.Generator;
 
 final class GeneratorFunctions {
@@ -155,8 +155,8 @@ final class GeneratorFunctions {
 		// See GuiWorldEdit.createBackup
 		Minecraft.getInstance().addScheduledTask(() -> {
 			GuiToast guitoast = Minecraft.getInstance().getToastGui();
-			ITextComponent top = new TextComponentTranslation("selectWorld.edit.backupCreated", name);
-			ITextComponent bot = new TextComponentTranslation("selectWorld.edit.backupSize", MathHelper.ceil(fileSize / 1048576.0));
+			ITextComponent top = new TranslationTextComponent("selectWorld.edit.backupCreated", name);
+			ITextComponent bot = new TranslationTextComponent("selectWorld.edit.backupSize", MathHelper.ceil(fileSize / 1048576.0));
 			guitoast.add(new SystemToast(SystemToast.Type.WORLD_BACKUP, top, bot));
 		});
 	}
@@ -170,8 +170,8 @@ final class GeneratorFunctions {
 		Minecraft.getInstance().addScheduledTask(() -> {
 			GuiToast guitoast = Minecraft.getInstance().getToastGui();
 			// NOTE: vanilla translation string is missing (MC-137308)
-			ITextComponent top = new TextComponentTranslation("wdl.toast.backupFailed");
-			ITextComponent bot = new TextComponentString(message);
+			ITextComponent top = new TranslationTextComponent("wdl.toast.backupFailed");
+			ITextComponent bot = new StringTextComponent(message);
 			guitoast.add(new SystemToast(SystemToast.Type.WORLD_BACKUP, top, bot));
 		});
 	}

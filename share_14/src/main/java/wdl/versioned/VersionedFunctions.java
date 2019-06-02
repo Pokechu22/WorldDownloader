@@ -478,7 +478,7 @@ public final class VersionedFunctions {
 	 * @param name The name. Non-null.
 	 * @param <T> The type that is expected to be returned, based on the method
 	 *             being called.
-	 * @return Either a String or a TextComponentString, depending on the version; T
+	 * @return Either a String or a StringTextComponent, depending on the version; T
 	 *         should be inferred to the right one of those.
 	 */
 	@SuppressWarnings("unchecked")
