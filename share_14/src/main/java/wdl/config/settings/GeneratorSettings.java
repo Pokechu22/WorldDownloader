@@ -14,6 +14,8 @@
  */
 package wdl.config.settings;
 
+import static wdl.config.settings.Utils.*;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;

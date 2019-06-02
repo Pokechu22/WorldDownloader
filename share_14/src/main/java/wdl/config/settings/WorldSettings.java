@@ -14,6 +14,8 @@
  */
 package wdl.config.settings;
 
+import static wdl.config.settings.Utils.*;
+
 import java.util.Map;
 
 import net.minecraft.entity.Entity;
