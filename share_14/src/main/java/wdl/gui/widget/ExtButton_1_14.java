@@ -20,10 +20,16 @@ import net.minecraft.client.Minecraft;
  * Extendible button, to deal with changing method signatures between versions.
  * The actual implementation is {@link Button}, and methods are declared in {@link IExtButton}.
  */
-abstract class ExtButton extends GuiButton implements IExtButton {
+abstract class ExtButton extends net.minecraft.client.gui.widget.button.Button implements IExtButton {
 	public ExtButton(int x, int y, int widthIn, int heightIn, String buttonText) {
-		super(-1, x, y, widthIn, heightIn, buttonText);
+		super(x, y, widthIn, heightIn, buttonText, (clicked)->((ExtButton)clicked).performAction());
 	}
+
+	/**
+	 * Also found in the regular button class.
+	 * Right now we're calling this in the accessibility thing too, which may mean it fires twice.
+	 */
+	public abstract void performAction();
 
 	@Override
 	public boolean mouseClicked(double arg0, double arg1, int arg2) {

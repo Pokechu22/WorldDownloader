@@ -16,6 +16,7 @@ package wdl.gui.widget;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
@@ -25,30 +26,30 @@ import org.lwjgl.glfw.GLFW;
 import com.mojang.blaze3d.platform.GlStateManager;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiListExtended;
-import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.gui.widget.list.ExtendedList;
 import wdl.gui.widget.ExtGuiList.ExtGuiListEntry;
 
-abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended<T> implements IExtGuiList<T> {
+abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends ExtendedList<T> implements IExtGuiList<T> {
 
-	static abstract class ExtGuiListEntry<T extends ExtGuiListEntry<T>> extends IGuiListEntry<T> implements IExtGuiListEntry<T> {
+	static abstract class ExtGuiListEntry<T extends ExtGuiListEntry<T>> extends AbstractListEntry<T> implements IExtGuiListEntry<T> {
 
 		private static class ButtonWrapper {
-			public final GuiButton button;
+			public final Button button;
 			public final int x;
 			public final int y;
-			public ButtonWrapper(GuiButton button, int x, int y) {
+			public ButtonWrapper(Button button, int x, int y) {
 				this.button = button;
 				this.x = x;
 				this.y = y;
 			}
 		}
 		private static class TextFieldWrapper {
-			public final GuiTextField field;
+			public final TextFieldWidget field;
 			public final int x;
 			public final int y;
-			public TextFieldWrapper(GuiTextField field, int x, int y) {
+			public TextFieldWrapper(TextFieldWidget field, int x, int y) {
 				this.field = field;
 				this.x = x;
 				this.y = y;
@@ -61,22 +62,19 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended<
 		private ButtonWrapper activeButton;
 
 		@Override
-		public final <B extends GuiButton> B addButton(B button, int x, int y) {
+		public final <B extends Button> B addButton(B button, int x, int y) {
 			this.buttonList.add(new ButtonWrapper(button, x, y));
 			return button;
 		}
 
 		@Override
-		public final <B extends GuiTextField> B addTextField(B field, int x, int y) {
+		public final <B extends TextFieldWidget> B addTextField(B field, int x, int y) {
 			this.fieldList.add(new TextFieldWrapper(field, x, y));
 			return field;
 		}
 
 		@Override
-		public final void drawEntry(int entryWidth, int entryHeight, int mouseX, int mouseY, boolean arg4, float partialTicks) {
-			int x = getX();
-			int y = getY();
-
+		public final void render(int index, int x, int y, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean mouseOver, float partialTicks) {
 			this.drawEntry(x, y, entryWidth, entryHeight, mouseX, mouseY);
 			for (ButtonWrapper button : this.buttonList) {
 				button.button.x = button.x + x + (entryWidth / 2);
@@ -86,7 +84,7 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended<
 			for (TextFieldWrapper field : this.fieldList) {
 				field.field.x = field.x + x + (entryWidth / 2);
 				field.field.y = field.y + y;
-				field.field.drawTextField(mouseX, mouseY, partialTicks);
+				field.field.render(mouseX, mouseY, partialTicks);
 			}
 		}
 
@@ -167,13 +165,18 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended<
 
 	public ExtGuiList(Minecraft mcIn, int widthIn, int heightIn, int topIn, int bottomIn, int slotHeightIn) {
 		super(mcIn, widthIn, heightIn, topIn, bottomIn, slotHeightIn);
+		this.mc = this.minecraft;
 	}
+
+	// Vanilla renamed this field
+	@Deprecated
+	protected final Minecraft mc;
 
 	private int y;
 
 	@Override
 	public final List<T> getEntries() {
-		return super.getChildren();
+		return super.children();
 	}
 
 	@Override
@@ -187,7 +190,7 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended<
 	}
 
 	@Override
-	protected final boolean isSelected(int slotIndex) {
+	protected final boolean isSelectedItem(int slotIndex) {
 		return getEntries().get(slotIndex).isSelected();
 	}
 
@@ -198,7 +201,7 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended<
 	}
 
 	@Override
-	public final int getListWidth() {
+	public final int getRowWidth() {
 		return this.getEntryWidth();
 	}
 
@@ -213,7 +216,7 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended<
 	// Hacks for y offsetting
 	@Override
 	public final boolean mouseClicked(double mouseX, double mouseY, int mouseEvent) {
-		if (mouseY - y >= top && mouseY - y <= bottom) {
+		if (mouseY - y >= y0 && mouseY - y <= y1) {
 			return super.mouseClicked(mouseX, mouseY - y, mouseEvent);
 		} else {
 			return false;
@@ -231,31 +234,32 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended<
 	}
 
 	@Override
-	public final boolean mouseScrolled(double p_mouseScrolled_1_) {
+	public final boolean mouseScrolled(double amount, double mouseX, double mouseY) {
 		// TODO check that the scroll is actually over this...
-		return super.mouseScrolled(p_mouseScrolled_1_);
+		return super.mouseScrolled(amount, mouseX, mouseY);
 	}
 
 	@Override
 	@OverridingMethodsMustInvokeSuper
-	public void drawScreen(int mouseXIn, int mouseYIn, float partialTicks) {
+	public void render(int mouseXIn, int mouseYIn, float partialTicks) {
 		GlStateManager.translatef(0, y, 0);
-		super.drawScreen(mouseXIn, mouseYIn - y, partialTicks);
+		super.render(mouseXIn, mouseYIn - y, partialTicks);
 		GlStateManager.translatef(0, -y, 0);
 	}
 
 	// Make the dirt background use visual positions that match the screen
 	// so that dragging looks less weird
+	// XXX - Typo on mojang's side?
 	@Override
-	protected final void overlayBackground(int y1, int y2,
+	protected final void renderHoleBackground(int y1, int y2,
 			int alpha1, int alpha2) {
 		if (y1 == 0) {
-			super.overlayBackground(y1, y2, alpha1, alpha2);
+			super.renderHoleBackground(y1, y2, alpha1, alpha2);
 			return;
 		} else {
 			GlStateManager.translatef(0, -y, 0);
 
-			super.overlayBackground(y1 + y, y2 + y, alpha1, alpha2);
+			super.renderHoleBackground(y1 + y, y2 + y, alpha1, alpha2);
 
 			GlStateManager.translatef(0, y, 0);
 		}

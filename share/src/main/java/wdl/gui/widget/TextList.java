@@ -46,7 +46,7 @@ public class TextList extends GuiList<TextEntry> {
 	}
 
 	public void addLine(String text) {
-		List<String> lines = Utils.wordWrap(text, getListWidth());
+		List<String> lines = Utils.wordWrap(text, getEntryWidth());
 		lines.stream()
 				.map(line -> new TextEntry(mc, line, 0xFFFFFF))
 				.forEach(getEntries()::add);
@@ -57,7 +57,7 @@ public class TextList extends GuiList<TextEntry> {
 	}
 
 	public void addLinkLine(String text, String URL) {
-		List<String> lines = Utils.wordWrap(text, getListWidth());
+		List<String> lines = Utils.wordWrap(text, getEntryWidth());
 		lines.stream()
 				.map(line -> new LinkEntry(mc, line, URL))
 				.forEach(getEntries()::add);

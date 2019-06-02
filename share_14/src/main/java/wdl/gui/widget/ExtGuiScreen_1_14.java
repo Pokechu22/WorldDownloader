@@ -16,39 +16,43 @@ package wdl.gui.widget;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import org.lwjgl.glfw.GLFW;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.util.text.StringTextComponent;
 import wdl.gui.widget.GuiList.GuiListEntry;
 
-abstract class ExtGuiScreen extends GuiScreen implements IExtGuiScreen {
+abstract class ExtGuiScreen extends net.minecraft.client.gui.screen.Screen implements IExtGuiScreen {
 
 	/**
 	 * Hide the buttonList field from subclasses.
-	 * @deprecated Do not use; use {@link #addButton(GuiButton)} instead.
+	 * @deprecated Do not use; use {@link #addButton} instead.
 	 */
 	@Deprecated
 	protected static final Void buttonList = null;
 
 	private final List<GuiList<?>> listList = new ArrayList<>();
-	private final List<GuiTextField> textFieldList = new ArrayList<>();
+	private final List<TextFieldWidget> textFieldList = new ArrayList<>();
+
+	protected ExtGuiScreen() {
+		super(new StringTextComponent("")); // XXX: Skipping on accessibility data
+	}
 
 	// Called before initGui
 	@Override
-	public final void setWorldAndResolution(Minecraft mc, int width, int height) {
+	public final void init(Minecraft mc, int width, int height) {
 		this.listList.clear();
 		this.textFieldList.clear();
-		super.setWorldAndResolution(mc, width, height);
+		super.init(mc, width, height);
 	}
 
 	@Override
-	public final <T extends GuiButton> T addButton(T buttonIn) {
+	public final <T extends net.minecraft.client.gui.widget.button.Button> T addButton(T buttonIn) {
 		return super.addButton(buttonIn);
 	}
 
@@ -60,14 +64,14 @@ abstract class ExtGuiScreen extends GuiScreen implements IExtGuiScreen {
 	}
 
 	@Override
-	public final <T extends GuiTextField> T addTextField(T field) {
+	public final <T extends TextFieldWidget> T addTextField(T field) {
 		this.textFieldList.add(field);
 		this.children.add(field);
 		return field;
 	}
 
 	@Override
-	public final boolean allowCloseWithEscape() {
+	public final boolean shouldCloseOnEsc() {
 		return this.onCloseAttempt();
 	}
 
@@ -123,7 +127,7 @@ abstract class ExtGuiScreen extends GuiScreen implements IExtGuiScreen {
 		for (GuiList<?> list : this.listList) {
 			list.tick();
 		}
-		for (GuiTextField field : this.textFieldList) {
+		for (TextFieldWidget field : this.textFieldList) {
 			field.tick();
 		}
 	}
@@ -132,11 +136,11 @@ abstract class ExtGuiScreen extends GuiScreen implements IExtGuiScreen {
 	@OverridingMethodsMustInvokeSuper
 	public void render(int mouseX, int mouseY, float partialTicks) {
 		for (GuiList<?> list : this.listList) {
-			list.drawScreen(mouseX, mouseY, partialTicks);
+			list.render(mouseX, mouseY, partialTicks);
 		}
 		super.render(mouseX, mouseY, partialTicks);
-		for (GuiTextField field : this.textFieldList) {
-			field.drawTextField(mouseX, mouseY, partialTicks);
+		for (TextFieldWidget field : this.textFieldList) {
+			field.render(mouseX, mouseY, partialTicks);
 		}
 	}
 }

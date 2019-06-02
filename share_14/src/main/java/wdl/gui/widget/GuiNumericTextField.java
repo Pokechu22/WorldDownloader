@@ -23,8 +23,7 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 public class GuiNumericTextField extends TextFieldWidget {
 	public GuiNumericTextField(int id, FontRenderer fontRenderer,
 			int x, int y, int width, int height) {
-		super(id, fontRenderer, x, y, width,
-				height);
+		super(fontRenderer, x, y, width, height, "Text field"); // XXX Accessibility data
 		setText("0");
 	}
 
