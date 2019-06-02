@@ -43,7 +43,7 @@ public class DropperHandler extends BlockHandler<DropperTileEntity, DispenserCon
 		saveContainerItems(container, blockEntity, 0);
 		saveMethod.accept(clickedPos, blockEntity);
 		if (title != null) {
-			blockEntity.setCustomName(customName(title));
+			blockEntity.func_213903_a(customName(title));
 		}
 		return new TranslationTextComponent("wdl.messages.onGuiClosedInfo.savedTileEntity.dropper");
 	}

@@ -36,11 +36,14 @@ public class BeaconHandler extends BlockHandler<BeaconTileEntity, BeaconContaine
 	public ITextComponent handle(BlockPos clickedPos, BeaconContainer container,
 			BeaconTileEntity blockEntity, IBlockReader world,
 			BiConsumer<BlockPos, BeaconTileEntity> saveMethod) throws HandlerException {
-		// NOTE: beacons do not have custom names, see https://bugs.mojang.com/browse/MC-124395
 		IInventory beaconInventory = container.getTileEntity();
+		String title = getCustomDisplayName(beaconInventory);
 		saveContainerItems(container, blockEntity, 0);
 		saveInventoryFields(beaconInventory, blockEntity);
 		saveMethod.accept(clickedPos, blockEntity);
+		if (title != null) {
+			blockEntity.setCustomName(customName(title));
+		}
 		return new TranslationTextComponent("wdl.messages.onGuiClosedInfo.savedTileEntity.beacon");
 	}
 }

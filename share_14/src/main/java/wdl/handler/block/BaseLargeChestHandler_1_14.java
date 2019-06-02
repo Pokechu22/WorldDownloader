@@ -92,8 +92,8 @@ abstract class BaseLargeChestHandler<B extends ChestTileEntity> extends BlockHan
 		if (displayName != null) {
 			// This is NOT server-accurate.  But making it correct is not easy.
 			// Only one of the chests needs to have the name.
-			chest1.setCustomName(customName(displayName));
-			chest2.setCustomName(customName(displayName));
+			chest1.func_213903_a(customName(displayName));
+			chest2.func_213903_a(customName(displayName));
 		}
 
 		saveMethod.accept(chestPos1, chest1);

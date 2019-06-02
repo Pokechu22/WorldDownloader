@@ -43,7 +43,7 @@ public class BrewingStandHandler extends BlockHandler<BrewingStandTileEntity, Br
 		saveContainerItems(container, blockEntity, 0);
 		saveInventoryFields(brewingInventory, blockEntity);
 		if (title != null) {
-			blockEntity.setCustomName(customName(title));
+			blockEntity.func_213903_a(customName(title));
 		}
 		saveMethod.accept(clickedPos, blockEntity);
 		return new TranslationTextComponent("wdl.messages.onGuiClosedInfo.savedTileEntity.brewingStand");
