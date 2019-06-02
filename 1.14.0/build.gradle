@@ -125,7 +125,7 @@ sourceSets {
     }
     test {
         java {
-            srcDir project(':share').file("src/test/java")
+            srcDir project(':share_14').file("src/test/java")
             exclude "wdl/MixinTest**.java"
             exclude "wdl/NoMixinTest_1_9.java"
             exclude "wdl/NoMixinTest_1_10.java"
