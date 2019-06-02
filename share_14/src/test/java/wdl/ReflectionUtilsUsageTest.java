@@ -15,20 +15,20 @@
 package wdl;
 
 import java.util.List;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.multiplayer.ChunkProviderClient;
-import net.minecraft.client.network.NetHandlerPlayClient;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.multiplayer.ClientChunkProvider;
+import net.minecraft.client.network.play.ClientPlayNetHandler;
 import net.minecraft.crash.CrashReport;
-import net.minecraft.entity.IMerchant;
-import net.minecraft.entity.passive.EntityVillager;
+import net.minecraft.entity.merchant.IMerchant;
+import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.passive.EquineEntity;
-import net.minecraft.inventory.ContainerBrewingStand;
-import net.minecraft.inventory.ContainerDispenser;
-import net.minecraft.inventory.ContainerFurnace;
-import net.minecraft.inventory.ContainerHopper;
 import net.minecraft.inventory.ContainerHorseChest;
-import net.minecraft.inventory.ContainerMerchant;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.container.BrewingStandContainer;
+import net.minecraft.inventory.container.DispenserContainer;
+import net.minecraft.inventory.container.FurnaceContainer;
+import net.minecraft.inventory.container.HopperContainer;
+import net.minecraft.inventory.container.MerchantContainer;
 import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.chunk.storage.AnvilChunkLoader;
 import org.junit.Test;
@@ -78,13 +78,13 @@ public class ReflectionUtilsUsageTest {
 	/** Handles {@link WDL#getRealmName()} */
 	@Test
 	public void testWDLGetRealmName() {
-		ReflectionUtils.findField(NetHandlerPlayClient.class, GuiScreen.class);
+		ReflectionUtils.findField(ClientPlayNetHandler.class, Screen.class);
 	}
 
 	/** Handles {@link WDL#saveChunks(GuiWDLSaveProgress)} */
 	@Test
 	public void testWDLSaveChunks() {
-		ReflectionUtils.findField(ChunkProviderClient.class, VersionedFunctions.getChunkListClass());
+		ReflectionUtils.findField(ClientChunkProvider.class, VersionedFunctions.getChunkListClass());
 	}
 
 	/** Handles {@link WDLChunkLoaderBase#WDLChunkLoaderBase(File)} */
@@ -96,25 +96,25 @@ public class ReflectionUtilsUsageTest {
 	/** Handles {@link BrewingStandHandler#handle} */
 	@Test
 	public void testBrewingStandHandler() {
-		ReflectionUtils.findField(ContainerBrewingStand.class, IInventory.class);
+		ReflectionUtils.findField(BrewingStandContainer.class, IInventory.class);
 	}
 
 	/** Handles {@link DispenserHandler#handle} and {@link DropperHandler#handle} */
 	@Test
 	public void testDispenserHandler() {
-		ReflectionUtils.findField(ContainerDispenser.class, IInventory.class);
+		ReflectionUtils.findField(DispenserContainer.class, IInventory.class);
 	}
 
 	/** Handles {@link FurnaceHandler#handle} */
 	@Test
 	public void testFuranceHandler() {
-		ReflectionUtils.findField(ContainerFurnace.class, IInventory.class);
+		ReflectionUtils.findField(FurnaceContainer.class, IInventory.class);
 	}
 
 	/** Handles {@link HopperHandler#handle} */
 	@Test
 	public void testHopperHandler() {
-		ReflectionUtils.findField(ContainerHopper.class, IInventory.class);
+		ReflectionUtils.findField(HopperContainer.class, IInventory.class);
 	}
 
 	// Skipping ShulkerBoxHandler due to version properties; testing is mostly redundant anyways
@@ -129,7 +129,7 @@ public class ReflectionUtilsUsageTest {
 	/** Handles {@link VillagerHandler#copyData(ContainerMerchant, EntityVillager, boolean)} */
 	@Test
 	public void testVillagerHandler() {
-		ReflectionUtils.findField(ContainerMerchant.class, IMerchant.class);
-		ReflectionUtils.findField(EntityVillager.class, MerchantRecipeList.class);
+		ReflectionUtils.findField(MerchantContainer.class, IMerchant.class);
+		ReflectionUtils.findField(VillagerEntity.class, MerchantRecipeList.class);
 	}
 }

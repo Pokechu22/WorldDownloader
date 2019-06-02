@@ -18,24 +18,24 @@ import com.mojang.authlib.GameProfile;
 import java.util.UUID;
 import junit.framework.ComparisonFailure;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.GuiIngame;
-import net.minecraft.client.gui.GuiNewChat;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.gui.IngameGui;
 import net.minecraft.client.gui.MapItemRenderer;
-import net.minecraft.client.multiplayer.WorldClient;
-import net.minecraft.client.network.NetHandlerPlayClient;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.InventoryBasic;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetHandlerPlayServer;
-import net.minecraft.network.Packet;
+import net.minecraft.client.gui.NewChatGui;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.network.play.ClientPlayNetHandler;
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.IPacket;
+import net.minecraft.network.play.ServerPlayNetHandler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.PlayerInteractionManager;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -98,8 +98,8 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 	protected TestWorld.ClientWorld clientWorld;
 	protected TestWorld.ServerWorld serverWorld;
 	/** Player entities.  Both have valid, empty inventories. */
-	protected EntityPlayerSP clientPlayer;
-	protected EntityPlayerMP serverPlayer;
+	protected ClientPlayerEntity clientPlayer;
+	protected ServerPlayerEntity serverPlayer;
 
 	protected Minecraft mc;
 
@@ -111,7 +111,7 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 		mc = mock(Minecraft.class, withSettings().defaultAnswer(RETURNS_DEEP_STUBS));
 		ReflectionUtils.findAndSetPrivateField(null, Minecraft.class, Minecraft.class, mc);
 
-		doAnswer(AdditionalAnswers.<GuiScreen>answerVoid(screen -> {
+		doAnswer(AdditionalAnswers.<Screen>answerVoid(screen -> {
 			if (screen instanceof GuiContainer) {
 				clientPlayer.openContainer = ((GuiContainer)screen).inventorySlots;
 			} else {
@@ -120,16 +120,16 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 			mc.currentScreen = screen;
 		})).when(mc).displayGuiScreen(any());
 		when(mc.isCallingFromMinecraftThread()).thenReturn(true);
-		mc.ingameGUI = mock(GuiIngame.class);
-		when(mc.ingameGUI.getChatGUI()).thenReturn(mock(GuiNewChat.class));
+		mc.ingameGUI = mock(IngameGui.class);
+		when(mc.ingameGUI.getChatGUI()).thenReturn(mock(NewChatGui.class));
 
 		clientWorld = TestWorld.makeClient();
 		serverWorld = TestWorld.makeServer();
 
-		NetHandlerPlayClient nhpc = new NetHandlerPlayClient(mc, new GuiScreen() {}, null, new GameProfile(UUID.randomUUID(), "ClientPlayer"));
-		ReflectionUtils.findAndSetPrivateField(nhpc, WorldClient.class, clientWorld);
+		ClientPlayNetHandler nhpc = new ClientPlayNetHandler(mc, new Screen() {}, null, new GameProfile(UUID.randomUUID(), "ClientPlayer"));
+		ReflectionUtils.findAndSetPrivateField(nhpc, ClientWorld.class, clientWorld);
 		clientPlayer = VersionedFunctions.makePlayer(mc, clientWorld, nhpc,
-				mock(EntityPlayerSP.class, withSettings().defaultAnswer(RETURNS_DEEP_STUBS))); // Use a mock for the rest of the defaults
+				mock(ClientPlayerEntity.class, withSettings().defaultAnswer(RETURNS_DEEP_STUBS))); // Use a mock for the rest of the defaults
 		mc.player = clientPlayer;
 		Class gameRendererClass = VersionedFunctions.getGameRendererClass();
 		Object mockGameRenderer = mock(gameRendererClass);
@@ -141,16 +141,16 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 
 		mc.gameSettings = VersionedFunctions.createNewGameSettings();
 
-		NetHandlerPlayServer nhps = mock(NetHandlerPlayServer.class);
-		doAnswer(AdditionalAnswers.<Packet<NetHandlerPlayClient>>answerVoid(
+		ServerPlayNetHandler nhps = mock(ServerPlayNetHandler.class);
+		doAnswer(AdditionalAnswers.<IPacket<ClientPlayNetHandler>>answerVoid(
 				packet -> packet.processPacket(nhpc)))
 				.when(nhps).sendPacket(any());
-		serverPlayer = new EntityPlayerMP(mock(MinecraftServer.class, withSettings().defaultAnswer(RETURNS_DEEP_STUBS)),
+		serverPlayer = new ServerPlayerEntity(mock(MinecraftServer.class, withSettings().defaultAnswer(RETURNS_DEEP_STUBS)),
 				serverWorld, new GameProfile(UUID.randomUUID(), "ServerPlayer"),
 				mock(PlayerInteractionManager.class));
 		serverPlayer.connection = nhps;
 
-		serverPlayer.inventory = new InventoryPlayer(serverPlayer);
+		serverPlayer.inventory = new PlayerInventory(serverPlayer);
 		clientPlayer.world = clientWorld;
 		serverPlayer.world = serverWorld;
 	}
@@ -171,7 +171,7 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 	 * @param pos The position
 	 * @param block The block to put
 	 */
-	protected void placeBlockAt(BlockPos pos, IBlockState state) {
+	protected void placeBlockAt(BlockPos pos, BlockState state) {
 		clientWorld.setBlockState(pos, state);
 		serverWorld.setBlockState(pos, state);
 	}
@@ -183,7 +183,7 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 	 * @param block The block to put
 	 * @param facing The direction to place the block from
 	 */
-	protected void placeBlockAt(BlockPos pos, Block block, EnumFacing facing) {
+	protected void placeBlockAt(BlockPos pos, Block block, Direction facing) {
 		clientWorld.placeBlockAt(pos, block, clientPlayer, facing);
 		serverWorld.placeBlockAt(pos, block, serverPlayer, facing);
 	}
@@ -194,7 +194,7 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 	 * @param expected The expected NBT
 	 * @param actual The actual NBT
 	 */
-	protected void assertSameNBT(NBTTagCompound expected, NBTTagCompound actual) {
+	protected void assertSameNBT(CompoundNBT expected, CompoundNBT actual) {
 		// Don't use real AssertionError, but instead use a special JUnit one,
 		// which has an interactive comparison tool
 		if (!expected.equals(actual)) {
@@ -209,7 +209,7 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 	 * @see org.junit.Assume
 	 */
 	protected static void assumeMixinsApplied() {
-		boolean applied = INetworkNameable.class.isAssignableFrom(InventoryBasic.class);
+		boolean applied = INetworkNameable.class.isAssignableFrom(Inventory.class);
 		if (!applied) {
 			LOGGER.warn("Mixins were not applied; skipping this test");
 		}

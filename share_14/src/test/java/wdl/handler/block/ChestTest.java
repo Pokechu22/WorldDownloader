@@ -14,11 +14,11 @@
  */
 package wdl.handler.block;
 
-import net.minecraft.init.Blocks;
-import net.minecraft.tileentity.TileEntityChest;
+import net.minecraft.block.Blocks;
+import net.minecraft.tileentity.ChestTileEntity;
 
-public class ChestTest extends BaseChestTest<TileEntityChest, ChestHandler> {
+public class ChestTest extends BaseChestTest<ChestTileEntity, ChestHandler> {
 	public ChestTest() {
-		super(Blocks.CHEST, Blocks.TRAPPED_CHEST, TileEntityChest.class, ChestHandler.class);
+		super(Blocks.CHEST, Blocks.TRAPPED_CHEST, ChestTileEntity.class, ChestHandler.class);
 	}
 }

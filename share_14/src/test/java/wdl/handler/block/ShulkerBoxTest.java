@@ -14,11 +14,11 @@
  */
 package wdl.handler.block;
 
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.ContainerShulkerBox;
+import net.minecraft.block.Blocks;
+import net.minecraft.inventory.container.ShulkerBoxContainer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntityShulkerBox;
+import net.minecraft.item.Items;
+import net.minecraft.tileentity.ShulkerBoxTileEntity;
 import net.minecraft.util.math.BlockPos;
 import org.junit.Test;
 import wdl.handler.HandlerException;
@@ -34,10 +34,10 @@ import net.minecraft.tileentity.TileEntityShulkerBox;
 import net.minecraft.util.math.BlockPos;
 import wdl.handler.HandlerException;
 
-public class ShulkerBoxTest extends AbstractBlockHandlerTest<TileEntityShulkerBox, ContainerShulkerBox, ShulkerBoxHandler> {
+public class ShulkerBoxTest extends AbstractBlockHandlerTest<ShulkerBoxTileEntity, ShulkerBoxContainer, ShulkerBoxHandler> {
 
 	public ShulkerBoxTest() {
-		super(TileEntityShulkerBox.class, ContainerShulkerBox.class, ShulkerBoxHandler.class);
+		super(ShulkerBoxTileEntity.class, ShulkerBoxContainer.class, ShulkerBoxHandler.class);
 	}
 
 	@Test
@@ -45,7 +45,7 @@ public class ShulkerBoxTest extends AbstractBlockHandlerTest<TileEntityShulkerBo
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.RED_SHULKER_BOX);
-		TileEntityShulkerBox te = makeBlockEntity(pos);
+		ShulkerBoxTileEntity te = makeBlockEntity(pos);
 		te.setInventorySlotContents(0, new ItemStack(Blocks.REDSTONE_BLOCK, 64));
 
 		runHandler(pos, makeClientContainer(pos));
@@ -57,7 +57,7 @@ public class ShulkerBoxTest extends AbstractBlockHandlerTest<TileEntityShulkerBo
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.LIME_SHULKER_BOX);
-		TileEntityShulkerBox te = makeBlockEntity(pos);
+		ShulkerBoxTileEntity te = makeBlockEntity(pos);
 		te.setCustomName(customName("Favorite things"));
 		te.setInventorySlotContents(13, new ItemStack(Items.POISONOUS_POTATO, 64));
 
@@ -72,7 +72,7 @@ public class ShulkerBoxTest extends AbstractBlockHandlerTest<TileEntityShulkerBo
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.PURPLE_SHULKER_BOX);
-		TileEntityShulkerBox te = makeBlockEntity(pos);
+		ShulkerBoxTileEntity te = makeBlockEntity(pos);
 		te.setCustomName(customName("Shulker Box"));
 
 		runHandler(pos, makeClientContainer(pos));

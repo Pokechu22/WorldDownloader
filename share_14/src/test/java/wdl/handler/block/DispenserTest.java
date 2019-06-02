@@ -14,10 +14,10 @@
  */
 package wdl.handler.block;
 
-import net.minecraft.init.Blocks;
-import net.minecraft.inventory.ContainerDispenser;
+import net.minecraft.block.Blocks;
+import net.minecraft.inventory.container.DispenserContainer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntityDispenser;
+import net.minecraft.tileentity.DispenserTileEntity;
 import net.minecraft.util.math.BlockPos;
 import org.junit.Test;
 import wdl.handler.HandlerException;
@@ -32,10 +32,10 @@ import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.util.math.BlockPos;
 import wdl.handler.HandlerException;
 
-public class DispenserTest extends AbstractBlockHandlerTest<TileEntityDispenser, ContainerDispenser, DispenserHandler> {
+public class DispenserTest extends AbstractBlockHandlerTest<DispenserTileEntity, DispenserContainer, DispenserHandler> {
 
 	public DispenserTest() {
-		super(TileEntityDispenser.class, ContainerDispenser.class, DispenserHandler.class);
+		super(DispenserTileEntity.class, DispenserContainer.class, DispenserHandler.class);
 	}
 
 	@Test
@@ -43,7 +43,7 @@ public class DispenserTest extends AbstractBlockHandlerTest<TileEntityDispenser,
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.DISPENSER);
-		TileEntityDispenser te = makeBlockEntity(pos);
+		DispenserTileEntity te = makeBlockEntity(pos);
 		te.setInventorySlotContents(0, new ItemStack(Blocks.TNT));
 		te.setInventorySlotContents(8, new ItemStack(Blocks.TNT));
 
@@ -56,7 +56,7 @@ public class DispenserTest extends AbstractBlockHandlerTest<TileEntityDispenser,
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.DISPENSER);
-		TileEntityDispenser te = makeBlockEntity(pos);
+		DispenserTileEntity te = makeBlockEntity(pos);
 		te.setCustomName(customName("Something"));
 
 		runHandler(pos, makeClientContainer(pos));
@@ -70,7 +70,7 @@ public class DispenserTest extends AbstractBlockHandlerTest<TileEntityDispenser,
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.DISPENSER);
-		TileEntityDispenser te = makeBlockEntity(pos);
+		DispenserTileEntity te = makeBlockEntity(pos);
 		te.setCustomName(customName("Dispenser"));
 
 		runHandler(pos, makeClientContainer(pos));

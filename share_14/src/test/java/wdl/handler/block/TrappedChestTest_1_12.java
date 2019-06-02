@@ -14,8 +14,8 @@
  */
 package wdl.handler.block;
 
-import net.minecraft.init.Blocks;
-import net.minecraft.tileentity.TileEntityChest;
+import net.minecraft.block.Blocks;
+import net.minecraft.tileentity.ChestTileEntity;
 import wdl.handler.block.TrappedChestTest.TestImpl;
 
 
@@ -27,9 +27,9 @@ import wdl.handler.block.TrappedChestTest.TestImpl;
  * rather enterprise-grade...
  */
 class TrappedChestTest {
-	public static class TestImpl extends BaseChestTest<TileEntityChest, ChestHandler> {
+	public static class TestImpl extends BaseChestTest<ChestTileEntity, ChestHandler> {
 		public TestImpl() {
-			super(Blocks.TRAPPED_CHEST, Blocks.CHEST, TileEntityChest.class, ChestHandler.class);
+			super(Blocks.TRAPPED_CHEST, Blocks.CHEST, ChestTileEntity.class, ChestHandler.class);
 		}
 	}
 }

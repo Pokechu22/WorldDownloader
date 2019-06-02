@@ -19,7 +19,7 @@ import java.util.Set;
 import com.google.common.collect.Sets;
 import net.minecraft.client.resources.LanguageManager;
 import net.minecraft.client.resources.ResourceIndex;
-import net.minecraft.init.Bootstrap;
+import net.minecraft.util.registry.Bootstrap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.runner.RunWith;

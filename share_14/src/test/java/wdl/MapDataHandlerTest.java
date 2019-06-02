@@ -15,11 +15,11 @@
 package wdl;
 
 import com.mojang.authlib.GameProfile;
-import net.minecraft.client.entity.EntityOtherPlayerMP;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
+import net.minecraft.client.entity.player.RemoteClientPlayerEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.play.server.SPacketMaps;
+import net.minecraft.item.Items;
+import net.minecraft.network.play.server.SMapDataPacket;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.storage.MapData;
 import net.minecraft.world.storage.MapData.MapInfo;
@@ -54,7 +54,7 @@ public class MapDataHandlerTest extends MaybeMixinTest {
 	@Test
 	public void testDimension() {
 		for (DimensionType dim : DIMENSIONS) {
-			EntityPlayer owner = new EntityOtherPlayerMP(TestWorld.makeClient(dim), mock(GameProfile.class));
+			PlayerEntity owner = new RemoteClientPlayerEntity(TestWorld.makeClient(dim), mock(GameProfile.class));
 			owner.inventory.setInventorySlotContents(10, SOME_MAP_ITEM);
 			MapData map = new MapData("test");
 			map.trackingPosition = true;
@@ -74,7 +74,7 @@ public class MapDataHandlerTest extends MaybeMixinTest {
 	 */
 	@Test
 	public void testDefaultDimension() {
-		EntityPlayer owner = new EntityOtherPlayerMP(TestWorld.makeClient(), mock(GameProfile.class));
+		PlayerEntity owner = new RemoteClientPlayerEntity(TestWorld.makeClient(), mock(GameProfile.class));
 		owner.inventory.setInventorySlotContents(10, SOME_MAP_ITEM);
 		MapData map = new MapData("test");
 		map.trackingPosition = true;
@@ -100,7 +100,7 @@ public class MapDataHandlerTest extends MaybeMixinTest {
 		};
 		for (int[] pos : positions) {
 			for (byte scale = 0; scale <= 4; scale++) {
-				EntityPlayer owner = new EntityOtherPlayerMP(TestWorld.makeClient(), mock(GameProfile.class));
+				PlayerEntity owner = new RemoteClientPlayerEntity(TestWorld.makeClient(), mock(GameProfile.class));
 				owner.inventory.setInventorySlotContents(10, SOME_MAP_ITEM);
 				owner.posX = pos[0];
 				owner.posZ = pos[1];
@@ -131,7 +131,7 @@ public class MapDataHandlerTest extends MaybeMixinTest {
 			map.scale = scale;
 			map.trackingPosition = true;
 
-			EntityPlayer owner = new EntityOtherPlayerMP(TestWorld.makeClient(), mock(GameProfile.class));
+			PlayerEntity owner = new RemoteClientPlayerEntity(TestWorld.makeClient(), mock(GameProfile.class));
 			owner.inventory.setInventorySlotContents(10, SOME_MAP_ITEM);
 			owner.posX = 900;
 			owner.posZ = 0;
@@ -174,7 +174,7 @@ public class MapDataHandlerTest extends MaybeMixinTest {
 	 */
 	private MapData copyMapData(MapData map) {
 		MapInfo info = map.new MapInfo(null);
-		SPacketMaps mapPacket = (SPacketMaps)info.getPacket(SOME_MAP_ITEM);
+		SMapDataPacket mapPacket = (SMapDataPacket)info.getPacket(SOME_MAP_ITEM);
 		MapData result = new MapData("test");
 		mapPacket.setMapdataTo(result);
 		return result;

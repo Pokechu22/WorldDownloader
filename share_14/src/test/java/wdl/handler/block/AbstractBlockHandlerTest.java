@@ -18,10 +18,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import net.minecraft.block.BlockContainer;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.inventory.Container;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.ContainerBlock;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import org.junit.Test;
@@ -120,12 +120,12 @@ public abstract class AbstractBlockHandlerTest<B extends TileEntity, C extends C
 	protected <T extends TileEntity> T makeBlockEntity(BlockPos pos) {
 		origTEPoses.add(pos);
 
-		IBlockState serverState = clientWorld.getBlockState(pos);
-		BlockContainer serverBlock = (BlockContainer)(serverState.getBlock());
+		BlockState serverState = clientWorld.getBlockState(pos);
+		ContainerBlock serverBlock = (ContainerBlock)(serverState.getBlock());
 		TileEntity serverBE = VersionedFunctions.createNewBlockEntity(clientWorld, serverBlock, serverState);
 
-		IBlockState clientState = clientWorld.getBlockState(pos);
-		BlockContainer clientBlock = (BlockContainer)(clientState.getBlock());
+		BlockState clientState = clientWorld.getBlockState(pos);
+		ContainerBlock clientBlock = (ContainerBlock)(clientState.getBlock());
 		TileEntity clientBE = VersionedFunctions.createNewBlockEntity(clientWorld, clientBlock, clientState);
 
 		assertNotNull(clientBE);
@@ -193,9 +193,9 @@ public abstract class AbstractBlockHandlerTest<B extends TileEntity, C extends C
 	 */
 	protected void assertSameNBT(TileEntity expected, TileEntity actual) {
 		// Can't call these methods directly because writeToNBT returns void in 1.9
-		NBTTagCompound expectedNBT = new NBTTagCompound();
+		CompoundNBT expectedNBT = new CompoundNBT();
 		expected.write(expectedNBT);
-		NBTTagCompound actualNBT = new NBTTagCompound();
+		CompoundNBT actualNBT = new CompoundNBT();
 		actual.write(actualNBT);
 		assertSameNBT(expectedNBT, actualNBT);
 	}

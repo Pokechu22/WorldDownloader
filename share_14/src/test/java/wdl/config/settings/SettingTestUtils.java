@@ -17,7 +17,7 @@ package wdl.config.settings;
 import java.util.function.Consumer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import wdl.config.CyclableSetting;
 import wdl.config.DefaultConfiguration;
 import wdl.config.Setting;
@@ -69,8 +69,8 @@ public final class SettingTestUtils {
 	public static void assertValidTranslationString(ITextComponent component) {
 		// Check to make sure it is a translation component in the first place
 		// (this is a bit of a dirty check, and if it fails in the future that's somewhat fine)
-		assertThat(component, is(instanceOf(TextComponentTranslation.class)));
-		TextComponentTranslation transComponent = (TextComponentTranslation) component;
+		assertThat(component, is(instanceOf(TranslationTextComponent.class)));
+		TranslationTextComponent transComponent = (TranslationTextComponent) component;
 		assertTrue("Translation key should be present: " + transComponent.getKey(),
 				I18n.hasKey(transComponent.getKey()));
 		// Make sure it can translate

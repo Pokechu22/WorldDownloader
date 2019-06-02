@@ -17,14 +17,14 @@ package wdl;
 
 import java.util.Collections;
 import java.util.function.Consumer;
-import net.minecraft.init.Blocks;
-import net.minecraft.network.play.server.SPacketBlockAction;
-import net.minecraft.network.play.server.SPacketChat;
-import net.minecraft.network.play.server.SPacketCustomPayload;
-import net.minecraft.network.play.server.SPacketMaps;
-import net.minecraft.network.play.server.SPacketUnloadChunk;
+import net.minecraft.block.Blocks;
+import net.minecraft.network.play.server.SBlockActionPacket;
+import net.minecraft.network.play.server.SChatPacket;
+import net.minecraft.network.play.server.SCustomPayloadPlayPacket;
+import net.minecraft.network.play.server.SMapDataPacket;
+import net.minecraft.network.play.server.SUnloadChunkPacket;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.StringTextComponent;
 import org.junit.Test;
 import wdl.handler.AbstractWorldBehaviorTest;
 import wdl.versioned.VersionedFunctions;
@@ -74,7 +74,7 @@ public class WDLHooksTest extends AbstractWorldBehaviorTest {
 	public void testHandleChunkUnload() {
 		doWithMockHooks(mock -> {
 			makeMockWorld();
-			SPacketUnloadChunk packet = new SPacketUnloadChunk(4, 4);
+			SUnloadChunkPacket packet = new SUnloadChunkPacket(4, 4);
 			clientPlayer.connection.processChunkUnload(packet);
 
 			verify(mock).onNHPCHandleChunkUnload0(same(clientPlayer.connection), any(), same(packet));
@@ -85,7 +85,7 @@ public class WDLHooksTest extends AbstractWorldBehaviorTest {
 	public void testDisconnect() {
 		doWithMockHooks(mock -> {
 			makeMockWorld();
-			TextComponentString reason = new TextComponentString("Disconnected");
+			StringTextComponent reason = new StringTextComponent("Disconnected");
 			clientPlayer.connection.onDisconnect(reason);
 
 			verify(mock).onNHPCDisconnect0(clientPlayer.connection, reason);
@@ -96,7 +96,7 @@ public class WDLHooksTest extends AbstractWorldBehaviorTest {
 	public void testHandleBlockAction() {
 		doWithMockHooks(mock -> {
 			makeMockWorld();
-			SPacketBlockAction packet = new SPacketBlockAction(BlockPos.ORIGIN, Blocks.NOTE_BLOCK, 0, 0);
+			SBlockActionPacket packet = new SBlockActionPacket(BlockPos.ORIGIN, Blocks.NOTE_BLOCK, 0, 0);
 			clientPlayer.connection.handleBlockAction(packet);
 
 			verify(mock).onNHPCHandleBlockAction0(clientPlayer.connection, packet);
@@ -107,7 +107,7 @@ public class WDLHooksTest extends AbstractWorldBehaviorTest {
 	public void testHandleCustomPayload() {
 		doWithMockHooks(mock -> {
 			makeMockWorld();
-			SPacketCustomPayload packet = VersionedFunctions.makeServerPluginMessagePacket("somechannel", new byte[0]);
+			SCustomPayloadPlayPacket packet = VersionedFunctions.makeServerPluginMessagePacket("somechannel", new byte[0]);
 			clientPlayer.connection.handleCustomPayload(packet);
 
 			verify(mock).onNHPCHandleCustomPayload0(clientPlayer.connection, packet);
@@ -118,7 +118,7 @@ public class WDLHooksTest extends AbstractWorldBehaviorTest {
 	public void testHandleChat() {
 		doWithMockHooks(mock -> {
 			makeMockWorld();
-			SPacketChat packet = new SPacketChat(new TextComponentString("Hello world"));
+			SChatPacket packet = new SChatPacket(new StringTextComponent("Hello world"));
 			clientPlayer.connection.handleChat(packet);
 
 			verify(mock).onNHPCHandleChat0(clientPlayer.connection, packet);
@@ -129,7 +129,7 @@ public class WDLHooksTest extends AbstractWorldBehaviorTest {
 	public void testHandleMaps() {
 		doWithMockHooks(mock -> {
 			makeMockWorld();
-			SPacketMaps packet = new SPacketMaps(0, (byte)0, false, Collections.emptyList(), new byte[0], 0, 0, 0, 0);
+			SMapDataPacket packet = new SMapDataPacket(0, (byte)0, false, Collections.emptyList(), new byte[0], 0, 0, 0, 0);
 			clientPlayer.connection.handleMaps(packet);
 
 			verify(mock).onNHPCHandleMaps0(clientPlayer.connection, packet);

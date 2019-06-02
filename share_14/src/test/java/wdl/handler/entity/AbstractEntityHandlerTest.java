@@ -19,12 +19,12 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import java.util.List;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import org.junit.Test;
 import wdl.handler.AbstractWorldBehaviorTest;
@@ -144,10 +144,10 @@ public abstract class AbstractEntityHandlerTest<E extends Entity, C extends Cont
 			clientEntity.posZ = serverEntity.posZ;
 			clientEntity.rotationPitch = serverEntity.rotationPitch;
 			clientEntity.rotationYaw = serverEntity.rotationYaw;
-			if (clientEntity instanceof EntityLivingBase) {
-				for (EntityEquipmentSlot slot : EntityEquipmentSlot.values()) {
-					ItemStack item = ((EntityLivingBase) serverEntity).getItemStackFromSlot(slot);
-					((EntityLivingBase) clientEntity).setItemStackToSlot(slot, item);
+			if (clientEntity instanceof LivingEntity) {
+				for (EquipmentSlotType slot : EquipmentSlotType.values()) {
+					ItemStack item = ((LivingEntity) serverEntity).getItemStackFromSlot(slot);
+					((LivingEntity) clientEntity).setItemStackToSlot(slot, item);
 				}
 			}
 			clientEntity.getDataManager().setEntryValues(serverEntity.getDataManager().getAll());
@@ -215,9 +215,9 @@ public abstract class AbstractEntityHandlerTest<E extends Entity, C extends Cont
 	 */
 	protected void assertSameNBT(Entity expected, Entity actual) {
 		// Can't call these methods directly because writeToNBT returns void in 1.9
-		NBTTagCompound expectedNBT = new NBTTagCompound();
+		CompoundNBT expectedNBT = new CompoundNBT();
 		expected.writeWithoutTypeId(expectedNBT);
-		NBTTagCompound actualNBT = new NBTTagCompound();
+		CompoundNBT actualNBT = new CompoundNBT();
 		actual.writeWithoutTypeId(actualNBT);
 		for (String key : getIgnoreTags()) {
 			expectedNBT.remove(key);
@@ -247,8 +247,8 @@ public abstract class AbstractEntityHandlerTest<E extends Entity, C extends Cont
 	/**
 	 * Applies the given NBT data to the entity.
 	 */
-	protected void applyNBT(Entity entity, NBTTagCompound update) {
-		NBTTagCompound tag = new NBTTagCompound();
+	protected void applyNBT(Entity entity, CompoundNBT update) {
+		CompoundNBT tag = new CompoundNBT();
 		entity.writeWithoutTypeId(tag);
 		tag.merge(update);
 		entity.read(tag);

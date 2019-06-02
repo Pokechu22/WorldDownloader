@@ -19,27 +19,27 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEventData;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.multiplayer.ChunkProviderClient;
-import net.minecraft.client.multiplayer.WorldClient;
-import net.minecraft.client.network.NetHandlerPlayClient;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.multiplayer.ClientChunkProvider;
+import net.minecraft.client.network.play.ClientPlayNetHandler;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.EnumDifficulty;
-import net.minecraft.world.WorldServer;
+import net.minecraft.world.Difficulty;
+import net.minecraft.world.ServerWorld;
 import net.minecraft.world.WorldSettings;
+import net.minecraft.world.chunk.AbstractChunkProvider;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraft.world.chunk.ServerChunkProvider;
 import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.gen.ChunkProviderServer;
-import net.minecraft.world.storage.ISaveHandler;
+import net.minecraft.world.storage.SaveHandler;
 import net.minecraft.world.storage.WorldInfo;
 import wdl.ExtWorldClient.SimpleChunkProvider;
 import wdl.ExtWorldServer.SimpleChunkProvider;
@@ -72,17 +72,17 @@ import net.minecraft.world.gen.ChunkProviderServer;
 import net.minecraft.world.storage.ISaveHandler;
 import net.minecraft.world.storage.WorldInfo;
 
-abstract class ExtWorldClient extends WorldClient {
-	public ExtWorldClient(NetHandlerPlayClient netHandler, WorldSettings settings, DimensionType dim,
-			EnumDifficulty difficulty, Profiler profilerIn) {
+abstract class ExtWorldClient extends ClientWorld {
+	public ExtWorldClient(ClientPlayNetHandler netHandler, WorldSettings settings, DimensionType dim,
+			Difficulty difficulty, Profiler profilerIn) {
 		super(netHandler, settings, dim.getId(), difficulty, profilerIn);
 	}
 
 	@Override
-	protected ChunkProviderClient createChunkProvider() {
-		ChunkProviderClient provider = new SimpleChunkProvider();
+	protected ClientChunkProvider createChunkProvider() {
+		ClientChunkProvider provider = new SimpleChunkProvider();
 		// Update WorldClient.clientChunkProvider which is a somewhat redundant field
-		ReflectionUtils.findAndSetPrivateField(this, WorldClient.class, ChunkProviderClient.class, provider);
+		ReflectionUtils.findAndSetPrivateField(this, ClientWorld.class, ClientChunkProvider.class, provider);
 		return provider;
 	}
 
@@ -104,16 +104,16 @@ abstract class ExtWorldClient extends WorldClient {
 	}
 
 	/** Places a block, creating the proper state. */
-	public void placeBlockAt(BlockPos pos, Block block, EntityPlayer player, EnumFacing direction) {
+	public void placeBlockAt(BlockPos pos, Block block, PlayerEntity player, Direction direction) {
 		player.rotationYaw = direction.getHorizontalAngle();
-		IBlockState state = block.getStateForPlacement(this, pos, direction, 0, 0, 0, 0, player);
+		BlockState state = block.getStateForPlacement(this, pos, direction, 0, 0, 0, 0, player);
 		this.setBlockState(pos, state);
 	}
 
 	/**
 	 * A simple chunk provider implementation that just caches chunks in a map.
 	 */
-	private final class SimpleChunkProvider extends ChunkProviderClient implements IChunkProvider {
+	private final class SimpleChunkProvider extends ClientChunkProvider implements AbstractChunkProvider {
 		private final Long2ObjectMap<Chunk> map = new Long2ObjectOpenHashMap<>();
 
 		public SimpleChunkProvider() {
@@ -142,34 +142,34 @@ abstract class ExtWorldClient extends WorldClient {
 	}
 }
 
-abstract class ExtWorldServer extends WorldServer {
-	public ExtWorldServer(MinecraftServer server, ISaveHandler saveHandlerIn, WorldInfo info, DimensionType dim,
+abstract class ExtWorldServer extends ServerWorld {
+	public ExtWorldServer(MinecraftServer server, SaveHandler saveHandlerIn, WorldInfo info, DimensionType dim,
 			Profiler profilerIn) {
 		super(server, saveHandlerIn, info, dim.getId(), profilerIn);
 	}
 
 	/** Places a block, creating the proper state. */
-	public void placeBlockAt(BlockPos pos, Block block, EntityPlayer player, EnumFacing direction) {
+	public void placeBlockAt(BlockPos pos, Block block, PlayerEntity player, Direction direction) {
 		player.rotationYaw = direction.getHorizontalAngle();
-		IBlockState state = block.getStateForPlacement(this, pos, direction, 0, 0, 0, 0, player);
+		BlockState state = block.getStateForPlacement(this, pos, direction, 0, 0, 0, 0, player);
 		this.setBlockState(pos, state);
 	}
 
 	/** Left-clicks a block. */
-	public void clickBlock(BlockPos pos, EntityPlayer player) {
-		IBlockState state = this.getBlockState(pos);
+	public void clickBlock(BlockPos pos, PlayerEntity player) {
+		BlockState state = this.getBlockState(pos);
 		state.getBlock().onBlockClicked(this, pos, player);
 	}
 
 	/** Right-clicks a block. */
-	public void interactBlock(BlockPos pos, EntityPlayer player) {
-		IBlockState state = this.getBlockState(pos);
-		state.getBlock().onBlockActivated(this, pos, state, player, EnumHand.MAIN_HAND, player.getHeldItemMainhand(), EnumFacing.DOWN, 0, 0, 0);
+	public void interactBlock(BlockPos pos, PlayerEntity player) {
+		BlockState state = this.getBlockState(pos);
+		state.getBlock().onBlockActivated(this, pos, state, player, Hand.MAIN_HAND, player.getHeldItemMainhand(), Direction.DOWN, 0, 0, 0);
 	}
 
 	/** Right-clicks an entity. */
-	public void interactEntity(Entity entity, EntityPlayer player) {
-		entity.processInitialInteract(player, player.getHeldItemMainhand(), EnumHand.MAIN_HAND);
+	public void interactEntity(Entity entity, PlayerEntity player) {
+		entity.processInitialInteract(player, player.getHeldItemMainhand(), Hand.MAIN_HAND);
 	}
 
 	public Consumer<BlockEventData> onBlockEvent = (e -> super.addBlockEvent(e.getPosition(), e.getBlock(), e.getEventID(), e.getEventParameter()));
@@ -180,14 +180,14 @@ abstract class ExtWorldServer extends WorldServer {
 	}
 
 	@Override
-	protected ChunkProviderServer createChunkProvider() {
+	protected ServerChunkProvider createChunkProvider() {
 		return new SimpleChunkProvider();
 	}
 
 	/**
 	 * A simple chunk provider implementation that just caches chunks in a map.
 	 */
-	private final class SimpleChunkProvider extends ChunkProviderServer implements IChunkProvider {
+	private final class SimpleChunkProvider extends ServerChunkProvider implements AbstractChunkProvider {
 		private final Long2ObjectMap<Chunk> map = new Long2ObjectOpenHashMap<>();
 
 		public SimpleChunkProvider() {

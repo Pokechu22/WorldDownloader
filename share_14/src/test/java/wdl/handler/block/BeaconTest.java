@@ -15,12 +15,12 @@
  */
 package wdl.handler.block;
 
-import net.minecraft.init.Blocks;
-import net.minecraft.init.MobEffects;
-import net.minecraft.inventory.ContainerBeacon;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.Potion;
-import net.minecraft.tileentity.TileEntityBeacon;
+import net.minecraft.block.Blocks;
+import net.minecraft.inventory.container.BeaconContainer;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.potion.Effect;
+import net.minecraft.potion.Effects;
+import net.minecraft.tileentity.BeaconTileEntity;
 import net.minecraft.util.math.BlockPos;
 import org.junit.Test;
 import wdl.handler.HandlerException;
@@ -40,10 +40,10 @@ import wdl.handler.HandlerException;
 /**
  * Tests beacons.
  */
-public class BeaconTest extends AbstractBlockHandlerTest<TileEntityBeacon, ContainerBeacon, BeaconHandler> {
+public class BeaconTest extends AbstractBlockHandlerTest<BeaconTileEntity, BeaconContainer, BeaconHandler> {
 
 	public BeaconTest() {
-		super(TileEntityBeacon.class, ContainerBeacon.class, BeaconHandler.class);
+		super(BeaconTileEntity.class, BeaconContainer.class, BeaconHandler.class);
 	}
 
 	/**
@@ -68,8 +68,8 @@ public class BeaconTest extends AbstractBlockHandlerTest<TileEntityBeacon, Conta
 		BlockPos center = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(center, Blocks.BEACON);
-		TileEntityBeacon te = makeBlockEntity(center);
-		te.setField(1, Potion.getIdFromPotion(MobEffects.JUMP_BOOST));
+		BeaconTileEntity te = makeBlockEntity(center);
+		te.setField(1, Effect.getIdFromPotion(Effects.JUMP_BOOST));
 
 		runHandler(center, makeClientContainer(center));
 		checkAllTEs();
@@ -83,9 +83,9 @@ public class BeaconTest extends AbstractBlockHandlerTest<TileEntityBeacon, Conta
 		BlockPos center = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(center, Blocks.BEACON);
-		TileEntityBeacon te = makeBlockEntity(center);
-		te.setField(1, Potion.getIdFromPotion(MobEffects.JUMP_BOOST));
-		te.setField(2, Potion.getIdFromPotion(MobEffects.REGENERATION));
+		BeaconTileEntity te = makeBlockEntity(center);
+		te.setField(1, Effect.getIdFromPotion(Effects.JUMP_BOOST));
+		te.setField(2, Effect.getIdFromPotion(Effects.REGENERATION));
 
 		runHandler(center, makeClientContainer(center));
 		checkAllTEs();
@@ -101,7 +101,7 @@ public class BeaconTest extends AbstractBlockHandlerTest<TileEntityBeacon, Conta
 		BlockPos center = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(center, Blocks.BEACON);
-		TileEntityBeacon te = makeBlockEntity(center);
+		BeaconTileEntity te = makeBlockEntity(center);
 		te.setCustomName(customName("Delicious pig meat"));
 
 		assumeHasCustomName(te);
@@ -122,7 +122,7 @@ public class BeaconTest extends AbstractBlockHandlerTest<TileEntityBeacon, Conta
 		BlockPos center = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(center, Blocks.BEACON);
-		TileEntityBeacon te = makeBlockEntity(center);
+		BeaconTileEntity te = makeBlockEntity(center);
 		te.setCustomName(customName("Beacon"));
 
 		assumeHasCustomName(te);
@@ -140,11 +140,11 @@ public class BeaconTest extends AbstractBlockHandlerTest<TileEntityBeacon, Conta
 	 *
 	 * @param te The server-sided TE
 	 */
-	private static void assumeHasCustomName(TileEntityBeacon te) {
+	private static void assumeHasCustomName(BeaconTileEntity te) {
 		assertTrue("Should have set a custom name on the server version for this to make sense",
 				te.hasCustomName());
 
-		NBTTagCompound nbt = new NBTTagCompound();
+		CompoundNBT nbt = new CompoundNBT();
 		te.write(nbt);
 
 		assumeTrue("NBT needs to have a CustomName to test saving CustomName",

@@ -15,8 +15,8 @@
 package wdl.handler.blockaction;
 
 import org.junit.Test;
-import net.minecraft.block.BlockNote;
-import net.minecraft.init.Blocks;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.NoteBlock;
 import net.minecraft.util.math.BlockPos;
 import wdl.handler.HandlerException;
 
@@ -27,10 +27,10 @@ import net.minecraft.tileentity.TileEntityNote;
 import net.minecraft.util.math.BlockPos;
 import wdl.handler.HandlerException;
 
-public class NoteBlockTest extends AbstractBlockActionHandlerTest<BlockNote, TileEntityNote, NoteBlockHandler> {
+public class NoteBlockTest extends AbstractBlockActionHandlerTest<NoteBlock, TileEntityNote, NoteBlockHandler> {
 
 	public NoteBlockTest() {
-		super(BlockNote.class, TileEntityNote.class, NoteBlockHandler.class);
+		super(NoteBlock.class, TileEntityNote.class, NoteBlockHandler.class);
 	}
 
 	@Test

@@ -14,12 +14,12 @@
  */
 package wdl;
 
-import net.minecraft.client.gui.inventory.GuiContainerCreative;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ContainerChest;
-import net.minecraft.inventory.ContainerPlayer;
+import net.minecraft.client.gui.screen.inventory.CreativeScreen;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.ChestContainer;
+import net.minecraft.inventory.container.PlayerContainer;
 import org.junit.Test;
 
 
@@ -42,14 +42,14 @@ public class ReflectionUtilsTest {
 	@Test
 	public void testIsCreativeContainer() {
 		// Need a player to create a creative inventory (not the best system)
-		EntityPlayer player = mock(EntityPlayer.class);
-		player.inventory = mock(InventoryPlayer.class);
+		PlayerEntity player = mock(PlayerEntity.class);
+		player.inventory = mock(PlayerInventory.class);
 
 		// OK, actually test
-		Container creativeInventory = new GuiContainerCreative(player).inventorySlots;
+		Container creativeInventory = new CreativeScreen(player).inventorySlots;
 
 		assertTrue(ReflectionUtils.isCreativeContainer(creativeInventory.getClass()));
-		assertFalse(ReflectionUtils.isCreativeContainer(ContainerPlayer.class));
-		assertFalse(ReflectionUtils.isCreativeContainer(ContainerChest.class));
+		assertFalse(ReflectionUtils.isCreativeContainer(PlayerContainer.class));
+		assertFalse(ReflectionUtils.isCreativeContainer(ChestContainer.class));
 	}
 }

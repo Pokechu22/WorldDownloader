@@ -17,13 +17,13 @@ package wdl.handler.entity;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nullable;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.passive.EquineEntity;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.inventory.ContainerHorseChest;
-import net.minecraft.inventory.ContainerHorseInventory;
+import net.minecraft.inventory.container.HorseInventoryContainer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.World;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,7 +57,7 @@ import wdl.VersionConstants;
 import wdl.handler.HandlerException;
 
 @RunWith(Parameterized.class)
-public class HorseTest<T extends EquineEntity> extends AbstractEntityHandlerTest<T, ContainerHorseInventory, HorseHandler> {
+public class HorseTest<T extends EquineEntity> extends AbstractEntityHandlerTest<T, HorseInventoryContainer, HorseHandler> {
 	private static enum HorseType {
 		HORSE("minecraft:horse", "net.minecraft.entity.passive.EntityHorse", 0, false),
 		DONKEY("minecraft:donkey", "net.minecraft.entity.passive.EntityDonkey", 1, true),
@@ -111,8 +111,8 @@ public class HorseTest<T extends EquineEntity> extends AbstractEntityHandlerTest
 		 * horse.
 		 * @param addChests true if chests should be present
 		 */
-		public NBTTagCompound getNBT(boolean addChests) {
-			NBTTagCompound tag = new NBTTagCompound();
+		public CompoundNBT getNBT(boolean addChests) {
+			CompoundNBT tag = new CompoundNBT();
 			if (this.typeID != null && HAS_NAMESPACED_ENTITIES) {
 				tag.putInt("Type", typeID);
 			}
@@ -159,7 +159,7 @@ public class HorseTest<T extends EquineEntity> extends AbstractEntityHandlerTest
 	private final boolean chests;
 
 	public HorseTest(HorseType type, Class<T> horseClass, boolean chests) {
-		super(horseClass, ContainerHorseInventory.class, HorseHandler.class);
+		super(horseClass, HorseInventoryContainer.class, HorseHandler.class);
 		this.type = type;
 		this.chests = chests;
 	}

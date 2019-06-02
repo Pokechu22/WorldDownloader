@@ -16,11 +16,11 @@ package wdl.handler.entity;
 
 import com.google.common.collect.ImmutableList;
 import java.util.List;
-import net.minecraft.entity.passive.EntityVillager;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.ContainerMerchant;
+import net.minecraft.entity.merchant.villager.VillagerEntity;
+import net.minecraft.inventory.container.MerchantContainer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.village.MerchantRecipe;
 import net.minecraft.village.MerchantRecipeList;
 import org.junit.Test;
@@ -43,17 +43,17 @@ import net.minecraft.village.MerchantRecipe;
 import net.minecraft.village.MerchantRecipeList;
 import wdl.handler.HandlerException;
 
-public class VillagerTest extends AbstractEntityHandlerTest<EntityVillager, ContainerMerchant, VillagerHandler> {
+public class VillagerTest extends AbstractEntityHandlerTest<VillagerEntity, MerchantContainer, VillagerHandler> {
 
 	public VillagerTest() {
-		super(EntityVillager.class, ContainerMerchant.class, VillagerHandler.class);
+		super(VillagerEntity.class, MerchantContainer.class, VillagerHandler.class);
 	}
 
 	@Test
 	public void testActiveTrade() throws HandlerException {
 		makeMockWorld();
 
-		EntityVillager villager = new EntityVillager(serverWorld);
+		VillagerEntity villager = new VillagerEntity(serverWorld);
 		MerchantRecipeList recipes = new MerchantRecipeList();
 		recipes.add(new MerchantRecipe(new ItemStack(Items.DIAMOND, 64), Items.EMERALD));
 		villager.setRecipes(recipes);
@@ -68,7 +68,7 @@ public class VillagerTest extends AbstractEntityHandlerTest<EntityVillager, Cont
 	public void testActiveTradeCustomName() {
 		makeMockWorld();
 
-		EntityVillager villager = new EntityVillager(serverWorld);
+		VillagerEntity villager = new VillagerEntity(serverWorld);
 		villager.setCustomName(customName("Testificate"));
 		MerchantRecipeList recipes = new MerchantRecipeList();
 		recipes.add(new MerchantRecipe(new ItemStack(Items.DIAMOND, 64), Items.EMERALD));
@@ -84,10 +84,10 @@ public class VillagerTest extends AbstractEntityHandlerTest<EntityVillager, Cont
 		}
 		assertThat(ex, is(notNullValue()));
 
-		EntityVillager clientVillager = (EntityVillager)clientWorld.getEntityByID(villager.getEntityId());
-		NBTTagCompound serverNbt = new NBTTagCompound();
+		VillagerEntity clientVillager = (VillagerEntity)clientWorld.getEntityByID(villager.getEntityId());
+		CompoundNBT serverNbt = new CompoundNBT();
 		villager.writeWithoutTypeId(serverNbt);
-		NBTTagCompound clientNbt = new NBTTagCompound();
+		CompoundNBT clientNbt = new CompoundNBT();
 		clientVillager.writeWithoutTypeId(clientNbt);
 		// Check specifically the Offers tag; career will vary so we can't use it.
 		assertSameNBT(serverNbt.getCompound("Offers"), clientNbt.getCompound("Offers"));
@@ -105,7 +105,7 @@ public class VillagerTest extends AbstractEntityHandlerTest<EntityVillager, Cont
 	@Test
 	public void testCareerIdentification() throws Exception {
 		// Figure out how many professions and careers there are
-		Field field = EntityVillager.class.getDeclaredField("DEFAULT_TRADE_LIST_MAP");
+		Field field = VillagerEntity.class.getDeclaredField("DEFAULT_TRADE_LIST_MAP");
 		field.setAccessible(true);
 		Object[][][][] tradesByProf = (Object[][][][]) field.get(null);
 		int numProfessions = tradesByProf.length;
@@ -118,7 +118,7 @@ public class VillagerTest extends AbstractEntityHandlerTest<EntityVillager, Cont
 			for (int career = 1; career <= numCareers; career++) { // careers start at 1
 				makeMockWorld();
 
-				EntityVillager villager = new EntityVillager(serverWorld, prof);
+				VillagerEntity villager = new VillagerEntity(serverWorld, prof);
 				VillagerHandler.CAREER_ID_FIELD.setInt(villager, career);
 				// Needed to avoid the entity recalculating the career when it gets the display name name
 				VillagerHandler.CAREER_LEVEL_FIELD.setInt(villager, 1);

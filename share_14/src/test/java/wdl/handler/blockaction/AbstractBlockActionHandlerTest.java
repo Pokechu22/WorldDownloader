@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEventData;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import org.junit.Test;
@@ -151,9 +151,9 @@ public abstract class AbstractBlockActionHandlerTest<B extends Block, E extends 
 	 */
 	protected void assertSameNBT(TileEntity expected, TileEntity actual) {
 		// Can't call these methods directly because writeToNBT returns void in 1.9
-		NBTTagCompound expectedNBT = new NBTTagCompound();
+		CompoundNBT expectedNBT = new CompoundNBT();
 		expected.write(expectedNBT);
-		NBTTagCompound actualNBT = new NBTTagCompound();
+		CompoundNBT actualNBT = new CompoundNBT();
 		actual.write(actualNBT);
 		assertSameNBT(expectedNBT, actualNBT);
 	}

@@ -14,11 +14,11 @@
  */
 package wdl.handler.block;
 
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.ContainerDispenser;
+import net.minecraft.block.Blocks;
+import net.minecraft.inventory.container.DispenserContainer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntityDropper;
+import net.minecraft.item.Items;
+import net.minecraft.tileentity.DropperTileEntity;
 import net.minecraft.util.math.BlockPos;
 import org.junit.Test;
 import wdl.handler.HandlerException;
@@ -34,10 +34,10 @@ import net.minecraft.tileentity.TileEntityDropper;
 import net.minecraft.util.math.BlockPos;
 import wdl.handler.HandlerException;
 
-public class DropperTest extends AbstractBlockHandlerTest<TileEntityDropper, ContainerDispenser, DropperHandler> {
+public class DropperTest extends AbstractBlockHandlerTest<DropperTileEntity, DispenserContainer, DropperHandler> {
 
 	public DropperTest() {
-		super(TileEntityDropper.class, ContainerDispenser.class, DropperHandler.class);
+		super(DropperTileEntity.class, DispenserContainer.class, DropperHandler.class);
 	}
 
 	@Test
@@ -45,7 +45,7 @@ public class DropperTest extends AbstractBlockHandlerTest<TileEntityDropper, Con
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.DROPPER);
-		TileEntityDropper te = makeBlockEntity(pos);
+		DropperTileEntity te = makeBlockEntity(pos);
 		te.setInventorySlotContents(0, new ItemStack(Items.COD)); // something something flopper
 		te.setInventorySlotContents(8, new ItemStack(Items.COD));
 
@@ -58,7 +58,7 @@ public class DropperTest extends AbstractBlockHandlerTest<TileEntityDropper, Con
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.DROPPER);
-		TileEntityDropper te = makeBlockEntity(pos);
+		DropperTileEntity te = makeBlockEntity(pos);
 		te.setCustomName(customName("Something"));
 
 		runHandler(pos, makeClientContainer(pos));
@@ -72,7 +72,7 @@ public class DropperTest extends AbstractBlockHandlerTest<TileEntityDropper, Con
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.DROPPER);
-		TileEntityDropper te = makeBlockEntity(pos);
+		DropperTileEntity te = makeBlockEntity(pos);
 		te.setCustomName(customName("Dropper"));
 
 		runHandler(pos, makeClientContainer(pos));

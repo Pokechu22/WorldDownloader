@@ -14,11 +14,11 @@
  */
 package wdl.handler.block;
 
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.ContainerBrewingStand;
+import net.minecraft.block.Blocks;
+import net.minecraft.inventory.container.BrewingStandContainer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntityBrewingStand;
+import net.minecraft.item.Items;
+import net.minecraft.tileentity.BrewingStandTileEntity;
 import net.minecraft.util.math.BlockPos;
 import org.junit.Test;
 import wdl.handler.HandlerException;
@@ -34,10 +34,10 @@ import net.minecraft.tileentity.TileEntityBrewingStand;
 import net.minecraft.util.math.BlockPos;
 import wdl.handler.HandlerException;
 
-public class BrewingStandTest extends AbstractBlockHandlerTest<TileEntityBrewingStand, ContainerBrewingStand, BrewingStandHandler> {
+public class BrewingStandTest extends AbstractBlockHandlerTest<BrewingStandTileEntity, BrewingStandContainer, BrewingStandHandler> {
 
 	public BrewingStandTest() {
-		super(TileEntityBrewingStand.class, ContainerBrewingStand.class, BrewingStandHandler.class);
+		super(BrewingStandTileEntity.class, BrewingStandContainer.class, BrewingStandHandler.class);
 	}
 
 	/**
@@ -48,7 +48,7 @@ public class BrewingStandTest extends AbstractBlockHandlerTest<TileEntityBrewing
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.BREWING_STAND);
-		TileEntityBrewingStand te = makeBlockEntity(pos);
+		BrewingStandTileEntity te = makeBlockEntity(pos);
 		te.setInventorySlotContents(0, new ItemStack(Items.GLASS_BOTTLE));
 		te.setInventorySlotContents(1, new ItemStack(Items.GLASS_BOTTLE));
 		te.setInventorySlotContents(2, new ItemStack(Items.GLASS_BOTTLE));
@@ -67,7 +67,7 @@ public class BrewingStandTest extends AbstractBlockHandlerTest<TileEntityBrewing
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.BREWING_STAND);
-		TileEntityBrewingStand te = makeBlockEntity(pos);
+		BrewingStandTileEntity te = makeBlockEntity(pos);
 		te.setField(0, 10); // brew time
 		te.setField(1, 13); // fuel
 
@@ -83,7 +83,7 @@ public class BrewingStandTest extends AbstractBlockHandlerTest<TileEntityBrewing
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.BREWING_STAND);
-		TileEntityBrewingStand te = makeBlockEntity(pos);
+		BrewingStandTileEntity te = makeBlockEntity(pos);
 		te.setCustomName(customName("Potion maker"));
 
 		runHandler(pos, makeClientContainer(pos));
@@ -100,7 +100,7 @@ public class BrewingStandTest extends AbstractBlockHandlerTest<TileEntityBrewing
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.BREWING_STAND);
-		TileEntityBrewingStand te = makeBlockEntity(pos);
+		BrewingStandTileEntity te = makeBlockEntity(pos);
 		te.setCustomName(customName("Brewing Stand"));
 
 		runHandler(pos, makeClientContainer(pos));

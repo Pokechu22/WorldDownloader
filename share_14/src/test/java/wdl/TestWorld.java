@@ -15,16 +15,16 @@
 package wdl;
 
 import java.util.UUID;
-import net.minecraft.client.network.NetHandlerPlayClient;
+import net.minecraft.client.network.play.ClientPlayNetHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.EnumDifficulty;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.WorldSettings;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.storage.ISaveHandler;
+import net.minecraft.world.storage.SaveHandler;
 import net.minecraft.world.storage.WorldInfo;
 
 
@@ -48,9 +48,9 @@ public final class TestWorld {
 	}
 
 	public static ClientWorld makeClient(DimensionType dim) {
-		NetHandlerPlayClient nhpc = mock(NetHandlerPlayClient.class);
+		ClientPlayNetHandler nhpc = mock(ClientPlayNetHandler.class);
 		WorldSettings settings = new WorldSettings(0L, null, false, false, WorldType.DEFAULT);
-		EnumDifficulty difficulty = EnumDifficulty.NORMAL;
+		Difficulty difficulty = Difficulty.NORMAL;
 		Profiler profiler = new Profiler();
 
 		return new ClientWorld(nhpc, settings, dim, difficulty, profiler);
@@ -62,7 +62,7 @@ public final class TestWorld {
 
 	public static ServerWorld makeServer(DimensionType dim) {
 		MinecraftServer server = mock(MinecraftServer.class, withSettings().defaultAnswer(RETURNS_MOCKS));
-		ISaveHandler saveHandler = mock(ISaveHandler.class);
+		SaveHandler saveHandler = mock(SaveHandler.class);
 		WorldInfo info = new WorldInfo() {};
 		Profiler profiler = new Profiler();
 
@@ -70,8 +70,8 @@ public final class TestWorld {
 	}
 
 	public static final class ClientWorld extends ExtWorldClient implements AutoCloseable {
-		private ClientWorld(NetHandlerPlayClient netHandler, WorldSettings settings, DimensionType dim,
-				EnumDifficulty difficulty, Profiler profilerIn) {
+		private ClientWorld(ClientPlayNetHandler netHandler, WorldSettings settings, DimensionType dim,
+				Difficulty difficulty, Profiler profilerIn) {
 			super(netHandler, settings, dim, difficulty, profilerIn);
 		}
 
@@ -87,7 +87,7 @@ public final class TestWorld {
 		public void close() { }
 	}
 	public static final class ServerWorld extends ExtWorldServer implements AutoCloseable {
-		private ServerWorld(MinecraftServer server, ISaveHandler saveHandlerIn, WorldInfo info, DimensionType dim,
+		private ServerWorld(MinecraftServer server, SaveHandler saveHandlerIn, WorldInfo info, DimensionType dim,
 				Profiler profilerIn) {
 			super(server, saveHandlerIn, info, dim, profilerIn);
 		}

@@ -14,11 +14,11 @@
  */
 package wdl.handler.block;
 
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.ContainerFurnace;
+import net.minecraft.block.Blocks;
+import net.minecraft.inventory.container.FurnaceContainer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraft.item.Items;
+import net.minecraft.tileentity.FurnaceTileEntity;
 import net.minecraft.util.math.BlockPos;
 import org.junit.Test;
 import wdl.handler.HandlerException;
@@ -34,10 +34,10 @@ import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.math.BlockPos;
 import wdl.handler.HandlerException;
 
-public class FurnaceTest extends AbstractBlockHandlerTest<TileEntityFurnace, ContainerFurnace, FurnaceHandler> {
+public class FurnaceTest extends AbstractBlockHandlerTest<FurnaceTileEntity, FurnaceContainer, FurnaceHandler> {
 
 	public FurnaceTest() {
-		super(TileEntityFurnace.class, ContainerFurnace.class, FurnaceHandler.class);
+		super(FurnaceTileEntity.class, FurnaceContainer.class, FurnaceHandler.class);
 	}
 
 	@Test
@@ -45,7 +45,7 @@ public class FurnaceTest extends AbstractBlockHandlerTest<TileEntityFurnace, Con
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.FURNACE);
-		TileEntityFurnace te = makeBlockEntity(pos);
+		FurnaceTileEntity te = makeBlockEntity(pos);
 		te.setInventorySlotContents(0, new ItemStack(Blocks.COAL_ORE));
 		te.setInventorySlotContents(1, new ItemStack(Items.WOODEN_HOE));
 		te.setInventorySlotContents(2, new ItemStack(Items.COAL));
@@ -59,7 +59,7 @@ public class FurnaceTest extends AbstractBlockHandlerTest<TileEntityFurnace, Con
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.FURNACE);
-		TileEntityFurnace te = makeBlockEntity(pos);
+		FurnaceTileEntity te = makeBlockEntity(pos);
 		te.setInventorySlotContents(0, new ItemStack(Blocks.COAL_ORE));
 		te.setInventorySlotContents(1, new ItemStack(Items.WOODEN_HOE));
 		te.setInventorySlotContents(2, new ItemStack(Items.COAL));
@@ -77,7 +77,7 @@ public class FurnaceTest extends AbstractBlockHandlerTest<TileEntityFurnace, Con
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.FURNACE);
-		TileEntityFurnace te = makeBlockEntity(pos);
+		FurnaceTileEntity te = makeBlockEntity(pos);
 		te.setCustomName(customName("Furni"));
 
 		runHandler(pos, makeClientContainer(pos));
@@ -91,7 +91,7 @@ public class FurnaceTest extends AbstractBlockHandlerTest<TileEntityFurnace, Con
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.FURNACE);
-		TileEntityFurnace te = makeBlockEntity(pos);
+		FurnaceTileEntity te = makeBlockEntity(pos);
 		te.setCustomName(customName("Furnace"));
 
 		runHandler(pos, makeClientContainer(pos));

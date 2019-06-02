@@ -14,11 +14,11 @@
  */
 package wdl.handler.block;
 
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.ContainerHopper;
+import net.minecraft.block.Blocks;
+import net.minecraft.inventory.container.HopperContainer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntityHopper;
+import net.minecraft.item.Items;
+import net.minecraft.tileentity.HopperTileEntity;
 import net.minecraft.util.math.BlockPos;
 import org.junit.Test;
 import wdl.handler.HandlerException;
@@ -34,10 +34,10 @@ import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.util.math.BlockPos;
 import wdl.handler.HandlerException;
 
-public class HopperTest extends AbstractBlockHandlerTest<TileEntityHopper, ContainerHopper, HopperHandler> {
+public class HopperTest extends AbstractBlockHandlerTest<HopperTileEntity, HopperContainer, HopperHandler> {
 
 	public HopperTest() {
-		super(TileEntityHopper.class, ContainerHopper.class, HopperHandler.class);
+		super(HopperTileEntity.class, HopperContainer.class, HopperHandler.class);
 	}
 
 	@Test
@@ -45,7 +45,7 @@ public class HopperTest extends AbstractBlockHandlerTest<TileEntityHopper, Conta
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.HOPPER);
-		TileEntityHopper te = makeBlockEntity(pos);
+		HopperTileEntity te = makeBlockEntity(pos);
 		te.setInventorySlotContents(0, new ItemStack(Items.DIAMOND));
 		// Old reference, and not just to the SethBling short
 		te.setInventorySlotContents(1, new ItemStack(Items.PAPER).setDisplayName(customName("This is the filler! //")));
@@ -62,7 +62,7 @@ public class HopperTest extends AbstractBlockHandlerTest<TileEntityHopper, Conta
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.HOPPER);
-		TileEntityHopper te = makeBlockEntity(pos);
+		HopperTileEntity te = makeBlockEntity(pos);
 		te.setCustomName(customName("Bin"));
 
 		runHandler(pos, makeClientContainer(pos));
@@ -74,7 +74,7 @@ public class HopperTest extends AbstractBlockHandlerTest<TileEntityHopper, Conta
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.HOPPER);
-		TileEntityHopper te = makeBlockEntity(pos);
+		HopperTileEntity te = makeBlockEntity(pos);
 		te.setCustomName(customName("Hopper"));
 
 		runHandler(pos, makeClientContainer(pos));

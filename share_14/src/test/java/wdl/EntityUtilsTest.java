@@ -22,12 +22,12 @@ import java.util.function.Function;
 import java.util.function.IntFunction;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityTracker;
-import net.minecraft.entity.item.EntityArmorStand;
-import net.minecraft.entity.monster.EntityCreeper;
-import net.minecraft.entity.monster.EntityZombie;
-import net.minecraft.entity.passive.EntityPig;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.NetHandlerPlayServer;
+import net.minecraft.entity.item.ArmorStandEntity;
+import net.minecraft.entity.monster.CreeperEntity;
+import net.minecraft.entity.monster.ZombieEntity;
+import net.minecraft.entity.passive.PigEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.network.play.ServerPlayNetHandler;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.junit.Test;
@@ -66,10 +66,10 @@ public class EntityUtilsTest extends MaybeMixinTest {
 	 */
 	@Test
 	public void testTrackerSimple() {
-		runTrackerTest(EntityPig::new, 80, 10, 300,
+		runTrackerTest(PigEntity::new, 80, 10, 300,
 				(tick, entity) -> true,
 				(tick) -> new Vec3d(-150 + tick, tick, -150 + tick));
-		runTrackerTest(EntityArmorStand::new, 160, 10, 300,
+		runTrackerTest(ArmorStandEntity::new, 160, 10, 300,
 				(tick, entity) -> true,
 				(tick) -> new Vec3d(150 * Math.sin(tick * 300 / (2 * Math.PI)), tick,
 						150 * Math.cos(tick * 300 / (2 * Math.PI))));
@@ -80,10 +80,10 @@ public class EntityUtilsTest extends MaybeMixinTest {
 	 */
 	@Test
 	public void testTrackerRemove() {
-		runTrackerTest(EntityZombie::new, 80, 10, 110,
+		runTrackerTest(ZombieEntity::new, 80, 10, 110,
 				(tick, entity) -> tick <= 100,
 				(tick) -> new Vec3d(-150 + tick, tick, -150 + tick));
-		runTrackerTest(EntityCreeper::new, 80, 10, 110,
+		runTrackerTest(CreeperEntity::new, 80, 10, 110,
 				(tick, entity) -> tick <= 100 || entity.posX <= (-150 + tick),
 				(tick) -> new Vec3d(-150 + tick, tick, -150 + tick));
 	}
@@ -103,7 +103,7 @@ public class EntityUtilsTest extends MaybeMixinTest {
 			int serverViewDistance, int numTicks, BiPredicate<Integer, Entity> keepEntity, IntFunction<Vec3d> posFunc) {
 		ServerWorld world = TestWorld.makeServer();
 
-		EntityPlayerMP player = mock(EntityPlayerMP.class, RETURNS_DEEP_STUBS);
+		ServerPlayerEntity player = mock(ServerPlayerEntity.class, RETURNS_DEEP_STUBS);
 		List<Entity> trackedEntities = new ArrayList<>();
 		when(player.toString()).thenCallRealMethod();
 		doAnswer(AdditionalAnswers.<Entity>answerVoid(trackedEntities::add)).when(player).addEntity(any());
@@ -112,7 +112,7 @@ public class EntityUtilsTest extends MaybeMixinTest {
 
 		List<Entity> entities = new ArrayList<>(); // all known entities; if killed they're removed from this list
 		List<Entity> tracked = new ArrayList<>(); // entities being tracked by the mock player
-		player.connection = mock(NetHandlerPlayServer.class);
+		player.connection = mock(ServerPlayNetHandler.class);
 
 		doAnswer(AdditionalAnswers.<Entity>answerVoid((e) -> {
 			assertThat("Tried to track an entity that was already tracked", tracked, not(hasItem(e)));
