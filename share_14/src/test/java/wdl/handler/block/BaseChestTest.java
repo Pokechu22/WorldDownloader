@@ -14,6 +14,9 @@
  */
 package wdl.handler.block;
 
+import org.junit.Ignore;
+import org.junit.Test;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.inventory.container.ChestContainer;
@@ -22,23 +25,6 @@ import net.minecraft.item.Items;
 import net.minecraft.tileentity.ChestTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import org.junit.Ignore;
-import org.junit.Test;
-import wdl.handler.HandlerException;
-
-
-import org.junit.Ignore;
-import org.junit.Test;
-
-import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.ContainerChest;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityChest;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import wdl.VersionConstants;
 import wdl.handler.HandlerException;

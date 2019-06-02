@@ -15,17 +15,11 @@
 package wdl.handler.entity;
 
 import org.junit.Test;
+
 import net.minecraft.entity.item.minecart.HopperMinecartEntity;
 import net.minecraft.inventory.container.HopperContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import wdl.handler.HandlerException;
-
-
-import net.minecraft.entity.item.EntityMinecartHopper;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.ContainerHopper;
-import net.minecraft.item.ItemStack;
 import wdl.handler.HandlerException;
 
 public class HopperMinecartTest extends AbstractEntityHandlerTest<HopperMinecartEntity, HopperContainer, HopperMinecartHandler> {

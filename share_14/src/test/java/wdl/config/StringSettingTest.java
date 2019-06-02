@@ -16,9 +16,6 @@ package wdl.config;
 
 import org.junit.Test;
 
-
-import org.junit.Test;
-
 public class StringSettingTest {
 
 	@Test

@@ -14,21 +14,12 @@
  */
 package wdl.handler.block;
 
+import org.junit.Test;
+
 import net.minecraft.block.Blocks;
 import net.minecraft.inventory.container.DispenserContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.DispenserTileEntity;
-import net.minecraft.util.math.BlockPos;
-import org.junit.Test;
-import wdl.handler.HandlerException;
-
-
-import org.junit.Test;
-
-import net.minecraft.init.Blocks;
-import net.minecraft.inventory.ContainerDispenser;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.util.math.BlockPos;
 import wdl.handler.HandlerException;
 

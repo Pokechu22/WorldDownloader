@@ -15,25 +15,14 @@
  */
 package wdl.handler.block;
 
+import org.junit.Test;
+
 import net.minecraft.block.Blocks;
 import net.minecraft.inventory.container.BeaconContainer;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.Effects;
 import net.minecraft.tileentity.BeaconTileEntity;
-import net.minecraft.util.math.BlockPos;
-import org.junit.Test;
-import wdl.handler.HandlerException;
-
-
-import org.junit.Test;
-
-import net.minecraft.init.Blocks;
-import net.minecraft.init.MobEffects;
-import net.minecraft.inventory.ContainerBeacon;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.Potion;
-import net.minecraft.tileentity.TileEntityBeacon;
 import net.minecraft.util.math.BlockPos;
 import wdl.handler.HandlerException;
 

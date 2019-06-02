@@ -14,6 +14,7 @@
  */
 package wdl.handler.block;
 
+import net.minecraft.block.Blocks;
 
 /**
  * This weird wrapper is to have a public class but the file with a different name.

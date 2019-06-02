@@ -14,10 +14,6 @@
  */
 package wdl.config;
 
-import net.minecraft.util.IStringSerializable;
-import org.junit.Test;
-
-
 import org.junit.Test;
 
 import net.minecraft.util.IStringSerializable;

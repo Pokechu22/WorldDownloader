@@ -14,14 +14,6 @@
  */
 package wdl.config.settings;
 
-import net.minecraft.entity.Entity;
-import org.junit.Test;
-import wdl.MaybeMixinTest;
-import wdl.config.Configuration;
-import wdl.config.DefaultConfiguration;
-import wdl.config.settings.WorldSettings.SpawnMode;
-
-
 import org.junit.Test;
 
 import net.minecraft.entity.Entity;

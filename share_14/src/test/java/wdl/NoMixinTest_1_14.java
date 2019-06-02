@@ -15,6 +15,8 @@
 package wdl;
 
 
+import java.io.IOException;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.runner.RunWith;
@@ -23,7 +25,6 @@ import org.junit.runners.JUnit4;
 import net.minecraft.client.resources.LanguageManager;
 import net.minecraft.client.resources.ResourceIndex;
 import net.minecraft.client.resources.VirtualAssetsPack;
-import net.minecraft.init.Bootstrap;
 import net.minecraft.resources.IResourcePack;
 import net.minecraft.resources.ResourcePackType;
 import net.minecraft.resources.SimpleReloadableResourceManager;

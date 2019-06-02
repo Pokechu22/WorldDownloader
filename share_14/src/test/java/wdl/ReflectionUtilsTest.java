@@ -14,16 +14,14 @@
  */
 package wdl;
 
+import org.junit.Test;
+
 import net.minecraft.client.gui.screen.inventory.CreativeScreen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ChestContainer;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.PlayerContainer;
-import org.junit.Test;
-
-
-import org.junit.Test;
 
 public class ReflectionUtilsTest {
 

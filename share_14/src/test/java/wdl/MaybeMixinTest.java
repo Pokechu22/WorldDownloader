@@ -15,6 +15,7 @@
 package wdl;
 
 import org.junit.BeforeClass;
+import org.junit.runner.RunWith;
 
 /**
  * This is a more or less empty class that is used to specify the runner that

@@ -15,15 +15,6 @@
 package wdl.config.settings;
 
 import java.util.function.BooleanSupplier;
-import org.junit.Test;
-import wdl.MaybeMixinTest;
-import wdl.config.Configuration;
-import wdl.config.DefaultConfiguration;
-import wdl.config.IConfiguration;
-import wdl.config.settings.EntitySettings.TrackDistanceMode;
-
-
-import java.util.function.BooleanSupplier;
 
 import org.junit.Test;
 

@@ -15,13 +15,6 @@
 package wdl.config.settings;
 
 import org.junit.Test;
-import wdl.MaybeMixinTest;
-import wdl.config.Configuration;
-import wdl.config.DefaultConfiguration;
-import wdl.config.IConfiguration;
-
-
-import org.junit.Test;
 
 import wdl.MaybeMixinTest;
 import wdl.config.Configuration;

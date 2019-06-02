@@ -17,6 +17,9 @@ package wdl;
 
 import java.util.Collections;
 import java.util.function.Consumer;
+
+import org.junit.Test;
+
 import net.minecraft.block.Blocks;
 import net.minecraft.network.play.server.SBlockActionPacket;
 import net.minecraft.network.play.server.SChatPacket;
@@ -25,24 +28,6 @@ import net.minecraft.network.play.server.SMapDataPacket;
 import net.minecraft.network.play.server.SUnloadChunkPacket;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
-import org.junit.Test;
-import wdl.handler.AbstractWorldBehaviorTest;
-import wdl.versioned.VersionedFunctions;
-
-
-import java.util.Collections;
-import java.util.function.Consumer;
-
-import org.junit.Test;
-
-import net.minecraft.init.Blocks;
-import net.minecraft.network.play.server.SPacketBlockAction;
-import net.minecraft.network.play.server.SPacketChat;
-import net.minecraft.network.play.server.SPacketCustomPayload;
-import net.minecraft.network.play.server.SPacketMaps;
-import net.minecraft.network.play.server.SPacketUnloadChunk;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
 import wdl.handler.AbstractWorldBehaviorTest;
 import wdl.versioned.VersionedFunctions;
 

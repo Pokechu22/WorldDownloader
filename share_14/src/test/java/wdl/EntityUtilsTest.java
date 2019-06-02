@@ -20,6 +20,10 @@ import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.IntFunction;
+
+import org.junit.Test;
+import org.mockito.AdditionalAnswers;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityTracker;
 import net.minecraft.entity.item.ArmorStandEntity;
@@ -28,30 +32,6 @@ import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.entity.passive.PigEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.play.ServerPlayNetHandler;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-import org.junit.Test;
-import wdl.TestWorld.ServerWorld;
-
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.function.BiPredicate;
-import java.util.function.Function;
-import java.util.function.IntFunction;
-
-import org.junit.Test;
-import org.mockito.AdditionalAnswers;
-
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityTracker;
-import net.minecraft.entity.item.EntityArmorStand;
-import net.minecraft.entity.monster.EntityCreeper;
-import net.minecraft.entity.monster.EntityZombie;
-import net.minecraft.entity.passive.EntityPig;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import wdl.TestWorld.ServerWorld;

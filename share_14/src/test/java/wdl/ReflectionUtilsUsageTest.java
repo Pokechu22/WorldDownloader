@@ -14,43 +14,27 @@
  */
 package wdl;
 
+import java.io.File;
 import java.util.List;
+
+import org.junit.Test;
+
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.multiplayer.ClientChunkProvider;
 import net.minecraft.client.network.play.ClientPlayNetHandler;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.entity.merchant.IMerchant;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
+import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.passive.EquineEntity;
 import net.minecraft.inventory.ContainerHorseChest;
+import net.minecraft.inventory.ContainerMerchant;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.BrewingStandContainer;
 import net.minecraft.inventory.container.DispenserContainer;
 import net.minecraft.inventory.container.FurnaceContainer;
 import net.minecraft.inventory.container.HopperContainer;
 import net.minecraft.inventory.container.MerchantContainer;
-import net.minecraft.village.MerchantRecipeList;
-import net.minecraft.world.chunk.storage.AnvilChunkLoader;
-import org.junit.Test;
-import wdl.versioned.VersionedFunctions;
-
-
-import org.junit.Test;
-
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.multiplayer.ChunkProviderClient;
-import net.minecraft.client.network.NetHandlerPlayClient;
-import net.minecraft.crash.CrashReport;
-import net.minecraft.entity.IMerchant;
-import net.minecraft.entity.passive.EntityVillager;
-import net.minecraft.entity.passive.EquineEntity;
-import net.minecraft.inventory.ContainerBrewingStand;
-import net.minecraft.inventory.ContainerDispenser;
-import net.minecraft.inventory.ContainerFurnace;
-import net.minecraft.inventory.ContainerHopper;
-import net.minecraft.inventory.ContainerHorseChest;
-import net.minecraft.inventory.ContainerMerchant;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.chunk.storage.AnvilChunkLoader;
 import wdl.gui.GuiWDLSaveProgress;

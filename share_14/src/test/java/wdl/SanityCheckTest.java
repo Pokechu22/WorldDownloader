@@ -16,9 +16,6 @@ package wdl;
 
 import org.junit.Test;
 
-
-import org.junit.Test;
-
 /**
  * Runs each {@link SanityCheck}.
  */

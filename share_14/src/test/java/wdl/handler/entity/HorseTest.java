@@ -14,25 +14,6 @@
  */
 package wdl.handler.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.annotation.Nullable;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.passive.EquineEntity;
-import net.minecraft.inventory.ContainerHorseChest;
-import net.minecraft.inventory.container.HorseInventoryContainer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.world.World;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
-import wdl.ReflectionUtils;
-import wdl.handler.HandlerException;
-
-
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,13 +25,13 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.passive.EquineEntity;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.inventory.ContainerHorseChest;
-import net.minecraft.inventory.ContainerHorseInventory;
+import net.minecraft.inventory.container.HorseInventoryContainer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.World;
 import wdl.ReflectionUtils;
 import wdl.VersionConstants;

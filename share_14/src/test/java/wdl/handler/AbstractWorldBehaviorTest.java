@@ -14,16 +14,25 @@
  */
 package wdl.handler;
 
-import com.mojang.authlib.GameProfile;
 import java.util.UUID;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.junit.After;
+import org.mockito.AdditionalAnswers;
+
+import com.mojang.authlib.GameProfile;
+
 import junit.framework.ComparisonFailure;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.IngameGui;
 import net.minecraft.client.gui.MapItemRenderer;
 import net.minecraft.client.gui.NewChatGui;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.network.play.ClientPlayNetHandler;
 import net.minecraft.client.world.ClientWorld;
@@ -36,49 +45,6 @@ import net.minecraft.network.play.ServerPlayNetHandler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.PlayerInteractionManager;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.junit.After;
-import wdl.MaybeMixinTest;
-import wdl.ReflectionUtils;
-import wdl.TestWorld;
-import wdl.ducks.INetworkNameable;
-import wdl.versioned.VersionedFunctions;
-
-
-import java.util.UUID;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.junit.After;
-import org.mockito.AdditionalAnswers;
-
-import com.mojang.authlib.GameProfile;
-
-import junit.framework.ComparisonFailure;
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.GuiIngame;
-import net.minecraft.client.gui.GuiNewChat;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.MapItemRenderer;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.multiplayer.WorldClient;
-import net.minecraft.client.network.NetHandlerPlayClient;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Bootstrap;
-import net.minecraft.inventory.InventoryBasic;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetHandlerPlayServer;
-import net.minecraft.network.Packet;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.management.PlayerInteractionManager;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import wdl.MaybeMixinTest;
 import wdl.ReflectionUtils;
