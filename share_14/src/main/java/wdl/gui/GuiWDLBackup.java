@@ -89,12 +89,14 @@ public class GuiWDLBackup extends WDLScreen {
 			}
 		});
 
-		customBackupCommandTemplateFld = this.addTextField(new TextFieldWidget(1, fontRenderer,
-				width / 2 - 100, 54, 200, 20));
+		customBackupCommandTemplateFld = this.addTextField(new TextFieldWidget(fontRenderer,
+				width / 2 - 100, 54, 200, 20,
+				I18n.format("wdl.gui.backup.customCommandTemplate")));
 		customBackupCommandTemplateFld.setMaxStringLength(255);
 		customBackupCommandTemplateFld.setText(this.customBackupCommandTemplate);
-		customBackupExtensionFld = this.addTextField(new TextFieldWidget(2, fontRenderer,
-				width / 2 + 160, 54, 40, 20));
+		customBackupExtensionFld = this.addTextField(new TextFieldWidget(fontRenderer,
+				width / 2 + 160, 54, 40, 20,
+				I18n.format("wdl.gui.backup.customExtension")));
 		customBackupExtensionFld.setText(this.customBackupExtension);
 
 		updateFieldVisibility();

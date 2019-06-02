@@ -57,8 +57,8 @@ public class GuiWDLGenerator extends WDLScreen {
 
 		this.title = I18n.format("wdl.gui.generator.title", WDL.baseFolderName);
 		int y = this.height / 4 - 15;
-		this.seedField = this.addTextField(new TextFieldWidget(40, this.fontRenderer,
-				this.width / 2 - (100 - seedWidth), y, 200 - seedWidth, 18));
+		this.seedField = this.addTextField(new TextFieldWidget(this.fontRenderer,
+				this.width / 2 - (100 - seedWidth), y, 200 - seedWidth, 18, seedText));
 		this.seedField.setText(config.getValue(GeneratorSettings.SEED));
 		y += 22;
 		this.generatorBtn = this.addButton(new SettingButton(

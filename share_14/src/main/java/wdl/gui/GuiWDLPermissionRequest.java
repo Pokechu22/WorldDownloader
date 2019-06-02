@@ -75,8 +75,8 @@ public class GuiWDLPermissionRequest extends WDLScreen {
 					+ request.getValue() + "'.");
 		}
 
-		this.requestField = this.addTextField(new TextFieldWidget(0, fontRenderer,
-				width / 2 - 155, 18, 150, 20));
+		this.requestField = this.addTextField(new TextFieldWidget(fontRenderer,
+				width / 2 - 155, 18, 150, 20, "Request"));
 
 		this.submitButton = this.addButton(new WDLButton(
 				width / 2 + 5, 18, 150, 20,
