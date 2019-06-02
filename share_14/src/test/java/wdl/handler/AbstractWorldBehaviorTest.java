@@ -14,6 +14,8 @@
  */
 package wdl.handler;
 
+import static org.mockito.Mockito.*;
+
 import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;

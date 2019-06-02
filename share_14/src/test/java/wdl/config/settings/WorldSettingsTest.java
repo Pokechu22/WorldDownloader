@@ -14,6 +14,8 @@
  */
 package wdl.config.settings;
 
+import static org.mockito.Mockito.*;
+
 import org.junit.Test;
 
 import net.minecraft.entity.Entity;

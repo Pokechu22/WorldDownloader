@@ -14,6 +14,8 @@
  */
 package wdl;
 
+import static org.mockito.Mockito.*;
+
 import org.junit.Test;
 
 import net.minecraft.client.gui.screen.inventory.CreativeScreen;

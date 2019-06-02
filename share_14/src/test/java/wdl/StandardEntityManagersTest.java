@@ -14,6 +14,8 @@
  */
 package wdl;
 
+import static org.mockito.Mockito.*;
+
 import java.util.List;
 import java.util.stream.Collectors;
 

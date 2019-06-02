@@ -14,6 +14,8 @@
  */
 package wdl;
 
+import static org.mockito.Mockito.*;
+
 import java.util.UUID;
 
 import net.minecraft.client.network.play.ClientPlayNetHandler;

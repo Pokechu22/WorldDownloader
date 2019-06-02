@@ -14,6 +14,7 @@
  */
 package wdl;
 
+import static org.mockito.Mockito.*;
 
 import java.util.Collections;
 import java.util.function.Consumer;
