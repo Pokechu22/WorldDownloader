@@ -30,8 +30,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.IngameMenuScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.multiplayer.WorldClient;
-import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.network.play.ClientPlayNetHandler;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.world.ClientWorld;
@@ -42,13 +40,8 @@ import net.minecraft.network.play.server.SBlockActionPacket;
 import net.minecraft.network.play.server.SChatPacket;
 import net.minecraft.network.play.server.SCustomPayloadPlayPacket;
 import net.minecraft.network.play.server.SMapDataPacket;
-import net.minecraft.network.play.server.SPacketBlockAction;
-import net.minecraft.network.play.server.SPacketChat;
-import net.minecraft.network.play.server.SPacketCustomPayload;
-import net.minecraft.network.play.server.SPacketMaps;
-import net.minecraft.network.play.server.SPacketUnloadChunk;
 import net.minecraft.network.play.server.SUnloadChunkPacket;
-import net.minecraft.profiler.Profiler;
+import net.minecraft.profiler.IProfiler;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.chunk.Chunk;
@@ -64,6 +57,7 @@ import wdl.gui.GuiWDL;
 import wdl.gui.GuiWDLAbout;
 import wdl.gui.GuiWDLChunkOverrides;
 import wdl.gui.GuiWDLPermissions;
+import wdl.gui.widget.WDLButton;
 import wdl.versioned.VersionedFunctions;
 
 /**
@@ -94,12 +88,12 @@ public class WDLHooks {
 	 * optimize it out, as may be verified by javap.
 	 */
 	static final boolean ENABLE_PROFILER = false;
-	private static final Profiler PROFILER = ENABLE_PROFILER ? Minecraft.getInstance().profiler : null;
+	private static final IProfiler PROFILER = ENABLE_PROFILER ? Minecraft.getInstance().func_213239_aq() : null;
 
 	private final WDL wdl = WDL.INSTANCE;
 
 	/**
-	 * Called when {@link WorldClient#tick()} is called.
+	 * Called when {@link ClientWorld#tick()} is called.
 	 * <br/>
 	 * Should be at end of the method.
 	 */
@@ -199,7 +193,7 @@ public class WDLHooks {
 	}
 
 	/**
-	 * Called when {@link WorldClient#removeEntityFromWorld(int)} is called.
+	 * Called when {@link ClientWorld#removeEntityFromWorld(int)} is called.
 	 * <br/>
 	 * Should be at the start of the method.
 	 *
@@ -231,7 +225,7 @@ public class WDLHooks {
 	}
 
 	/**
-	 * Called when {@link NetHandlerPlayClient#processChunkUnload(SPacketUnloadChunk)} is called.
+	 * Called when {@link ClientPlayNetHandler#processChunkUnload(SUnloadChunkPacket)} is called.
 	 * <br/>
 	 * Should be at the start of the method.
 	 */
@@ -262,7 +256,7 @@ public class WDLHooks {
 	}
 
 	/**
-	 * Called when {@link NetHandlerPlayClient#handleChat(SPacketChat)} is
+	 * Called when {@link ClientPlayNetHandler#handleChat(SChatPacket)} is
 	 * called.
 	 * <br/>
 	 * Should be at the end of the method.
@@ -302,7 +296,7 @@ public class WDLHooks {
 	}
 
 	/**
-	 * Called when {@link NetHandlerPlayClient#handleMaps(SPacketMaps)} is
+	 * Called when {@link ClientPlayNetHandler#handleMaps(SMapDataPacket)} is
 	 * called.
 	 * <br/>
 	 * Should be at the end of the method.
@@ -340,7 +334,7 @@ public class WDLHooks {
 
 	/**
 	 * Called when
-	 * {@link NetHandlerPlayClient#handleCustomPayload(SPacketCustomPayload)}
+	 * {@link ClientPlayNetHandler#handleCustomPayload(SCustomPayloadPlayPacket)}
 	 * is called.
 	 * <br/>
 	 * Should be at the end of the method.
@@ -409,7 +403,7 @@ public class WDLHooks {
 
 	/**
 	 * Called when
-	 * {@link NetHandlerPlayClient#handleBlockAction(SPacketBlockAction)} is
+	 * {@link ClientPlayNetHandler#handleBlockAction(SBlockActionPacket)} is
 	 * called.
 	 * <br/>
 	 * Should be at the end of the method.
@@ -454,7 +448,7 @@ public class WDLHooks {
 	}
 
 	/**
-	 * Called when {@link NetHandlerPlayClient#onDisconnect(ITextComponent)} is called.
+	 * Called when {@link ClientPlayNetHandler#onDisconnect(ITextComponent)} is called.
 	 * <br/>
 	 * Should be at the start of the method.
 	 *
@@ -502,7 +496,7 @@ public class WDLHooks {
 	 */
 	private static final int WDLo = ('W' << 24) | ('D' << 16) | ('L' << 8) | ('o');
 
-	private class StartDownloadButton extends Button {
+	private class StartDownloadButton extends WDLButton {
 		public StartDownloadButton(Screen menu, int x, int y, int width, int height) {
 			super(x, y, width, height, null);
 			this.menu = menu;
@@ -582,7 +576,7 @@ public class WDLHooks {
 		}
 	}
 
-	private class SettingsButton extends Button {
+	private class SettingsButton extends WDLButton {
 		public SettingsButton(Screen menu, int x, int y, int width, int height, String displayString) {
 			super(x, y, width, height, displayString);
 			this.menu = menu;

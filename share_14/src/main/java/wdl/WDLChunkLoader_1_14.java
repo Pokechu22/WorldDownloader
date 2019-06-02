@@ -37,7 +37,7 @@ import net.minecraft.world.chunk.ChunkStatus;
 import net.minecraft.world.chunk.IChunk;
 import net.minecraft.world.chunk.NibbleArray;
 import net.minecraft.world.chunk.UpgradeData;
-import net.minecraft.world.chunk.storage.AnvilChunkLoader;
+import net.minecraft.world.chunk.ChunkManager;
 import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.dimension.EndDimension;
 import net.minecraft.world.dimension.NetherDimension;
@@ -47,12 +47,12 @@ import net.minecraft.world.storage.SessionLockException;
 import wdl.versioned.VersionedFunctions;
 
 /**
- * Alternative implementation of {@link AnvilChunkLoader} that handles editing
+ * Alternative implementation of {@link ChunkManager} that handles editing
  * WDL-specific properties of chunks as they are being saved.
  *
  * This variant is used for chunks from 1.13 and later.
  */
-abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
+abstract class WDLChunkLoaderBase extends ChunkManager {
 
 	private static final Logger LOGGER = LogManager.getLogger();
 	/**

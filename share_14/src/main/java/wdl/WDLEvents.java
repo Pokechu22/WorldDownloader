@@ -26,11 +26,14 @@ import net.minecraft.inventory.EnderChestInventory;
 import net.minecraft.inventory.container.ChestContainer;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
+import net.minecraft.profiler.IProfiler;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.tileentity.EnderChestTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.chunk.Chunk;
@@ -58,7 +61,7 @@ import wdl.update.WDLUpdateChecker;
 public class WDLEvents {
 	/** @see WDLHooks#ENABLE_PROFILER */
 	private static final boolean ENABLE_PROFILER = WDLHooks.ENABLE_PROFILER;
-	private static final Profiler PROFILER = ENABLE_PROFILER ? Minecraft.getInstance().profiler : null;
+	private static final IProfiler PROFILER = ENABLE_PROFILER ? Minecraft.getInstance().func_213239_aq() : null;
 
 	// XXX this shoudln't be static
 	private static WDL wdl = WDL.INSTANCE;
@@ -134,15 +137,18 @@ public class WDLEvents {
 	public static void onItemGuiOpened() {
 		if (!WDL.downloading) { return; }
 
-		if (WDL.minecraft.objectMouseOver == null) {
+		// NOTE: https://bugs.mojang.com/browse/MC-79925 was fixed in 1.14, but when backporting
+		// will possibly cause issues.
+		RayTraceResult result = WDL.minecraft.objectMouseOver;
+		if (result.func_216346_c() == RayTraceResult.Type.MISS) {
 			return;
 		}
 
-		if (WDL.minecraft.objectMouseOver.type == RayTraceResult.Type.ENTITY) {
-			wdl.lastEntity = WDL.minecraft.objectMouseOver.entity;
+		if (result.func_216346_c() == RayTraceResult.Type.ENTITY) {
+			wdl.lastEntity = ((EntityRayTraceResult)result).func_216348_a();
 		} else {
 			wdl.lastEntity = null;
-			wdl.lastClickedBlock = WDL.minecraft.objectMouseOver.getBlockPos();
+			wdl.lastClickedBlock = ((BlockRayTraceResult)result).func_216350_a();
 		}
 	}
 

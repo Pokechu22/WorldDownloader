@@ -15,6 +15,9 @@
 
 package wdl;
 
+import static net.minecraft.util.text.TextFormatting.*;
+import static wdl.MessageTypeCategory.*;
+
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
