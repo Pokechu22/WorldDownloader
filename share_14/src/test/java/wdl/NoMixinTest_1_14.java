@@ -28,6 +28,7 @@ import net.minecraft.client.resources.VirtualAssetsPack;
 import net.minecraft.resources.IResourcePack;
 import net.minecraft.resources.ResourcePackType;
 import net.minecraft.resources.SimpleReloadableResourceManager;
+import net.minecraft.util.registry.Bootstrap;
 
 /**
  * This is a more or less empty class that is used to specify the runner that
@@ -46,10 +47,6 @@ abstract class MaybeMixinTestBase {
 		if (ran) {
 			return;
 		}
-		if (Bootstrap.isRegistered()) {
-			LOGGER.warn("Bootstrap already initialized.");
-			return;
-		}
 		ran = true;
 		LOGGER.debug("Initializing bootstrap...");
 		Bootstrap.register();
@@ -59,7 +56,7 @@ abstract class MaybeMixinTestBase {
 		// Prepare I18n by constructing a LanguageManager and preparing it...
 		// (some tests depend on it)
 		LanguageManager languageManager = new LanguageManager("en_us");
-		SimpleReloadableResourceManager resourceManager = new SimpleReloadableResourceManager(ResourcePackType.CLIENT_RESOURCES);
+		SimpleReloadableResourceManager resourceManager = new SimpleReloadableResourceManager(ResourcePackType.CLIENT_RESOURCES, null);
 		IResourcePack pack = new VirtualAssetsPack(new ResourceIndex() {}); // needs modified VirtualAssetsPack, I think
 		resourceManager.addResourcePack(pack);
 		languageManager.onResourceManagerReload(resourceManager);
