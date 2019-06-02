@@ -17,31 +17,44 @@ package wdl;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.nbt.INBT;
+import it.unimi.dsi.fastutil.shorts.ShortList;
+import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.LongArrayNBT;
+import net.minecraft.nbt.ShortNBT;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.SectionPos;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.world.LightType;
+import net.minecraft.world.SerializableTickList;
 import net.minecraft.world.ServerTickList;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.ChunkManager;
+import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.chunk.ChunkPrimerTickList;
 import net.minecraft.world.chunk.ChunkSection;
 import net.minecraft.world.chunk.ChunkStatus;
 import net.minecraft.world.chunk.IChunk;
 import net.minecraft.world.chunk.NibbleArray;
 import net.minecraft.world.chunk.UpgradeData;
-import net.minecraft.world.chunk.ChunkManager;
 import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.dimension.EndDimension;
 import net.minecraft.world.dimension.NetherDimension;
+import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.Heightmap;
+import net.minecraft.world.lighting.WorldLightManager;
 import net.minecraft.world.storage.SaveHandler;
 import net.minecraft.world.storage.SessionLockException;
 import wdl.versioned.VersionedFunctions;
@@ -54,7 +67,6 @@ import wdl.versioned.VersionedFunctions;
  */
 abstract class WDLChunkLoaderBase extends ChunkManager {
 
-	private static final Logger LOGGER = LogManager.getLogger();
 	/**
 	 * Gets the save folder for the given WorldProvider, respecting Forge's
 	 * dimension names if forge is present.
@@ -130,11 +142,12 @@ abstract class WDLChunkLoaderBase extends ChunkManager {
 	private CompoundNBT writeChunkToNBT(Chunk chunk, World world) {
 		CompoundNBT compound = new CompoundNBT();
 
-		compound.putInt("xPos", chunk.getPos().x);
-		compound.putInt("zPos", chunk.getPos().z);
+		ChunkPos chunkpos = chunk.getPos();
+		compound.putInt("xPos", chunkpos.x);
+		compound.putInt("zPos", chunkpos.z);
 		compound.putLong("LastUpdate", world.getGameTime());
 		compound.putLong("InhabitedTime", chunk.getInhabitedTime());
-		compound.putString("Status", ChunkStatus.POSTPROCESSED.getName()); // Make sure that the chunk is considered fully generated
+		compound.putString("Status", ChunkStatus.field_222617_m/*FULL*/.func_222596_d()); // Make sure that the chunk is considered fully generated
 		UpgradeData upgradedata = chunk.getUpgradeData();
 
 		if (!upgradedata.isEmpty()) {
@@ -143,45 +156,50 @@ abstract class WDLChunkLoaderBase extends ChunkManager {
 
 		ChunkSection[] chunkSections = chunk.getSections();
 		ListNBT chunkSectionList = new ListNBT();
-		boolean hasSky = VersionedFunctions.hasSkyLight(world);
+		WorldLightManager worldlightmanager = world.getChunkProvider().func_212863_j_();
 
-		for (ChunkSection chunkSection : chunkSections) {
-			if (chunkSection != Chunk.EMPTY_SECTION) {
+		// XXX: VersionedFunctions.hasSkyLight is inapplicable here presumably, but it might still need to be used somehow
+		for (int y = -1; y < 17; ++y) {
+			final int f_y = y; // Compiler food
+			ChunkSection chunkSection = Arrays.stream(chunkSections)
+					.filter(section -> section != null && section.func_222632_g() >> 4 == f_y)
+					.findFirst()
+					.orElse(Chunk.EMPTY_SECTION);
+			NibbleArray blocklightArray = worldlightmanager.func_215569_a(LightType.BLOCK)
+					.func_215612_a(SectionPos.func_218156_a(chunkpos, y));
+			NibbleArray skylightArray = worldlightmanager.func_215569_a(LightType.SKY)
+					.func_215612_a(SectionPos.func_218156_a(chunkpos, y));
+			if (chunkSection != Chunk.EMPTY_SECTION || blocklightArray != null || skylightArray != null) {
 				CompoundNBT sectionNBT = new CompoundNBT();
-				sectionNBT.putByte("Y",
-						(byte) (chunkSection.getYLocation() >> 4 & 255));
-				chunkSection.getData().writeChunkPalette(sectionNBT, "Palette", "BlockStates");
-
-				NibbleArray blocklightArray = chunkSection.getBlockLight();
-				int lightArrayLen = blocklightArray.getData().length;
-				sectionNBT.putByteArray("BlockLight", blocklightArray.getData());
-
-				if (hasSky) {
-					NibbleArray skylightArray = chunkSection.getSkyLight();
-					if (skylightArray != null) {
-						sectionNBT.putByteArray("SkyLight", chunkSection.getSkyLight().getData());
-					} else {
-						// Shouldn't happen, but if it does, handle it smoothly.
-						LOGGER.error("[WDL] Skylight array for chunk at " +
-								chunk.getPos().x + ", " + chunk.getPos().z +
-								" is null despite VersionedProperties " +
-								"saying it shouldn't be!");
-						sectionNBT.putByteArray("SkyLight", new byte[lightArrayLen]);
-					}
-				} else {
-					sectionNBT.putByteArray("SkyLight", new byte[chunkSection.getBlockLight().getData().length]);
+				sectionNBT.putByte("Y", (byte) (y & 255));
+				if (chunkSection != Chunk.EMPTY_SECTION) {
+					chunkSection.getData().writeChunkPalette(sectionNBT, "Palette", "BlockStates");
 				}
 
-				chunkSectionList.add((INBT) sectionNBT);
+				if (blocklightArray != null && !blocklightArray.func_215655_c()) {
+					sectionNBT.putByteArray("BlockLight", blocklightArray.getData());
+				}
+
+				if (skylightArray != null && !skylightArray.func_215655_c()) {
+					sectionNBT.putByteArray("SkyLight", skylightArray.getData());
+				}
+
+				chunkSectionList.add(sectionNBT);
 			}
 		}
 
 		compound.func_218657_a("Sections", chunkSectionList);
 
+		if (chunk.func_217310_r()) {
+			compound.putBoolean("isLightOn", true);
+		}
+
 		Biome[] biomes = chunk.getBiomes();
-		int[] biomeData = new int[biomes.length];
-		for (int i = 0; i < biomes.length; ++i) {
-			biomeData[i] = VersionedFunctions.getBiomeId(biomes[i]);
+		int[] biomeData = biomes != null ? new int[biomes.length] : new int[0];
+		if (biomes != null) {
+			for (int j = 0; j < biomes.length; ++j) {
+				biomeData[j] = VersionedFunctions.getBiomeId(biomes[j]);
+			}
 		}
 
 		compound.putIntArray("Biomes", biomeData);
@@ -193,11 +211,12 @@ abstract class WDLChunkLoaderBase extends ChunkManager {
 		ListNBT tileEntityList = getTileEntityList(chunk);
 		compound.func_218657_a("TileEntities", tileEntityList);
 
+		// XXX: Note: This was re-sorted on mojang's end; I've undone that.
 		if (world.getPendingBlockTicks() instanceof ServerTickList) {
-			compound.func_218657_a("TileTicks", ((ServerTickList<?>) world.getPendingBlockTicks()).write(chunk));
+			compound.func_218657_a("TileTicks", ((ServerTickList<?>) world.getPendingBlockTicks()).func_219503_a(chunkpos));
 		}
 		if (world.getPendingFluidTicks() instanceof ServerTickList) {
-			compound.func_218657_a("LiquidTicks", ((ServerTickList<?>) world.getPendingFluidTicks()).write(chunk));
+			compound.func_218657_a("LiquidTicks", ((ServerTickList<?>) world.getPendingFluidTicks()).func_219503_a(chunkpos));
 		}
 
 		compound.func_218657_a("PostProcessing", listArrayToTag(chunk.getPackedPositions()));
@@ -205,23 +224,34 @@ abstract class WDLChunkLoaderBase extends ChunkManager {
 		if (chunk.getBlocksToBeTicked() instanceof ChunkPrimerTickList) {
 			compound.func_218657_a("ToBeTicked", ((ChunkPrimerTickList<?>) chunk.getBlocksToBeTicked()).write());
 		}
+
+		// XXX: These are new, and they might conflict with the other one.  Not sure which should be used.
+		if (chunk.getBlocksToBeTicked() instanceof SerializableTickList) {
+			compound.func_218657_a("TileTicks", ((SerializableTickList<?>) chunk.getBlocksToBeTicked())
+					.func_219498_a(world.getGameTime()));
+		}
+
 		if (chunk.getFluidsToBeTicked() instanceof ChunkPrimerTickList) {
 			compound.func_218657_a("LiquidsToBeTicked", ((ChunkPrimerTickList<?>) chunk.getFluidsToBeTicked()).write());
 		}
 
+		if (chunk.getFluidsToBeTicked() instanceof SerializableTickList) {
+			compound.func_218657_a("LiquidTicks", ((SerializableTickList<?>) chunk.getFluidsToBeTicked())
+					.func_219498_a(world.getGameTime()));
+		}
+
 		CompoundNBT heightMaps = new CompoundNBT();
 
-		for (Heightmap.Type type : chunk.getHeightmaps()) {
-			if (type.getUsage() == Heightmap.Usage.LIVE_WORLD) {
-				heightMaps.put(type.getId(),
-						new LongArrayNBT(chunk.getHeightmap(type).getDataArray()));
+		for (Entry<Heightmap.Type, Heightmap> entry : chunk.func_217311_f()) {
+			if (chunk.getStatus().func_222595_h().contains(entry.getKey())) {
+				heightMaps.func_218657_a(entry.getKey().getId(), new LongArrayNBT(entry.getValue().getDataArray()));
 			}
 		}
 
 		compound.func_218657_a("Heightmaps", heightMaps);
 		// TODO
 		//compound.func_218657_a("Structures",
-		//		this.func_202160_a(chunk.x, chunk.z, chunk.func_201609_c(), chunk.func_201604_d()));
+		//		func_222649_a(chunkpos, chunk.getStructureStarts(), chunk.getStructureReferences()));
 
 		return compound;
 	}
@@ -237,5 +267,23 @@ abstract class WDLChunkLoaderBase extends ChunkManager {
 	 */
 	public synchronized int getNumPendingChunks() {
 		return this.chunksToSave.size();
+	}
+
+	private ListNBT listArrayToTag(ShortList[] list) {
+		ListNBT listnbt = new ListNBT();
+
+		for (ShortList shortlist : list) {
+			ListNBT sublist = new ListNBT();
+
+			if (shortlist != null) {
+				for (Short val : shortlist) {
+					sublist.add(new ShortNBT(val));
+				}
+			}
+
+			listnbt.add(sublist);
+		}
+
+		return listnbt;
 	}
 }
