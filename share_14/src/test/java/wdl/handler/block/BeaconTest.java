@@ -17,7 +17,7 @@ package wdl.handler.block;
 
 import static org.junit.Assert.*;
 import static org.junit.Assume.*;
-import static wdl.versioned.VersionedFunctions.customName;
+import static wdl.versioned.VersionedFunctions.*;
 
 import org.junit.Test;
 
@@ -27,7 +27,9 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.Effects;
 import net.minecraft.tileentity.BeaconTileEntity;
+import net.minecraft.util.IIntArray;
 import net.minecraft.util.math.BlockPos;
+import wdl.ReflectionUtils;
 import wdl.handler.HandlerException;
 
 /**
@@ -62,7 +64,8 @@ public class BeaconTest extends AbstractBlockHandlerTest<BeaconTileEntity, Beaco
 		makeMockWorld();
 		placeBlockAt(center, Blocks.BEACON);
 		BeaconTileEntity te = makeBlockEntity(center);
-		te.setField(1, Effect.getIdFromPotion(Effects.JUMP_BOOST));
+		IIntArray fields = ReflectionUtils.findAndGetPrivateField(te, IIntArray.class);
+		fields.func_221477_a(1, Effect.getIdFromPotion(Effects.JUMP_BOOST));
 
 		runHandler(center, makeClientContainer(center));
 		checkAllTEs();
@@ -77,8 +80,9 @@ public class BeaconTest extends AbstractBlockHandlerTest<BeaconTileEntity, Beaco
 		makeMockWorld();
 		placeBlockAt(center, Blocks.BEACON);
 		BeaconTileEntity te = makeBlockEntity(center);
-		te.setField(1, Effect.getIdFromPotion(Effects.JUMP_BOOST));
-		te.setField(2, Effect.getIdFromPotion(Effects.REGENERATION));
+		IIntArray fields = ReflectionUtils.findAndGetPrivateField(te, IIntArray.class);
+		fields.func_221477_a(1, Effect.getIdFromPotion(Effects.JUMP_BOOST));
+		fields.func_221477_a(2, Effect.getIdFromPotion(Effects.REGENERATION));
 
 		runHandler(center, makeClientContainer(center));
 		checkAllTEs();

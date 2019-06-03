@@ -23,7 +23,9 @@ import net.minecraft.inventory.container.BrewingStandContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.tileentity.BrewingStandTileEntity;
+import net.minecraft.util.IIntArray;
 import net.minecraft.util.math.BlockPos;
+import wdl.ReflectionUtils;
 import wdl.handler.HandlerException;
 
 public class BrewingStandTest extends AbstractBlockHandlerTest<BrewingStandTileEntity, BrewingStandContainer, BrewingStandHandler> {
@@ -60,8 +62,9 @@ public class BrewingStandTest extends AbstractBlockHandlerTest<BrewingStandTileE
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.BREWING_STAND);
 		BrewingStandTileEntity te = makeBlockEntity(pos);
-		te.setField(0, 10); // brew time
-		te.setField(1, 13); // fuel
+		IIntArray fields = ReflectionUtils.findAndGetPrivateField(te, IIntArray.class);
+		fields.func_221477_a(0, 10); // brew time
+		fields.func_221477_a(1, 13); // fuel
 
 		runHandler(pos, makeClientContainer(pos));
 		checkAllTEs();

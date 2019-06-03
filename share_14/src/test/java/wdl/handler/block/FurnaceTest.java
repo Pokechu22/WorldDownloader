@@ -23,7 +23,9 @@ import net.minecraft.inventory.container.FurnaceContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.tileentity.FurnaceTileEntity;
+import net.minecraft.util.IIntArray;
 import net.minecraft.util.math.BlockPos;
+import wdl.ReflectionUtils;
 import wdl.handler.HandlerException;
 
 public class FurnaceTest extends AbstractBlockHandlerTest<FurnaceTileEntity, FurnaceContainer, FurnaceHandler> {
@@ -55,10 +57,11 @@ public class FurnaceTest extends AbstractBlockHandlerTest<FurnaceTileEntity, Fur
 		te.setInventorySlotContents(0, new ItemStack(Blocks.COAL_ORE));
 		te.setInventorySlotContents(1, new ItemStack(Items.WOODEN_HOE));
 		te.setInventorySlotContents(2, new ItemStack(Items.COAL));
-		te.setField(0, 100); // burn time
+		IIntArray fields = ReflectionUtils.findAndGetPrivateField(te, IIntArray.class);
+		fields.func_221477_a(0, 100); // burn time
 		// skip field 1 (total burn time) -- not saved: https://bugs.mojang.com/browse/MC-10025
-		te.setField(2, 100); // cook time
-		te.setField(3, 200); // total cook time (saved but unused?)
+		fields.func_221477_a(2, 100); // cook time
+		fields.func_221477_a(3, 200); // total cook time (saved but unused?)
 
 		runHandler(pos, makeClientContainer(pos));
 		checkAllTEs();
