@@ -16,6 +16,7 @@ package wdl.handler.block;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
+import static wdl.versioned.VersionedFunctions.customName;
 
 import java.util.HashMap;
 import java.util.HashSet;

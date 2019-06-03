@@ -14,6 +14,8 @@
  */
 package wdl.handler.block;
 
+import static wdl.versioned.VersionedFunctions.customName;
+
 import org.junit.Test;
 
 import net.minecraft.block.Blocks;
