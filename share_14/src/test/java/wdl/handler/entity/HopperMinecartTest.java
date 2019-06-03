@@ -16,6 +16,7 @@ package wdl.handler.entity;
 
 import org.junit.Test;
 
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.item.minecart.HopperMinecartEntity;
 import net.minecraft.inventory.container.HopperContainer;
 import net.minecraft.item.ItemStack;
@@ -31,7 +32,7 @@ public class HopperMinecartTest extends AbstractEntityHandlerTest<HopperMinecart
 	@Test
 	public void testStorageHopper() throws HandlerException {
 		makeMockWorld();
-		HopperMinecartEntity minecart = new HopperMinecartEntity(serverWorld);
+		HopperMinecartEntity minecart = new HopperMinecartEntity(EntityType.HOPPER_MINECART, serverWorld);
 		minecart.setInventorySlotContents(2, new ItemStack(Items.DIAMOND));
 		addEntity(minecart);
 

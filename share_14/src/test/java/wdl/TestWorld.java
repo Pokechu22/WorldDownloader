@@ -20,6 +20,8 @@ import java.util.UUID;
 
 import net.minecraft.client.network.play.ClientPlayNetHandler;
 import net.minecraft.entity.Entity;
+import net.minecraft.profiler.EmptyProfiler;
+import net.minecraft.profiler.IProfiler;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
@@ -41,7 +43,7 @@ public final class TestWorld {
 		ClientPlayNetHandler nhpc = mock(ClientPlayNetHandler.class);
 		WorldSettings settings = new WorldSettings(0L, null, false, false, WorldType.DEFAULT);
 		Difficulty difficulty = Difficulty.NORMAL;
-		Profiler profiler = new Profiler();
+		IProfiler profiler = EmptyProfiler.field_219906_a;
 
 		return new ClientWorld(nhpc, settings, dim, difficulty, profiler);
 	}
@@ -54,14 +56,14 @@ public final class TestWorld {
 		MinecraftServer server = mock(MinecraftServer.class, withSettings().defaultAnswer(RETURNS_MOCKS));
 		SaveHandler saveHandler = mock(SaveHandler.class);
 		WorldInfo info = new WorldInfo() {};
-		Profiler profiler = new Profiler();
+		IProfiler profiler = EmptyProfiler.field_219906_a;
 
 		return new ServerWorld(server, saveHandler, info, dim, profiler);
 	}
 
 	public static final class ClientWorld extends ExtWorldClient implements AutoCloseable {
 		private ClientWorld(ClientPlayNetHandler netHandler, WorldSettings settings, DimensionType dim,
-				Difficulty difficulty, Profiler profilerIn) {
+				Difficulty difficulty, IProfiler profilerIn) {
 			super(netHandler, settings, dim, difficulty, profilerIn);
 		}
 
@@ -78,7 +80,7 @@ public final class TestWorld {
 	}
 	public static final class ServerWorld extends ExtWorldServer implements AutoCloseable {
 		private ServerWorld(MinecraftServer server, SaveHandler saveHandlerIn, WorldInfo info, DimensionType dim,
-				Profiler profilerIn) {
+				IProfiler profilerIn) {
 			super(server, saveHandlerIn, info, dim, profilerIn);
 		}
 

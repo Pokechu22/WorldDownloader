@@ -28,19 +28,22 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import net.minecraft.block.Blocks;
-import net.minecraft.entity.passive.EquineEntity;
-import net.minecraft.inventory.ContainerHorseChest;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.passive.horse.AbstractHorseEntity;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.HorseInventoryContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import wdl.ReflectionUtils;
 import wdl.VersionConstants;
 import wdl.handler.HandlerException;
 
 @RunWith(Parameterized.class)
-public class HorseTest<T extends EquineEntity> extends AbstractEntityHandlerTest<T, HorseInventoryContainer, HorseHandler> {
+public class HorseTest<T extends AbstractHorseEntity> extends AbstractEntityHandlerTest<T, HorseInventoryContainer, HorseHandler> {
 	private static enum HorseType {
 		HORSE("minecraft:horse", "net.minecraft.entity.passive.EntityHorse", 0, false),
 		DONKEY("minecraft:donkey", "net.minecraft.entity.passive.EntityDonkey", 1, true),
@@ -110,15 +113,15 @@ public class HorseTest<T extends EquineEntity> extends AbstractEntityHandlerTest
 		/**
 		 * Gets the class used to represent this horse.
 		 */
-		public Class<? extends EquineEntity> getHorseClass() {
+		public Class<? extends AbstractHorseEntity> getHorseClass() {
 			if (HAS_NAMESPACED_ENTITIES) {
 				try {
-					return Class.forName(this.className).asSubclass(EquineEntity.class);
+					return Class.forName(this.className).asSubclass(AbstractHorseEntity.class);
 				} catch (ClassNotFoundException e) {
 					throw new RuntimeException(e);
 				}
 			} else {
-				return EquineEntity.class;
+				return AbstractHorseEntity.class;
 			}
 		}
 	}
@@ -149,7 +152,8 @@ public class HorseTest<T extends EquineEntity> extends AbstractEntityHandlerTest
 
 	private T makeHorse() {
 		try {
-			T entity = this.entityClass.getConstructor(World.class).newInstance(this.serverWorld);
+			EntityType<?> type = Registry.ENTITY_TYPE.func_218349_b(new ResourceLocation(this.type.id)).get();
+			T entity = this.entityClass.getConstructor(EntityType.class, World.class).newInstance(type, this.serverWorld);
 			applyNBT(entity, this.type.getNBT(this.chests));
 			entity.setHorseTamed(true);
 			return entity;
@@ -162,8 +166,8 @@ public class HorseTest<T extends EquineEntity> extends AbstractEntityHandlerTest
 	@Test
 	public void testHorse() throws HandlerException {
 		makeMockWorld();
-		EquineEntity horse = makeHorse();
-		ContainerHorseChest inventory = ReflectionUtils.findAndGetPrivateField(horse, EquineEntity.class, ContainerHorseChest.class);
+		AbstractHorseEntity horse = makeHorse();
+		Inventory inventory = ReflectionUtils.findAndGetPrivateField(horse, AbstractHorseEntity.class, Inventory.class);
 		inventory.setInventorySlotContents(0, new ItemStack(Items.SADDLE));
 		if (inventory.getSizeInventory() > 2) {
 			inventory.setInventorySlotContents(inventory.getSizeInventory() - 1, new ItemStack(Blocks.STONE));

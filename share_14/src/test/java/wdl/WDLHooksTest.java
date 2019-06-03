@@ -116,7 +116,7 @@ public class WDLHooksTest extends AbstractWorldBehaviorTest {
 	public void testHandleMaps() {
 		doWithMockHooks(mock -> {
 			makeMockWorld();
-			SMapDataPacket packet = new SMapDataPacket(0, (byte)0, false, Collections.emptyList(), new byte[0], 0, 0, 0, 0);
+			SMapDataPacket packet = new SMapDataPacket(0, (byte)0, false, false, Collections.emptyList(), new byte[0], 0, 0, 0, 0);
 			clientPlayer.connection.handleMaps(packet);
 
 			verify(mock).onNHPCHandleMaps0(clientPlayer.connection, packet);

@@ -50,7 +50,7 @@ public class DispenserTest extends AbstractBlockHandlerTest<DispenserTileEntity,
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.DISPENSER);
 		DispenserTileEntity te = makeBlockEntity(pos);
-		te.setCustomName(customName("Something"));
+		te.func_213903_a(customName("Something"));
 
 		runHandler(pos, makeClientContainer(pos));
 		checkAllTEs();
@@ -64,7 +64,7 @@ public class DispenserTest extends AbstractBlockHandlerTest<DispenserTileEntity,
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.DISPENSER);
 		DispenserTileEntity te = makeBlockEntity(pos);
-		te.setCustomName(customName("Dispenser"));
+		te.func_213903_a(customName("Dispenser"));
 
 		runHandler(pos, makeClientContainer(pos));
 		checkAllTEs();

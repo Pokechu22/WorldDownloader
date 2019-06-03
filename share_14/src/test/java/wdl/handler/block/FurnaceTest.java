@@ -70,7 +70,7 @@ public class FurnaceTest extends AbstractBlockHandlerTest<FurnaceTileEntity, Fur
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.FURNACE);
 		FurnaceTileEntity te = makeBlockEntity(pos);
-		te.setCustomName(customName("Furni"));
+		te.func_213903_a(customName("Furni"));
 
 		runHandler(pos, makeClientContainer(pos));
 		checkAllTEs();
@@ -84,7 +84,7 @@ public class FurnaceTest extends AbstractBlockHandlerTest<FurnaceTileEntity, Fur
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.FURNACE);
 		FurnaceTileEntity te = makeBlockEntity(pos);
-		te.setCustomName(customName("Furnace"));
+		te.func_213903_a(customName("Furnace"));
 
 		runHandler(pos, makeClientContainer(pos));
 		checkAllTEs();

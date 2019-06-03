@@ -76,7 +76,7 @@ public class BrewingStandTest extends AbstractBlockHandlerTest<BrewingStandTileE
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.BREWING_STAND);
 		BrewingStandTileEntity te = makeBlockEntity(pos);
-		te.setCustomName(customName("Potion maker"));
+		te.func_213903_a(customName("Potion maker"));
 
 		runHandler(pos, makeClientContainer(pos));
 		checkAllTEs();
@@ -93,7 +93,7 @@ public class BrewingStandTest extends AbstractBlockHandlerTest<BrewingStandTileE
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.BREWING_STAND);
 		BrewingStandTileEntity te = makeBlockEntity(pos);
-		te.setCustomName(customName("Brewing Stand"));
+		te.func_213903_a(customName("Brewing Stand"));
 
 		runHandler(pos, makeClientContainer(pos));
 		checkAllTEs();

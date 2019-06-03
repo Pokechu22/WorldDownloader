@@ -34,7 +34,7 @@ import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.item.crafting.RecipeManager;
-import net.minecraft.profiler.Profiler;
+import net.minecraft.profiler.IProfiler;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.scoreboard.ServerScoreboard;
 import net.minecraft.server.MinecraftServer;
@@ -49,17 +49,17 @@ import net.minecraft.world.WorldSettings;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraft.world.chunk.AbstractChunkProvider;
 import net.minecraft.world.chunk.ServerChunkProvider;
 import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.gen.IChunkGenerator;
-import net.minecraft.world.storage.ISaveHandler;
+import net.minecraft.world.gen.ChunkGenerator;
+import net.minecraft.world.storage.SaveHandler;
 import net.minecraft.world.storage.WorldInfo;
 
 abstract class ExtWorldClient extends ClientWorld {
 	public ExtWorldClient(ClientPlayNetHandler netHandler, WorldSettings settings, DimensionType dim,
-			Difficulty difficulty, Profiler profilerIn) {
-		super(netHandler, settings, dim, difficulty, profilerIn);
+			Difficulty difficulty, IProfiler profilerIn) {
+		super(netHandler, settings, dim, 0, profilerIn, null);
 	}
 
 	@Override
@@ -122,7 +122,7 @@ abstract class ExtWorldClient extends ClientWorld {
 	/**
 	 * A simple chunk provider implementation that just caches chunks in a map.
 	 */
-	private final class SimpleChunkProvider extends ClientChunkProvider implements IChunkProvider {
+	private final class SimpleChunkProvider extends ClientChunkProvider {
 		private final Long2ObjectMap<Chunk> map = new Long2ObjectOpenHashMap<>();
 
 		public SimpleChunkProvider() {
@@ -145,16 +145,16 @@ abstract class ExtWorldClient extends ClientWorld {
 		}
 
 		@Override
-		public IChunkGenerator<?> getChunkGenerator() {
+		public ChunkGenerator<?> getChunkGenerator() {
 			return null; // This is allowed, albeit awkward; see ChunkProviderClient
 		}
 	}
 }
 
 abstract class ExtWorldServer extends ServerWorld {
-	public ExtWorldServer(MinecraftServer server, ISaveHandler saveHandlerIn, WorldInfo info, DimensionType dim,
-			Profiler profilerIn) {
-		super(server, saveHandlerIn, null, info, dim, profilerIn);
+	public ExtWorldServer(MinecraftServer server, SaveHandler saveHandlerIn, WorldInfo info, DimensionType dim,
+			IProfiler profilerIn) {
+		super(server, null, saveHandlerIn, info, dim, profilerIn, null);
 	}
 
 	@Override
@@ -221,7 +221,7 @@ abstract class ExtWorldServer extends ServerWorld {
 	/**
 	 * A simple chunk provider implementation that just caches chunks in a map.
 	 */
-	private final class SimpleChunkProvider extends ServerChunkProvider implements IChunkProvider {
+	private final class SimpleChunkProvider extends ServerChunkProvider {
 		private final Long2ObjectMap<Chunk> map = new Long2ObjectOpenHashMap<>();
 
 		public SimpleChunkProvider() {
@@ -254,7 +254,7 @@ abstract class ExtWorldServer extends ServerWorld {
 		}
 
 		@Override
-		public IChunkGenerator<?> getChunkGenerator() {
+		public ChunkGenerator<?> getChunkGenerator() {
 			return null; // This is allowed, albeit awkward; see ChunkProviderClient
 		}
 	}

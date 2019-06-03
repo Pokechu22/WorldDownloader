@@ -30,6 +30,7 @@ import org.mockito.AdditionalAnswers;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityTracker;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.item.ArmorStandEntity;
 import net.minecraft.entity.monster.CreeperEntity;
 import net.minecraft.entity.monster.ZombieEntity;
@@ -50,10 +51,10 @@ public class EntityUtilsTest extends MaybeMixinTest {
 	 */
 	@Test
 	public void testTrackerSimple() {
-		runTrackerTest(PigEntity::new, 80, 10, 300,
+		runTrackerTest(world -> new PigEntity(EntityType.PIG, world), 80, 10, 300,
 				(tick, entity) -> true,
 				(tick) -> new Vec3d(-150 + tick, tick, -150 + tick));
-		runTrackerTest(ArmorStandEntity::new, 160, 10, 300,
+		runTrackerTest(world -> new ArmorStandEntity(EntityType.ARMOR_STAND, world), 160, 10, 300,
 				(tick, entity) -> true,
 				(tick) -> new Vec3d(150 * Math.sin(tick * 300 / (2 * Math.PI)), tick,
 						150 * Math.cos(tick * 300 / (2 * Math.PI))));
@@ -64,10 +65,10 @@ public class EntityUtilsTest extends MaybeMixinTest {
 	 */
 	@Test
 	public void testTrackerRemove() {
-		runTrackerTest(ZombieEntity::new, 80, 10, 110,
+		runTrackerTest(ZombieEntity::new, 80, 10, 110, // Why does this still work?
 				(tick, entity) -> tick <= 100,
 				(tick) -> new Vec3d(-150 + tick, tick, -150 + tick));
-		runTrackerTest(CreeperEntity::new, 80, 10, 110,
+		runTrackerTest(world -> new CreeperEntity(EntityType.CREEPER, world), 80, 10, 110,
 				(tick, entity) -> tick <= 100 || entity.posX <= (-150 + tick),
 				(tick) -> new Vec3d(-150 + tick, tick, -150 + tick));
 	}

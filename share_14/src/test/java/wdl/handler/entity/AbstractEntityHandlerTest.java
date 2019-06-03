@@ -32,7 +32,6 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import wdl.handler.AbstractWorldBehaviorTest;
 import wdl.handler.HandlerException;

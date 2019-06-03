@@ -16,7 +16,6 @@ package wdl.handler.block;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
-import static wdl.versioned.VersionedFunctions.customName;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,7 +28,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import wdl.handler.AbstractWorldBehaviorTest;

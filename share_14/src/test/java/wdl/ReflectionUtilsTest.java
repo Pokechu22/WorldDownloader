@@ -48,7 +48,7 @@ public class ReflectionUtilsTest {
 		player.inventory = mock(PlayerInventory.class);
 
 		// OK, actually test
-		Container creativeInventory = new CreativeScreen(player).inventorySlots;
+		Container creativeInventory = new CreativeScreen(player).func_212873_a_();
 
 		assertTrue(ReflectionUtils.isCreativeContainer(creativeInventory.getClass()));
 		assertFalse(ReflectionUtils.isCreativeContainer(PlayerContainer.class));

@@ -50,7 +50,7 @@ public class ShulkerBoxTest extends AbstractBlockHandlerTest<ShulkerBoxTileEntit
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.LIME_SHULKER_BOX);
 		ShulkerBoxTileEntity te = makeBlockEntity(pos);
-		te.setCustomName(customName("Favorite things"));
+		te.func_213903_a(customName("Favorite things"));
 		te.setInventorySlotContents(13, new ItemStack(Items.POISONOUS_POTATO, 64));
 
 		runHandler(pos, makeClientContainer(pos));
@@ -65,7 +65,7 @@ public class ShulkerBoxTest extends AbstractBlockHandlerTest<ShulkerBoxTileEntit
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.PURPLE_SHULKER_BOX);
 		ShulkerBoxTileEntity te = makeBlockEntity(pos);
-		te.setCustomName(customName("Shulker Box"));
+		te.func_213903_a(customName("Shulker Box"));
 
 		runHandler(pos, makeClientContainer(pos));
 		checkAllTEs();

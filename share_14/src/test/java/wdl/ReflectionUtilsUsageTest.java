@@ -14,7 +14,6 @@
  */
 package wdl;
 
-import java.io.File;
 import java.util.List;
 
 import org.junit.Test;
@@ -23,20 +22,13 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.multiplayer.ClientChunkProvider;
 import net.minecraft.client.network.play.ClientPlayNetHandler;
 import net.minecraft.crash.CrashReport;
-import net.minecraft.entity.merchant.IMerchant;
-import net.minecraft.entity.merchant.villager.VillagerEntity;
-import net.minecraft.entity.passive.EntityVillager;
-import net.minecraft.entity.passive.EquineEntity;
-import net.minecraft.inventory.ContainerHorseChest;
-import net.minecraft.inventory.ContainerMerchant;
+import net.minecraft.entity.passive.horse.AbstractHorseEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.BrewingStandContainer;
 import net.minecraft.inventory.container.DispenserContainer;
 import net.minecraft.inventory.container.FurnaceContainer;
 import net.minecraft.inventory.container.HopperContainer;
-import net.minecraft.inventory.container.MerchantContainer;
-import net.minecraft.village.MerchantRecipeList;
-import net.minecraft.world.chunk.storage.AnvilChunkLoader;
+import net.minecraft.inventory.container.HorseInventoryContainer;
 import wdl.gui.GuiWDLSaveProgress;
 import wdl.handler.block.BrewingStandHandler;
 import wdl.handler.block.DispenserHandler;
@@ -44,7 +36,6 @@ import wdl.handler.block.DropperHandler;
 import wdl.handler.block.FurnaceHandler;
 import wdl.handler.block.HopperHandler;
 import wdl.handler.entity.HorseHandler;
-import wdl.handler.entity.VillagerHandler;
 import wdl.versioned.VersionedFunctions;
 
 /**
@@ -69,12 +60,6 @@ public class ReflectionUtilsUsageTest {
 	@Test
 	public void testWDLSaveChunks() {
 		ReflectionUtils.findField(ClientChunkProvider.class, VersionedFunctions.getChunkListClass());
-	}
-
-	/** Handles {@link WDLChunkLoaderBase#WDLChunkLoaderBase(File)} */
-	@Test
-	public void testWDLChunkLoaderInit() {
-		ReflectionUtils.findField(AnvilChunkLoader.class, VersionedFunctions.getChunksToSaveClass());
 	}
 
 	/** Handles {@link BrewingStandHandler#handle} */
@@ -107,13 +92,6 @@ public class ReflectionUtilsUsageTest {
 	/** Handles {@link HorseHandler#copyData} and {@link HorseHandler#checkRiding} */
 	@Test
 	public void testHorseHandler() {
-		ReflectionUtils.findField(EquineEntity.class, ContainerHorseChest.class);
-	}
-
-	/** Handles {@link VillagerHandler#copyData(ContainerMerchant, EntityVillager, boolean)} */
-	@Test
-	public void testVillagerHandler() {
-		ReflectionUtils.findField(MerchantContainer.class, IMerchant.class);
-		ReflectionUtils.findField(VillagerEntity.class, MerchantRecipeList.class);
+		ReflectionUtils.findField(AbstractHorseEntity.class, HorseInventoryContainer.class);
 	}
 }
