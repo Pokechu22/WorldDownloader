@@ -14,7 +14,9 @@
  */
 package wdl;
 
+/*
 import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -29,7 +31,6 @@ import org.junit.Test;
 import org.mockito.AdditionalAnswers;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityTracker;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.item.ArmorStandEntity;
 import net.minecraft.entity.monster.CreeperEntity;
@@ -40,6 +41,7 @@ import net.minecraft.network.play.ServerPlayNetHandler;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import wdl.TestWorld.ServerWorld;
+*/
 
 /**
  * An experimental test around the entity tracking code.  Not particularly complete.
@@ -49,7 +51,7 @@ public class EntityUtilsTest extends MaybeMixinTest {
 	/**
 	 * Some basic tests, with varying paths but no entity removal.
 	 */
-	@Test
+	/*@Test
 	public void testTrackerSimple() {
 		runTrackerTest(world -> new PigEntity(EntityType.PIG, world), 80, 10, 300,
 				(tick, entity) -> true,
@@ -58,12 +60,12 @@ public class EntityUtilsTest extends MaybeMixinTest {
 				(tick, entity) -> true,
 				(tick) -> new Vec3d(150 * Math.sin(tick * 300 / (2 * Math.PI)), tick,
 						150 * Math.cos(tick * 300 / (2 * Math.PI))));
-	}
+	}*/
 
 	/**
 	 * Tracker test, where some entities are removed.
 	 */
-	@Test
+	/*@Test
 	public void testTrackerRemove() {
 		runTrackerTest(ZombieEntity::new, 80, 10, 110, // Why does this still work?
 				(tick, entity) -> tick <= 100,
@@ -71,7 +73,7 @@ public class EntityUtilsTest extends MaybeMixinTest {
 		runTrackerTest(world -> new CreeperEntity(EntityType.CREEPER, world), 80, 10, 110,
 				(tick, entity) -> tick <= 100 || entity.posX <= (-150 + tick),
 				(tick) -> new Vec3d(-150 + tick, tick, -150 + tick));
-	}
+	}*/
 
 	/**
 	 * A generalized test for the entity tracker.
@@ -84,7 +86,7 @@ public class EntityUtilsTest extends MaybeMixinTest {
 	 *                           it should be "killed" on a tick.
 	 * @param posFunc            Function providing player position by tick.
 	 */
-	protected void runTrackerTest(Function<World, ? extends Entity> entitySupplier, int threshold,
+	/*protected void runTrackerTest(Function<World, ? extends Entity> entitySupplier, int threshold,
 			int serverViewDistance, int numTicks, BiPredicate<Integer, Entity> keepEntity, IntFunction<Vec3d> posFunc) {
 		ServerWorld world = TestWorld.makeServer();
 
@@ -150,5 +152,5 @@ public class EntityUtilsTest extends MaybeMixinTest {
 		}
 
 		world.close();
-	}
+	}*/
 }

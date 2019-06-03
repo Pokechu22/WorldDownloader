@@ -51,7 +51,7 @@ public class WDLHooksTest extends AbstractWorldBehaviorTest {
 	public void testWorldClientRemoveEntityFromWorld() {
 		doWithMockHooks(mock -> {
 			makeMockWorld();
-			clientWorld.removeEntityFromWorld(0);
+			clientWorld.func_217413_d(0);
 
 			verify(mock).onWorldClientRemoveEntityFromWorld0(clientWorld, 0);
 		});

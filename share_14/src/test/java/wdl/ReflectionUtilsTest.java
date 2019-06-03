@@ -45,7 +45,7 @@ public class ReflectionUtilsTest {
 	public void testIsCreativeContainer() {
 		// Need a player to create a creative inventory (not the best system)
 		PlayerEntity player = mock(PlayerEntity.class);
-		player.inventory = mock(PlayerInventory.class);
+		//player.inventory = mock(PlayerInventory.class);
 
 		// OK, actually test
 		Container creativeInventory = new CreativeScreen(player).func_212873_a_();

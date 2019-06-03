@@ -48,6 +48,7 @@ abstract class MaybeMixinTestBase {
 			return;
 		}
 		ran = true;
+		//SharedConstants.developmentMode = true;
 		LOGGER.debug("Initializing bootstrap...");
 		Bootstrap.register();
 		LOGGER.debug("Initialized bootstrap.");

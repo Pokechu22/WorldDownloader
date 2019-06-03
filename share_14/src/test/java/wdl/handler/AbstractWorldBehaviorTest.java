@@ -36,11 +36,10 @@ import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.IngameGui;
 import net.minecraft.client.gui.MapItemRenderer;
 import net.minecraft.client.gui.NewChatGui;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.network.play.ClientPlayNetHandler;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.nbt.CompoundNBT;
@@ -51,6 +50,7 @@ import net.minecraft.server.management.PlayerInteractionManager;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Bootstrap;
+import net.minecraft.util.text.StringTextComponent;
 import wdl.MaybeMixinTest;
 import wdl.ReflectionUtils;
 import wdl.TestWorld;
@@ -83,21 +83,21 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 		ReflectionUtils.findAndSetPrivateField(null, Minecraft.class, Minecraft.class, mc);
 
 		doAnswer(AdditionalAnswers.<Screen>answerVoid(screen -> {
-			if (screen instanceof GuiContainer) {
-				clientPlayer.openContainer = ((GuiContainer)screen).inventorySlots;
+			if (screen instanceof ContainerScreen<?>){
+				clientPlayer.openContainer = ((ContainerScreen<?>)screen).func_212873_a_();
 			} else {
 				clientPlayer.openContainer = clientPlayer.inventoryContainer;
 			}
 			mc.currentScreen = screen;
 		})).when(mc).displayGuiScreen(any());
-		when(mc.isCallingFromMinecraftThread()).thenReturn(true);
+		when(mc.func_213162_bc()).thenReturn(true);
 		mc.ingameGUI = mock(IngameGui.class);
 		when(mc.ingameGUI.getChatGUI()).thenReturn(mock(NewChatGui.class));
 
 		clientWorld = TestWorld.makeClient();
 		serverWorld = TestWorld.makeServer();
 
-		ClientPlayNetHandler nhpc = new ClientPlayNetHandler(mc, new Screen() {}, null, new GameProfile(UUID.randomUUID(), "ClientPlayer"));
+		ClientPlayNetHandler nhpc = new ClientPlayNetHandler(mc, new Screen(new StringTextComponent("")) {}, null, new GameProfile(UUID.randomUUID(), "ClientPlayer"));
 		ReflectionUtils.findAndSetPrivateField(nhpc, ClientWorld.class, clientWorld);
 		clientPlayer = VersionedFunctions.makePlayer(mc, clientWorld, nhpc,
 				mock(ClientPlayerEntity.class, withSettings().defaultAnswer(RETURNS_DEEP_STUBS))); // Use a mock for the rest of the defaults
@@ -121,7 +121,7 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 				mock(PlayerInteractionManager.class));
 		serverPlayer.connection = nhps;
 
-		serverPlayer.inventory = new PlayerInventory(serverPlayer);
+		//serverPlayer.inventory = new PlayerInventory(serverPlayer);
 		clientPlayer.world = clientWorld;
 		serverPlayer.world = serverWorld;
 	}

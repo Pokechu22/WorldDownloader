@@ -22,7 +22,6 @@ import net.minecraft.client.network.play.ClientPlayNetHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.profiler.EmptyProfiler;
 import net.minecraft.profiler.IProfiler;
-import net.minecraft.profiler.Profiler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Difficulty;
@@ -70,8 +69,7 @@ public final class TestWorld {
 		public void addEntity(Entity e, int eid) {
 			e.setEntityId(eid);
 			e.setUniqueId(new UUID(0, eid));
-			this.spawnEntity(e);
-			this.entitiesById.addKey(eid, e);
+			this.func_217411_a(eid, e);
 		}
 
 		// Provided for 1.13 support.  Does nothing.
@@ -87,8 +85,7 @@ public final class TestWorld {
 		public void addEntity(Entity e, int eid) {
 			e.setEntityId(eid);
 			e.setUniqueId(new UUID(0, eid));
-			this.spawnEntity(e);
-			this.entitiesById.addKey(eid, e);
+			this.func_217376_c(e); // Not sure what the difference between this and func_217470_d is
 		}
 
 		@Override

@@ -16,21 +16,23 @@ package wdl.handler.entity;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
+import static wdl.versioned.VersionedFunctions.customName;
 
-import java.lang.reflect.Field;
 import java.util.List;
 
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableList;
 
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.inventory.container.MerchantContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.item.MerchantOffer;
+import net.minecraft.item.MerchantOffers;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.village.MerchantRecipe;
-import net.minecraft.village.MerchantRecipeList;
+import wdl.ReflectionUtils;
 import wdl.handler.HandlerException;
 
 public class VillagerTest extends AbstractEntityHandlerTest<VillagerEntity, MerchantContainer, VillagerHandler> {
@@ -43,10 +45,10 @@ public class VillagerTest extends AbstractEntityHandlerTest<VillagerEntity, Merc
 	public void testActiveTrade() throws HandlerException {
 		makeMockWorld();
 
-		VillagerEntity villager = new VillagerEntity(serverWorld);
-		MerchantRecipeList recipes = new MerchantRecipeList();
-		recipes.add(new MerchantRecipe(new ItemStack(Items.DIAMOND, 64), Items.EMERALD));
-		villager.setRecipes(recipes);
+		VillagerEntity villager = new VillagerEntity(EntityType.VILLAGER, serverWorld);
+		MerchantOffers recipes = new MerchantOffers();
+		recipes.add(new MerchantOffer(new ItemStack(Items.DIAMOND, 64), ItemStack.EMPTY, new ItemStack(Items.EMERALD), 1, 1, 5));
+		ReflectionUtils.findAndSetPrivateField(villager, MerchantOffers.class, recipes);
 		addEntity(villager);
 
 		runHandler(villager.getEntityId(), createClientContainer(villager));
@@ -58,11 +60,11 @@ public class VillagerTest extends AbstractEntityHandlerTest<VillagerEntity, Merc
 	public void testActiveTradeCustomName() {
 		makeMockWorld();
 
-		VillagerEntity villager = new VillagerEntity(serverWorld);
+		VillagerEntity villager = new VillagerEntity(EntityType.VILLAGER, serverWorld);
 		villager.setCustomName(customName("Testificate"));
-		MerchantRecipeList recipes = new MerchantRecipeList();
-		recipes.add(new MerchantRecipe(new ItemStack(Items.DIAMOND, 64), Items.EMERALD));
-		villager.setRecipes(recipes);
+		MerchantOffers recipes = new MerchantOffers();
+		recipes.add(new MerchantOffer(new ItemStack(Items.DIAMOND, 64), ItemStack.EMPTY, new ItemStack(Items.EMERALD), 1, 1, 5));
+		ReflectionUtils.findAndSetPrivateField(villager, MerchantOffers.class, recipes);
 		addEntity(villager);
 
 		HandlerException ex = null;
@@ -92,7 +94,7 @@ public class VillagerTest extends AbstractEntityHandlerTest<VillagerEntity, Merc
 	/**
 	 * Verifies that all villager careers are stored in {@link VillagerHandler#VANILLA_VILLAGER_CAREERS}.
 	 */
-	@Test
+	/*@Test
 	public void testCareerIdentification() throws Exception {
 		// Figure out how many professions and careers there are
 		Field field = VillagerEntity.class.getDeclaredField("DEFAULT_TRADE_LIST_MAP");
@@ -122,14 +124,14 @@ public class VillagerTest extends AbstractEntityHandlerTest<VillagerEntity, Merc
 				assertThat(VillagerHandler.CAREER_ID_FIELD.getInt(clientVillager), is(career));
 			}
 		}
-	}
+	}*/
 
 	/**
 	 * Verifies that the villager career field was identified correctly.
 	 */
-	@Test
+	/*@Test
 	public void checkCareerField() {
 		assertThat(VillagerHandler.CAREER_ID_FIELD.getName(), is("careerId"));
 		assertThat(VillagerHandler.CAREER_LEVEL_FIELD.getName(), is("careerLevel"));
-	}
+	}*/
 }

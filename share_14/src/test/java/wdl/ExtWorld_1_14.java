@@ -41,15 +41,15 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.ServerWorld;
 import net.minecraft.world.WorldSettings;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.AbstractChunkProvider;
 import net.minecraft.world.chunk.ServerChunkProvider;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.gen.ChunkGenerator;
@@ -57,35 +57,20 @@ import net.minecraft.world.storage.SaveHandler;
 import net.minecraft.world.storage.WorldInfo;
 
 abstract class ExtWorldClient extends ClientWorld {
+	private static final int VIEW_DISTANCE = 16;
+
 	public ExtWorldClient(ClientPlayNetHandler netHandler, WorldSettings settings, DimensionType dim,
 			Difficulty difficulty, IProfiler profilerIn) {
-		super(netHandler, settings, dim, 0, profilerIn, null);
+		super(netHandler, settings, dim, VIEW_DISTANCE, profilerIn, null);
 	}
 
-	@Override
-	protected ClientChunkProvider createChunkProvider() {
-		ClientChunkProvider provider = new SimpleChunkProvider();
-		// Update WorldClient.clientChunkProvider which is a somewhat redundant field
-		ReflectionUtils.findAndSetPrivateField(this, ClientWorld.class, ClientChunkProvider.class, provider);
-		return provider;
-	}
-
-	@Override
-	public Entity getEntityByID(int id) {
-		// Ignore the WorldClient implementation which depends on mc.player
-		return this.entitiesById.lookup(id);
-	}
-
-	@Override
-	public boolean spawnEntity(Entity entityIn) {
-		// WorldClient implementation depends on an MC instance
-		int chunkX = MathHelper.floor(entityIn.posX / 16.0D);
-		int chunkZ = MathHelper.floor(entityIn.posZ / 16.0D);
-		this.getChunk(chunkX, chunkZ).addEntity(entityIn);
-		this.loadedEntityList.add(entityIn);
-		this.onEntityAdded(entityIn);
-		return true;
-	}
+	//@Override
+	//protected ClientChunkProvider createChunkProvider() {
+	//	ClientChunkProvider provider = new SimpleChunkProvider();
+	//	// Update WorldClient.clientChunkProvider which is a somewhat redundant field
+	//	ReflectionUtils.findAndSetPrivateField(this, ClientWorld.class, ClientChunkProvider.class, provider);
+	//	return provider;
+	//}
 
 	private final RecipeManager recipeManager = mock(RecipeManager.class);
 	private final Scoreboard scoreboard = mock(Scoreboard.class, withSettings().useConstructor());
@@ -103,8 +88,10 @@ abstract class ExtWorldClient extends ClientWorld {
 	/** Places a block, creating the proper state. */
 	public void placeBlockAt(BlockPos pos, Block block, PlayerEntity player, Direction direction) {
 		player.rotationYaw = direction.getHorizontalAngle();
+		player.setHeldItem(Hand.MAIN_HAND, new ItemStack(block));
 		BlockItemUseContext context = new BlockItemUseContext(
-				new ItemUseContext(player, new ItemStack(block), pos, direction, 0, 0, 0));
+				new ItemUseContext(player, Hand.MAIN_HAND,
+						new BlockRayTraceResult(new Vec3d(pos), direction, pos, false)));
 		BlockState state = block.getStateForPlacement(context);
 		setBlockState(pos, state);
 	}
@@ -126,17 +113,16 @@ abstract class ExtWorldClient extends ClientWorld {
 		private final Long2ObjectMap<Chunk> map = new Long2ObjectOpenHashMap<>();
 
 		public SimpleChunkProvider() {
-			super(ExtWorldClient.this);
+			super(ExtWorldClient.this, VIEW_DISTANCE);
 		}
 
 		@Override
-		public Chunk getChunk(int x, int z, boolean p_186025_3_, boolean p_186025_4_) {
-			return map.computeIfAbsent(ChunkPos.asLong(x, z), k -> new Chunk(ExtWorldClient.this, x, z, NO_BIOMES));
+		public Chunk func_217205_a(int x, int z, boolean p_186025_3_) {
+			return map.computeIfAbsent(ChunkPos.asLong(x, z), k -> new Chunk(ExtWorldClient.this, new ChunkPos(x, z), NO_BIOMES));
 		}
 
 		@Override
-		public boolean tick(BooleanSupplier p_73156_1_) {
-			return false;
+		public void func_217207_a(BooleanSupplier p_73156_1_) {
 		}
 
 		@Override
@@ -157,10 +143,10 @@ abstract class ExtWorldServer extends ServerWorld {
 		super(server, null, saveHandlerIn, info, dim, profilerIn, null);
 	}
 
-	@Override
-	protected ServerChunkProvider createChunkProvider() {
-		return new SimpleChunkProvider();
-	}
+	//@Override
+	//protected ServerChunkProvider createChunkProvider() {
+	//	return new SimpleChunkProvider();
+	//}
 
 	private final RecipeManager recipeManager = mock(RecipeManager.class);
 	private final ServerScoreboard scoreboard = mock(ServerScoreboard.class, withSettings().useConstructor(new Object[] {null}));
@@ -179,7 +165,8 @@ abstract class ExtWorldServer extends ServerWorld {
 	public void placeBlockAt(BlockPos pos, Block block, PlayerEntity player, Direction direction) {
 		player.rotationYaw = direction.getHorizontalAngle();
 		BlockItemUseContext context = new BlockItemUseContext(
-				new ItemUseContext(player, new ItemStack(block), pos, direction, 0, 0, 0));
+				new ItemUseContext(player, Hand.MAIN_HAND,
+						new BlockRayTraceResult(new Vec3d(pos), direction, pos, false)));
 		BlockState state = block.getStateForPlacement(context);
 		setBlockState(pos, state);
 	}
@@ -193,7 +180,8 @@ abstract class ExtWorldServer extends ServerWorld {
 	/** Right-clicks a block. */
 	public void interactBlock(BlockPos pos, PlayerEntity player) {
 		BlockState state = this.getBlockState(pos);
-		state.onBlockActivated(this, pos, player, Hand.MAIN_HAND, Direction.DOWN, 0, 0, 0);
+		BlockRayTraceResult rayTraceResult = new BlockRayTraceResult(new Vec3d(pos), Direction.DOWN, pos, false);
+		state.func_215687_a(this, player, Hand.MAIN_HAND, rayTraceResult);
 	}
 
 	/** Right-clicks an entity. */
@@ -225,17 +213,16 @@ abstract class ExtWorldServer extends ServerWorld {
 		private final Long2ObjectMap<Chunk> map = new Long2ObjectOpenHashMap<>();
 
 		public SimpleChunkProvider() {
-			super(ExtWorldServer.this, null, null, null);
+			super(ExtWorldServer.this, null, null, null, null, null, 0, 0, null, null);
 		}
 
 		@Override
-		public Chunk getChunk(int x, int z, boolean p_186025_3_, boolean p_186025_4_) {
-			return map.computeIfAbsent(ChunkPos.asLong(x, z), k -> new Chunk(ExtWorldServer.this, x, z, NO_BIOMES));
+		public Chunk func_217205_a(int x, int z, boolean p_186025_3_) {
+			return map.computeIfAbsent(ChunkPos.asLong(x, z), k -> new Chunk(ExtWorldServer.this, new ChunkPos(x, z), NO_BIOMES));
 		}
 
 		@Override
-		public boolean tick(BooleanSupplier p_73156_1_) {
-			return false;
+		public void func_217207_a(BooleanSupplier p_73156_1_) {
 		}
 
 		@Override
