@@ -607,15 +607,19 @@ public class WDLHooks {
 	 *                   modified directly.
 	 * @param addButton  Method to add a button to the GUI.
 	 */
-	public static void injectWDLButtons(GuiIngameMenu gui, Collection<GuiButton> buttonList,
+	public static void injectWDLButtons(GuiIngameMenu gui, Collection<? super GuiButton> buttonList,
 			Consumer<GuiButton> addButton) {
 		INSTANCE.injectWDLButtons0(gui, buttonList, addButton);
 	}
-	protected void injectWDLButtons0(GuiIngameMenu gui, Collection<GuiButton> buttonList,
+	protected void injectWDLButtons0(GuiIngameMenu gui, Collection<? super GuiButton> buttonList,
 			Consumer<GuiButton> addButton) {
 		int insertAtYPos = 0;
 
-		for (GuiButton btn : buttonList) {
+		for (Object o : buttonList) {
+			if (!(o instanceof GuiButton)) {
+				continue;
+			}
+			GuiButton btn = (GuiButton)o;
 			if (btn.id == 5) { // Button "Achievements"
 				insertAtYPos = btn.y + 24;
 				break;
@@ -623,7 +627,11 @@ public class WDLHooks {
 		}
 
 		// Move other buttons down one slot (= 24 height units)
-		for (GuiButton btn : buttonList) {
+		for (Object o : buttonList) {
+			if (!(o instanceof GuiButton)) {
+				continue;
+			}
+			GuiButton btn = (GuiButton)o;
 			if (btn.y >= insertAtYPos) {
 				btn.y += 24;
 			}

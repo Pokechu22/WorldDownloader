@@ -594,16 +594,20 @@ public class WDLHooks {
 	 *                   modified directly.
 	 * @param addButton  Method to add a button to the GUI.
 	 */
-	public static void injectWDLButtons(IngameMenuScreen gui, Collection<Button> buttonList,
+	public static void injectWDLButtons(IngameMenuScreen gui, Collection<? super Button> buttonList,
 			Consumer<Button> addButton) {
 		INSTANCE.injectWDLButtons0(gui, buttonList, addButton);
 	}
-	protected void injectWDLButtons0(IngameMenuScreen gui, Collection<Button> buttonList,
+	protected void injectWDLButtons0(IngameMenuScreen gui, Collection<? super Button> buttonList,
 			Consumer<Button> addButton) {
 		int insertAtYPos = 0;
 
 		String advancementsText = I18n.format("gui.advancements");
-		for (Button btn : buttonList) {
+		for (Object o : buttonList) {
+			if (!(o instanceof Button)) {
+				continue;
+			}
+			Button btn = (Button)o;
 			if (btn.getMessage().equals(advancementsText)) { // Button "Achievements"
 				insertAtYPos = btn.y + 24;
 				break;
@@ -611,7 +615,11 @@ public class WDLHooks {
 		}
 
 		// Move other buttons down one slot (= 24 height units)
-		for (Button btn : buttonList) {
+		for (Object o : buttonList) {
+			if (!(o instanceof Button)) {
+				continue;
+			}
+			Button btn = (Button)o;
 			if (btn.y >= insertAtYPos) {
 				btn.y += 24;
 			}
