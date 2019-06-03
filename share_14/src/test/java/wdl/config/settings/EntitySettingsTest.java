@@ -14,6 +14,10 @@
  */
 package wdl.config.settings;
 
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
+import static wdl.config.settings.SettingTestUtils.*;
+
 import java.util.function.BooleanSupplier;
 
 import org.junit.Test;

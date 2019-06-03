@@ -14,6 +14,9 @@
  */
 package wdl.config;
 
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
+
 import org.junit.Test;
 
 import net.minecraft.util.IStringSerializable;

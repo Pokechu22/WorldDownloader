@@ -15,6 +15,8 @@
  */
 package wdl.handler.block;
 
+import static org.junit.Assert.*;
+
 import org.junit.Test;
 
 import net.minecraft.block.Blocks;

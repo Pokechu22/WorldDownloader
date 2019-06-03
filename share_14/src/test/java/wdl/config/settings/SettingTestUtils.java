@@ -14,6 +14,9 @@
  */
 package wdl.config.settings;
 
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
+
 import java.util.function.Consumer;
 
 import net.minecraft.client.resources.I18n;

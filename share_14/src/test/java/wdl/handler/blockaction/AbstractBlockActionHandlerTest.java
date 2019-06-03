@@ -14,6 +14,9 @@
  */
 package wdl.handler.blockaction;
 
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
+
 import java.util.HashMap;
 import java.util.Map;
 

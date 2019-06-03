@@ -14,6 +14,8 @@
  */
 package wdl.handler.entity;
 
+import static org.junit.Assert.*;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;

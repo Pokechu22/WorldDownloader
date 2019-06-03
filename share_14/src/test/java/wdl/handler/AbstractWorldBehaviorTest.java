@@ -14,6 +14,8 @@
  */
 package wdl.handler;
 
+import static org.junit.Assume.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import java.util.UUID;
@@ -48,6 +50,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.PlayerInteractionManager;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.registry.Bootstrap;
 import wdl.MaybeMixinTest;
 import wdl.ReflectionUtils;
 import wdl.TestWorld;
