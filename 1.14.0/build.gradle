@@ -30,7 +30,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 //apply plugin: 'pokechu22.test.begradle'
 //apply plugin: 'pokechu22.test.customsrg'
-//apply plugin: 'pokechu22.test.langrenamer'
+apply plugin: 'pokechu22.test.langrenamer'
 //apply plugin: 'pokechu22.test.noinplacereobf'
 
 dependencies {
@@ -51,14 +51,14 @@ minecraft {
     }
 
     // We don't currently want a source jar (doesn't work well for base edits, and the version info doesn't work yet)
-    /*makeObfSourceJar = false
+    //makeObfSourceJar = false
     // 1.13's json language files
     ext.jsonLangFiles = true
     // Copy one language to its variants
     ext.langMap = [
         'es_es': ['es_ar', 'es_cl', 'es_mx', 'es_uy', 'es_ve'],
         'fr_fr': ['fr_ca']
-    ]*/
+    ]
 }
 
 configurations {
