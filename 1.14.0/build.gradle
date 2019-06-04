@@ -26,9 +26,7 @@ archivesBaseName = "WorldDownloader"
 libsDirName = "../../libs/${version}"
 
 
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'eclipse'
-//apply plugin: 'pokechu22.test.begradle'
+apply plugin: 'pokechu22.test.begradle'
 //apply plugin: 'pokechu22.test.customsrg'
 apply plugin: 'pokechu22.test.langrenamer'
 //apply plugin: 'pokechu22.test.noinplacereobf'
@@ -151,20 +149,6 @@ sourceSets {
 tasks.withType(JavaCompile) { javaTask ->
     javaTask.sourceCompatibility = "1.8"
     javaTask.targetCompatibility = "1.8"
-}
-
-// This doesn't sound right, but I think it is correct; we want notch-mapped code
-task mcpToSrg(type: net.minecraftforge.gradle.patcher.task.TaskCreateSrg) {
-    dependsOn extractSrg
-    toNotch()
-    setMappings(net.minecraftforge.gradle.common.util.MavenArtifactDownloader.manual(project, "de.oceanlabs.mcp:mcp_snapshot:20190518-1.13.2@zip", false));
-    setSrg(extractSrg.getOutput())
-}
-afterEvaluate {
-    tasks.withType(net.minecraftforge.gradle.userdev.tasks.RenameJarInPlace) { thatTask ->
-        thatTask.dependsOn(mcpToSrg)
-        thatTask.setMappings(mcpToSrg.getOutput())
-    }
 }
 
 sourceCompatibility = "1.8"
