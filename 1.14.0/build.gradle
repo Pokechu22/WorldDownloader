@@ -60,8 +60,7 @@ minecraft {
 }
 
 configurations {
-    //apiImplementation.extendsFrom minecraft
-    //implementation.extendsFrom api
+    apiImplementation.extendsFrom implementation
 }
 
 dependencies {
@@ -100,19 +99,16 @@ dependencies {
     implementation "org.lwjgl:lwjgl-stb:3.2.1"
     implementation "com.mojang:text2speech:1.11.3"
     implementation "com.google.code.findbugs:jsr305:3.0.1"
-    //apiImplementation "it.unimi.dsi:fastutil:8.2.1"
-    //apiImplementation "org.apache.logging.log4j:log4j-api:2.8.1"
-    //apiImplementation "org.apache.logging.log4j:log4j-core:2.8.1"
     //compile 'net.minecraft:client:1.14:extra'
 }
 
-
 sourceSets {
+    api
     main {
         java {
+            compileClasspath += api.output
             srcDir "src/main/java"
             srcDir project(':share_14').file("src/main/java")
-            srcDir project(':share_14').file("src/api/java")
         }
         resources {
             srcDir project(':share').file("src/main/resources")
@@ -133,6 +129,7 @@ sourceSets {
     }
     test {
         java {
+            compileClasspath += api.output
             srcDir project(':share_14').file("src/test/java")
             exclude "wdl/lwts/WDLTestTweaker_1_9.java"
             exclude "wdl/lwts/WDLTestTweaker_1_10.java"
@@ -141,7 +138,7 @@ sourceSets {
     }
     api {
         java {
-            //srcDir project(':share_14').file("src/api/java")
+            srcDir project(':share_14').file("src/api/java")
         }
     }
 }
