@@ -18,7 +18,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import wdl.api.ITileEntityEditor.TileEntityCreationMode;
 
 /**
  * Something that can edit tile entities as they are being saved.

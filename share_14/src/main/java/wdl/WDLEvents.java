@@ -27,7 +27,6 @@ import net.minecraft.inventory.container.ChestContainer;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.profiler.IProfiler;
-import net.minecraft.profiler.Profiler;
 import net.minecraft.tileentity.EnderChestTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
