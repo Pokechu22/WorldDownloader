@@ -1,0 +1,33 @@
+--- net/minecraft/client/world/ClientWorld.java
++++ net/minecraft/client/world/ClientWorld.java
+@@ -63,7 +63,7 @@
+ import net.minecraft.world.storage.MapData;
+ import net.minecraft.world.storage.WorldInfo;
+ 
+-public class ClientWorld extends World {
++public class ClientWorld extends World/* WDL >>> */ implements wdl.ducks.IBaseChangesApplied/* <<< WDL */ {
+    private final List<Entity> field_217428_a = Lists.newArrayList();
+    private final Int2ObjectMap<Entity> field_217429_b = new Int2ObjectOpenHashMap<>();
+    /** The packets that need to be sent to the server. */
+@@ -96,6 +96,10 @@
+       this.chunkProvider.func_217207_a(hasTimeLeft);
+       this.func_217426_j();
+       this.func_217381_Z().endSection();
++
++      /* WDL >>> */
++      wdl.WDLHooks.onWorldClientTick(this);
++      /* <<< WDL */
+    }
+ 
+    public Iterable<Entity> func_217416_b() {
+@@ -271,6 +275,10 @@
+    }
+ 
+    public void func_217413_d(int p_217413_1_) {
++      /* WDL >>> */
++      wdl.WDLHooks.onWorldClientRemoveEntityFromWorld(this, p_217413_1_);
++      /* <<< WDL */
++
+       Entity entity = this.field_217429_b.remove(p_217413_1_);
+       if (entity != null) {
+          entity.remove();

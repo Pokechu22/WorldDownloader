@@ -1,0 +1,15 @@
+/.gradle/
+/bin/
+/build/
+/logs/
+/run/
+/src/main/base
+
+# Eclipse
+.project
+.classpath
+1.40.0_Client.launch
+/.settings/
+
+# Idea
+1.14.1.iml
