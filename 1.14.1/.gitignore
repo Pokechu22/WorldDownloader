@@ -8,7 +8,7 @@
 # Eclipse
 .project
 .classpath
-1.40.0_Client.launch
+1.40.1_Client.launch
 /.settings/
 
 # Idea
