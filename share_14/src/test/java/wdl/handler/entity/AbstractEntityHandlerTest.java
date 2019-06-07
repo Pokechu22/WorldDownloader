@@ -26,6 +26,7 @@ import com.google.common.collect.ImmutableList;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.container.Container;
@@ -122,8 +123,9 @@ public abstract class AbstractEntityHandlerTest<E extends Entity, C extends Cont
 			this.serverEntities.put(eid, serverEntity);
 			this.serverWorld.addEntity(serverEntity, eid);
 
+			EntityType<?> type = serverEntity.getType();
 			// Create the client copy
-			Entity clientEntity = serverEntity.getClass().getConstructor(World.class).newInstance((World)clientWorld);
+			Entity clientEntity = serverEntity.getClass().getConstructor(EntityType.class, World.class).newInstance(type, (World)clientWorld);
 			// Copy the standard entity data
 			clientEntity.posX = serverEntity.posX;
 			clientEntity.posY = serverEntity.posY;

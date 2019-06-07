@@ -45,12 +45,12 @@ import wdl.handler.HandlerException;
 @RunWith(Parameterized.class)
 public class HorseTest<T extends AbstractHorseEntity> extends AbstractEntityHandlerTest<T, HorseInventoryContainer, HorseHandler> {
 	private static enum HorseType {
-		HORSE("minecraft:horse", "net.minecraft.entity.passive.EntityHorse", 0, false),
-		DONKEY("minecraft:donkey", "net.minecraft.entity.passive.EntityDonkey", 1, true),
-		MULE("minecraft:mule", "net.minecraft.entity.passive.EntityMule", 2, true),
-		ZOMBIE_HORSE("minecraft:zombie_horse", "net.minecraft.entity.passive.EntitySkeletonHorse", 3, false),
-		SKELETON_HORSE("minecraft:skeleton_horse", "net.minecraft.entity.passive.EntityZombieHorse", 4, false),
-		LLAMA("minecraft:llama", "net.minecraft.entity.passive.EntityLlama", null, true) {
+		HORSE("minecraft:horse", "net.minecraft.entity.passive.horse.HorseEntity", 0, false),
+		DONKEY("minecraft:donkey", "net.minecraft.entity.passive.horse.DonkeyEntity", 1, true),
+		MULE("minecraft:mule", "net.minecraft.entity.passive.horse.MuleEntity", 2, true),
+		ZOMBIE_HORSE("minecraft:zombie_horse", "net.minecraft.entity.passive.horse.SkeletonHorseEntity", 3, false),
+		SKELETON_HORSE("minecraft:skeleton_horse", "net.minecraft.entity.passive.horse.ZombieHorseEntity", 4, false),
+		LLAMA("minecraft:llama", "net.minecraft.entity.passive.horse.LlamaEntity", null, true) {
 			@Override
 			public boolean exists() {
 				return HAS_NAMESPACED_ENTITIES;
