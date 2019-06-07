@@ -267,8 +267,8 @@ public class WDL {
 
 		globalProps = new Configuration(defaultProps);
 
-		File dataFile = new File(minecraft.gameDir, "WorldDownloader.txt");
 		try {
+			File dataFile = new File(minecraft.gameDir, "WorldDownloader.txt");
 			globalProps.load(dataFile);
 		} catch (FileNotFoundException e) {
 			LOGGER.debug("Failed to load global properties as they do not exist", e);
