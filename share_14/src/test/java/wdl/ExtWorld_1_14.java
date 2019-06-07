@@ -43,6 +43,8 @@ import net.minecraft.scoreboard.ServerScoreboard;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.ChunkPos;
@@ -113,6 +115,12 @@ abstract class ExtWorldClient extends ClientWorld {
 	/** Defers to the 1.13.1-specific tick method */
 	public void tick() {
 		this.tick(() -> true);
+	}
+
+	@Override
+	public void playSound(double p_184134_1_, double p_184134_3_, double p_184134_5_, SoundEvent p_184134_7_,
+			SoundCategory p_184134_8_, float p_184134_9_, float p_184134_10_, boolean p_184134_11_) {
+		// Do nothing
 	}
 
 	private static final Biome[] NO_BIOMES = new Biome[16*16];
@@ -237,6 +245,12 @@ abstract class ExtWorldServer extends ServerWorld {
 
 	@Override
 	public void createSpawnPosition(WorldSettings p_73052_1_) {
+		// Do nothing
+	}
+
+	@Override
+	public void playSound(double p_184134_1_, double p_184134_3_, double p_184134_5_, SoundEvent p_184134_7_,
+			SoundCategory p_184134_8_, float p_184134_9_, float p_184134_10_, boolean p_184134_11_) {
 		// Do nothing
 	}
 
