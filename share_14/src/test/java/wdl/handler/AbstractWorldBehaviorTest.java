@@ -143,7 +143,10 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 	 * @param block The block to put
 	 */
 	protected void placeBlockAt(BlockPos pos, BlockState state) {
+		System.out.println("Setting " + pos + " to " + state);
 		clientWorld.setBlockState(pos, state);
+		System.out.println("Now: " + clientWorld.getBlockState(pos));
+		System.out.println(clientWorld.getChunk(pos));
 		serverWorld.setBlockState(pos, state);
 	}
 
