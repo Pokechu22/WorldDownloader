@@ -15,7 +15,7 @@
 package wdl.handler.block;
 
 import net.minecraft.block.Blocks;
-import net.minecraft.tileentity.ChestTileEntity;
+import net.minecraft.tileentity.TrappedChestTileEntity;
 
 /**
  * This weird wrapper is to have a public class but the file with a different name.
@@ -25,9 +25,9 @@ import net.minecraft.tileentity.ChestTileEntity;
  * rather enterprise-grade...
  */
 class TrappedChestTest {
-	public static class TestImpl extends BaseChestTest<ChestTileEntity, ChestHandler> {
+	public static class TestImpl extends BaseChestTest<TrappedChestTileEntity, TrappedChestHandler> {
 		public TestImpl() {
-			super(Blocks.TRAPPED_CHEST, Blocks.CHEST, ChestTileEntity.class, ChestHandler.class);
+			super(Blocks.TRAPPED_CHEST, Blocks.CHEST, TrappedChestTileEntity.class, TrappedChestHandler.class);
 		}
 	}
 }
