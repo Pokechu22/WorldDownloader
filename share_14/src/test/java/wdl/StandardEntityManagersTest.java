@@ -29,6 +29,9 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Registry;
 //import net.minecraft.entity.EntityTracker;
 import net.minecraft.world.World;
 
@@ -53,9 +56,14 @@ public class StandardEntityManagersTest {
 	 * Entity identifier to test.
 	 */
 	private final String identifier;
+	/**
+	 * EntityType associated with the entity to test
+	 */
+	private final EntityType<?> type;
 
 	public StandardEntityManagersTest(String identifier) {
 		this.identifier = identifier;
+		this.type = Registry.ENTITY_TYPE.func_218349_b(new ResourceLocation(identifier)).get();
 	}
 
 	/**
@@ -65,7 +73,7 @@ public class StandardEntityManagersTest {
 	public void testIdentifier() throws Exception {
 		TestWorld.ServerWorld world = TestWorld.makeServer();
 		Class<? extends Entity> cls = StandardEntityManagers.entityClassFor(StandardEntityManagers.VANILLA, identifier);
-		Entity entity = cls.getConstructor(World.class).newInstance(world);
+		Entity entity = cls.getConstructor(EntityType.class, World.class).newInstance(type, world);
 		assertThat(StandardEntityManagers.VANILLA.getIdentifierFor(entity), is(identifier));
 		world.close();
 	}
@@ -82,7 +90,7 @@ public class StandardEntityManagersTest {
 		doCallRealMethod().when(tracker).track(any(), anyInt(), anyInt());
 
 		Class<? extends Entity> cls = StandardEntityManagers.entityClassFor(StandardEntityManagers.VANILLA, identifier);
-		Entity entity = cls.getConstructor(World.class).newInstance(world);
+		Entity entity = cls.getConstructor(EntityType.class, World.class).newInstance(type, world);
 
 		int expectedDistance = StandardEntityManagers.VANILLA.getTrackDistance(identifier, entity);
 
