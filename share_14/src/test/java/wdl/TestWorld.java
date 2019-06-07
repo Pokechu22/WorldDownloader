@@ -51,6 +51,7 @@ public final class TestWorld {
 		return makeServer(DimensionType.OVERWORLD);
 	}
 
+	@SuppressWarnings("resource")
 	public static ServerWorld makeServer(DimensionType dim) {
 		MinecraftServer server = mock(MinecraftServer.class, withSettings().defaultAnswer(RETURNS_MOCKS));
 		SaveHandler saveHandler = mock(SaveHandler.class);

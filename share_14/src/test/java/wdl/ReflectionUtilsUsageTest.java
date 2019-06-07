@@ -24,9 +24,10 @@ import net.minecraft.client.network.play.ClientPlayNetHandler;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.entity.passive.horse.AbstractHorseEntity;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.container.AbstractFurnaceContainer;
 import net.minecraft.inventory.container.BrewingStandContainer;
 import net.minecraft.inventory.container.DispenserContainer;
-import net.minecraft.inventory.container.FurnaceContainer;
 import net.minecraft.inventory.container.HopperContainer;
 import net.minecraft.inventory.container.HorseInventoryContainer;
 import wdl.gui.GuiWDLSaveProgress;
@@ -77,7 +78,7 @@ public class ReflectionUtilsUsageTest {
 	/** Handles {@link FurnaceHandler#handle} */
 	@Test
 	public void testFuranceHandler() {
-		ReflectionUtils.findField(FurnaceContainer.class, IInventory.class);
+		ReflectionUtils.findField(AbstractFurnaceContainer.class, IInventory.class);
 	}
 
 	/** Handles {@link HopperHandler#handle} */
@@ -92,6 +93,7 @@ public class ReflectionUtilsUsageTest {
 	/** Handles {@link HorseHandler#copyData} and {@link HorseHandler#checkRiding} */
 	@Test
 	public void testHorseHandler() {
-		ReflectionUtils.findField(AbstractHorseEntity.class, HorseInventoryContainer.class);
+		ReflectionUtils.findField(HorseInventoryContainer.class, AbstractHorseEntity.class);
+		ReflectionUtils.findField(AbstractHorseEntity.class, Inventory.class);
 	}
 }

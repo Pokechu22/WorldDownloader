@@ -22,7 +22,6 @@ import org.junit.Test;
 
 import net.minecraft.client.gui.screen.inventory.CreativeScreen;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.ChestContainer;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.PlayerContainer;
@@ -45,7 +44,6 @@ public class ReflectionUtilsTest {
 	public void testIsCreativeContainer() {
 		// Need a player to create a creative inventory (not the best system)
 		PlayerEntity player = mock(PlayerEntity.class);
-		//player.inventory = mock(PlayerInventory.class);
 
 		// OK, actually test
 		Container creativeInventory = new CreativeScreen(player).func_212873_a_();

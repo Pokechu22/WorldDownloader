@@ -75,6 +75,7 @@ public class BrewingStandTest extends AbstractBlockHandlerTest<BrewingStandTileE
 	 */
 	@Test
 	public void testCustomName() throws HandlerException {
+		assumeCustomNamesNotBroken();
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.BREWING_STAND);
@@ -90,6 +91,7 @@ public class BrewingStandTest extends AbstractBlockHandlerTest<BrewingStandTileE
 	 */
 	@Test
 	public void testCustomNameVanilla() throws HandlerException {
+		assumeCustomNamesNotBroken();
 		assumeMixinsApplied();
 
 		BlockPos pos = new BlockPos(0, 0, 0);

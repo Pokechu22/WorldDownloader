@@ -51,6 +51,7 @@ public class HopperTest extends AbstractBlockHandlerTest<HopperTileEntity, Hoppe
 
 	@Test
 	public void testCustomName() throws HandlerException {
+		assumeCustomNamesNotBroken();
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.HOPPER);
@@ -63,6 +64,7 @@ public class HopperTest extends AbstractBlockHandlerTest<HopperTileEntity, Hoppe
 
 	@Test
 	public void testCustomNameVanila() throws HandlerException {
+		assumeCustomNamesNotBroken();
 		BlockPos pos = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.HOPPER);

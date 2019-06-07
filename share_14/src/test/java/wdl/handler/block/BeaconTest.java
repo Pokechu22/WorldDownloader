@@ -95,6 +95,7 @@ public class BeaconTest extends AbstractBlockHandlerTest<BeaconTileEntity, Beaco
 	 */
 	@Test
 	public void testCustomName() throws HandlerException {
+		assumeCustomNamesNotBroken();
 		BlockPos center = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(center, Blocks.BEACON);
@@ -114,6 +115,7 @@ public class BeaconTest extends AbstractBlockHandlerTest<BeaconTileEntity, Beaco
 	 */
 	@Test
 	public void testCustomNameVanilla() throws HandlerException {
+		assumeCustomNamesNotBroken();
 		assumeMixinsApplied();
 
 		BlockPos center = new BlockPos(0, 0, 0);

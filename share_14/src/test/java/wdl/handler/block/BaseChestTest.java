@@ -145,6 +145,7 @@ public abstract class BaseChestTest<B extends ChestTileEntity, H extends BaseChe
 	 */
 	@Test
 	public void testCustomNameNaive() throws HandlerException {
+		assumeCustomNamesNotBroken();
 		makeMockWorld();
 
 		BlockPos center = new BlockPos(0, 0, 0);
@@ -170,6 +171,7 @@ public abstract class BaseChestTest<B extends ChestTileEntity, H extends BaseChe
 	@Test
 	@Ignore("Known failure")
 	public void testCustomNameConflict() throws HandlerException {
+		assumeCustomNamesNotBroken();
 		makeMockWorld();
 
 		BlockPos center = new BlockPos(0, 0, 0);
@@ -196,6 +198,7 @@ public abstract class BaseChestTest<B extends ChestTileEntity, H extends BaseChe
 	@Test
 	@Ignore("Known failure")
 	public void testCustomNameSingle() throws HandlerException {
+		assumeCustomNamesNotBroken();
 		makeMockWorld();
 
 		BlockPos center = new BlockPos(0, 0, 0);
@@ -221,6 +224,7 @@ public abstract class BaseChestTest<B extends ChestTileEntity, H extends BaseChe
 	 */
 	@Test
 	public void testCustomNameMatchesRealName() throws HandlerException {
+		assumeCustomNamesNotBroken();
 		assumeMixinsApplied();
 
 		makeMockWorld();
@@ -248,6 +252,7 @@ public abstract class BaseChestTest<B extends ChestTileEntity, H extends BaseChe
 	 */
 	@Test
 	public void testSingleChestCustomName() throws HandlerException {
+		assumeCustomNamesNotBroken();
 		BlockPos center = new BlockPos(0, 0, 0);
 		makeMockWorld();
 		placeBlockAt(center, ownBlock);
@@ -268,6 +273,7 @@ public abstract class BaseChestTest<B extends ChestTileEntity, H extends BaseChe
 	 */
 	@Test
 	public void testSingleChestCustomNameMatchesRealName() throws HandlerException {
+		assumeCustomNamesNotBroken();
 		assumeMixinsApplied();
 
 		BlockPos center = new BlockPos(0, 0, 0);

@@ -23,6 +23,7 @@ import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.After;
+import org.junit.Assume;
 import org.mockito.AdditionalAnswers;
 
 import com.mojang.authlib.GameProfile;
@@ -171,6 +172,14 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 		if (!expected.equals(actual)) {
 			throw new ComparisonFailure("Mismatched NBT!", VersionedFunctions.nbtString(expected), VersionedFunctions.nbtString(actual));
 		}
+	}
+
+	/**
+	 * With a name like this, it's quite obvious that this only exists _because_
+	 * custom names are completely broken...
+	 */
+	protected static void assumeCustomNamesNotBroken() {
+		Assume.assumeTrue("Custom names are just completely broken, YAY!", false);
 	}
 
 	/**

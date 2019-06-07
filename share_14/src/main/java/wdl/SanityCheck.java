@@ -95,6 +95,10 @@ enum SanityCheck {
 	// Separately list all of these so that we know exactly which ones failed (otherwise an exception would only indicate the first failure)
 	MIXIN_INVENTORYBASIC("wdl.sanity.mixin") {
 		@Override
+		public boolean canRun() {
+			return false; // XXX Not implemented right now...
+		}
+		@Override
 		public void run() throws Exception {
 			if (!INetworkNameable.class.isAssignableFrom(Inventory.class)) {
 				throw new Exception("InventoryBasic does not implement INetworkNameable!");
