@@ -41,7 +41,6 @@ public class ShulkerBoxHandler extends BlockHandler<ShulkerBoxTileEntity, Shulke
 				container, IInventory.class);
 		String title = getCustomDisplayName(shulkerInventory);
 		saveContainerItems(container, blockEntity, 0);
-		saveInventoryFields(shulkerInventory, blockEntity);
 		if (title != null) {
 			blockEntity.func_213903_a(customName(title));
 		}

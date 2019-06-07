@@ -41,7 +41,7 @@ public class BrewingStandHandler extends BlockHandler<BrewingStandTileEntity, Br
 				container, IInventory.class);
 		String title = getCustomDisplayName(brewingInventory);
 		saveContainerItems(container, blockEntity, 0);
-		saveInventoryFields(brewingInventory, blockEntity);
+		saveInventoryFields(container, blockEntity);
 		if (title != null) {
 			blockEntity.func_213903_a(customName(title));
 		}

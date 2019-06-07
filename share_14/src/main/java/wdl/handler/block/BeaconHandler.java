@@ -14,13 +14,18 @@
  */
 package wdl.handler.block;
 
+import static wdl.versioned.VersionedFunctions.customName;
+
 import java.util.function.BiConsumer;
 
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.BeaconContainer;
 import net.minecraft.tileentity.BeaconTileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
+import wdl.ReflectionUtils;
 import wdl.handler.HandlerException;
 
 public class BeaconHandler extends BlockHandler<BeaconTileEntity, BeaconContainer> {
@@ -32,15 +37,14 @@ public class BeaconHandler extends BlockHandler<BeaconTileEntity, BeaconContaine
 	public ITextComponent handle(BlockPos clickedPos, BeaconContainer container,
 			BeaconTileEntity blockEntity, IBlockReader world,
 			BiConsumer<BlockPos, BeaconTileEntity> saveMethod) throws HandlerException {
-		/*IInventory beaconInventory = container.getTileEntity();
+		IInventory beaconInventory = ReflectionUtils.findAndGetPrivateField(container, IInventory.class);
 		String title = getCustomDisplayName(beaconInventory);
-		saveContainerItems(container, blockEntity, 0);
-		saveInventoryFields(beaconInventory, blockEntity);
+		//saveContainerItems(container, blockEntity, 0); // Beacon inventory is not persisted
+		saveInventoryFields(container, blockEntity);
 		saveMethod.accept(clickedPos, blockEntity);
 		if (title != null) {
 			blockEntity.setCustomName(customName(title));
 		}
-		return new TranslationTextComponent("wdl.messages.onGuiClosedInfo.savedTileEntity.beacon");*/
-		throw new HandlerException("Beacons are borked");
+		return new TranslationTextComponent("wdl.messages.onGuiClosedInfo.savedTileEntity.beacon");
 	}
 }

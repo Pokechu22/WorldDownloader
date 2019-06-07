@@ -19,7 +19,9 @@ import static wdl.versioned.VersionedFunctions.*;
 import java.util.function.BiConsumer;
 
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.container.AbstractFurnaceContainer;
 import net.minecraft.inventory.container.FurnaceContainer;
+import net.minecraft.tileentity.AbstractFurnaceTileEntity;
 import net.minecraft.tileentity.FurnaceTileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -38,10 +40,10 @@ public class FurnaceHandler extends BlockHandler<FurnaceTileEntity, FurnaceConta
 			FurnaceTileEntity blockEntity, IBlockReader world,
 			BiConsumer<BlockPos, FurnaceTileEntity> saveMethod) throws HandlerException {
 		IInventory furnaceInventory = ReflectionUtils.findAndGetPrivateField(
-				container, IInventory.class);
+				container, AbstractFurnaceContainer.class, IInventory.class);
 		String title = getCustomDisplayName(furnaceInventory);
 		saveContainerItems(container, blockEntity, 0);
-		saveInventoryFields(furnaceInventory, blockEntity);
+		saveInventoryFields(AbstractFurnaceContainer.class, container, AbstractFurnaceTileEntity.class, blockEntity);
 		if (title != null) {
 			blockEntity.func_213903_a(customName(title));
 		}

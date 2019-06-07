@@ -20,6 +20,7 @@ import java.util.function.BiConsumer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.tileentity.TileEntity;
@@ -128,15 +129,34 @@ public abstract class BlockHandler<B extends TileEntity, C extends Container> ex
 	 * Fields are pieces of data such as furnace smelt time and
 	 * beacon effects.
 	 *
-	 * @param inventory The inventory to save from.
-	 * @param tileEntity The inventory to save to.
+	 * @param container The container to save from.
+	 * @param blockEntity The inventory to save to.
 	 */
-	protected static void saveInventoryFields(IInventory inventory,
-			IInventory tileEntity) {
+	protected static void saveInventoryFields(Container container,
+			TileEntity blockEntity) {
 		// IIntArray is a SUPER misleading name; it's what stores these inventory fields.
 		// Unfortuantely they're declared on a per-inventory level now.
-		IIntArray input = ReflectionUtils.findAndGetPrivateField(inventory, IIntArray.class);
-		IIntArray output = ReflectionUtils.findAndGetPrivateField(tileEntity, IIntArray.class);
+		IIntArray input = ReflectionUtils.findAndGetPrivateField(container, IIntArray.class);
+		IIntArray output = ReflectionUtils.findAndGetPrivateField(blockEntity, IIntArray.class);
+		for (int i = 0; i < input.func_221478_a(); i++) {
+			output.func_221477_a(i, input.func_221476_a(i));
+		}
+	}
+
+	/**
+	 * Saves the fields of an inventory.
+	 * Fields are pieces of data such as furnace smelt time and
+	 * beacon effects.
+	 *
+	 * @param container The container to save from.
+	 * @param blockEntity The inventory to save to.
+	 */
+	protected static <C, B> void saveInventoryFields(Class<C> containerClass, C container,
+			Class<B> blockEntityClass, B blockEntity) {
+		// IIntArray is a SUPER misleading name; it's what stores these inventory fields.
+		// Unfortuantely they're declared on a per-inventory level now.
+		IIntArray input = ReflectionUtils.findAndGetPrivateField(container, containerClass, IIntArray.class);
+		IIntArray output = ReflectionUtils.findAndGetPrivateField(blockEntity, blockEntityClass, IIntArray.class);
 		for (int i = 0; i < input.func_221478_a(); i++) {
 			output.func_221477_a(i, input.func_221476_a(i));
 		}
@@ -160,9 +180,16 @@ public abstract class BlockHandler<B extends TileEntity, C extends Container> ex
 	protected String getCustomDisplayName(IInventory inventory) {
 		if (inventory instanceof INetworkNameable) {
 			return ((INetworkNameable) inventory).getCustomDisplayName();
-		} else {
-			return null;
 		}
+		// Fallback, will fail for situations where the custom name
+		// is the vanilla name
+		String name = null; //inventory.getDisplayName().getString();
+		for (String key : defaultNames) {
+			if (I18n.format(key).equals(name)) {
+				return null;
+			}
+		}
+		return name;
 	}
 
 	/**

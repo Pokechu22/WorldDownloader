@@ -22,6 +22,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.inventory.container.FurnaceContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.tileentity.AbstractFurnaceTileEntity;
 import net.minecraft.tileentity.FurnaceTileEntity;
 import net.minecraft.util.IIntArray;
 import net.minecraft.util.math.BlockPos;
@@ -57,7 +58,7 @@ public class FurnaceTest extends AbstractBlockHandlerTest<FurnaceTileEntity, Fur
 		te.setInventorySlotContents(0, new ItemStack(Blocks.COAL_ORE));
 		te.setInventorySlotContents(1, new ItemStack(Items.WOODEN_HOE));
 		te.setInventorySlotContents(2, new ItemStack(Items.COAL));
-		IIntArray fields = ReflectionUtils.findAndGetPrivateField(te, IIntArray.class);
+		IIntArray fields = ReflectionUtils.findAndGetPrivateField(te, AbstractFurnaceTileEntity.class, IIntArray.class);
 		fields.func_221477_a(0, 100); // burn time
 		// skip field 1 (total burn time) -- not saved: https://bugs.mojang.com/browse/MC-10025
 		fields.func_221477_a(2, 100); // cook time
