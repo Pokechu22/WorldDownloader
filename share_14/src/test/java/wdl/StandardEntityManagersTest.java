@@ -16,10 +16,10 @@ package wdl;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
-//import static org.mockito.ArgumentMatchers.*;
-//import static org.mockito.ArgumentMatchers.any;
-//import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,11 +28,14 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
-//import net.minecraft.entity.EntityTracker;
+import net.minecraft.world.ServerWorld;
+import net.minecraft.world.chunk.ChunkManager;
 
 /**
  * Tests the data contained within StandardEntityManagers.
@@ -79,22 +82,40 @@ public class StandardEntityManagersTest {
 	/**
 	 * Checks that the range associated with the entity is the actual range assigned by EntityTracker.
 	 */
-	/*@Test
+	@Test
 	public void testVanillaRange() throws Exception {
 		TestWorld.ServerWorld world = TestWorld.makeServer();
 
-		EntityTracker tracker = mock(EntityTracker.class);
-		doCallRealMethod().when(tracker).track(any());
-		doCallRealMethod().when(tracker).track(any(), anyInt(), anyInt());
+		class DerivedTracker extends ChunkManager {
+			public DerivedTracker() {
+				super(null, null, null, null, null, null, null, null, null, null, 0, 0);
+			}
 
-		Class<? extends Entity> cls = StandardEntityManagers.entityClassFor(StandardEntityManagers.VANILLA, identifier);
-		Entity entity = cls.getConstructor(EntityType.class, World.class).newInstance(type, world);
+			@Override
+			public void func_219210_a(Entity p_219210_1_) {
+				super.func_219210_a(p_219210_1_);
+			}
+		}
+		DerivedTracker tracker = mock(DerivedTracker.class);
+		// We bypass the constructor, so this needs to be manually set
+		Int2ObjectMap<?> trackedEntities = new Int2ObjectOpenHashMap<>();
+		ReflectionUtils.findAndSetPrivateField(tracker, ChunkManager.class, Int2ObjectMap.class, trackedEntities);
+		ReflectionUtils.findAndSetPrivateField(tracker, ChunkManager.class, ServerWorld.class, world);
+		doCallRealMethod().when(tracker).func_219210_a(any());
+
+		Entity entity = type.create(world);
 
 		int expectedDistance = StandardEntityManagers.VANILLA.getTrackDistance(identifier, entity);
 
-		tracker.track(entity);
-		verify(tracker).track(same(entity), eq(expectedDistance), anyInt(), anyBoolean());
+		tracker.func_219210_a(entity);
+		assertThat(trackedEntities, hasKey(entity.getEntityId()));
+		Object entityTrackerEntry = trackedEntities.get(entity.getEntityId());
+		Field actualDistanceField = ReflectionUtils.findField(entityTrackerEntry.getClass(), int.class);
+		int actualDistance = actualDistanceField.getInt(entityTrackerEntry);
 
+		assertEquals(expectedDistance, actualDistance);
+
+		tracker.close();
 		world.close();
-	}*/
+	}
 }
