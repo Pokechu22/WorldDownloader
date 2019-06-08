@@ -25,6 +25,7 @@ import org.junit.Test;
 import com.google.common.collect.ImmutableList;
 
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.inventory.container.MerchantContainer;
 import net.minecraft.item.ItemStack;
@@ -46,9 +47,10 @@ public class VillagerTest extends AbstractEntityHandlerTest<VillagerEntity, Merc
 		makeMockWorld();
 
 		VillagerEntity villager = new VillagerEntity(EntityType.VILLAGER, serverWorld);
-		MerchantOffers recipes = new MerchantOffers();
+		MerchantOffers recipes = villager.func_213706_dY();
+		recipes.clear();
 		recipes.add(new MerchantOffer(new ItemStack(Items.DIAMOND, 64), ItemStack.EMPTY, new ItemStack(Items.EMERALD), 1, 1, 5));
-		ReflectionUtils.findAndSetPrivateField(villager, MerchantOffers.class, recipes);
+		ReflectionUtils.findAndSetPrivateField(villager, AbstractVillagerEntity.class, MerchantOffers.class, recipes);
 		addEntity(villager);
 
 		runHandler(villager.getEntityId(), createClientContainer(villager));
@@ -58,13 +60,15 @@ public class VillagerTest extends AbstractEntityHandlerTest<VillagerEntity, Merc
 	// The career cannot be identified with a custom name.  However, trades should still be saved.
 	@Test
 	public void testActiveTradeCustomName() {
+		assumeCustomNamesNotBroken();
 		makeMockWorld();
 
 		VillagerEntity villager = new VillagerEntity(EntityType.VILLAGER, serverWorld);
 		villager.setCustomName(customName("Testificate"));
-		MerchantOffers recipes = new MerchantOffers();
+		MerchantOffers recipes = villager.func_213706_dY();
+		recipes.clear();
 		recipes.add(new MerchantOffer(new ItemStack(Items.DIAMOND, 64), ItemStack.EMPTY, new ItemStack(Items.EMERALD), 1, 1, 5));
-		ReflectionUtils.findAndSetPrivateField(villager, MerchantOffers.class, recipes);
+		ReflectionUtils.findAndSetPrivateField(villager, AbstractVillagerEntity.class, MerchantOffers.class, recipes);
 		addEntity(villager);
 
 		HandlerException ex = null;

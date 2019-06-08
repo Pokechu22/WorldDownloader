@@ -15,6 +15,7 @@
 package wdl.handler.entity;
 
 import net.minecraft.entity.merchant.IMerchant;
+import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.inventory.container.MerchantContainer;
 import net.minecraft.item.MerchantOffers;
@@ -33,8 +34,7 @@ public class VillagerHandler extends EntityHandler<VillagerEntity, MerchantConta
 		IMerchant merchant = ReflectionUtils.findAndGetPrivateField(
 				container, IMerchant.class);
 		MerchantOffers recipes = merchant.func_213706_dY();
-		// XXX This seems to be outdated; I don't think this field is right
-		ReflectionUtils.findAndSetPrivateField(villager, MerchantOffers.class, recipes);
+		ReflectionUtils.findAndSetPrivateField(villager, AbstractVillagerEntity.class, MerchantOffers.class, recipes);
 
 		return new TranslationTextComponent("wdl.messages.onGuiClosedInfo.savedEntity.villager.tradesOnly");
 		// Other data is actually transfered properly now, fortunately
