@@ -16,6 +16,7 @@ package wdl;
 
 
 import java.util.Collections;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
@@ -23,22 +24,12 @@ import javax.annotation.Nonnull;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableSet;
 
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.item.ExperienceOrbEntity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.item.ItemFrameEntity;
-import net.minecraft.entity.item.PaintingEntity;
-import net.minecraft.entity.monster.IMob;
-import net.minecraft.entity.monster.SlimeEntity;
-import net.minecraft.entity.passive.AmbientEntity;
-import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import wdl.EntityUtils.ISpigotEntityManager;
@@ -85,23 +76,26 @@ class StandardEntityManagers {
 		@Nonnull
 		@Override
 		public SpigotEntityType getSpigotType(String identifier) {
-			Class<? extends Entity> c = entityClassFor(this, identifier);
-			if (c == null) {
+			ResourceLocation rloc = new ResourceLocation(identifier);
+			Optional<EntityType<?>> otype = Registry.ENTITY_TYPE.func_218349_b(rloc);
+			if (!otype.isPresent()) {
 				return SpigotEntityType.UNKNOWN;
 			}
-
+			EntityType<?> type = otype.get();
+			EntityClassification vanillaClassification = type.func_220339_d();
 			// Spigot's mapping, which is based off of bukkit inheritance (which
 			// doesn't match vanilla)
-			if (MobEntity.class.isAssignableFrom(c) ||
-					SlimeEntity.class.isAssignableFrom(c)) {
+			// TODO Not sure I've ported this correctly, nor that spigot is still doing it this way
+			if (vanillaClassification == EntityClassification.MONSTER) {
 				return SpigotEntityType.MONSTER;
-			} else if (CreatureEntity.class.isAssignableFrom(c) ||
-					AmbientEntity.class.isAssignableFrom(c)) {
+			} else if (vanillaClassification == EntityClassification.CREATURE ||
+					vanillaClassification == EntityClassification.AMBIENT) {
+				// Is WATER_CREATURE included?  There's a lot more now...
 				return SpigotEntityType.ANIMAL;
-			} else if (ItemFrameEntity.class.isAssignableFrom(c) ||
-					PaintingEntity.class.isAssignableFrom(c) ||
-					ItemEntity.class.isAssignableFrom(c) ||
-					ExperienceOrbEntity.class.isAssignableFrom(c)) {
+			} else if (type == EntityType.ITEM_FRAME ||
+					type == EntityType.PAINTING ||
+					type == EntityType.ITEM ||
+					type == EntityType.EXPERIENCE_ORB) {
 				return SpigotEntityType.MISC;
 			} else {
 				return SpigotEntityType.OTHER;
@@ -168,14 +162,18 @@ class StandardEntityManagers {
 
 		@Override
 		public String getGroup(String identifier) {
-			Class<? extends Entity> c = entityClassFor(this, identifier);
-			if (c == null) {
+			ResourceLocation rloc = new ResourceLocation(identifier);
+			Optional<EntityType<?>> otype = Registry.ENTITY_TYPE.func_218349_b(rloc);
+			if (!otype.isPresent()) {
 				return null;
 			}
+			EntityClassification classification = otype.get().func_220339_d();
 
-			if (IMob.class.isAssignableFrom(c)) {
+			if (classification == EntityClassification.MONSTER) {
 				return "Hostile";
-			} else if (AnimalEntity.class.isAssignableFrom(c)) {
+			} else if (classification == EntityClassification.CREATURE ||
+					classification == EntityClassification.WATER_CREATURE ||
+					classification == EntityClassification.AMBIENT) {
 				return "Passive";
 			} else {
 				return "Other";
@@ -218,26 +216,6 @@ class StandardEntityManagers {
 			return null;
 		}
 	};
-
-	/**
-	 * Gets the entity class for that identifier.
-	 */
-	@VisibleForTesting
-	static Class<? extends Entity> entityClassFor(IEntityManager manager, String identifier) {
-		assert manager.getProvidedEntities().contains(identifier);
-
-		ResourceLocation loc = new ResourceLocation(identifier);
-
-		if (!Registry.ENTITY_TYPE.containsKey(loc)) {
-			return null;
-		}
-
-		// XXX: This is not a good way of doing this
-		Class<? extends Entity> c = Registry.ENTITY_TYPE.func_218349_b(loc).get().create(null).getClass();
-		assert c != null;
-
-		return c;
-	}
 
 	private static final Logger LOGGER = LogManager.getLogger();
 

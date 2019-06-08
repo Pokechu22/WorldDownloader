@@ -33,7 +33,6 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 //import net.minecraft.entity.EntityTracker;
-import net.minecraft.world.World;
 
 /**
  * Tests the data contained within StandardEntityManagers.
@@ -72,8 +71,7 @@ public class StandardEntityManagersTest {
 	@Test
 	public void testIdentifier() throws Exception {
 		TestWorld.ServerWorld world = TestWorld.makeServer();
-		Class<? extends Entity> cls = StandardEntityManagers.entityClassFor(StandardEntityManagers.VANILLA, identifier);
-		Entity entity = cls.getConstructor(EntityType.class, World.class).newInstance(type, world);
+		Entity entity = this.type.create(world);
 		assertThat(StandardEntityManagers.VANILLA.getIdentifierFor(entity), is(identifier));
 		world.close();
 	}
