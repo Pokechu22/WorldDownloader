@@ -14,13 +14,14 @@
  */
 package wdl;
 
-/*
 import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.BiPredicate;
@@ -30,6 +31,9 @@ import java.util.function.IntFunction;
 import org.junit.Test;
 import org.mockito.AdditionalAnswers;
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.longs.Long2ObjectLinkedOpenHashMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.item.ArmorStandEntity;
@@ -39,9 +43,11 @@ import net.minecraft.entity.passive.PigEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.play.ServerPlayNetHandler;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.ServerWorld;
 import net.minecraft.world.World;
-import wdl.TestWorld.ServerWorld;
-*/
+import net.minecraft.world.chunk.ChunkHolder;
+import net.minecraft.world.chunk.ChunkManager;
+import net.minecraft.world.chunk.TicketManager;
 
 /**
  * An experimental test around the entity tracking code.  Not particularly complete.
@@ -51,8 +57,8 @@ public class EntityUtilsTest extends MaybeMixinTest {
 	/**
 	 * Some basic tests, with varying paths but no entity removal.
 	 */
-	/*@Test
-	public void testTrackerSimple() {
+	@Test
+	public void testTrackerSimple() throws Exception  {
 		runTrackerTest(world -> new PigEntity(EntityType.PIG, world), 80, 10, 300,
 				(tick, entity) -> true,
 				(tick) -> new Vec3d(-150 + tick, tick, -150 + tick));
@@ -60,20 +66,20 @@ public class EntityUtilsTest extends MaybeMixinTest {
 				(tick, entity) -> true,
 				(tick) -> new Vec3d(150 * Math.sin(tick * 300 / (2 * Math.PI)), tick,
 						150 * Math.cos(tick * 300 / (2 * Math.PI))));
-	}*/
+	}
 
 	/**
 	 * Tracker test, where some entities are removed.
 	 */
-	/*@Test
-	public void testTrackerRemove() {
+	@Test
+	public void testTrackerRemove() throws Exception {
 		runTrackerTest(ZombieEntity::new, 80, 10, 110, // Why does this still work?
 				(tick, entity) -> tick <= 100,
 				(tick) -> new Vec3d(-150 + tick, tick, -150 + tick));
 		runTrackerTest(world -> new CreeperEntity(EntityType.CREEPER, world), 80, 10, 110,
 				(tick, entity) -> tick <= 100 || entity.posX <= (-150 + tick),
 				(tick) -> new Vec3d(-150 + tick, tick, -150 + tick));
-	}*/
+	}
 
 	/**
 	 * A generalized test for the entity tracker.
@@ -86,8 +92,8 @@ public class EntityUtilsTest extends MaybeMixinTest {
 	 *                           it should be "killed" on a tick.
 	 * @param posFunc            Function providing player position by tick.
 	 */
-	/*protected void runTrackerTest(Function<World, ? extends Entity> entitySupplier, int threshold,
-			int serverViewDistance, int numTicks, BiPredicate<Integer, Entity> keepEntity, IntFunction<Vec3d> posFunc) {
+	protected void runTrackerTest(Function<World, ? extends Entity> entitySupplier, int threshold,
+			int serverViewDistance, int numTicks, BiPredicate<Integer, Entity> keepEntity, IntFunction<Vec3d> posFunc) throws Exception {
 		ServerWorld world = TestWorld.makeServer();
 
 		ServerPlayerEntity player = mock(ServerPlayerEntity.class, RETURNS_DEEP_STUBS);
@@ -95,7 +101,6 @@ public class EntityUtilsTest extends MaybeMixinTest {
 		when(player.toString()).thenCallRealMethod();
 		doAnswer(AdditionalAnswers.<Entity>answerVoid(trackedEntities::add)).when(player).addEntity(any());
 		doAnswer(AdditionalAnswers.<Entity>answerVoid(trackedEntities::remove)).when(player).removeEntity(any());
-		when(player.getServerWorld().getPlayerChunkMap().isPlayerWatchingChunk(eq(player), anyInt(), anyInt())).thenReturn(true);
 
 		List<Entity> entities = new ArrayList<>(); // all known entities; if killed they're removed from this list
 		List<Entity> tracked = new ArrayList<>(); // entities being tracked by the mock player
@@ -117,12 +122,55 @@ public class EntityUtilsTest extends MaybeMixinTest {
 			}
 		})).when(player).removeEntity(any());
 
-		world.playerEntities.add(player);
+		// Not sure if I should use this, func_217435_c, func_217447_b, or func_217446_a...
+		world.func_217433_d(player);
 
-		EntityTracker tracker = new EntityTracker(world);
+		// Make some methods public...
+		class EntityTracker extends ChunkManager {
+			public EntityTracker() {
+				super(null, null, null, null, null, null, null, null, null, null, 0, 0);
+			}
+
+			@Override
+			protected void func_219175_a(int p_219175_1_, int p_219175_2_) {
+				super.func_219175_a(p_219175_1_, p_219175_2_);
+			}
+
+			@Override
+			public void func_219210_a(Entity p_219210_1_) {
+				super.func_219210_a(p_219210_1_);
+			}
+
+			@Override
+			public void func_219231_b(Entity p_219231_1_) {
+				super.func_219231_b(p_219231_1_);
+			}
+
+			@Override
+			public void func_219169_g() {
+				super.func_219169_g();
+			}
+		}
+
+		EntityTracker tracker = mock(EntityTracker.class);
+		doCallRealMethod().when(tracker).func_219175_a(anyInt(), anyInt()); // setViewDistance
+		doCallRealMethod().when(tracker).func_219210_a(any()); // track
+		doCallRealMethod().when(tracker).func_219231_b(any()); // untrack
+		// We bypass the constructor, so this needs to be manually set
+		Class<? extends TicketManager> ticketManagerClass = Arrays
+				.stream(ChunkManager.class.getDeclaredClasses())
+				.filter(TicketManager.class::isAssignableFrom)
+				.map(c -> c.<TicketManager>asSubclass(TicketManager.class)).findAny().get();
+		setToMock(tracker, ChunkManager.class, ticketManagerClass);
+		Long2ObjectLinkedOpenHashMap<ChunkHolder> chunkHolders1 = new Long2ObjectLinkedOpenHashMap<>();
+		ReflectionUtils.findAndSetPrivateField(tracker, ChunkManager.class, Long2ObjectLinkedOpenHashMap.class, chunkHolders1);
+		Int2ObjectMap<?> trackerTrackedEntities = new Int2ObjectOpenHashMap<>();
+		ReflectionUtils.findAndSetPrivateField(tracker, ChunkManager.class, Int2ObjectMap.class, trackerTrackedEntities);
+		ReflectionUtils.findAndSetPrivateField(tracker, ChunkManager.class, ServerWorld.class, world);
 		// Required because world doesn't set it up right for a mock, and mocking it
 		// would be making assumptions about how this is calculated
-		tracker.setViewDistance(serverViewDistance);
+		// (NOTE: I'm not sure what the difference between the two parameters are)
+		tracker.func_219175_a(serverViewDistance, serverViewDistance);
 
 		int eid = 0;
 		for (int x = -100; x <= 100; x += 10) {
@@ -132,7 +180,7 @@ public class EntityUtilsTest extends MaybeMixinTest {
 				e.setEntityId(eid++);
 				e.posX = x;
 				e.posZ = z;
-				tracker.track(e);
+				tracker.func_219210_a(e);
 			}
 		}
 
@@ -145,12 +193,19 @@ public class EntityUtilsTest extends MaybeMixinTest {
 				Entity e = itr.next();
 				if (!keepEntity.test(tick, e)) {
 					itr.remove();
-					tracker.untrack(e);
+					tracker.func_219231_b(e);
 				}
 			}
-			tracker.tick();
+			tracker.func_219169_g();
 		}
 
+		tracker.close();
 		world.close();
-	}*/
+	}
+
+	// Needed for silly wildcard reasons...
+	private static <A, B> void setToMock(A a, Class<A> aClass, Class<B> mockClass) {
+		B b = mock(mockClass);
+		ReflectionUtils.findAndSetPrivateField(a, aClass, mockClass, b);
+	}
 }
