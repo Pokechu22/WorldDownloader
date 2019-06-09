@@ -23,13 +23,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReferenceArray;
 
 import javax.annotation.Nullable;
 
@@ -840,27 +840,18 @@ public class WDL {
 				WDLMessageTypes.SAVING, "wdl.messages.saving.savingChunks");
 
 		// Get the list of loaded chunks
+		Class<?> chunkArrayClass = ClientChunkProvider.class.getDeclaredClasses()[0];
 		Object obj = ReflectionUtils.findAndGetPrivateField(worldClient.getChunkProvider(),
 				ClientChunkProvider.class,
-				VersionedFunctions.getChunkListClass());
-		List<Chunk> chunks;
-		if (obj instanceof List<?>) {
-			@SuppressWarnings("unchecked")
-			List<Chunk> chunkList = (List<Chunk>)obj;
-			chunks = new ArrayList<>(chunkList);
-		} else if (obj instanceof Map<?, ?>) {
-			@SuppressWarnings("unchecked")
-			Map<?, Chunk> chunkMap = (Map<?, Chunk>)obj;
-			chunks = new ArrayList<>(chunkMap.values());
-		} else {
-			// Shouldn't ever happen
-			throw new RuntimeException("Could not get ChunkProviderClient's chunk list: unexpected type for object " + obj);
-		}
+				chunkArrayClass);
+		@SuppressWarnings("unchecked")
+		AtomicReferenceArray<Chunk> chunks = ReflectionUtils.findAndGetPrivateField(obj,
+				AtomicReferenceArray.class);
 
 		progressScreen.startMajorTask(I18n.format("wdl.saveProgress.chunk.title"),
-				chunks.size());
+				chunks.length());
 
-		for (int currentChunk = 0; currentChunk < chunks.size(); currentChunk++) {
+		for (int currentChunk = 0; currentChunk < chunks.length(); currentChunk++) {
 			Chunk c = chunks.get(currentChunk);
 			if (c != null) {
 				//Serverside restrictions check

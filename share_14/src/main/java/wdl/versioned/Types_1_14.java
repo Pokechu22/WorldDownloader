@@ -17,7 +17,6 @@ package wdl.versioned;
 
 import java.util.Map;
 
-import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.minecraft.client.GameSettings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
@@ -27,14 +26,6 @@ import net.minecraft.util.text.StringTextComponent;
  * Functions that help deal with things that vary in type between versions.
  */
 final class TypeFunctions {
-	/* (non-javadoc)
-	 * @see VersionedFunctions#getChunkListClass
-	 */
-	@SuppressWarnings("rawtypes")
-	static Class<Long2ObjectMap> getChunkListClass() {
-		return Long2ObjectMap.class;
-	}
-
 	/* (non-javadoc)
 	 * @see VersionedFunctions#getChunksToSaveClass
 	 */

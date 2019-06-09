@@ -14,7 +14,11 @@
  */
 package wdl;
 
+import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.*;
+
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReferenceArray;
 
 import org.junit.Test;
 
@@ -37,7 +41,6 @@ import wdl.handler.block.DropperHandler;
 import wdl.handler.block.FurnaceHandler;
 import wdl.handler.block.HopperHandler;
 import wdl.handler.entity.HorseHandler;
-import wdl.versioned.VersionedFunctions;
 
 /**
  * Tests all situations where {@link ReflectionUtils} is used, to verify that
@@ -60,7 +63,11 @@ public class ReflectionUtilsUsageTest {
 	/** Handles {@link WDL#saveChunks(GuiWDLSaveProgress)} */
 	@Test
 	public void testWDLSaveChunks() {
-		ReflectionUtils.findField(ClientChunkProvider.class, VersionedFunctions.getChunkListClass());
+		Class<?>[] chunkArrayClasses = ClientChunkProvider.class.getDeclaredClasses();
+		assertThat(chunkArrayClasses, is(arrayWithSize(1)));
+		Class<?> chunkArrayClass = chunkArrayClasses[0];
+		ReflectionUtils.findField(ClientChunkProvider.class, chunkArrayClass);
+		ReflectionUtils.findField(chunkArrayClass, AtomicReferenceArray.class);
 	}
 
 	/** Handles {@link BrewingStandHandler#handle} */

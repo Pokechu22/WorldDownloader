@@ -38,7 +38,6 @@ import net.minecraft.block.ContainerBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.multiplayer.ClientChunkProvider;
 import net.minecraft.client.network.play.ClientPlayNetHandler;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -449,14 +448,6 @@ public final class VersionedFunctions {
 	 */
 	public static int getBiomeId(Biome biome) {
 		return RegistryFunctions.getBiomeId(biome);
-	}
-
-	/**
-	 * Gets the class used to store the list of chunks in ClientChunkProvider
-	 * ({@link ClientChunkProvider#loadedChunks}).
-	 */
-	public static Class<?> getChunkListClass() {
-		return TypeFunctions.getChunkListClass();
 	}
 
 	/**
