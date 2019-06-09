@@ -164,4 +164,5 @@ targetCompatibility = "1.8"
 // Ensure that the API code is in the jar
 jar {
     from sourceSets.api.output
+    classifier = 'mc1.14.1'
 }
