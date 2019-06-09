@@ -110,6 +110,7 @@ sourceSets {
     main {
         java {
             compileClasspath += api.output
+            runtimeClasspath += api.output
             srcDir "src/main/java"
             srcDir project(':share_14').file("src/main/java")
         }
@@ -133,6 +134,7 @@ sourceSets {
     test {
         java {
             compileClasspath += api.output
+            runtimeClasspath += api.output
             srcDir project(':share_14').file("src/test/java")
             exclude "wdl/lwts/WDLTestTweaker_1_9.java"
             exclude "wdl/lwts/WDLTestTweaker_1_10.java"
