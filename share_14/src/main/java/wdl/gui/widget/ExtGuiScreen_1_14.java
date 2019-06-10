@@ -55,9 +55,9 @@ abstract class ExtGuiScreen extends net.minecraft.client.gui.screen.Screen imple
 	public final void init(Minecraft mc, int width, int height) {
 		this.listList.clear();
 		this.textFieldList.clear();
+		this.mc = mc;
+		this.fontRenderer = mc.fontRenderer;
 		super.init(mc, width, height);
-		this.fontRenderer = this.font;
-		this.mc = this.minecraft;
 	}
 
 	@Override
