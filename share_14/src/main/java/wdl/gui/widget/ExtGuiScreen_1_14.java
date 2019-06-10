@@ -42,15 +42,13 @@ abstract class ExtGuiScreen extends net.minecraft.client.gui.screen.Screen imple
 
 	protected ExtGuiScreen() {
 		super(new StringTextComponent("")); // XXX: Skipping on accessibility data
-		this.fontRenderer = this.font;
-		this.mc = this.minecraft;
 	}
 
 	// Vanilla renames
 	@Deprecated
-	protected final FontRenderer fontRenderer;
+	protected FontRenderer fontRenderer;
 	@Deprecated
-	protected final Minecraft mc;
+	protected Minecraft mc;
 
 	// Called before initGui
 	@Override
@@ -58,6 +56,8 @@ abstract class ExtGuiScreen extends net.minecraft.client.gui.screen.Screen imple
 		this.listList.clear();
 		this.textFieldList.clear();
 		super.init(mc, width, height);
+		this.fontRenderer = this.font;
+		this.mc = this.minecraft;
 	}
 
 	@Override

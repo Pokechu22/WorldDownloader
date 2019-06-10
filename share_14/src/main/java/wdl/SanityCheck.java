@@ -86,6 +86,8 @@ enum SanityCheck {
 	TRANSLATION("wdl.sanity.translation") {
 		@Override
 		public void run() throws Exception {
+			System.out.println(I18n.format("gui.done"));
+			System.out.println(I18n.format(errorMessage));
 			if (!I18n.hasKey(this.errorMessage)) {
 				// Verbose, because obviously the normal string will not be translated.
 				throw new Exception("Translation strings are not present!  All messages will be the untranslated keys (e.g. `wdl.sanity.translation').  Please redownload the mod.  If this problem persists, file a bug report.");
