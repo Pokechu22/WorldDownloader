@@ -39,7 +39,7 @@ import net.minecraft.util.ClassInheritanceMultiMap;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.ChunkManager;
+import net.minecraft.world.chunk.storage.ChunkLoader;
 import net.minecraft.world.chunk.storage.RegionFile;
 import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.storage.SaveHandler;
@@ -52,7 +52,7 @@ import wdl.api.WDLApi.ModInfo;
 import wdl.versioned.VersionedFunctions;
 
 /**
- * Alternative implementation of {@link ChunkManager} that handles editing
+ * Alternative implementation of {@link ChunkLoader} that handles editing
  * WDL-specific properties of chunks as they are being saved.
  *
  * Extends the class in either WDLChunkLoader12.java or WDLChunkLoader13.java,

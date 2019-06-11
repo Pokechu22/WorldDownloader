@@ -33,13 +33,13 @@ import net.minecraft.world.ServerTickList;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.ChunkManager;
 import net.minecraft.world.chunk.ChunkPrimerTickList;
 import net.minecraft.world.chunk.ChunkSection;
 import net.minecraft.world.chunk.ChunkStatus;
 import net.minecraft.world.chunk.IChunk;
 import net.minecraft.world.chunk.NibbleArray;
 import net.minecraft.world.chunk.UpgradeData;
+import net.minecraft.world.chunk.storage.ChunkLoader;
 import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.dimension.EndDimension;
 import net.minecraft.world.dimension.NetherDimension;
@@ -50,12 +50,12 @@ import net.minecraft.world.storage.SessionLockException;
 import wdl.versioned.VersionedFunctions;
 
 /**
- * Alternative implementation of {@link ChunkManager} that handles editing
+ * Alternative implementation of {@link ChunkLoader} that handles editing
  * WDL-specific properties of chunks as they are being saved.
  *
  * This variant is used for chunks from 1.13 and later.
  */
-abstract class WDLChunkLoaderBase extends ChunkManager {
+abstract class WDLChunkLoaderBase extends ChunkLoader {
 
 	/**
 	 * Gets the save folder for the given WorldProvider, respecting Forge's
@@ -83,7 +83,7 @@ abstract class WDLChunkLoaderBase extends ChunkManager {
 	protected final File chunkSaveLocation;
 
 	protected WDLChunkLoaderBase(WDL wdl, File file) {
-		super(null, file, null, null, null, null, null, null, null, null, 0, 0); // Surely this can't go wrong
+		super(file, null);
 		this.wdl = wdl;
 		this.chunkSaveLocation = file;
 	}
