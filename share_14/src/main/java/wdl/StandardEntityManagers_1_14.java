@@ -157,7 +157,12 @@ class StandardEntityManagers {
 		@Override
 		public int getTrackDistance(String identifier, Entity entity) {
 			// Per ChunkManager.func_219210_a; hopefully this is right
-			return entity.getType().func_220345_k() * 16;
+			ResourceLocation rloc = new ResourceLocation(identifier);
+			Optional<EntityType<?>> type = Registry.ENTITY_TYPE.func_218349_b(rloc);
+			if (!type.isPresent()) {
+				return -1;
+			}
+			return type.get().func_220345_k() * 16;
 		}
 
 		@Override
