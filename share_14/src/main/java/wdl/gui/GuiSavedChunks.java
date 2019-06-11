@@ -169,6 +169,9 @@ public class GuiSavedChunks extends WDLScreen {
 	 */
 	@Nullable
 	private RegionFile loadRegion(int x, int z) {
+		if (wdl.chunkLoader == null) {
+			return null;
+		}
 		return wdl.chunkLoader.getRegionFileIfExists(x, z);
 	}
 
