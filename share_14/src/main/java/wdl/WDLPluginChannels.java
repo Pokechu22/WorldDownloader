@@ -708,6 +708,7 @@ public class WDLPluginChannels {
 	 * correct ones.
 	 */
 	static void onWorldLoad() {
+		@SuppressWarnings("resource")
 		Minecraft minecraft = Minecraft.getInstance();
 
 		receivedPackets = new HashSet<>();

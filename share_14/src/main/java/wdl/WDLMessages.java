@@ -303,6 +303,7 @@ public class WDLMessages {
 		text.appendSibling(header);
 		text.appendSibling(messageFormat);
 		if (enabled) {
+			@SuppressWarnings("resource")
 			Minecraft minecraft = Minecraft.getInstance();
 			// Cross-thread calls to printChatMessage are illegal in 1.13 due to accessing
 			// the font renderer; add a scheduled task instead.
