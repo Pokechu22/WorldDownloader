@@ -76,10 +76,16 @@ abstract class WDLChunkLoaderBase extends ChunkLoader {
 			return file;
 		}
 
-		return baseFolder;
+		return new File(baseFolder, "region");
 	}
 
 	protected final WDL wdl;
+	/**
+	 * Location where chunks are saved.
+	 *
+	 * In this version, this directly is the region folder for the given dimension;
+	 * for the overworld it is world/region and others it is world/DIM#/region.
+	 */
 	protected final File chunkSaveLocation;
 
 	protected WDLChunkLoaderBase(WDL wdl, File file) {

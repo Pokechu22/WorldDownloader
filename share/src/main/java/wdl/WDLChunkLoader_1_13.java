@@ -78,6 +78,12 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 
 	protected final WDL wdl;
 	protected final Map<ChunkPos, NBTTagCompound> chunksToSave;
+	/**
+	 * Location where chunks are saved.
+	 *
+	 * In this version, this directly is parent to the region folder for the given dimension;
+	 * in the overworld it is simply world and for other dimensions it is world/DIM#.
+	 */
 	protected final File chunkSaveLocation;
 
 	protected WDLChunkLoaderBase(WDL wdl, File file) {
