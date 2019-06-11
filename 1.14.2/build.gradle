@@ -14,7 +14,7 @@ buildscript {
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.0.128'
-        classpath 'pokechu22.test.begradle:begradle:0.2.0-SNAPSHOT:fg3'
+        classpath 'pokechu22.test.begradle:begradle:0.2.0:fg3'
     }
 }
 
