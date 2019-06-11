@@ -202,7 +202,9 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends ExtendedList<T> 
 	}
 
 	@Override
-	public abstract int getScrollBarX();
+	public final int getScrollbarPosition() {
+		return this.getScrollBarX();
+	}
 
 	@Override
 	public final int getWidth() {
