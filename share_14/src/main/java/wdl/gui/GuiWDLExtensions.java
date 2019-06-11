@@ -143,7 +143,7 @@ public class GuiWDLExtensions extends WDLScreen {
 				if (selectedEntry != this) {
 					selectedEntry = this;
 
-					mc.getSoundHandler().play(SimpleSound.master(
+					minecraft.getSoundHandler().play(SimpleSound.master(
 							SoundEvents.UI_BUTTON_CLICK, 1.0F));
 
 					updateDetailsList(mod);

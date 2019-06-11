@@ -118,10 +118,10 @@ public class GuiWDLUpdates extends WDLScreen {
 			@Override
 			public boolean mouseDown(int x, int y, int mouseButton) {
 				if (y > this.y && y < this.y + entryHeight) {
-					mc.displayGuiScreen(new GuiWDLSingleUpdate(GuiWDLUpdates.this,
+					minecraft.displayGuiScreen(new GuiWDLSingleUpdate(GuiWDLUpdates.this,
 							this.release));
 
-					mc.getSoundHandler().play(SimpleSound.master(
+					minecraft.getSoundHandler().play(SimpleSound.master(
 							SoundEvents.UI_BUTTON_CLICK, 1.0f));
 					return true;
 				}

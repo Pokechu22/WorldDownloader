@@ -116,7 +116,7 @@ public class GuiWDLEntities extends WDLScreen {
 
 			public CategoryEntry(String group) {
 				this.displayGroup = EntityUtils.getDisplayGroup(group);
-				this.labelWidth = mc.fontRenderer.getStringWidth(displayGroup);
+				this.labelWidth = minecraft.fontRenderer.getStringWidth(displayGroup);
 
 				this.groupEnabled = config.isEntityGroupEnabled(group);
 
@@ -134,9 +134,9 @@ public class GuiWDLEntities extends WDLScreen {
 			public void drawEntry(int x, int y, int width, int height, int mouseX, int mouseY) {
 				this.enableGroupButton.setMessage(getButtonText());
 				super.drawEntry(x, y, width, height, mouseX, mouseY);
-				mc.fontRenderer.drawString(this.displayGroup, (x + 110 / 2)
+				minecraft.fontRenderer.drawString(this.displayGroup, (x + 110 / 2)
 						- (this.labelWidth / 2), y + height
-						- mc.fontRenderer.FONT_HEIGHT - 1, 0xFFFFFF);
+						- minecraft.fontRenderer.FONT_HEIGHT - 1, 0xFFFFFF);
 			}
 
 			boolean isGroupEnabled() {
@@ -220,8 +220,8 @@ public class GuiWDLEntities extends WDLScreen {
 
 				super.drawEntry(x, y, width, height, mouseX, mouseY);
 
-				mc.fontRenderer.drawString(this.displayEntity,
-						x, y + height / 2 - mc.fontRenderer.FONT_HEIGHT / 2, 0xFFFFFF);
+				minecraft.fontRenderer.drawString(this.displayEntity,
+						x, y + height / 2 - minecraft.fontRenderer.FONT_HEIGHT / 2, 0xFFFFFF);
 			}
 
 			@Override

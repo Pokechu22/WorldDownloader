@@ -72,7 +72,7 @@ public class GuiWDLMessages extends WDLScreen {
 
 				drawCenteredString(font, category.getDisplayName().getFormattedText(),
 						GuiWDLMessages.this.width / 2 - 40, y + height
-						- mc.fontRenderer.FONT_HEIGHT - 1, 0xFFFFFF);
+						- minecraft.fontRenderer.FONT_HEIGHT - 1, 0xFFFFFF);
 
 				if (button.isMouseOver()) {
 					hoveredButtonTooltip = button.getTooltip();

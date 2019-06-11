@@ -165,12 +165,7 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends ExtendedList<T> 
 
 	public ExtGuiList(Minecraft mcIn, int widthIn, int heightIn, int topIn, int bottomIn, int slotHeightIn) {
 		super(mcIn, widthIn, heightIn, topIn, bottomIn, slotHeightIn);
-		this.mc = this.minecraft;
 	}
-
-	// Vanilla renamed this field
-	@Deprecated
-	protected final Minecraft mc;
 
 	private int y;
 
