@@ -354,7 +354,7 @@ wdl.messages.updates.grabingUpdatesFromGithub=Usando la lista de versiones de Gi
 
 wdl.messages.permissions.init=Enciendo la sistema de Plugin Chaneles.
 wdl.messages.permissions.packet0=Recibí paquete de opciones Nº 0: [canUseFunctionsUnknownToServer=%s]
-wdl.messages.permissions.packet1=Recibí paquete de opciones Nº 1: [canDownloadInGeneral=%s, canCacheChunks=%s, saveRadius=%s, canSaveEntities=%s, canSaveTileEntities=%s, canSaveContainers=%s]
+wdl.messages.permissions.packet1=Recibí paquete de opciones Nº 1: [canDownloadInGeneral=%s, canCacheChunks=%s, saveRadius=%s, canSaveEntities=%s, canSaveBlockEntities=%s, canSaveContainers=%s]
 wdl.messages.permissions.packet2=Recibí paquete de opciones Nº #2: [entityRanges=(total of %s)]
 wdl.messages.permissions.packet3=Recibí paquete de opciones Nº #3: [canRequestPermissions=%s, requestMessage=(%s long, HashCode of %s)]
 wdl.messages.permissions.packet4=Recibí paquete de opciones Nº #4: [chunkOverrides=(%s groups, %s total ranges)]
