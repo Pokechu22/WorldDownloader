@@ -25,6 +25,7 @@ public abstract class WDLButton extends ExtButton {
 	/**
 	 * Performs the action of this button when it has been clicked.
 	 */
+	@Override
 	public abstract void performAction();
 
 	@Override

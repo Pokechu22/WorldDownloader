@@ -24,6 +24,7 @@ import org.lwjgl.glfw.GLFW;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.util.text.StringTextComponent;
 import wdl.gui.widget.GuiList.GuiListEntry;
 
@@ -70,7 +71,7 @@ abstract class ExtGuiScreen extends net.minecraft.client.gui.screen.Screen imple
 	public void onGuiClosed() {}
 
 	@Override
-	public final <T extends net.minecraft.client.gui.widget.button.Button> T addButton(T buttonIn) {
+	public final <T extends Widget> T addButton(T buttonIn) {
 		return super.addButton(buttonIn);
 	}
 

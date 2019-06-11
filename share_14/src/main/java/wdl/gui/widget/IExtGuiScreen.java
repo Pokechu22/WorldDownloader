@@ -15,7 +15,7 @@
 package wdl.gui.widget;
 
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.gui.widget.Widget;
 
 /**
  * Shared interface for a GuiScreen variant that can also store buttons and GuiLists.
@@ -26,7 +26,7 @@ public interface IExtGuiScreen {
 	 *
 	 * @param button The button to add.
 	 */
-	public abstract <T extends Button> T addButton(T button);
+	public abstract <T extends Widget> T addButton(T button);
 
 	/**
 	 * Adds a list to the collection of lists to process.

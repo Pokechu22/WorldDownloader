@@ -27,7 +27,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.list.ExtendedList;
 import wdl.gui.widget.ExtGuiList.ExtGuiListEntry;
 
@@ -36,10 +36,10 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends ExtendedList<T> 
 	static abstract class ExtGuiListEntry<T extends ExtGuiListEntry<T>> extends AbstractListEntry<T> implements IExtGuiListEntry<T> {
 
 		private static class ButtonWrapper {
-			public final Button button;
+			public final Widget button;
 			public final int x;
 			public final int y;
-			public ButtonWrapper(Button button, int x, int y) {
+			public ButtonWrapper(Widget button, int x, int y) {
 				this.button = button;
 				this.x = x;
 				this.y = y;
@@ -62,7 +62,7 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends ExtendedList<T> 
 		private ButtonWrapper activeButton;
 
 		@Override
-		public final <B extends Button> B addButton(B button, int x, int y) {
+		public final <B extends Widget> B addButton(B button, int x, int y) {
 			this.buttonList.add(new ButtonWrapper(button, x, y));
 			return button;
 		}

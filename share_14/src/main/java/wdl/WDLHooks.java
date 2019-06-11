@@ -29,6 +29,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.IngameMenuScreen;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.network.play.ClientPlayNetHandler;
 import net.minecraft.client.resources.I18n;
@@ -594,12 +595,12 @@ public class WDLHooks {
 	 *                   modified directly.
 	 * @param addButton  Method to add a button to the GUI.
 	 */
-	public static void injectWDLButtons(IngameMenuScreen gui, Collection<? super Button> buttonList,
-			Consumer<Button> addButton) {
+	public static void injectWDLButtons(IngameMenuScreen gui, Collection<Widget> buttonList,
+			Consumer<Widget> addButton) {
 		INSTANCE.injectWDLButtons0(gui, buttonList, addButton);
 	}
-	protected void injectWDLButtons0(IngameMenuScreen gui, Collection<? super Button> buttonList,
-			Consumer<Button> addButton) {
+	protected void injectWDLButtons0(IngameMenuScreen gui, Collection<Widget> buttonList,
+			Consumer<Widget> addButton) {
 		int insertAtYPos = 0;
 
 		String advancementsText = I18n.format("gui.advancements");
