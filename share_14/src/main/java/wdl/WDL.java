@@ -620,9 +620,8 @@ public class WDL {
 		} catch (Exception e) {
 			throw new RuntimeException("Threw exception waiting for asynchronous IO to finish. Hmmm.", e);
 		}
-		// XXX Still needed?
-		//saveHandler.flush();
-		//minecraft.getSaveLoader().flushCache();
+		chunkLoader.close();
+		chunkLoader = null;
 
 		if (backupType != WorldBackupType.NONE) {
 			WDLMessages.chatMessageTranslated(WDL.serverProps,
