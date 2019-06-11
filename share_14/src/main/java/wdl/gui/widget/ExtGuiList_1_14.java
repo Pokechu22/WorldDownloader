@@ -74,7 +74,8 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends ExtendedList<T> 
 		}
 
 		@Override
-		public final void render(int index, int x, int y, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean mouseOver, float partialTicks) {
+		public final void render(int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean mouseOver, float partialTicks) {
+			// XXX: Note that y and x here are swapped!
 			this.drawEntry(x, y, entryWidth, entryHeight, mouseX, mouseY);
 			for (ButtonWrapper button : this.buttonList) {
 				button.button.x = button.x + x + (entryWidth / 2);
