@@ -94,7 +94,7 @@ public class GuiWDLEntityRangePresets extends WDLScreen {
 	public void render(int mouseX, int mouseY, float partialTicks) {
 		Utils.drawListBackground(23, 32, 0, 0, height, width);
 
-		this.drawCenteredString(this.fontRenderer,
+		this.drawCenteredString(this.font,
 				I18n.format("wdl.gui.rangePresets.title"), this.width / 2, 8,
 				0xFFFFFF);
 
@@ -147,7 +147,7 @@ public class GuiWDLEntityRangePresets extends WDLScreen {
 			}
 		}
 
-		mc.displayGuiScreen(parent);
+		minecraft.displayGuiScreen(parent);
 	}
 
 	@Override

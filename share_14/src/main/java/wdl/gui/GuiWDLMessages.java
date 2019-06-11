@@ -46,7 +46,7 @@ public class GuiWDLMessages extends WDLScreen {
 
 	private class GuiMessageTypeList extends GuiList<GuiMessageTypeList.Entry> {
 		public GuiMessageTypeList() {
-			super(GuiWDLMessages.this.mc, GuiWDLMessages.this.width,
+			super(GuiWDLMessages.this.minecraft, GuiWDLMessages.this.width,
 					GuiWDLMessages.this.height, 39,
 					GuiWDLMessages.this.height - 32, 20);
 		}
@@ -70,7 +70,7 @@ public class GuiWDLMessages extends WDLScreen {
 
 				super.drawEntry(x, y, width, height, mouseX, mouseY);
 
-				drawCenteredString(fontRenderer, category.getDisplayName().getFormattedText(),
+				drawCenteredString(font, category.getDisplayName().getFormattedText(),
 						GuiWDLMessages.this.width / 2 - 40, y + height
 						- mc.fontRenderer.FONT_HEIGHT - 1, 0xFFFFFF);
 
@@ -163,7 +163,7 @@ public class GuiWDLMessages extends WDLScreen {
 			}
 		}
 
-		mc.displayGuiScreen(this);
+		minecraft.displayGuiScreen(this);
 	}
 
 	@Override
@@ -178,7 +178,7 @@ public class GuiWDLMessages extends WDLScreen {
 		this.renderBackground();
 		super.render(mouseX, mouseY, partialTicks);
 
-		this.drawCenteredString(this.fontRenderer,
+		this.drawCenteredString(this.font,
 				I18n.format("wdl.gui.messages.message.title"),
 				this.width / 2, 8, 0xFFFFFF);
 

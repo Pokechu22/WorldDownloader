@@ -108,7 +108,7 @@ public abstract class GuiTurningCameraBase extends WDLScreen {
 	 */
 	@Override
 	public void tick() {
-		if (mc.world != null && this.initializedCamera) {
+		if (minecraft.world != null && this.initializedCamera) {
 			this.cam.prevRotationPitch = this.cam.rotationPitch = 0.0F;
 			this.cam.prevRotationYaw = this.yaw;
 			this.cam.lastTickPosY = this.cam.prevPosY = this.cam.posY;
@@ -181,7 +181,7 @@ public abstract class GuiTurningCameraBase extends WDLScreen {
 			Vec3d from = playerPos.add(offsetX, offsetY, offsetZ);
 			Vec3d to = offsetPos.add(offsetX, offsetY, offsetZ);
 
-			RayTraceResult pos = mc.world.func_217299_a(new RayTraceContext(from, to, RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, wdl.player));
+			RayTraceResult pos = minecraft.world.func_217299_a(new RayTraceContext(from, to, RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, wdl.player));
 
 			double distance = pos.func_216347_e().distanceTo(playerPos);
 			if (distance < currentDistance && distance > 0) {
@@ -205,7 +205,7 @@ public abstract class GuiTurningCameraBase extends WDLScreen {
 	 */
 	@Override
 	public void renderBackground() {
-		if (mc.world == null) {
+		if (minecraft.world == null) {
 			this.renderDirtBackground(0);
 		}
 	}

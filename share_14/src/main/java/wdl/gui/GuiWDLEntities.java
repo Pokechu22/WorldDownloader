@@ -62,7 +62,7 @@ public class GuiWDLEntities extends WDLScreen {
 				Multimap<String, String> entities = EntityUtils
 						.getEntitiesByGroup();
 				largestWidth = entities.values().stream()
-						.mapToInt(fontRenderer::getStringWidth)
+						.mapToInt(font::getStringWidth)
 						.max().orElse(0);
 				totalWidth = largestWidth + 255;
 
@@ -247,7 +247,7 @@ public class GuiWDLEntities extends WDLScreen {
 		}
 
 		public GuiEntityList() {
-			super(GuiWDLEntities.this.mc, GuiWDLEntities.this.width,
+			super(GuiWDLEntities.this.minecraft, GuiWDLEntities.this.width,
 					GuiWDLEntities.this.height, 39,
 					GuiWDLEntities.this.height - 32, 20);
 		}
@@ -305,7 +305,7 @@ public class GuiWDLEntities extends WDLScreen {
 
 		super.render(mouseX, mouseY, partialTicks);
 
-		this.drawCenteredString(this.fontRenderer,
+		this.drawCenteredString(this.font,
 				I18n.format("wdl.gui.entities.title"), this.width / 2, 8,
 				0xFFFFFF);
 

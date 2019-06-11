@@ -65,7 +65,7 @@ public class GuiWDLExtensions extends WDLScreen {
 
 	private class ModList extends GuiList<ModList.ModEntry> {
 		public ModList() {
-			super(GuiWDLExtensions.this.mc, GuiWDLExtensions.this.width,
+			super(GuiWDLExtensions.this.minecraft, GuiWDLExtensions.this.width,
 					bottomLocation, TOP_HEIGHT, bottomLocation, 22);
 			this.renderSelection = true;
 		}
@@ -158,8 +158,8 @@ public class GuiWDLExtensions extends WDLScreen {
 			public void drawEntry(int x, int y, int width, int height, int mouseX, int mouseY) {
 				super.drawEntry(x, y, width, height, mouseX, mouseY);
 
-				int centerY = y + height / 2 - fontRenderer.FONT_HEIGHT / 2;
-				fontRenderer.drawString(label, x, centerY, 0xFFFFFF);
+				int centerY = y + height / 2 - font.FONT_HEIGHT / 2;
+				font.drawString(label, x, centerY, 0xFFFFFF);
 			}
 
 			@Override
@@ -194,7 +194,7 @@ public class GuiWDLExtensions extends WDLScreen {
 
 	private class ModDetailList extends TextList {
 		public ModDetailList() {
-			super(GuiWDLExtensions.this.mc, GuiWDLExtensions.this.width,
+			super(GuiWDLExtensions.this.minecraft, GuiWDLExtensions.this.width,
 					GuiWDLExtensions.this.height - bottomLocation,
 					MIDDLE_HEIGHT, BOTTOM_HEIGHT);
 		}
@@ -207,7 +207,7 @@ public class GuiWDLExtensions extends WDLScreen {
 
 			super.render(mouseX, mouseY, partialTicks);
 
-			drawCenteredString(fontRenderer,
+			drawCenteredString(font,
 					I18n.format("wdl.gui.extensions.detailsCaption"),
 					GuiWDLExtensions.this.width / 2, bottomLocation + 5, 0xFFFFFF);
 		}
@@ -298,7 +298,7 @@ public class GuiWDLExtensions extends WDLScreen {
 
 		super.render(mouseX, mouseY, partialTicks);
 
-		this.drawCenteredString(this.fontRenderer,
+		this.drawCenteredString(this.font,
 				I18n.format("wdl.gui.extensions.title"), this.width / 2, 8,
 				0xFFFFFF);
 	}

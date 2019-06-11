@@ -53,11 +53,11 @@ public class GuiWDLGenerator extends WDLScreen {
 	@Override
 	public void initGui() {
 		this.seedText = I18n.format("wdl.gui.generator.seed");
-		int seedWidth = fontRenderer.getStringWidth(seedText + " ");
+		int seedWidth = font.getStringWidth(seedText + " ");
 
 		this.title = I18n.format("wdl.gui.generator.title", WDL.baseFolderName);
 		int y = this.height / 4 - 15;
-		this.seedField = this.addTextField(new TextFieldWidget(this.fontRenderer,
+		this.seedField = this.addTextField(new TextFieldWidget(this.font,
 				this.width / 2 - (100 - seedWidth), y, 200 - seedWidth, 18, seedText));
 		this.seedField.setText(config.getValue(GeneratorSettings.SEED));
 		y += 22;
@@ -109,10 +109,10 @@ public class GuiWDLGenerator extends WDLScreen {
 	public void render(int mouseX, int mouseY, float partialTicks) {
 		Utils.drawListBackground(23, 32, 0, 0, height, width);
 
-		this.drawCenteredString(this.fontRenderer, this.title,
+		this.drawCenteredString(this.font, this.title,
 				this.width / 2, 8, 0xFFFFFF);
 
-		this.drawString(this.fontRenderer, seedText, this.width / 2 - 100,
+		this.drawString(this.font, seedText, this.width / 2 - 100,
 				this.height / 4 - 10, 0xFFFFFF);
 
 		super.render(mouseX, mouseY, partialTicks);

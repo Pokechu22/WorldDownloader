@@ -193,17 +193,17 @@ public class GuiWDLChunkOverrides extends WDLScreen {
 					partiallyRequested = true;
 				}
 
-				mc.getSoundHandler().play(SimpleSound.master(
+				minecraft.getSoundHandler().play(SimpleSound.master(
 								SoundEvents.UI_BUTTON_CLICK, 1.0F));
 				break;
 			case ERASING:
 				// TODO
-				mc.getSoundHandler().play(SimpleSound.master(
+				minecraft.getSoundHandler().play(SimpleSound.master(
 						SoundEvents.BLOCK_DISPENSER_FAIL, 1.0F));
 				break;
 			case MOVING:
 				// TODO
-				mc.getSoundHandler().play(SimpleSound.master(
+				minecraft.getSoundHandler().play(SimpleSound.master(
 						SoundEvents.BLOCK_DISPENSER_FAIL, 1.0F));
 				break;
 			}
@@ -266,12 +266,12 @@ public class GuiWDLChunkOverrides extends WDLScreen {
 		// Draw the main borders now so that ranges are hidden behind it.
 		Utils.drawBorder(TOP_MARGIN, BOTTOM_MARGIN, 0, 0, height, width);
 
-		this.drawCenteredString(this.fontRenderer, "Chunk overrides",
+		this.drawCenteredString(this.font, "Chunk overrides",
 				this.width / 2, 8, 0xFFFFFF);
 
 		super.render(mouseX, mouseY, partialTicks);
 
-		this.drawCenteredString(this.fontRenderer, "\u00A7c\u00A7lThis is a work in progress.",
+		this.drawCenteredString(this.font, "\u00A7c\u00A7lThis is a work in progress.",
 				this.width / 2, this.height / 2, 0xFFFFFF);
 	}
 
@@ -402,7 +402,7 @@ public class GuiWDLChunkOverrides extends WDLScreen {
 		public void afterDraw() {
 			// Reset the color, which gets set somewhere (probably when drawing text)
 			GlStateManager.color3f(1.0f, 1.0f, 1.0f);
-			mc.getTextureManager().bindTexture(WIDGET_TEXTURES);
+			minecraft.getTextureManager().bindTexture(WIDGET_TEXTURES);
 
 			this.blit(this.x + 2, this.y + 2,
 					mode.overlayU, mode.overlayV, 16, 16);

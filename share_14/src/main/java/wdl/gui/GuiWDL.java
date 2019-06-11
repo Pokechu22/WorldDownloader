@@ -40,7 +40,7 @@ public class GuiWDL extends WDLScreen {
 
 	private class GuiWDLButtonList extends GuiList<GuiWDLButtonList.ButtonEntry> {
 		public GuiWDLButtonList() {
-			super(GuiWDL.this.mc, GuiWDL.this.width, GuiWDL.this.height, 39,
+			super(GuiWDL.this.minecraft, GuiWDL.this.width, GuiWDL.this.height, 39,
 					GuiWDL.this.height - 32, 20);
 		}
 
@@ -127,7 +127,7 @@ public class GuiWDL extends WDLScreen {
 	public void initGui() {
 		this.title = I18n.format("wdl.gui.wdl.title", WDL.baseFolderName);
 
-		this.worldname = this.addTextField(new TextFieldWidget(this.fontRenderer,
+		this.worldname = this.addTextField(new TextFieldWidget(this.font,
 				this.width / 2 - 155, 19, 150, 18, I18n.format("wdl.gui.wdl.worldname")));
 		this.worldname.setText(this.config.getValue(MiscSettings.SERVER_NAME));
 
@@ -162,11 +162,11 @@ public class GuiWDL extends WDLScreen {
 
 		super.render(mouseX, mouseY, partialTicks);
 
-		this.drawCenteredString(this.fontRenderer, this.title,
+		this.drawCenteredString(this.font, this.title,
 				this.width / 2, 8, 0xFFFFFF);
 		String name = I18n.format("wdl.gui.wdl.worldname");
-		this.drawString(this.fontRenderer, name, this.worldname.x
-				- this.fontRenderer.getStringWidth(name + " "), 26, 0xFFFFFF);
+		this.drawString(this.font, name, this.worldname.x
+				- this.font.getStringWidth(name + " "), 26, 0xFFFFFF);
 
 		Utils.drawGuiInfoBox(displayedTooltip, width, height, 48);
 	}

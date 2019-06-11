@@ -23,7 +23,6 @@ import javax.annotation.OverridingMethodsMustInvokeSuper;
 import org.lwjgl.glfw.GLFW;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.util.text.StringTextComponent;
 import wdl.gui.widget.GuiList.GuiListEntry;
@@ -44,19 +43,11 @@ abstract class ExtGuiScreen extends net.minecraft.client.gui.screen.Screen imple
 		super(new StringTextComponent("")); // XXX: Skipping on accessibility data
 	}
 
-	// Vanilla renames
-	@Deprecated
-	protected FontRenderer fontRenderer;
-	@Deprecated
-	protected Minecraft mc;
-
 	// Called before initGui
 	@Override
 	public final void init(Minecraft mc, int width, int height) {
 		this.listList.clear();
 		this.textFieldList.clear();
-		this.mc = mc;
-		this.fontRenderer = mc.fontRenderer;
 		super.init(mc, width, height);
 	}
 

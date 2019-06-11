@@ -127,14 +127,14 @@ public class GuiSavedChunks extends WDLScreen {
 		// Draw the main borders now so that positions are hidden behind it.
 		Utils.drawBorder(TOP_MARGIN, BOTTOM_MARGIN, 0, 0, height, width);
 
-		this.drawCenteredString(this.fontRenderer, I18n.format("wdl.gui.savedChunks.title"),
+		this.drawCenteredString(this.font, I18n.format("wdl.gui.savedChunks.title"),
 				this.width / 2, 8, 0xFFFFFF);
 
 		if (mouseY > TOP_MARGIN && mouseY < height - BOTTOM_MARGIN) {
 			int x = displayXToChunkX(mouseX);
 			int z = displayZToChunkZ(mouseY);
 			if (wdl.savedChunks.contains(new ChunkPos(x, z))) {
-				this.drawString(this.fontRenderer,
+				this.drawString(this.font,
 						I18n.format("wdl.gui.savedChunks.savedNow", x, z),
 						12, height - 12, 0xFFFFFF);
 			} else {
@@ -146,11 +146,11 @@ public class GuiSavedChunks extends WDLScreen {
 					timestamp = timestamps[(x & (REGION_SIZE - 1)) + (z & (REGION_SIZE - 1)) * REGION_SIZE];
 				}
 				if (timestamp != 0) {
-					this.drawString(this.fontRenderer,
+					this.drawString(this.font,
 							I18n.format("wdl.gui.savedChunks.lastSaved", x, z, timestamp * 1000L),
 							12, height - 12, 0xFFFFFF);
 				} else {
-					this.drawString(this.fontRenderer,
+					this.drawString(this.font,
 							I18n.format("wdl.gui.savedChunks.neverSaved", x, z),
 							12, height - 12, 0xFFFFFF);
 				}

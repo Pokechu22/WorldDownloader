@@ -88,7 +88,7 @@ public class GuiWDLPermissions extends WDLScreen {
 			}
 		});
 
-		this.list = this.addList(new TextList(mc, width, height, TOP_MARGIN, BOTTOM_MARGIN));
+		this.list = this.addList(new TextList(minecraft, width, height, TOP_MARGIN, BOTTOM_MARGIN));
 
 		list.addLine("\u00A7c\u00A7lThis is a work in progress.");
 
@@ -151,14 +151,14 @@ public class GuiWDLPermissions extends WDLScreen {
 	public void render(int mouseX, int mouseY, float partialTicks) {
 		super.render(mouseX, mouseY, partialTicks);
 
-		this.drawCenteredString(this.fontRenderer, "Permission info",
+		this.drawCenteredString(this.font, "Permission info",
 				this.width / 2, 8, 0xFFFFFF);
 
 		if (!WDLPluginChannels.hasPermissions()) {
-			this.drawCenteredString(this.fontRenderer,
+			this.drawCenteredString(this.font,
 					"No permissions received; defaulting to everything enabled.",
 					this.width / 2, (this.height - 32 - 23) / 2 + 23
-					- fontRenderer.FONT_HEIGHT / 2, 0xFFFFFF);
+					- font.FONT_HEIGHT / 2, 0xFFFFFF);
 		}
 	}
 }

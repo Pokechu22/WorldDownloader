@@ -61,7 +61,7 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements IBac
 			} finally {
 				backingUp = false;
 
-				mc.func_212871_a_(() -> {
+				minecraft.func_212871_a_(() -> {
 					callback.run();
 				});
 			}
@@ -141,7 +141,7 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements IBac
 
 		// TODO: Figure out the widest between captionTitle, captionSubtitle,
 		// overwriteWarning1, and overwriteWarning2.
-		infoBoxWidth = fontRenderer.getStringWidth(overwriteWarning1);
+		infoBoxWidth = font.getStringWidth(overwriteWarning1);
 		infoBoxHeight = 22 * 6;
 
 		// Ensure that the infobox is wide enough for the buttons.
@@ -205,37 +205,37 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements IBac
 		if (this.backingUp) {
 			renderDirtBackground(0);
 
-			drawCenteredString(fontRenderer, backingUpTitle,
+			drawCenteredString(font, backingUpTitle,
 					width / 2, height / 4 - 40, 0xFFFFFF);
-			drawCenteredString(fontRenderer, backupData,
+			drawCenteredString(font, backupData,
 					width / 2, height / 4 - 10, 0xFFFFFF);
 			if (backupFile != null) {
 				String text = I18n.format(
 						"wdl.gui.overwriteChanges.backingUp.progress",
 						backupCurrent, backupCount, backupFile);
-				drawCenteredString(fontRenderer, text, width / 2,
+				drawCenteredString(font, text, width / 2,
 						height / 4 + 10, 0xFFFFFF);
 			}
 		} else {
 			renderBackground();
 			Utils.drawBorder(32, 22, 0, 0, height, width);
 
-			drawCenteredString(fontRenderer, title, width / 2, 8, 0xFFFFFF);
-			drawCenteredString(fontRenderer, footer, width / 2, height - 8
-					- fontRenderer.FONT_HEIGHT, 0xFFFFFF);
+			drawCenteredString(font, title, width / 2, 8, 0xFFFFFF);
+			drawCenteredString(font, footer, width / 2, height - 8
+					- font.FONT_HEIGHT, 0xFFFFFF);
 
 			fill(infoBoxX - 5, infoBoxY - 5, infoBoxX + infoBoxWidth + 5,
 					infoBoxY + infoBoxHeight + 5, 0xB0000000);
 
-			drawCenteredString(fontRenderer, captionTitle, width / 2,
+			drawCenteredString(font, captionTitle, width / 2,
 					infoBoxY, 0xFFFFFF);
-			drawCenteredString(fontRenderer, captionSubtitle, width / 2,
-					infoBoxY + fontRenderer.FONT_HEIGHT, 0xFFFFFF);
+			drawCenteredString(font, captionSubtitle, width / 2,
+					infoBoxY + font.FONT_HEIGHT, 0xFFFFFF);
 
-			drawCenteredString(fontRenderer, overwriteWarning1, width / 2,
+			drawCenteredString(font, overwriteWarning1, width / 2,
 					infoBoxY + 115, 0xFFFFFF);
-			drawCenteredString(fontRenderer, overwriteWarning2, width / 2,
-					infoBoxY + 115 + fontRenderer.FONT_HEIGHT, 0xFFFFFF);
+			drawCenteredString(font, overwriteWarning2, width / 2,
+					infoBoxY + 115 + font.FONT_HEIGHT, 0xFFFFFF);
 
 			super.render(mouseX, mouseY, partialTicks);
 

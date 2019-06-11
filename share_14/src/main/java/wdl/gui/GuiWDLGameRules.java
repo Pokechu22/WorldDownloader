@@ -57,7 +57,7 @@ public class GuiWDLGameRules extends WDLScreen {
 		private RuleEntry lastClickedEntry = null;
 
 		public GuiGameRuleList() {
-			super(GuiWDLGameRules.this.mc, GuiWDLGameRules.this.width,
+			super(GuiWDLGameRules.this.minecraft, GuiWDLGameRules.this.width,
 					GuiWDLGameRules.this.height, 39,
 					GuiWDLGameRules.this.height - 32, 24);
 			List<RuleEntry> entries = this.getEntries();
@@ -94,7 +94,7 @@ public class GuiWDLGameRules extends WDLScreen {
 
 				super.drawEntry(x, y, width, height, mouseX, mouseY);
 
-				drawString(fontRenderer, this.ruleName, x, y + 6, 0xFFFFFFFF);
+				drawString(font, this.ruleName, x, y + 6, 0xFFFFFFFF);
 
 				if (this.isMouseOverControl(mouseX, mouseY)) {
 					String key = "wdl.gui.gamerules.rules." + ruleName;
@@ -129,7 +129,7 @@ public class GuiWDLGameRules extends WDLScreen {
 			public IntRuleEntry(String ruleName) {
 				super(ruleName);
 				field = this.addTextField(new GuiNumericTextField(
-						0, fontRenderer, 0, 0, 100, 20), 0, 0);
+						0, font, 0, 0, 100, 20), 0, 0);
 				field.setText(getRule(ruleName));
 			}
 
@@ -280,7 +280,7 @@ public class GuiWDLGameRules extends WDLScreen {
 
 		super.render(mouseX, mouseY, partialTicks);
 
-		this.drawCenteredString(fontRenderer, title, width / 2, 4, 0xFFFFFF);
+		this.drawCenteredString(font, title, width / 2, 4, 0xFFFFFF);
 
 		if (this.doneButton.isMouseOver()) {
 			Utils.drawGuiInfoBox(I18n.format("wdl.gui.gamerules.doneInfo"),
