@@ -14,11 +14,7 @@
  */
 package wdl.gui;
 
-import java.net.URI;
 import java.util.List;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -27,7 +23,6 @@ import wdl.versioned.VersionedFunctions;
 
 public class Utils {
 	private static final Minecraft mc = Minecraft.getInstance();
-	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
 	 * Draws a semitransparent description box.
@@ -160,21 +155,5 @@ public class Utils {
 
 		return scaledX >= 0 && scaledX < textBox.getWidth() && scaledY >= 0
 				&& scaledY < height;
-	}
-
-	/**
-	 * Attempts to open a link.
-	 * @param path the URL to open.
-	 */
-	public static void openLink(String path) {
-		try {
-			Class<?> desktopClass = Class.forName("java.awt.Desktop");
-			Object desktop = desktopClass.getMethod("getDesktop").invoke(
-					null);
-			desktopClass.getMethod("browse", URI.class).invoke(desktop,
-					new URI(path));
-		} catch (Throwable e) {
-			LOGGER.error("Couldn't open link", e);
-		}
 	}
 }

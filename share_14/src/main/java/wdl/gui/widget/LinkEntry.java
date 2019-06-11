@@ -2,7 +2,7 @@ package wdl.gui.widget;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
-import wdl.gui.Utils;
+import wdl.versioned.VersionedFunctions;
 
 /**
  * {@link IGuiListEntry} that displays a single clickable link.
@@ -50,7 +50,7 @@ public class LinkEntry extends TextEntry {
 	@Override
 	public boolean mouseDown(int mouseX, int mouseY, int mouseButton) {
 		if (mouseX >= x && mouseX <= x + textWidth) {
-			Utils.openLink(link);
+			VersionedFunctions.openLink(link);
 			return true;
 		}
 		return false;

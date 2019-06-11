@@ -437,6 +437,15 @@ public final class VersionedFunctions {
 	}
 
 	/**
+	 * Opens a link using the default browser.
+	 * @param url The URL to open.
+	 * @see GuiScreen#openWebLink()
+	 */
+	public static void openLink(String url) {
+		GuiFunctions.openLink(url);
+	}
+
+	/**
 	 * Gets the numeric ID for the given block.
 	 * @return A numeric ID, the meaning and value of which is unspecified.
 	 */

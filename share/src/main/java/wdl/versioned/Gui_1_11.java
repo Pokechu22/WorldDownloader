@@ -16,6 +16,11 @@ package wdl.versioned;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import java.net.URI;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.Gui;
@@ -32,6 +37,8 @@ import net.minecraft.world.World;
  */
 final class GuiFunctions {
 	private GuiFunctions() { throw new AssertionError(); }
+
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	/* (non-javadoc)
 	 * @see VersionedFunctions#makePlayer
@@ -155,5 +162,20 @@ final class GuiFunctions {
 	 */
 	static void setClipboardString(String text) {
 		GuiScreen.setClipboardString(text);
+	}
+
+	/* (non-javadoc)
+	 * @see VersionedFunctions#openLink
+	 */
+	static void openLink(String url) {
+		try {
+			Class<?> desktopClass = Class.forName("java.awt.Desktop");
+			Object desktop = desktopClass.getMethod("getDesktop").invoke(
+					null);
+			desktopClass.getMethod("browse", URI.class).invoke(desktop,
+					new URI(url));
+		} catch (Throwable e) {
+			LOGGER.error("Couldn't open link to " + url, e);
+		}
 	}
 }

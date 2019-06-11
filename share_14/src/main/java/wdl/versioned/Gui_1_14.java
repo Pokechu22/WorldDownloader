@@ -26,6 +26,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.util.Util;
 import net.minecraft.world.World;
 
 /**
@@ -156,5 +157,12 @@ final class GuiFunctions {
 	 */
 	static void setClipboardString(String text) {
 		Minecraft.getInstance().keyboardListener.setClipboardString(text);
+	}
+
+	/* (non-javadoc)
+	 * @see VersionedFunctions#openLink
+	 */
+	static void openLink(String url) {
+		Util.getOSType().openURI(url);
 	}
 }

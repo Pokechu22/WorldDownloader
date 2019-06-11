@@ -32,6 +32,7 @@ import wdl.gui.widget.GuiList.GuiListEntry;
 import wdl.gui.widget.TextList;
 import wdl.update.Release;
 import wdl.update.WDLUpdateChecker;
+import wdl.versioned.VersionedFunctions;
 
 /**
  * Gui that lists updates fetched via {@link wdl.update.GithubInfoGrabber}.
@@ -306,7 +307,7 @@ public class GuiWDLUpdates extends WDLScreen {
 					this.width / 2 - 155, 18, 150, 20,
 					I18n.format("wdl.gui.updates.update.viewOnline")) {
 				public @Override void performAction() {
-					Utils.openLink(release.URL);
+					VersionedFunctions.openLink(release.URL);
 				}
 			});
 			if (release.hiddenInfo != null) {
@@ -314,7 +315,7 @@ public class GuiWDLUpdates extends WDLScreen {
 						this.width / 2 + 5, 18, 150, 20,
 						I18n.format("wdl.gui.updates.update.viewForumPost")) {
 					public @Override void performAction() {
-						Utils.openLink(release.hiddenInfo.post);
+						VersionedFunctions.openLink(release.hiddenInfo.post);
 					}
 				});
 			}
