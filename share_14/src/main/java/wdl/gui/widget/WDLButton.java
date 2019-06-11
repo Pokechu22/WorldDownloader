@@ -38,9 +38,7 @@ public abstract class WDLButton extends ExtButton {
 	public void afterDraw() { }
 
 	@Override
-	public void mouseDown(int mouseX, int mouseY) {
-		this.performAction();
-	}
+	public void mouseDown(int mouseX, int mouseY) { }
 
 	@Override
 	public void mouseDragged(int mouseX, int mouseY) { }
