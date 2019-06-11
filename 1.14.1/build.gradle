@@ -39,12 +39,19 @@ dependencies {
     // testCompile configurations.forgeGradleMcDeps
 }
 
+sourceSets {
+    main
+    test
+    api
+}
+
 minecraft {
     //suppressMappingVersionWarnings = true
     mappings channel: 'snapshot', version: '20190518-1.13.2'
     runs {
         client {
             workingDirectory project.file('run')
+            main 'mcp.client.Start'
         }
     }
 
@@ -106,7 +113,6 @@ dependencies {
 }
 
 sourceSets {
-    api
     main {
         java {
             compileClasspath += api.output
