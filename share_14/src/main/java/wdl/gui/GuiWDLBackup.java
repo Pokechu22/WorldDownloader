@@ -74,7 +74,7 @@ public class GuiWDLBackup extends WDLScreen {
 	}
 
 	@Override
-	public void initGui() {
+	public void init() {
 		backupTypeButton = this.addButton(new WDLButton(this.width / 2 - 100, 32,
 				200, 20, getBackupButtonText()) {
 			public @Override void performAction() {
@@ -144,7 +144,7 @@ public class GuiWDLBackup extends WDLScreen {
 	}
 
 	@Override
-	public void onGuiClosed() {
+	public void removed() {
 		if (isCommandValid) {
 			config.setValue(MiscSettings.BACKUP_TYPE, backupType);
 			config.setValue(MiscSettings.BACKUP_COMMAND_TEMPLATE, customBackupCommandTemplate);

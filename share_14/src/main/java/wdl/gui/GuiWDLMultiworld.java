@@ -46,7 +46,7 @@ public class GuiWDLMultiworld extends WDLScreen {
 	 * Adds the buttons (and other controls) to the screen in question.
 	 */
 	@Override
-	public void initGui() {
+	public void init() {
 		String multiworldMessage = I18n
 				.format("wdl.gui.multiworld.descirption.requiredWhen")
 				+ "\n\n"

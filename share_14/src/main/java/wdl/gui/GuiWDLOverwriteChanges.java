@@ -123,7 +123,7 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements IBac
 	private String backingUpTitle;
 
 	@Override
-	public void initGui() {
+	public void init() {
 		backingUp = false;
 
 		title = I18n.format("wdl.gui.overwriteChanges.title");
@@ -189,7 +189,7 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements IBac
 			}
 		});
 
-		super.initGui();
+		super.init();
 	}
 
 	@Override

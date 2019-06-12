@@ -131,7 +131,7 @@ public class GuiWDLMessages extends WDLScreen {
 	private static final int ID_RESET_ALL = 101;
 
 	@Override
-	public void initGui() {
+	public void init() {
 		enableAllButton = this.addButton(new SettingButton(
 				MessageSettings.ENABLE_ALL_MESSAGES, this.config,
 				(this.width / 2) - 155, 18, 150, 20));
@@ -167,7 +167,7 @@ public class GuiWDLMessages extends WDLScreen {
 	}
 
 	@Override
-	public void onGuiClosed() {
+	public void removed() {
 		wdl.saveProps();
 	}
 

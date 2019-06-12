@@ -51,7 +51,7 @@ public class GuiWDLGenerator extends WDLScreen {
 	 * Adds the buttons (and other controls) to the screen in question.
 	 */
 	@Override
-	public void initGui() {
+	public void init() {
 		this.seedText = I18n.format("wdl.gui.generator.seed");
 		int seedWidth = font.getStringWidth(seedText + " ");
 
@@ -96,7 +96,7 @@ public class GuiWDLGenerator extends WDLScreen {
 	}
 
 	@Override
-	public void onGuiClosed() {
+	public void removed() {
 		config.setValue(GeneratorSettings.SEED, this.seedField.getText());
 
 		wdl.saveProps();

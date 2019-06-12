@@ -53,7 +53,7 @@ public class GuiWDLPlayer extends WDLScreen {
 	 * Adds the buttons (and other controls) to the screen in question.
 	 */
 	@Override
-	public void initGui() {
+	public void init() {
 		this.title = I18n.format("wdl.gui.player.title", WDL.baseFolderName);
 		int y = this.height / 4 - 15;
 		this.healthBtn = this.addButton(new SettingButton(
@@ -99,7 +99,7 @@ public class GuiWDLPlayer extends WDLScreen {
 	}
 
 	@Override
-	public void onGuiClosed() {
+	public void removed() {
 		if (this.showPosFields) {
 			this.config.setValue(PlayerSettings.PLAYER_X, posX.getValue());
 			this.config.setValue(PlayerSettings.PLAYER_Y, posY.getValue());

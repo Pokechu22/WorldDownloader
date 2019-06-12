@@ -124,7 +124,7 @@ public class GuiWDL extends WDLScreen {
 	 * Adds the buttons (and other controls) to the screen in question.
 	 */
 	@Override
-	public void initGui() {
+	public void init() {
 		this.title = I18n.format("wdl.gui.wdl.title", WDL.baseFolderName);
 
 		this.worldname = this.addTextField(new TextFieldWidget(this.font,
@@ -138,7 +138,7 @@ public class GuiWDL extends WDLScreen {
 	}
 
 	@Override
-	public void onGuiClosed() {
+	public void removed() {
 		if (this.worldname != null) {
 			// Check to see if the server name matches the default, and clear the
 			// setting if so, such that changing the name of the server will be

@@ -68,7 +68,7 @@ public class GuiSavedChunks extends WDLScreen {
 	}
 
 	@Override
-	public void initGui() {
+	public void init() {
 		this.addButton(new ButtonDisplayGui(width / 2 - 100, height - 29,
 				200, 20, this.parent));
 	}

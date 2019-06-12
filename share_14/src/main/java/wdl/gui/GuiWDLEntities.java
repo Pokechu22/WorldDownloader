@@ -273,7 +273,7 @@ public class GuiWDLEntities extends WDLScreen {
 	}
 
 	@Override
-	public void initGui() {
+	public void init() {
 		this.addButton(new ButtonDisplayGui(this.width / 2 - 100, this.height - 29,
 				200, 20, this.parent));
 
@@ -295,7 +295,7 @@ public class GuiWDLEntities extends WDLScreen {
 	}
 
 	@Override
-	public void onGuiClosed() {
+	public void removed() {
 		wdl.saveProps();
 	}
 

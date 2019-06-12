@@ -238,7 +238,7 @@ public class GuiWDLExtensions extends WDLScreen {
 	}
 
 	@Override
-	public void initGui() {
+	public void init() {
 		bottomLocation = height - 100;
 		dragging = false;
 

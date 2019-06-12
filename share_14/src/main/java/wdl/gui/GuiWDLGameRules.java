@@ -266,7 +266,7 @@ public class GuiWDLGameRules extends WDLScreen {
 	}
 
 	@Override
-	public void initGui() {
+	public void init() {
 		this.title = I18n.format("wdl.gui.gamerules.title");
 		this.addList(new GuiGameRuleList());
 
@@ -291,7 +291,7 @@ public class GuiWDLGameRules extends WDLScreen {
 	}
 
 	@Override
-	public void onGuiClosed() {
+	public void removed() {
 		// Can't save anywhere until the download actually occurs...
 	}
 }

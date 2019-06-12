@@ -113,7 +113,7 @@ public class GuiWDLChunkOverrides extends WDLScreen {
 	}
 
 	@Override
-	public void initGui() {
+	public void init() {
 		this.addButton(new RequestModeButton(width / 2 - 155, 18, Mode.PANNING) {
 			public @Override void performAction() {
 				GuiWDLChunkOverrides.this.mode = Mode.PANNING;

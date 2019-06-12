@@ -58,7 +58,7 @@ public class GuiWDLPermissions extends WDLScreen {
 	}
 
 	@Override
-	public void initGui() {
+	public void init() {
 		this.addButton(new ButtonDisplayGui(width / 2 - 100, height - 29,
 				200, 20, this.parent));
 
@@ -136,14 +136,14 @@ public class GuiWDLPermissions extends WDLScreen {
 		if (refreshTicks > 0) {
 			refreshTicks--;
 		} else if (refreshTicks == 0) {
-			initGui();
+			init();
 			refreshTicks = -1;
 		}
 		super.tick();
 	}
 
 	@Override
-	public void onGuiClosed() {
+	public void removed() {
 		wdl.saveProps();
 	}
 

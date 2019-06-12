@@ -44,31 +44,13 @@ abstract class ExtGuiScreen extends net.minecraft.client.gui.screen.Screen imple
 		super(new StringTextComponent("")); // XXX: Skipping on accessibility data
 	}
 
-	// Called before initGui
+	// Called before init
 	@Override
 	public final void init(Minecraft mc, int width, int height) {
 		this.listList.clear();
 		this.textFieldList.clear();
 		super.init(mc, width, height);
 	}
-
-	@Override
-	protected final void init() {
-		this.initGui();
-	}
-
-	// Renamed...
-	@Deprecated
-	public void initGui() {}
-
-	@Override
-	public void removed() {
-		this.onGuiClosed();
-	}
-
-	// Renamed...
-	@Deprecated
-	public void onGuiClosed() {}
 
 	@Override
 	public final <T extends Widget> T addButton(T buttonIn) {

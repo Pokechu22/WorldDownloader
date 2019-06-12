@@ -55,7 +55,7 @@ public class GuiWDLAbout extends WDLScreen {
 	}
 
 	@Override
-	public void initGui() {
+	public void init() {
 		this.addButton(new ButtonDisplayGui((this.width / 2) - 155, 18, 150, 20,
 				I18n.format("wdl.gui.about.extensions"), () -> new GuiWDLExtensions(this)));
 		this.addButton(new WDLButton((this.width / 2) + 5, 18, 150, 20,

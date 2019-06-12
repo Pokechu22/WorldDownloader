@@ -55,7 +55,7 @@ public class GuiWDLWorld extends WDLScreen {
 	 * Adds the buttons (and other controls) to the screen in question.
 	 */
 	@Override
-	public void initGui() {
+	public void init() {
 		this.title = I18n.format("wdl.gui.world.title", WDL.baseFolderName);
 
 		int y = this.height / 4 - 15;
@@ -108,7 +108,7 @@ public class GuiWDLWorld extends WDLScreen {
 	}
 
 	@Override
-	public void onGuiClosed() {
+	public void removed() {
 		if (this.showSpawnFields) {
 			this.config.setValue(WorldSettings.SPAWN_X, spawnX.getValue());
 			this.config.setValue(WorldSettings.SPAWN_Y, spawnY.getValue());

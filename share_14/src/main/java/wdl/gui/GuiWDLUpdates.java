@@ -186,7 +186,7 @@ public class GuiWDLUpdates extends WDLScreen {
 	}
 
 	@Override
-	public void initGui() {
+	public void init() {
 		this.list = this.addList(new UpdateList());
 
 		this.addButton(new ButtonDisplayGui(this.width / 2 - 100, this.height - 29,
@@ -194,7 +194,7 @@ public class GuiWDLUpdates extends WDLScreen {
 	}
 
 	@Override
-	public void onGuiClosed() {
+	public void removed() {
 		WDL.saveGlobalProps();
 	}
 
@@ -302,7 +302,7 @@ public class GuiWDLUpdates extends WDLScreen {
 		}
 
 		@Override
-		public void initGui() {
+		public void init() {
 			this.addButton(new WDLButton(
 					this.width / 2 - 155, 18, 150, 20,
 					I18n.format("wdl.gui.updates.update.viewOnline")) {

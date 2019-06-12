@@ -56,7 +56,7 @@ public class GuiWDLEntityRangePresets extends WDLScreen {
 	}
 
 	@Override
-	public void initGui() {
+	public void init() {
 		int y = this.height / 4;
 
 		this.vanillaButton = this.addButton(new ButtonDisplayGui(
@@ -151,7 +151,7 @@ public class GuiWDLEntityRangePresets extends WDLScreen {
 	}
 
 	@Override
-	public void onGuiClosed() {
+	public void removed() {
 		wdl.saveProps();
 	}
 }

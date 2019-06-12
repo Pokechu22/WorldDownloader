@@ -258,8 +258,8 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	}
 
 	@Override
-	public void initGui() {
-		super.initGui();
+	public void init() {
+		super.init();
 
 		numWorldButtons = (this.width - 50) / 155;
 

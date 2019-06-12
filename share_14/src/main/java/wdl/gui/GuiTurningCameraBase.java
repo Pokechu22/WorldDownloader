@@ -78,7 +78,7 @@ public abstract class GuiTurningCameraBase extends WDLScreen {
 	 */
 	@Override
 	@OverridingMethodsMustInvokeSuper
-	public void initGui() {
+	public void init() {
 		if (!initializedCamera) {
 			this.cam = VersionedFunctions.makePlayer(WDL.minecraft, wdl.worldClient, wdl.player.connection, wdl.player);
 			this.cam.setLocationAndAngles(wdl.player.posX, wdl.player.posY,
@@ -193,8 +193,8 @@ public abstract class GuiTurningCameraBase extends WDLScreen {
 	}
 
 	@Override
-	public void onGuiClosed() {
-		super.onGuiClosed();
+	public void removed() {
+		super.removed();
 		this.deactivateRenderViewEntity();
 	}
 
