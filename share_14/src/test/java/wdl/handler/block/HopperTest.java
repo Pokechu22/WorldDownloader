@@ -56,7 +56,7 @@ public class HopperTest extends AbstractBlockHandlerTest<HopperTileEntity, Hoppe
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.HOPPER);
 		HopperTileEntity te = makeBlockEntity(pos);
-		te.func_213903_a(customName("Bin"));
+		te.setCustomName(customName("Bin"));
 
 		runHandler(pos, makeClientContainer(pos));
 		checkAllTEs();
@@ -69,7 +69,7 @@ public class HopperTest extends AbstractBlockHandlerTest<HopperTileEntity, Hoppe
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.HOPPER);
 		HopperTileEntity te = makeBlockEntity(pos);
-		te.func_213903_a(customName("Hopper"));
+		te.setCustomName(customName("Hopper"));
 
 		runHandler(pos, makeClientContainer(pos));
 		checkAllTEs();

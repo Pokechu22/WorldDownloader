@@ -32,8 +32,6 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.ServerWorld;
 import net.minecraft.world.chunk.ChunkManager;
 
@@ -65,7 +63,7 @@ public class StandardEntityManagersTest {
 
 	public StandardEntityManagersTest(String identifier) {
 		this.identifier = identifier;
-		this.type = Registry.ENTITY_TYPE.func_218349_b(new ResourceLocation(identifier)).get();
+		this.type = EntityType.getTypeFromString(identifier).get();
 	}
 
 	/**
@@ -92,8 +90,8 @@ public class StandardEntityManagersTest {
 			}
 
 			@Override
-			public void func_219210_a(Entity p_219210_1_) {
-				super.func_219210_a(p_219210_1_);
+			public void track(Entity entityIn) {
+				super.track(entityIn);
 			}
 		}
 		DerivedTracker tracker = mock(DerivedTracker.class);
@@ -101,13 +99,13 @@ public class StandardEntityManagersTest {
 		Int2ObjectMap<?> trackedEntities = new Int2ObjectOpenHashMap<>();
 		ReflectionUtils.findAndSetPrivateField(tracker, ChunkManager.class, Int2ObjectMap.class, trackedEntities);
 		ReflectionUtils.findAndSetPrivateField(tracker, ChunkManager.class, ServerWorld.class, world);
-		doCallRealMethod().when(tracker).func_219210_a(any());
+		doCallRealMethod().when(tracker).track(any());
 
 		Entity entity = type.create(world);
 
 		int expectedDistance = StandardEntityManagers.VANILLA.getTrackDistance(identifier, entity);
 
-		tracker.func_219210_a(entity);
+		tracker.track(entity);
 		assertThat(trackedEntities, hasKey(entity.getEntityId()));
 		Object entityTrackerEntry = trackedEntities.get(entity.getEntityId());
 		Field actualDistanceField = ReflectionUtils.findField(entityTrackerEntry.getClass(), int.class);

@@ -42,7 +42,7 @@ public final class TestWorld {
 		ClientPlayNetHandler nhpc = mock(ClientPlayNetHandler.class);
 		WorldSettings settings = new WorldSettings(0L, null, false, false, WorldType.DEFAULT);
 		Difficulty difficulty = Difficulty.NORMAL;
-		IProfiler profiler = EmptyProfiler.field_219906_a;
+		IProfiler profiler = EmptyProfiler.INSTANCE;
 
 		return new ClientWorld(nhpc, settings, dim, difficulty, profiler);
 	}
@@ -56,7 +56,7 @@ public final class TestWorld {
 		MinecraftServer server = mock(MinecraftServer.class, withSettings().defaultAnswer(RETURNS_MOCKS));
 		SaveHandler saveHandler = mock(SaveHandler.class);
 		WorldInfo info = new WorldInfo() {};
-		IProfiler profiler = EmptyProfiler.field_219906_a;
+		IProfiler profiler = EmptyProfiler.INSTANCE;
 
 		return new ServerWorld(server, saveHandler, info, dim, profiler);
 	}
@@ -70,7 +70,7 @@ public final class TestWorld {
 		public void addEntity(Entity e, int eid) {
 			e.setEntityId(eid);
 			e.setUniqueId(new UUID(0, eid));
-			this.func_217411_a(eid, e);
+			super.addEntity(eid, e);
 		}
 
 		// Provided for 1.13 support.  Does nothing.
@@ -86,12 +86,12 @@ public final class TestWorld {
 		public void addEntity(Entity e, int eid) {
 			e.setEntityId(eid);
 			e.setUniqueId(new UUID(0, eid));
-			this.func_217376_c(e); // Not sure what the difference between this and func_217470_d is
+			this.addEntity(e);
 		}
 
 		@Override
 		public BlockPos getSpawnPoint() {
-			return BlockPos.ORIGIN;
+			return BlockPos.ZERO;
 		}
 
 		// Provided for 1.13 support.  Does nothing.

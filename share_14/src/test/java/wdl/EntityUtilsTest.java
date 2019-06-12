@@ -122,8 +122,7 @@ public class EntityUtilsTest extends MaybeMixinTest {
 			}
 		})).when(player).removeEntity(any());
 
-		// Not sure if I should use this, func_217435_c, func_217447_b, or func_217446_a...
-		world.func_217433_d(player);
+		world.addNewPlayer(player);
 
 		// Make some methods public...
 		class EntityTracker extends ChunkManager {
@@ -132,30 +131,31 @@ public class EntityUtilsTest extends MaybeMixinTest {
 			}
 
 			@Override
-			protected void func_219175_a(int p_219175_1_, int p_219175_2_) {
-				super.func_219175_a(p_219175_1_, p_219175_2_);
+			public void setViewDistance(int p_219175_1_, int p_219175_2_) {
+				super.setViewDistance(p_219175_1_, p_219175_2_);
 			}
 
 			@Override
-			public void func_219210_a(Entity p_219210_1_) {
-				super.func_219210_a(p_219210_1_);
+			public void track(Entity entityIn) {
+				super.track(entityIn);
 			}
 
 			@Override
-			public void func_219231_b(Entity p_219231_1_) {
-				super.func_219231_b(p_219231_1_);
+			public void untrack(Entity entityIn) {
+				super.untrack(entityIn);
 			}
 
 			@Override
-			public void func_219169_g() {
-				super.func_219169_g();
+			public void tickEntityTracker() {
+				super.tickEntityTracker();
 			}
 		}
 
 		EntityTracker tracker = mock(EntityTracker.class);
-		doCallRealMethod().when(tracker).func_219175_a(anyInt(), anyInt()); // setViewDistance
-		doCallRealMethod().when(tracker).func_219210_a(any()); // track
-		doCallRealMethod().when(tracker).func_219231_b(any()); // untrack
+		doCallRealMethod().when(tracker).setViewDistance(anyInt(), anyInt());
+		doCallRealMethod().when(tracker).track(any());
+		doCallRealMethod().when(tracker).untrack(any());
+		doCallRealMethod().when(tracker).tickEntityTracker();
 		// We bypass the constructor, so this needs to be manually set
 		Class<? extends TicketManager> ticketManagerClass = Arrays
 				.stream(ChunkManager.class.getDeclaredClasses())
@@ -170,7 +170,7 @@ public class EntityUtilsTest extends MaybeMixinTest {
 		// Required because world doesn't set it up right for a mock, and mocking it
 		// would be making assumptions about how this is calculated
 		// (NOTE: I'm not sure what the difference between the two parameters are)
-		tracker.func_219175_a(serverViewDistance, serverViewDistance);
+		tracker.setViewDistance(serverViewDistance, serverViewDistance);
 
 		int eid = 0;
 		for (int x = -100; x <= 100; x += 10) {
@@ -180,7 +180,7 @@ public class EntityUtilsTest extends MaybeMixinTest {
 				e.setEntityId(eid++);
 				e.posX = x;
 				e.posZ = z;
-				tracker.func_219210_a(e);
+				tracker.track(e);
 			}
 		}
 
@@ -193,10 +193,10 @@ public class EntityUtilsTest extends MaybeMixinTest {
 				Entity e = itr.next();
 				if (!keepEntity.test(tick, e)) {
 					itr.remove();
-					tracker.func_219231_b(e);
+					tracker.untrack(e);
 				}
 			}
-			tracker.func_219169_g();
+			tracker.tickEntityTracker();
 		}
 
 		tracker.close();

@@ -67,7 +67,7 @@ public class BaseChestHandler<B extends ChestTileEntity> extends BaseLargeChestH
 			@Nullable String displayName) throws HandlerException {
 		saveContainerItems(container, blockEntity, 0);
 		if (displayName != null) {
-			blockEntity.func_213903_a(customName(displayName));
+			blockEntity.setCustomName(customName(displayName));
 		}
 		saveMethod.accept(clickedPos, blockEntity);
 	}

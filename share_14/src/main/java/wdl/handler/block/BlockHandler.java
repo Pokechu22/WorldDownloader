@@ -138,8 +138,8 @@ public abstract class BlockHandler<B extends TileEntity, C extends Container> ex
 		// Unfortuantely they're declared on a per-inventory level now.
 		IIntArray input = ReflectionUtils.findAndGetPrivateField(container, IIntArray.class);
 		IIntArray output = ReflectionUtils.findAndGetPrivateField(blockEntity, IIntArray.class);
-		for (int i = 0; i < input.func_221478_a(); i++) {
-			output.func_221477_a(i, input.func_221476_a(i));
+		for (int i = 0; i < input.size(); i++) {
+			output.set(i, input.get(i));
 		}
 	}
 
@@ -157,8 +157,8 @@ public abstract class BlockHandler<B extends TileEntity, C extends Container> ex
 		// Unfortuantely they're declared on a per-inventory level now.
 		IIntArray input = ReflectionUtils.findAndGetPrivateField(container, containerClass, IIntArray.class);
 		IIntArray output = ReflectionUtils.findAndGetPrivateField(blockEntity, blockEntityClass, IIntArray.class);
-		for (int i = 0; i < input.func_221478_a(); i++) {
-			output.func_221477_a(i, input.func_221476_a(i));
+		for (int i = 0; i < input.size(); i++) {
+			output.set(i, input.get(i));
 		}
 	}
 

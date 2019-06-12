@@ -63,8 +63,8 @@ public class BrewingStandTest extends AbstractBlockHandlerTest<BrewingStandTileE
 		placeBlockAt(pos, Blocks.BREWING_STAND);
 		BrewingStandTileEntity te = makeBlockEntity(pos);
 		IIntArray fields = ReflectionUtils.findAndGetPrivateField(te, IIntArray.class);
-		fields.func_221477_a(0, 10); // brew time
-		fields.func_221477_a(1, 13); // fuel
+		fields.set(0, 10); // brew time
+		fields.set(1, 13); // fuel
 
 		runHandler(pos, makeClientContainer(pos));
 		checkAllTEs();
@@ -80,7 +80,7 @@ public class BrewingStandTest extends AbstractBlockHandlerTest<BrewingStandTileE
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.BREWING_STAND);
 		BrewingStandTileEntity te = makeBlockEntity(pos);
-		te.func_213903_a(customName("Potion maker"));
+		te.setCustomName(customName("Potion maker"));
 
 		runHandler(pos, makeClientContainer(pos));
 		checkAllTEs();
@@ -98,7 +98,7 @@ public class BrewingStandTest extends AbstractBlockHandlerTest<BrewingStandTileE
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.BREWING_STAND);
 		BrewingStandTileEntity te = makeBlockEntity(pos);
-		te.func_213903_a(customName("Brewing Stand"));
+		te.setCustomName(customName("Brewing Stand"));
 
 		runHandler(pos, makeClientContainer(pos));
 		checkAllTEs();

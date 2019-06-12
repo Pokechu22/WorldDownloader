@@ -47,7 +47,7 @@ public class VillagerTest extends AbstractEntityHandlerTest<VillagerEntity, Merc
 		makeMockWorld();
 
 		VillagerEntity villager = new VillagerEntity(EntityType.VILLAGER, serverWorld);
-		MerchantOffers recipes = villager.func_213706_dY();
+		MerchantOffers recipes = villager.getOffers();
 		recipes.clear();
 		recipes.add(new MerchantOffer(new ItemStack(Items.DIAMOND, 64), ItemStack.EMPTY, new ItemStack(Items.EMERALD), 1, 1, 5));
 		ReflectionUtils.findAndSetPrivateField(villager, AbstractVillagerEntity.class, MerchantOffers.class, recipes);
@@ -65,7 +65,7 @@ public class VillagerTest extends AbstractEntityHandlerTest<VillagerEntity, Merc
 
 		VillagerEntity villager = new VillagerEntity(EntityType.VILLAGER, serverWorld);
 		villager.setCustomName(customName("Testificate"));
-		MerchantOffers recipes = villager.func_213706_dY();
+		MerchantOffers recipes = villager.getOffers();
 		recipes.clear();
 		recipes.add(new MerchantOffer(new ItemStack(Items.DIAMOND, 64), ItemStack.EMPTY, new ItemStack(Items.EMERALD), 1, 1, 5));
 		ReflectionUtils.findAndSetPrivateField(villager, AbstractVillagerEntity.class, MerchantOffers.class, recipes);

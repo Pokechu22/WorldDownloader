@@ -302,7 +302,7 @@ public class WDLChunkLoader extends WDLChunkLoaderBase {
 			CompoundNBT chunkNBT;
 
 			// XXX The cache is gone now (along with MC-119971), right?
-			chunkNBT = this.func_219099_e(chunk.getPos());
+			chunkNBT = this.readChunk(chunk.getPos());
 			if (chunkNBT == null) {
 				// This happens whenever the chunk hasn't been saved before.
 				// It's a normal case.
@@ -411,7 +411,7 @@ public class WDLChunkLoader extends WDLChunkLoaderBase {
 		// Based on RegionFileCache.func_219098_a
 		try {
 			long cacheKey = ChunkPos.asLong(regionX, regionZ);
-			RegionFile regionfile = this.field_219102_c.getAndMoveToFirst(cacheKey);
+			RegionFile regionfile = this.cache.getAndMoveToFirst(cacheKey);
 			if (regionfile != null) {
 				return regionfile;
 			} else {
@@ -421,8 +421,8 @@ public class WDLChunkLoader extends WDLChunkLoaderBase {
 					return null;
 				}
 
-				if (this.field_219102_c.size() >= 256) {
-					this.field_219102_c.removeLast();
+				if (this.cache.size() >= 256) {
+					this.cache.removeLast();
 				}
 
 				if (!this.chunkSaveLocation.exists()) {
@@ -430,7 +430,7 @@ public class WDLChunkLoader extends WDLChunkLoaderBase {
 				}
 
 				regionfile = new RegionFile(file);
-				this.field_219102_c.putAndMoveToFirst(cacheKey, regionfile);
+				this.cache.putAndMoveToFirst(cacheKey, regionfile);
 				return regionfile;
 			}
 		} catch (IOException ex) {

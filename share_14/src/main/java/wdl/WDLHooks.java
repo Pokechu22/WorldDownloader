@@ -89,7 +89,7 @@ public class WDLHooks {
 	 * optimize it out, as may be verified by javap.
 	 */
 	static final boolean ENABLE_PROFILER = false;
-	private static final IProfiler PROFILER = ENABLE_PROFILER ? Minecraft.getInstance().func_213239_aq() : null;
+	private static final IProfiler PROFILER = ENABLE_PROFILER ? Minecraft.getInstance().getProfiler() : null;
 
 	private final WDL wdl = WDL.INSTANCE;
 
@@ -117,7 +117,7 @@ public class WDLHooks {
 				if (ENABLE_PROFILER) PROFILER.startSection("inventoryCheck");
 				if (WDL.downloading && wdl.player != null) {
 					if (wdl.player.openContainer != wdl.windowContainer) {
-						if (wdl.player.openContainer == wdl.player.inventoryContainer) {
+						if (wdl.player.openContainer == wdl.player.container) {
 							boolean handled;
 
 							if (ENABLE_PROFILER) PROFILER.startSection("onItemGuiClosed");
@@ -237,14 +237,14 @@ public class WDLHooks {
 	protected void onNHPCHandleChunkUnload0(ClientPlayNetHandler sender,
 			ClientWorld world, SUnloadChunkPacket packet) {
 		try {
-			if (!Minecraft.getInstance().func_213162_bc()) {
+			if (!Minecraft.getInstance().isOnExecutionThread()) {
 				return;
 			}
 
 			if (!WDL.downloading) { return; }
 
 			if (ENABLE_PROFILER) PROFILER.startSection("wdl.onChunkNoLongerNeeded");
-			Chunk chunk = world.func_212866_a_(packet.getX(), packet.getZ());
+			Chunk chunk = world.getChunk(packet.getX(), packet.getZ());
 
 			if (ENABLE_PROFILER) PROFILER.startSection("Core");
 			WDLEvents.onChunkNoLongerNeeded(chunk);
@@ -269,7 +269,7 @@ public class WDLHooks {
 	protected void onNHPCHandleChat0(ClientPlayNetHandler sender,
 			SChatPacket packet) {
 		try {
-			if (!Minecraft.getInstance().func_213162_bc()) {
+			if (!Minecraft.getInstance().isOnExecutionThread()) {
 				return;
 			}
 
@@ -309,7 +309,7 @@ public class WDLHooks {
 	protected void onNHPCHandleMaps0(ClientPlayNetHandler sender,
 			SMapDataPacket packet) {
 		try {
-			if (!Minecraft.getInstance().func_213162_bc()) {
+			if (!Minecraft.getInstance().isOnExecutionThread()) {
 				return;
 			}
 
@@ -347,7 +347,7 @@ public class WDLHooks {
 	protected void onNHPCHandleCustomPayload0(ClientPlayNetHandler sender,
 			SCustomPayloadPlayPacket packet) {
 		try {
-			if (!Minecraft.getInstance().func_213162_bc()) {
+			if (!Minecraft.getInstance().isOnExecutionThread()) {
 				return;
 			}
 			if (ENABLE_PROFILER) PROFILER.startSection("wdl.onPluginMessage");
@@ -416,7 +416,7 @@ public class WDLHooks {
 	protected void onNHPCHandleBlockAction0(ClientPlayNetHandler sender,
 			SBlockActionPacket packet) {
 		try {
-			if (!Minecraft.getInstance().func_213162_bc()) {
+			if (!Minecraft.getInstance().isOnExecutionThread()) {
 				return;
 			}
 
@@ -461,7 +461,7 @@ public class WDLHooks {
 	protected void onNHPCDisconnect0(ClientPlayNetHandler sender, ITextComponent reason) {
 		if (WDL.downloading) {
 			// This is likely to be called from an unexpected thread, so queue a task
-			Minecraft.getInstance().func_212871_a_(wdl::stopDownload);
+			Minecraft.getInstance().enqueue(wdl::stopDownload);
 
 			// This code was present on older versions of WDL which weren't missing
 			// the onDisconnect handler before.

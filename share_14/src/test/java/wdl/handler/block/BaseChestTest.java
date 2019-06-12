@@ -155,10 +155,10 @@ public abstract class BaseChestTest<B extends ChestTileEntity, H extends BaseChe
 		placeBlockAt(offset, ownBlock, Direction.EAST);
 		ChestTileEntity te1 = makeBlockEntity(center);
 		te1.setInventorySlotContents(2, new ItemStack(Items.BEEF));
-		te1.func_213903_a(customName("Food"));
+		te1.setCustomName(customName("Food"));
 		ChestTileEntity te2 = makeBlockEntity(offset);
 		te2.setInventorySlotContents(8, new ItemStack(Items.COOKED_BEEF));
-		te2.func_213903_a(customName("Food"));
+		te2.setCustomName(customName("Food"));
 
 		ChestContainer container = (ChestContainer) makeClientContainer(center);
 		runHandler(center, container);
@@ -181,10 +181,10 @@ public abstract class BaseChestTest<B extends ChestTileEntity, H extends BaseChe
 		placeBlockAt(offset, ownBlock, Direction.EAST);
 		ChestTileEntity te1 = makeBlockEntity(center);
 		te1.setInventorySlotContents(2, new ItemStack(Items.BEEF));
-		te1.func_213903_a(customName("Name 1"));
+		te1.setCustomName(customName("Name 1"));
 		ChestTileEntity te2 = makeBlockEntity(offset);
 		te2.setInventorySlotContents(8, new ItemStack(Items.COOKED_BEEF));
-		te2.func_213903_a(customName("Name 2"));
+		te2.setCustomName(customName("Name 2"));
 
 		ChestContainer container = (ChestContainer) makeClientContainer(center);
 		runHandler(center, container);
@@ -208,7 +208,7 @@ public abstract class BaseChestTest<B extends ChestTileEntity, H extends BaseChe
 		placeBlockAt(offset, ownBlock, Direction.EAST);
 		ChestTileEntity te1 = makeBlockEntity(center);
 		te1.setInventorySlotContents(2, new ItemStack(Items.BEEF));
-		te1.func_213903_a(customName("Name 1"));
+		te1.setCustomName(customName("Name 1"));
 		ChestTileEntity te2 = makeBlockEntity(offset);
 		te2.setInventorySlotContents(8, new ItemStack(Items.COOKED_BEEF));
 
@@ -236,10 +236,10 @@ public abstract class BaseChestTest<B extends ChestTileEntity, H extends BaseChe
 		placeBlockAt(offset, ownBlock, Direction.EAST);
 		ChestTileEntity te1 = makeBlockEntity(center);
 		te1.setInventorySlotContents(2, new ItemStack(Items.BEEF));
-		te1.func_213903_a(customName("Large Chest"));
+		te1.setCustomName(customName("Large Chest"));
 		ChestTileEntity te2 = makeBlockEntity(offset);
 		te2.setInventorySlotContents(8, new ItemStack(Items.COOKED_BEEF));
-		te2.func_213903_a(customName("Large Chest"));
+		te2.setCustomName(customName("Large Chest"));
 
 		ChestContainer container = (ChestContainer) makeClientContainer(center);
 		runHandler(center, container);
@@ -257,7 +257,7 @@ public abstract class BaseChestTest<B extends ChestTileEntity, H extends BaseChe
 		makeMockWorld();
 		placeBlockAt(center, ownBlock);
 		ChestTileEntity te = makeBlockEntity(center);
-		te.func_213903_a(customName("A chest"));
+		te.setCustomName(customName("A chest"));
 		te.setInventorySlotContents(2, new ItemStack(Items.BEEF));
 
 		ChestContainer container = (ChestContainer) makeClientContainer(center);
@@ -280,7 +280,7 @@ public abstract class BaseChestTest<B extends ChestTileEntity, H extends BaseChe
 		makeMockWorld();
 		placeBlockAt(center, ownBlock);
 		ChestTileEntity te = makeBlockEntity(center);
-		te.func_213903_a(customName("Chest"));
+		te.setCustomName(customName("Chest"));
 		te.setInventorySlotContents(2, new ItemStack(Items.BEEF));
 
 		ChestContainer container = (ChestContainer) makeClientContainer(center);

@@ -35,8 +35,6 @@ import net.minecraft.inventory.container.HorseInventoryContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import wdl.ReflectionUtils;
 import wdl.VersionConstants;
@@ -152,7 +150,7 @@ public class HorseTest<T extends AbstractHorseEntity> extends AbstractEntityHand
 
 	private T makeHorse() {
 		try {
-			EntityType<?> type = Registry.ENTITY_TYPE.func_218349_b(new ResourceLocation(this.type.id)).get();
+			EntityType<?> type = EntityType.getTypeFromString(this.type.id).get();
 			T entity = this.entityClass.getConstructor(EntityType.class, World.class).newInstance(type, this.serverWorld);
 			applyNBT(entity, this.type.getNBT(this.chests));
 			entity.setHorseTamed(true);

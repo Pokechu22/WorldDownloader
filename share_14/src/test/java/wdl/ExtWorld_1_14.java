@@ -139,12 +139,12 @@ abstract class ExtWorldClient extends ClientWorld {
 		}
 
 		@Override
-		public Chunk func_212849_a_(int x, int z, ChunkStatus p_212849_3_, boolean p_212849_4_) {
+		public Chunk getChunk(int x, int z, ChunkStatus requiredStatus, boolean load) {
 			return map.computeIfAbsent(ChunkPos.asLong(x, z), k -> new Chunk(ExtWorldClient.this, new ChunkPos(x, z), NO_BIOMES));
 		}
 
 		@Override
-		public void func_217207_a(BooleanSupplier p_73156_1_) {
+		public void tick(BooleanSupplier hasTimeLeft) {
 		}
 
 		@Override
@@ -170,11 +170,6 @@ abstract class ExtWorldServer extends ServerWorld {
 		super(server, task -> task.run(), saveHandlerIn, info, dim, profilerIn, null);
 		getChunkProvider(); // Make sure it's injected
 	}
-
-	//@Override
-	//protected ServerChunkProvider createChunkProvider() {
-	//	return new SimpleChunkProvider();
-	//}
 
 	private final RecipeManager recipeManager = mock(RecipeManager.class);
 	private final ServerScoreboard scoreboard = mock(ServerScoreboard.class, withSettings().useConstructor(new Object[] {null}));
@@ -223,7 +218,7 @@ abstract class ExtWorldServer extends ServerWorld {
 	public void interactBlock(BlockPos pos, PlayerEntity player) {
 		BlockState state = this.getBlockState(pos);
 		BlockRayTraceResult rayTraceResult = new BlockRayTraceResult(new Vec3d(pos), Direction.DOWN, pos, false);
-		state.func_215687_a(this, player, Hand.MAIN_HAND, rayTraceResult);
+		state.onBlockActivated(this, player, Hand.MAIN_HAND, rayTraceResult);
 	}
 
 	/** Right-clicks an entity. */
@@ -270,12 +265,12 @@ abstract class ExtWorldServer extends ServerWorld {
 		}
 
 		@Override
-		public IChunk func_212849_a_(int x, int z, ChunkStatus p_212849_3_, boolean p_212849_4_) {
+		public IChunk getChunk(int x, int z, ChunkStatus p_212849_3_, boolean p_212849_4_) {
 			return map.computeIfAbsent(ChunkPos.asLong(x, z), k -> new Chunk(ExtWorldServer.this, new ChunkPos(x, z), NO_BIOMES));
 		}
 
 		@Override
-		public void func_217207_a(BooleanSupplier p_73156_1_) {
+		public void tick(BooleanSupplier hasTimeLeft) {
 		}
 
 		@Override

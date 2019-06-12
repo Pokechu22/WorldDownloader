@@ -53,7 +53,7 @@ public class DropperTest extends AbstractBlockHandlerTest<DropperTileEntity, Dis
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.DROPPER);
 		DropperTileEntity te = makeBlockEntity(pos);
-		te.func_213903_a(customName("Something"));
+		te.setCustomName(customName("Something"));
 
 		runHandler(pos, makeClientContainer(pos));
 		checkAllTEs();
@@ -68,7 +68,7 @@ public class DropperTest extends AbstractBlockHandlerTest<DropperTileEntity, Dis
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.DROPPER);
 		DropperTileEntity te = makeBlockEntity(pos);
-		te.func_213903_a(customName("Dropper"));
+		te.setCustomName(customName("Dropper"));
 
 		runHandler(pos, makeClientContainer(pos));
 		checkAllTEs();

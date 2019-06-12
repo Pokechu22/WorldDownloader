@@ -61,7 +61,7 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements IBac
 			} finally {
 				backingUp = false;
 
-				minecraft.func_212871_a_(() -> {
+				minecraft.enqueue(() -> {
 					callback.run();
 				});
 			}

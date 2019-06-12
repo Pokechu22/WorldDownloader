@@ -307,7 +307,7 @@ public class WDLMessages {
 			Minecraft minecraft = Minecraft.getInstance();
 			// Cross-thread calls to printChatMessage are illegal in 1.13 due to accessing
 			// the font renderer; add a scheduled task instead.
-			minecraft.func_212871_a_(() -> minecraft.ingameGUI.getChatGUI().printChatMessage(text));
+			minecraft.enqueue(() -> minecraft.ingameGUI.getChatGUI().printChatMessage(text));
 		} else {
 			LOGGER.info(text.getString());
 		}

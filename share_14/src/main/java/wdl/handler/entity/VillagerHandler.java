@@ -33,7 +33,7 @@ public class VillagerHandler extends EntityHandler<VillagerEntity, MerchantConta
 	public ITextComponent copyData(MerchantContainer container, VillagerEntity villager, boolean riding) throws HandlerException {
 		IMerchant merchant = ReflectionUtils.findAndGetPrivateField(
 				container, IMerchant.class);
-		MerchantOffers recipes = merchant.func_213706_dY();
+		MerchantOffers recipes = merchant.getOffers();
 		ReflectionUtils.findAndSetPrivateField(villager, AbstractVillagerEntity.class, MerchantOffers.class, recipes);
 
 		return new TranslationTextComponent("wdl.messages.onGuiClosedInfo.savedEntity.villager.tradesOnly");

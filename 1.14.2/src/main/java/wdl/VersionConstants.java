@@ -29,7 +29,7 @@ public class VersionConstants {
 	 *         version number</a>, eg <samp>316</samp>.
 	 */
 	public static int getProtocolVersion() {
-		return SharedConstants.func_215069_a().getProtocolVersion();
+		return SharedConstants.getVersion().getProtocolVersion();
 	}
 
 	/**
@@ -39,7 +39,7 @@ public class VersionConstants {
 	 * @return A version string, eg <samp>1.11</samp>.
 	 */
 	public static String getMinecraftVersion() {
-		return SharedConstants.func_215069_a().getName();
+		return SharedConstants.getVersion().getName();
 	}
 
 	/**

@@ -76,13 +76,12 @@ class StandardEntityManagers {
 		@Nonnull
 		@Override
 		public SpigotEntityType getSpigotType(String identifier) {
-			ResourceLocation rloc = new ResourceLocation(identifier);
-			Optional<EntityType<?>> otype = Registry.ENTITY_TYPE.func_218349_b(rloc);
+			Optional<EntityType<?>> otype = EntityType.getTypeFromString(identifier);
 			if (!otype.isPresent()) {
 				return SpigotEntityType.UNKNOWN;
 			}
 			EntityType<?> type = otype.get();
-			EntityClassification vanillaClassification = type.func_220339_d();
+			EntityClassification vanillaClassification = type.getClassification();
 			// Spigot's mapping, which is based off of bukkit inheritance (which
 			// doesn't match vanilla)
 			// TODO Not sure I've ported this correctly, nor that spigot is still doing it this way
@@ -156,23 +155,20 @@ class StandardEntityManagers {
 		 */
 		@Override
 		public int getTrackDistance(String identifier, Entity entity) {
-			// Per ChunkManager.func_219210_a; hopefully this is right
-			ResourceLocation rloc = new ResourceLocation(identifier);
-			Optional<EntityType<?>> type = Registry.ENTITY_TYPE.func_218349_b(rloc);
+			Optional<EntityType<?>> type = EntityType.getTypeFromString(identifier);
 			if (!type.isPresent()) {
 				return -1;
 			}
-			return type.get().func_220345_k() * 16;
+			return type.get().getTrackingRange() * 16;
 		}
 
 		@Override
 		public String getGroup(String identifier) {
-			ResourceLocation rloc = new ResourceLocation(identifier);
-			Optional<EntityType<?>> otype = Registry.ENTITY_TYPE.func_218349_b(rloc);
+			Optional<EntityType<?>> otype = EntityType.getTypeFromString(identifier);
 			if (!otype.isPresent()) {
 				return null;
 			}
-			EntityClassification classification = otype.get().func_220339_d();
+			EntityClassification classification = otype.get().getClassification();
 
 			if (classification == EntityClassification.MONSTER) {
 				return "Hostile";
@@ -187,7 +183,7 @@ class StandardEntityManagers {
 
 		@Override
 		public String getDisplayIdentifier(String identifier) {
-			String i18nKey = EntityType.func_220327_a(identifier).get().getTranslationKey();
+			String i18nKey = EntityType.getTypeFromString(identifier).get().getTranslationKey();
 			if (I18n.hasKey(i18nKey)) {
 				return I18n.format(i18nKey);
 			} else {

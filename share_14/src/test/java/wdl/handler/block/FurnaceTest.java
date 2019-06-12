@@ -59,10 +59,10 @@ public class FurnaceTest extends AbstractBlockHandlerTest<FurnaceTileEntity, Fur
 		te.setInventorySlotContents(1, new ItemStack(Items.WOODEN_HOE));
 		te.setInventorySlotContents(2, new ItemStack(Items.COAL));
 		IIntArray fields = ReflectionUtils.findAndGetPrivateField(te, AbstractFurnaceTileEntity.class, IIntArray.class);
-		fields.func_221477_a(0, 100); // burn time
+		fields.set(0, 100); // burn time
 		// skip field 1 (total burn time) -- not saved: https://bugs.mojang.com/browse/MC-10025
-		fields.func_221477_a(2, 100); // cook time
-		fields.func_221477_a(3, 200); // total cook time (saved but unused?)
+		fields.set(2, 100); // cook time
+		fields.set(3, 200); // total cook time (saved but unused?)
 
 		runHandler(pos, makeClientContainer(pos));
 		checkAllTEs();
@@ -75,7 +75,7 @@ public class FurnaceTest extends AbstractBlockHandlerTest<FurnaceTileEntity, Fur
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.FURNACE);
 		FurnaceTileEntity te = makeBlockEntity(pos);
-		te.func_213903_a(customName("Furni"));
+		te.setCustomName(customName("Furni"));
 
 		runHandler(pos, makeClientContainer(pos));
 		checkAllTEs();
@@ -90,7 +90,7 @@ public class FurnaceTest extends AbstractBlockHandlerTest<FurnaceTileEntity, Fur
 		makeMockWorld();
 		placeBlockAt(pos, Blocks.FURNACE);
 		FurnaceTileEntity te = makeBlockEntity(pos);
-		te.func_213903_a(customName("Furnace"));
+		te.setCustomName(customName("Furnace"));
 
 		runHandler(pos, makeClientContainer(pos));
 		checkAllTEs();

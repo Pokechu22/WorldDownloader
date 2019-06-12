@@ -60,7 +60,7 @@ import wdl.update.WDLUpdateChecker;
 public class WDLEvents {
 	/** @see WDLHooks#ENABLE_PROFILER */
 	private static final boolean ENABLE_PROFILER = WDLHooks.ENABLE_PROFILER;
-	private static final IProfiler PROFILER = ENABLE_PROFILER ? Minecraft.getInstance().func_213239_aq() : null;
+	private static final IProfiler PROFILER = ENABLE_PROFILER ? Minecraft.getInstance().getProfiler() : null;
 
 	// XXX this shoudln't be static
 	private static WDL wdl = WDL.INSTANCE;
@@ -139,15 +139,15 @@ public class WDLEvents {
 		// NOTE: https://bugs.mojang.com/browse/MC-79925 was fixed in 1.14, but when backporting
 		// will possibly cause issues.
 		RayTraceResult result = WDL.minecraft.objectMouseOver;
-		if (result.func_216346_c() == RayTraceResult.Type.MISS) {
+		if (result.getType() == RayTraceResult.Type.MISS) {
 			return;
 		}
 
-		if (result.func_216346_c() == RayTraceResult.Type.ENTITY) {
-			wdl.lastEntity = ((EntityRayTraceResult)result).func_216348_a();
+		if (result.getType() == RayTraceResult.Type.ENTITY) {
+			wdl.lastEntity = ((EntityRayTraceResult)result).getEntity();
 		} else {
 			wdl.lastEntity = null;
-			wdl.lastClickedBlock = ((BlockRayTraceResult)result).func_216350_a();
+			wdl.lastClickedBlock = ((BlockRayTraceResult)result).getPos();
 		}
 	}
 

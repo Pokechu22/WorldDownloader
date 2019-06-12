@@ -45,7 +45,7 @@ public class FurnaceHandler extends BlockHandler<FurnaceTileEntity, FurnaceConta
 		saveContainerItems(container, blockEntity, 0);
 		saveInventoryFields(AbstractFurnaceContainer.class, container, AbstractFurnaceTileEntity.class, blockEntity);
 		if (title != null) {
-			blockEntity.func_213903_a(customName(title));
+			blockEntity.setCustomName(customName(title));
 		}
 		saveMethod.accept(clickedPos, blockEntity);
 		return new TranslationTextComponent("wdl.messages.onGuiClosedInfo.savedTileEntity.furnace");

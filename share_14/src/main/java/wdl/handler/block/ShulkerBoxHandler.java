@@ -42,7 +42,7 @@ public class ShulkerBoxHandler extends BlockHandler<ShulkerBoxTileEntity, Shulke
 		String title = getCustomDisplayName(shulkerInventory);
 		saveContainerItems(container, blockEntity, 0);
 		if (title != null) {
-			blockEntity.func_213903_a(customName(title));
+			blockEntity.setCustomName(customName(title));
 		}
 		saveMethod.accept(clickedPos, blockEntity);
 		return new TranslationTextComponent("wdl.messages.onGuiClosedInfo.savedTileEntity.shulkerBox");

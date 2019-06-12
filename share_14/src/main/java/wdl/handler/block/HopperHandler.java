@@ -43,7 +43,7 @@ public class HopperHandler extends BlockHandler<HopperTileEntity, HopperContaine
 		saveContainerItems(container, blockEntity, 0);
 		saveMethod.accept(clickedPos, blockEntity);
 		if (title != null) {
-			blockEntity.func_213903_a(customName(title));
+			blockEntity.setCustomName(customName(title));
 		}
 		return new TranslationTextComponent("wdl.messages.onGuiClosedInfo.savedTileEntity.hopper");
 	}

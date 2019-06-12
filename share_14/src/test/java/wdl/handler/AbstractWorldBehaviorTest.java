@@ -85,13 +85,13 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 
 		doAnswer(AdditionalAnswers.<Screen>answerVoid(screen -> {
 			if (screen instanceof ContainerScreen<?>){
-				clientPlayer.openContainer = ((ContainerScreen<?>)screen).func_212873_a_();
+				clientPlayer.openContainer = ((ContainerScreen<?>)screen).getContainer();
 			} else {
-				clientPlayer.openContainer = clientPlayer.inventoryContainer;
+				clientPlayer.openContainer = clientPlayer.container;
 			}
 			mc.currentScreen = screen;
 		})).when(mc).displayGuiScreen(any());
-		when(mc.func_213162_bc()).thenReturn(true);
+		when(mc.isOnExecutionThread()).thenReturn(true);
 		mc.ingameGUI = mock(IngameGui.class);
 		when(mc.ingameGUI.getChatGUI()).thenReturn(mock(NewChatGui.class));
 

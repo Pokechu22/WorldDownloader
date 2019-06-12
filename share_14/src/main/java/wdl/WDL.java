@@ -455,7 +455,7 @@ public class WDL {
 		Thread thread = new Thread(() -> {
 			try {
 				saveEverything();
-				WDL.minecraft.func_212871_a_(() -> {
+				WDL.minecraft.enqueue(() -> {
 					WDL.saving = false;
 					onSaveComplete();
 				});
@@ -577,7 +577,7 @@ public class WDL {
 		// Schedule this as a task to avoid threading issues.
 		// If directly displayed, in some rare cases the GUI will be drawn before it has been
 		// initialized, causing a crash.  Using a task stops that.
-		minecraft.func_212871_a_(() -> { minecraft.displayGuiScreen(progressScreen); });
+		minecraft.enqueue(() -> { minecraft.displayGuiScreen(progressScreen); });
 
 		saveProps();
 
@@ -774,7 +774,7 @@ public class WDL {
 
 		// There's a root tag that stores the above one.
 		CompoundNBT rootWorldInfoNBT = new CompoundNBT();
-		rootWorldInfoNBT.func_218657_a("Data", worldInfoNBT);
+		rootWorldInfoNBT.put("Data", worldInfoNBT);
 
 		progressScreen.setMinorTaskProgress(
 				I18n.format("wdl.saveProgress.worldMetadata.editingNBT"), 2);
@@ -1110,17 +1110,17 @@ public class WDL {
 			pos.add(new DoubleNBT(x + 0.5D));
 			pos.add(new DoubleNBT(y + 0.621D));
 			pos.add(new DoubleNBT(z + 0.5D));
-			playerNBT.func_218657_a("Pos", pos);
+			playerNBT.put("Pos", pos);
 			ListNBT motion = new ListNBT();
 			motion.add(new DoubleNBT(0.0D));
 			//Force them to land on the ground?
 			motion.add(new DoubleNBT(-0.0001D));
 			motion.add(new DoubleNBT(0.0D));
-			playerNBT.func_218657_a("Motion", motion);
+			playerNBT.put("Motion", motion);
 			ListNBT rotation = new ListNBT();
 			rotation.add(new FloatNBT(0.0f));
 			rotation.add(new FloatNBT(0.0f));
-			playerNBT.func_218657_a("Rotation", rotation);
+			playerNBT.put("Rotation", rotation);
 		}
 
 		// If the player is able to fly, spawn them flying.
@@ -1198,7 +1198,7 @@ public class WDL {
 		// generatorOptions
 		String generatorOptions = worldProps.getValue(GeneratorSettings.GENERATOR_OPTIONS);
 		// NOTE: The type varies between versions; in 1.12.2 it's a string tag and in 1.13 it's a compound.
-		worldInfoNBT.func_218657_a("generatorOptions", VersionedFunctions.createGeneratorOptionsTag(generatorOptions));
+		worldInfoNBT.put("generatorOptions", VersionedFunctions.createGeneratorOptionsTag(generatorOptions));
 		// generatorVersion
 		int generatorVersion = worldProps.getValue(GeneratorSettings.GENERATOR_VERSION);
 		worldInfoNBT.putInt("generatorVersion", generatorVersion);
@@ -1239,7 +1239,7 @@ public class WDL {
 		for (Map.Entry<String, String> e : ourRules.entrySet()) {
 			gamerules.putString(e.getKey(), e.getValue());
 		}
-		worldInfoNBT.func_218657_a("GameRules", gamerules);
+		worldInfoNBT.put("GameRules", gamerules);
 
 		addForgeDataToWorldInfo(rootWorldInfoNBT, worldInfoNBT);
 	}
@@ -1337,7 +1337,7 @@ public class WDL {
 
 			e.getValue().write(data);
 
-			mapNBT.func_218657_a("data", data);
+			mapNBT.put("data", data);
 			if (VersionConstants.getDataVersion() >= 1484) { // 18w19a
 				// MapData has a data version in 1.13+
 				mapNBT.putInt("DataVersion", VersionConstants.getDataVersion());
