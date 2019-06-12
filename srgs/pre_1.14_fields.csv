@@ -55,3 +55,5 @@ field_73010_i,playerEntities,0,
 field_175563_bv,careerId,0,NOTE: Name must be kept exactly as-is as the name is checked in tests
 field_175562_bw,careerLevel,0,NOTE: Name must be kept exactly as-is as the name is checked in tests
 field_175561_bA,DEFAULT_TRADE_LIST_MAP,0,NOTE: Name must be kept exactly as-is as the name is used in tests
+field_70483_a,inventoryTitle,0,
+field_94051_e,customName,0,"The custom name of this inventory, or null if it doesn't have one and {@link inventoryTitle} should be used instead"
