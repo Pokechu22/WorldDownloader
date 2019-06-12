@@ -1,5 +1,4 @@
 searge,name,side,desc
-
 field_146122_a,BUTTON_TEXTURES,0,
 field_146120_f,width,0,
 field_146121_g,height,0,
@@ -9,13 +8,11 @@ field_146126_j,message,0,@deprecated not usable in 1.14
 field_146127_k,id,0,@deprecated not usable in 1.14
 field_146124_l,active,0,
 field_146125_m,visible,0,
-
 field_175208_g,id,0,@deprecated not usable in 1.14
 field_146209_f,x,0,
 field_146210_g,y,0,
 field_146218_h,width,0,
 field_146219_i,height,0,
-
 field_175287_a,LOGGER,0,
 field_195124_j,children,0,
 field_146297_k,minecraft,0,
@@ -26,12 +23,11 @@ field_146292_n,buttons,0,
 field_146291_p,passEvents,0,
 field_146289_q,font,0,
 field_175286_t,clickedLink,0,
-
 field_148161_k,minecraft,0,
 field_148155_a,width,0,
 field_148158_l,height,0,
-field_148153_b,y0,
-field_148154_c,y1,
+field_148153_b,y0,0,
+field_148154_c,y1,0,
 field_148152_e,x0,0,
 field_148151_d,x1,0,
 field_148149_f,itemHeight,0,
@@ -43,7 +39,6 @@ field_148165_u,renderHeader,0,
 field_148160_j,headerHeight,0,
 field_195084_v,scrolling,0,
 field_148168_r,selected,0,
-
 field_110325_k,BACKGROUND_LOCATION,0,
 field_110323_l,STATS_ICON_LOCATION,0,
 field_110324_m,GUI_ICONS_LOCATION,0,

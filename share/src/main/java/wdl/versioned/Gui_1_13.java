@@ -51,7 +51,7 @@ final class GuiFunctions {
 		Tessellator t = Tessellator.getInstance();
 		BufferBuilder b = t.getBuffer();
 
-		Minecraft.getInstance().getTextureManager().bindTexture(Gui.OPTIONS_BACKGROUND);
+		Minecraft.getInstance().getTextureManager().bindTexture(Gui.BACKGROUND_LOCATION);
 		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 		float textureSize = 32.0F;
@@ -76,7 +76,7 @@ final class GuiFunctions {
 		GlStateManager.disableDepthTest();
 		byte padding = 4;
 
-		Minecraft.getInstance().getTextureManager().bindTexture(Gui.OPTIONS_BACKGROUND);
+		Minecraft.getInstance().getTextureManager().bindTexture(Gui.BACKGROUND_LOCATION);
 		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 		float textureSize = 32.0F;

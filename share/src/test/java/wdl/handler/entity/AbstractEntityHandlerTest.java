@@ -160,11 +160,11 @@ public abstract class AbstractEntityHandlerTest<E extends Entity, C extends Cont
 
 		serverPlayer.setSneaking(true);
 		serverPlayer.closeScreen();
-		assertSame("Should have reset server open container", serverPlayer.openContainer, serverPlayer.inventoryContainer);
-		assertSame("Should have reset client open container", clientPlayer.openContainer, clientPlayer.inventoryContainer);
+		assertSame("Should have reset server open container", serverPlayer.openContainer, serverPlayer.container);
+		assertSame("Should have reset client open container", clientPlayer.openContainer, clientPlayer.container);
 		serverWorld.interactEntity(serverEntity, serverPlayer);
-		assertNotSame("Should have updated server open container", serverPlayer.openContainer, serverPlayer.inventoryContainer);
-		assertNotSame("Should have updated client open container", clientPlayer.openContainer, clientPlayer.inventoryContainer);
+		assertNotSame("Should have updated server open container", serverPlayer.openContainer, serverPlayer.container);
+		assertNotSame("Should have updated client open container", clientPlayer.openContainer, clientPlayer.container);
 		serverPlayer.sendContainerToPlayer(serverPlayer.openContainer);
 
 		return clientPlayer.openContainer;
