@@ -152,10 +152,10 @@ public class GuiWDLSaveProgress extends GuiTurningCameraBase {
 	 */
 	@Override
 	public synchronized void render(int mouseX, int mouseY, float partialTicks) {
-		this.drawDefaultBackground();
+		this.renderBackground();
 
 		if (this.doneWorking) {
-			this.mc.displayGuiScreen((GuiScreen) null);
+			this.minecraft.displayGuiScreen((GuiScreen) null);
 		} else {
 			Utils.drawBorder(32, 32, 0, 0, height, width);
 
@@ -172,15 +172,15 @@ public class GuiWDLSaveProgress extends GuiTurningCameraBase {
 						minorTaskProgress, minorTaskMaximum);
 			}
 
-			this.drawCenteredString(this.fontRenderer, this.title,
+			this.drawCenteredString(this.font, this.title,
 					this.width / 2, 8, 0xFFFFFF);
 
-			this.drawCenteredString(this.fontRenderer,
+			this.drawCenteredString(this.font,
 					majorTaskInfo, this.width / 2, 100, 0xFFFFFF);
 			this.drawProgressBar(110, 84, 89,
 						prevMajorBar + (majorBar - prevMajorBar) * partialTicks);
 
-			this.drawCenteredString(this.fontRenderer, minorTaskInfo,
+			this.drawCenteredString(this.font, minorTaskInfo,
 					this.width / 2, 130, 0xFFFFFF);
 			this.drawProgressBar(140, 64, 69,
 					prevMinorBar + (minorBar - prevMinorBar) * partialTicks);
@@ -208,15 +208,15 @@ public class GuiWDLSaveProgress extends GuiTurningCameraBase {
 	private void drawProgressBar(int y, int emptyV, int filledV, float progress) {
 		progress = MathHelper.clamp(progress, 0, 1);
 
-		this.mc.getTextureManager().bindTexture(Gui.ICONS);
+		this.minecraft.getTextureManager().bindTexture(Gui.GUI_ICONS_LOCATION);
 
 		final int height = 5;
 
 		final int x = (this.width / 2) - (FULL_BAR_WIDTH / 2);
 		final int u = 0; //Texture position.
 
-		drawTexturedModalRect(x, y, u, emptyV, FULL_BAR_WIDTH, height);
-		drawTexturedModalRect(x, y, u, filledV, (int)(FULL_BAR_WIDTH * progress), height);
+		blit(x, y, u, emptyV, FULL_BAR_WIDTH, height);
+		blit(x, y, u, filledV, (int)(FULL_BAR_WIDTH * progress), height);
 	}
 
 	@Override

@@ -86,7 +86,7 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 			if (screen instanceof GuiContainer) {
 				clientPlayer.openContainer = ((GuiContainer)screen).inventorySlots;
 			} else {
-				clientPlayer.openContainer = clientPlayer.inventoryContainer;
+				clientPlayer.openContainer = clientPlayer.container;
 			}
 			mc.currentScreen = screen;
 		})).when(mc).displayGuiScreen(any());

@@ -116,7 +116,7 @@ public class WDLHooks {
 				if (ENABLE_PROFILER) PROFILER.startSection("inventoryCheck");
 				if (WDL.downloading && wdl.player != null) {
 					if (wdl.player.openContainer != wdl.windowContainer) {
-						if (wdl.player.openContainer == wdl.player.inventoryContainer) {
+						if (wdl.player.openContainer == wdl.player.container) {
 							boolean handled;
 
 							if (ENABLE_PROFILER) PROFILER.startSection("onItemGuiClosed");
@@ -460,7 +460,7 @@ public class WDLHooks {
 	protected void onNHPCDisconnect0(NetHandlerPlayClient sender, ITextComponent reason) {
 		if (WDL.downloading) {
 			// This is likely to be called from an unexpected thread, so queue a task
-			Minecraft.getInstance().addScheduledTask(wdl::stopDownload);
+			Minecraft.getInstance().enqueue(wdl::stopDownload);
 
 			// This code was present on older versions of WDL which weren't missing
 			// the onDisconnect handler before.
@@ -660,7 +660,7 @@ public class WDLHooks {
 		if (button.id == 1) { // "Disconnect", from vanilla
 			wdl.stopDownload();
 			// Disable the button to prevent double-clicks
-			button.enabled = false;
+			button.active = false;
 		}
 	}
 }

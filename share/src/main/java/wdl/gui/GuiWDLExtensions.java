@@ -66,9 +66,9 @@ public class GuiWDLExtensions extends WDLScreen {
 
 	private class ModList extends GuiList<ModList.ModEntry> {
 		public ModList() {
-			super(GuiWDLExtensions.this.mc, GuiWDLExtensions.this.width,
+			super(GuiWDLExtensions.this.minecraft, GuiWDLExtensions.this.width,
 					bottomLocation, TOP_HEIGHT, bottomLocation, 22);
-			this.showSelectionBox = true;
+			this.renderSelection = true;
 		}
 
 		@Nullable
@@ -144,7 +144,7 @@ public class GuiWDLExtensions extends WDLScreen {
 				if (selectedEntry != this) {
 					selectedEntry = this;
 
-					mc.getSoundHandler().play(SimpleSound.master(
+					minecraft.getSoundHandler().play(SimpleSound.master(
 							SoundEvents.UI_BUTTON_CLICK, 1.0F));
 
 					updateDetailsList(mod);
@@ -159,8 +159,8 @@ public class GuiWDLExtensions extends WDLScreen {
 			public void drawEntry(int x, int y, int width, int height, int mouseX, int mouseY) {
 				super.drawEntry(x, y, width, height, mouseX, mouseY);
 
-				int centerY = y + height / 2 - fontRenderer.FONT_HEIGHT / 2;
-				fontRenderer.drawString(label, x, centerY, 0xFFFFFF);
+				int centerY = y + height / 2 - font.FONT_HEIGHT / 2;
+				font.drawString(label, x, centerY, 0xFFFFFF);
 			}
 
 			@Override
@@ -176,10 +176,10 @@ public class GuiWDLExtensions extends WDLScreen {
 		}
 
 		@Override
-		public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-			this.height = this.bottom = bottomLocation;
+		public void render(int mouseX, int mouseY, float partialTicks) {
+			this.height = this.y1 = bottomLocation;
 
-			super.drawScreen(mouseX, mouseY, partialTicks);
+			super.render(mouseX, mouseY, partialTicks);
 		}
 
 		@Override
@@ -195,20 +195,20 @@ public class GuiWDLExtensions extends WDLScreen {
 
 	private class ModDetailList extends TextList {
 		public ModDetailList() {
-			super(GuiWDLExtensions.this.mc, GuiWDLExtensions.this.width,
+			super(GuiWDLExtensions.this.minecraft, GuiWDLExtensions.this.width,
 					GuiWDLExtensions.this.height - bottomLocation,
 					MIDDLE_HEIGHT, BOTTOM_HEIGHT);
 		}
 
 		@Override
-		public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		public void render(int mouseX, int mouseY, float partialTicks) {
 			this.setY(bottomLocation);
 			this.height = GuiWDLExtensions.this.height - bottomLocation;
-			this.bottom = this.height - 32;
+			this.y1 = this.height - 32;
 
-			super.drawScreen(mouseX, mouseY, partialTicks);
+			super.render(mouseX, mouseY, partialTicks);
 
-			drawCenteredString(fontRenderer,
+			drawCenteredString(font,
 					I18n.format("wdl.gui.extensions.detailsCaption"),
 					GuiWDLExtensions.this.width / 2, bottomLocation + 5, 0xFFFFFF);
 		}
@@ -239,7 +239,7 @@ public class GuiWDLExtensions extends WDLScreen {
 	}
 
 	@Override
-	public void initGui() {
+	public void init() {
 		bottomLocation = height - 100;
 		dragging = false;
 
@@ -287,7 +287,7 @@ public class GuiWDLExtensions extends WDLScreen {
 
 	@Override
 	public void render(int mouseX, int mouseY, float partialTicks) {
-		this.drawDefaultBackground();
+		this.renderBackground();
 
 		//Clamp bottomLocation.
 		if (bottomLocation < TOP_HEIGHT + 33) {
@@ -299,7 +299,7 @@ public class GuiWDLExtensions extends WDLScreen {
 
 		super.render(mouseX, mouseY, partialTicks);
 
-		this.drawCenteredString(this.fontRenderer,
+		this.drawCenteredString(this.font,
 				I18n.format("wdl.gui.extensions.title"), this.width / 2, 8,
 				0xFFFFFF);
 	}

@@ -70,7 +70,7 @@ public class GuiSavedChunks extends WDLScreen {
 	}
 
 	@Override
-	public void initGui() {
+	public void init() {
 		this.addButton(new ButtonDisplayGui(width / 2 - 100, height - 29,
 				200, 20, this.parent));
 	}
@@ -121,21 +121,21 @@ public class GuiSavedChunks extends WDLScreen {
 		int playerPosX = (int)(((wdl.player.posX / 16.0D) - scrollX) * SCALE + (width / 2));
 		int playerPosZ = (int)(((wdl.player.posZ / 16.0D) - scrollZ) * SCALE + (height / 2));
 
-		drawHorizontalLine(playerPosX - 3, playerPosX + 3, playerPosZ, 0xFFFFFFFF);
+		hLine(playerPosX - 3, playerPosX + 3, playerPosZ, 0xFFFFFFFF);
 		// Vertical is 1px taller because it seems to be needed to make it proportional
-		drawVerticalLine(playerPosX, playerPosZ - 4, playerPosZ + 4, 0xFFFFFFFF);
+		vLine(playerPosX, playerPosZ - 4, playerPosZ + 4, 0xFFFFFFFF);
 
 		// Draw the main borders now so that positions are hidden behind it.
 		Utils.drawBorder(TOP_MARGIN, BOTTOM_MARGIN, 0, 0, height, width);
 
-		this.drawCenteredString(this.fontRenderer, I18n.format("wdl.gui.savedChunks.title"),
+		this.drawCenteredString(this.font, I18n.format("wdl.gui.savedChunks.title"),
 				this.width / 2, 8, 0xFFFFFF);
 
 		if (mouseY > TOP_MARGIN && mouseY < height - BOTTOM_MARGIN) {
 			int x = displayXToChunkX(mouseX);
 			int z = displayZToChunkZ(mouseY);
 			if (wdl.savedChunks.contains(new ChunkPos(x, z))) {
-				this.drawString(this.fontRenderer,
+				this.drawString(this.font,
 						I18n.format("wdl.gui.savedChunks.savedNow", x, z),
 						12, height - 12, 0xFFFFFF);
 			} else {
@@ -146,11 +146,11 @@ public class GuiSavedChunks extends WDLScreen {
 					timestamp = timestamps[(x & (REGION_SIZE - 1)) + (z & (REGION_SIZE - 1)) * REGION_SIZE];
 				}
 				if (timestamp != 0) {
-					this.drawString(this.fontRenderer,
+					this.drawString(this.font,
 							I18n.format("wdl.gui.savedChunks.lastSaved", x, z, timestamp * 1000L),
 							12, height - 12, 0xFFFFFF);
 				} else {
-					this.drawString(this.fontRenderer,
+					this.drawString(this.font,
 							I18n.format("wdl.gui.savedChunks.neverSaved", x, z),
 							12, height - 12, 0xFFFFFF);
 				}
@@ -249,14 +249,14 @@ public class GuiSavedChunks extends WDLScreen {
 		int x2 = x1 + SCALE - 1;
 		int z2 = z1 + SCALE - 1;
 
-		drawRect(x1, z1, x2, z2, color);
+		fill(x1, z1, x2, z2, color);
 
 		int colorDark = darken(color);
 
-		drawVerticalLine(x1, z1, z2, colorDark);
-		drawVerticalLine(x2, z1, z2, colorDark);
-		drawHorizontalLine(x1, x2, z1, colorDark);
-		drawHorizontalLine(x1, x2, z2, colorDark);
+		vLine(x1, z1, z2, colorDark);
+		vLine(x2, z1, z2, colorDark);
+		hLine(x1, x2, z1, colorDark);
+		hLine(x1, x2, z2, colorDark);
 	}
 
 	/**

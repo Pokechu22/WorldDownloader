@@ -53,7 +53,7 @@ public class GuiWDLPlayer extends WDLScreen {
 	 * Adds the buttons (and other controls) to the screen in question.
 	 */
 	@Override
-	public void initGui() {
+	public void init() {
 		this.title = I18n.format("wdl.gui.player.title", WDL.baseFolderName);
 		int y = this.height / 4 - 15;
 		this.healthBtn = this.addButton(new SettingButton(
@@ -71,11 +71,11 @@ public class GuiWDLPlayer extends WDLScreen {
 		});
 		y += 22;
 		this.posTextY = y + 4;
-		this.posX = this.addTextField(new GuiNumericTextField(40, this.fontRenderer,
+		this.posX = this.addTextField(new GuiNumericTextField(40, this.font,
 				this.width / 2 - 87, y, 50, 16));
-		this.posY = this.addTextField(new GuiNumericTextField(41, this.fontRenderer,
+		this.posY = this.addTextField(new GuiNumericTextField(41, this.font,
 				this.width / 2 - 19, y, 50, 16));
-		this.posZ = this.addTextField(new GuiNumericTextField(42, this.fontRenderer,
+		this.posZ = this.addTextField(new GuiNumericTextField(42, this.font,
 				this.width / 2 + 48, y, 50, 16));
 		this.posX.setValue(config.getValue(PlayerSettings.PLAYER_X));
 		this.posY.setValue(config.getValue(PlayerSettings.PLAYER_Y));
@@ -99,7 +99,7 @@ public class GuiWDLPlayer extends WDLScreen {
 	}
 
 	@Override
-	public void onGuiClosed() {
+	public void removed() {
 		if (this.showPosFields) {
 			this.config.setValue(PlayerSettings.PLAYER_X, posX.getValue());
 			this.config.setValue(PlayerSettings.PLAYER_Y, posY.getValue());
@@ -116,17 +116,17 @@ public class GuiWDLPlayer extends WDLScreen {
 	public void render(int mouseX, int mouseY, float partialTicks) {
 		Utils.drawListBackground(23, 32, 0, 0, height, width);
 
-		this.drawCenteredString(this.fontRenderer, this.title,
+		this.drawCenteredString(this.font, this.title,
 				this.width / 2, 8, 0xFFFFFF);
 
 		String tooltip = null;
 
 		if (this.showPosFields) {
-			this.drawString(this.fontRenderer, "X:", this.width / 2 - 99,
+			this.drawString(this.font, "X:", this.width / 2 - 99,
 					this.posTextY, 0xFFFFFF);
-			this.drawString(this.fontRenderer, "Y:", this.width / 2 - 31,
+			this.drawString(this.font, "Y:", this.width / 2 - 31,
 					this.posTextY, 0xFFFFFF);
-			this.drawString(this.fontRenderer, "Z:", this.width / 2 + 37,
+			this.drawString(this.font, "Z:", this.width / 2 + 37,
 					this.posTextY, 0xFFFFFF);
 
 			if (Utils.isMouseOverTextBox(mouseX, mouseY, posX)) {

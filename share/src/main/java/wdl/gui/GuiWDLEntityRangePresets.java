@@ -55,7 +55,7 @@ public class GuiWDLEntityRangePresets extends WDLScreen implements GuiYesNoCallb
 	}
 
 	@Override
-	public void initGui() {
+	public void init() {
 		int y = this.height / 4;
 
 		this.vanillaButton = this.addButton(new ButtonDisplayGui(
@@ -93,7 +93,7 @@ public class GuiWDLEntityRangePresets extends WDLScreen implements GuiYesNoCallb
 	public void render(int mouseX, int mouseY, float partialTicks) {
 		Utils.drawListBackground(23, 32, 0, 0, height, width);
 
-		this.drawCenteredString(this.fontRenderer,
+		this.drawCenteredString(this.font,
 				I18n.format("wdl.gui.rangePresets.title"), this.width / 2, 8,
 				0xFFFFFF);
 
@@ -147,11 +147,11 @@ public class GuiWDLEntityRangePresets extends WDLScreen implements GuiYesNoCallb
 			}
 		}
 
-		mc.displayGuiScreen(parent);
+		minecraft.displayGuiScreen(parent);
 	}
 
 	@Override
-	public void onGuiClosed() {
+	public void removed() {
 		wdl.saveProps();
 	}
 }

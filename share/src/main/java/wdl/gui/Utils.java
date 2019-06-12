@@ -67,7 +67,7 @@ public class Utils {
 		int infoY = guiHeight - bottomPadding - infoBoxHeight;
 		int y = infoY + 5;
 
-		Gui.drawRect(infoX, infoY, infoX + infoBoxWidth, infoY
+		Gui.fill(infoX, infoY, infoX + infoBoxWidth, infoY
 				+ infoBoxHeight, 0x7F000000);
 
 		List<String> lines = wordWrap(text, infoBoxWidth - 10);

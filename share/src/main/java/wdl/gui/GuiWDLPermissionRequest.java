@@ -56,8 +56,8 @@ public class GuiWDLPermissionRequest extends WDLScreen {
 	}
 
 	@Override
-	public void initGui() {
-		this.list = this.addList(new TextList(mc, width, height, TOP_MARGIN, BOTTOM_MARGIN));
+	public void init() {
+		this.list = this.addList(new TextList(minecraft, width, height, TOP_MARGIN, BOTTOM_MARGIN));
 
 		list.addLine("\u00A7c\u00A7lThis is a work in progress.");
 		list.addLine("You can request permissions in this GUI, although " +
@@ -75,7 +75,7 @@ public class GuiWDLPermissionRequest extends WDLScreen {
 					+ request.getValue() + "'.");
 		}
 
-		this.requestField = this.addTextField(new GuiTextField(0, fontRenderer,
+		this.requestField = this.addTextField(new GuiTextField(0, font,
 				width / 2 - 155, 18, 150, 20));
 
 		this.submitButton = this.addButton(new WDLButton(
@@ -147,7 +147,7 @@ public class GuiWDLPermissionRequest extends WDLScreen {
 	public void render(int mouseX, int mouseY, float partialTicks) {
 		super.render(mouseX, mouseY, partialTicks);
 
-		this.drawCenteredString(this.fontRenderer, "Permission request",
+		this.drawCenteredString(this.font, "Permission request",
 				this.width / 2, 8, 0xFFFFFF);
 	}
 }

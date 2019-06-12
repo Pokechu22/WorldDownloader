@@ -26,7 +26,7 @@ abstract class ExtButton extends GuiButton implements IExtButton {
 	 * @deprecated Do not use; use {@link #setMessage} instead.
 	 */
 	@Deprecated
-	protected static final Void displayString = null;
+	protected static final Void message = null;
 	/**
 	 * @deprecated Do not use; use {@link #setEnabled} instead.
 	 */
@@ -79,16 +79,16 @@ abstract class ExtButton extends GuiButton implements IExtButton {
 
 	@Override
 	public void setMessage(String message) {
-		super.displayString = message;
+		super.message = message;
 	}
 
 	@Override
 	public void setEnabled(boolean enabled) {
-		super.enabled = enabled;
+		super.active = enabled;
 	}
 
 	@Override
 	public boolean isEnabled() {
-		return super.enabled;
+		return super.active;
 	}
 }

@@ -90,7 +90,7 @@ public final class TestWorld {
 
 		@Override
 		public BlockPos getSpawnPoint() {
-			return BlockPos.ORIGIN;
+			return BlockPos.ZERO;
 		}
 
 		// Provided for 1.13 support.  Does nothing.

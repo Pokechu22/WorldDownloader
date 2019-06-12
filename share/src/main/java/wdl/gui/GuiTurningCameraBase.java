@@ -77,7 +77,7 @@ public abstract class GuiTurningCameraBase extends WDLScreen {
 	 */
 	@Override
 	@OverridingMethodsMustInvokeSuper
-	public void initGui() {
+	public void init() {
 		if (!initializedCamera) {
 			this.cam = VersionedFunctions.makePlayer(WDL.minecraft, wdl.worldClient, wdl.player.connection, wdl.player);
 			this.cam.setLocationAndAngles(wdl.player.posX, wdl.player.posY,
@@ -107,7 +107,7 @@ public abstract class GuiTurningCameraBase extends WDLScreen {
 	 */
 	@Override
 	public void tick() {
-		if (mc.world != null && this.initializedCamera) {
+		if (minecraft.world != null && this.initializedCamera) {
 			this.cam.prevRotationPitch = this.cam.rotationPitch = 0.0F;
 			this.cam.prevRotationYaw = this.yaw;
 			this.cam.lastTickPosY = this.cam.prevPosY = this.cam.posY;
@@ -180,7 +180,7 @@ public abstract class GuiTurningCameraBase extends WDLScreen {
 			Vec3d from = playerPos.add(offsetX, offsetY, offsetZ);
 			Vec3d to = offsetPos.add(offsetX, offsetY, offsetZ);
 
-			RayTraceResult pos = mc.world.rayTraceBlocks(from, to);
+			RayTraceResult pos = minecraft.world.rayTraceBlocks(from, to);
 
 			if (pos != null) {
 				double distance = pos.hitVec.distanceTo(playerPos);
@@ -194,8 +194,8 @@ public abstract class GuiTurningCameraBase extends WDLScreen {
 	}
 
 	@Override
-	public void onGuiClosed() {
-		super.onGuiClosed();
+	public void removed() {
+		super.removed();
 		this.deactivateRenderViewEntity();
 	}
 
@@ -205,9 +205,9 @@ public abstract class GuiTurningCameraBase extends WDLScreen {
 	 * graphical issues</a> when there is no world.
 	 */
 	@Override
-	public void drawDefaultBackground() {
-		if (mc.world == null) {
-			this.drawBackground(0);
+	public void renderBackground() {
+		if (minecraft.world == null) {
+			this.renderDirtBackground(0);
 		}
 	}
 

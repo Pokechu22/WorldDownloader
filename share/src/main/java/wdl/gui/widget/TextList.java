@@ -48,18 +48,18 @@ public class TextList extends GuiList<TextEntry> {
 	public void addLine(String text) {
 		List<String> lines = Utils.wordWrap(text, getEntryWidth());
 		lines.stream()
-				.map(line -> new TextEntry(mc, line, 0xFFFFFF))
+				.map(line -> new TextEntry(minecraft, line, 0xFFFFFF))
 				.forEach(getEntries()::add);
 	}
 
 	public void addBlankLine() {
-		getEntries().add(new TextEntry(mc, "", 0xFFFFFF));
+		getEntries().add(new TextEntry(minecraft, "", 0xFFFFFF));
 	}
 
 	public void addLinkLine(String text, String URL) {
 		List<String> lines = Utils.wordWrap(text, getEntryWidth());
 		lines.stream()
-				.map(line -> new LinkEntry(mc, line, URL))
+				.map(line -> new LinkEntry(minecraft, line, URL))
 				.forEach(getEntries()::add);
 	}
 

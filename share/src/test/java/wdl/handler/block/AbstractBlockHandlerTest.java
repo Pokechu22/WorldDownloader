@@ -131,8 +131,8 @@ public abstract class AbstractBlockHandlerTest<B extends TileEntity, C extends C
 	 */
 	protected Container makeClientContainer(BlockPos pos) {
 		serverPlayer.closeScreen();
-		assertSame(clientPlayer.openContainer, clientPlayer.inventoryContainer);
-		assertSame(serverPlayer.openContainer, serverPlayer.inventoryContainer);
+		assertSame(clientPlayer.openContainer, clientPlayer.container);
+		assertSame(serverPlayer.openContainer, serverPlayer.container);
 		serverWorld.interactBlock(pos, serverPlayer);
 		assertNotNull(clientPlayer.openContainer);
 		assertNotNull(serverPlayer.openContainer);

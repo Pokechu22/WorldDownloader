@@ -55,7 +55,7 @@ public class GuiWDLAbout extends WDLScreen {
 	}
 
 	@Override
-	public void initGui() {
+	public void init() {
 		this.addButton(new ButtonDisplayGui((this.width / 2) - 155, 18, 150, 20,
 				I18n.format("wdl.gui.about.extensions"), () -> new GuiWDLExtensions(this)));
 		this.addButton(new WDLButton((this.width / 2) + 5, 18, 150, 20,
@@ -74,7 +74,7 @@ public class GuiWDLAbout extends WDLScreen {
 
 		String mcVersion = VersionConstants.getMinecraftVersionInfo();
 
-		list = this.addList(new TextList(mc, width, height, 39, 32));
+		list = this.addList(new TextList(minecraft, width, height, 39, 32));
 		list.addLine(I18n.format("wdl.gui.about.blurb"));
 		list.addBlankLine();
 		list.addLine(I18n.format("wdl.gui.about.version", wdlVersion,
@@ -109,7 +109,7 @@ public class GuiWDLAbout extends WDLScreen {
 	public void render(int mouseX, int mouseY, float partialTicks) {
 		super.render(mouseX, mouseY, partialTicks);
 
-		drawCenteredString(fontRenderer, I18n.format("wdl.gui.about.title"),
+		drawCenteredString(font, I18n.format("wdl.gui.about.title"),
 				width / 2, 2, 0xFFFFFF);
 	}
 }

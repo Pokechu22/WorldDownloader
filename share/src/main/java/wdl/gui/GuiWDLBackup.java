@@ -73,7 +73,7 @@ public class GuiWDLBackup extends WDLScreen {
 	}
 
 	@Override
-	public void initGui() {
+	public void init() {
 		backupTypeButton = this.addButton(new WDLButton(this.width / 2 - 100, 32,
 				200, 20, getBackupButtonText()) {
 			public @Override void performAction() {
@@ -89,11 +89,11 @@ public class GuiWDLBackup extends WDLScreen {
 			}
 		});
 
-		customBackupCommandTemplateFld = this.addTextField(new GuiTextField(1, fontRenderer,
+		customBackupCommandTemplateFld = this.addTextField(new GuiTextField(1, font,
 				width / 2 - 100, 54, 200, 20));
 		customBackupCommandTemplateFld.setMaxStringLength(255);
 		customBackupCommandTemplateFld.setText(this.customBackupCommandTemplate);
-		customBackupExtensionFld = this.addTextField(new GuiTextField(2, fontRenderer,
+		customBackupExtensionFld = this.addTextField(new GuiTextField(2, font,
 				width / 2 + 160, 54, 40, 20));
 		customBackupExtensionFld.setText(this.customBackupExtension);
 
@@ -141,7 +141,7 @@ public class GuiWDLBackup extends WDLScreen {
 	}
 
 	@Override
-	public void onGuiClosed() {
+	public void removed() {
 		if (isCommandValid) {
 			config.setValue(MiscSettings.BACKUP_TYPE, backupType);
 			config.setValue(MiscSettings.BACKUP_COMMAND_TEMPLATE, customBackupCommandTemplate);
@@ -209,7 +209,7 @@ public class GuiWDLBackup extends WDLScreen {
 				// True if too much time passed, the command changed, or the GUI was closed.
 				return customSettingsChanged() ||
 						System.currentTimeMillis() >= endTime ||
-						mc.currentScreen != GuiWDLBackup.this;
+						minecraft.currentScreen != GuiWDLBackup.this;
 			}
 
 			private boolean customSettingsChanged() {
@@ -225,7 +225,7 @@ public class GuiWDLBackup extends WDLScreen {
 
 				try {
 					tempDir = Files.createTempDir();
-					File optionsTxt = new File(mc.gameDir, "options.txt"); // Should exist
+					File optionsTxt = new File(minecraft.gameDir, "options.txt"); // Should exist
 					tempOptions = new File(tempDir, "options.txt");
 					Files.copy(optionsTxt, tempOptions);
 					tempDest = File.createTempFile("wdlbackuptest", "." + customBackupExtension);
@@ -258,7 +258,7 @@ public class GuiWDLBackup extends WDLScreen {
 	public void render(int mouseX, int mouseY, float partialTicks) {
 		Utils.drawListBackground(23, 32, 0, 0, height, width);
 
-		this.drawCenteredString(this.fontRenderer,
+		this.drawCenteredString(this.font,
 				I18n.format("wdl.gui.backup.title"), this.width / 2, 8,
 				0xFFFFFF);
 
@@ -266,26 +266,26 @@ public class GuiWDLBackup extends WDLScreen {
 
 		if (customBackupCommandTemplateFld.getVisible()) {
 			String text = I18n.format("wdl.gui.backup.customCommandTemplate");
-			int x = customBackupCommandTemplateFld.x - 3 - fontRenderer.getStringWidth(text);
+			int x = customBackupCommandTemplateFld.x - 3 - font.getStringWidth(text);
 			int y = customBackupCommandTemplateFld.y + 6;
-			this.drawString(fontRenderer, text, x, y, 0xFFFFFF);
+			this.drawString(font, text, x, y, 0xFFFFFF);
 		}
 		if (customBackupExtensionFld.getVisible()) {
 			String text = I18n.format("wdl.gui.backup.customExtension");
-			int x = customBackupExtensionFld.x - 3 - fontRenderer.getStringWidth(text);
+			int x = customBackupExtensionFld.x - 3 - font.getStringWidth(text);
 			int y = customBackupExtensionFld.y + 6;
-			this.drawString(fontRenderer, text, x, y, 0xFFFFFF);
+			this.drawString(font, text, x, y, 0xFFFFFF);
 			if (customBackupExtensionFld.getText().equalsIgnoreCase("rar")) {
 				x = customBackupExtensionFld.x + customBackupExtensionFld.getWidth() + 14;
-				this.drawString(fontRenderer, "ಠ_ಠ", x, y, 0xFF0000); // See some of my experiences with dealing with rar files.  Use a non-proprietary format, please, it's for your own good!
+				this.drawString(font, "ಠ_ಠ", x, y, 0xFF0000); // See some of my experiences with dealing with rar files.  Use a non-proprietary format, please, it's for your own good!
 			}
 		}
 		if (commandInvalidReason != null) {
 			List<String> lines = Utils.wordWrap(commandInvalidReason, this.width - 50);
 			int y = 80;
 			for (String line : lines) {
-				this.drawString(fontRenderer, line, 50, y, 0xFF0000);
-				y += fontRenderer.FONT_HEIGHT;
+				this.drawString(font, line, 50, y, 0xFF0000);
+				y += font.FONT_HEIGHT;
 			}
 		}
 
@@ -307,9 +307,9 @@ public class GuiWDLBackup extends WDLScreen {
 		} else {
 			return new GuiYesNo((result, id) -> {
 				if (result) {
-					mc.displayGuiScreen(parent);
+					minecraft.displayGuiScreen(parent);
 				} else {
-					mc.displayGuiScreen(GuiWDLBackup.this);
+					minecraft.displayGuiScreen(GuiWDLBackup.this);
 				}
 			}, I18n.format("wdl.gui.backup.customCommandFailed.line1"),
 					I18n.format("wdl.gui.backup.customCommandFailed.line2"),

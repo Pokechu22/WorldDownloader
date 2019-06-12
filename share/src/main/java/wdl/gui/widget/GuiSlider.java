@@ -84,17 +84,16 @@ public class GuiSlider extends ExtButton {
 		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 		if (this.isEnabled()) {
-			this.drawTexturedModalRect(this.x
+			this.blit(this.x
 					+ (int) (this.sliderValue * (this.width - 8)),
 					this.y, 0, 66, 4, 20);
-			this.drawTexturedModalRect(this.x
+			this.blit(this.x
 					+ (int) (this.sliderValue * (this.width - 8))
 					+ 4, this.y, 196, 66, 4, 20);
 		} else {
-			this.drawTexturedModalRect(this.x
-					+ (int) (this.sliderValue * (this.width - 8)),
+			this.blit(this.x + (int) (this.sliderValue * (this.width - 8)),
 					this.y, 0, 46, 4, 20);
-			this.drawTexturedModalRect(this.x
+			this.blit(this.x
 					+ (int) (this.sliderValue * (this.width - 8))
 					+ 4, this.y, 196, 46, 4, 20);
 		}

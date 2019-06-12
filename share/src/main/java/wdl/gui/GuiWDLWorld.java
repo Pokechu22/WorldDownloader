@@ -55,7 +55,7 @@ public class GuiWDLWorld extends WDLScreen {
 	 * Adds the buttons (and other controls) to the screen in question.
 	 */
 	@Override
-	public void initGui() {
+	public void init() {
 		this.title = I18n.format("wdl.gui.world.title", WDL.baseFolderName);
 
 		int y = this.height / 4 - 15;
@@ -81,11 +81,11 @@ public class GuiWDLWorld extends WDLScreen {
 		});
 		y += 22;
 		this.spawnTextY = y + 4;
-		this.spawnX = this.addTextField(new GuiNumericTextField(40, this.fontRenderer,
+		this.spawnX = this.addTextField(new GuiNumericTextField(40, this.font,
 				this.width / 2 - 87, y, 50, 16));
-		this.spawnY = this.addTextField(new GuiNumericTextField(41, this.fontRenderer,
+		this.spawnY = this.addTextField(new GuiNumericTextField(41, this.font,
 				this.width / 2 - 19, y, 50, 16));
-		this.spawnZ = this.addTextField(new GuiNumericTextField(42, this.fontRenderer,
+		this.spawnZ = this.addTextField(new GuiNumericTextField(42, this.font,
 				this.width / 2 + 48, y, 50, 16));
 		spawnX.setValue(config.getValue(WorldSettings.SPAWN_X));
 		spawnY.setValue(config.getValue(WorldSettings.SPAWN_Y));
@@ -108,7 +108,7 @@ public class GuiWDLWorld extends WDLScreen {
 	}
 
 	@Override
-	public void onGuiClosed() {
+	public void removed() {
 		if (this.showSpawnFields) {
 			this.config.setValue(WorldSettings.SPAWN_X, spawnX.getValue());
 			this.config.setValue(WorldSettings.SPAWN_Y, spawnY.getValue());
@@ -125,15 +125,15 @@ public class GuiWDLWorld extends WDLScreen {
 	public void render(int mouseX, int mouseY, float partialTicks) {
 		Utils.drawListBackground(23, 32, 0, 0, height, width);
 
-		this.drawCenteredString(this.fontRenderer, this.title,
+		this.drawCenteredString(this.font, this.title,
 				this.width / 2, 8, 0xFFFFFF);
 
 		if (this.showSpawnFields) {
-			this.drawString(this.fontRenderer, "X:", this.width / 2 - 99,
+			this.drawString(this.font, "X:", this.width / 2 - 99,
 					this.spawnTextY, 0xFFFFFF);
-			this.drawString(this.fontRenderer, "Y:", this.width / 2 - 31,
+			this.drawString(this.font, "Y:", this.width / 2 - 31,
 					this.spawnTextY, 0xFFFFFF);
-			this.drawString(this.fontRenderer, "Z:", this.width / 2 + 37,
+			this.drawString(this.font, "Z:", this.width / 2 + 37,
 					this.spawnTextY, 0xFFFFFF);
 		}
 
