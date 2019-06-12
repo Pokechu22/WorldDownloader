@@ -73,7 +73,7 @@ public class GuiWDLMessages extends WDLScreen {
 						GuiWDLMessages.this.width / 2 - 40, y + itemHeight
 						- minecraft.fontRenderer.FONT_HEIGHT - 1, 0xFFFFFF);
 
-				if (button.isMouseOver()) {
+				if (button.isHovered()) {
 					hoveredButtonTooltip = button.getTooltip();
 				}
 			}
@@ -95,7 +95,7 @@ public class GuiWDLMessages extends WDLScreen {
 
 				super.drawEntry(x, y, width, height, mouseX, mouseY);
 
-				if (button.isMouseOver()) {
+				if (button.isHovered()) {
 					hoveredButtonTooltip = button.getTooltip();
 				}
 			}
@@ -186,9 +186,9 @@ public class GuiWDLMessages extends WDLScreen {
 		String tooltip = null;
 		if (hoveredButtonTooltip != null) {
 			tooltip = hoveredButtonTooltip;
-		} else if (enableAllButton.isMouseOver()) {
+		} else if (enableAllButton.isHovered()) {
 			tooltip = enableAllButton.getTooltip();
-		} else if (resetButton.isMouseOver()) {
+		} else if (resetButton.isHovered()) {
 			tooltip = I18n.format("wdl.gui.messages.reset.description");
 		}
 

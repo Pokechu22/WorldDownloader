@@ -309,7 +309,7 @@ public class GuiWDLEntities extends WDLScreen {
 				I18n.format("wdl.gui.entities.title"), this.width / 2, 8,
 				0xFFFFFF);
 
-		if (this.rangeModeButton.isMouseOver()) {
+		if (this.rangeModeButton.isHovered()) {
 			Utils.drawGuiInfoBox(this.rangeModeButton.getTooltip(), width, height, 48);
 		}
 	}

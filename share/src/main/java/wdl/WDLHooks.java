@@ -236,7 +236,7 @@ public class WDLHooks {
 	protected void onNHPCHandleChunkUnload0(NetHandlerPlayClient sender,
 			WorldClient world, SPacketUnloadChunk packet) {
 		try {
-			if (!Minecraft.getInstance().isCallingFromMinecraftThread()) {
+			if (!Minecraft.getInstance().isOnExecutionThread()) {
 				return;
 			}
 
@@ -268,7 +268,7 @@ public class WDLHooks {
 	protected void onNHPCHandleChat0(NetHandlerPlayClient sender,
 			SPacketChat packet) {
 		try {
-			if (!Minecraft.getInstance().isCallingFromMinecraftThread()) {
+			if (!Minecraft.getInstance().isOnExecutionThread()) {
 				return;
 			}
 
@@ -308,7 +308,7 @@ public class WDLHooks {
 	protected void onNHPCHandleMaps0(NetHandlerPlayClient sender,
 			SPacketMaps packet) {
 		try {
-			if (!Minecraft.getInstance().isCallingFromMinecraftThread()) {
+			if (!Minecraft.getInstance().isOnExecutionThread()) {
 				return;
 			}
 
@@ -346,7 +346,7 @@ public class WDLHooks {
 	protected void onNHPCHandleCustomPayload0(NetHandlerPlayClient sender,
 			SPacketCustomPayload packet) {
 		try {
-			if (!Minecraft.getInstance().isCallingFromMinecraftThread()) {
+			if (!Minecraft.getInstance().isOnExecutionThread()) {
 				return;
 			}
 			if (ENABLE_PROFILER) PROFILER.startSection("wdl.onPluginMessage");
@@ -415,7 +415,7 @@ public class WDLHooks {
 	protected void onNHPCHandleBlockAction0(NetHandlerPlayClient sender,
 			SPacketBlockAction packet) {
 		try {
-			if (!Minecraft.getInstance().isCallingFromMinecraftThread()) {
+			if (!Minecraft.getInstance().isOnExecutionThread()) {
 				return;
 			}
 

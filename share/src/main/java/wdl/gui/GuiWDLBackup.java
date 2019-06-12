@@ -289,11 +289,11 @@ public class GuiWDLBackup extends WDLScreen {
 			}
 		}
 
-		if (Utils.isMouseOverTextBox(mouseX, mouseY, customBackupCommandTemplateFld)) {
+		if (Utils.isHoveredTextBox(mouseX, mouseY, customBackupCommandTemplateFld)) {
 			Utils.drawGuiInfoBox(I18n.format("wdl.gui.backup.customCommandTemplate.description"), width, height, 48);
-		} else if (Utils.isMouseOverTextBox(mouseX, mouseY, customBackupExtensionFld)) {
+		} else if (Utils.isHoveredTextBox(mouseX, mouseY, customBackupExtensionFld)) {
 			Utils.drawGuiInfoBox(I18n.format("wdl.gui.backup.customExtension.description"), width, height, 48);
-		} else if (commandInvalidReason == null || backupTypeButton.isMouseOver()) {
+		} else if (commandInvalidReason == null || backupTypeButton.isHovered()) {
 			// Only draw the large description if the command is valid (i.e. there isn't other text)
 			// or the mouse is directly over the backup type button (i.e. the info is useful)
 			Utils.drawGuiInfoBox(description, width - 50, 3 * this.height / 5, width,

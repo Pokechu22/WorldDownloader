@@ -47,7 +47,7 @@ public class ReflectionUtilsTest {
 		player.inventory = mock(InventoryPlayer.class);
 
 		// OK, actually test
-		Container creativeInventory = new GuiContainerCreative(player).inventorySlots;
+		Container creativeInventory = new GuiContainerCreative(player).container;
 
 		assertTrue(ReflectionUtils.isCreativeContainer(creativeInventory.getClass()));
 		assertFalse(ReflectionUtils.isCreativeContainer(ContainerPlayer.class));

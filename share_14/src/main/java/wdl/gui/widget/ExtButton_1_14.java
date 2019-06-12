@@ -26,7 +26,7 @@ abstract class ExtButton extends AbstractButton implements IExtButton {
 	 * @deprecated Do not use; use {@link #setMessage} instead.
 	 */
 	@Deprecated
-	protected static final Void displayString = null;
+	protected static final Void message = null;
 	/**
 	 * @deprecated Do not use; use {@link #setEnabled} instead.
 	 */
@@ -44,12 +44,6 @@ abstract class ExtButton extends AbstractButton implements IExtButton {
 
 	// Renamed
 	public abstract void performAction();
-
-	// Renamed
-	@Deprecated
-	public boolean isMouseOver() {
-		return this.isHovered();
-	}
 
 	@Override
 	public boolean mouseClicked(double arg0, double arg1, int arg2) {

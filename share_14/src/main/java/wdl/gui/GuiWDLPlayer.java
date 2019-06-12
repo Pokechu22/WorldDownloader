@@ -129,26 +129,26 @@ public class GuiWDLPlayer extends WDLScreen {
 			this.drawString(this.font, "Z:", this.width / 2 + 37,
 					this.posTextY, 0xFFFFFF);
 
-			if (Utils.isMouseOverTextBox(mouseX, mouseY, posX)) {
+			if (Utils.isHoveredTextBox(mouseX, mouseY, posX)) {
 				tooltip = I18n.format("wdl.gui.player.positionTextBox.description", "X");
-			} else if (Utils.isMouseOverTextBox(mouseX, mouseY, posY)) {
+			} else if (Utils.isHoveredTextBox(mouseX, mouseY, posY)) {
 				tooltip = I18n.format("wdl.gui.player.positionTextBox.description", "Y");
-			} else if (Utils.isMouseOverTextBox(mouseX, mouseY, posZ)) {
+			} else if (Utils.isHoveredTextBox(mouseX, mouseY, posZ)) {
 				tooltip = I18n.format("wdl.gui.player.positionTextBox.description", "Z");
 			}
 
-			if (pickPosBtn.isMouseOver()) {
+			if (pickPosBtn.isHovered()) {
 				tooltip = I18n.format("wdl.gui.player.setPositionToCurrentPosition.description");
 			}
 		}
 
-		if (healthBtn.isMouseOver()) {
+		if (healthBtn.isHovered()) {
 			tooltip = healthBtn.getTooltip();
 		}
-		if (hungerBtn.isMouseOver()) {
+		if (hungerBtn.isHovered()) {
 			tooltip = hungerBtn.getTooltip();
 		}
-		if (playerPosBtn.isMouseOver()) {
+		if (playerPosBtn.isHovered()) {
 			tooltip = playerPosBtn.getTooltip();
 		}
 

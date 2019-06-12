@@ -141,24 +141,24 @@ public class GuiWDLWorld extends WDLScreen {
 
 		String tooltip = null;
 
-		if (allowCheatsBtn.isMouseOver()) {
+		if (allowCheatsBtn.isHovered()) {
 			tooltip = allowCheatsBtn.getTooltip();
-		} else if (gamemodeBtn.isMouseOver()) {
+		} else if (gamemodeBtn.isHovered()) {
 			tooltip = gamemodeBtn.getTooltip();
-		} else if (timeBtn.isMouseOver()) {
+		} else if (timeBtn.isHovered()) {
 			tooltip = timeBtn.getTooltip();
-		} else if (weatherBtn.isMouseOver()) {
+		} else if (weatherBtn.isHovered()) {
 			tooltip = weatherBtn.getTooltip();
-		} else if (spawnBtn.isMouseOver()) {
+		} else if (spawnBtn.isHovered()) {
 			tooltip = spawnBtn.getTooltip();
-		} else if (pickSpawnBtn.isMouseOver()) {
+		} else if (pickSpawnBtn.isHovered()) {
 			tooltip = I18n.format("wdl.gui.world.setSpawnToCurrentPosition.description");
 		} else if (showSpawnFields) {
-			if (Utils.isMouseOverTextBox(mouseX, mouseY, spawnX)) {
+			if (Utils.isHoveredTextBox(mouseX, mouseY, spawnX)) {
 				tooltip = I18n.format("wdl.gui.world.spawnPos.description", "X");
-			} else if (Utils.isMouseOverTextBox(mouseX, mouseY, spawnY)) {
+			} else if (Utils.isHoveredTextBox(mouseX, mouseY, spawnY)) {
 				tooltip = I18n.format("wdl.gui.world.spawnPos.description", "Y");
-			} else if (Utils.isMouseOverTextBox(mouseX, mouseY, spawnZ)) {
+			} else if (Utils.isHoveredTextBox(mouseX, mouseY, spawnZ)) {
 				tooltip = I18n.format("wdl.gui.world.spawnPos.description", "Z");
 			}
 		}

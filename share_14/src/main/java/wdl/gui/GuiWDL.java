@@ -77,7 +77,7 @@ public class GuiWDL extends WDLScreen {
 			@Override
 			public void drawEntry(int x, int y, int width, int height, int mouseX, int mouseY) {
 				super.drawEntry(x, y, width, height, mouseX, mouseY);
-				if (button.isMouseOver()) {
+				if (button.isHovered()) {
 					displayedTooltip = tooltip;
 				}
 			}

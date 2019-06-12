@@ -106,8 +106,7 @@ public class GuiWDLMultiworld extends WDLScreen {
 		}
 
 		//Red box around "multiworld support" button.
-		drawRect(
-				multiworldEnabledBtn.x - 2,
+		fill(multiworldEnabledBtn.x - 2,
 				multiworldEnabledBtn.y - 2,
 				multiworldEnabledBtn.x
 				+ multiworldEnabledBtn.getWidth() + 2,

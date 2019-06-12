@@ -104,7 +104,7 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 	 */
 	@Override
 	public synchronized void saveChunk(World world, IChunk chunk) throws SessionLockException, IOException {
-		world.checkSessionLock();
+		wdl.saveHandler.checkSessionLock();
 
 		NBTTagCompound levelTag = writeChunkToNBT((Chunk)chunk, world);
 

@@ -61,7 +61,7 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements IBac
 			} finally {
 				backingUp = false;
 
-				minecraft.addScheduledTask(() -> {
+				minecraft.enqueue(() -> {
 					callback.run();
 				});
 			}
@@ -240,13 +240,13 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements IBac
 			super.render(mouseX, mouseY, partialTicks);
 
 			String tooltip = null;
-			if (backupAsZipButton.isMouseOver()) {
+			if (backupAsZipButton.isHovered()) {
 				tooltip = I18n.format("wdl.gui.overwriteChanges.asZip.description");
-			} else if (backupAsFolderButton.isMouseOver()) {
+			} else if (backupAsFolderButton.isHovered()) {
 				tooltip = I18n.format("wdl.gui.overwriteChanges.asFolder.description");
-			} else if (downloadNowButton.isMouseOver()) {
+			} else if (downloadNowButton.isHovered()) {
 				tooltip = I18n.format("wdl.gui.overwriteChanges.startNow.description");
-			} else if (cancelButton.isMouseOver()) {
+			} else if (cancelButton.isHovered()) {
 				tooltip = I18n.format("wdl.gui.overwriteChanges.cancel.description");
 			}
 

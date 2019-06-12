@@ -136,7 +136,7 @@ abstract class ExtGuiScreen extends GuiScreen implements IExtGuiScreen {
 		}
 		super.render(mouseX, mouseY, partialTicks);
 		for (GuiTextField field : this.textFieldList) {
-			field.drawTextField(mouseX, mouseY, partialTicks);
+			field.render(mouseX, mouseY, partialTicks);
 		}
 	}
 }

@@ -100,11 +100,11 @@ public class GuiWDLEntityRangePresets extends WDLScreen {
 
 		String infoText = null;
 
-		if (vanillaButton.isMouseOver()) {
+		if (vanillaButton.isHovered()) {
 			infoText = I18n.format("wdl.gui.rangePresets.vanilla.description");
-		} else if (spigotButton.isMouseOver()) {
+		} else if (spigotButton.isHovered()) {
 			infoText = I18n.format("wdl.gui.rangePresets.spigot.description");
-		} else if (serverButton.isMouseOver()) {
+		} else if (serverButton.isHovered()) {
 			infoText = I18n.format("wdl.gui.rangePresets.server.description") + "\n\n";
 
 			if (serverButton.isEnabled()) {
@@ -112,7 +112,7 @@ public class GuiWDLEntityRangePresets extends WDLScreen {
 			} else {
 				infoText += I18n.format("wdl.gui.rangePresets.server.notInstalled");
 			}
-		} else if (cancelButton.isMouseOver()) {
+		} else if (cancelButton.isHovered()) {
 			infoText = I18n.format("wdl.gui.rangePresets.cancel.description");
 		}
 

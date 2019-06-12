@@ -140,7 +140,7 @@ public class Utils {
 	 * @param textBox The text box.
 	 * @return Whether the mouse is over the given text box.
 	 */
-	public static boolean isMouseOverTextBox(int mouseX, int mouseY,
+	public static boolean isHoveredTextBox(int mouseX, int mouseY,
 			GuiTextField textBox) {
 		if (!textBox.getVisible()) {
 			return false;

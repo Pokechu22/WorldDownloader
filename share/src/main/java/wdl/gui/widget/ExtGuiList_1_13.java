@@ -85,7 +85,7 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended<
 			for (TextFieldWrapper field : this.fieldList) {
 				field.field.x = field.x + x + (entryWidth / 2);
 				field.field.y = field.y + y;
-				field.field.drawTextField(mouseX, mouseY, partialTicks);
+				field.field.render(mouseX, mouseY, partialTicks);
 			}
 		}
 

@@ -31,7 +31,7 @@ abstract class ExtButton extends GuiButton implements IExtButton {
 	 * @deprecated Do not use; use {@link #setEnabled} instead.
 	 */
 	@Deprecated
-	protected static final Void enabled = null;
+	protected static final Void active = null;
 
 	public ExtButton(int x, int y, int widthIn, int heightIn, String buttonText) {
 		super(-1, x, y, widthIn, heightIn, buttonText);

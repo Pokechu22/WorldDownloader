@@ -4,7 +4,7 @@ field_146120_f,width,0,
 field_146121_g,height,0,
 field_146128_h,x,0,
 field_146129_i,y,0,
-field_146126_j,message,0,@deprecated not usable in 1.14
+field_146126_j,message,0,
 field_146127_k,id,0,@deprecated not usable in 1.14
 field_146124_l,active,0,
 field_146125_m,visible,0,
@@ -49,4 +49,3 @@ field_178784_b,facing,0,
 field_72308_g,entity,0,
 field_175729_l,entitiesById,0,
 field_72996_f,loadedEntityList,0,
-func_72923_a,onEntityAdded,0,

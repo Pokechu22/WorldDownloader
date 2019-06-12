@@ -91,7 +91,7 @@ public class GuiWDLUpdates extends WDLScreen {
 				this.entryHeight = getEntryWidth();
 
 				String title;
-				//The 'isSelected' parameter is actually 'isMouseOver'
+				//The 'isSelected' parameter is actually 'isHovered'
 				if (this.isSelected()) {
 					title = I18n.format("wdl.gui.updates.currentVersion",
 							this.title);

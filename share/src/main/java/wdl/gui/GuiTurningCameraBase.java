@@ -183,7 +183,7 @@ public abstract class GuiTurningCameraBase extends WDLScreen {
 			RayTraceResult pos = minecraft.world.rayTraceBlocks(from, to);
 
 			if (pos != null) {
-				double distance = pos.hitVec.distanceTo(playerPos);
+				double distance = pos.hitResult.distanceTo(playerPos);
 				if (distance < currentDistance && distance > 0) {
 					currentDistance = distance;
 				}
