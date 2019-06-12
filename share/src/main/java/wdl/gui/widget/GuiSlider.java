@@ -49,7 +49,7 @@ public class GuiSlider extends ExtButton {
 	 * this button and 2 if it IS hovering over this button.
 	 */
 	@Override
-	protected int getHoverState(boolean mouseOver) {
+	protected int getYImage(boolean mouseOver) {
 		return 0;
 	}
 

@@ -142,7 +142,7 @@ public class WDLEvents {
 			wdl.lastEntity = WDL.minecraft.objectMouseOver.entity;
 		} else {
 			wdl.lastEntity = null;
-			wdl.lastClickedBlock = WDL.minecraft.objectMouseOver.getBlockPos();
+			wdl.lastClickedBlock = WDL.minecraft.objectMouseOver.getPos();
 		}
 	}
 

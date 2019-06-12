@@ -14,7 +14,6 @@
  */
 package wdl.gui;
 
-import java.io.File;
 import java.lang.reflect.Field;
 
 import javax.annotation.Nullable;
@@ -24,7 +23,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.chunk.storage.RegionFile;
-import net.minecraft.world.chunk.storage.RegionFileCache;
 import wdl.WDL;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.WDLScreen;
@@ -169,18 +167,10 @@ public class GuiSavedChunks extends WDLScreen {
 	 */
 	@Nullable
 	private RegionFile loadRegion(int x, int z) {
-		// Impl note: not exactly great, probably all this data should be cached.
-		// Also, I _really_ need to refactor this world folder stuff...
-		File worldFolder = wdl.saveHandler.getWorldDirectory();
-		// 1.12- has func_191065_b or getRegionFileIfExists, but 1.13 doesn't,
-		// so we get this...
-		File regionFolder = new File(worldFolder, "region");
-		File region = new File(regionFolder, "r." + x + "." + z + ".mca");
-		if (region.exists()) {
-			return RegionFileCache.createOrLoadRegionFile(worldFolder, x << 5, z << 5);
-		} else {
+		if (wdl.chunkLoader == null) {
 			return null;
 		}
+		return wdl.chunkLoader.getRegionFileIfExists(x, z);
 	}
 
 	private static final Field CHUNK_TIMESTAMPS_FIELD;

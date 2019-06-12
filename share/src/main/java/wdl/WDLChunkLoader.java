@@ -38,6 +38,7 @@ import net.minecraft.util.ClassInheritanceMultiMap;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.AnvilChunkLoader;
+import net.minecraft.world.chunk.storage.RegionFile;
 import net.minecraft.world.chunk.storage.RegionFileCache;
 import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.storage.SaveHandler;
@@ -410,6 +411,20 @@ public class WDLChunkLoader extends WDLChunkLoaderBase {
 						+ "initial value, an edited value, or a partially "
 						+ "edited value)", ex);
 			}
+		}
+	}
+
+	public RegionFile getRegionFileIfExists(int regionX, int regionZ) {
+		// 1.13.0 and earlier have func_191065_b or getRegionFileIfExists, but 1.13 doesn't,
+		// so we get this...
+		File regionFolder = new File(this.chunkSaveLocation, "region");
+		File region = new File(regionFolder, "r." + regionX + "." + regionZ + ".mca");
+		if (region.exists()) {
+			// This takes chunk coordinates and shifts them back into region ones, so convert
+			// our region coordinates to chunk ones to appease it
+			return RegionFileCache.createOrLoadRegionFile(this.chunkSaveLocation, regionX << 5, regionZ << 5);
+		} else {
+			return null;
 		}
 	}
 }

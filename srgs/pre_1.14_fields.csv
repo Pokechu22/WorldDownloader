@@ -39,6 +39,8 @@ field_148165_u,renderHeader,0,
 field_148160_j,headerHeight,0,
 field_195084_v,scrolling,0,
 field_148168_r,selected,0,
+field_195004_a,list,0,@deprecated Do it yourself, gone in 1.14+
+field_195005_b,index,0,@deprecated Do it yourself, gone in 1.14+
 field_110325_k,BACKGROUND_LOCATION,0,
 field_110323_l,STATS_ICON_LOCATION,0,
 field_110324_m,GUI_ICONS_LOCATION,0,
@@ -49,3 +51,7 @@ field_178784_b,facing,0,
 field_72308_g,entity,0,
 field_175729_l,entitiesById,0,
 field_72996_f,loadedEntityList,0,
+field_73010_i,playerEntities,0,
+field_175563_bv,careerId,0,NOTE: Name must be kept exactly as-is as the name is checked in tests
+field_175562_bw,careerLevel,0,NOTE: Name must be kept exactly as-is as the name is checked in tests
+field_175561_bA,DEFAULT_TRADE_LIST_MAP,0,NOTE: Name must be kept exactly as-is as the name is used in tests

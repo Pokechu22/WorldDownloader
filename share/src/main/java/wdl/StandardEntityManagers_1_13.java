@@ -283,7 +283,7 @@ class StandardEntityManagers {
 
 		@Override
 		public String getDisplayIdentifier(String identifier) {
-			String i18nKey = EntityType.getById(identifier).getTranslationKey();
+			String i18nKey = EntityType.getTypeFromString(identifier).getTranslationKey();
 			if (I18n.hasKey(i18nKey)) {
 				return I18n.format(i18nKey);
 			} else {

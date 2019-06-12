@@ -72,7 +72,7 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended<
 		}
 
 		@Override
-		public final void drawEntry(int entryWidth, int entryHeight, int mouseX, int mouseY, boolean arg4, float partialTicks) {
+		public final void render(int entryWidth, int entryHeight, int mouseX, int mouseY, boolean arg4, float partialTicks) {
 			int x = getX();
 			int y = getY();
 

@@ -276,7 +276,7 @@ public class GuiWDLBackup extends WDLScreen {
 			int y = customBackupExtensionFld.y + 6;
 			this.drawString(font, text, x, y, 0xFFFFFF);
 			if (customBackupExtensionFld.getText().equalsIgnoreCase("rar")) {
-				x = customBackupExtensionFld.x + customBackupExtensionFld.getWidth() + 14;
+				x = customBackupExtensionFld.x + customBackupExtensionFld.getAdjustedWidth() + 14;
 				this.drawString(font, "ಠ_ಠ", x, y, 0xFF0000); // See some of my experiences with dealing with rar files.  Use a non-proprietary format, please, it's for your own good!
 			}
 		}

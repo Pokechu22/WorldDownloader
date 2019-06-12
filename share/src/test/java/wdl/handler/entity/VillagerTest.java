@@ -47,7 +47,7 @@ public class VillagerTest extends AbstractEntityHandlerTest<EntityVillager, Cont
 		EntityVillager villager = new EntityVillager(serverWorld);
 		MerchantRecipeList recipes = new MerchantRecipeList();
 		recipes.add(new MerchantRecipe(new ItemStack(Items.DIAMOND, 64), Items.EMERALD));
-		villager.setRecipes(recipes);
+		villager.setOffers(recipes);
 		addEntity(villager);
 
 		runHandler(villager.getEntityId(), createClientContainer(villager));
@@ -63,7 +63,7 @@ public class VillagerTest extends AbstractEntityHandlerTest<EntityVillager, Cont
 		villager.setCustomName(customName("Testificate"));
 		MerchantRecipeList recipes = new MerchantRecipeList();
 		recipes.add(new MerchantRecipe(new ItemStack(Items.DIAMOND, 64), Items.EMERALD));
-		villager.setRecipes(recipes);
+		villager.setOffers(recipes);
 		addEntity(villager);
 
 		HandlerException ex = null;

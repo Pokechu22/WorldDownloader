@@ -153,7 +153,7 @@ public class Utils {
 		// one.
 		final int height = 20;
 
-		return scaledX >= 0 && scaledX < textBox.getWidth() && scaledY >= 0
+		return scaledX >= 0 && scaledX < textBox.getAdjustedWidth() && scaledY >= 0
 				&& scaledY < height;
 	}
 }

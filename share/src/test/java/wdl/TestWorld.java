@@ -68,7 +68,7 @@ public final class TestWorld {
 			e.setEntityId(eid);
 			e.setUniqueId(new UUID(0, eid));
 			this.spawnEntity(e);
-			this.entitiesById.addKey(eid, e);
+			this.entitiesById.put(eid, e);
 		}
 
 		// Provided for 1.13 support.  Does nothing.
@@ -85,7 +85,7 @@ public final class TestWorld {
 			e.setEntityId(eid);
 			e.setUniqueId(new UUID(0, eid));
 			this.spawnEntity(e);
-			this.entitiesById.addKey(eid, e);
+			this.entitiesById.put(eid, e);
 		}
 
 		@Override

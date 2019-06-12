@@ -67,7 +67,7 @@ abstract class ExtGuiScreen extends GuiScreen implements IExtGuiScreen {
 	}
 
 	@Override
-	public final boolean allowCloseWithEscape() {
+	public final boolean shouldCloseOnEsc() {
 		return this.onCloseAttempt();
 	}
 

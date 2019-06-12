@@ -40,7 +40,7 @@ public class VillagerHandler extends EntityHandler<EntityVillager, ContainerMerc
 	public ITextComponent copyData(ContainerMerchant container, EntityVillager villager, boolean riding) throws HandlerException {
 		IMerchant merchant = ReflectionUtils.findAndGetPrivateField(
 				container, IMerchant.class);
-		MerchantRecipeList recipes = merchant.getRecipes(merchant.getCustomer()); // note: parameter is ignored by all implementations
+		MerchantRecipeList recipes = merchant.getOffers(merchant.getCustomer()); // note: parameter is ignored by all implementations
 		ReflectionUtils.findAndSetPrivateField(villager, MerchantRecipeList.class, recipes);
 
 		if (CAREER_ID_FIELD != null) {

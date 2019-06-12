@@ -137,7 +137,7 @@ public class GuiWDLGameRules extends WDLScreen {
 			public void drawEntry(int x, int y, int width, int height, int mouseX, int mouseY) {
 				super.drawEntry(x, y, width, height, mouseX, mouseY);
 				if (!this.isSelected()) {
-					field.setFocused(false);
+					field.setFocused2(false);
 				}
 				if (isRuleNonDefault(this.ruleName)) {
 					field.setTextColor(SET_TEXT_FIELD);
