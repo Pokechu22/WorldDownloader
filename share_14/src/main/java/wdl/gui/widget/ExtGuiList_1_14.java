@@ -95,7 +95,7 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends ExtendedList<T> 
 			for (ButtonWrapper button : this.buttonList) {
 				if (button.button.mouseClicked(arg0, arg1, arg2)) {
 					this.activeButton = button;
-					// no need to call playPressSound; mouseClicked does it automatically
+					// no need to call playDownSound; mouseClicked does it automatically
 					result = true;
 				}
 			}

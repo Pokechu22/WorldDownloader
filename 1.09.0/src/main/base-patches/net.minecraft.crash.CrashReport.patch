@@ -7,9 +7,9 @@
 -public class CrashReport {
 +public class CrashReport/* WDL >>> */ implements wdl.ducks.IBaseChangesApplied/* <<< WDL */ {
  	private static final Logger LOGGER = LogManager.getLogger();
- 	/** Description of the crash report. */
  	private final String description;
-@@ -102,6 +102,22 @@
+ 	private final Throwable cause;
+@@ -96,6 +96,22 @@
  				return IntCache.func_85144_b();
  			}
  		});

@@ -31,20 +31,20 @@ public class NoteBlockTest extends AbstractBlockActionHandlerTest<BlockNote, Til
 	@Test
 	public void testTunePlay() throws HandlerException {
 		makeMockWorld();
-		placeBlockAt(BlockPos.ORIGIN, Blocks.NOTE_BLOCK);
+		placeBlockAt(BlockPos.ZERO, Blocks.NOTE_BLOCK);
 		serverWorld.addTileEntity(new TileEntityNote());
-		serverWorld.interactBlock(BlockPos.ORIGIN, serverPlayer);
-		runHandler(BlockPos.ORIGIN);
+		serverWorld.interactBlock(BlockPos.ZERO, serverPlayer);
+		runHandler(BlockPos.ZERO);
 		checkAllTEs();
 	}
 
 	@Test
 	public void testHitPlay() throws HandlerException {
 		makeMockWorld();
-		placeBlockAt(BlockPos.ORIGIN, Blocks.NOTE_BLOCK);
+		placeBlockAt(BlockPos.ZERO, Blocks.NOTE_BLOCK);
 		serverWorld.addTileEntity(new TileEntityNote());
-		serverWorld.clickBlock(BlockPos.ORIGIN, serverPlayer);
-		runHandler(BlockPos.ORIGIN);
+		serverWorld.clickBlock(BlockPos.ZERO, serverPlayer);
+		runHandler(BlockPos.ZERO);
 		checkAllTEs();
 	}
 
@@ -52,12 +52,12 @@ public class NoteBlockTest extends AbstractBlockActionHandlerTest<BlockNote, Til
 	public void testAllNotes() throws HandlerException {
 		for (byte i = 0; i < 25; i++) {
 			makeMockWorld();
-			placeBlockAt(BlockPos.ORIGIN, Blocks.NOTE_BLOCK);
+			placeBlockAt(BlockPos.ZERO, Blocks.NOTE_BLOCK);
 			TileEntityNote te = new TileEntityNote();
 			te.note = i;
 			serverWorld.addTileEntity(te);
-			serverWorld.clickBlock(BlockPos.ORIGIN, serverPlayer);
-			runHandler(BlockPos.ORIGIN);
+			serverWorld.clickBlock(BlockPos.ZERO, serverPlayer);
+			runHandler(BlockPos.ZERO);
 			checkAllTEs();
 		}
 	}

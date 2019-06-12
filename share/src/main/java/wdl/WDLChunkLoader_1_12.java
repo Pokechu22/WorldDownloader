@@ -121,7 +121,7 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 	 */
 	@Override
 	public void saveChunk(World world, Chunk chunk) throws SessionLockException, IOException {
-		world.checkSessionLock();
+		wdl.saveHandler.checkSessionLock();
 
 		NBTTagCompound levelTag = writeChunkToNBT(chunk, world);
 
@@ -152,8 +152,8 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 	private NBTTagCompound writeChunkToNBT(Chunk chunk, World world) {
 		NBTTagCompound compound = new NBTTagCompound();
 
-		compound.putInt("xPos", chunk.x);
-		compound.putInt("zPos", chunk.z);
+		compound.putInt("xPos", chunk.getPos().x);
+		compound.putInt("zPos", chunk.getPos().z);
 		compound.putLong("LastUpdate", world.getGameTime());
 		compound.putIntArray("HeightMap", chunk.getHeightMap());
 		compound.putBoolean("TerrainPopulated", true);  // We always want this
@@ -191,7 +191,7 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 					} else {
 						// Shouldn't happen, but if it does, handle it smoothly.
 						LOGGER.error("[WDL] Skylight array for chunk at " +
-								chunk.x + ", " + chunk.z +
+								chunk.getPos().x + ", " + chunk.getPos().z +
 								" is null despite VersionedProperties " +
 								"saying it shouldn't be!");
 						sectionNBT.putByteArray("SkyLight", new byte[lightArrayLen]);

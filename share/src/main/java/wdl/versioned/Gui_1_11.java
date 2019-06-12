@@ -58,7 +58,7 @@ final class GuiFunctions {
 		Tessellator t = Tessellator.getInstance();
 		VertexBuffer b = t.getBuffer();
 
-		Minecraft.getInstance().getTextureManager().bindTexture(Gui.OPTIONS_BACKGROUND);
+		Minecraft.getInstance().getTextureManager().bindTexture(Gui.BACKGROUND_LOCATION);
 		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 		float textureSize = 32.0F;
@@ -83,7 +83,7 @@ final class GuiFunctions {
 		GlStateManager.disableDepthTest();
 		byte padding = 4;
 
-		Minecraft.getInstance().getTextureManager().bindTexture(Gui.OPTIONS_BACKGROUND);
+		Minecraft.getInstance().getTextureManager().bindTexture(Gui.BACKGROUND_LOCATION);
 		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 		float textureSize = 32.0F;
@@ -129,7 +129,7 @@ final class GuiFunctions {
 				GL_ONE_MINUS_SRC_ALPHA, 0, 1);
 		GlStateManager.disableAlphaTest();
 		GlStateManager.shadeModel(GL_SMOOTH);
-		GlStateManager.disableTexture2D();
+		GlStateManager.disableTexture();
 		b.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
 		b.pos(left, upperBoxEnd + padding, 0.0D).tex(0.0D, 1.0D)
 		.color(0, 0, 0, 0).endVertex();
@@ -151,7 +151,7 @@ final class GuiFunctions {
 		.color(0, 0, 0, 0).endVertex();
 		t.draw();
 
-		GlStateManager.enableTexture2D();
+		GlStateManager.enableTexture();
 		GlStateManager.shadeModel(GL_FLAT);
 		GlStateManager.enableAlphaTest();
 		GlStateManager.disableBlend();

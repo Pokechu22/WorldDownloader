@@ -5,9 +5,9 @@ func_74742_a,add,0,Adds the provided tag to the end of the list. There is no che
 func_150260_c,getString,0,Changed for unchangeable 1.13 name
 func_78276_b,drawString,0,
 func_146284_a,actionPerformed,0,
-func_146194_f,drawTextBox,0,
-func_191745_a,drawButton,0,
-func_192634_a,drawEntry,0,
+func_146194_f,render,0,
+func_191745_a,render,0,
+func_192634_a,render,0,
 func_192633_a,updatePosition,0,
 func_146274_d,handleMouseInput,0,
 func_178039_p,handleMouseInput,0,

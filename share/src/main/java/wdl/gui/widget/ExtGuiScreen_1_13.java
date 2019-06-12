@@ -39,7 +39,7 @@ abstract class ExtGuiScreen extends GuiScreen implements IExtGuiScreen {
 	private final List<GuiList<?>> listList = new ArrayList<>();
 	private final List<GuiTextField> textFieldList = new ArrayList<>();
 
-	// Called before initGui
+	// Called before init()
 	@Override
 	public final void init(Minecraft mc, int width, int height) {
 		this.listList.clear();
