@@ -7,9 +7,9 @@
 -public class CrashReport {
 +public class CrashReport/* WDL >>> */ implements wdl.ducks.IBaseChangesApplied/* <<< WDL */ {
     private static final Logger LOGGER = LogManager.getLogger();
-    /** Description of the crash report. */
     private final String description;
-@@ -73,6 +73,21 @@
+    private final Throwable cause;
+@@ -67,6 +67,21 @@
           List<String> list = Util.getJvmFlags().collect(Collectors.toList());
           return String.format("%d total; %s", list.size(), list.stream().collect(Collectors.joining(" ")));
        });

@@ -47,7 +47,7 @@ sourceSets {
 
 minecraft {
     //suppressMappingVersionWarnings = true
-    mappings channel: 'snapshot', version: '20190518-1.13.2'
+    mappings channel: 'snapshot', version: '20190611-1.14.2'
     runs {
         client {
             workingDirectory project.file('run')

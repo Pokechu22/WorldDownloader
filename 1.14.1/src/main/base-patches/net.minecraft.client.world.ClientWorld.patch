@@ -7,12 +7,12 @@
 -public class ClientWorld extends World {
 +public class ClientWorld extends World/* WDL >>> */ implements wdl.ducks.IBaseChangesApplied/* <<< WDL */ {
     private final List<Entity> field_217428_a = Lists.newArrayList();
-    private final Int2ObjectMap<Entity> field_217429_b = new Int2ObjectOpenHashMap<>();
-    /** The packets that need to be sent to the server. */
-@@ -96,6 +96,10 @@
-       this.chunkProvider.func_217207_a(hasTimeLeft);
+    private final Int2ObjectMap<Entity> entitiesById = new Int2ObjectOpenHashMap<>();
+    private final ClientPlayNetHandler connection;
+@@ -95,6 +95,10 @@
+       this.chunkProvider.tick(hasTimeLeft);
        this.func_217426_j();
-       this.func_217381_Z().endSection();
+       this.getProfiler().endSection();
 +
 +      /* WDL >>> */
 +      wdl.WDLHooks.onWorldClientTick(this);
@@ -20,14 +20,14 @@
     }
  
     public Iterable<Entity> func_217416_b() {
-@@ -271,6 +275,10 @@
+@@ -270,6 +274,10 @@
     }
  
-    public void func_217413_d(int p_217413_1_) {
+    public void removeEntityFromWorld(int eid) {
 +      /* WDL >>> */
-+      wdl.WDLHooks.onWorldClientRemoveEntityFromWorld(this, p_217413_1_);
++      wdl.WDLHooks.onWorldClientRemoveEntityFromWorld(this, eid);
 +      /* <<< WDL */
 +
-       Entity entity = this.field_217429_b.remove(p_217413_1_);
+       Entity entity = this.entitiesById.remove(eid);
        if (entity != null) {
           entity.remove();
