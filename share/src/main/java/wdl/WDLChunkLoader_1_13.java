@@ -135,8 +135,8 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 	private NBTTagCompound writeChunkToNBT(Chunk chunk, World world) {
 		NBTTagCompound compound = new NBTTagCompound();
 
-		compound.putInt("xPos", chunk.x);
-		compound.putInt("zPos", chunk.z);
+		compound.putInt("xPos", chunk.getPos().x);
+		compound.putInt("zPos", chunk.getPos().z);
 		compound.putLong("LastUpdate", world.getGameTime());
 		compound.putLong("InhabitedTime", chunk.getInhabitedTime());
 		compound.putString("Status", ChunkStatus.POSTPROCESSED.getName()); // Make sure that the chunk is considered fully generated
@@ -168,7 +168,7 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 					} else {
 						// Shouldn't happen, but if it does, handle it smoothly.
 						LOGGER.error("[WDL] Skylight array for chunk at " +
-								chunk.x + ", " + chunk.z +
+								chunk.getPos().x + ", " + chunk.getPos().z +
 								" is null despite VersionedProperties " +
 								"saying it shouldn't be!");
 						sectionNBT.putByteArray("SkyLight", new byte[lightArrayLen]);
