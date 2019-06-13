@@ -29,7 +29,7 @@ import com.uyjulian.LiteModWDL.AddButtonCallback;
 @Mixin(GuiIngameMenu.class)
 public abstract class MixinGuiIngameMenu extends GuiScreen implements IBaseChangesApplied {
 
-	@Inject(method="initGui", at=@At("RETURN"))
+	@Inject(method="init", at=@At("RETURN"))
 	private void onInitGui(CallbackInfo ci) {
 		wdl.WDLHooks.injectWDLButtons((GuiIngameMenu)(Object)this, buttons, new AddButtonCallback(this.buttons));
 	}

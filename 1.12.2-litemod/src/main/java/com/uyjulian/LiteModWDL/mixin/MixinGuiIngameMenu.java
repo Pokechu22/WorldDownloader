@@ -27,7 +27,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(GuiIngameMenu.class)
 public abstract class MixinGuiIngameMenu extends GuiScreen implements IBaseChangesApplied {
 
-	@Inject(method="initGui", at=@At("RETURN"))
+	@Inject(method="init", at=@At("RETURN"))
 	private void onInitGui(CallbackInfo ci) {
 		wdl.WDLHooks.injectWDLButtons((GuiIngameMenu)(Object)this, buttons, this::addButton);
 	}
