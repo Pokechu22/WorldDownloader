@@ -135,3 +135,10 @@ func_75734_a,waitForFinish,0,
 func_72694_a,isPlayerWatchingChunk,0,
 func_76318_c,endStartSection,0,
 func_180031_a,checkThreadAndEnqueue,0,
+func_78471_a,renderWorld,0,Used by liteloader
+func_175068_a,renderWorldPass,0,Used by liteloader
+func_180437_a,renderCloudsCheck,0,Used by liteloader
+func_179086_m,clear,0,Used by liteloader
+func_72377_c,playerLoggedIn,0,Used by liteloader
+func_180784_a,onBlockClicked,0,Used by liteloader
+func_187251_a,processRightClickBlock,0,Used by liteloader
