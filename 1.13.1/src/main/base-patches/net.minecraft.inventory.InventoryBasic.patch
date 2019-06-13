@@ -1,6 +1,6 @@
 --- net/minecraft/inventory/InventoryBasic.java
 +++ net/minecraft/inventory/InventoryBasic.java
-@@ -9,7 +9,7 @@
+@@ -9,18 +9,33 @@
  import net.minecraft.util.NonNullList;
  import net.minecraft.util.text.ITextComponent;
  
@@ -9,7 +9,6 @@
  	private final ITextComponent inventoryTitle;
  	private final int slotsCount;
  	private final NonNullList<ItemStack> inventoryContents;
-@@ -17,11 +17,26 @@
  	private List<IInventoryChangedListener> listeners;
  	/** The custom name of this inventory, or null if it doesn't have one and {@link inventoryTitle} should be used instead */
  	private ITextComponent customName;
@@ -24,13 +23,13 @@
 +	}
 +	/* <<< WDL */
 +
- 	public InventoryBasic(ITextComponent title, int slotCount) {
- 		this.inventoryTitle = title;
- 		this.slotsCount = slotCount;
- 		this.inventoryContents = NonNullList.<ItemStack>withSize(slotCount, ItemStack.EMPTY);
+ 	public InventoryBasic(ITextComponent p_i45902_1_, int p_i45902_2_) {
+ 		this.inventoryTitle = p_i45902_1_;
+ 		this.slotsCount = p_i45902_2_;
+ 		this.inventoryContents = NonNullList.<ItemStack>withSize(p_i45902_2_, ItemStack.EMPTY);
 +		/* WDL >>> */
-+		if (title instanceof net.minecraft.util.text.TextComponentString) {
-+			this.networkCustomName = title.getString();
++		if (p_i45902_1_ instanceof net.minecraft.util.text.TextComponentString) {
++			this.networkCustomName = p_i45902_1_.getString();
 +		}
 +		/* <<< WDL */
  	}

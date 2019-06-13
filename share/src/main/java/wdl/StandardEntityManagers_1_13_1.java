@@ -284,7 +284,7 @@ class StandardEntityManagers {
 
 		@Override
 		public String getDisplayIdentifier(String identifier) {
-			String i18nKey = EntityType.getById(identifier).getTranslationKey();
+			String i18nKey = EntityType.getTypeFromString(identifier).getTranslationKey();
 			if (I18n.hasKey(i18nKey)) {
 				return I18n.format(i18nKey);
 			} else {
@@ -326,13 +326,12 @@ class StandardEntityManagers {
 	static Class<? extends Entity> entityClassFor(IEntityManager manager, String identifier) {
 		assert manager.getProvidedEntities().contains(identifier);
 
-		ResourceLocation loc = new ResourceLocation(identifier);
-
-		if (!IRegistry.ENTITY_TYPE.containsKey(loc)) {
+		EntityType<?> type = EntityType.getTypeFromString(identifier);
+		if (type == null) {
 			return null;
 		}
 
-		Class<? extends Entity> c = IRegistry.ENTITY_TYPE.get(loc).getEntityClass();
+		Class<? extends Entity> c = type.getEntityClass();
 		assert c != null;
 
 		return c;

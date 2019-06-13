@@ -60,10 +60,10 @@ minecraft {
 extraSrgs {
     addSrg file('../srgs/AbstractHorseToEquineEntity.srg')
     addSrg file('../srgs/PositionedSound.srg')
-    addMethods file('../srgs/1.13.0_methods.csv')
-    addFields file('../srgs/1.13.0_fields.csv')
     addMethods file('../srgs/pre_1.14_methods.csv')
+    addMethods file('../srgs/1.13.0_methods.csv')
     addFields file('../srgs/pre_1.14_fields.csv')
+    addFields file('../srgs/1.13.0_fields.csv')
 }
 
 sourceSets {

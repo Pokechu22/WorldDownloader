@@ -73,7 +73,7 @@ abstract class ExtWorldClient extends WorldClient {
 	@Override
 	public Entity getEntityByID(int id) {
 		// Ignore the WorldClient implementation which depends on mc.player
-		return this.entitiesById.lookup(id);
+		return this.entitiesById.get(id);
 	}
 
 	@Override
