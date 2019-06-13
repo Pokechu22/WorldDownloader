@@ -40,12 +40,12 @@ abstract class ExtGuiScreen extends GuiScreen implements IExtGuiScreen {
 	private final List<GuiList<?>> listList = new ArrayList<>();
 	private final List<GuiTextField> textFieldList = new ArrayList<>();
 
-	// Called before initGui
+	// Called before init()
 	@Override
-	public final void setWorldAndResolution(Minecraft mc, int width, int height) {
+	public final void init(Minecraft mc, int width, int height) {
 		this.listList.clear();
 		this.textFieldList.clear();
-		super.setWorldAndResolution(mc, width, height);
+		super.init(mc, width, height);
 	}
 
 	@Override
@@ -154,11 +154,11 @@ abstract class ExtGuiScreen extends GuiScreen implements IExtGuiScreen {
 	@OverridingMethodsMustInvokeSuper
 	public void render(int mouseX, int mouseY, float partialTicks) {
 		for (GuiList<?> list : this.listList) {
-			list.drawScreen(mouseX, mouseY, partialTicks);
+			list.render(mouseX, mouseY, partialTicks);
 		}
 		super.render(mouseX, mouseY, partialTicks);
 		for (GuiTextField field : this.textFieldList) {
-			field.drawTextBox();
+			field.render();
 		}
 	}
 }

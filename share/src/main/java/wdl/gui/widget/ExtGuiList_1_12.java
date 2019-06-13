@@ -75,18 +75,18 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended 
 		}
 
 		@Override
-		public final void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY,
+		public final void render(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY,
 				boolean isSelected, float partialTicks) {
 			this.drawEntry(x, y, listWidth, slotHeight, mouseX, mouseY);
 			for (ButtonWrapper button : this.buttonList) {
 				button.button.x = button.x + x + (listWidth / 2);
 				button.button.y = button.y + y;
-				button.button.drawButton(Minecraft.getInstance(), mouseX, mouseY, partialTicks);
+				button.button.render(Minecraft.getInstance(), mouseX, mouseY, partialTicks);
 			}
 			for (TextFieldWrapper field : this.fieldList) {
 				field.field.x = field.x + x + (listWidth / 2);
 				field.field.y = field.y + y;
-				field.field.drawTextBox();
+				field.field.render();
 			}
 		}
 
@@ -97,7 +97,7 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended 
 			for (ButtonWrapper button : this.buttonList) {
 				if (button.button.mousePressed(Minecraft.getInstance(), mouseX, mouseY)) {
 					this.activeButton = button;
-					button.button.playPressSound(Minecraft.getInstance().getSoundHandler());
+					button.button.playDownSound(Minecraft.getInstance().getSoundHandler());
 					result = true;
 				}
 			}
@@ -164,17 +164,17 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended 
 	}
 
 	@Override
-	protected final boolean isSelected(int slotIndex) {
+	protected final boolean isSelectedItem(int slotIndex) {
 		return entries.get(slotIndex).isSelected();
 	}
 
 	@Override
-	public final IGuiListEntry getListEntry(int index) {
+	public final IGuiListEntry getEntry(int index) {
 		return entries.get(index);
 	}
 
 	@Override
-	protected final int getSize() {
+	protected final int getItemCount() {
 		return entries.size();
 	}
 
@@ -197,12 +197,14 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended 
 	}
 
 	@Override
-	public final int getListWidth() {
+	public int getRowWidth() {
 		return this.getEntryWidth();
 	}
 
 	@Override
-	public abstract int getScrollBarX();
+	protected int getScrollbarPosition() {
+		return this.getScrollBarX();
+	}
 
 	@Override
 	public final int getWidth() {
@@ -212,7 +214,7 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended 
 	// Hacks for y offsetting
 	@Override
 	public final boolean mouseClicked(int mouseX, int mouseY, int mouseEvent) {
-		if (mouseY - y >= top && mouseY - y <= bottom) {
+		if (mouseY - y >= y0 && mouseY - y <= y1) {
 			return super.mouseClicked(mouseX, mouseY - y, mouseEvent);
 		} else {
 			return false;
@@ -231,24 +233,24 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends GuiListExtended 
 
 	@Override
 	@OverridingMethodsMustInvokeSuper
-	public void drawScreen(int mouseXIn, int mouseYIn, float partialTicks) {
+	public void render(int mouseXIn, int mouseYIn, float partialTicks) {
 		GlStateManager.translatef(0, y, 0);
-		super.drawScreen(mouseXIn, mouseYIn - y, partialTicks);
+		super.render(mouseXIn, mouseYIn - y, partialTicks);
 		GlStateManager.translatef(0, -y, 0);
 	}
 
 	// Make the dirt background use visual positions that match the screen
 	// so that dragging looks less weird
 	@Override
-	protected final void overlayBackground(int y1, int y2,
+	protected final void renderHoleBackground(int y1, int y2,
 			int alpha1, int alpha2) {
 		if (y1 == 0) {
-			super.overlayBackground(y1, y2, alpha1, alpha2);
+			super.renderHoleBackground(y1, y2, alpha1, alpha2);
 			return;
 		} else {
 			GlStateManager.translatef(0, -y, 0);
 
-			super.overlayBackground(y1 + y, y2 + y, alpha1, alpha2);
+			super.renderHoleBackground(y1 + y, y2 + y, alpha1, alpha2);
 
 			GlStateManager.translatef(0, y, 0);
 		}

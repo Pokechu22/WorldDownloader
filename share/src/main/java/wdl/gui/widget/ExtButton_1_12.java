@@ -26,12 +26,12 @@ abstract class ExtButton extends GuiButton implements IExtButton {
 	 * @deprecated Do not use; use {@link #setMessage} instead.
 	 */
 	@Deprecated
-	protected static final Void displayString = null;
+	protected static final Void message = null;
 	/**
 	 * @deprecated Do not use; use {@link #setEnabled} instead.
 	 */
 	@Deprecated
-	protected static final Void enabled = null;
+	protected static final Void active = null;
 
 	public ExtButton(int x, int y, int widthIn, int heightIn, String buttonText) {
 		super(-1, x, y, widthIn, heightIn, buttonText);
@@ -57,13 +57,13 @@ abstract class ExtButton extends GuiButton implements IExtButton {
 	}
 
 	@Override
-	public final void drawButton(Minecraft mc, int mouseX, int mouseY,
+	public final void render(Minecraft mc, int mouseX, int mouseY,
 			float partialTicks) {
 		if (this.dragging) {
 			this.mouseDragged(mouseX, mouseY);
 		}
 		this.beforeDraw();
-		super.drawButton(mc, mouseX, mouseY, partialTicks);
+		super.render(mc, mouseX, mouseY, partialTicks);
 		this.afterDraw();
 	}
 
@@ -75,16 +75,16 @@ abstract class ExtButton extends GuiButton implements IExtButton {
 
 	@Override
 	public void setMessage(String message) {
-		super.displayString = message;
+		super.message = message;
 	}
 
 	@Override
 	public void setEnabled(boolean enabled) {
-		super.enabled = enabled;
+		super.active = enabled;
 	}
 
 	@Override
 	public boolean isEnabled() {
-		return super.enabled;
+		return super.active;
 	}
 }
