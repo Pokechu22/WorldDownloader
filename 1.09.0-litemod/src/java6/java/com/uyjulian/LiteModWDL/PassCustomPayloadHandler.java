@@ -68,7 +68,7 @@ public class PassCustomPayloadHandler extends SimpleChannelInboundHandler<Packet
 				final PacketBuffer copiedBuffer = new PacketBuffer(packet.getBufferData().copy());
 				final SPacketCustomPayload copiedPacket = new SPacketCustomPayload(packet.getChannelName(), copiedBuffer);
 
-				mc.addScheduledTask(new Runnable() {
+				mc.enqueue(new Runnable() {
 					@Override
 					public void run() {
 						try {
