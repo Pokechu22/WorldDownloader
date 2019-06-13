@@ -6,12 +6,12 @@
  
 -public class WorldClient extends World {
 +public class WorldClient extends World/* WDL >>> */ implements wdl.ducks.IBaseChangesApplied/* <<< WDL */ {
- 	/** The packets that need to be sent to the server. */
  	private final NetHandlerPlayClient connection;
- 	/** The ChunkProviderClient instance */
-@@ -102,6 +102,10 @@
+ 	private ChunkProviderClient field_73033_b;
+ 	private final Set<Entity> field_73032_d = Sets.<Entity>newHashSet();
+@@ -95,6 +95,10 @@
  		this.profiler.endStartSection("blocks");
- 		this.tickBlocks();
+ 		this.func_147456_g();
  		this.profiler.endSection();
 +
 +		/* WDL >>> */
@@ -20,14 +20,14 @@
  	}
  
  	public void func_73031_a(int p_73031_1_, int p_73031_2_, int p_73031_3_, int p_73031_4_, int p_73031_5_, int p_73031_6_) {
-@@ -252,6 +256,10 @@
+@@ -233,6 +237,10 @@
  	}
  
- 	public Entity removeEntityFromWorld(int entityID) {
+ 	public Entity removeEntityFromWorld(int p_73028_1_) {
 +		/* WDL >>> */
-+		wdl.WDLHooks.onWorldClientRemoveEntityFromWorld(this, entityID);
++		wdl.WDLHooks.onWorldClientRemoveEntityFromWorld(this, p_73028_1_);
 +		/* <<< WDL */
 +
- 		Entity entity = this.entitiesById.removeObject(entityID);
+ 		Entity entity = this.entitiesById.remove(p_73028_1_);
  
  		if (entity != null) {
