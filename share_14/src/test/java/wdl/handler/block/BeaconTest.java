@@ -65,7 +65,7 @@ public class BeaconTest extends AbstractBlockHandlerTest<BeaconTileEntity, Beaco
 		placeBlockAt(center, Blocks.BEACON);
 		BeaconTileEntity te = makeBlockEntity(center);
 		IIntArray fields = ReflectionUtils.findAndGetPrivateField(te, IIntArray.class);
-		fields.set(1, Effect.getIdFromPotion(Effects.JUMP_BOOST));
+		fields.set(1, Effect.getId(Effects.JUMP_BOOST));
 
 		runHandler(center, makeClientContainer(center));
 		checkAllTEs();
@@ -81,8 +81,8 @@ public class BeaconTest extends AbstractBlockHandlerTest<BeaconTileEntity, Beaco
 		placeBlockAt(center, Blocks.BEACON);
 		BeaconTileEntity te = makeBlockEntity(center);
 		IIntArray fields = ReflectionUtils.findAndGetPrivateField(te, IIntArray.class);
-		fields.set(1, Effect.getIdFromPotion(Effects.JUMP_BOOST));
-		fields.set(2, Effect.getIdFromPotion(Effects.REGENERATION));
+		fields.set(1, Effect.getId(Effects.JUMP_BOOST));
+		fields.set(2, Effect.getId(Effects.REGENERATION));
 
 		runHandler(center, makeClientContainer(center));
 		checkAllTEs();

@@ -62,7 +62,7 @@ public class BeaconTest extends AbstractBlockHandlerTest<TileEntityBeacon, Conta
 		makeMockWorld();
 		placeBlockAt(center, Blocks.BEACON);
 		TileEntityBeacon te = makeBlockEntity(center);
-		te.setField(1, Potion.getIdFromPotion(MobEffects.JUMP_BOOST));
+		te.setField(1, Potion.getId(MobEffects.JUMP_BOOST));
 
 		runHandler(center, makeClientContainer(center));
 		checkAllTEs();
@@ -77,8 +77,8 @@ public class BeaconTest extends AbstractBlockHandlerTest<TileEntityBeacon, Conta
 		makeMockWorld();
 		placeBlockAt(center, Blocks.BEACON);
 		TileEntityBeacon te = makeBlockEntity(center);
-		te.setField(1, Potion.getIdFromPotion(MobEffects.JUMP_BOOST));
-		te.setField(2, Potion.getIdFromPotion(MobEffects.REGENERATION));
+		te.setField(1, Potion.getId(MobEffects.JUMP_BOOST));
+		te.setField(2, Potion.getId(MobEffects.REGENERATION));
 
 		runHandler(center, makeClientContainer(center));
 		checkAllTEs();
