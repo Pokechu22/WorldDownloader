@@ -41,7 +41,7 @@ dependencies {
 minecraft {
     suppressMappingVersionWarnings = true
     version = "1.10"
-    mappings = "snapshot_20190518"
+    mappings = "snapshot_20190611"
     runDir = "run"
 
     // We don't currently want a source jar (doesn't work well for base edits, and the version info doesn't work yet)
@@ -61,10 +61,12 @@ extraSrgs {
     addSrg file('../srgs/AnimalChestToContainerHorseChest.srg')
     addSrg file('../srgs/Vec4bToMapDecoration.srg')
     addSrg file('../srgs/1.13.srg')
+    addMethods file('../srgs/pre_1.14_methods.csv')
     addMethods file('../srgs/1.12_methods.csv')
     addMethods file('../srgs/liteloader_1.10_methods.csv')
     addMethods file('../srgs/old_inventory_methods.csv')
     addMethods file('../srgs/1.11_gui_methods.csv')
+    addFields file('../srgs/pre_1.14_fields.csv')
     addFields file('../srgs/1.12_fields.csv')
     addFields file('../srgs/old_inventory_fields.csv')
     addPatch('net.minecraft.entity.passive.EquineEntity.java', file('../srgs/EE_1.10.x.patch'))
