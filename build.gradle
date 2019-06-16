@@ -57,7 +57,7 @@ allprojects {
 }
 
 subprojects {
-    if (project.name != 'share') {
+    if (project.name != 'share' && project.name != 'share_14') {
         task regenEclipse {
             // Delete the eclipse classpath and project and then recreate it, without doing any of the slower bits.
             dependsOn 'cleanEclipseProject'
