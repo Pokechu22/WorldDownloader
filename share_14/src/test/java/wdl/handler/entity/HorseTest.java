@@ -150,7 +150,7 @@ public class HorseTest<T extends AbstractHorseEntity> extends AbstractEntityHand
 
 	private T makeHorse() {
 		try {
-			EntityType<?> type = EntityType.getTypeFromString(this.type.id).get();
+			EntityType<?> type = EntityType.byKey(this.type.id).get();
 			T entity = this.entityClass.getConstructor(EntityType.class, World.class).newInstance(type, this.serverWorld);
 			applyNBT(entity, this.type.getNBT(this.chests));
 			entity.setHorseTamed(true);

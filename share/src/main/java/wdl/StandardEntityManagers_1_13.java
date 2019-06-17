@@ -173,7 +173,7 @@ class StandardEntityManagers {
 
 		@Override
 		public String getIdentifierFor(Entity entity) {
-			ResourceLocation loc = EntityType.getId(entity.getType());
+			ResourceLocation loc = EntityType.getKey(entity.getType());
 			if (loc == null) {
 				// Eg players
 				return null;
@@ -283,7 +283,7 @@ class StandardEntityManagers {
 
 		@Override
 		public String getDisplayIdentifier(String identifier) {
-			String i18nKey = EntityType.getTypeFromString(identifier).getTranslationKey();
+			String i18nKey = EntityType.byKey(identifier).getTranslationKey();
 			if (I18n.hasKey(i18nKey)) {
 				return I18n.format(i18nKey);
 			} else {
@@ -350,7 +350,7 @@ class StandardEntityManagers {
 			PROVIDED_ENTITIES = EntityType.REGISTRY.stream()
 					.filter(EntityType::isSerializable)
 					.filter(EntityType::isSummonable)
-					.map(EntityType::getId)
+					.map(EntityType::getKey)
 					.map(ResourceLocation::toString)
 					.collect(ImmutableSet.toImmutableSet());
 		} catch (Throwable ex) {

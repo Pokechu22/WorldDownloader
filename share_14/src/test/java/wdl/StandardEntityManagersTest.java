@@ -63,7 +63,7 @@ public class StandardEntityManagersTest {
 
 	public StandardEntityManagersTest(String identifier) {
 		this.identifier = identifier;
-		this.type = EntityType.getTypeFromString(identifier).get();
+		this.type = EntityType.byKey(identifier).get();
 	}
 
 	/**

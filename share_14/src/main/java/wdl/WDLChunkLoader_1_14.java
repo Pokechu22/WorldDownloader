@@ -155,9 +155,9 @@ abstract class WDLChunkLoaderBase extends ChunkLoader {
 					.filter(section -> section != null && section.getYLocation() >> 4 == f_y)
 					.findFirst()
 					.orElse(Chunk.EMPTY_SECTION);
-			NibbleArray blocklightArray = worldlightmanager.func_215569_a(LightType.BLOCK)
+			NibbleArray blocklightArray = worldlightmanager.getLightEngine(LightType.BLOCK)
 					.func_215612_a(SectionPos.from(chunkpos, y));
-			NibbleArray skylightArray = worldlightmanager.func_215569_a(LightType.SKY)
+			NibbleArray skylightArray = worldlightmanager.getLightEngine(LightType.SKY)
 					.func_215612_a(SectionPos.from(chunkpos, y));
 			if (chunkSection != Chunk.EMPTY_SECTION || blocklightArray != null || skylightArray != null) {
 				CompoundNBT sectionNBT = new CompoundNBT();

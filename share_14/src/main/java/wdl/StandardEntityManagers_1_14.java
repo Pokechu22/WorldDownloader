@@ -76,7 +76,7 @@ class StandardEntityManagers {
 		@Nonnull
 		@Override
 		public SpigotEntityType getSpigotType(String identifier) {
-			Optional<EntityType<?>> otype = EntityType.getTypeFromString(identifier);
+			Optional<EntityType<?>> otype = EntityType.byKey(identifier);
 			if (!otype.isPresent()) {
 				return SpigotEntityType.UNKNOWN;
 			}
@@ -141,7 +141,7 @@ class StandardEntityManagers {
 
 		@Override
 		public String getIdentifierFor(Entity entity) {
-			ResourceLocation loc = EntityType.getId(entity.getType());
+			ResourceLocation loc = EntityType.getKey(entity.getType());
 			if (loc == null) {
 				// Eg players
 				return null;
@@ -155,7 +155,7 @@ class StandardEntityManagers {
 		 */
 		@Override
 		public int getTrackDistance(String identifier, Entity entity) {
-			Optional<EntityType<?>> type = EntityType.getTypeFromString(identifier);
+			Optional<EntityType<?>> type = EntityType.byKey(identifier);
 			if (!type.isPresent()) {
 				return -1;
 			}
@@ -164,7 +164,7 @@ class StandardEntityManagers {
 
 		@Override
 		public String getGroup(String identifier) {
-			Optional<EntityType<?>> otype = EntityType.getTypeFromString(identifier);
+			Optional<EntityType<?>> otype = EntityType.byKey(identifier);
 			if (!otype.isPresent()) {
 				return null;
 			}
@@ -183,7 +183,7 @@ class StandardEntityManagers {
 
 		@Override
 		public String getDisplayIdentifier(String identifier) {
-			String i18nKey = EntityType.getTypeFromString(identifier).get().getTranslationKey();
+			String i18nKey = EntityType.byKey(identifier).get().getTranslationKey();
 			if (I18n.hasKey(i18nKey)) {
 				return I18n.format(i18nKey);
 			} else {
@@ -231,7 +231,7 @@ class StandardEntityManagers {
 			PROVIDED_ENTITIES = Registry.ENTITY_TYPE.stream()
 					.filter(EntityType::isSerializable)
 					.filter(EntityType::isSummonable)
-					.map(EntityType::getId)
+					.map(EntityType::getKey)
 					.map(ResourceLocation::toString)
 					.collect(ImmutableSet.toImmutableSet());
 		} catch (Throwable ex) {
