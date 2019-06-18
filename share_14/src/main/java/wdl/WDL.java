@@ -420,9 +420,12 @@ public class WDL {
 		boolean wasDownloading = downloading;
 
 		if (wasDownloading) {
-			// XXX still needed?
-			//minecraft.getSaveLoader().flushCache();
-			//saveHandler.flush();
+			try {
+				chunkLoader.close();
+			} catch (IOException ex) {
+				LOGGER.warn("Failed to close chunkLoader", ex);
+			}
+			chunkLoader = null;
 			startOnChange = false;
 			saving = false;
 			downloading = false;

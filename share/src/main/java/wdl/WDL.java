@@ -72,6 +72,7 @@ import net.minecraft.world.GameRules;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkSection;
 import net.minecraft.world.chunk.EmptyChunk;
+import net.minecraft.world.chunk.storage.RegionFileCache;
 import net.minecraft.world.storage.MapData;
 import net.minecraft.world.storage.SaveHandler;
 import net.minecraft.world.storage.SessionLockException;
@@ -427,8 +428,7 @@ public class WDL {
 		boolean wasDownloading = downloading;
 
 		if (wasDownloading) {
-			minecraft.getSaveLoader().flushCache();
-			saveHandler.flush();
+			RegionFileCache.func_76551_a(); // clearRegionFileReferences - i.e. close all files open
 			startOnChange = false;
 			saving = false;
 			downloading = false;
@@ -625,8 +625,7 @@ public class WDL {
 		} catch (Exception e) {
 			throw new RuntimeException("Threw exception waiting for asynchronous IO to finish. Hmmm.", e);
 		}
-		saveHandler.flush();
-		minecraft.getSaveLoader().flushCache();
+		RegionFileCache.func_76551_a(); // clearRegionFileReferences - i.e. close all files open
 
 		if (backupType != WorldBackupType.NONE) {
 			WDLMessages.chatMessageTranslated(WDL.serverProps,

@@ -497,6 +497,7 @@ public class WDLHooks {
 	private static final int WDLo = ('W' << 24) | ('D' << 16) | ('L' << 8) | ('o');
 
 	private class StartDownloadButton extends WDLButton {
+		@SuppressWarnings("deprecation")
 		public StartDownloadButton(GuiScreen menu, int x, int y, int width, int height) {
 			super(x, y, width, height, null);
 			this.menu = menu;
@@ -577,6 +578,7 @@ public class WDLHooks {
 	}
 
 	private class SettingsButton extends WDLButton {
+		@SuppressWarnings("deprecation")
 		public SettingsButton(GuiScreen menu, int x, int y, int width, int height, String displayString) {
 			super(x, y, width, height, displayString);
 			this.menu = menu;
@@ -611,6 +613,7 @@ public class WDLHooks {
 			Consumer<GuiButton> addButton) {
 		INSTANCE.injectWDLButtons0(gui, buttonList, addButton);
 	}
+	@SuppressWarnings("deprecation")
 	protected void injectWDLButtons0(GuiIngameMenu gui, Collection<? super GuiButton> buttonList,
 			Consumer<GuiButton> addButton) {
 		int insertAtYPos = 0;
@@ -656,6 +659,7 @@ public class WDLHooks {
 	public static void handleWDLButtonClick(GuiIngameMenu gui, GuiButton button) {
 		INSTANCE.handleWDLButtonClick0(gui, button);
 	}
+	@SuppressWarnings("deprecation")
 	protected void handleWDLButtonClick0(GuiIngameMenu gui, GuiButton button) {
 		if (button.id == 1) { // "Disconnect", from vanilla
 			wdl.stopDownload();
