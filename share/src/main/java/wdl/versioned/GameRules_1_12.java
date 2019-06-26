@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 
 import net.minecraft.world.GameRules;
+import wdl.versioned.VersionedFunctions.GameRuleType;
 
 /**
  * Contains functions related to gamerules. This version of the class is used
@@ -35,15 +36,12 @@ final class GameRuleFunctions {
 	 * @see VersionedFunctions#getRuleType
 	 */
 	@Nullable
-	static GameRules.ValueType getRuleType(GameRules rules, String rule) {
-		for (GameRules.ValueType type : GameRules.ValueType.values()) {
-			if (type == GameRules.ValueType.ANY_VALUE) {
-				// Ignore this as it always returns true
-				continue;
-			}
-			if (rules.areSameType(rule, type)) {
-				return type;
-			}
+	static GameRuleType getRuleType(GameRules rules, String rule) {
+		if (rules.areSameType(rule, GameRules.ValueType.NUMERICAL_VALUE)) {
+			return GameRuleType.INTEGER;
+		}
+		if (rules.areSameType(rule, GameRules.ValueType.BOOLEAN_VALUE)) {
+			return GameRuleType.BOOLEAN;
 		}
 		return null;
 	}

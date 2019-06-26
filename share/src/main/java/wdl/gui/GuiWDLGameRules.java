@@ -20,25 +20,20 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.world.GameRules;
-import net.minecraft.world.GameRules.ValueType;
 import wdl.WDL;
-import wdl.gui.widget.WDLButton;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.GuiList;
 import wdl.gui.widget.GuiList.GuiListEntry;
-import wdl.versioned.VersionedFunctions;
 import wdl.gui.widget.GuiNumericTextField;
+import wdl.gui.widget.WDLButton;
 import wdl.gui.widget.WDLScreen;
+import wdl.versioned.VersionedFunctions;
+import wdl.versioned.VersionedFunctions.GameRuleType;
 
 public class GuiWDLGameRules extends WDLScreen {
-	private static final Logger LOGGER = LogManager.getLogger();
-
 	/**
 	 * Text to draw (set from inner classes)
 	 */
@@ -62,13 +57,15 @@ public class GuiWDLGameRules extends WDLScreen {
 					GuiWDLGameRules.this.height - 32, 24);
 			List<RuleEntry> entries = this.getEntries();
 			for (String rule : vanillaGameRules.keySet()) {
-				GameRules.ValueType type = VersionedFunctions.getRuleType(rules, rule);
-				if (type == ValueType.NUMERICAL_VALUE) {
+				GameRuleType type = VersionedFunctions.getRuleType(rules, rule);
+				if (type == null) continue;
+				switch (type) {
+				case INTEGER:
 					entries.add(new IntRuleEntry(rule));
-				} else if (type == ValueType.BOOLEAN_VALUE) {
+					break;
+				case BOOLEAN:
 					entries.add(new BooleanRuleEntry(rule));
-				} else {
-					LOGGER.debug("Unexpected type for vanilla game rule " + rule + ": " + type);
+					break;
 				}
 			}
 		}

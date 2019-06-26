@@ -278,6 +278,11 @@ public final class VersionedFunctions {
 		return list.build();
 	}
 
+	public static enum GameRuleType {
+		INTEGER,
+		BOOLEAN;
+	}
+
 	/**
 	 * Checks if the given game rule is of the given type.
 	 * @param rules The rule collection
@@ -285,7 +290,7 @@ public final class VersionedFunctions {
 	 * @return The type, or null if no info could be found.
 	 */
 	@Nullable
-	public static GameRules.ValueType getRuleType(GameRules rules, String rule) {
+	public static GameRuleType getRuleType(GameRules rules, String rule) {
 		return GameRuleFunctions.getRuleType(rules, rule);
 	}
 
