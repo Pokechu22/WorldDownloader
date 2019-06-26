@@ -34,7 +34,7 @@ import wdl.versioned.VersionedFunctions;
 
 public class MapDataHandlerTest extends MaybeMixinTest {
 	// (n.b. DimensionType.values() doesn't exist in 1.13.1+)
-	private static final DimensionType[] DIMENSIONS = { DimensionType.NETHER, DimensionType.OVERWORLD, DimensionType.THE_END };
+	private static final DimensionType[] DIMENSIONS = { DimensionType.getById(-1) /* NETHER or THE_NETHER */, DimensionType.OVERWORLD, DimensionType.THE_END };
 	private static final ItemStack SOME_MAP_ITEM = new ItemStack(Items.FILLED_MAP);
 
 	/**

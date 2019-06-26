@@ -47,7 +47,7 @@ sourceSets {
 
 minecraft {
     //suppressMappingVersionWarnings = true
-    mappings channel: 'snapshot', version: '20190616-1.14.2'
+    mappings channel: 'snapshot', version: '20190626-1.14.3'
     runs {
         client {
             workingDirectory project.file('run')
@@ -143,6 +143,7 @@ sourceSets {
             compileClasspath += api.output
             runtimeClasspath += api.output
             srcDir project(':share_14').file("src/test/java")
+            exclude "wdl/DelegateChunkManager_1_14_3.java"
             exclude "wdl/lwts/WDLTestTweaker_1_9.java"
             exclude "wdl/lwts/WDLTestTweaker_1_10.java"
             exclude "wdl/lwts/WDLTestTweaker.java"

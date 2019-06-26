@@ -156,9 +156,9 @@ abstract class WDLChunkLoaderBase extends ChunkLoader {
 					.findFirst()
 					.orElse(Chunk.EMPTY_SECTION);
 			NibbleArray blocklightArray = worldlightmanager.getLightEngine(LightType.BLOCK)
-					.func_215612_a(SectionPos.from(chunkpos, y));
+					.getData(SectionPos.from(chunkpos, y));
 			NibbleArray skylightArray = worldlightmanager.getLightEngine(LightType.SKY)
-					.func_215612_a(SectionPos.from(chunkpos, y));
+					.getData(SectionPos.from(chunkpos, y));
 			if (chunkSection != Chunk.EMPTY_SECTION || blocklightArray != null || skylightArray != null) {
 				CompoundNBT sectionNBT = new CompoundNBT();
 				sectionNBT.putByte("Y", (byte) (y & 255));
@@ -166,11 +166,11 @@ abstract class WDLChunkLoaderBase extends ChunkLoader {
 					chunkSection.getData().writeChunkPalette(sectionNBT, "Palette", "BlockStates");
 				}
 
-				if (blocklightArray != null && !blocklightArray.func_215655_c()) {
+				if (blocklightArray != null && !blocklightArray.isEmpty()) {
 					sectionNBT.putByteArray("BlockLight", blocklightArray.getData());
 				}
 
-				if (skylightArray != null && !skylightArray.func_215655_c()) {
+				if (skylightArray != null && !skylightArray.isEmpty()) {
 					sectionNBT.putByteArray("SkyLight", skylightArray.getData());
 				}
 

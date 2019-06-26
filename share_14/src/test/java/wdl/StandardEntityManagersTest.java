@@ -84,17 +84,7 @@ public class StandardEntityManagersTest {
 	public void testVanillaRange() throws Exception {
 		TestWorld.ServerWorld world = TestWorld.makeServer();
 
-		class DerivedTracker extends ChunkManager {
-			public DerivedTracker() {
-				super(null, null, null, null, null, null, null, null, null, null, 0, 0);
-			}
-
-			@Override
-			public void track(Entity entityIn) {
-				super.track(entityIn);
-			}
-		}
-		DerivedTracker tracker = mock(DerivedTracker.class);
+		MockableChunkManager tracker = mock(MockableChunkManager.class);
 		// We bypass the constructor, so this needs to be manually set
 		Int2ObjectMap<?> trackedEntities = new Int2ObjectOpenHashMap<>();
 		ReflectionUtils.findAndSetPrivateField(tracker, ChunkManager.class, Int2ObjectMap.class, trackedEntities);

@@ -37,11 +37,11 @@ final class GameRuleFunctions {
 	 */
 	@Nullable
 	static GameRuleType getRuleType(GameRules rules, String rule) {
-		GameRules.Value value = rules.get(rule);
+		GameRules.Value value = rules.func_196230_f(rule);
 		if (value == null) {
 			return null;
 		} else {
-			switch (value.getType()) {
+			switch (value.func_180254_e()) {
 			case NUMERICAL_VALUE:
 				return GameRuleType.INTEGER;
 			case BOOLEAN_VALUE:
@@ -57,11 +57,11 @@ final class GameRuleFunctions {
 	 */
 	@Nullable
 	static String getRuleValue(GameRules rules, String rule) { 
-		GameRules.Value value = rules.get(rule);
+		GameRules.Value value = rules.func_196230_f(rule);
 		if (value == null) {
 			return null;
 		} else {
-			return value.getString();
+			return value.func_82756_a();
 		}
 	}
 
@@ -72,14 +72,14 @@ final class GameRuleFunctions {
 		if (getRuleType(rules, rule) == null) {
 			throw new IllegalArgumentException("No rule named " + rule + " exists in " + rules + " (setting to " + value + ", rules list is " + getGameRules(rules) + ")");
 		}
-		rules.setOrCreateGameRule(rule, value, null); // Server argument is for changecallbacks and can be null
+		rules.func_82764_b(rule, value, null); // Server argument is for changecallbacks and can be null
 	}
 
 	/* (non-javadoc)
 	 * @see VersionedFunctions#getGameRules
 	 */
 	static Map<String, String> getGameRules(GameRules rules) {
-		Map<String, String> result = GameRules.getDefinitions()
+		Map<String, String> result = GameRules.func_196231_c()
 				.keySet().stream()
 				.collect(Collectors.toMap(
 						rule -> rule,

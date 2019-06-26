@@ -124,35 +124,8 @@ public class EntityUtilsTest extends MaybeMixinTest {
 
 		world.addNewPlayer(player);
 
-		// Make some methods public...
-		class EntityTracker extends ChunkManager {
-			public EntityTracker() {
-				super(null, null, null, null, null, null, null, null, null, null, 0, 0);
-			}
-
-			@Override
-			public void setViewDistance(int p_219175_1_, int p_219175_2_) {
-				super.setViewDistance(p_219175_1_, p_219175_2_);
-			}
-
-			@Override
-			public void track(Entity entityIn) {
-				super.track(entityIn);
-			}
-
-			@Override
-			public void untrack(Entity entityIn) {
-				super.untrack(entityIn);
-			}
-
-			@Override
-			public void tickEntityTracker() {
-				super.tickEntityTracker();
-			}
-		}
-
-		EntityTracker tracker = mock(EntityTracker.class);
-		doCallRealMethod().when(tracker).setViewDistance(anyInt(), anyInt());
+		MockableChunkManager tracker = mock(MockableChunkManager.class);
+		doCallRealMethod().when(tracker).setViewDistance(anyInt());
 		doCallRealMethod().when(tracker).track(any());
 		doCallRealMethod().when(tracker).untrack(any());
 		doCallRealMethod().when(tracker).tickEntityTracker();
@@ -170,7 +143,7 @@ public class EntityUtilsTest extends MaybeMixinTest {
 		// Required because world doesn't set it up right for a mock, and mocking it
 		// would be making assumptions about how this is calculated
 		// (NOTE: I'm not sure what the difference between the two parameters are)
-		tracker.setViewDistance(serverViewDistance, serverViewDistance);
+		tracker.setViewDistance(serverViewDistance);
 
 		int eid = 0;
 		for (int x = -100; x <= 100; x += 10) {

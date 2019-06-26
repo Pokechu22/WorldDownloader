@@ -257,11 +257,11 @@ abstract class ExtWorldServer extends ServerWorld {
 	/**
 	 * A simple chunk provider implementation that just caches chunks in a map.
 	 */
-	private final class SimpleChunkProvider extends ServerChunkProvider {
+	private final class SimpleChunkProvider extends ExtServerChunkProvider {
 		private final Long2ObjectMap<Chunk> map = new Long2ObjectOpenHashMap<>();
 
 		public SimpleChunkProvider() {
-			super(ExtWorldServer.this, null, null, null, task -> task.run(), null, 0, 0, null, null);
+			super(ExtWorldServer.this, null, null, null, task -> task.run(), null, 0, null, null);
 		}
 
 		@Override
