@@ -41,7 +41,7 @@ dependencies {
 minecraft {
     suppressMappingVersionWarnings = true
     version = "1.11"
-    mappings = "snapshot_20190616"
+    mappings = "snapshot_20190626"
     runDir = "run"
 
     // We don't currently want a source jar (doesn't work well for base edits, and the version info doesn't work yet)
@@ -57,6 +57,7 @@ extraSrgs {
     addSrg file('../srgs/AbstractHorseToEquineEntity.srg')
     addSrg file('../srgs/PositionedSound.srg')
     addSrg file('../srgs/1.13.srg')
+    addMethods file('../srgs/gamerule_methods_pre_1.14.3.csv')
     addMethods file('../srgs/pre_1.14_methods.csv')
     addMethods file('../srgs/1.12_methods.csv')
     addMethods file('../srgs/1.11_gui_methods.csv')
