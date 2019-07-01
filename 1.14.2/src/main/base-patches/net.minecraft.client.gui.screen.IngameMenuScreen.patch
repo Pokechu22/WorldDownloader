@@ -6,7 +6,7 @@
  
 -public class IngameMenuScreen extends Screen {
 +public class IngameMenuScreen extends Screen/* WDL >>> */ implements wdl.ducks.IBaseChangesApplied/* <<< WDL */ {
-    private final boolean field_222813_a;
+    private final boolean isFullMenu;
  
     public IngameMenuScreen(boolean p_i51519_1_) {
 @@ -63,6 +63,10 @@
