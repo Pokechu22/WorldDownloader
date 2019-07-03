@@ -628,10 +628,10 @@ public class WDLHooks {
 
 		// Insert wdl buttons.
 		addButton.accept(new StartDownloadButton(gui,
-				gui.width / 2 - 100, insertAtYPos, 170, 20));
+				gui.width / 2 - 102, insertAtYPos, 174, 20));
 
 		addButton.accept(new SettingsButton(gui,
-				gui.width / 2 + 71, insertAtYPos, 28, 20,
+				gui.width / 2 + 73, insertAtYPos, 28, 20,
 				I18n.format("wdl.gui.ingameMenu.settings")));
 	}
 
