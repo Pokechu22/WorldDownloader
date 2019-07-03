@@ -45,7 +45,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.storage.SaveHandler;
+import wdl.handler.block.BarrelHandler;
 import wdl.handler.block.BeaconHandler;
+import wdl.handler.block.BlastFurnaceHandler;
 import wdl.handler.block.BlockHandler;
 import wdl.handler.block.BrewingStandHandler;
 import wdl.handler.block.ChestHandler;
@@ -53,7 +55,9 @@ import wdl.handler.block.DispenserHandler;
 import wdl.handler.block.DropperHandler;
 import wdl.handler.block.FurnaceHandler;
 import wdl.handler.block.HopperHandler;
+import wdl.handler.block.LecternHandler;
 import wdl.handler.block.ShulkerBoxHandler;
+import wdl.handler.block.SmokerHandler;
 import wdl.handler.block.TrappedChestHandler;
 import wdl.handler.blockaction.BlockActionHandler;
 import wdl.handler.entity.EntityHandler;
@@ -77,14 +81,18 @@ final class HandlerFunctions {
 	 * @see VersionedFunctions#BLOCK_HANDLERS
 	 */
 	static final ImmutableList<BlockHandler<?, ?>> BLOCK_HANDLERS = ImmutableList.of(
+			new BarrelHandler(),
 			new BeaconHandler(),
 			new BrewingStandHandler(),
+			new BlastFurnaceHandler(),
 			new ChestHandler(),
 			new DispenserHandler(),
 			new DropperHandler(),
 			new FurnaceHandler(),
 			new HopperHandler(),
+			new LecternHandler(),
 			new ShulkerBoxHandler(),
+			new SmokerHandler(),
 			new TrappedChestHandler()
 	);
 

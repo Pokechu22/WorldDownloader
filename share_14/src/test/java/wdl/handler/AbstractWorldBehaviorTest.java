@@ -34,11 +34,11 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.gui.IHasContainer;
 import net.minecraft.client.gui.IngameGui;
 import net.minecraft.client.gui.MapItemRenderer;
 import net.minecraft.client.gui.NewChatGui;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.network.play.ClientPlayNetHandler;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -84,8 +84,8 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 		ReflectionUtils.findAndSetPrivateField(null, Minecraft.class, Minecraft.class, mc);
 
 		doAnswer(AdditionalAnswers.<Screen>answerVoid(screen -> {
-			if (screen instanceof ContainerScreen<?>){
-				clientPlayer.openContainer = ((ContainerScreen<?>)screen).getContainer();
+			if (screen instanceof IHasContainer<?>){
+				clientPlayer.openContainer = ((IHasContainer<?>)screen).getContainer();
 			} else {
 				clientPlayer.openContainer = clientPlayer.container;
 			}
