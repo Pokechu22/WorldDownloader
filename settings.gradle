@@ -9,10 +9,14 @@ include '1.11.2', '1.11.2-litemod'
 include '1.12.0', '1.12.0-litemod'
 include '1.12.1', '1.12.1-litemod'
 include '1.12.2', '1.12.2-litemod'
-// NOTE: 1.13.x building is extremely broken right now; attempting to build it will most likely fail
-include '1.13.0', '1.13.1', '1.13.2'
-// 1.14.x is also somewhat messy, but with a bit of work it should be doable
-include '1.14.0', '1.14.1', '1.14.2', '1.14.3'
+if (ENABLE_UNSTABLE_BUILDS) { // see gradle.properties
+    // NOTE: 1.13.x building is extremely broken right now; attempting to build it will most likely fail
+    include '1.13.0', '1.13.1', '1.13.2'
+    // 1.14.0 is also somewhat messy, but with a bit of work it should be doable
+    include '1.14.0'
+}
+// These should build fine.
+include '1.14.1', '1.14.2', '1.14.3'
 
 // More information about what went wrong
 gradle.buildFinished { buildResult ->
