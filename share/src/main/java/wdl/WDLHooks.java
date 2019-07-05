@@ -645,7 +645,7 @@ public class WDLHooks {
 				gui.width / 2 - 100, insertAtYPos, 170, 20));
 
 		addButton.accept(new SettingsButton(gui,
-				gui.width / 2 + 71, insertAtYPos, 28, 20,
+				gui.width / 2 + 72, insertAtYPos, 28, 20,
 				I18n.format("wdl.gui.ingameMenu.settings")));
 	}
 
