@@ -26,6 +26,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.util.text.ITextComponent;
 import wdl.gui.widget.GuiList.GuiListEntry;
 
 abstract class ExtGuiScreen extends GuiScreen implements IExtGuiScreen {
@@ -41,6 +42,12 @@ abstract class ExtGuiScreen extends GuiScreen implements IExtGuiScreen {
 	private final List<GuiTextField> textFieldList = new ArrayList<>();
 
 	// Called before init()
+	protected final ITextComponent title;
+
+	protected ExtGuiScreen(ITextComponent title) {
+		this.title = title;
+	}
+
 	@Override
 	public final void init(Minecraft mc, int width, int height) {
 		this.listList.clear();
@@ -161,5 +168,10 @@ abstract class ExtGuiScreen extends GuiScreen implements IExtGuiScreen {
 		for (GuiTextField field : this.textFieldList) {
 			field.render();
 		}
+		this.renderTitle(mouseX, mouseY, partialTicks);
+	}
+
+	protected void renderTitle(int mouseX, int mouseY, float partialTicks) {
+		this.drawCenteredString(this.font, this.title.getFormattedText(), this.width / 2, 8, 0xFFFFFF);
 	}
 }

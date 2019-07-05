@@ -23,6 +23,7 @@ import net.minecraft.entity.player.EntityPlayer.EnumChatVisibility;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.ITextComponent;
 import wdl.WDL;
 import wdl.gui.widget.WDLScreen;
 import wdl.versioned.VersionedFunctions;
@@ -68,7 +69,13 @@ public abstract class GuiTurningCameraBase extends WDLScreen {
 	 */
 	private boolean initializedCamera = false;
 
-	protected GuiTurningCameraBase(WDL wdl) {
+	protected GuiTurningCameraBase(WDL wdl, String titleI18nKey) {
+		super(titleI18nKey);
+		this.wdl = wdl;
+	}
+
+	protected GuiTurningCameraBase(WDL wdl, ITextComponent title) {
+		super(title);
 		this.wdl = wdl;
 	}
 

@@ -22,6 +22,7 @@ import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.text.StringTextComponent;
 import wdl.VersionConstants;
 import wdl.WDL;
 import wdl.gui.widget.WDLButton;
@@ -182,6 +183,7 @@ public class GuiWDLUpdates extends WDLScreen {
 	private UpdateList list;
 
 	public GuiWDLUpdates(@Nullable Screen parent, WDL wdl) {
+		super("wdl.gui.updates.title");
 		this.parent = parent;
 	}
 
@@ -217,9 +219,6 @@ public class GuiWDLUpdates extends WDLScreen {
 			drawCenteredString(font, I18n.format(reason), width / 2,
 					height / 2 + font.FONT_HEIGHT / 2, 0xFF5555);
 		}
-
-		drawCenteredString(font, I18n.format("wdl.gui.updates.title"),
-				width / 2, 8, 0xFFFFFF);
 	}
 
 	/**
@@ -297,6 +296,7 @@ public class GuiWDLUpdates extends WDLScreen {
 		private final Release release;
 
 		public GuiWDLSingleUpdate(GuiWDLUpdates parent, Release releaseToShow) {
+			super(new StringTextComponent(buildReleaseTitle(releaseToShow))); // Already translated
 			this.parent = parent;
 			this.release = releaseToShow;
 		}
@@ -331,14 +331,6 @@ public class GuiWDLUpdates extends WDLScreen {
 			list.addLine(release.textOnlyBody);
 
 			this.addList(list);
-		}
-
-		@Override
-		public void render(int mouseX, int mouseY, float partialTicks) {
-			super.render(mouseX, mouseY, partialTicks);
-
-			this.drawCenteredString(this.font, buildReleaseTitle(release),
-					this.width / 2, 8, 0xFFFFFF);
 		}
 	}
 }

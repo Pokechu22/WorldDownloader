@@ -68,6 +68,7 @@ import net.minecraft.realms.RealmsScreen;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkSection;
@@ -284,7 +285,7 @@ public class WDL {
 	/**
 	 * Prompts for specific input that is needed (world name and multiworld status).
 	 *
-	 * @param "startDownload" or "changeOptions"
+	 * @param context "startDownload" or "changeOptions"
 	 * @param checkLastModified True if the last modified check should be performed.
 	 * @param callback Callback when information is entered.  Should call this method again.  Should also change GUIs.
 	 * @param cancel Callback when canceling.
@@ -316,7 +317,7 @@ public class WDL {
 
 		if (isMultiworld && worldName.isEmpty()) {
 			minecraft.displayGuiScreen(new GuiWDLMultiworldSelect(this,
-					I18n.format("wdl.gui.multiworldSelect.title." + context),
+					new TextComponentTranslation("wdl.gui.multiworldSelect.title." + context),
 					new GuiWDLMultiworldSelect.WorldSelectionCallback() {
 				@Override
 				public void onWorldSelected(String selectedWorld) {
@@ -576,7 +577,7 @@ public class WDL {
 		WorldBackupType backupType = serverProps.getValue(MiscSettings.BACKUP_TYPE);
 
 		final GuiWDLSaveProgress progressScreen = new GuiWDLSaveProgress(this,
-				I18n.format("wdl.saveProgress.title"),
+				new TextComponentTranslation("wdl.saveProgress.title"),
 				(backupType != WorldBackupType.NONE ? 6 : 5)
 				+ WDLApi.getImplementingExtensions(ISaveListener.class).size());
 

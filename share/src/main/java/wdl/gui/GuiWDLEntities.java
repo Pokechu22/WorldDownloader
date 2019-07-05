@@ -267,6 +267,7 @@ public class GuiWDLEntities extends WDLScreen {
 	private WDLButton presetsButton;
 
 	public GuiWDLEntities(@Nullable GuiScreen parent, WDL wdl) {
+		super("wdl.gui.entities.title");
 		this.parent = parent;
 		this.wdl = wdl;
 		this.config = wdl.worldProps;
@@ -304,10 +305,6 @@ public class GuiWDLEntities extends WDLScreen {
 		this.renderBackground();
 
 		super.render(mouseX, mouseY, partialTicks);
-
-		this.drawCenteredString(this.font,
-				I18n.format("wdl.gui.entities.title"), this.width / 2, 8,
-				0xFFFFFF);
 
 		if (this.rangeModeButton.isHovered()) {
 			Utils.drawGuiInfoBox(this.rangeModeButton.getTooltip(), width, height, 48);

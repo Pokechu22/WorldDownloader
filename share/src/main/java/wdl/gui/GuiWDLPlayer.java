@@ -18,17 +18,17 @@ import javax.annotation.Nullable;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.TextComponentTranslation;
 import wdl.WDL;
 import wdl.config.IConfiguration;
 import wdl.config.settings.PlayerSettings;
-import wdl.gui.widget.WDLButton;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.GuiNumericTextField;
-import wdl.gui.widget.WDLScreen;
 import wdl.gui.widget.SettingButton;
+import wdl.gui.widget.WDLButton;
+import wdl.gui.widget.WDLScreen;
 
 public class GuiWDLPlayer extends WDLScreen {
-	private String title;
 	@Nullable
 	private final GuiScreen parent;
 	private final WDL wdl;
@@ -44,6 +44,7 @@ public class GuiWDLPlayer extends WDLScreen {
 	private int posTextY;
 
 	public GuiWDLPlayer(@Nullable GuiScreen parent, WDL wdl) {
+		super(new TextComponentTranslation("wdl.gui.player.title", WDL.baseFolderName));
 		this.parent = parent;
 		this.wdl = wdl;
 		this.config = wdl.worldProps;
@@ -54,7 +55,6 @@ public class GuiWDLPlayer extends WDLScreen {
 	 */
 	@Override
 	public void init() {
-		this.title = I18n.format("wdl.gui.player.title", WDL.baseFolderName);
 		int y = this.height / 4 - 15;
 		this.healthBtn = this.addButton(new SettingButton(
 				PlayerSettings.HEALTH, this.config, this.width / 2 - 100, y));
@@ -115,9 +115,6 @@ public class GuiWDLPlayer extends WDLScreen {
 	@Override
 	public void render(int mouseX, int mouseY, float partialTicks) {
 		Utils.drawListBackground(23, 32, 0, 0, height, width);
-
-		this.drawCenteredString(this.font, this.title,
-				this.width / 2, 8, 0xFFFFFF);
 
 		String tooltip = null;
 

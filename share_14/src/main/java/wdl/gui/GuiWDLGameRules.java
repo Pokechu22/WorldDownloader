@@ -193,7 +193,6 @@ public class GuiWDLGameRules extends WDLScreen {
 		}
 	}
 
-	private String title;
 	@Nullable
 	private final Screen parent;
 	private final WDL wdl;
@@ -253,6 +252,7 @@ public class GuiWDLGameRules extends WDLScreen {
 	}
 
 	public GuiWDLGameRules(@Nullable Screen parent, WDL wdl) {
+		super("wdl.gui.gamerules.title");
 		this.parent = parent;
 		this.wdl = wdl;
 		this.rules = wdl.gameRules;
@@ -264,7 +264,6 @@ public class GuiWDLGameRules extends WDLScreen {
 
 	@Override
 	public void init() {
-		this.title = I18n.format("wdl.gui.gamerules.title");
 		this.addList(new GuiGameRuleList());
 
 		this.doneButton = this.addButton(new ButtonDisplayGui(this.width / 2 - 100,
@@ -276,8 +275,6 @@ public class GuiWDLGameRules extends WDLScreen {
 		hoveredToolTip = null;
 
 		super.render(mouseX, mouseY, partialTicks);
-
-		this.drawCenteredString(font, title, width / 2, 4, 0xFFFFFF);
 
 		if (this.doneButton.isHovered()) {
 			Utils.drawGuiInfoBox(I18n.format("wdl.gui.gamerules.doneInfo"),

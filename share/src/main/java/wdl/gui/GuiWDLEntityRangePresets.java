@@ -49,6 +49,7 @@ public class GuiWDLEntityRangePresets extends WDLScreen implements GuiYesNoCallb
 	private static final int ID_VANILLA = 0, ID_SPIGOT = 1, ID_SERVER = 2;
 
 	public GuiWDLEntityRangePresets(@Nullable GuiScreen parent, WDL wdl, IConfiguration config) {
+		super("wdl.gui.rangePresets.title");
 		this.parent = parent;
 		this.wdl = wdl;
 		this.config = config;
@@ -92,10 +93,6 @@ public class GuiWDLEntityRangePresets extends WDLScreen implements GuiYesNoCallb
 	@Override
 	public void render(int mouseX, int mouseY, float partialTicks) {
 		Utils.drawListBackground(23, 32, 0, 0, height, width);
-
-		this.drawCenteredString(this.font,
-				I18n.format("wdl.gui.rangePresets.title"), this.width / 2, 8,
-				0xFFFFFF);
 
 		String infoText = null;
 

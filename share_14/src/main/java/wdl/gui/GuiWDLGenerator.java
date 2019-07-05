@@ -19,6 +19,7 @@ import javax.annotation.Nullable;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.TranslationTextComponent;
 import wdl.WDL;
 import wdl.config.IConfiguration;
 import wdl.config.settings.GeneratorSettings;
@@ -29,7 +30,6 @@ import wdl.gui.widget.WDLScreen;
 import wdl.versioned.VersionedFunctions;
 
 public class GuiWDLGenerator extends WDLScreen {
-	private String title;
 	@Nullable
 	private final Screen parent;
 	private final WDL wdl;
@@ -42,6 +42,7 @@ public class GuiWDLGenerator extends WDLScreen {
 	private String seedText;
 
 	public GuiWDLGenerator(@Nullable Screen parent, WDL wdl) {
+		super(new TranslationTextComponent("wdl.gui.generator.title", WDL.baseFolderName));
 		this.parent = parent;
 		this.wdl = wdl;
 		this.config = wdl.worldProps;
@@ -55,7 +56,6 @@ public class GuiWDLGenerator extends WDLScreen {
 		this.seedText = I18n.format("wdl.gui.generator.seed");
 		int seedWidth = font.getStringWidth(seedText + " ");
 
-		this.title = I18n.format("wdl.gui.generator.title", WDL.baseFolderName);
 		int y = this.height / 4 - 15;
 		this.seedField = this.addTextField(new TextFieldWidget(this.font,
 				this.width / 2 - (100 - seedWidth), y, 200 - seedWidth, 18, seedText));
@@ -108,9 +108,6 @@ public class GuiWDLGenerator extends WDLScreen {
 	@Override
 	public void render(int mouseX, int mouseY, float partialTicks) {
 		Utils.drawListBackground(23, 32, 0, 0, height, width);
-
-		this.drawCenteredString(this.font, this.title,
-				this.width / 2, 8, 0xFFFFFF);
 
 		this.drawString(this.font, seedText, this.width / 2 - 100,
 				this.height / 4 - 10, 0xFFFFFF);

@@ -25,6 +25,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.StringTextComponent;
 import wdl.WDL;
 import wdl.WDLPluginChannels;
 import wdl.WDLPluginChannels.ChunkRange;
@@ -103,6 +104,7 @@ public class GuiWDLChunkOverrides extends WDLScreen {
 	private int lastTickX, lastTickY;
 
 	public GuiWDLChunkOverrides(@Nullable Screen parent, WDL wdl) {
+		super(new StringTextComponent("Chunk overrides"));
 		this.parent = parent;
 		this.wdl = wdl;
 
@@ -265,9 +267,6 @@ public class GuiWDLChunkOverrides extends WDLScreen {
 
 		// Draw the main borders now so that ranges are hidden behind it.
 		Utils.drawBorder(TOP_MARGIN, BOTTOM_MARGIN, 0, 0, height, width);
-
-		this.drawCenteredString(this.font, "Chunk overrides",
-				this.width / 2, 8, 0xFFFFFF);
 
 		super.render(mouseX, mouseY, partialTicks);
 

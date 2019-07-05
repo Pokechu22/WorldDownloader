@@ -20,6 +20,7 @@ import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
 import wdl.WDL;
 
 /**
@@ -29,7 +30,6 @@ import wdl.WDL;
  * {@link net.minecraft.client.gui.GuiScreenWorking GuiScreenWorking}.
  */
 public class GuiWDLSaveProgress extends GuiTurningCameraBase {
-	private final String title;
 	private String majorTaskMessage = "";
 	private Supplier<String> minorTaskMessageProvider = () -> "";
 	private int majorTaskNumber;
@@ -56,9 +56,8 @@ public class GuiWDLSaveProgress extends GuiTurningCameraBase {
 	 * @param title The title.
 	 * @param taskCount The total number of major tasks that there will be.
 	 */
-	public GuiWDLSaveProgress(WDL wdl, String title, int taskCount) {
-		super(wdl);
-		this.title = title;
+	public GuiWDLSaveProgress(WDL wdl, ITextComponent title, int taskCount) {
+		super(wdl, title);
 		this.majorTaskCount = taskCount;
 		this.majorTaskNumber = 0;
 	}
@@ -171,9 +170,6 @@ public class GuiWDLSaveProgress extends GuiTurningCameraBase {
 						"wdl.gui.saveProgress.progressInfo", minorTaskInfo,
 						minorTaskProgress, minorTaskMaximum);
 			}
-
-			this.drawCenteredString(this.font, this.title,
-					this.width / 2, 8, 0xFFFFFF);
 
 			this.drawCenteredString(this.font,
 					majorTaskInfo, this.width / 2, 100, 0xFFFFFF);

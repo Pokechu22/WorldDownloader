@@ -69,7 +69,7 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements IBac
 	}
 
 	public GuiWDLOverwriteChanges(WDL wdl, long lastSaved, long lastPlayed, Runnable callback, Runnable cancel) {
-		super(wdl);
+		super(wdl, "wdl.gui.overwriteChanges.title");
 		this.wdl = wdl;
 		this.lastSaved = lastSaved;
 		this.lastPlayed = lastPlayed;
@@ -114,7 +114,6 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements IBac
 	 */
 	private final long lastSaved, lastPlayed;
 
-	private String title;
 	private String footer;
 	private String captionTitle;
 	private String captionSubtitle;
@@ -126,7 +125,6 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements IBac
 	public void init() {
 		backingUp = false;
 
-		title = I18n.format("wdl.gui.overwriteChanges.title");
 		if (lastSaved != -1) {
 			footer = I18n.format("wdl.gui.overwriteChanges.footer", lastSaved, lastPlayed);
 		} else {
@@ -220,7 +218,6 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements IBac
 			renderBackground();
 			Utils.drawBorder(32, 22, 0, 0, height, width);
 
-			drawCenteredString(font, title, width / 2, 8, 0xFFFFFF);
 			drawCenteredString(font, footer, width / 2, height - 8
 					- font.FONT_HEIGHT, 0xFFFFFF);
 

@@ -60,6 +60,7 @@ public class GuiWDLBackup extends WDLScreen {
 	private volatile @Nullable String commandInvalidReason;
 
 	public GuiWDLBackup(@Nullable Screen parent, WDL wdl) {
+		super("wdl.gui.backup.title");
 		this.parent = parent;
 		this.wdl = wdl;
 		this.config = WDL.serverProps;
@@ -260,10 +261,6 @@ public class GuiWDLBackup extends WDLScreen {
 	@Override
 	public void render(int mouseX, int mouseY, float partialTicks) {
 		Utils.drawListBackground(23, 32, 0, 0, height, width);
-
-		this.drawCenteredString(this.font,
-				I18n.format("wdl.gui.backup.title"), this.width / 2, 8,
-				0xFFFFFF);
 
 		super.render(mouseX, mouseY, partialTicks);
 

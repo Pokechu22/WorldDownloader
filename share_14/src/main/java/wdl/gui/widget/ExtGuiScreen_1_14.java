@@ -25,7 +25,7 @@ import org.lwjgl.glfw.GLFW;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.ITextComponent;
 import wdl.gui.widget.GuiList.GuiListEntry;
 
 abstract class ExtGuiScreen extends net.minecraft.client.gui.screen.Screen implements IExtGuiScreen {
@@ -40,8 +40,8 @@ abstract class ExtGuiScreen extends net.minecraft.client.gui.screen.Screen imple
 	private final List<GuiList<?>> listList = new ArrayList<>();
 	private final List<TextFieldWidget> textFieldList = new ArrayList<>();
 
-	protected ExtGuiScreen() {
-		super(new StringTextComponent("")); // XXX: Skipping on accessibility data
+	protected ExtGuiScreen(ITextComponent title) {
+		super(title);
 	}
 
 	// Called before init
@@ -143,5 +143,10 @@ abstract class ExtGuiScreen extends net.minecraft.client.gui.screen.Screen imple
 		for (TextFieldWidget field : this.textFieldList) {
 			field.render(mouseX, mouseY, partialTicks);
 		}
+		this.renderTitle(mouseX, mouseY, partialTicks);
+	}
+
+	protected void renderTitle(int mouseX, int mouseY, float partialTicks) {
+		this.drawCenteredString(this.font, this.title.getFormattedText(), this.width / 2, 8, 0xFFFFFF);
 	}
 }

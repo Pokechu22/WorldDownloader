@@ -39,6 +39,7 @@ public class GuiWDLMultiworld extends WDLScreen {
 	}
 
 	public GuiWDLMultiworld(MultiworldCallback callback) {
+		super("wdl.gui.multiworld.title");
 		this.callback = callback;
 	}
 
@@ -89,10 +90,6 @@ public class GuiWDLMultiworld extends WDLScreen {
 	public void render(int mouseX, int mouseY, float partialTicks) {
 		this.renderBackground();
 		Utils.drawBorder(32, 32, 0, 0, height, width);
-
-		this.drawCenteredString(this.font,
-				I18n.format("wdl.gui.multiworld.title"),
-				this.width / 2, 8, 0xFFFFFF);
 
 		fill(infoBoxX, infoBoxY, infoBoxX + infoBoxWidth, infoBoxY
 				+ infoBoxHeight, 0xB0000000);

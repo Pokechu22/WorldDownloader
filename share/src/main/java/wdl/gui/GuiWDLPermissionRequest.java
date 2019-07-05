@@ -21,12 +21,13 @@ import javax.annotation.Nullable;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.TextComponentString;
 import wdl.WDL;
 import wdl.WDLPluginChannels;
-import wdl.gui.widget.WDLButton;
 import wdl.gui.widget.ButtonDisplayGui;
-import wdl.gui.widget.WDLScreen;
 import wdl.gui.widget.TextList;
+import wdl.gui.widget.WDLButton;
+import wdl.gui.widget.WDLScreen;
 
 /**
  * GUI for requesting permissions.  Again, this is a work in progress.
@@ -51,6 +52,7 @@ public class GuiWDLPermissionRequest extends WDLScreen {
 	private WDLButton submitButton;
 
 	public GuiWDLPermissionRequest(@Nullable GuiScreen parent, WDL wdl) {
+		super(new TextComponentString("Permission request")); // XXX untranslated
 		this.parent = parent;
 		this.wdl = wdl;
 	}
@@ -141,13 +143,5 @@ public class GuiWDLPermissionRequest extends WDLScreen {
 			}
 		}
 		return false;
-	}
-
-	@Override
-	public void render(int mouseX, int mouseY, float partialTicks) {
-		super.render(mouseX, mouseY, partialTicks);
-
-		this.drawCenteredString(this.font, "Permission request",
-				this.width / 2, 8, 0xFFFFFF);
 	}
 }

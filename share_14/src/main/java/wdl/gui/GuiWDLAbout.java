@@ -50,6 +50,7 @@ public class GuiWDLAbout extends WDLScreen {
 	 * Creates a GUI with the specified parent.
 	 */
 	public GuiWDLAbout(@Nullable Screen parent, WDL wdl) {
+		super("wdl.gui.about.title");
 		this.parent = parent;
 		this.wdl = wdl;
 	}
@@ -106,10 +107,8 @@ public class GuiWDLAbout extends WDLScreen {
 	}
 
 	@Override
-	public void render(int mouseX, int mouseY, float partialTicks) {
-		super.render(mouseX, mouseY, partialTicks);
-
-		drawCenteredString(font, I18n.format("wdl.gui.about.title"),
-				width / 2, 2, 0xFFFFFF);
+	protected void renderTitle(int mouseX, int mouseY, float partialTicks) {
+		// Draw at y=2 instead of y=8, to avoid drawing over the buttons
+		this.drawCenteredString(this.font, this.title.getFormattedText(), this.width / 2, 2, 0xFFFFFF);
 	}
 }

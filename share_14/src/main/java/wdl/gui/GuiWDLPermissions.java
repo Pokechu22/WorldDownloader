@@ -18,6 +18,7 @@ import javax.annotation.Nullable;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.StringTextComponent;
 import wdl.WDL;
 import wdl.WDLPluginChannels;
 import wdl.gui.widget.WDLButton;
@@ -53,6 +54,7 @@ public class GuiWDLPermissions extends WDLScreen {
 	 * @param parent
 	 */
 	public GuiWDLPermissions(@Nullable Screen parent, WDL wdl) {
+		super(new StringTextComponent("Permission info")); // XXX Untranslated
 		this.parent = parent;
 		this.wdl = wdl;
 	}
@@ -150,9 +152,6 @@ public class GuiWDLPermissions extends WDLScreen {
 	@Override
 	public void render(int mouseX, int mouseY, float partialTicks) {
 		super.render(mouseX, mouseY, partialTicks);
-
-		this.drawCenteredString(this.font, "Permission info",
-				this.width / 2, 8, 0xFFFFFF);
 
 		if (!WDLPluginChannels.hasPermissions()) {
 			this.drawCenteredString(this.font,

@@ -120,6 +120,7 @@ public class GuiWDLMessages extends WDLScreen {
 	private final IConfiguration config;
 
 	public GuiWDLMessages(@Nullable Screen parent, WDL wdl) {
+		super("wdl.gui.messages.message.title");
 		this.parent = parent;
 		this.wdl = wdl;
 		this.config = WDL.serverProps;
@@ -177,10 +178,6 @@ public class GuiWDLMessages extends WDLScreen {
 
 		this.renderBackground();
 		super.render(mouseX, mouseY, partialTicks);
-
-		this.drawCenteredString(this.font,
-				I18n.format("wdl.gui.messages.message.title"),
-				this.width / 2, 8, 0xFFFFFF);
 
 		String tooltip = null;
 		if (hoveredButtonTooltip != null) {

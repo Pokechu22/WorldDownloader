@@ -22,13 +22,14 @@ import javax.annotation.Nullable;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.TextComponentTranslation;
 import wdl.WDL;
 import wdl.WDLPluginChannels;
 import wdl.config.IConfiguration;
 import wdl.config.settings.MiscSettings;
-import wdl.gui.widget.WDLButton;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.GuiList;
+import wdl.gui.widget.WDLButton;
 import wdl.gui.widget.WDLScreen;
 import wdl.update.WDLUpdateChecker;
 
@@ -105,8 +106,6 @@ public class GuiWDL extends WDLScreen {
 		}
 	}
 
-	private String title = "";
-
 	@Nullable
 	private final GuiScreen parent;
 	private final WDL wdl;
@@ -115,6 +114,7 @@ public class GuiWDL extends WDLScreen {
 	private GuiTextField worldname;
 
 	public GuiWDL(@Nullable GuiScreen parent, WDL wdl) {
+		super(new TextComponentTranslation("wdl.gui.wdl.title", WDL.baseFolderName));
 		this.parent = parent;
 		this.wdl = wdl;
 		this.config = WDL.serverProps;
@@ -125,8 +125,6 @@ public class GuiWDL extends WDLScreen {
 	 */
 	@Override
 	public void init() {
-		this.title = I18n.format("wdl.gui.wdl.title", WDL.baseFolderName);
-
 		this.worldname = this.addTextField(new GuiTextField(42, this.font,
 				this.width / 2 - 155, 19, 150, 18));
 		this.worldname.setText(this.config.getValue(MiscSettings.SERVER_NAME));
@@ -162,8 +160,6 @@ public class GuiWDL extends WDLScreen {
 
 		super.render(mouseX, mouseY, partialTicks);
 
-		this.drawCenteredString(this.font, this.title,
-				this.width / 2, 8, 0xFFFFFF);
 		String name = I18n.format("wdl.gui.wdl.worldname");
 		this.drawString(this.font, name, this.worldname.x
 				- this.font.getStringWidth(name + " "), 26, 0xFFFFFF);

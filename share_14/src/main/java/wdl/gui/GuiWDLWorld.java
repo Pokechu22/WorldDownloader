@@ -18,6 +18,7 @@ import javax.annotation.Nullable;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.TranslationTextComponent;
 import wdl.WDL;
 import wdl.config.IConfiguration;
 import wdl.config.settings.WorldSettings;
@@ -28,7 +29,6 @@ import wdl.gui.widget.WDLButton;
 import wdl.gui.widget.WDLScreen;
 
 public class GuiWDLWorld extends WDLScreen {
-	private String title;
 	@Nullable
 	private final Screen parent;
 	private final WDL wdl;
@@ -46,6 +46,7 @@ public class GuiWDLWorld extends WDLScreen {
 	private int spawnTextY;
 
 	public GuiWDLWorld(@Nullable Screen parent, WDL wdl) {
+		super(new TranslationTextComponent("wdl.gui.world.title", WDL.baseFolderName));
 		this.parent = parent;
 		this.wdl = wdl;
 		this.config = wdl.worldProps;
@@ -56,8 +57,6 @@ public class GuiWDLWorld extends WDLScreen {
 	 */
 	@Override
 	public void init() {
-		this.title = I18n.format("wdl.gui.world.title", WDL.baseFolderName);
-
 		int y = this.height / 4 - 15;
 
 		this.gamemodeBtn = this.addButton(new SettingButton(
@@ -124,9 +123,6 @@ public class GuiWDLWorld extends WDLScreen {
 	@Override
 	public void render(int mouseX, int mouseY, float partialTicks) {
 		Utils.drawListBackground(23, 32, 0, 0, height, width);
-
-		this.drawCenteredString(this.font, this.title,
-				this.width / 2, 8, 0xFFFFFF);
 
 		if (this.showSpawnFields) {
 			this.drawString(this.font, "X:", this.width / 2 - 99,

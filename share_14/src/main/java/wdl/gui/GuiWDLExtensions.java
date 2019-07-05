@@ -234,6 +234,7 @@ public class GuiWDLExtensions extends WDLScreen {
 	private ModDetailList detailsList;
 
 	public GuiWDLExtensions(@Nullable Screen parent) {
+		super("wdl.gui.extensions.title");
 		this.parent = parent;
 	}
 
@@ -297,9 +298,5 @@ public class GuiWDLExtensions extends WDLScreen {
 		}
 
 		super.render(mouseX, mouseY, partialTicks);
-
-		this.drawCenteredString(this.font,
-				I18n.format("wdl.gui.extensions.title"), this.width / 2, 8,
-				0xFFFFFF);
 	}
 }

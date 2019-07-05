@@ -21,6 +21,7 @@ import javax.annotation.Nullable;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.StringTextComponent;
 import wdl.WDL;
 import wdl.WDLPluginChannels;
 import wdl.gui.widget.ButtonDisplayGui;
@@ -51,6 +52,7 @@ public class GuiWDLPermissionRequest extends WDLScreen {
 	private WDLButton submitButton;
 
 	public GuiWDLPermissionRequest(@Nullable Screen parent, WDL wdl) {
+		super(new StringTextComponent("Permission request")); // XXX Untranslated
 		this.parent = parent;
 		this.wdl = wdl;
 	}
@@ -141,13 +143,5 @@ public class GuiWDLPermissionRequest extends WDLScreen {
 			}
 		}
 		return false;
-	}
-
-	@Override
-	public void render(int mouseX, int mouseY, float partialTicks) {
-		super.render(mouseX, mouseY, partialTicks);
-
-		this.drawCenteredString(this.font, "Permission request",
-				this.width / 2, 8, 0xFFFFFF);
 	}
 }

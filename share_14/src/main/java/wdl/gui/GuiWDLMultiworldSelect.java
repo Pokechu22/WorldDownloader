@@ -20,6 +20,7 @@ import java.util.List;
 
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.ITextComponent;
 import wdl.WDL;
 import wdl.config.Configuration;
 import wdl.config.IConfiguration;
@@ -170,10 +171,6 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	 */
 	private final WorldSelectionCallback callback;
 	/**
-	 * Title of the GUI.
-	 */
-	private final String title;
-	/**
 	 * The accept button.
 	 */
 	private WDLButton acceptBtn;
@@ -226,11 +223,10 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	 */
 	private String searchText = "";
 
-	public GuiWDLMultiworldSelect(WDL wdl, String title, WorldSelectionCallback callback) {
-		super(wdl);
+	public GuiWDLMultiworldSelect(WDL wdl, ITextComponent title, WorldSelectionCallback callback) {
+		super(wdl, title);
 
 		this.wdl = wdl;
-		this.title = title;
 		this.callback = callback;
 
 		// Build a list of world names.
@@ -370,9 +366,6 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		}
 
 		Utils.drawBorder(53, 53, 0, 0, height, width);
-
-		this.drawCenteredString(this.font, title, this.width / 2, 8,
-				0xFFFFFF);
 
 		this.drawCenteredString(this.font,
 				I18n.format("wdl.gui.multiworldSelect.subtitle"),

@@ -58,6 +58,7 @@ public class GuiSavedChunks extends WDLScreen {
 	private int lastTickX, lastTickY;
 
 	public GuiSavedChunks(@Nullable GuiScreen parent, WDL wdl) {
+		super("wdl.gui.savedChunks.title");
 		this.parent = parent;
 		this.wdl = wdl;
 
@@ -125,9 +126,6 @@ public class GuiSavedChunks extends WDLScreen {
 
 		// Draw the main borders now so that positions are hidden behind it.
 		Utils.drawBorder(TOP_MARGIN, BOTTOM_MARGIN, 0, 0, height, width);
-
-		this.drawCenteredString(this.font, I18n.format("wdl.gui.savedChunks.title"),
-				this.width / 2, 8, 0xFFFFFF);
 
 		if (mouseY > TOP_MARGIN && mouseY < height - BOTTOM_MARGIN) {
 			int x = displayXToChunkX(mouseX);
