@@ -14,13 +14,13 @@ buildscript {
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.0.128'
-        classpath 'pokechu22.test.begradle:begradle:0.2.1-SNAPSHOT:fg3'
+        classpath 'pokechu22.test.begradle:begradle:0.2.1:fg3'
     }
 }
 
 apply plugin: 'java'
 
-version = "4.0.5.1-SNAPSHOT"
+version = "4.0.5.1"
 group = "wdl"
 archivesBaseName = "WorldDownloader"
 libsDirName = "../../libs/${version}"
