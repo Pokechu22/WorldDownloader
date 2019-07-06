@@ -71,7 +71,7 @@ public class LecternTest extends AbstractBlockHandlerTest<LecternTileEntity, Lec
 		LecternBlock.tryPlaceBook(serverWorld, pos, serverWorld.getBlockState(pos), stack);
 		IIntArray fields = ReflectionUtils.findAndGetPrivateField(te, IIntArray.class);
 		fields.set(0, 3); // Update the page
-		assertThat(te.func_214041_g(), is(3));
+		assertThat(te.getPage(), is(3));
 
 		LecternContainer test = (LecternContainer)makeClientContainer(pos);
 		runHandler(pos, test);

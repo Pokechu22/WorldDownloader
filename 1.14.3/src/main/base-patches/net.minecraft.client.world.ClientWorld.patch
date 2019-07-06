@@ -6,7 +6,7 @@
  
 -public class ClientWorld extends World {
 +public class ClientWorld extends World/* WDL >>> */ implements wdl.ducks.IBaseChangesApplied/* <<< WDL */ {
-    private final List<Entity> field_217428_a = Lists.newArrayList();
+    private final List<Entity> globalEntities = Lists.newArrayList();
     private final Int2ObjectMap<Entity> entitiesById = new Int2ObjectOpenHashMap<>();
     private final ClientPlayNetHandler connection;
 @@ -96,6 +96,10 @@
@@ -19,7 +19,7 @@
 +      /* <<< WDL */
     }
  
-    public Iterable<Entity> func_217416_b() {
+    public Iterable<Entity> getAllEntities() {
 @@ -271,6 +275,10 @@
     }
  

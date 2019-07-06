@@ -33,7 +33,7 @@ public class LecternHandler extends BlockHandler<LecternTileEntity, LecternConta
 	@Override
 	public ITextComponent handle(BlockPos clickedPos, LecternContainer container, LecternTileEntity blockEntity,
 			IBlockReader world, BiConsumer<BlockPos, LecternTileEntity> saveMethod) throws HandlerException {
-		blockEntity.func_214045_a(container.func_217016_e()); // setBook, getBook
+		blockEntity.setBook(container.getBook());
 		saveInventoryFields(container, blockEntity); // current page
 		// NOTE: Cannot be renamed
 		saveMethod.accept(clickedPos, blockEntity);

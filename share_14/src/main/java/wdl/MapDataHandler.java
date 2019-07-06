@@ -146,7 +146,7 @@ public final class MapDataHandler {
 		byte scale = mapData.scale;
 
 		// No convenient way to filter it seems
-		Iterable<Entity> entities = ((ClientWorld)world).func_217416_b();
+		Iterable<Entity> entities = ((ClientWorld)world).getAllEntities();
 		for (Entity e : entities) {
 			if (!(e instanceof ItemFrameEntity)) {
 				continue;
