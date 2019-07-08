@@ -66,17 +66,17 @@ abstract class WDLChunkLoaderBase extends ChunkLoader {
 		File baseFolder = handler.getWorldDirectory();
 		// XXX No forge support at this time
 
+		File dimensionFolder;
 		if (dimension instanceof NetherDimension) {
-			File file = new File(baseFolder, "DIM-1");
-			file.mkdirs();
-			return file;
+			dimensionFolder = new File(baseFolder, "DIM-1");
 		} else if (dimension instanceof EndDimension) {
-			File file = new File(baseFolder, "DIM1");
-			file.mkdirs();
-			return file;
+			dimensionFolder = new File(baseFolder, "DIM1");
+		} else {
+			// Assume that this is the overworld.
+			dimensionFolder = baseFolder;
 		}
 
-		return new File(baseFolder, "region");
+		return new File(dimensionFolder, "region");
 	}
 
 	protected final WDL wdl;
