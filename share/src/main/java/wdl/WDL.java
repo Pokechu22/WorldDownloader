@@ -922,7 +922,7 @@ public class WDL {
 			for (int y = 0; y < 16; y++) {
 				for (int z = 0; z < 16; z++) {
 					for (int x = 0; x < 16; x++) {
-						Block block = array[0].get(x, y, z).getBlock(); 
+						Block block = array[0].getBlockState(x, y, z).getBlock(); 
 						if (!(block instanceof BlockAir || block instanceof BlockBed)) {
 							// Contains a non-airoid; stop
 							return false;
