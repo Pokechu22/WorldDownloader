@@ -292,6 +292,34 @@ public class WDL {
 	 * @return true when the calling method should exit (this is prompting), false if it should continue
 	 */
 	public boolean promptForInfoForSettings(String context, boolean checkLastModified, Runnable callback, Runnable cancel) {
+		// NOTE: This is checked first, even though this condition will fail initially while
+		// the !propsFound one will be hit first.
+		// That's because this one will trigger on the next call, but the properties
+		// will not have yet been loaded.  We want to ask this question next, and
+		// then the properties will finally be loaded.
+		// This code really needs to be redone.
+		if (isMultiworld && worldName.isEmpty()) {
+			minecraft.displayGuiScreen(new GuiWDLMultiworldSelect(this,
+					new TextComponentTranslation("wdl.gui.multiworldSelect.title." + context),
+					new GuiWDLMultiworldSelect.WorldSelectionCallback() {
+				@Override
+				public void onWorldSelected(String selectedWorld) {
+					worldName = selectedWorld;
+
+					worldProps = loadWorldProps(selectedWorld);
+					propsFound = true; // Successfully loaded, even if the file doesn't exist.
+					gameRules = loadGameRules(selectedWorld);
+					callback.run();
+				}
+
+				@Override
+				public void onCancel() {
+					cancel.run();
+				}
+			}));
+			return true;
+		}
+
 		if (!propsFound) {
 			minecraft.displayGuiScreen(new GuiWDLMultiworld(new GuiWDLMultiworld.MultiworldCallback() {
 				@Override
@@ -304,27 +332,6 @@ public class WDL {
 						propsFound = true;
 					}
 
-					callback.run();
-				}
-
-				@Override
-				public void onCancel() {
-					cancel.run();
-				}
-			}));
-			return true;
-		}
-
-		if (isMultiworld && worldName.isEmpty()) {
-			minecraft.displayGuiScreen(new GuiWDLMultiworldSelect(this,
-					new TextComponentTranslation("wdl.gui.multiworldSelect.title." + context),
-					new GuiWDLMultiworldSelect.WorldSelectionCallback() {
-				@Override
-				public void onWorldSelected(String selectedWorld) {
-					worldName = selectedWorld;
-
-					worldProps = loadWorldProps(selectedWorld);
-					gameRules = loadGameRules(selectedWorld);
 					callback.run();
 				}
 
