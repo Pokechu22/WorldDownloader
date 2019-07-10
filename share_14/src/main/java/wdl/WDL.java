@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReferenceArray;
 
 import javax.annotation.Nullable;
@@ -175,6 +176,13 @@ public class WDL {
 	 * world.
 	 */
 	public Map<Integer, MapData> newMapDatas = new HashMap<>();
+
+	/**
+	 * The chunk position of each entity that has been saved, by UUID.
+	 * Cleared after that chunk has been written to disk.  Used to avoid
+	 * writing the same entity into multiple chunks.
+	 */
+	public Map<UUID, ChunkPos> entityPositions = new HashMap<>();
 
 	/**
 	 * All chunks that have been saved, for use in a UI.
@@ -1510,10 +1518,14 @@ public class WDL {
 	 */
 	public void unloadChunk(ChunkPos pos) {
 		Map<BlockPos, TileEntity> m = newTileEntities.get(pos);
-		if(m != null) {
+		if (m != null) {
 			m.clear();
 		}
 		newTileEntities.remove(pos);
+		// The entity has been saved, so there's no easy way to remove it from the already saved file.
+		// TODO: In the future it might be worth rewriting existing chunks for this, but that seems
+		// like a fair bit of work for the moment.
+		newEntities.get(pos).forEach(e -> entityPositions.remove(e.getUniqueID()));
 		newEntities.removeAll(pos);
 	}
 
@@ -1635,6 +1647,7 @@ public class WDL {
 		state.addDetail("chunkLoader", chunkLoader);
 		state.addDetail("newTileEntities", newTileEntities);
 		state.addDetail("newEntities", newEntities);
+		state.addDetail("entityPositions", entityPositions);
 		state.addDetail("newMapDatas", newMapDatas);
 		state.addDetail("downloading", downloading);
 		state.addDetail("isMultiworld", isMultiworld);

@@ -91,6 +91,10 @@ public class WDLChunkLoader extends WDLChunkLoaderBase {
 		}
 		// Add the manually saved entities.
 		for (Entity e : wdl.newEntities.get(chunk.getPos())) {
+			assert chunk.getPos().equals(wdl.entityPositions.get(e.getUniqueID())) :
+				"Mismatch between position of " + e + " in "
+				+ chunk.getPos() + " and position recorded in entityPositions of "
+				+ wdl.entityPositions.get(e.getUniqueID());
 			// "Unkill" the entity, since it is killed when it is unloaded.
 			e.removed = false;
 			entities.add(e);

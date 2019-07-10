@@ -14,7 +14,12 @@
  */
 package wdl;
 
+import java.util.UUID;
+
 import javax.annotation.Nonnull;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -62,6 +67,8 @@ public class WDLEvents {
 
 	// XXX this shoudln't be static
 	private static WDL wdl = WDL.INSTANCE;
+
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
 	 * Must be called after the static World object in Minecraft has been
@@ -371,8 +378,16 @@ public class WDLEvents {
 						WDLMessageTypes.REMOVE_ENTITY,
 						"wdl.messages.removeEntity.savingDistance", entity,
 						entity.getPositionVector().toString(), wdl.player.getPositionVector(), threshold, serverViewDistance);
-				wdl.newEntities.put(new ChunkPos(entity.chunkCoordX,
-						entity.chunkCoordZ), entity);
+				ChunkPos pos = new ChunkPos(entity.chunkCoordX, entity.chunkCoordZ);
+				UUID uuid = entity.getUniqueID();
+				if (wdl.entityPositions.containsKey(uuid)) {
+					// Remove previous entity, to avoid saving the same one in multiple chunks.
+					ChunkPos prevPos = wdl.entityPositions.get(uuid);
+					boolean removedSome = wdl.newEntities.get(pos).removeIf(e -> e.getUniqueID().equals(uuid));
+					LOGGER.info("Replacing entity with UUID {} previously located at {} with new position {}.  There was an entity at old position (should be true): {}", uuid, prevPos, pos, removedSome);
+				}
+				wdl.newEntities.put(pos, entity);
+				wdl.entityPositions.put(uuid, pos);
 			} else {
 				WDLMessages.chatMessageTranslated(
 						WDL.serverProps,
