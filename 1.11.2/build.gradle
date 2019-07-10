@@ -14,7 +14,7 @@ buildscript {
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
-        classpath 'pokechu22.test.begradle:begradle:0.2.1:fg2'
+        classpath 'pokechu22.test.begradle:begradle:0.2.2-SNAPSHOT:fg2'
     }
 }
 
@@ -41,7 +41,7 @@ dependencies {
 minecraft {
     suppressMappingVersionWarnings = true
     version = "1.11.2"
-    mappings = "snapshot_20190708"
+    mappings = "snapshot_20190710"
     runDir = "run"
 
     // We don't currently want a source jar (doesn't work well for base edits, and the version info doesn't work yet)

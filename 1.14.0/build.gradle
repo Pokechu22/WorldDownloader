@@ -13,8 +13,8 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.0.128'
-        classpath 'pokechu22.test.begradle:begradle:0.2.1:fg3'
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.0.130'
+        classpath 'pokechu22.test.begradle:begradle:0.2.2-SNAPSHOT:fg3'
     }
 }
 
@@ -47,7 +47,7 @@ sourceSets {
 
 minecraft {
     //suppressMappingVersionWarnings = true
-    mappings channel: 'snapshot', version: '20190708-1.14.3'
+    mappings channel: 'snapshot', version: '20190710-1.14.3'
     runs {
         client {
             workingDirectory project.file('run')
