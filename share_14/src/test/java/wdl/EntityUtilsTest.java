@@ -43,11 +43,7 @@ import net.minecraft.entity.passive.PigEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.play.ServerPlayNetHandler;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.ServerWorld;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.ChunkHolder;
-import net.minecraft.world.chunk.ChunkManager;
-import net.minecraft.world.chunk.TicketManager;
 
 /**
  * An experimental test around the entity tracking code.  Not particularly complete.
@@ -94,7 +90,7 @@ public class EntityUtilsTest extends MaybeMixinTest {
 	 */
 	protected void runTrackerTest(Function<World, ? extends Entity> entitySupplier, int threshold,
 			int serverViewDistance, int numTicks, BiPredicate<Integer, Entity> keepEntity, IntFunction<Vec3d> posFunc) throws Exception {
-		ServerWorld world = TestWorld.makeServer();
+		TestWorld.ServerWorld world = TestWorld.makeServer();
 
 		ServerPlayerEntity player = mock(ServerPlayerEntity.class, RETURNS_DEEP_STUBS);
 		List<Entity> trackedEntities = new ArrayList<>();
@@ -130,16 +126,16 @@ public class EntityUtilsTest extends MaybeMixinTest {
 		doCallRealMethod().when(tracker).untrack(any());
 		doCallRealMethod().when(tracker).tickEntityTracker();
 		// We bypass the constructor, so this needs to be manually set
-		Class<? extends TicketManager> ticketManagerClass = Arrays
-				.stream(ChunkManager.class.getDeclaredClasses())
-				.filter(TicketManager.class::isAssignableFrom)
-				.map(c -> c.<TicketManager>asSubclass(TicketManager.class)).findAny().get();
-		setToMock(tracker, ChunkManager.class, ticketManagerClass);
-		Long2ObjectLinkedOpenHashMap<ChunkHolder> chunkHolders1 = new Long2ObjectLinkedOpenHashMap<>();
-		ReflectionUtils.findAndSetPrivateField(tracker, ChunkManager.class, Long2ObjectLinkedOpenHashMap.class, chunkHolders1);
+		Class<?> ticketManagerClass = Arrays
+				.stream(MockableChunkManager.CHUNK_MANAGER_CLASS.getDeclaredClasses())
+				.filter(MockableChunkManager.TICKET_MANAGER_CLASS::isAssignableFrom)
+				.findAny().get();
+		setToMock(tracker, MockableChunkManager.CHUNK_MANAGER_CLASS, ticketManagerClass);
+		Long2ObjectLinkedOpenHashMap<?> chunkHolders1 = new Long2ObjectLinkedOpenHashMap<>();
+		ReflectionUtils.findAndSetPrivateField(tracker, MockableChunkManager.CHUNK_MANAGER_CLASS, Long2ObjectLinkedOpenHashMap.class, chunkHolders1);
 		Int2ObjectMap<?> trackerTrackedEntities = new Int2ObjectOpenHashMap<>();
-		ReflectionUtils.findAndSetPrivateField(tracker, ChunkManager.class, Int2ObjectMap.class, trackerTrackedEntities);
-		ReflectionUtils.findAndSetPrivateField(tracker, ChunkManager.class, ServerWorld.class, world);
+		ReflectionUtils.findAndSetPrivateField(tracker, MockableChunkManager.CHUNK_MANAGER_CLASS, Int2ObjectMap.class, trackerTrackedEntities);
+		ReflectionUtils.findAndSetPrivateField(tracker, MockableChunkManager.CHUNK_MANAGER_CLASS, TestWorld.ServerWorld.SERVER_WORLD_CLASS, world);
 		// Required because world doesn't set it up right for a mock, and mocking it
 		// would be making assumptions about how this is calculated
 		// (NOTE: I'm not sure what the difference between the two parameters are)

@@ -24,6 +24,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.world.ServerWorld;
 import net.minecraft.world.chunk.ChunkManager;
 import net.minecraft.world.chunk.ServerChunkProvider;
+import net.minecraft.world.chunk.TicketManager;
 import net.minecraft.world.chunk.listener.IChunkStatusListener;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.feature.template.TemplateManager;
@@ -34,6 +35,9 @@ import net.minecraft.world.storage.DimensionSavedDataManager;
  * Intended to be mocked.
  */
 class MockableChunkManager extends ChunkManager {
+	public static final Class<? super MockableChunkManager> CHUNK_MANAGER_CLASS = ChunkManager.class;
+	public static final Class<?> TICKET_MANAGER_CLASS = TicketManager.class;
+
 	public MockableChunkManager() {
 		super(null, null, null, null, null, null, null, null, null, null, 0, 0);
 	}

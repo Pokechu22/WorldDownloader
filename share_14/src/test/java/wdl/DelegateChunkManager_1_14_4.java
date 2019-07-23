@@ -21,10 +21,10 @@ import java.util.function.Supplier;
 import com.mojang.datafixers.DataFixer;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.world.ServerWorld;
-import net.minecraft.world.chunk.ChunkManager;
-import net.minecraft.world.chunk.ServerChunkProvider;
-import net.minecraft.world.chunk.TicketManager;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.server.TicketManager;
+import net.minecraft.world.server.ChunkManager;
+import net.minecraft.world.server.ServerChunkProvider;
 import net.minecraft.world.chunk.listener.IChunkStatusListener;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.feature.template.TemplateManager;

@@ -32,8 +32,6 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.world.ServerWorld;
-import net.minecraft.world.chunk.ChunkManager;
 
 /**
  * Tests the data contained within StandardEntityManagers.
@@ -87,8 +85,8 @@ public class StandardEntityManagersTest {
 		MockableChunkManager tracker = mock(MockableChunkManager.class);
 		// We bypass the constructor, so this needs to be manually set
 		Int2ObjectMap<?> trackedEntities = new Int2ObjectOpenHashMap<>();
-		ReflectionUtils.findAndSetPrivateField(tracker, ChunkManager.class, Int2ObjectMap.class, trackedEntities);
-		ReflectionUtils.findAndSetPrivateField(tracker, ChunkManager.class, ServerWorld.class, world);
+		ReflectionUtils.findAndSetPrivateField(tracker, MockableChunkManager.CHUNK_MANAGER_CLASS, Int2ObjectMap.class, trackedEntities);
+		ReflectionUtils.findAndSetPrivateField(tracker, MockableChunkManager.CHUNK_MANAGER_CLASS, TestWorld.ServerWorld.SERVER_WORLD_CLASS, world);
 		doCallRealMethod().when(tracker).track(any());
 
 		Entity entity = type.create(world);
