@@ -1,6 +1,6 @@
 --- net/minecraft/client/network/play/ClientPlayNetHandler.java
 +++ net/minecraft/client/network/play/ClientPlayNetHandler.java
-@@ -294,7 +294,7 @@
+@@ -297,7 +297,7 @@
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
  
@@ -9,7 +9,7 @@
     private static final Logger LOGGER = LogManager.getLogger();
     private final NetworkManager netManager;
     private final GameProfile profile;
-@@ -772,6 +772,10 @@
+@@ -775,6 +775,10 @@
     }
  
     public void processChunkUnload(SUnloadChunkPacket packetIn) {
@@ -20,7 +20,7 @@
        PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.client);
        int i = packetIn.getX();
        int j = packetIn.getZ();
-@@ -802,6 +806,10 @@
+@@ -809,6 +813,10 @@
      * Invoked when disconnecting, the parameter is a ChatComponent describing the reason for termination
      */
     public void onDisconnect(ITextComponent reason) {
@@ -31,7 +31,7 @@
        this.client.func_213254_o();
        if (this.guiScreenServer != null) {
           if (this.guiScreenServer instanceof RealmsScreenProxy) {
-@@ -850,6 +858,10 @@
+@@ -857,6 +865,10 @@
     public void handleChat(SChatPacket packetIn) {
        PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.client);
        this.client.ingameGUI.addChatMessage(packetIn.getType(), packetIn.getChatComponent());
@@ -42,7 +42,7 @@
     }
  
     /**
-@@ -1223,6 +1235,10 @@
+@@ -1230,6 +1242,10 @@
     public void handleBlockAction(SBlockActionPacket packetIn) {
        PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.client);
        this.client.world.addBlockEvent(packetIn.getBlockPosition(), packetIn.getBlockType(), packetIn.getData1(), packetIn.getData2());
@@ -53,7 +53,7 @@
     }
  
     /**
-@@ -1311,6 +1327,10 @@
+@@ -1318,6 +1334,10 @@
  
        packetIn.setMapdataTo(mapdata);
        mapitemrenderer.updateMapTexture(mapdata);
@@ -64,7 +64,7 @@
     }
  
     public void handleEffect(SPlaySoundEventPacket packetIn) {
-@@ -1890,7 +1910,10 @@
+@@ -1897,7 +1917,10 @@
  
              this.client.debugRenderer.field_217741_m.func_217692_a(pointofinterestdebugrenderer$braininfo);
           } else {
