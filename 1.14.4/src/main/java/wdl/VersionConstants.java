@@ -51,7 +51,7 @@ public class VersionConstants {
 	 */
 	public static int getDataVersion() {
 		// As per MinecraftVersion
-		return 1968;
+		return 1976;
 	}
 
 	/**
@@ -60,7 +60,7 @@ public class VersionConstants {
 	 * @return A version string, eg <samp>1.11</samp>.
 	 */
 	public static String getExpectedVersion() {
-		return "1.14.3";
+		return "1.14.4";
 	}
 
 	/**

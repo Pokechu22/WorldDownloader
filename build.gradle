@@ -52,6 +52,7 @@ if (ENABLE_UNSTABLE_BUILDS) { // see gradle.properties
 project(':1.14.1').evaluationDependsOn(':share')
 project(':1.14.2').evaluationDependsOn(':share')
 project(':1.14.3').evaluationDependsOn(':share')
+project(':1.14.4').evaluationDependsOn(':share')
 
 allprojects {
     tasks.withType(JavaCompile) {
