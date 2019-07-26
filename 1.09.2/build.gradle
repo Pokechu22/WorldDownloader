@@ -49,7 +49,7 @@ minecraft {
     // 1.9.2 actually does work with FG 2.2, but it'll claim it doesn't
     suppressVersionTest = true
     version = "1.9.2"
-    mappings = "snapshot_20190710"
+    mappings = "snapshot_20190725"
     runDir = "run"
 
     // We don't currently want a source jar (doesn't work well for base edits, and the version info doesn't work yet)
