@@ -176,3 +176,10 @@ jar {
     from sourceSets.api.output
     classifier = 'mc1.14.3'
 }
+
+// Unit tests require native libraries to be available, which ForgeGradle
+// doesn't do automatically...
+test {
+    dependsOn extractNatives
+    systemProperty 'java.library.path', file('build/natives')
+}
