@@ -38,7 +38,7 @@ final class MapFunctions {
 	 */
 	@Nullable
 	static MapData getMapData(World world, SMapDataPacket mapPacket) {
-		return world.func_217406_a("map_" + mapPacket.getMapId());
+		return world.getMapData("map_" + mapPacket.getMapId());
 	}
 
 	/* (non-javadoc)
