@@ -20,7 +20,7 @@ buildscript {
         // NOTE: must be compiled manually, not currently in any repos
         // Download https://github.com/Pokechu22/ForgeGradle-extensions and
         // then run 'gradlew install'
-        // classpath 'pokechu22.test.begradle:begradle:0.2.2:fg2'
+        // classpath 'pokechu22.test.begradle:begradle:0.2.3-SNAPSHOT:fg2'
     }
 }
 
