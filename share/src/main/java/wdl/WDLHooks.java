@@ -146,7 +146,7 @@ public class WDLHooks {
 											WDLMessageTypes.ON_GUI_CLOSED_WARNING,
 											"wdl.messages.onGuiClosedWarning.unhandledEntity", entity);
 								}
-							} else {
+							} else if (wdl.lastClickedBlock != null) {
 								BlockPos pos = wdl.lastClickedBlock;
 								for (ModInfo<IGuiHooksListener> info : WDLApi
 										.getImplementingExtensions(IGuiHooksListener.class)) {
