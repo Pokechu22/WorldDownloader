@@ -13,7 +13,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.0.130'
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.0.154'
         classpath 'pokechu22.test.begradle:begradle:0.2.3-SNAPSHOT:fg3'
     }
 }
