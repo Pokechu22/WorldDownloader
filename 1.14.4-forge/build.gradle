@@ -77,7 +77,7 @@ configurations {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.14.4-28.1.0'
+    minecraft 'net.minecraftforge:forge:1.14.4-28.1.93'
     // HACK: For some reason the libraries MC depends upon aren't added automatically
     // implementation "com.mojang:patchy:1.1"
     // implementation "oshi-project:oshi-core:1.1"
