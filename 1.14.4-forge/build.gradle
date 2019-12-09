@@ -66,6 +66,7 @@ minecraft {
     mappings channel: 'snapshot', version: '20191102-1.14.3'
     runs {
         client {
+            args("--mixin", "mixins.ForgeWDL.json")
             workingDirectory project.file('run')
             mods {
                 wdl {
