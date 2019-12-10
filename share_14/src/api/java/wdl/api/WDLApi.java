@@ -108,7 +108,7 @@ public class WDLApi {
 	 *
 	 * Does not check if there is an existing instance.
 	 */
-	static void setInstance(APIInstance instance) {
+	public static void setInstance(APIInstance instance) {
 		LOGGER.debug("Changing api instance from {} to {}", INSTANCE, instance);
 		INSTANCE = instance;
 	}
@@ -130,7 +130,7 @@ public class WDLApi {
 		public final String version;
 		public final T mod;
 
-		ModInfo(String id, String version, T mod) {
+		public ModInfo(String id, String version, T mod) {
 			this.id = id;
 			this.version = version;
 			this.mod = mod;
@@ -278,7 +278,7 @@ public class WDLApi {
 	/**
 	 * Delegates API logic.
 	 */
-	static interface APIInstance {
+	public static interface APIInstance {
 		/** @see {@link WDLApi#saveTileEntity(BlockPos, TileEntity)} */
 		abstract void saveTileEntity(BlockPos pos, TileEntity te);
 		/** @see {@link WDLApi#addWDLMod(String, String, IWDLMod)} */
@@ -302,7 +302,7 @@ public class WDLApi {
 	// a direct mediator to call e.g. an event (unlike with forge mods)
 	// So indirectly initialize it through reflection
 	// NOTE: The class must call setInstance during static initialization!
-	private static final String IMPL = "wdl.api.APIImpl";
+	/*private static final String IMPL = "wdl.api.APIImpl";
 	static {
 		try {
 			Class.forName(IMPL);
@@ -315,5 +315,5 @@ public class WDLApi {
 			// Did it not call setInstance in a static block?
 			LOGGER.error("After loading the API implementation class ({}), state is still not valid!  Things will probably break!", IMPL, e);
 		}
-	}
+	}*/
 }
