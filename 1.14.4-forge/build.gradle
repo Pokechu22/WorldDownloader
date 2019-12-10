@@ -92,7 +92,7 @@ configurations {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.14.4-28.1.93'
+    minecraft 'net.minecraftforge:forge:1.14.4-28.1.0'
 }
 
 sourceSets {
