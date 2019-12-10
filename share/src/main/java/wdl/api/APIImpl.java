@@ -43,10 +43,12 @@ import wdl.config.settings.MiscSettings.ExtensionEnabledSetting;
 /**
  * {@link WDLApi.APIInstance} implementation.
  */
-class APIImpl implements WDLApi.APIInstance {
+public class APIImpl implements WDLApi.APIInstance {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	private static Map<String, ModInfoImpl<?>> wdlMods = new HashMap<>();
+
+	private APIImpl() { }  // Internal use only
 
 	@Override
 	public void saveTileEntity(BlockPos pos, TileEntity te) {
@@ -229,6 +231,10 @@ class APIImpl implements WDLApi.APIInstance {
 			super(id, version, mod);
 			this.enabledSetting = new ExtensionEnabledSetting(id);
 		}
+	}
+
+	public static void ensureInitialized() {
+		LOGGER.debug("APIImpl.ensureInitialized()");
 	}
 
 	static {

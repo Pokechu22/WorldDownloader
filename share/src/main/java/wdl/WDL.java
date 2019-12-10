@@ -81,6 +81,7 @@ import net.minecraft.world.storage.SessionLockException;
 import net.minecraft.world.storage.ThreadedFileIOBase;
 import net.minecraft.world.storage.WorldInfo;
 import wdl.WorldBackup.WorldBackupType;
+import wdl.api.APIImpl;
 import wdl.api.IPlayerInfoEditor;
 import wdl.api.ISaveListener;
 import wdl.api.IWorldInfoEditor;
@@ -288,6 +289,10 @@ public class WDL {
 		serverProps = new Configuration(globalProps);
 		INSTANCE.worldProps = serverProps;
 		INSTANCE.gameRules = new GameRules();
+
+		// Now that all configuration is loaded, it should be safe to access this
+		// (and it shouldn't have issues with depending back on this class)
+		APIImpl.ensureInitialized();
 	}
 
 	/**

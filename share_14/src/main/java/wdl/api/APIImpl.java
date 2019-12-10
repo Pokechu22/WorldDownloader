@@ -48,6 +48,8 @@ public class APIImpl implements WDLApi.APIInstance {
 
 	private static Map<String, ModInfoImpl<?>> wdlMods = new HashMap<>();
 
+	private APIImpl() { }  // Internal use only
+
 	@Override
 	public void saveTileEntity(BlockPos pos, TileEntity te) {
 		if (!WDLPluginChannels.canSaveTileEntities(pos.getX() >> 4,
