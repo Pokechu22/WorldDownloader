@@ -149,6 +149,13 @@ targetCompatibility = "1.8"
 jar {
     from sourceSets.api.output
     classifier = 'mc1.14.4'
+    // Workaround for what appears to be a MixinGradle bug, where it fails at
+    // https://git.io/Je9fm due to a groovy.lang.MissingMethodException
+    // with SimpleFileCollection.from() and java.io.File.
+    // The default refMaps is set at https://git.io/Je9fY, and apparently
+    // configurableFiles() is deprecated nowadays with the replacement being
+    // files().  No idea why configurableFiles() is used there, then; this works.
+    ext.refMaps = files()
 }
 
 // Unit tests require native libraries to be available, which ForgeGradle
