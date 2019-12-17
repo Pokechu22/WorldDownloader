@@ -65,7 +65,7 @@ public class WorldSettingsTest extends MaybeMixinTest {
 		config.setValue(WorldSettings.SPAWN_X, 42);
 		config.setValue(WorldSettings.SPAWN_Y, 43);
 		config.setValue(WorldSettings.SPAWN_Z, 44);
-		Entity entity = mock(Entity.class);
+		Entity entity = mock(Entity.class, withSettings().defaultAnswer(CALLS_REAL_METHODS));
 		VersionedFunctions.setEntityPos(entity, 90, 24, 36);
 
 		// All of these are invalid.
