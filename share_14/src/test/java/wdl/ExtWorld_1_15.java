@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2018 Pokechu22, julialy
+ * Copyright (c) 2018-2019 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -50,16 +50,17 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.ServerWorld;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSettings;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.BiomeContainer;
 import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.chunk.AbstractChunkProvider;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkStatus;
 import net.minecraft.world.chunk.IChunk;
-import net.minecraft.world.chunk.ServerChunkProvider;
+import net.minecraft.world.server.ServerChunkProvider;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.storage.SaveHandler;
@@ -123,9 +124,11 @@ abstract class ExtWorldClient extends ClientWorld {
 		// Do nothing
 	}
 
-	private static final Biome[] NO_BIOMES = new Biome[16*16];
+	private static final BiomeContainer NO_BIOMES;
 	static {
-		Arrays.fill(NO_BIOMES, Biomes.THE_VOID);
+		Biome[] biomes = new Biome[BiomeContainer.field_227049_a_];
+		Arrays.fill(biomes, Biomes.THE_VOID);
+		NO_BIOMES = new BiomeContainer(biomes);
 	}
 
 	/**
@@ -155,11 +158,6 @@ abstract class ExtWorldClient extends ClientWorld {
 		@Override
 		public boolean chunkExists(int x, int z) {
 			return true;
-		}
-
-		@Override
-		public ChunkGenerator<?> getChunkGenerator() {
-			return null; // This is allowed, albeit awkward; see ChunkProviderClient
 		}
 	}
 }
@@ -223,7 +221,7 @@ abstract class ExtWorldServer extends ServerWorld {
 	public void interactBlock(BlockPos pos, PlayerEntity player) {
 		BlockState state = this.getBlockState(pos);
 		BlockRayTraceResult rayTraceResult = new BlockRayTraceResult(new Vec3d(pos), Direction.DOWN, pos, false);
-		state.onBlockActivated(this, player, Hand.MAIN_HAND, rayTraceResult);
+		state.func_227031_a_(this, player, Hand.MAIN_HAND, rayTraceResult);
 	}
 
 	/** Right-clicks an entity. */
@@ -254,9 +252,11 @@ abstract class ExtWorldServer extends ServerWorld {
 		// Do nothing
 	}
 
-	private static final Biome[] NO_BIOMES = new Biome[16*16];
+	private static final BiomeContainer NO_BIOMES;
 	static {
-		Arrays.fill(NO_BIOMES, Biomes.THE_VOID);
+		Biome[] biomes = new Biome[BiomeContainer.field_227049_a_];
+		Arrays.fill(biomes, Biomes.THE_VOID);
+		NO_BIOMES = new BiomeContainer(biomes);
 	}
 
 	/**
@@ -301,6 +301,6 @@ abstract class ExtWorldServer extends ServerWorld {
 
 	public void setPlayerSneaking(PlayerEntity player, boolean sneaking) {
 		// Exists only due to name issues
-		player.setSneaking(sneaking);
+		player.func_226284_e_(sneaking);
 	}
 }

@@ -161,7 +161,7 @@ public abstract class AbstractEntityHandlerTest<E extends Entity, C extends Cont
 		assertThat("Entity is not known to the server!", serverWorld.getEntityByID(eid), is(serverEntity));
 		assertThat("Entity is not known to the client!", clientWorld.getEntityByID(eid), is(notNullValue()));
 
-		serverPlayer.setSneaking(true);
+		serverWorld.setPlayerSneaking(serverPlayer, true);
 		serverPlayer.closeScreen();
 		assertSame("Should have reset server open container", serverPlayer.openContainer, serverPlayer.container);
 		assertSame("Should have reset client open container", clientPlayer.openContainer, clientPlayer.container);

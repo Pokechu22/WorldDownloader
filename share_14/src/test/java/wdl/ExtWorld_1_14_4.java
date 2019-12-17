@@ -298,4 +298,9 @@ abstract class ExtWorldServer extends ServerWorld {
 			return null; // This is allowed, albeit awkward; see ChunkProviderClient
 		}
 	}
+
+	public void setPlayerSneaking(PlayerEntity player, boolean sneaking) {
+		// Exists only due to name issues
+		player.setSneaking(sneaking);
+	}
 }
