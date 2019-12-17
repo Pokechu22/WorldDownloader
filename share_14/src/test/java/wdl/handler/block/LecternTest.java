@@ -25,12 +25,12 @@ import net.minecraft.inventory.container.LecternContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.ListNBT;
-import net.minecraft.nbt.StringNBT;
 import net.minecraft.tileentity.LecternTileEntity;
 import net.minecraft.util.IIntArray;
 import net.minecraft.util.math.BlockPos;
 import wdl.ReflectionUtils;
 import wdl.handler.HandlerException;
+import wdl.versioned.VersionedFunctions;
 
 public class LecternTest extends AbstractBlockHandlerTest<LecternTileEntity, LecternContainer, LecternHandler> {
 
@@ -46,7 +46,7 @@ public class LecternTest extends AbstractBlockHandlerTest<LecternTileEntity, Lec
 		 makeBlockEntity(pos);
 		ItemStack stack = new ItemStack(Items.WRITTEN_BOOK);
 		ListNBT pages = new ListNBT();
-		pages.add(new StringNBT("{\"text\": \"Hello world!\"}"));
+		pages.add(VersionedFunctions.createStringTag("{\"text\": \"Hello world!\"}"));
 		stack.setTagInfo("pages", pages);
 		assertTrue(LecternBlock.tryPlaceBook(serverWorld, pos, serverWorld.getBlockState(pos), stack));
 
@@ -62,11 +62,11 @@ public class LecternTest extends AbstractBlockHandlerTest<LecternTileEntity, Lec
 		LecternTileEntity te = makeBlockEntity(pos);
 		ItemStack stack = new ItemStack(Items.WRITTEN_BOOK);
 		ListNBT pages = new ListNBT();
-		pages.add(new StringNBT("\"p1\""));
-		pages.add(new StringNBT("\"p2\""));
-		pages.add(new StringNBT("\"p3\""));
-		pages.add(new StringNBT("\"p4\""));
-		pages.add(new StringNBT("\"p5\""));
+		pages.add(VersionedFunctions.createStringTag("\"p1\""));
+		pages.add(VersionedFunctions.createStringTag("\"p2\""));
+		pages.add(VersionedFunctions.createStringTag("\"p3\""));
+		pages.add(VersionedFunctions.createStringTag("\"p4\""));
+		pages.add(VersionedFunctions.createStringTag("\"p5\""));
 		stack.setTagInfo("pages", pages);
 		LecternBlock.tryPlaceBook(serverWorld, pos, serverWorld.getBlockState(pos), stack);
 		IIntArray fields = ReflectionUtils.findAndGetPrivateField(te, IIntArray.class);

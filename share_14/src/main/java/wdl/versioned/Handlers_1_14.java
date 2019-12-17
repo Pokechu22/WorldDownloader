@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017-2018 Pokechu22, julialy
+ * Copyright (c) 2017-2019 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -38,7 +38,6 @@ import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.block.TrappedChestBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
 import net.minecraft.tileentity.CommandBlockTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -202,12 +201,5 @@ final class HandlerFunctions {
 		VANILLA_VILLAGER_CAREERS.put(3, blacksmith);
 		VANILLA_VILLAGER_CAREERS.put(4, butcher);
 		VANILLA_VILLAGER_CAREERS.put(5, nitwit);
-	}
-
-	/* (non-javadoc)
-	 * @see VersionedFunctions#nbtString
-	 */
-	static String nbtString(INBT tag) {
-		return tag.toFormattedComponent("    ", 0).getString();
 	}
 }

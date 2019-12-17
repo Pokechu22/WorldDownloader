@@ -24,7 +24,6 @@ import it.unimi.dsi.fastutil.shorts.ShortList;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.LongArrayNBT;
-import net.minecraft.nbt.ShortNBT;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.SectionPos;
 import net.minecraft.world.LightType;
@@ -263,12 +262,11 @@ abstract class WDLChunkLoaderBase extends ChunkLoader {
 		ListNBT listnbt = new ListNBT();
 
 		for (ShortList shortlist : list) {
-			ListNBT sublist = new ListNBT();
-
+			ListNBT sublist;
 			if (shortlist != null) {
-				for (Short val : shortlist) {
-					sublist.add(new ShortNBT(val));
-				}
+				sublist = VersionedFunctions.createShortListTag(shortlist.toShortArray());
+			} else {
+				sublist = VersionedFunctions.createShortListTag();
 			}
 
 			listnbt.add(sublist);

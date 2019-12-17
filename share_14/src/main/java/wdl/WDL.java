@@ -56,8 +56,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.CompressedStreamTools;
-import net.minecraft.nbt.DoubleNBT;
-import net.minecraft.nbt.FloatNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.tileentity.TileEntity;
@@ -1128,22 +1126,14 @@ public class WDL {
 			int x = worldProps.getValue(PlayerSettings.PLAYER_X);
 			int y = worldProps.getValue(PlayerSettings.PLAYER_Y);
 			int z = worldProps.getValue(PlayerSettings.PLAYER_Z);
-			//Positions are offset to center of block,
-			//or player height.
-			ListNBT pos = new ListNBT();
-			pos.add(new DoubleNBT(x + 0.5D));
-			pos.add(new DoubleNBT(y + 0.621D));
-			pos.add(new DoubleNBT(z + 0.5D));
+			// Positions are offset to center of block,
+			// or player height.
+			ListNBT pos = VersionedFunctions.createDoubleListTag(x + 0.5D, y + 0.621D, z + 0.5D);
 			playerNBT.put("Pos", pos);
-			ListNBT motion = new ListNBT();
-			motion.add(new DoubleNBT(0.0D));
-			//Force them to land on the ground?
-			motion.add(new DoubleNBT(-0.0001D));
-			motion.add(new DoubleNBT(0.0D));
+			// Force them to land on the ground?
+			ListNBT motion = VersionedFunctions.createDoubleListTag(0.0D, -0.0001D, 0.0D);
 			playerNBT.put("Motion", motion);
-			ListNBT rotation = new ListNBT();
-			rotation.add(new FloatNBT(0.0f));
-			rotation.add(new FloatNBT(0.0f));
+			ListNBT rotation = VersionedFunctions.createFloatListTag(0.0f, 0.0f);
 			playerNBT.put("Rotation", rotation);
 		}
 

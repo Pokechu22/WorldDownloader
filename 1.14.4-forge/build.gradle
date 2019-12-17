@@ -104,6 +104,7 @@ sourceSets {
             srcDir project(':1.14.4').file("src/main/java")
             srcDir project(':share_14').file("src/main/java")
             exclude "wdl/versioned/GameRules_1_14.java"
+            exclude "wdl/versioned/NBT_1_15.java"
         }
         resources {
             srcDir project(':share').file("src/main/resources")

@@ -61,8 +61,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagDouble;
-import net.minecraft.nbt.NBTTagFloat;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.realms.RealmsScreen;
@@ -1138,22 +1136,14 @@ public class WDL {
 			int x = worldProps.getValue(PlayerSettings.PLAYER_X);
 			int y = worldProps.getValue(PlayerSettings.PLAYER_Y);
 			int z = worldProps.getValue(PlayerSettings.PLAYER_Z);
-			//Positions are offset to center of block,
-			//or player height.
-			NBTTagList pos = new NBTTagList();
-			pos.add(new NBTTagDouble(x + 0.5D));
-			pos.add(new NBTTagDouble(y + 0.621D));
-			pos.add(new NBTTagDouble(z + 0.5D));
+			// Positions are offset to center of block,
+			// or player height.
+			NBTTagList pos = VersionedFunctions.createDoubleListTag(x + 0.5D, y + 0.621D, z + 0.5D);
 			playerNBT.put("Pos", pos);
-			NBTTagList motion = new NBTTagList();
-			motion.add(new NBTTagDouble(0.0D));
-			//Force them to land on the ground?
-			motion.add(new NBTTagDouble(-0.0001D));
-			motion.add(new NBTTagDouble(0.0D));
+			// Force them to land on the ground?
+			NBTTagList motion = VersionedFunctions.createDoubleListTag(0.0D, -0.0001D, 0.0D);
 			playerNBT.put("Motion", motion);
-			NBTTagList rotation = new NBTTagList();
-			rotation.add(new NBTTagFloat(0.0f));
-			rotation.add(new NBTTagFloat(0.0f));
+			NBTTagList rotation = VersionedFunctions.createFloatListTag(0.0f, 0.0f);
 			playerNBT.put("Rotation", rotation);
 		}
 
