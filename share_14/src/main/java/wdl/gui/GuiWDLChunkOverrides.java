@@ -17,7 +17,7 @@ package wdl.gui;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.Multimap;
-import com.mojang.blaze3d.platform.GlStateManager;
+//import com.mojang.blaze3d.platform.GlStateManager;
 
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.screen.Screen;
@@ -400,7 +400,7 @@ public class GuiWDLChunkOverrides extends WDLScreen {
 		@Override
 		public void afterDraw() {
 			// Reset the color, which gets set somewhere (probably when drawing text)
-			GlStateManager.color3f(1.0f, 1.0f, 1.0f);
+			//GlStateManager.color3f(1.0f, 1.0f, 1.0f); XXX broken until 1.15 names work
 			minecraft.getTextureManager().bindTexture(WIDGET_TEXTURES);
 
 			this.blit(this.x + 2, this.y + 2,
