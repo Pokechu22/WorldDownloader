@@ -1,6 +1,6 @@
 --- net/minecraft/client/world/ClientWorld.java
 +++ net/minecraft/client/world/ClientWorld.java
-@@ -64,7 +64,7 @@
+@@ -74,7 +74,7 @@
  import net.minecraft.world.storage.MapData;
  import net.minecraft.world.storage.WorldInfo;
  
@@ -9,7 +9,7 @@
     private final List<Entity> globalEntities = Lists.newArrayList();
     private final Int2ObjectMap<Entity> entitiesById = new Int2ObjectOpenHashMap<>();
     private final ClientPlayNetHandler connection;
-@@ -96,6 +96,10 @@
+@@ -112,6 +112,10 @@
        this.chunkProvider.tick(hasTimeLeft);
        this.func_217426_j();
        this.getProfiler().endSection();
@@ -20,7 +20,7 @@
     }
  
     public Iterable<Entity> getAllEntities() {
-@@ -271,6 +275,10 @@
+@@ -295,6 +299,10 @@
     }
  
     public void removeEntityFromWorld(int eid) {
