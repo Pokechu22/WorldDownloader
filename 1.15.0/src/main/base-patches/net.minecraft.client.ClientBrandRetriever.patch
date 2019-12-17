@@ -1,0 +1,10 @@
+--- net/minecraft/client/ClientBrandRetriever.java
++++ net/minecraft/client/ClientBrandRetriever.java
+@@ -2,6 +2,6 @@
+ 
+ public class ClientBrandRetriever {
+    public static String getClientModName() {
+-      return "vanilla";
++      return "WorldDownloader-" + wdl.VersionConstants.getModVersion();
+    }
+ }

@@ -1,0 +1,32 @@
+--- net/minecraft/client/gui/screen/IngameMenuScreen.java
++++ net/minecraft/client/gui/screen/IngameMenuScreen.java
+@@ -8,7 +8,7 @@
+ import net.minecraft.util.Util;
+ import net.minecraft.util.text.TranslationTextComponent;
+ 
+-public class IngameMenuScreen extends Screen {
++public class IngameMenuScreen extends Screen/* WDL >>> */ implements wdl.ducks.IBaseChangesApplied/* <<< WDL */ {
+    private final boolean isFullMenu;
+ 
+    public IngameMenuScreen(boolean p_i51519_1_) {
+@@ -63,6 +63,10 @@
+       }));
+       button.active = this.minecraft.isSingleplayer() && !this.minecraft.getIntegratedServer().getPublic();
+       Button button1 = this.addButton(new Button(this.width / 2 - 102, this.height / 4 + 120 + -16, 204, 20, I18n.format("menu.returnToMenu"), (p_213067_1_) -> {
++         /* WDL >>> */
++         wdl.WDLHooks.handleWDLButtonClick(IngameMenuScreen.this, p_213067_1_); // XXX this call is awkward, maybe just make it for the disconnect button?
++         /* <<< WDL */
++
+          boolean flag = this.minecraft.isIntegratedServerRunning();
+          boolean flag1 = this.minecraft.isConnectedToRealms();
+          p_213067_1_.active = false;
+@@ -87,6 +91,9 @@
+          button1.setMessage(I18n.format("menu.disconnect"));
+       }
+ 
++      /* WDL >>> */
++      wdl.WDLHooks.injectWDLButtons(this, buttons, this::addButton);
++      /* <<< WDL */
+    }
+ 
+    public void tick() {
