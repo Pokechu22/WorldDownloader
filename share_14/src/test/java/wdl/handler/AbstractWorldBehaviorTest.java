@@ -32,6 +32,7 @@ import junit.framework.ComparisonFailure;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.GameSettings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.IHasContainer;
@@ -92,7 +93,7 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 			mc.currentScreen = screen;
 		})).when(mc).displayGuiScreen(any());
 		when(mc.isOnExecutionThread()).thenReturn(true);
-		mc.ingameGUI = mock(IngameGui.class);
+		ReflectionUtils.findAndSetPrivateField(mc, Minecraft.class, IngameGui.class, mock(IngameGui.class));
 		when(mc.ingameGUI.getChatGUI()).thenReturn(mock(NewChatGui.class));
 
 		clientWorld = TestWorld.makeClient();
@@ -111,7 +112,7 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 				mock(MapItemRenderer.class, withSettings().useConstructor(new Object[] {null})));
 		mc.world = clientWorld;
 
-		mc.gameSettings = VersionedFunctions.createNewGameSettings();
+		ReflectionUtils.findAndSetPrivateField(mc, Minecraft.class, GameSettings.class, VersionedFunctions.createNewGameSettings());
 
 		ServerPlayNetHandler nhps = mock(ServerPlayNetHandler.class);
 		doAnswer(AdditionalAnswers.<IPacket<ClientPlayNetHandler>>answerVoid(
