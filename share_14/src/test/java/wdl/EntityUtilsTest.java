@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2018 Pokechu22, julialy
+ * Copyright (c) 2018-2019 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -44,6 +44,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.play.ServerPlayNetHandler;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import wdl.versioned.VersionedFunctions;
 
 /**
  * An experimental test around the entity tracking code.  Not particularly complete.
@@ -73,7 +74,7 @@ public class EntityUtilsTest extends MaybeMixinTest {
 				(tick, entity) -> tick <= 100,
 				(tick) -> new Vec3d(-150 + tick, tick, -150 + tick));
 		runTrackerTest(world -> new CreeperEntity(EntityType.CREEPER, world), 80, 10, 110,
-				(tick, entity) -> tick <= 100 || entity.posX <= (-150 + tick),
+				(tick, entity) -> tick <= 100 || VersionedFunctions.getEntityX(entity) <= (-150 + tick),
 				(tick) -> new Vec3d(-150 + tick, tick, -150 + tick));
 	}
 
@@ -147,17 +148,14 @@ public class EntityUtilsTest extends MaybeMixinTest {
 				Entity e = entitySupplier.apply(world);
 				entities.add(e);
 				e.setEntityId(eid++);
-				e.posX = x;
-				e.posZ = z;
+				VersionedFunctions.setEntityPos(e, x, 0, z);
 				tracker.track(e);
 			}
 		}
 
 		for (int tick = 0; tick <= numTicks; tick++) {
 			Vec3d pos = posFunc.apply(tick);
-			player.posX = pos.x;
-			player.posY = pos.y;
-			player.posZ = pos.z;
+			VersionedFunctions.setEntityPos(player, pos.x, pos.y, pos.z);
 			for (Iterator<Entity> itr = entities.iterator(); itr.hasNext();) {
 				Entity e = itr.next();
 				if (!keepEntity.test(tick, e)) {

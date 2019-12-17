@@ -4,7 +4,7 @@
  * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2018 Pokechu22, julialy
+ * Copyright (c) 2018-2019 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -26,6 +26,7 @@ import wdl.MaybeMixinTest;
 import wdl.config.Configuration;
 import wdl.config.DefaultConfiguration;
 import wdl.config.settings.WorldSettings.SpawnMode;
+import wdl.versioned.VersionedFunctions;
 
 public class WorldSettingsTest extends MaybeMixinTest {
 
@@ -65,9 +66,7 @@ public class WorldSettingsTest extends MaybeMixinTest {
 		config.setValue(WorldSettings.SPAWN_Y, 43);
 		config.setValue(WorldSettings.SPAWN_Z, 44);
 		Entity entity = mock(Entity.class);
-		entity.posX = 90;
-		entity.posY = 24;
-		entity.posZ = 36;
+		VersionedFunctions.setEntityPos(entity, 90, 24, 36);
 
 		// All of these are invalid.
 		assertThrows(() -> SpawnMode.AUTO.getX(entity, config));

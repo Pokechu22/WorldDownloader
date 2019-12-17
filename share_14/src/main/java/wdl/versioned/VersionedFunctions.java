@@ -39,6 +39,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.network.play.ClientPlayNetHandler;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
@@ -152,6 +153,48 @@ public final class VersionedFunctions {
 	 * @see EntityVillager#getDisplayName
 	 */
 	public static final Int2ObjectMap<BiMap<String, Integer>> VANILLA_VILLAGER_CAREERS = HandlerFunctions.VANILLA_VILLAGER_CAREERS;
+
+	/**
+	 * Gets an entity's x coordinate.
+	 *
+	 * @param e The entity
+	 * @return {@link Entity#posX}
+	 */
+	public static double getEntityX(Entity e) {
+		return HandlerFunctions.getEntityX(e);
+	}
+
+	/**
+	 * Gets an entity's y coordinate.
+	 *
+	 * @param e The entity
+	 * @return {@link Entity#posY}
+	 */
+	public static double getEntityY(Entity e) {
+		return HandlerFunctions.getEntityY(e);
+	}
+
+	/**
+	 * Gets an entity's z coordinate.
+	 *
+	 * @param e The entity
+	 * @return {@link Entity#posZ}
+	 */
+	public static double getEntityZ(Entity e) {
+		return HandlerFunctions.getEntityZ(e);
+	}
+
+	/**
+	 * Sets an entity's position directly.
+	 *
+	 * @param e The entity
+	 * @param x The x coordinate
+	 * @param y The y coordinate
+	 * @param z The z coordinate
+	 */
+	public static void setEntityPos(Entity e, double x, double y, double z) {
+		HandlerFunctions.setEntityPos(e, x, y, z);
+	}
 
 	/**
 	 * Returns a well-formated String version of the tag, suitable for tests and logging.

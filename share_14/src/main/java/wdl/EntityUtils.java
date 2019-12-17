@@ -37,6 +37,7 @@ import wdl.api.WDLApi;
 import wdl.api.WDLApi.ModInfo;
 import wdl.config.settings.EntitySettings;
 import wdl.config.settings.EntitySettings.TrackDistanceMode;
+import wdl.versioned.VersionedFunctions;
 
 /**
  * Provides utility functions for recognizing entities.
@@ -316,8 +317,8 @@ public class EntityUtils {
 		int threshold = Math.min(trackDistance, maxRange);
 
 		// Entity track distance is a square, see TrackedEntity.isVisibleTo
-		double dx = Math.abs(entity.posX - player.posX);
-		double dz = Math.abs(entity.posZ - player.posZ);
+		double dx = Math.abs(VersionedFunctions.getEntityX(entity) - VersionedFunctions.getEntityX(player));
+		double dz = Math.abs(VersionedFunctions.getEntityZ(entity) - VersionedFunctions.getEntityZ(player));
 
 		double distance = Math.max(dx, dz);
 

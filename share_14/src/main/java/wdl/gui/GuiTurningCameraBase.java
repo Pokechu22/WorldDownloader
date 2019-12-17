@@ -88,8 +88,9 @@ public abstract class GuiTurningCameraBase extends WDLScreen {
 	public void init() {
 		if (!initializedCamera) {
 			this.cam = VersionedFunctions.makePlayer(WDL.minecraft, wdl.worldClient, wdl.player.connection, wdl.player);
-			this.cam.setLocationAndAngles(wdl.player.posX, wdl.player.posY,
-					wdl.player.posZ, wdl.player.rotationYaw, 0.0F);
+			this.cam.setLocationAndAngles(VersionedFunctions.getEntityX(wdl.player),
+					VersionedFunctions.getEntityY(wdl.player), VersionedFunctions.getEntityZ(wdl.player),
+					wdl.player.rotationYaw, 0.0F);
 			this.yaw = wdl.player.rotationYaw;
 			this.oldCameraMode = WDL.minecraft.gameSettings.thirdPersonView;
 			this.oldHideHud = WDL.minecraft.gameSettings.hideGUI;
@@ -118,9 +119,9 @@ public abstract class GuiTurningCameraBase extends WDLScreen {
 		if (minecraft.world != null && this.initializedCamera) {
 			this.cam.prevRotationPitch = this.cam.rotationPitch = 0.0F;
 			this.cam.prevRotationYaw = this.yaw;
-			this.cam.lastTickPosY = this.cam.prevPosY = this.cam.posY;
-			this.cam.lastTickPosX = this.cam.prevPosX = this.cam.posX;
-			this.cam.lastTickPosZ = this.cam.prevPosZ = this.cam.posZ;
+			this.cam.lastTickPosY = this.cam.prevPosY = VersionedFunctions.getEntityY(this.cam);
+			this.cam.lastTickPosX = this.cam.prevPosX = VersionedFunctions.getEntityX(this.cam);
+			this.cam.lastTickPosZ = this.cam.prevPosZ = VersionedFunctions.getEntityZ(this.cam);
 
 			// TODO: Rewrite this function as a function of time, rather than
 			// an incremental function, if it's possible to do so.
@@ -145,13 +146,14 @@ public abstract class GuiTurningCameraBase extends WDLScreen {
 			double z = Math.sin((yaw - 90) / 180.0D * Math.PI);
 
 			double distance = truncateDistanceIfBlockInWay(x, z, .5);
-			this.cam.posY = wdl.player.posY;
-			this.cam.posX = wdl.player.posX - distance * x;
-			this.cam.posZ = wdl.player.posZ + distance * z;
+			double posX = VersionedFunctions.getEntityX(wdl.player) - distance * x;
+			double posY = VersionedFunctions.getEntityY(wdl.player);
+			double posZ = VersionedFunctions.getEntityZ(wdl.player) + distance * z;
+			VersionedFunctions.setEntityPos(this.cam, posX, posY, posZ);
 
-			this.cam.chunkCoordX = MathHelper.floor(this.cam.posX / 16.0D);
-			this.cam.chunkCoordY = MathHelper.floor(this.cam.posY / 16.0D);
-			this.cam.chunkCoordZ = MathHelper.floor(this.cam.posZ / 16.0D);
+			this.cam.chunkCoordX = MathHelper.floor(posX / 16.0D);
+			this.cam.chunkCoordY = MathHelper.floor(posY / 16.0D);
+			this.cam.chunkCoordZ = MathHelper.floor(posZ / 16.0D);
 		}
 
 		this.deactivateRenderViewEntity();
@@ -169,7 +171,7 @@ public abstract class GuiTurningCameraBase extends WDLScreen {
 	 */
 	private double truncateDistanceIfBlockInWay(double camX, double camZ, double currentDistance) {
 		Vec3d playerPos = wdl.player.getPositionVector().add(0, wdl.player.getEyeHeight(), 0);
-		Vec3d offsetPos = new Vec3d(wdl.player.posX - currentDistance * camX, wdl.player.posY + wdl.player.getEyeHeight(), wdl.player.posZ + camZ);
+		Vec3d offsetPos = playerPos.add(-currentDistance * camX, 0, currentDistance * camZ);
 
 		// NOTE: Vec3.addVector and Vec3.add return new vectors and leave the
 		// current vector unmodified.

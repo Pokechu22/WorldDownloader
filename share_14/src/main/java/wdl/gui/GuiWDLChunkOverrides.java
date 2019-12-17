@@ -258,8 +258,8 @@ public class GuiWDLChunkOverrides extends WDLScreen {
 		}
 
 		// Player position.
-		int playerPosX = (int)(((wdl.player.posX / 16.0D) - scrollX) * SCALE + (width / 2));
-		int playerPosZ = (int)(((wdl.player.posZ / 16.0D) - scrollZ) * SCALE + (height / 2));
+		int playerPosX = (int)(((VersionedFunctions.getEntityX(wdl.player) / 16.0D) - scrollX) * SCALE + (width / 2));
+		int playerPosZ = (int)(((VersionedFunctions.getEntityZ(wdl.player) / 16.0D) - scrollZ) * SCALE + (height / 2));
 
 		hLine(playerPosX - 3, playerPosX + 3, playerPosZ, 0xFFFFFFFF);
 		// Vertical is 1px taller because it seems to be needed to make it proportional

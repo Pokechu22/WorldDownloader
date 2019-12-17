@@ -127,9 +127,10 @@ public abstract class AbstractEntityHandlerTest<E extends Entity, C extends Cont
 			// Create the client copy
 			Entity clientEntity = serverEntity.getClass().getConstructor(EntityType.class, World.class).newInstance(type, (World)clientWorld);
 			// Copy the standard entity data
-			clientEntity.posX = serverEntity.posX;
-			clientEntity.posY = serverEntity.posY;
-			clientEntity.posZ = serverEntity.posZ;
+			double posX = VersionedFunctions.getEntityX(serverEntity);
+			double posY = VersionedFunctions.getEntityY(serverEntity);
+			double posZ = VersionedFunctions.getEntityZ(serverEntity);
+			VersionedFunctions.setEntityPos(clientEntity, posX, posY, posZ);
 			clientEntity.rotationPitch = serverEntity.rotationPitch;
 			clientEntity.rotationYaw = serverEntity.rotationYaw;
 			if (clientEntity instanceof LivingEntity) {

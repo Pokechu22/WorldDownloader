@@ -208,29 +208,27 @@ final class HandlerFunctions {
 	 * @see VersionedFunctions#getEntityX
 	 */
 	static double getEntityX(Entity e) {
-		return e.posX;
+		return e.func_226277_ct_();
 	}
 
 	/* (non-javadoc)
 	 * @see VersionedFunctions#getEntityY
 	 */
 	static double getEntityY(Entity e) {
-		return e.posY;
+		return e.func_226278_cu_();
 	}
 
 	/* (non-javadoc)
 	 * @see VersionedFunctions#getEntityZ
 	 */
 	static double getEntityZ(Entity e) {
-		return e.posZ;
+		return e.func_226281_cx_();
 	}
 
 	/* (non-javadoc)
 	 * @see VersionedFunctions#setEntityPos
 	 */
 	static void setEntityPos(Entity e, double x, double y, double z) {
-		e.posX = x;
-		e.posY = y;
-		e.posZ = z;
+		e.func_226288_n_(x, y, z);
 	}
 }

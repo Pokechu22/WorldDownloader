@@ -323,8 +323,8 @@ public final class MapDataHandler {
 				// Maps are always snapped to a grid based on the player position when it's created
 				// If the player is on the map, there's only one possible center position
 				hasCenter = true;
-				xCenter = worldCoordToMapCenter(confirmedOwner.posX, map.scale);
-				zCenter = worldCoordToMapCenter(confirmedOwner.posZ, map.scale);
+				xCenter = worldCoordToMapCenter(VersionedFunctions.getEntityX(confirmedOwner), map.scale);
+				zCenter = worldCoordToMapCenter(VersionedFunctions.getEntityZ(confirmedOwner), map.scale);
 
 				map.xCenter = xCenter;
 				map.zCenter = zCenter;

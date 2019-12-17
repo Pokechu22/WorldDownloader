@@ -27,6 +27,7 @@ import wdl.gui.widget.GuiNumericTextField;
 import wdl.gui.widget.SettingButton;
 import wdl.gui.widget.WDLButton;
 import wdl.gui.widget.WDLScreen;
+import wdl.versioned.VersionedFunctions;
 
 public class GuiWDLWorld extends WDLScreen {
 	@Nullable
@@ -176,8 +177,8 @@ public class GuiWDLWorld extends WDLScreen {
 	}
 
 	private void setSpawnToPlayerPosition() {
-		this.spawnX.setValue((int)wdl.player.posX);
-		this.spawnY.setValue((int)wdl.player.posY);
-		this.spawnZ.setValue((int)wdl.player.posZ);
+		this.spawnX.setValue((int)VersionedFunctions.getEntityX(wdl.player));
+		this.spawnY.setValue((int)VersionedFunctions.getEntityY(wdl.player));
+		this.spawnZ.setValue((int)VersionedFunctions.getEntityZ(wdl.player));;
 	}
 }

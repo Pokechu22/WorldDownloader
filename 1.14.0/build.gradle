@@ -124,6 +124,7 @@ sourceSets {
             exclude "wdl/gui/widget/ExtGuiList_1_15.java"
             exclude "wdl/versioned/GameRules_1_14_3.java"
             exclude "wdl/versioned/Gui_1_15.java"
+            exclude "wdl/versioned/Handlers_1_15.java"
             exclude "wdl/versioned/NBT_1_15.java"
         }
         resources {
