@@ -14,7 +14,7 @@
  */
 package wdl.gui.widget;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+//import com.mojang.blaze3d.platform.GlStateManager; XXX
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
@@ -95,7 +95,7 @@ public class GuiSlider extends ExtButton {
 	@Override
 	public void midDraw() {
 		Minecraft.getInstance().getTextureManager().bindTexture(WIDGETS_LOCATION);
-		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+		//GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F); XXX reenable when names match in 1.15
 
 		if (this.isEnabled()) {
 			this.blit(this.x
