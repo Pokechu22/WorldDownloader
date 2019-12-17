@@ -20,30 +20,34 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map.Entry;
 
+import it.unimi.dsi.fastutil.longs.Long2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.shorts.ShortList;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.LongArrayNBT;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.SectionPos;
+import net.minecraft.util.palette.UpgradeData;
 import net.minecraft.world.LightType;
 import net.minecraft.world.SerializableTickList;
-import net.minecraft.world.ServerTickList;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.BiomeContainer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkPrimerTickList;
 import net.minecraft.world.chunk.ChunkSection;
 import net.minecraft.world.chunk.ChunkStatus;
 import net.minecraft.world.chunk.IChunk;
 import net.minecraft.world.chunk.NibbleArray;
-import net.minecraft.world.chunk.UpgradeData;
 import net.minecraft.world.chunk.storage.ChunkLoader;
+import net.minecraft.world.chunk.storage.IOWorker;
+import net.minecraft.world.chunk.storage.RegionFile;
+import net.minecraft.world.chunk.storage.RegionFileCache;
 import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.dimension.EndDimension;
 import net.minecraft.world.dimension.NetherDimension;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.lighting.WorldLightManager;
+import net.minecraft.world.server.ServerTickList;
 import net.minecraft.world.storage.SaveHandler;
 import net.minecraft.world.storage.SessionLockException;
 import wdl.versioned.VersionedFunctions;
@@ -87,10 +91,17 @@ abstract class WDLChunkLoaderBase extends ChunkLoader {
 	 */
 	protected final File chunkSaveLocation;
 
+	// XXX HACK this is burried deep, and probably shouldn't be directly accessed
+	protected final Long2ObjectLinkedOpenHashMap<RegionFile> cache;
+
+	@SuppressWarnings({ "resource", "unchecked" })
 	protected WDLChunkLoaderBase(WDL wdl, File file) {
 		super(file, null);
 		this.wdl = wdl;
 		this.chunkSaveLocation = file;
+		IOWorker worker = ReflectionUtils.findAndGetPrivateField(this, ChunkLoader.class, IOWorker.class);
+		RegionFileCache rfc = ReflectionUtils.findAndGetPrivateField(worker, RegionFileCache.class);
+		this.cache = ReflectionUtils.findAndGetPrivateField(rfc, Long2ObjectLinkedOpenHashMap.class);
 	}
 
 	/**
@@ -137,6 +148,11 @@ abstract class WDLChunkLoaderBase extends ChunkLoader {
 		compound.putLong("LastUpdate", world.getGameTime());
 		compound.putLong("InhabitedTime", chunk.getInhabitedTime());
 		compound.putString("Status", ChunkStatus.FULL.getName()); // Make sure that the chunk is considered fully generated
+		compound.putInt("xPos", chunkpos.x);
+		compound.putInt("zPos", chunkpos.z);
+		compound.putLong("LastUpdate", world.getGameTime());
+		compound.putLong("InhabitedTime", chunk.getInhabitedTime());
+		compound.putString("Status", chunk.getStatus().getName());
 		UpgradeData upgradedata = chunk.getUpgradeData();
 
 		if (!upgradedata.isEmpty()) {
@@ -183,15 +199,10 @@ abstract class WDLChunkLoaderBase extends ChunkLoader {
 			compound.putBoolean("isLightOn", true);
 		}
 
-		Biome[] biomes = chunk.getBiomes();
-		int[] biomeData = biomes != null ? new int[biomes.length] : new int[0];
+		BiomeContainer biomes = chunk.func_225549_i_();
 		if (biomes != null) {
-			for (int j = 0; j < biomes.length; ++j) {
-				biomeData[j] = VersionedFunctions.getBiomeId(biomes[j]);
-			}
+			compound.putIntArray("Biomes", biomes.func_227055_a_());
 		}
-
-		compound.putIntArray("Biomes", biomeData);
 
 		chunk.setHasEntities(false);
 		ListNBT entityList = getEntityList(chunk);
@@ -240,8 +251,7 @@ abstract class WDLChunkLoaderBase extends ChunkLoader {
 		compound.put("Heightmaps", heightMaps);
 		// TODO
 		//compound.put("Structures",
-		//		func_222649_a(chunkpos, chunk.getStructureStarts(), chunk.getStructureReferences()));
-
+		//		writeStructures(chunkpos, chunk.getStructureStarts(), chunk.getStructureReferences()));
 		return compound;
 	}
 
@@ -273,5 +283,19 @@ abstract class WDLChunkLoaderBase extends ChunkLoader {
 		}
 
 		return listnbt;
+	}
+
+	/**
+	 * Provided since the constructor changes between versions.
+	 */
+	protected RegionFile createRegionFile(File file) throws IOException {
+		return new RegionFile(file, this.chunkSaveLocation);
+	}
+
+	/**
+	 * Provided until names are fixed (should generate a missing override warning then)
+	 */
+	protected CompoundNBT readChunk(ChunkPos pos) throws IOException {
+		return this.func_227078_e_(pos);
 	}
 }

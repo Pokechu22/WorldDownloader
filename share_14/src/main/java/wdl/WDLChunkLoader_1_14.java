@@ -39,6 +39,7 @@ import net.minecraft.world.chunk.IChunk;
 import net.minecraft.world.chunk.NibbleArray;
 import net.minecraft.world.chunk.UpgradeData;
 import net.minecraft.world.chunk.storage.ChunkLoader;
+import net.minecraft.world.chunk.storage.RegionFile;
 import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.dimension.EndDimension;
 import net.minecraft.world.dimension.NetherDimension;
@@ -240,7 +241,7 @@ abstract class WDLChunkLoaderBase extends ChunkLoader {
 		compound.put("Heightmaps", heightMaps);
 		// TODO
 		//compound.put("Structures",
-		//		func_222649_a(chunkpos, chunk.getStructureStarts(), chunk.getStructureReferences()));
+		//		writeStructures(chunkpos, chunk.getStructureStarts(), chunk.getStructureReferences()));
 
 		return compound;
 	}
@@ -273,5 +274,12 @@ abstract class WDLChunkLoaderBase extends ChunkLoader {
 		}
 
 		return listnbt;
+	}
+
+	/**
+	 * Provided since the constructor changes between versions.
+	 */
+	protected RegionFile createRegionFile(File file) throws IOException {
+		return new RegionFile(file);
 	}
 }

@@ -433,7 +433,7 @@ public class WDLChunkLoader extends WDLChunkLoaderBase {
 					this.chunkSaveLocation.mkdirs();
 				}
 
-				regionfile = new RegionFile(file);
+				regionfile = createRegionFile(file);
 				this.cache.putAndMoveToFirst(cacheKey, regionfile);
 				return regionfile;
 			}
