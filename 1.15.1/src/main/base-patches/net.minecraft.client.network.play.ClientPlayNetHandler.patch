@@ -1,0 +1,78 @@
+--- net/minecraft/client/network/play/ClientPlayNetHandler.java
++++ net/minecraft/client/network/play/ClientPlayNetHandler.java
+@@ -302,7 +302,7 @@
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
+ 
+-public class ClientPlayNetHandler implements IClientPlayNetHandler {
++public class ClientPlayNetHandler implements IClientPlayNetHandler/* WDL >>> */, wdl.ducks.IBaseChangesApplied/* <<< WDL */ {
+    private static final Logger LOGGER = LogManager.getLogger();
+    private final NetworkManager netManager;
+    private final GameProfile profile;
+@@ -788,6 +788,10 @@
+    }
+ 
+    public void processChunkUnload(SUnloadChunkPacket packetIn) {
++      /* WDL >>> */
++      wdl.WDLHooks.onNHPCHandleChunkUnload(this, this.world, packetIn);
++      /* <<< WDL */
++
+       PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.client);
+       int i = packetIn.getX();
+       int j = packetIn.getZ();
+@@ -822,6 +826,10 @@
+     * Invoked when disconnecting, the parameter is a ChatComponent describing the reason for termination
+     */
+    public void onDisconnect(ITextComponent reason) {
++      /* WDL >>> */
++      wdl.WDLHooks.onNHPCDisconnect(this, reason);
++      /* <<< WDL */
++
+       this.client.func_213254_o();
+       if (this.guiScreenServer != null) {
+          if (this.guiScreenServer instanceof RealmsScreenProxy) {
+@@ -870,6 +878,10 @@
+    public void handleChat(SChatPacket packetIn) {
+       PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.client);
+       this.client.ingameGUI.addChatMessage(packetIn.getType(), packetIn.getChatComponent());
++
++      /* WDL >>> */
++      wdl.WDLHooks.onNHPCHandleChat(this, packetIn);
++      /* <<< WDL */
+    }
+ 
+    /**
+@@ -1251,6 +1263,10 @@
+    public void handleBlockAction(SBlockActionPacket packetIn) {
+       PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.client);
+       this.client.world.addBlockEvent(packetIn.getBlockPosition(), packetIn.getBlockType(), packetIn.getData1(), packetIn.getData2());
++
++      /* WDL >>> */
++      wdl.WDLHooks.onNHPCHandleBlockAction(this, packetIn);
++      /* <<< WDL */
+    }
+ 
+    /**
+@@ -1341,6 +1357,10 @@
+ 
+       packetIn.setMapdataTo(mapdata);
+       mapitemrenderer.updateMapTexture(mapdata);
++
++      /* WDL >>> */
++      wdl.WDLHooks.onNHPCHandleMaps(this, packetIn);
++      /* <<< WDL */
+    }
+ 
+    public void handleEffect(SPlaySoundEventPacket packetIn) {
+@@ -1982,7 +2002,10 @@
+             int l5 = packetbuffer.readInt();
+             this.client.debugRenderer.field_229018_q_.func_229022_a_(blockpos7, l3, s10, l5);
+          } else {
+-            LOGGER.warn("Unknown custom packed identifier: {}", (Object)resourcelocation);
++            /* WDL >>> */
++            wdl.WDLHooks.onNHPCHandleCustomPayload(this, packetIn);
++            // LOGGER.warn("Unknown custom packed identifier: {}", (Object)resourcelocation);
++            /* <<< WDL */
+          }
+       } finally {
+          if (packetbuffer != null) {
