@@ -92,7 +92,8 @@ configurations {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.14.4-28.1.0'
+    // Must be >= 28.1.23, as that version updated to a modlauncher build that works with mixin
+    minecraft 'net.minecraftforge:forge:1.14.4-28.1.23'
 }
 
 sourceSets {
