@@ -15,6 +15,7 @@
 package wdl.gui;
 
 import java.lang.reflect.Field;
+import java.nio.IntBuffer;
 
 import javax.annotation.Nullable;
 
@@ -146,8 +147,8 @@ public class GuiSavedChunks extends WDLScreen {
 				RegionFile region = loadRegion(x >> 5, z >> 5);
 				int timestamp = 0;
 				if (region != null) {
-					int[] timestamps = getChunkTimestamps(region);
-					timestamp = timestamps[(x & (REGION_SIZE - 1)) + (z & (REGION_SIZE - 1)) * REGION_SIZE];
+					IntBuffer timestamps = getChunkTimestamps(region);
+					timestamp = timestamps.get(computeTimestampIndex(x, z));
 				}
 				if (timestamp != 0) {
 					this.drawString(this.font,
@@ -185,28 +186,59 @@ public class GuiSavedChunks extends WDLScreen {
 		return wdl.chunkLoader.getRegionFileIfExists(x, z);
 	}
 
+	/**
+	 * Gets the timestamp index corresponding to the given chunk coordinates. The
+	 * chunk coordinates are not constrained to 0-31.
+	 *
+	 * @param x X chunk coordinate
+	 * @param z Z chunk coordinate
+	 * @return The index into a region file's timestamp array
+	 */
+	private int computeTimestampIndex(int x, int z) {
+		return (x & (REGION_SIZE - 1)) + (z & (REGION_SIZE - 1)) * REGION_SIZE;
+	}
+
 	private static final Field CHUNK_TIMESTAMPS_FIELD;
+	private static final boolean CHUNK_TIMESTAMPS_IS_INT_BUFFER; // True in 1.15+
 	static {
 		Field chunkTimestampsField = null;
-		int n = 0;
+		boolean isIntBuffer = false;
+
+		int nArray = 0;
+		int nBuf = 0;
 		for (Field field : RegionFile.class.getDeclaredFields()) {
 			if (field.getType() == int[].class) {
-				n++;
-				if (n == 2) {
+				nArray++;
+				if (nArray == 2) {
 					chunkTimestampsField = field;
+					isIntBuffer = false;
+					break;
+				}
+			}
+			if (field.getType() == IntBuffer.class) {
+				nBuf++;
+				if (nBuf == 2) {
+					chunkTimestampsField = field;
+					isIntBuffer = true;
 					break;
 				}
 			}
 		}
 		if (chunkTimestampsField == null) {
-			throw new AssertionError("Failed to find chunkTimestamps field (n=" + n + ")");
+			throw new AssertionError("Failed to find chunkTimestamps field (nArray=" + nArray + ", nBuf=" + nBuf + ")");
 		}
 		CHUNK_TIMESTAMPS_FIELD = chunkTimestampsField;
 		CHUNK_TIMESTAMPS_FIELD.setAccessible(true);
+		CHUNK_TIMESTAMPS_IS_INT_BUFFER = isIntBuffer;
 	}
-	private int[] getChunkTimestamps(RegionFile region) {
+	private IntBuffer getChunkTimestamps(RegionFile region) {
 		try {
-			return (int[])CHUNK_TIMESTAMPS_FIELD.get(region);
+			Object value = CHUNK_TIMESTAMPS_FIELD.get(region);
+			if (CHUNK_TIMESTAMPS_IS_INT_BUFFER) {
+				return (IntBuffer)value;
+			} else {
+				return IntBuffer.wrap((int[])value);
+			}
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}
@@ -217,14 +249,14 @@ public class GuiSavedChunks extends WDLScreen {
 
 	private void drawRegion(RegionFile region, int regionX, int regionZ) {
 		// n.b. Vanilla doesn't read these values at all, which is odd.
-		int[] chunkTimestamps = getChunkTimestamps(region);
+		IntBuffer chunkTimestamps = getChunkTimestamps(region);
 		int now = (int)(System.currentTimeMillis() / 1000);
 		for (int z = 0; z < REGION_SIZE; z++) {
 			for (int x = 0; x < REGION_SIZE; x++) {
 				if (wdl.savedChunks.contains(new ChunkPos(x, z))) {
 					continue;
 				}
-				int saveTime = chunkTimestamps[x + z * REGION_SIZE];
+				int saveTime = chunkTimestamps.get(computeTimestampIndex(x, z));
 				if (saveTime == 0) {
 					continue;
 				}
