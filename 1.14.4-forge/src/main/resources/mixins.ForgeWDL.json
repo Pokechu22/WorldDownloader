@@ -1,0 +1,16 @@
+{
+    "required": true,
+    "minVersion": "0.8.0",
+    "package": "wdl.forge.mixin",
+    "refmap": "mixins.ForgeWDL.refmap.json",
+    "compatibilityLevel": "JAVA_8",
+    "mixins": [
+        "MixinGuiIngameMenu",
+        "MixinWorldClient",
+        "MixinNetHandlerPlayClient",
+        "MixinCrashReport"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
+}
