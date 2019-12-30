@@ -15,6 +15,7 @@
 package wdl.gui;
 
 import java.lang.reflect.Field;
+import java.nio.IntBuffer;
 
 import javax.annotation.Nullable;
 
@@ -24,6 +25,7 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.chunk.storage.RegionFile;
 import wdl.WDL;
+import wdl.config.settings.MiscSettings;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.WDLScreen;
 import wdl.versioned.VersionedFunctions;
@@ -32,7 +34,7 @@ import wdl.versioned.VersionedFunctions;
  * A GUI that shows chunks that have been already saved.
  */
 public class GuiSavedChunks extends WDLScreen {
-	private static final int TOP_MARGIN = 61, BOTTOM_MARGIN = 32;
+	private static final int TOP_MARGIN = 36, BOTTOM_MARGIN = 32;
 
 	private static final int REGION_SIZE = 32;
 
@@ -57,6 +59,17 @@ public class GuiSavedChunks extends WDLScreen {
 	 */
 	private int lastTickX, lastTickY;
 
+	/**
+	 * Time in epoch seconds after which a chunk is considered to have been saved
+	 * after the world was downloaded.
+	 *
+	 * We can't just use the LAST_SAVED value because that is calculated before the
+	 * currently loaded chunks are saved, so it would always mark those as old.
+	 * Instead, we use that time plus a (rather arbitrary) 5 seconds.
+	 */
+	private final int savedAfterLastDownloadTime;
+	private static final int SAVE_TIME_LEWAY = 5;
+
 	public GuiSavedChunks(@Nullable GuiScreen parent, WDL wdl) {
 		super("wdl.gui.savedChunks.title");
 		this.parent = parent;
@@ -66,6 +79,9 @@ public class GuiSavedChunks extends WDLScreen {
 			this.scrollX = wdl.player.chunkCoordX;
 			this.scrollZ = wdl.player.chunkCoordZ;
 		}
+
+		int saveTime = (int)(wdl.worldProps.getValue(MiscSettings.LAST_SAVED) / 1000);
+		this.savedAfterLastDownloadTime = saveTime + SAVE_TIME_LEWAY;
 	}
 
 	@Override
@@ -133,22 +149,26 @@ public class GuiSavedChunks extends WDLScreen {
 			if (wdl.savedChunks.contains(new ChunkPos(x, z))) {
 				this.drawString(this.font,
 						I18n.format("wdl.gui.savedChunks.savedNow", x, z),
-						12, height - 12, 0xFFFFFF);
+						12, 24, 0xFFFFFF);
 			} else {
 				RegionFile region = loadRegion(x >> 5, z >> 5);
 				int timestamp = 0;
 				if (region != null) {
-					int[] timestamps = getChunkTimestamps(region);
-					timestamp = timestamps[(x & (REGION_SIZE - 1)) + (z & (REGION_SIZE - 1)) * REGION_SIZE];
+					IntBuffer timestamps = getChunkTimestamps(region);
+					timestamp = timestamps.get(computeTimestampIndex(x, z));
 				}
-				if (timestamp != 0) {
+				if (timestamp > savedAfterLastDownloadTime) {
+					this.drawString(this.font,
+							I18n.format("wdl.gui.savedChunks.savedAfterDownload", x, z, timestamp * 1000L),
+							12, 24, 0xFFFFFF);
+				} else if (timestamp != 0) {
 					this.drawString(this.font,
 							I18n.format("wdl.gui.savedChunks.lastSaved", x, z, timestamp * 1000L),
-							12, height - 12, 0xFFFFFF);
+							12, 24, 0xFFFFFF);
 				} else {
 					this.drawString(this.font,
 							I18n.format("wdl.gui.savedChunks.neverSaved", x, z),
-							12, height - 12, 0xFFFFFF);
+							12, 24, 0xFFFFFF);
 				}
 			}
 		}
@@ -177,28 +197,59 @@ public class GuiSavedChunks extends WDLScreen {
 		return wdl.chunkLoader.getRegionFileIfExists(x, z);
 	}
 
+	/**
+	 * Gets the timestamp index corresponding to the given chunk coordinates. The
+	 * chunk coordinates are not constrained to 0-31.
+	 *
+	 * @param x X chunk coordinate
+	 * @param z Z chunk coordinate
+	 * @return The index into a region file's timestamp array
+	 */
+	private int computeTimestampIndex(int x, int z) {
+		return (x & (REGION_SIZE - 1)) + (z & (REGION_SIZE - 1)) * REGION_SIZE;
+	}
+
 	private static final Field CHUNK_TIMESTAMPS_FIELD;
+	private static final boolean CHUNK_TIMESTAMPS_IS_INT_BUFFER; // True in 1.15+
 	static {
 		Field chunkTimestampsField = null;
-		int n = 0;
+		boolean isIntBuffer = false;
+
+		int nArray = 0;
+		int nBuf = 0;
 		for (Field field : RegionFile.class.getDeclaredFields()) {
 			if (field.getType() == int[].class) {
-				n++;
-				if (n == 2) {
+				nArray++;
+				if (nArray == 2) {
 					chunkTimestampsField = field;
+					isIntBuffer = false;
+					break;
+				}
+			}
+			if (field.getType() == IntBuffer.class) {
+				nBuf++;
+				if (nBuf == 2) {
+					chunkTimestampsField = field;
+					isIntBuffer = true;
 					break;
 				}
 			}
 		}
 		if (chunkTimestampsField == null) {
-			throw new AssertionError("Failed to find chunkTimestamps field (n=" + n + ")");
+			throw new AssertionError("Failed to find chunkTimestamps field (nArray=" + nArray + ", nBuf=" + nBuf + ")");
 		}
 		CHUNK_TIMESTAMPS_FIELD = chunkTimestampsField;
 		CHUNK_TIMESTAMPS_FIELD.setAccessible(true);
+		CHUNK_TIMESTAMPS_IS_INT_BUFFER = isIntBuffer;
 	}
-	private int[] getChunkTimestamps(RegionFile region) {
+	private IntBuffer getChunkTimestamps(RegionFile region) {
 		try {
-			return (int[])CHUNK_TIMESTAMPS_FIELD.get(region);
+			Object value = CHUNK_TIMESTAMPS_FIELD.get(region);
+			if (CHUNK_TIMESTAMPS_IS_INT_BUFFER) {
+				return (IntBuffer)value;
+			} else {
+				return IntBuffer.wrap((int[])value);
+			}
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}
@@ -209,30 +260,38 @@ public class GuiSavedChunks extends WDLScreen {
 
 	private void drawRegion(RegionFile region, int regionX, int regionZ) {
 		// n.b. Vanilla doesn't read these values at all, which is odd.
-		int[] chunkTimestamps = getChunkTimestamps(region);
+		IntBuffer chunkTimestamps = getChunkTimestamps(region);
 		int now = (int)(System.currentTimeMillis() / 1000);
-		for (int z = 0; z < REGION_SIZE; z++) {
-			for (int x = 0; x < REGION_SIZE; x++) {
-				if (wdl.savedChunks.contains(new ChunkPos(x, z))) {
+		for (int zOff = 0; zOff < REGION_SIZE; zOff++) {
+			for (int xOff = 0; xOff < REGION_SIZE; xOff++) {
+				ChunkPos pos = new ChunkPos(xOff + regionX * REGION_SIZE, zOff + regionZ * REGION_SIZE);
+				if (wdl.savedChunks.contains(pos)) {
 					continue;
 				}
-				int saveTime = chunkTimestamps[x + z * REGION_SIZE];
+				int saveTime = chunkTimestamps.get(computeTimestampIndex(pos.x, pos.z));
 				if (saveTime == 0) {
 					continue;
 				}
-				int age = now - saveTime; // in seconds
-				int r, g;
-				// Make the color go from red -> yellow in ~1 day and then
-				// yellow -> red in ~1 month
-				if (age <= YELLOW_THRESHOLD) {
-					r = MathHelper.clamp(0xFF * age / YELLOW_THRESHOLD, 0, 0xFF);
-					g = 0xFF;
+				int color;
+				if (saveTime > savedAfterLastDownloadTime) {
+					// Saved after the previous download finished.  Due to the check for
+					// it being in savedChunks, we don't need to worry about chunks saved in this session.
+					color = 0xFF404040; // dark gray
 				} else {
-					r = 0xFF;
-					g = 0xFF - MathHelper.clamp((age - YELLOW_THRESHOLD) / RED_THRESHOLD, 0, 0xFF);
+					int age = now - saveTime; // in seconds
+					int r, g;
+					// Make the color go from red -> yellow in ~1 day and then
+					// yellow -> red in ~1 month
+					if (age <= YELLOW_THRESHOLD) {
+						r = MathHelper.clamp(0xFF * age / YELLOW_THRESHOLD, 0, 0xFF);
+						g = 0xFF;
+					} else {
+						r = 0xFF;
+						g = 0xFF - MathHelper.clamp((age - YELLOW_THRESHOLD) / RED_THRESHOLD, 0, 0xFF);
+					}
+					color = 0xFF000000 | r << 16 | g << 8;
 				}
-				int color = 0xFF000000 | r << 16 | g << 8;
-				drawChunk(new ChunkPos(x + regionX * REGION_SIZE, z + regionZ * REGION_SIZE), color);
+				drawChunk(pos, color);
 			}
 		}
 	}
