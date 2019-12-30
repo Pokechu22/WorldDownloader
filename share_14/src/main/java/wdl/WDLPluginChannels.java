@@ -1,14 +1,13 @@
 /*
- * This file is part of World Downloader: A mod to make backups of your
- * multiplayer worlds.
- * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
+ * This file is part of World Downloader: A mod to make backups of your multiplayer worlds.
+ * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds
  *
  * Copyright (c) 2014 nairol, cubic72
  * Copyright (c) 2017 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
- * For information about this the MMPLv2, see http://stopmodreposts.org/
+ * For information about this the MMPLv2, see https://stopmodreposts.org/
  *
  * Do not redistribute (in modified or unmodified form) without prior permission.
  */
@@ -61,7 +60,7 @@ import wdl.versioned.VersionedFunctions.ChannelName;
  * requests, which would be hard to do with another mechanism.
  *
  * This system makes use of plugin channels (hence the class name).  If you
- * haven't read <a href="http://wiki.vg/Plugin_channels">their info</a>,
+ * haven't read <a href="https://wiki.vg/Plugin_channels">their info</a>,
  * they're a vanilla minecraft packet intended for mods.  But they <em>do</em>
  * need each channel to be REGISTERed before use, so the server does know
  * when the mod is installed.  As such, I actually did a second step and
@@ -80,7 +79,7 @@ import wdl.versioned.VersionedFunctions.ChannelName;
  * of the available options (and doing nothing wouldn't work - as I said,
  * there <em>are</em> weird ways of finding mods).
  *
- * <a href="http://wiki.vg/User:Pokechu22/World_downloader">Packet
+ * <a href="https://wiki.vg/Plugin_channels/World_downloader">Packet
  * documentation is on wiki.vg</a>, if you're interested.
  */
 public class WDLPluginChannels {
@@ -689,7 +688,7 @@ public class WDLPluginChannels {
 		LOGGER.debug("[WDL] Sending init packet for state {} on {}", state, channel);
 
 		JsonObject object = new JsonObject();
-		object.addProperty("X-RTFM", "http://wiki.vg/Plugin_channels/World_downloader");
+		object.addProperty("X-RTFM", "https://wiki.vg/Plugin_channels/World_downloader");
 		object.addProperty("X-UpdateNote", UPDATE_NOTE);
 		object.addProperty("Version", VersionConstants.getModVersion());
 		object.addProperty("State", state);

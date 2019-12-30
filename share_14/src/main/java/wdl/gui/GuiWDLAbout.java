@@ -1,14 +1,13 @@
 /*
- * This file is part of World Downloader: A mod to make backups of your
- * multiplayer worlds.
- * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
+ * This file is part of World Downloader: A mod to make backups of your multiplayer worlds.
+ * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds
  *
  * Copyright (c) 2014 nairol, cubic72
  * Copyright (c) 2017-2019 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
- * For information about this the MMPLv2, see http://stopmodreposts.org/
+ * For information about this the MMPLv2, see https://stopmodreposts.org/
  *
  * Do not redistribute (in modified or unmodified form) without prior permission.
  */
@@ -37,12 +36,12 @@ public class GuiWDLAbout extends WDLScreen {
 	private final Screen parent;
 	private final WDL wdl;
 
-	private static final String FORUMS_THREAD = "http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465";
+	private static final String FORUM_THREAD = "https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds";
 	private static final String ALL_GITHUB = "https://github.com/Pokechu22/WorldDownloader";
 	private static final String MMPLV2 = "https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md";
 
 	private static final String FASTUTIL_PAGE = "http://fastutil.di.unimi.it/";
-	private static final String APACHE_LICENSE_2_0 = "http://www.apache.org/licenses/LICENSE-2.0.html";
+	private static final String APACHE_LICENSE_2_0 = "https://www.apache.org/licenses/LICENSE-2.0.html";
 
 	private TextList list;
 
@@ -91,7 +90,7 @@ public class GuiWDLAbout extends WDLScreen {
 			list.addBlankLine();
 		}
 
-		list.addLinkLine(I18n.format("wdl.gui.about.forumThread"), FORUMS_THREAD);
+		list.addLinkLine(I18n.format("wdl.gui.about.forumThread"), FORUM_THREAD);
 		list.addBlankLine();
 		list.addLinkLine(I18n.format("wdl.gui.about.allSrc"), ALL_GITHUB);
 		list.addBlankLine();

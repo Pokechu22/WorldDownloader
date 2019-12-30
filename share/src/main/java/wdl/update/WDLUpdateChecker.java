@@ -1,14 +1,13 @@
 /*
- * This file is part of World Downloader: A mod to make backups of your
- * multiplayer worlds.
- * http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465
+ * This file is part of World Downloader: A mod to make backups of your multiplayer worlds.
+ * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds
  *
  * Copyright (c) 2014 nairol, cubic72
  * Copyright (c) 2017 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
- * For information about this the MMPLv2, see http://stopmodreposts.org/
+ * For information about this the MMPLv2, see https://stopmodreposts.org/
  *
  * Do not redistribute (in modified or unmodified form) without prior permission.
  */
@@ -172,12 +171,12 @@ public class WDLUpdateChecker extends Thread {
 		return failReason;
 	}
 
-	private static final String FORUMS_THREAD_USAGE_LINK = "http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2520465#Usage";
+	private static final String FORUMS_THREAD_USAGE_LINK = "https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds#Usage";
 	private static final String WIKI_LINK = "https://github.com/pokechu22/WorldDownloader/wiki";
 	private static final String GITHUB_LINK = "https://github.com/pokechu22/WorldDownloader";
 	private static final String GITHUB_ISSUES_LINK = "https://github.com/pokechu22/WorldDownloader/issues";
-	private static final String REDISTRIBUTION_LINK = "http://pokechu22.github.io/WorldDownloader/redistribution";
-	private static final String SMR_LINK = "http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/mods-discussion/2314237";
+	private static final String REDISTRIBUTION_LINK = "https://pokechu22.github.io/WorldDownloader/redistribution";
+	private static final String SMR_LINK = "https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/mods-discussion/2314237-list-of-sites-stealing-minecraft-content";
 
 	private WDLUpdateChecker() {
 		super("World Downloader update check thread");
