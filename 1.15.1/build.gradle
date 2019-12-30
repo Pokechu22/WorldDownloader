@@ -182,7 +182,7 @@ targetCompatibility = "1.8"
 // Ensure that the API code is in the jar
 jar {
     from sourceSets.api.output
-    classifier = 'mc1.14.4'
+    classifier = 'mc1.15.1'
 }
 
 // Unit tests require native libraries to be available, which ForgeGradle
