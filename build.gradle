@@ -53,7 +53,9 @@ project(':1.14.1').evaluationDependsOn(':share')
 project(':1.14.2').evaluationDependsOn(':share')
 project(':1.14.3').evaluationDependsOn(':share')
 project(':1.14.4').evaluationDependsOn(':share')
-project(':1.14.4-forge').evaluationDependsOn(':1.14.4')
+if (ENABLE_UNSTABLE_BUILDS) { // This builds without issue (apart from tests), but cannot be used easily
+    project(':1.14.4-forge').evaluationDependsOn(':1.14.4')
+}
 project(':1.15.0').evaluationDependsOn(':share')
 project(':1.15.1').evaluationDependsOn(':share')
 
