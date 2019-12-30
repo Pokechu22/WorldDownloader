@@ -24,6 +24,7 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.chunk.storage.RegionFile;
 import wdl.WDL;
+import wdl.config.settings.MiscSettings;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.WDLScreen;
 import wdl.versioned.VersionedFunctions;
@@ -57,6 +58,9 @@ public class GuiSavedChunks extends WDLScreen {
 	 */
 	private int lastTickX, lastTickY;
 
+	// Cached for performance reasons
+	private final int lastSavedSecs;
+
 	public GuiSavedChunks(@Nullable Screen parent, WDL wdl) {
 		super("wdl.gui.savedChunks.title");
 		this.parent = parent;
@@ -66,6 +70,8 @@ public class GuiSavedChunks extends WDLScreen {
 			this.scrollX = wdl.player.chunkCoordX;
 			this.scrollZ = wdl.player.chunkCoordZ;
 		}
+
+		this.lastSavedSecs = (int)(wdl.worldProps.getValue(MiscSettings.LAST_SAVED) / 1000);
 	}
 
 	@Override
@@ -222,18 +228,25 @@ public class GuiSavedChunks extends WDLScreen {
 				if (saveTime == 0) {
 					continue;
 				}
-				int age = now - saveTime; // in seconds
-				int r, g;
-				// Make the color go from red -> yellow in ~1 day and then
-				// yellow -> red in ~1 month
-				if (age <= YELLOW_THRESHOLD) {
-					r = MathHelper.clamp(0xFF * age / YELLOW_THRESHOLD, 0, 0xFF);
-					g = 0xFF;
+				int color;
+				if (saveTime >= lastSavedSecs) {
+					// Saved after the previous download finished.  Due to the check for
+					// it being in savedChunks, we don't need to worry about chunks saved in this session.
+					color = 0xFF404040; // dark gray
 				} else {
-					r = 0xFF;
-					g = 0xFF - MathHelper.clamp((age - YELLOW_THRESHOLD) / RED_THRESHOLD, 0, 0xFF);
+					int age = now - saveTime; // in seconds
+					int r, g;
+					// Make the color go from red -> yellow in ~1 day and then
+					// yellow -> red in ~1 month
+					if (age <= YELLOW_THRESHOLD) {
+						r = MathHelper.clamp(0xFF * age / YELLOW_THRESHOLD, 0, 0xFF);
+						g = 0xFF;
+					} else {
+						r = 0xFF;
+						g = 0xFF - MathHelper.clamp((age - YELLOW_THRESHOLD) / RED_THRESHOLD, 0, 0xFF);
+					}
+					color = 0xFF000000 | r << 16 | g << 8;
 				}
-				int color = 0xFF000000 | r << 16 | g << 8;
 				drawChunk(new ChunkPos(x + regionX * REGION_SIZE, z + regionZ * REGION_SIZE), color);
 			}
 		}
