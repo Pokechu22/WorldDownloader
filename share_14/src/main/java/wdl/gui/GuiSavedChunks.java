@@ -59,8 +59,16 @@ public class GuiSavedChunks extends WDLScreen {
 	 */
 	private int lastTickX, lastTickY;
 
-	// Cached for performance reasons
-	private final int lastSavedSecs;
+	/**
+	 * Time in epoch seconds after which a chunk is considered to have been saved
+	 * after the world was downloaded.
+	 *
+	 * We can't just use the LAST_SAVED value because that is calculated before the
+	 * currently loaded chunks are saved, so it would always mark those as old.
+	 * Instead, we use that time plus a (rather arbitrary) 5 seconds.
+	 */
+	private final int savedAfterLastDownloadTime;
+	private static final int SAVE_TIME_LEWAY = 5;
 
 	public GuiSavedChunks(@Nullable Screen parent, WDL wdl) {
 		super("wdl.gui.savedChunks.title");
@@ -72,7 +80,8 @@ public class GuiSavedChunks extends WDLScreen {
 			this.scrollZ = wdl.player.chunkCoordZ;
 		}
 
-		this.lastSavedSecs = (int)(wdl.worldProps.getValue(MiscSettings.LAST_SAVED) / 1000);
+		int saveTime = (int)(wdl.worldProps.getValue(MiscSettings.LAST_SAVED) / 1000);
+		this.savedAfterLastDownloadTime = saveTime + SAVE_TIME_LEWAY;
 	}
 
 	@Override
@@ -262,7 +271,7 @@ public class GuiSavedChunks extends WDLScreen {
 					continue;
 				}
 				int color;
-				if (saveTime >= lastSavedSecs) {
+				if (saveTime > savedAfterLastDownloadTime) {
 					// Saved after the previous download finished.  Due to the check for
 					// it being in savedChunks, we don't need to worry about chunks saved in this session.
 					color = 0xFF404040; // dark gray
