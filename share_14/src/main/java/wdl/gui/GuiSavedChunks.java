@@ -251,12 +251,13 @@ public class GuiSavedChunks extends WDLScreen {
 		// n.b. Vanilla doesn't read these values at all, which is odd.
 		IntBuffer chunkTimestamps = getChunkTimestamps(region);
 		int now = (int)(System.currentTimeMillis() / 1000);
-		for (int z = 0; z < REGION_SIZE; z++) {
-			for (int x = 0; x < REGION_SIZE; x++) {
-				if (wdl.savedChunks.contains(new ChunkPos(x, z))) {
+		for (int zOff = 0; zOff < REGION_SIZE; zOff++) {
+			for (int xOff = 0; xOff < REGION_SIZE; xOff++) {
+				ChunkPos pos = new ChunkPos(xOff + regionX * REGION_SIZE, zOff + regionZ * REGION_SIZE);
+				if (wdl.savedChunks.contains(pos)) {
 					continue;
 				}
-				int saveTime = chunkTimestamps.get(computeTimestampIndex(x, z));
+				int saveTime = chunkTimestamps.get(computeTimestampIndex(pos.x, pos.z));
 				if (saveTime == 0) {
 					continue;
 				}
@@ -279,7 +280,7 @@ public class GuiSavedChunks extends WDLScreen {
 					}
 					color = 0xFF000000 | r << 16 | g << 8;
 				}
-				drawChunk(new ChunkPos(x + regionX * REGION_SIZE, z + regionZ * REGION_SIZE), color);
+				drawChunk(pos, color);
 			}
 		}
 	}
