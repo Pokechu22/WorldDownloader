@@ -34,7 +34,7 @@ import wdl.versioned.VersionedFunctions;
  * A GUI that shows chunks that have been already saved.
  */
 public class GuiSavedChunks extends WDLScreen {
-	private static final int TOP_MARGIN = 61, BOTTOM_MARGIN = 32;
+	private static final int TOP_MARGIN = 36, BOTTOM_MARGIN = 32;
 
 	private static final int REGION_SIZE = 32;
 
@@ -150,7 +150,7 @@ public class GuiSavedChunks extends WDLScreen {
 			if (wdl.savedChunks.contains(new ChunkPos(x, z))) {
 				this.drawString(this.font,
 						I18n.format("wdl.gui.savedChunks.savedNow", x, z),
-						12, height - 12, 0xFFFFFF);
+						12, 24, 0xFFFFFF);
 			} else {
 				@SuppressWarnings("resource")
 				RegionFile region = loadRegion(x >> 5, z >> 5);
@@ -159,14 +159,18 @@ public class GuiSavedChunks extends WDLScreen {
 					IntBuffer timestamps = getChunkTimestamps(region);
 					timestamp = timestamps.get(computeTimestampIndex(x, z));
 				}
-				if (timestamp != 0) {
+				if (timestamp > savedAfterLastDownloadTime) {
+					this.drawString(this.font,
+							I18n.format("wdl.gui.savedChunks.savedAfterDownload", x, z, timestamp * 1000L),
+							12, 24, 0xFFFFFF);
+				} else if (timestamp != 0) {
 					this.drawString(this.font,
 							I18n.format("wdl.gui.savedChunks.lastSaved", x, z, timestamp * 1000L),
-							12, height - 12, 0xFFFFFF);
+							12, 24, 0xFFFFFF);
 				} else {
 					this.drawString(this.font,
 							I18n.format("wdl.gui.savedChunks.neverSaved", x, z),
-							12, height - 12, 0xFFFFFF);
+							12, 24, 0xFFFFFF);
 				}
 			}
 		}

@@ -293,6 +293,7 @@ wdl.gui.savedChunks.title=Saved Chunks
 wdl.gui.savedChunks.savedNow=Chunk at %s, %s: saved now
 wdl.gui.savedChunks.lastSaved=Chunk at %s, %s: last saved at %tc
 wdl.gui.savedChunks.neverSaved=Chunk at %s, %s: never saved
+wdl.gui.savedChunks.savedAfterDownload=Chunk at %s, %s: last saved at %tc AFTER the world was downloaded (e.g. generated in singleplayer)
 
 wdl.backup.none=No backup
 wdl.backup.folder=Copy world folder
