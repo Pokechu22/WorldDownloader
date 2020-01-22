@@ -57,14 +57,14 @@ final class GuiFunctions {
 
 		float textureSize = 32.0F;
 		b.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-		b.func_181662_b(0, bottom, 0).func_187315_a(0 / textureSize,
-				bottom / textureSize).func_181669_b(32, 32, 32, 255).endVertex();
-		b.func_181662_b(right, bottom, 0).func_187315_a(right / textureSize,
-				bottom / textureSize).func_181669_b(32, 32, 32, 255).endVertex();
-		b.func_181662_b(right, top, 0).func_187315_a(right / textureSize,
-				top / textureSize).func_181669_b(32, 32, 32, 255).endVertex();
-		b.func_181662_b(left, top, 0).func_187315_a(left / textureSize,
-				top / textureSize).func_181669_b(32, 32, 32, 255).endVertex();
+		b.pos(0, bottom, 0).tex(0 / textureSize,
+				bottom / textureSize).color(32, 32, 32, 255).endVertex();
+		b.pos(right, bottom, 0).tex(right / textureSize,
+				bottom / textureSize).color(32, 32, 32, 255).endVertex();
+		b.pos(right, top, 0).tex(right / textureSize,
+				top / textureSize).color(32, 32, 32, 255).endVertex();
+		b.pos(left, top, 0).tex(left / textureSize,
+				top / textureSize).color(32, 32, 32, 255).endVertex();
 		t.draw();
 	}
 
@@ -91,14 +91,14 @@ final class GuiFunctions {
 
 		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		b.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-		b.func_181662_b(left, upperBoxEnd, 0.0D).func_187315_a(0, upperBoxEnd
-				/ textureSize).func_181669_b(64, 64, 64, 255).endVertex();
-		b.func_181662_b(right, upperBoxEnd, 0.0D).func_187315_a(right / textureSize,
-				upperBoxEnd / textureSize).func_181669_b(64, 64, 64, 255).endVertex();
-		b.func_181662_b(right, top, 0.0D).func_187315_a(right / textureSize, top / textureSize)
-		.func_181669_b(64, 64, 64, 255).endVertex();
-		b.func_181662_b(left, top, 0.0D).func_187315_a(0, top / textureSize)
-		.func_181669_b(64, 64, 64, 255).endVertex();
+		b.pos(left, upperBoxEnd, 0.0D).tex(0, upperBoxEnd
+				/ textureSize).color(64, 64, 64, 255).endVertex();
+		b.pos(right, upperBoxEnd, 0.0D).tex(right / textureSize,
+				upperBoxEnd / textureSize).color(64, 64, 64, 255).endVertex();
+		b.pos(right, top, 0.0D).tex(right / textureSize, top / textureSize)
+		.color(64, 64, 64, 255).endVertex();
+		b.pos(left, top, 0.0D).tex(0, top / textureSize)
+		.color(64, 64, 64, 255).endVertex();
 		t.draw();
 
 		// Lower box
@@ -106,15 +106,15 @@ final class GuiFunctions {
 
 		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		b.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-		b.func_181662_b(left, bottom, 0.0D).func_187315_a(0, bottom / textureSize)
-		.func_181669_b(64, 64, 64, 255).endVertex();
-		b.func_181662_b(right, bottom, 0.0D).func_187315_a(right / textureSize, bottom
-				/ textureSize).func_181669_b(64, 64, 64, 255).endVertex();
-		b.func_181662_b(right, lowerBoxStart, 0.0D)
-		.func_187315_a(right / textureSize, lowerBoxStart / textureSize)
-		.func_181669_b(64, 64, 64, 255).endVertex();
-		b.func_181662_b(left, lowerBoxStart, 0.0D).func_187315_a(0, lowerBoxStart
-				/ textureSize).func_181669_b(64, 64, 64, 255).endVertex();
+		b.pos(left, bottom, 0.0D).tex(0, bottom / textureSize)
+		.color(64, 64, 64, 255).endVertex();
+		b.pos(right, bottom, 0.0D).tex(right / textureSize, bottom
+				/ textureSize).color(64, 64, 64, 255).endVertex();
+		b.pos(right, lowerBoxStart, 0.0D)
+		.tex(right / textureSize, lowerBoxStart / textureSize)
+		.color(64, 64, 64, 255).endVertex();
+		b.pos(left, lowerBoxStart, 0.0D).tex(0, lowerBoxStart
+				/ textureSize).color(64, 64, 64, 255).endVertex();
 		t.draw();
 
 		//Gradients
@@ -125,24 +125,24 @@ final class GuiFunctions {
 		GlStateManager.shadeModel(GL_SMOOTH);
 		GlStateManager.disableTexture();
 		b.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-		b.func_181662_b(left, upperBoxEnd + padding, 0.0D).func_187315_a(0, 1)
-		.func_181669_b(0, 0, 0, 0).endVertex();
-		b.func_181662_b(right, upperBoxEnd + padding, 0.0D).func_187315_a(1, 1)
-		.func_181669_b(0, 0, 0, 0).endVertex();
-		b.func_181662_b(right, upperBoxEnd, 0.0D).func_187315_a(1, 0).func_181669_b(0, 0, 0, 255)
+		b.pos(left, upperBoxEnd + padding, 0.0D).tex(0, 1)
+		.color(0, 0, 0, 0).endVertex();
+		b.pos(right, upperBoxEnd + padding, 0.0D).tex(1, 1)
+		.color(0, 0, 0, 0).endVertex();
+		b.pos(right, upperBoxEnd, 0.0D).tex(1, 0).color(0, 0, 0, 255)
 		.endVertex();
-		b.func_181662_b(left, upperBoxEnd, 0.0D).func_187315_a(0, 0).func_181669_b(0, 0, 0, 255)
+		b.pos(left, upperBoxEnd, 0.0D).tex(0, 0).color(0, 0, 0, 255)
 		.endVertex();
 		t.draw();
 		b.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-		b.func_181662_b(left, lowerBoxStart, 0.0D).func_187315_a(0, 1).func_181669_b(0, 0, 0, 255)
+		b.pos(left, lowerBoxStart, 0.0D).tex(0, 1).color(0, 0, 0, 255)
 		.endVertex();
-		b.func_181662_b(right, lowerBoxStart, 0.0D).func_187315_a(1, 1).func_181669_b(0, 0, 0, 255)
+		b.pos(right, lowerBoxStart, 0.0D).tex(1, 1).color(0, 0, 0, 255)
 		.endVertex();
-		b.func_181662_b(right, lowerBoxStart - padding, 0.0D).func_187315_a(1, 0)
-		.func_181669_b(0, 0, 0, 0).endVertex();
-		b.func_181662_b(left, lowerBoxStart - padding, 0.0D).func_187315_a(0, 0)
-		.func_181669_b(0, 0, 0, 0).endVertex();
+		b.pos(right, lowerBoxStart - padding, 0.0D).tex(1, 0)
+		.color(0, 0, 0, 0).endVertex();
+		b.pos(left, lowerBoxStart - padding, 0.0D).tex(0, 0)
+		.color(0, 0, 0, 0).endVertex();
 		t.draw();
 
 		GlStateManager.enableTexture();
