@@ -61,6 +61,7 @@ extraSrgs {
     addSrg file('../srgs/AbstractHorseToEquineEntity.srg')
     addMethods file('../srgs/gamerule_methods_pre_1.14.3.csv')
     addMethods file('../srgs/pre_1.14_methods.csv')
+    addMethods file('../srgs/pre_1.15_methods.csv')
     addFields file('../srgs/pre_1.14_fields.csv')
 }
 

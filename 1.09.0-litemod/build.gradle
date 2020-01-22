@@ -86,6 +86,7 @@ extraSrgs {
     addSrg file('../srgs/1.13.srg')
     addMethods file('../srgs/gamerule_methods_pre_1.14.3.csv')
     addMethods file('../srgs/pre_1.14_methods.csv')
+    addMethods file('../srgs/pre_1.15_methods.csv')
     addMethods file('../srgs/1.12_methods.csv')
     addMethods file('../srgs/liteloader_1.9_methods.csv')
     addMethods file('../srgs/1.9.2_methods.csv')
