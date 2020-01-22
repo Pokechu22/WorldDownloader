@@ -48,8 +48,8 @@ final class GameRuleFunctions {
 		public RuleInfo(RuleKey<T> key, RuleType<T> type) {
 			this.key = key;
 			this.type = type;
-			this.commandNode = this.type.func_223581_a("value").build();
-			T defaultValue = type.func_223579_a();
+			this.commandNode = this.type.createArgument("value").build();
+			T defaultValue = type.parse(); // XXX this is a bad name, why did I do that to func_223579_a
 			if (defaultValue instanceof GameRules.BooleanValue) {
 				this.wdlType = GameRuleType.BOOLEAN;
 			} else if (defaultValue instanceof GameRules.IntegerValue) {
@@ -71,7 +71,7 @@ final class GameRuleFunctions {
 				CommandContextBuilder<CommandSource> ctxBuilder = new CommandContextBuilder<>(null, null, null, 0);
 				StringReader reader = new StringReader(value);
 				this.commandNode.parse(reader, ctxBuilder);
-				rules.get(this.key).func_223554_b(ctxBuilder.build(value), "value");
+				rules.get(this.key).updateValue(ctxBuilder.build(value), "value");
 			} catch (Exception ex) {
 				LOGGER.error("[WDL] Failed to set rule {} to {}", key, value, ex);
 				throw new IllegalArgumentException("Failed to set rule " + key + " to " + value, ex);
@@ -81,9 +81,9 @@ final class GameRuleFunctions {
 	private static final Map<String, RuleInfo<?>> RULES;
 	static {
 		RULES = new TreeMap<>();
-		GameRules.func_223590_a(new IRuleEntryVisitor() {
+		GameRules.visitAll(new IRuleEntryVisitor() {
 			@Override
-			public <T extends RuleValue<T>> void func_223481_a(RuleKey<T> key, RuleType<T> type) {
+			public <T extends RuleValue<T>> void visit(RuleKey<T> key, RuleType<T> type) {
 				RULES.put(key.func_223576_a(), new RuleInfo<>(key, type));
 			}
 		});

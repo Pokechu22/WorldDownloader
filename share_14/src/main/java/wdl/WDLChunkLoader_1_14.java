@@ -231,7 +231,7 @@ abstract class WDLChunkLoaderBase extends ChunkLoader {
 
 		CompoundNBT heightMaps = new CompoundNBT();
 
-		for (Entry<Heightmap.Type, Heightmap> entry : chunk.func_217311_f()) {
+		for (Entry<Heightmap.Type, Heightmap> entry : chunk.getHeightmaps()) {
 			if (chunk.getStatus().getHeightMaps().contains(entry.getKey())) {
 				heightMaps.put(entry.getKey().getId(), new LongArrayNBT(entry.getValue().getDataArray()));
 			}

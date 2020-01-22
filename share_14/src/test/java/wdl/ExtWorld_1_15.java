@@ -125,7 +125,7 @@ abstract class ExtWorldClient extends ClientWorld {
 
 	private static final BiomeContainer NO_BIOMES;
 	static {
-		Biome[] biomes = new Biome[BiomeContainer.field_227049_a_];
+		Biome[] biomes = new Biome[BiomeContainer.BIOMES_SIZE];
 		Arrays.fill(biomes, Biomes.THE_VOID);
 		NO_BIOMES = new BiomeContainer(biomes);
 	}
@@ -253,7 +253,7 @@ abstract class ExtWorldServer extends ServerWorld {
 
 	private static final BiomeContainer NO_BIOMES;
 	static {
-		Biome[] biomes = new Biome[BiomeContainer.field_227049_a_];
+		Biome[] biomes = new Biome[BiomeContainer.BIOMES_SIZE];
 		Arrays.fill(biomes, Biomes.THE_VOID);
 		NO_BIOMES = new BiomeContainer(biomes);
 	}

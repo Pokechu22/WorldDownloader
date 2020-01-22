@@ -198,9 +198,9 @@ abstract class WDLChunkLoaderBase extends ChunkLoader {
 			compound.putBoolean("isLightOn", true);
 		}
 
-		BiomeContainer biomes = chunk.func_225549_i_();
+		BiomeContainer biomes = chunk.getBiomes();
 		if (biomes != null) {
-			compound.putIntArray("Biomes", biomes.func_227055_a_());
+			compound.putIntArray("Biomes", biomes.getIdArray());
 		}
 
 		chunk.setHasEntities(false);
@@ -241,7 +241,7 @@ abstract class WDLChunkLoaderBase extends ChunkLoader {
 
 		CompoundNBT heightMaps = new CompoundNBT();
 
-		for (Entry<Heightmap.Type, Heightmap> entry : chunk.func_217311_f()) {
+		for (Entry<Heightmap.Type, Heightmap> entry : chunk.getHeightmaps()) {
 			if (chunk.getStatus().getHeightMaps().contains(entry.getKey())) {
 				heightMaps.put(entry.getKey().getId(), new LongArrayNBT(entry.getValue().getDataArray()));
 			}
