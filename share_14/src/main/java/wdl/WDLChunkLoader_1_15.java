@@ -147,11 +147,6 @@ abstract class WDLChunkLoaderBase extends ChunkLoader {
 		compound.putLong("LastUpdate", world.getGameTime());
 		compound.putLong("InhabitedTime", chunk.getInhabitedTime());
 		compound.putString("Status", ChunkStatus.FULL.getName()); // Make sure that the chunk is considered fully generated
-		compound.putInt("xPos", chunkpos.x);
-		compound.putInt("zPos", chunkpos.z);
-		compound.putLong("LastUpdate", world.getGameTime());
-		compound.putLong("InhabitedTime", chunk.getInhabitedTime());
-		compound.putString("Status", chunk.getStatus().getName());
 		UpgradeData upgradedata = chunk.getUpgradeData();
 
 		if (!upgradedata.isEmpty()) {
