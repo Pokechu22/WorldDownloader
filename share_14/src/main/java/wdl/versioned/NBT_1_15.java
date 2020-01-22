@@ -40,7 +40,7 @@ final class NBTFunctions {
 	static ListNBT createFloatListTag(float... values) {
 		ListNBT result = new ListNBT();
 		for (float value : values) {
-			result.add(FloatNBT.func_229689_a_(value));
+			result.add(FloatNBT.valueOf(value));
 		}
 		return result;
 	}
@@ -51,7 +51,7 @@ final class NBTFunctions {
 	static ListNBT createDoubleListTag(double... values) {
 		ListNBT result = new ListNBT();
 		for (double value : values) {
-			result.add(DoubleNBT.func_229684_a_(value));
+			result.add(DoubleNBT.valueOf(value));
 		}
 		return result;
 	}
@@ -62,7 +62,7 @@ final class NBTFunctions {
 	static ListNBT createShortListTag(short... values) {
 		ListNBT result = new ListNBT();
 		for (short value : values) {
-			result.add(ShortNBT.func_229701_a_(value));
+			result.add(ShortNBT.valueOf(value));
 		}
 		return result;
 	}
@@ -71,6 +71,6 @@ final class NBTFunctions {
 	 * @see VersionedFunctions#createStringTag
 	 */
 	static StringNBT createStringTag(String value) {
-		return StringNBT.func_229705_a_(value);
+		return StringNBT.valueOf(value);
 	}
 }

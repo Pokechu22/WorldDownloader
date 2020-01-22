@@ -91,13 +91,13 @@ final class GuiFunctions {
 
 		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		b.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-		b.pos(left, upperBoxEnd, 0.0D).tex(0.0D, upperBoxEnd
+		b.pos(left, upperBoxEnd, 0.0D).tex(0, upperBoxEnd
 				/ textureSize).color(64, 64, 64, 255).endVertex();
 		b.pos(right, upperBoxEnd, 0.0D).tex(right / textureSize,
 				upperBoxEnd / textureSize).color(64, 64, 64, 255).endVertex();
 		b.pos(right, top, 0.0D).tex(right / textureSize, top / textureSize)
 		.color(64, 64, 64, 255).endVertex();
-		b.pos(left, top, 0.0D).tex(0.0D, top / textureSize)
+		b.pos(left, top, 0.0D).tex(0, top / textureSize)
 		.color(64, 64, 64, 255).endVertex();
 		t.draw();
 
@@ -106,14 +106,14 @@ final class GuiFunctions {
 
 		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		b.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-		b.pos(left, bottom, 0.0D).tex(0.0D, bottom / textureSize)
+		b.pos(left, bottom, 0.0D).tex(0, bottom / textureSize)
 		.color(64, 64, 64, 255).endVertex();
 		b.pos(right, bottom, 0.0D).tex(right / textureSize, bottom
 				/ textureSize).color(64, 64, 64, 255).endVertex();
 		b.pos(right, lowerBoxStart, 0.0D)
 		.tex(right / textureSize, lowerBoxStart / textureSize)
 		.color(64, 64, 64, 255).endVertex();
-		b.pos(left, lowerBoxStart, 0.0D).tex(0.0D, lowerBoxStart
+		b.pos(left, lowerBoxStart, 0.0D).tex(0, lowerBoxStart
 				/ textureSize).color(64, 64, 64, 255).endVertex();
 		t.draw();
 
@@ -125,23 +125,23 @@ final class GuiFunctions {
 		GlStateManager.shadeModel(GL_SMOOTH);
 		GlStateManager.disableTexture();
 		b.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-		b.pos(left, upperBoxEnd + padding, 0.0D).tex(0.0D, 1.0D)
+		b.pos(left, upperBoxEnd + padding, 0.0D).tex(0, 1)
 		.color(0, 0, 0, 0).endVertex();
-		b.pos(right, upperBoxEnd + padding, 0.0D).tex(1.0D, 1.0D)
+		b.pos(right, upperBoxEnd + padding, 0.0D).tex(1, 1)
 		.color(0, 0, 0, 0).endVertex();
-		b.pos(right, upperBoxEnd, 0.0D).tex(1.0D, 0.0D).color(0, 0, 0, 255)
+		b.pos(right, upperBoxEnd, 0.0D).tex(1, 0).color(0, 0, 0, 255)
 		.endVertex();
-		b.pos(left, upperBoxEnd, 0.0D).tex(0.0D, 0.0D).color(0, 0, 0, 255)
+		b.pos(left, upperBoxEnd, 0.0D).tex(0, 0).color(0, 0, 0, 255)
 		.endVertex();
 		t.draw();
 		b.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-		b.pos(left, lowerBoxStart, 0.0D).tex(0.0D, 1.0D).color(0, 0, 0, 255)
+		b.pos(left, lowerBoxStart, 0.0D).tex(0, 1).color(0, 0, 0, 255)
 		.endVertex();
-		b.pos(right, lowerBoxStart, 0.0D).tex(1.0D, 1.0D).color(0, 0, 0, 255)
+		b.pos(right, lowerBoxStart, 0.0D).tex(1, 1).color(0, 0, 0, 255)
 		.endVertex();
-		b.pos(right, lowerBoxStart - padding, 0.0D).tex(1.0D, 0.0D)
+		b.pos(right, lowerBoxStart - padding, 0.0D).tex(1, 0)
 		.color(0, 0, 0, 0).endVertex();
-		b.pos(left, lowerBoxStart - padding, 0.0D).tex(0.0D, 0.0D)
+		b.pos(left, lowerBoxStart - padding, 0.0D).tex(0, 0)
 		.color(0, 0, 0, 0).endVertex();
 		t.draw();
 

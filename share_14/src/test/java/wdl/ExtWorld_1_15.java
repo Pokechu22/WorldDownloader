@@ -220,7 +220,7 @@ abstract class ExtWorldServer extends ServerWorld {
 	public void interactBlock(BlockPos pos, PlayerEntity player) {
 		BlockState state = this.getBlockState(pos);
 		BlockRayTraceResult rayTraceResult = new BlockRayTraceResult(new Vec3d(pos), Direction.DOWN, pos, false);
-		state.func_227031_a_(this, player, Hand.MAIN_HAND, rayTraceResult);
+		state.onBlockActivated(this, player, Hand.MAIN_HAND, rayTraceResult);
 	}
 
 	/** Right-clicks an entity. */
@@ -300,6 +300,6 @@ abstract class ExtWorldServer extends ServerWorld {
 
 	public void setPlayerSneaking(PlayerEntity player, boolean sneaking) {
 		// Exists only due to name issues
-		player.func_226284_e_(sneaking);
+		player.setSneaking(sneaking);
 	}
 }
