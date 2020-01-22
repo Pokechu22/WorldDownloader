@@ -11,7 +11,7 @@
     private final ClientPlayNetHandler connection;
 @@ -96,6 +96,10 @@
        this.chunkProvider.tick(hasTimeLeft);
-       this.func_217426_j();
+       this.playMoodSoundAndCheckLight();
        this.getProfiler().endSection();
 +
 +      /* WDL >>> */
