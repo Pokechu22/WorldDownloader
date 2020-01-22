@@ -110,8 +110,11 @@ sourceSets {
 =======
 >>>>>>> parent of b5e7f00e... Resolve the other uses of GlStateManager
             exclude "wdl/versioned/GameRules_1_14.java"
+<<<<<<< HEAD
             exclude "wdl/versioned/Gui_1_15.java"
             exclude "wdl/versioned/Handlers_1_15.java"
+=======
+>>>>>>> parent of 55892e52... Partially fix GlStateManager changes
             exclude "wdl/versioned/NBT_1_15.java"
         }
         resources {
