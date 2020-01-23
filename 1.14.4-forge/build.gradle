@@ -63,7 +63,7 @@ sourceSets {
 
 minecraft {
     //suppressMappingVersionWarnings = true
-    mappings channel: 'snapshot', version: '20200122-1.15.1'
+    mappings channel: 'snapshot', version: '20200123-1.15.1'
     runs {
         client {
             args("--mixin", "mixins.ForgeWDL.json")
