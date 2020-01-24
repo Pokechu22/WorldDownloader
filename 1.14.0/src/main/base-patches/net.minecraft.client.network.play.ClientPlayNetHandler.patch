@@ -28,7 +28,7 @@
 +      wdl.WDLHooks.onNHPCDisconnect(this, reason);
 +      /* <<< WDL */
 +
-       this.client.func_213254_o();
+       this.client.unloadWorld();
        if (this.guiScreenServer != null) {
           if (this.guiScreenServer instanceof RealmsScreenProxy) {
 @@ -851,6 +859,10 @@

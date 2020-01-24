@@ -49,7 +49,7 @@ final class GameRuleFunctions {
 			this.key = key;
 			this.type = type;
 			this.commandNode = this.type.createArgument("value").build();
-			T defaultValue = type.parse(); // XXX this is a bad name, why did I do that to func_223579_a
+			T defaultValue = type.createValue();
 			if (defaultValue instanceof GameRules.BooleanValue) {
 				this.wdlType = GameRuleType.BOOLEAN;
 			} else if (defaultValue instanceof GameRules.IntegerValue) {
@@ -84,7 +84,7 @@ final class GameRuleFunctions {
 		GameRules.visitAll(new IRuleEntryVisitor() {
 			@Override
 			public <T extends RuleValue<T>> void visit(RuleKey<T> key, RuleType<T> type) {
-				RULES.put(key.func_223576_a(), new RuleInfo<>(key, type));
+				RULES.put(key.getName(), new RuleInfo<>(key, type));
 			}
 		});
 	}
