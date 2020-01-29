@@ -22,13 +22,12 @@ import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import org.lwjgl.glfw.GLFW;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.list.ExtendedList;
 import wdl.gui.widget.ExtGuiList.ExtGuiListEntry;
+import wdl.versioned.VersionedFunctions;
 
 abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends ExtendedList<T> implements IExtGuiList<T> {
 
@@ -239,9 +238,9 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends ExtendedList<T> 
 	@Override
 	@OverridingMethodsMustInvokeSuper
 	public void render(int mouseXIn, int mouseYIn, float partialTicks) {
-		GlStateManager.translatef(0, y, 0);
+		VersionedFunctions.glTranslatef(0, y, 0);
 		super.render(mouseXIn, mouseYIn - y, partialTicks);
-		GlStateManager.translatef(0, -y, 0);
+		VersionedFunctions.glTranslatef(0, -y, 0);
 	}
 
 	// Make the dirt background use visual positions that match the screen
@@ -254,11 +253,11 @@ abstract class ExtGuiList<T extends ExtGuiListEntry<T>> extends ExtendedList<T> 
 			super.renderHoleBackground(y1, y2, alpha1, alpha2);
 			return;
 		} else {
-			GlStateManager.translatef(0, -y, 0);
+			VersionedFunctions.glTranslatef(0, -y, 0);
 
 			super.renderHoleBackground(y1 + y, y2 + y, alpha1, alpha2);
 
-			GlStateManager.translatef(0, y, 0);
+			VersionedFunctions.glTranslatef(0, y, 0);
 		}
 	}
 }

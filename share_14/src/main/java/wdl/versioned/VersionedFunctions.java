@@ -532,6 +532,20 @@ public final class VersionedFunctions {
 	}
 
 	/**
+	 * Calls glColor4f.
+	 */
+	public static void glColor4f(float r, float g, float b, float a) {
+		GuiFunctions.glColor4f(r, g, b, a);
+	}
+
+	/**
+	 * Calls glTranslatef.
+	 */
+	public static void glTranslatef(float x, float y, float z) {
+		GuiFunctions.glTranslatef(x, y, z);
+	}
+
+	/**
 	 * Gets the numeric ID for the given block.
 	 * @return A numeric ID, the meaning and value of which is unspecified.
 	 */
