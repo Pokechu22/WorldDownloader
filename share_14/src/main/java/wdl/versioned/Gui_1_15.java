@@ -56,15 +56,11 @@ final class GuiFunctions {
 		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 		float textureSize = 32.0F;
-		b.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-		b.pos(0, bottom, 0).tex(0 / textureSize,
-				bottom / textureSize).color(32, 32, 32, 255).endVertex();
-		b.pos(right, bottom, 0).tex(right / textureSize,
-				bottom / textureSize).color(32, 32, 32, 255).endVertex();
-		b.pos(right, top, 0).tex(right / textureSize,
-				top / textureSize).color(32, 32, 32, 255).endVertex();
-		b.pos(left, top, 0).tex(left / textureSize,
-				top / textureSize).color(32, 32, 32, 255).endVertex();
+		b.begin(7, DefaultVertexFormats.POSITION_COLOR_TEX);
+		b.pos(0, bottom, 0).color(32, 32, 32, 255).tex(0 / textureSize, bottom / textureSize).endVertex();
+		b.pos(right, bottom, 0).color(32, 32, 32, 255).tex(right / textureSize, bottom / textureSize).endVertex();
+		b.pos(right, top, 0).color(32, 32, 32, 255).tex(right / textureSize, top / textureSize).endVertex();
+		b.pos(left, top, 0).color(32, 32, 32, 255).tex(left / textureSize, top / textureSize).endVertex();
 		t.draw();
 	}
 
@@ -85,64 +81,48 @@ final class GuiFunctions {
 		Tessellator t = Tessellator.getInstance();
 		BufferBuilder b = t.getBuffer();
 
-		//Box code is GuiSlot.overlayBackground
-		//Upper box
+		// Box code is GuiSlot.overlayBackground
+		// Upper box
 		int upperBoxEnd = top + topMargin;
 
 		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-		b.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-		b.pos(left, upperBoxEnd, 0.0D).tex(0, upperBoxEnd
-				/ textureSize).color(64, 64, 64, 255).endVertex();
-		b.pos(right, upperBoxEnd, 0.0D).tex(right / textureSize,
-				upperBoxEnd / textureSize).color(64, 64, 64, 255).endVertex();
-		b.pos(right, top, 0.0D).tex(right / textureSize, top / textureSize)
-		.color(64, 64, 64, 255).endVertex();
-		b.pos(left, top, 0.0D).tex(0, top / textureSize)
-		.color(64, 64, 64, 255).endVertex();
+		b.begin(7, DefaultVertexFormats.POSITION_COLOR_TEX);
+		b.pos(left, upperBoxEnd, 0.0D).color(64, 64, 64, 255).tex(0, upperBoxEnd / textureSize).endVertex();
+		b.pos(right, upperBoxEnd, 0.0D).color(64, 64, 64, 255).tex(right / textureSize, upperBoxEnd / textureSize)
+				.endVertex();
+		b.pos(right, top, 0.0D).color(64, 64, 64, 255).tex(right / textureSize, top / textureSize).endVertex();
+		b.pos(left, top, 0.0D).color(64, 64, 64, 255).tex(0, top / textureSize).endVertex();
 		t.draw();
 
 		// Lower box
 		int lowerBoxStart = bottom - bottomMargin;
 
 		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-		b.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-		b.pos(left, bottom, 0.0D).tex(0, bottom / textureSize)
-		.color(64, 64, 64, 255).endVertex();
-		b.pos(right, bottom, 0.0D).tex(right / textureSize, bottom
-				/ textureSize).color(64, 64, 64, 255).endVertex();
-		b.pos(right, lowerBoxStart, 0.0D)
-		.tex(right / textureSize, lowerBoxStart / textureSize)
-		.color(64, 64, 64, 255).endVertex();
-		b.pos(left, lowerBoxStart, 0.0D).tex(0, lowerBoxStart
-				/ textureSize).color(64, 64, 64, 255).endVertex();
+		b.begin(7, DefaultVertexFormats.POSITION_COLOR_TEX);
+		b.pos(left, bottom, 0.0D).color(64, 64, 64, 255).tex(0, bottom / textureSize).endVertex();
+		b.pos(right, bottom, 0.0D).color(64, 64, 64, 255).tex(right / textureSize, bottom / textureSize).endVertex();
+		b.pos(right, lowerBoxStart, 0.0D).color(64, 64, 64, 255).tex(right / textureSize, lowerBoxStart / textureSize)
+				.endVertex();
+		b.pos(left, lowerBoxStart, 0.0D).color(64, 64, 64, 255).tex(0, lowerBoxStart / textureSize).endVertex();
 		t.draw();
 
-		//Gradients
+		// Gradients
 		RenderSystem.enableBlend();
-		RenderSystem.blendFuncSeparate(GL_SRC_ALPHA,
-				GL_ONE_MINUS_SRC_ALPHA, 0, 1);
+		RenderSystem.blendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, 0, 1);
 		RenderSystem.disableAlphaTest();
 		RenderSystem.shadeModel(GL_SMOOTH);
 		RenderSystem.disableTexture();
-		b.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-		b.pos(left, upperBoxEnd + padding, 0.0D).tex(0, 1)
-		.color(0, 0, 0, 0).endVertex();
-		b.pos(right, upperBoxEnd + padding, 0.0D).tex(1, 1)
-		.color(0, 0, 0, 0).endVertex();
-		b.pos(right, upperBoxEnd, 0.0D).tex(1, 0).color(0, 0, 0, 255)
-		.endVertex();
-		b.pos(left, upperBoxEnd, 0.0D).tex(0, 0).color(0, 0, 0, 255)
-		.endVertex();
+		b.begin(7, DefaultVertexFormats.POSITION_COLOR_TEX);
+		b.pos(left, upperBoxEnd + padding, 0.0D).color(0, 0, 0, 0).tex(0, 1).endVertex();
+		b.pos(right, upperBoxEnd + padding, 0.0D).color(0, 0, 0, 0).tex(1, 1).endVertex();
+		b.pos(right, upperBoxEnd, 0.0D).color(0, 0, 0, 255).tex(1, 0).endVertex();
+		b.pos(left, upperBoxEnd, 0.0D).color(0, 0, 0, 255).tex(0, 0).endVertex();
 		t.draw();
-		b.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-		b.pos(left, lowerBoxStart, 0.0D).tex(0, 1).color(0, 0, 0, 255)
-		.endVertex();
-		b.pos(right, lowerBoxStart, 0.0D).tex(1, 1).color(0, 0, 0, 255)
-		.endVertex();
-		b.pos(right, lowerBoxStart - padding, 0.0D).tex(1, 0)
-		.color(0, 0, 0, 0).endVertex();
-		b.pos(left, lowerBoxStart - padding, 0.0D).tex(0, 0)
-		.color(0, 0, 0, 0).endVertex();
+		b.begin(7, DefaultVertexFormats.POSITION_COLOR_TEX);
+		b.pos(left, lowerBoxStart, 0.0D).color(0, 0, 0, 255).tex(0, 1).endVertex();
+		b.pos(right, lowerBoxStart, 0.0D).color(0, 0, 0, 255).tex(1, 1).endVertex();
+		b.pos(right, lowerBoxStart - padding, 0.0D).color(0, 0, 0, 0).tex(1, 0).endVertex();
+		b.pos(left, lowerBoxStart - padding, 0.0D).color(0, 0, 0, 0).tex(0, 0).endVertex();
 		t.draw();
 
 		RenderSystem.enableTexture();
