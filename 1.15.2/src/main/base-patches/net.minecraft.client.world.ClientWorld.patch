@@ -1,0 +1,33 @@
+--- net/minecraft/client/world/ClientWorld.java
++++ net/minecraft/client/world/ClientWorld.java
+@@ -74,7 +74,7 @@
+ import net.minecraft.world.storage.MapData;
+ import net.minecraft.world.storage.WorldInfo;
+ 
+-public class ClientWorld extends World {
++public class ClientWorld extends World/* WDL >>> */ implements wdl.ducks.IBaseChangesApplied/* <<< WDL */ {
+    private final List<Entity> globalEntities = Lists.newArrayList();
+    private final Int2ObjectMap<Entity> entitiesById = new Int2ObjectOpenHashMap<>();
+    private final ClientPlayNetHandler connection;
+@@ -112,6 +112,10 @@
+       this.chunkProvider.tick(hasTimeLeft);
+       this.playMoodSoundAndCheckLight();
+       this.getProfiler().endSection();
++
++      /* WDL >>> */
++      wdl.WDLHooks.onWorldClientTick(this);
++      /* <<< WDL */
+    }
+ 
+    public Iterable<Entity> getAllEntities() {
+@@ -295,6 +299,10 @@
+    }
+ 
+    public void removeEntityFromWorld(int eid) {
++      /* WDL >>> */
++      wdl.WDLHooks.onWorldClientRemoveEntityFromWorld(this, eid);
++      /* <<< WDL */
++
+       Entity entity = this.entitiesById.remove(eid);
+       if (entity != null) {
+          entity.remove();

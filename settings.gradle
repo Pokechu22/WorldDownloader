@@ -20,7 +20,7 @@ include '1.14.1', '1.14.2', '1.14.3', '1.14.4'
 if (ENABLE_UNSTABLE_BUILDS) { // This builds without issue (apart from tests), but cannot be used easily
     include '1.14.4-forge'
 }
-include '1.15.0', '1.15.1'
+include '1.15.0', '1.15.1', '1.15.2'
 
 // More information about what went wrong
 gradle.buildFinished { buildResult ->
