@@ -286,13 +286,13 @@ wdl.gui.gamerules.rules.sendCommandFeedback=Должен ли игрок пол�
 wdl.gui.gamerules.rules.showDeathMessages=Должны ли сообщения о смерти появлятся в чате?  (От игроков и питомцев)
 wdl.gui.gamerules.rules.spawnRadius=Как далеко от центра спавна (в блоках) должны распределяться игркои при спавне?
 wdl.gui.gamerules.rules.spectatorsGenerateChunks=Могут ли игроки в режиме Наблюдателя генерировать новые чанки?
-wdl.gui.gamerules.rules.disableRaids=Should raids on villages be disabled?
-wdl.gui.gamerules.rules.doInsomnia=Should phantoms spawn near players who haven't slept?
-wdl.gui.gamerules.rules.drowningDamage=Should players take damage when drowning?
-wdl.gui.gamerules.rules.fallDamage=Should players take fall damage?
-wdl.gui.gamerules.rules.fireDamage=Should players take damage from fire?
-wdl.gui.gamerules.rules.doPatrolSpawning=Should patrols of pillagers randomly spawn?
-wdl.gui.gamerules.rules.doTraderSpawning=Should the wandering trader randomly spawn?
+wdl.gui.gamerules.rules.disableRaids=Должны ли рейды на деревни быть отключены?
+wdl.gui.gamerules.rules.doInsomnia=Должны ли появляться фантомы рядом с игроками, которые не спали?
+wdl.gui.gamerules.rules.drowningDamage=Должны ли игроки получать урон при удушении под водой?
+wdl.gui.gamerules.rules.fallDamage=Должны ли игроки получать урон от падения?
+wdl.gui.gamerules.rules.fireDamage=Должны ли игроки получать урон от горения?
+wdl.gui.gamerules.rules.doPatrolSpawning=Должны ли патрули рейдеров случайно появляться?
+wdl.gui.gamerules.rules.doTraderSpawning=Должен ли странствующий торговец случайно появляться?
 # This is a special case, since it doesn't seem to actually be on the list:
 wdl.gui.gamerules.rules.gameLoopFunction=Имя функции для вызова каждого тика.  (Устаревший, было удалено в 1.13 и функции не будут сохранены модом, так что это бесполезно)
 
