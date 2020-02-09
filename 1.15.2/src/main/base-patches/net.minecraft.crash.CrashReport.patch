@@ -9,13 +9,17 @@
     private static final Logger LOGGER = LogManager.getLogger();
     private final String description;
     private final Throwable cause;
-@@ -71,6 +71,21 @@
+@@ -71,6 +71,25 @@
           List<String> list = Util.getJvmFlags().collect(Collectors.toList());
           return String.format("%d total; %s", list.size(), list.stream().collect(Collectors.joining(" ")));
        });
 +      /* WDL >>> */
 +      try {
-+         wdl.WDLHooks.onCrashReportPopulateEnvironment(this);
++         if (net.minecraft.client.Minecraft.getInstance() != null) {
++             wdl.WDLHooks.onCrashReportPopulateEnvironment(this);
++         } else {
++             throw new IllegalStateException("(WDL) No Minecraft instance, not calling crash handler");
++         }
 +      } catch (Throwable t) {
 +         try {
 +            final Logger LOGGER = LogManager.getLogger();
