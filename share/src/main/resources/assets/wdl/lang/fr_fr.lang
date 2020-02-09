@@ -2,7 +2,7 @@
 # All of the text on the left side of the = is the key, while the right side is the value.
 # '%s' and similar are formatting tokens, as described on the formatter
 # docs: https://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html
-# Only '%s' and '%%' are allowed.  '%s' is a string, and '%%' is an escapped percent.
+# Only '%s' and '%%' are allowed.  '%s' is a string, and '%%' is an escaped percent.
 # You can reference an argument at a specific index with %i$s, where 'i'
 # is the number.
 # Everything after a '#' is a comment.
