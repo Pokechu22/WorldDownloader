@@ -3,7 +3,7 @@
  * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017-2019 Pokechu22, julialy
+ * Copyright (c) 2017-2020 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -85,15 +85,15 @@ public abstract class GuiTurningCameraBase extends WDLScreen {
 	@OverridingMethodsMustInvokeSuper
 	public void init() {
 		if (!initializedCamera) {
-			this.cam = VersionedFunctions.makePlayer(WDL.minecraft, wdl.worldClient, wdl.player.connection, wdl.player);
+			this.cam = VersionedFunctions.makePlayer(wdl.minecraft, wdl.worldClient, wdl.player.connection, wdl.player);
 			this.cam.setLocationAndAngles(wdl.player.posX, wdl.player.posY,
 					wdl.player.posZ, wdl.player.rotationYaw, 0.0F);
 			this.yaw = wdl.player.rotationYaw;
-			this.oldCameraMode = WDL.minecraft.gameSettings.thirdPersonView;
-			this.oldHideHud = WDL.minecraft.gameSettings.hideGUI;
-			this.oldShowDebug = WDL.minecraft.gameSettings.showDebugInfo;
-			this.oldChatVisibility = WDL.minecraft.gameSettings.chatVisibility;
-			this.oldRenderViewEntity = WDL.minecraft.getRenderViewEntity();
+			this.oldCameraMode = wdl.minecraft.gameSettings.thirdPersonView;
+			this.oldHideHud = wdl.minecraft.gameSettings.hideGUI;
+			this.oldShowDebug = wdl.minecraft.gameSettings.showDebugInfo;
+			this.oldChatVisibility = wdl.minecraft.gameSettings.chatVisibility;
+			this.oldRenderViewEntity = wdl.minecraft.getRenderViewEntity();
 
 			initializedCamera = true;
 		}
@@ -221,7 +221,7 @@ public abstract class GuiTurningCameraBase extends WDLScreen {
 	 * Called when the client world ticks, from a static context.
 	 */
 	public static void onWorldTick() {
-		GuiScreen screen = WDL.minecraft.currentScreen;
+		GuiScreen screen = WDL.getInstance().minecraft.currentScreen;
 		if (screen instanceof GuiTurningCameraBase) {
 			((GuiTurningCameraBase) screen).onWorldTick0();
 		}
@@ -244,11 +244,11 @@ public abstract class GuiTurningCameraBase extends WDLScreen {
 	private void activateRenderViewEntity() {
 		if (!this.initializedCamera) return;
 
-		WDL.minecraft.gameSettings.thirdPersonView = 0;
-		WDL.minecraft.gameSettings.hideGUI = true;
-		WDL.minecraft.gameSettings.showDebugInfo = false;
-		WDL.minecraft.gameSettings.chatVisibility = EnumChatVisibility.HIDDEN;
-		WDL.minecraft.setRenderViewEntity(this.cam);
+		wdl.minecraft.gameSettings.thirdPersonView = 0;
+		wdl.minecraft.gameSettings.hideGUI = true;
+		wdl.minecraft.gameSettings.showDebugInfo = false;
+		wdl.minecraft.gameSettings.chatVisibility = EnumChatVisibility.HIDDEN;
+		wdl.minecraft.setRenderViewEntity(this.cam);
 	}
 
 	/**
@@ -257,10 +257,10 @@ public abstract class GuiTurningCameraBase extends WDLScreen {
 	private void deactivateRenderViewEntity() {
 		if (!this.initializedCamera) return;
 
-		WDL.minecraft.gameSettings.thirdPersonView = this.oldCameraMode;
-		WDL.minecraft.gameSettings.hideGUI = oldHideHud;
-		WDL.minecraft.gameSettings.showDebugInfo = oldShowDebug;
-		WDL.minecraft.gameSettings.chatVisibility = oldChatVisibility;
-		WDL.minecraft.setRenderViewEntity(this.oldRenderViewEntity);
+		wdl.minecraft.gameSettings.thirdPersonView = this.oldCameraMode;
+		wdl.minecraft.gameSettings.hideGUI = oldHideHud;
+		wdl.minecraft.gameSettings.showDebugInfo = oldShowDebug;
+		wdl.minecraft.gameSettings.chatVisibility = oldChatVisibility;
+		wdl.minecraft.setRenderViewEntity(this.oldRenderViewEntity);
 	}
 }

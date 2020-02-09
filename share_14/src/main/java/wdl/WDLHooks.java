@@ -498,7 +498,7 @@ public class WDLHooks {
 		public void beforeDraw() {
 			final String displayString;
 			final boolean enabled;
-			if (WDL.minecraft.isIntegratedServerRunning()) {
+			if (wdl.minecraft.isIntegratedServerRunning()) {
 				// Singleplayer
 				displayString = I18n
 						.format("wdl.gui.ingameMenu.downloadStatus.singlePlayer");
@@ -535,7 +535,7 @@ public class WDLHooks {
 
 		@Override
 		public void performAction() {
-			if (WDL.minecraft.isIntegratedServerRunning()) {
+			if (wdl.minecraft.isIntegratedServerRunning()) {
 				return; // WDL not available if in singleplayer or LAN server mode
 			}
 
@@ -547,7 +547,7 @@ public class WDLHooks {
 					// If they don't have any permissions, let the player
 					// request some.
 					if (WDLPluginChannels.canRequestPermissions()) {
-						WDL.minecraft.displayGuiScreen(new GuiWDLPermissions(menu, wdl));
+						wdl.minecraft.displayGuiScreen(new GuiWDLPermissions(menu, wdl));
 					} else {
 						// Should never happen
 					}
@@ -555,7 +555,7 @@ public class WDLHooks {
 						&& !WDLPluginChannels.canDownloadInGeneral()) {
 					// Handle the "only has chunk overrides" state - notify
 					// the player of limited areas.
-					WDL.minecraft.displayGuiScreen(new GuiWDLChunkOverrides(menu, wdl));
+					wdl.minecraft.displayGuiScreen(new GuiWDLChunkOverrides(menu, wdl));
 				} else {
 					wdl.startDownload();
 					setEnabled(false); // Disable to stop double-clicks
@@ -575,13 +575,13 @@ public class WDLHooks {
 
 		@Override
 		public void performAction() {
-			if (WDL.minecraft.isIntegratedServerRunning()) {
-				WDL.minecraft.displayGuiScreen(new GuiWDLAbout(menu, wdl));
+			if (wdl.minecraft.isIntegratedServerRunning()) {
+				wdl.minecraft.displayGuiScreen(new GuiWDLAbout(menu, wdl));
 			} else {
-				if (wdl.promptForInfoForSettings("changeOptions", false, this::performAction, () -> WDL.minecraft.displayGuiScreen(null))) {
+				if (wdl.promptForInfoForSettings("changeOptions", false, this::performAction, () -> wdl.minecraft.displayGuiScreen(null))) {
 					return;
 				}
-				WDL.minecraft.displayGuiScreen(new GuiWDL(menu, wdl));
+				wdl.minecraft.displayGuiScreen(new GuiWDL(menu, wdl));
 			}
 		}
 	}

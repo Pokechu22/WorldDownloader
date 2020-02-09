@@ -76,7 +76,7 @@ public class WDLEvents {
 	public static void onWorldLoad(WorldClient world) {
 		if (ENABLE_PROFILER) PROFILER.startSection("Core");
 
-		if (WDL.minecraft.isIntegratedServerRunning()) {
+		if (wdl.minecraft.isIntegratedServerRunning()) {
 			// Don't do anything else in single player
 
 			if (ENABLE_PROFILER) PROFILER.endSection();  // "Core"
@@ -140,15 +140,15 @@ public class WDLEvents {
 	public static void onItemGuiOpened() {
 		if (!WDL.downloading) { return; }
 
-		if (WDL.minecraft.objectMouseOver == null) {
+		if (wdl.minecraft.objectMouseOver == null) {
 			return;
 		}
 
-		if (WDL.minecraft.objectMouseOver.type == RayTraceResult.Type.ENTITY) {
-			wdl.lastEntity = WDL.minecraft.objectMouseOver.entity;
+		if (wdl.minecraft.objectMouseOver.type == RayTraceResult.Type.ENTITY) {
+			wdl.lastEntity = wdl.minecraft.objectMouseOver.entity;
 		} else {
 			wdl.lastEntity = null;
-			wdl.lastClickedBlock = WDL.minecraft.objectMouseOver.getPos();
+			wdl.lastClickedBlock = wdl.minecraft.objectMouseOver.getPos();
 		}
 	}
 

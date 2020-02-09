@@ -3,7 +3,7 @@
  * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017-2019 Pokechu22, julialy
+ * Copyright (c) 2017-2020 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -86,7 +86,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	 *
 	 * TODO: I may want to move this elsewhere.
 	 */
-	private static class MultiworldInfo {
+	private class MultiworldInfo {
 		public MultiworldInfo(String folderName, String displayName) {
 			this.folderName = folderName;
 			this.displayName = displayName;
@@ -107,7 +107,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 				// TODO: More info than just dimensions - EG if the
 				// chunk the player is in is added, etc.
 				description.add("Defined dimensions:");
-				File savesFolder = new File(WDL.minecraft.gameDir, "saves");
+				File savesFolder = new File(wdl.minecraft.gameDir, "saves");
 				File world = new File(savesFolder, WDL.getWorldFolderName(folderName));
 				File[] subfolders = world.listFiles();
 

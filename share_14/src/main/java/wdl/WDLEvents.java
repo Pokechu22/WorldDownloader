@@ -78,7 +78,7 @@ public class WDLEvents {
 	public static void onWorldLoad(ClientWorld world) {
 		if (ENABLE_PROFILER) PROFILER.startSection("Core");
 
-		if (WDL.minecraft.isIntegratedServerRunning()) {
+		if (wdl.minecraft.isIntegratedServerRunning()) {
 			// Don't do anything else in single player
 
 			if (ENABLE_PROFILER) PROFILER.endSection();  // "Core"
@@ -144,7 +144,7 @@ public class WDLEvents {
 
 		// NOTE: https://bugs.mojang.com/browse/MC-79925 was fixed in 1.14, but when backporting
 		// will possibly cause issues.
-		RayTraceResult result = WDL.minecraft.objectMouseOver;
+		RayTraceResult result = wdl.minecraft.objectMouseOver;
 		if (result.getType() == RayTraceResult.Type.MISS) {
 			return;
 		}
