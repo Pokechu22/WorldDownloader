@@ -3,7 +3,7 @@
  * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017 Pokechu22, julialy
+ * Copyright (c) 2017-2020 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -229,8 +229,8 @@ public class WDLPluginChannels {
 
 		if (receivedPackets.contains(1)) {
 			if (!canCacheChunks && saveRadius >= 0) {
-				int distanceX = chunk.getPos().x - WDL.INSTANCE.player.chunkCoordX;
-				int distanceZ = chunk.getPos().z - WDL.INSTANCE.player.chunkCoordZ;
+				int distanceX = chunk.getPos().x - WDL.getInstance().player.chunkCoordX;
+				int distanceZ = chunk.getPos().z - WDL.getInstance().player.chunkCoordZ;
 
 				if (Math.abs(distanceX) > saveRadius ||
 						Math.abs(distanceZ) > saveRadius) {
@@ -813,7 +813,7 @@ public class WDLPluginChannels {
 						WDLMessages.chatMessageTranslated(
 								WDL.serverProps,
 								WDLMessageTypes.ERROR, "wdl.messages.generalError.forbidden");
-						WDL.INSTANCE.cancelDownload();
+						WDL.getInstance().cancelDownload();
 					}
 				}
 				break;

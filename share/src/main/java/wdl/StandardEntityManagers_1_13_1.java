@@ -3,7 +3,7 @@
  * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017 Pokechu22, julialy
+ * Copyright (c) 2017-2020 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -88,7 +88,7 @@ class StandardEntityManagers {
 	public static final ISpigotEntityManager SPIGOT = new ISpigotEntityManager() {
 		@Override
 		public Set<String> getProvidedEntities() {
-			if (WDL.INSTANCE.isSpigot()) {
+			if (WDL.getInstance().isSpigot()) {
 				return PROVIDED_ENTITIES;
 			} else {
 				// Don't try to do spigot ranges on non-spigot servers

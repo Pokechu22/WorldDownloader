@@ -3,7 +3,7 @@
  * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017-2018 Pokechu22, julialy
+ * Copyright (c) 2017-2020 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -157,7 +157,7 @@ public class EntityUtils {
 			return serverDistance;
 		} 
 		case USER: {
-			int value = WDL.INSTANCE.worldProps.getUserEntityTrackDistance(type);
+			int value = WDL.getInstance().worldProps.getUserEntityTrackDistance(type);
 
 			if (value < 0) {
 				return getEntityTrackDistance(TrackDistanceMode.SERVER, type, entity);
@@ -212,8 +212,8 @@ public class EntityUtils {
 	 * @return
 	 */
 	public static boolean isEntityEnabled(@Nonnull String type) {
-		boolean groupEnabled = WDL.INSTANCE.worldProps.isEntityGroupEnabled(getEntityGroup(type));
-		boolean singleEnabled = WDL.INSTANCE.worldProps.isEntityTypeEnabled(type);
+		boolean groupEnabled = WDL.getInstance().worldProps.isEntityGroupEnabled(getEntityGroup(type));
+		boolean singleEnabled = WDL.getInstance().worldProps.isEntityTypeEnabled(type);
 
 		return groupEnabled && singleEnabled;
 	}
@@ -249,7 +249,7 @@ public class EntityUtils {
 	 * Gets the currently selected track distance mode from {@link WDL#worldProps}.
 	 */
 	public static TrackDistanceMode getTrackDistanceMode() {
-		return WDL.INSTANCE.worldProps.getValue(EntitySettings.TRACK_DISTANCE_MODE);
+		return WDL.getInstance().worldProps.getValue(EntitySettings.TRACK_DISTANCE_MODE);
 	}
 
 	/**
