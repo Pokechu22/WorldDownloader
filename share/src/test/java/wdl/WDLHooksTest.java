@@ -3,7 +3,7 @@
  * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2018 Pokechu22, julialy
+ * Copyright (c) 2018-2020 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -29,6 +29,7 @@ import net.minecraft.network.play.server.SPacketMaps;
 import net.minecraft.network.play.server.SPacketUnloadChunk;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+import wdl.WDLHooks.IHooksListener;
 import wdl.handler.AbstractWorldBehaviorTest;
 import wdl.versioned.VersionedFunctions;
 
@@ -42,7 +43,7 @@ public class WDLHooksTest extends AbstractWorldBehaviorTest {
 			makeMockWorld();
 			clientWorld.tick();
 
-			verify(mock).onWorldClientTick0(clientWorld);
+			verify(mock).onWorldClientTick(clientWorld);
 		});
 	}
 
@@ -52,7 +53,7 @@ public class WDLHooksTest extends AbstractWorldBehaviorTest {
 			makeMockWorld();
 			clientWorld.removeEntityFromWorld(0);
 
-			verify(mock).onWorldClientRemoveEntityFromWorld0(clientWorld, 0);
+			verify(mock).onWorldClientRemoveEntityFromWorld(clientWorld, 0);
 		});
 	}
 
@@ -63,7 +64,7 @@ public class WDLHooksTest extends AbstractWorldBehaviorTest {
 			SPacketUnloadChunk packet = new SPacketUnloadChunk(4, 4);
 			clientPlayer.connection.processChunkUnload(packet);
 
-			verify(mock).onNHPCHandleChunkUnload0(same(clientPlayer.connection), any(), same(packet));
+			verify(mock).onNHPCHandleChunkUnload(same(clientPlayer.connection), any(), same(packet));
 		});
 	}
 
@@ -74,7 +75,7 @@ public class WDLHooksTest extends AbstractWorldBehaviorTest {
 			TextComponentString reason = new TextComponentString("Disconnected");
 			clientPlayer.connection.onDisconnect(reason);
 
-			verify(mock).onNHPCDisconnect0(clientPlayer.connection, reason);
+			verify(mock).onNHPCDisconnect(clientPlayer.connection, reason);
 		});
 	}
 
@@ -85,7 +86,7 @@ public class WDLHooksTest extends AbstractWorldBehaviorTest {
 			SPacketBlockAction packet = new SPacketBlockAction(BlockPos.ZERO, Blocks.NOTE_BLOCK, 0, 0);
 			clientPlayer.connection.handleBlockAction(packet);
 
-			verify(mock).onNHPCHandleBlockAction0(clientPlayer.connection, packet);
+			verify(mock).onNHPCHandleBlockAction(clientPlayer.connection, packet);
 		});
 	}
 
@@ -96,7 +97,7 @@ public class WDLHooksTest extends AbstractWorldBehaviorTest {
 			SPacketCustomPayload packet = VersionedFunctions.makeServerPluginMessagePacket("somechannel", new byte[0]);
 			clientPlayer.connection.handleCustomPayload(packet);
 
-			verify(mock).onNHPCHandleCustomPayload0(clientPlayer.connection, packet);
+			verify(mock).onNHPCHandleCustomPayload(clientPlayer.connection, packet);
 		});
 	}
 
@@ -107,7 +108,7 @@ public class WDLHooksTest extends AbstractWorldBehaviorTest {
 			SPacketChat packet = new SPacketChat(new TextComponentString("Hello world"));
 			clientPlayer.connection.handleChat(packet);
 
-			verify(mock).onNHPCHandleChat0(clientPlayer.connection, packet);
+			verify(mock).onNHPCHandleChat(clientPlayer.connection, packet);
 		});
 	}
 
@@ -118,27 +119,27 @@ public class WDLHooksTest extends AbstractWorldBehaviorTest {
 			SPacketMaps packet = new SPacketMaps(0, (byte)0, false, Collections.emptyList(), new byte[0], 0, 0, 0, 0);
 			clientPlayer.connection.handleMaps(packet);
 
-			verify(mock).onNHPCHandleMaps0(clientPlayer.connection, packet);
+			verify(mock).onNHPCHandleMaps(clientPlayer.connection, packet);
 		});
 	}
 
 	/**
-	 * Creates a mock WDLHooks instance and modifies the value of
-	 * {@link WDLHooks#INSTANCE} temporarily.
+	 * Creates a mock WDLHooks listener and modifies the value of
+	 * {@link WDLHooks#listener} temporarily.
 	 *
-	 * @param action Action to perform with the modified WDLHooks instance
+	 * @param action Action to perform with the modified WDLHooks listener
 	 */
-	protected synchronized void doWithMockHooks(Consumer<WDLHooks> action) {
-		WDLHooks realInstance = WDLHooks.INSTANCE;
+	protected synchronized void doWithMockHooks(Consumer<IHooksListener> action) {
+		IHooksListener prevListener = WDLHooks.listener;
 		try {
-			WDLHooks mockInstance = mock(WDLHooks.class);
-			WDLHooks.INSTANCE = mockInstance;
+			IHooksListener mockListener = mock(IHooksListener.class);
+			WDLHooks.listener = mockListener;
 
-			action.accept(mockInstance);
+			action.accept(mockListener);
 
-			verifyNoMoreInteractions(mockInstance);
+			verifyNoMoreInteractions(mockListener);
 		} finally {
-			WDLHooks.INSTANCE = realInstance;
+			WDLHooks.listener = prevListener;
 		}
 	}
 }

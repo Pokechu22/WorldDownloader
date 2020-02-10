@@ -123,17 +123,21 @@ public class WDL {
 	/**
 	 * Instance of WDL, currently a singleton but this will change in the future.
 	 */
-	private static final WDL INSTANCE = new WDL();
+	@Nullable
+	private static WDL INSTANCE = null;
 	/**
 	 * Returns the active instance of WDL.
 	 */
 	public static WDL getInstance() {
+		if (INSTANCE == null) {
+			throw new IllegalStateException("WDL has not been bootstraped, yet getInstance() called");
+		}
 		return INSTANCE;
 	}
 	/**
 	 * Reference to the Minecraft object.
 	 */
-	public Minecraft minecraft = Minecraft.getInstance();
+	public final Minecraft minecraft;
 	/**
 	 * Reference to the World object that WDL uses.
 	 */
@@ -273,15 +277,30 @@ public class WDL {
 
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	// Initialization:
 	static {
+		LOGGER.info("WDL static init", new Exception("Call stack"));
 		// Initialize the Properties template:
 		defaultProps = new DefaultConfiguration();
 
 		globalProps = new Configuration(defaultProps);
+	}
+	/**
+	 * Sets up everything used by this class; can be called multiple times if needed.
+	 */
+	public static void bootstrap(Minecraft minecraft) {
+		if (minecraft == null) {
+			throw new AssertionError("Minecraft instance is null at WDL bootstrap!");
+		}
+		if (INSTANCE == null) {
+			LOGGER.info("WDL bootstrap", new Exception("Call stack"));
+			INSTANCE = new WDL(Minecraft.getInstance());
+		}
+	}
+	private WDL(Minecraft minecraft) {
+		this.minecraft = minecraft;
 
 		try {
-			File dataFile = new File(Minecraft.getInstance().gameDir, "WorldDownloader.txt");
+			File dataFile = new File(minecraft.gameDir, "WorldDownloader.txt");
 			globalProps.load(dataFile);
 		} catch (FileNotFoundException e) {
 			LOGGER.debug("Failed to load global properties as they do not exist", e);
@@ -289,8 +308,10 @@ public class WDL {
 			LOGGER.warn("Failed to load global properties", e);
 		}
 		serverProps = new Configuration(globalProps);
-		INSTANCE.worldProps = serverProps;
-		INSTANCE.gameRules = new GameRules();
+		this.worldProps = serverProps;
+		this.gameRules = new GameRules();
+
+		WDLEvents.createListener(this);
 
 		// Now that all configuration is loaded, it should be safe to access this
 		// (and it shouldn't have issues with depending back on this class)
@@ -489,7 +510,7 @@ public class WDL {
 					onSaveComplete();
 				});
 			} catch (Throwable e) {
-				WDL.crashed(e, "World Downloader Mod: Saving world");
+				crashed(e, "World Downloader Mod: Saving world");
 			}
 		}, "WDL Save Thread");
 		thread.start();
@@ -1711,12 +1732,11 @@ public class WDL {
 	 *
 	 * @param category
 	 */
-	public static void crashed(Throwable t, String category) {
+	public void crashed(Throwable t, String category) {
 		CrashReport report;
 
 		if (t instanceof ReportedException) {
-			CrashReport oldReport =
-					((ReportedException) t).getCrashReport();
+			CrashReport oldReport = ((ReportedException) t).getCrashReport();
 
 			report = CrashReport.makeCrashReport(oldReport.getCrashCause(),
 					category + " (" + oldReport.getCauseStackTraceOrString() + ")");
@@ -1725,15 +1745,15 @@ public class WDL {
 				//Steal crashReportSections, and replace it.
 				@SuppressWarnings("unchecked")
 				List<CrashReportCategory> crashReportSectionsOld = ReflectionUtils
-				.findAndGetPrivateField(oldReport, List.class);
+						.findAndGetPrivateField(oldReport, List.class);
 				@SuppressWarnings("unchecked")
 				List<CrashReportCategory> crashReportSectionsNew = ReflectionUtils
-				.findAndGetPrivateField(report, List.class);
+						.findAndGetPrivateField(report, List.class);
 
 				crashReportSectionsNew.addAll(crashReportSectionsOld);
 			} catch (Exception e) {
-				//Well... some kind of reflection error.
-				//No use trying to do anything else.
+				// Well... some kind of reflection error.
+				// No use trying to do anything else.
 				report.makeCategory(
 						"An exception occured while trying to copy " +
 						"the origional categories.")
@@ -1742,6 +1762,6 @@ public class WDL {
 		} else {
 			report = CrashReport.makeCrashReport(t, category);
 		}
-		Minecraft.getInstance().crashed(report);
+		minecraft.crashed(report);
 	}
 }
