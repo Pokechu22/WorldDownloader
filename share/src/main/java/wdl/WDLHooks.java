@@ -24,6 +24,7 @@ import net.minecraft.client.gui.GuiIngameMenu;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.crash.CrashReport;
+import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.network.play.server.SPacketBlockAction;
 import net.minecraft.network.play.server.SPacketChat;
 import net.minecraft.network.play.server.SPacketCustomPayload;
@@ -70,6 +71,14 @@ public final class WDLHooks {
 			}
 			// Forward the event to the new listener
 			listener.onWorldClientTick(sender);
+		}
+
+		@Override
+		public void onCrashReportPopulateEnvironment(CrashReport report) {
+			CrashReportCategory cat = report.makeCategory("World Downloader Mod - not bootstrapped yet");
+			cat.addDetail("WDL version", VersionConstants::getModVersion);
+			cat.addDetail("Targeted MC version", VersionConstants::getExpectedVersion);
+			cat.addDetail("Actual MC version", VersionConstants::getMinecraftVersion);
 		}
 	}
 
