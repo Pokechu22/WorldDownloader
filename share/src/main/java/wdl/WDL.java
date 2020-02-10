@@ -278,7 +278,6 @@ public class WDL {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	static {
-		LOGGER.info("WDL static init", new Exception("Call stack"));
 		// Initialize the Properties template:
 		defaultProps = new DefaultConfiguration();
 
@@ -292,7 +291,6 @@ public class WDL {
 			throw new AssertionError("Minecraft instance is null at WDL bootstrap!");
 		}
 		if (INSTANCE == null) {
-			LOGGER.info("WDL bootstrap", new Exception("Call stack"));
 			INSTANCE = new WDL(Minecraft.getInstance());
 		}
 	}

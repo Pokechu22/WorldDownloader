@@ -270,7 +270,6 @@ public class WDL {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	static {
-		LOGGER.info("WDL static init", new Exception("Call stack"));
 		// Initialize the Properties template:
 		defaultProps = new DefaultConfiguration();
 
