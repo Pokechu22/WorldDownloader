@@ -25,7 +25,7 @@ configurations {
     compile.extendsFrom(shade)
 }
 
-version = "4.0.6.2-SNAPSHOT"
+version = "4.0.6.2"
 group = "wdl"
 archivesBaseName = "WorldDownloader"
 libsDirName = "../../libs/${version}"
