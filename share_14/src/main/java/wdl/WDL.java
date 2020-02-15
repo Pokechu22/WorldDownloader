@@ -285,7 +285,6 @@ public class WDL {
 			throw new AssertionError("Minecraft instance is null at WDL bootstrap!");
 		}
 		if (INSTANCE == null) {
-			LOGGER.info("WDL bootstrap", new Exception("Call stack"));
 			INSTANCE = new WDL(Minecraft.getInstance());
 		}
 	}
