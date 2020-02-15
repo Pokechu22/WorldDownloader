@@ -48,31 +48,90 @@ public final class WDLHooks {
 	static IHooksListener listener = new BootstrapHooksListener();
 
 	public static interface IHooksListener {
-		default void onWorldClientTick(ClientWorld sender) {};
-		default void onWorldClientRemoveEntityFromWorld(ClientWorld sender, int eid) {};
-		default void onNHPCHandleChunkUnload(ClientPlayNetHandler sender, ClientWorld world, SUnloadChunkPacket packet) {};
-		default void onNHPCHandleChat(ClientPlayNetHandler sender, SChatPacket packet) {};
-		default void onNHPCHandleMaps(ClientPlayNetHandler sender, SMapDataPacket packet) {};
-		default void onNHPCHandleCustomPayload(ClientPlayNetHandler sender, SCustomPayloadPlayPacket packet) {};
-		default void onNHPCHandleBlockAction(ClientPlayNetHandler sender, SBlockActionPacket packet) {};
-		default void onNHPCDisconnect(ClientPlayNetHandler sender, ITextComponent reason) {};
-		default void onCrashReportPopulateEnvironment(CrashReport report) {};
-		default void injectWDLButtons(IngameMenuScreen gui, Collection<Widget> buttonList, Consumer<Widget> addButton) {};
-		default void handleWDLButtonClick(IngameMenuScreen gui, Button button) {};
+		void onWorldClientTick(ClientWorld sender);
+		void onWorldClientRemoveEntityFromWorld(ClientWorld sender, int eid);
+		void onNHPCHandleChunkUnload(ClientPlayNetHandler sender, ClientWorld world, SUnloadChunkPacket packet);
+		void onNHPCHandleChat(ClientPlayNetHandler sender, SChatPacket packet);
+		void onNHPCHandleMaps(ClientPlayNetHandler sender, SMapDataPacket packet);
+		void onNHPCHandleCustomPayload(ClientPlayNetHandler sender, SCustomPayloadPlayPacket packet);
+		void onNHPCHandleBlockAction(ClientPlayNetHandler sender, SBlockActionPacket packet);
+		void onNHPCDisconnect(ClientPlayNetHandler sender, ITextComponent reason);
+		void onCrashReportPopulateEnvironment(CrashReport report);
+		void injectWDLButtons(IngameMenuScreen gui, Collection<Widget> buttonList, Consumer<Widget> addButton);
+		void handleWDLButtonClick(IngameMenuScreen gui, Button button);
 	}
 
 	private static class BootstrapHooksListener implements IHooksListener {
-		@Override
-		public void onWorldClientTick(ClientWorld sender) {
-			// Use this as a time to set up the real instance
+		// All of these methods other than the crash one first bootstrap WDL,
+		// and then forward the event to the new listener (which should have changed)
+		private void bootstrap() {
 			WDL.bootstrap(Minecraft.getInstance());
 			if (listener == this) {
 				throw new AssertionError("WDL bootstrap failed to change WDLHooks listener from " + this);
 			}
-			// Forward the event to the new instance
+		}
+
+		@Override
+		public void onWorldClientTick(ClientWorld sender) {
+			bootstrap();
 			listener.onWorldClientTick(sender);
 		}
 
+		@Override
+		public void onWorldClientRemoveEntityFromWorld(ClientWorld sender, int eid) {
+			bootstrap();
+			listener.onWorldClientRemoveEntityFromWorld(sender, eid);
+		}
+
+		@Override
+		public void onNHPCHandleChunkUnload(ClientPlayNetHandler sender, ClientWorld world, SUnloadChunkPacket packet) {
+			bootstrap();
+			listener.onNHPCHandleChunkUnload(sender, world, packet);
+		}
+
+		@Override
+		public void onNHPCHandleChat(ClientPlayNetHandler sender, SChatPacket packet) {
+			bootstrap();
+			listener.onNHPCHandleChat(sender, packet);
+		}
+
+		@Override
+		public void onNHPCHandleMaps(ClientPlayNetHandler sender, SMapDataPacket packet) {
+			bootstrap();
+			listener.onNHPCHandleMaps(sender, packet);
+		}
+
+		@Override
+		public void onNHPCHandleCustomPayload(ClientPlayNetHandler sender, SCustomPayloadPlayPacket packet) {
+			bootstrap();
+			listener.onNHPCHandleCustomPayload(sender, packet);
+		}
+
+		@Override
+		public void onNHPCHandleBlockAction(ClientPlayNetHandler sender, SBlockActionPacket packet) {
+			bootstrap();
+			listener.onNHPCHandleBlockAction(sender, packet);
+		}
+
+		@Override
+		public void onNHPCDisconnect(ClientPlayNetHandler sender, ITextComponent reason) {
+			bootstrap();
+			listener.onNHPCDisconnect(sender, reason);
+		}
+
+		@Override
+		public void injectWDLButtons(IngameMenuScreen gui, Collection<Widget> buttonList, Consumer<Widget> addButton) {
+			bootstrap();
+			listener.injectWDLButtons(gui, buttonList, addButton);
+		}
+
+		@Override
+		public void handleWDLButtonClick(IngameMenuScreen gui, Button button) {
+			bootstrap();
+			listener.handleWDLButtonClick(gui, button);
+		}
+
+		// NOTE: This does NOT bootstrap, as we do not want to bootstrap in a crash
 		@Override
 		public void onCrashReportPopulateEnvironment(CrashReport report) {
 			// Trick the crash report handler into not storing a stack trace
