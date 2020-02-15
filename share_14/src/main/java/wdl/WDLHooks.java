@@ -75,7 +75,16 @@ public final class WDLHooks {
 
 		@Override
 		public void onCrashReportPopulateEnvironment(CrashReport report) {
-			CrashReportCategory cat = report.makeCategory("World Downloader Mod - not bootstrapped yet");
+			// Trick the crash report handler into not storing a stack trace
+			// (we don't want it)
+			int stSize;
+			try {
+				stSize = Thread.currentThread().getStackTrace().length - 1;
+			} catch (Exception e) {
+				// Ignore
+				stSize = 0;
+			}
+			CrashReportCategory cat = report.makeCategoryDepth("World Downloader Mod - not bootstrapped yet", stSize);
 			cat.addDetail("WDL version", VersionConstants::getModVersion);
 			cat.addDetail("Targeted MC version", VersionConstants::getExpectedVersion);
 			cat.addDetail("Actual MC version", VersionConstants::getMinecraftVersion);
