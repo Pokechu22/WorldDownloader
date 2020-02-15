@@ -181,15 +181,26 @@ public class WDLEvents {
 	public void onItemGuiOpened() {
 		if (!WDL.downloading) { return; }
 
-		if (wdl.minecraft.objectMouseOver == null) {
+		RayTraceResult result = wdl.minecraft.objectMouseOver;
+		if (result == null) {
+			// This case is hit via https://bugs.mojang.com/browse/MC-79925
+			wdl.lastEntity = null;
+			wdl.lastClickedBlock = null;
 			return;
 		}
 
-		if (wdl.minecraft.objectMouseOver.type == RayTraceResult.Type.ENTITY) {
-			wdl.lastEntity = wdl.minecraft.objectMouseOver.entity;
-		} else {
+		switch (result.type) {
+		case ENTITY:
+			wdl.lastEntity = result.entity;
+			wdl.lastClickedBlock = null;
+			break;
+		case BLOCK:
 			wdl.lastEntity = null;
-			wdl.lastClickedBlock = wdl.minecraft.objectMouseOver.getPos();
+			wdl.lastClickedBlock = result.getPos();
+			break;
+		case MISS:
+			wdl.lastEntity = null;
+			wdl.lastClickedBlock = null;
 		}
 	}
 
@@ -265,9 +276,15 @@ public class WDLEvents {
 			}
 		}
 
-		// Else, the last thing clicked was a TILE ENTITY
+		// Else, the last thing clicked was a BLOCK ENTITY
+		if (wdl.lastClickedBlock == null) {
+			WDLMessages.chatMessageTranslated(WDL.serverProps,
+					WDLMessageTypes.ON_GUI_CLOSED_WARNING,
+					"wdl.messages.onGuiClosedWarning.noCoordinates");
+			return true; // nothing else can handle this
+		}
 
-		// Get the tile entity which we are going to update the inventory for
+		// Get the block entity which we are going to update the inventory for
 		TileEntity te = wdl.worldClient.getTileEntity(wdl.lastClickedBlock);
 
 		if (te == null) {

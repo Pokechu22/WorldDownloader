@@ -412,6 +412,7 @@ wdl.messages.onGuiClosedInfo.savedTileEntity.lectern=Saved lectern book.
 wdl.messages.onGuiClosedInfo.savedTileEntity.shulkerBox=Saved shulker box contents.
 wdl.messages.onGuiClosedInfo.savedTileEntity.smoker=Saved smoker contents.
 
+wdl.messages.onGuiClosedWarning.noCoordinates=onItemGuiClosed: Nothing was targeted when the container was opened; there is no location to save it to!
 wdl.messages.onGuiClosedWarning.couldNotGetTE=onItemGuiClosed could not get BE at %s.
 wdl.messages.onGuiClosedWarning.unhandledEntity=onItemGuiClosed: Unrecognised entity could not be saved: %s
 wdl.messages.onGuiClosedWarning.unhandledTileEntity=onItemGuiClosed: Unhandled Block Entity at %s: %s
