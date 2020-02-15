@@ -38,6 +38,7 @@ import net.minecraft.world.dimension.EndDimension;
 import net.minecraft.world.dimension.NetherDimension;
 import net.minecraft.world.storage.SaveHandler;
 import net.minecraft.world.storage.SessionLockException;
+import wdl.config.settings.MiscSettings;
 import wdl.versioned.VersionedFunctions;
 
 /**
@@ -57,6 +58,10 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 	protected static File getWorldSaveFolder(SaveHandler handler,
 			Dimension dimension) {
 		File baseFolder = handler.getWorldDirectory();
+
+		if (WDL.serverProps.getValue(MiscSettings.FORCE_DIMENSION_TO_OVERWORLD)) {
+			return baseFolder;
+		}
 
 		// Based off of AnvilSaveHandler.getChunkLoader, but also accounts
 		// for forge changes.

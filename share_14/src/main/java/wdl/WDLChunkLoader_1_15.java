@@ -49,6 +49,7 @@ import net.minecraft.world.lighting.WorldLightManager;
 import net.minecraft.world.server.ServerTickList;
 import net.minecraft.world.storage.SaveHandler;
 import net.minecraft.world.storage.SessionLockException;
+import wdl.config.settings.MiscSettings;
 import wdl.versioned.VersionedFunctions;
 
 /**
@@ -69,7 +70,9 @@ abstract class WDLChunkLoaderBase extends ChunkLoader {
 		// XXX No forge support at this time
 
 		File dimensionFolder;
-		if (dimension instanceof NetherDimension) {
+		if (WDL.serverProps.getValue(MiscSettings.FORCE_DIMENSION_TO_OVERWORLD)) {
+			dimensionFolder = baseFolder;
+		} else if (dimension instanceof NetherDimension) {
 			dimensionFolder = new File(baseFolder, "DIM-1");
 		} else if (dimension instanceof EndDimension) {
 			dimensionFolder = new File(baseFolder, "DIM1");

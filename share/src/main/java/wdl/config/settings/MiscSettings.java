@@ -84,6 +84,10 @@ public final class MiscSettings {
 					str -> str.isEmpty() ? Optional.empty() : Optional.of(str),
 					opt -> opt.orElse(""));
 
+	// Test code for https://github.com/Pokechu22/WorldDownloader/issues/143
+	public static final Setting<Boolean> FORCE_DIMENSION_TO_OVERWORLD =
+			new BaseSetting<>("ForceDimensionToOverworld", false, Boolean::valueOf, Object::toString);
+
 	// Extensions
 	public static class ExtensionEnabledSetting extends BaseSetting<Boolean> {
 		public ExtensionEnabledSetting(String modID) {

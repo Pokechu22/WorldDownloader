@@ -42,6 +42,7 @@ import net.minecraft.world.dimension.NetherDimension;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.storage.SaveHandler;
 import net.minecraft.world.storage.SessionLockException;
+import wdl.config.settings.MiscSettings;
 import wdl.versioned.VersionedFunctions;
 
 /**
@@ -62,6 +63,9 @@ abstract class WDLChunkLoaderBase extends AnvilChunkLoader {
 		File baseFolder = handler.getWorldDirectory();
 		// XXX No forge support at this time
 
+		if (WDL.serverProps.getValue(MiscSettings.FORCE_DIMENSION_TO_OVERWORLD)) {
+			return baseFolder;
+		}
 		if (dimension instanceof NetherDimension) {
 			File file = new File(baseFolder, "DIM-1");
 			file.mkdirs();

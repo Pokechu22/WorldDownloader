@@ -1168,6 +1168,10 @@ public class WDL {
 		if (playerNBT.getCompound("abilities").getBoolean("mayfly")) {
 			playerNBT.getCompound("abilities").putBoolean("flying", true);
 		}
+
+		if (serverProps.getValue(MiscSettings.FORCE_DIMENSION_TO_OVERWORLD)) {
+			playerNBT.putInt("Dimension", 0);
+		}
 	}
 
 	/**
