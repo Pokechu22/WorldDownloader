@@ -296,7 +296,7 @@ wdl.gui.gamerules.rules.doTraderSpawning=控制流浪商人的生成。
 # This is a special case, since it doesn't seem to actually be on the list:
 wdl.gui.gamerules.rules.gameLoopFunction=调用每个刻的函数的名称。  （不推荐，将在1.13被移除，且函数不会被mods保存，因此这并不实用）
 
-wdl.gui.savedChunks.title=保存的区块
+wdl.gui.savedChunks.title=已保存的区块
 wdl.gui.savedChunks.savedNow=位于 %s, %s 的区块：已保存
 wdl.gui.savedChunks.lastSaved=位于 %s, %s 的区块：上一次保存于 %tc
 wdl.gui.savedChunks.neverSaved=位于 %s, %s 的区块：从未保存
@@ -314,11 +314,11 @@ wdl.messages.message.updates.text=新版信息
 wdl.messages.message.loadingTileEntity.text=加载方块实体
 wdl.messages.message.onWorldLoad.text=加载世界
 wdl.messages.message.blockEvent.text=方块事件
-wdl.messages.message.mapDataSaved.text=保存地图数据
+wdl.messages.message.mapDataSaved.text=已保存地图数据
 wdl.messages.message.chunkUnloaded.text=区块未加载
 wdl.messages.message.guiClosedInfo.text=关闭GUI(Info)
 wdl.messages.message.guiClosedWarning.text=关闭GUI(Warning)
-wdl.messages.message.saving.text=保存数据
+wdl.messages.message.saving.text=正在保存数据
 wdl.messages.message.removeEntity.text=正在移除实体
 wdl.messages.message.pluginChannel.text=插件频道消息
 wdl.messages.message.updateDebug.text=更新debug信息
@@ -328,18 +328,18 @@ wdl.messages.message.updates.description=关于新版 WDL 何时发布的信息�
 wdl.messages.message.loadingTileEntity.description=发生于从以前保存的区块中导入方块实体时。  在一个区块中可能有多个方块实体。
 wdl.messages.message.onWorldLoad.description=在世界加载时的信息，包括玩家是否在同一个服务器，或是已经换了一个服务器，以及服务器的类型（版本）。
 wdl.messages.message.blockEvent.description=方块事件的信息。  This is only used for note blocks to include the saved pitch.
-wdl.messages.message.mapDataSaved.description=发生于新地图（物品）的数据被保存时。   请注意，在物品展示框中时，地图数据大约每秒发送一次时，并且其位于玩家物品栏时这个过程会更频繁。
+wdl.messages.message.mapDataSaved.description=发生于新地图（物品）的数据被保存时。 请注意，在物品展示框中时，地图数据大约每秒发送一次时，并且其位于玩家物品栏时这个过程会更频繁。
 wdl.messages.message.chunkUnloaded.description=在一个区块未加载并保存时出现。
-wdl.messages.message.guiClosedInfo.description=Information about when an item's GUI is closed.  This message is used to state that the contents of the item were saved successfully.
-wdl.messages.message.guiClosedWarning.description=Warnings when an item's GUI is closed.  This message is used when something went wrong -- usually, when you are looking at something else.
-wdl.messages.message.saving.description=Gives details about the current progress in saving the downloaded world.
-wdl.messages.message.removeEntity.description=Occurs whenever an entity is removed from the world, and whether that entity was saved.
-wdl.messages.message.pluginChannel.description=Information about the serverside configuration system and user rights.
-wdl.messages.message.updateDebug.description=Debug information from the update checker, including network status information.
-wdl.messages.category.core_recommended=Core (recommended)
-wdl.messages.category.core_debug=Core (debug)
-wdl.messages.category.core_recommended.description=General information that should usually be enabled.
-wdl.messages.category.core_debug.description=More verbose information that is sometimes useful, but not always necessary.
+wdl.messages.message.guiClosedInfo.description=关于某个物品的GUI何时关闭的信息。 此消息用于声明已成功保存了物品的内容。
+wdl.messages.message.guiClosedWarning.description=关闭某个物品的GUI时发出警告。 这个信息是在出错时使用的——通常是在你看别的东西的时候。
+wdl.messages.message.saving.description=提供有关保存下载世界的当前进展的详细信息。
+wdl.messages.message.removeEntity.description=每当有实体从世界中删除时发生，以及是否保存了该实体。
+wdl.messages.message.pluginChannel.description=有关服务器端配置系统和用户权限的信息。
+wdl.messages.message.updateDebug.description=更新检查器的调试信息，包括网络状态信息。
+wdl.messages.category.core_recommended=核心（推荐）
+wdl.messages.category.core_debug=核心（调试）
+wdl.messages.category.core_recommended.description=通常应该启用的常规信息。
+wdl.messages.category.core_debug.description=更多冗长的信息，这些信息有时是有用的，但并不总是必要的。
 
 wdl.messages.removeEntity.allowingRemoveUserPref=removeEntityFromWorld: Allowing removal of %s (user pref)
 wdl.messages.removeEntity.allowingRemoveUnrecognizedDistance=removeEntityFromWorld: Allowing removal of %s (unrecognized distance)
@@ -347,177 +347,177 @@ wdl.messages.removeEntity.allowingRemoveDistance=removeEntityFromWorld: Allowing
 wdl.messages.removeEntity.savingDistance=removeEntityFromWorld: Saving %s at %s (player %s, track %s, server %s)
 wdl.messages.removeEntity.notSavingUserPreference=saveChunk: Not saving %s (User preference)
 
-wdl.messages.tileEntity.usingOld=Using old BE from saved file: %s at %s
-wdl.messages.tileEntity.usingNew=Using new BE: %s at %s
-wdl.messages.tileEntity.notImporting=Old BE does not need importing: %s at %s
-wdl.messages.tileEntity.edited=Edited BE at %s using %s
+wdl.messages.tileEntity.usingOld=使用来自已保存文件的旧的基岩版：%s 于 %s
+wdl.messages.tileEntity.usingNew=使用新的基岩版：%s 于 %s
+wdl.messages.tileEntity.notImporting=旧的基岩版不需要导入： %s 于 %s
+wdl.messages.tileEntity.edited=编辑基岩版于 %s 使用 %s
 
 # MC = Minecraft; this is used to display what WDL and MC think of an entity
 # First arg is the display identifier, or the raw identifier if none available
 # The second arg is MC's display entity component
 wdl.messages.entityData=%s (MC %s)
-wdl.messages.entityData.noKnownName=unidentified entity
+wdl.messages.entityData.noKnownName=未知实体
 wdl.messages.entityData.internalName=Internally %s
 # First arg is display group, second is raw group
 wdl.messages.entityData.group=Grouped as %s (%s)
 
-wdl.messages.saving.savingChunks=Saving chunks...
-wdl.messages.saving.chunksSaved=Chunk data saved.
-wdl.messages.saving.flushingIO=Waiting for ThreadedFileIOBase to finish...
-wdl.messages.saving.backingUp=Backing up the world...
-wdl.messages.saving.savingPlayer=Saving player data...
-wdl.messages.saving.playerSaved=Player data saved.
-wdl.messages.saving.savingWorld=Saving world metadata...
-wdl.messages.saving.worldSaved=World metadata saved.
-wdl.messages.saving.savingMapItemData=Saving map data...
-wdl.messages.saving.mapItemDataSaved=Map data saved.
+wdl.messages.saving.savingChunks=正在保存区块...
+wdl.messages.saving.chunksSaved=已保存区块数据。
+wdl.messages.saving.flushingIO=等待 ThreadedFileIOBase 完成...
+wdl.messages.saving.backingUp=正在备份世界...
+wdl.messages.saving.savingPlayer=正在保存玩家数据...
+wdl.messages.saving.playerSaved=已保存玩家数据。
+wdl.messages.saving.savingWorld=正在保存世界元数据...
+wdl.messages.saving.worldSaved=已保存世界元数据。
+wdl.messages.saving.savingMapItemData=正在保存地图数据...
+wdl.messages.saving.mapItemDataSaved=已保存地图数据。
 
-wdl.messages.onWorldLoad.sameServer=onWorldLoad: same server!
-wdl.messages.onWorldLoad.differentServer=onWorldLoad: different server!
-wdl.messages.onWorldLoad.spigot=Server brand = %s.  Using spigot track distances.
-wdl.messages.onWorldLoad.vanilla=Server brand = %s.  Using vanilla track distances.
+wdl.messages.onWorldLoad.sameServer=onWorldLoad：相同的服务器！
+wdl.messages.onWorldLoad.differentServer=onWorldLoad：不同的服务器！
+wdl.messages.onWorldLoad.spigot=服务器类型 = %s。  使用spigot跟踪距离。
+wdl.messages.onWorldLoad.vanilla=服务器类型 = %s。  使用vanilla跟踪距离。
 
-wdl.messages.onBlockEvent.noteblock=onBlockEvent: Note Block: %s pitch: %s - %s
+wdl.messages.onBlockEvent.noteblock=onBlockEvent：音符盒： %s 音高： %s - %s
 
 # First value is map ID.  Second value is more detailed info
-wdl.messages.onMapSaved=onMapDataLoaded: Saved map %s; %s
+wdl.messages.onMapSaved=onMapDataLoaded: 已保存地图 %s; %s
 wdl.messages.onMapSaved.neitherKnown=dim=? center=(?, ?)
 wdl.messages.onMapSaved.onlyCenterKnown=dim=? center=(%s, %s)
 wdl.messages.onMapSaved.onlyDimKnown=dim=%s center=(?, ?)
 wdl.messages.onMapSaved.dimAndCenterKnown=dim=%s center=(%s, %s)
 
-wdl.messages.onChunkNoLongerNeeded.saved=onChunkNoLongerNeeded: Saved chunk at %s, %s
-wdl.messages.onChunkNoLongerNeeded.didNotSave=onChunkNoLongerNeeded: Could not save chunk at %s, %s due to server restrictions!
+wdl.messages.onChunkNoLongerNeeded.saved=onChunkNoLongerNeeded：已保存位于%s, %s 的区块
+wdl.messages.onChunkNoLongerNeeded.didNotSave=onChunkNoLongerNeeded: 由于服务器限制，无法保存位于 %s, %s 的区块！
 
-wdl.messages.onGuiClosedInfo.cannotSaveEntities=Server configuration forbids saving of Entities!
-wdl.messages.onGuiClosedInfo.cannotSaveTileEntities=Server configuration forbids saving of Block Entities!
-wdl.messages.onGuiClosedInfo.savedRiddenEntity.horse=Saved ridden horse inventory.
-wdl.messages.onGuiClosedInfo.savedEntity.storageMinecart=Saved storage minecart contents.
-wdl.messages.onGuiClosedInfo.savedEntity.hopperMinecart=Saved hopper minecart contents.
-wdl.messages.onGuiClosedInfo.savedEntity.villager.tradesOnly=Saved villager trades.
-wdl.messages.onGuiClosedInfo.savedEntity.villager.tradesAndCareer=Saved villager trades.  (Profession: %s -> %s %s)
-wdl.messages.onGuiClosedInfo.savedEntity.horse=Saved horse inventory.
-wdl.messages.onGuiClosedInfo.savedTileEntity.singleChest=Saved chest contents.
-wdl.messages.onGuiClosedInfo.savedTileEntity.doubleChest=Saved double chest contents.
-wdl.messages.onGuiClosedInfo.savedTileEntity.enderChest=Saved ender chest contents.
-wdl.messages.onGuiClosedInfo.savedTileEntity.barrel=Saved barrel contents.
-wdl.messages.onGuiClosedInfo.savedTileEntity.beacon=Saved beacon effects.
-wdl.messages.onGuiClosedInfo.savedTileEntity.blastFurnace=Saved blast furnace contents.
-wdl.messages.onGuiClosedInfo.savedTileEntity.brewingStand=Saved brewing stand contents.
-wdl.messages.onGuiClosedInfo.savedTileEntity.dispenser=Saved dispenser contents.
-wdl.messages.onGuiClosedInfo.savedTileEntity.dropper=Saved dropper contents.
-wdl.messages.onGuiClosedInfo.savedTileEntity.furnace=Saved furnace contents.
-wdl.messages.onGuiClosedInfo.savedTileEntity.hopper=Saved hopper contents.
-wdl.messages.onGuiClosedInfo.savedTileEntity.lectern=Saved lectern book.
-wdl.messages.onGuiClosedInfo.savedTileEntity.shulkerBox=Saved shulker box contents.
-wdl.messages.onGuiClosedInfo.savedTileEntity.smoker=Saved smoker contents.
+wdl.messages.onGuiClosedInfo.cannotSaveEntities=服务器配置禁止保存实体！
+wdl.messages.onGuiClosedInfo.cannotSaveTileEntities=服务器配置禁止保存方块实体！
+wdl.messages.onGuiClosedInfo.savedRiddenEntity.horse=已保存骑马物品栏。
+wdl.messages.onGuiClosedInfo.savedEntity.storageMinecart=已保存贮存的矿车内容。
+wdl.messages.onGuiClosedInfo.savedEntity.hopperMinecart=已保存漏斗矿车内容。
+wdl.messages.onGuiClosedInfo.savedEntity.villager.tradesOnly=已保存村民交易。
+wdl.messages.onGuiClosedInfo.savedEntity.villager.tradesAndCareer=已保存村民交易。 (职业: %s -> %s %s)
+wdl.messages.onGuiClosedInfo.savedEntity.horse=已保存骑马物品栏。
+wdl.messages.onGuiClosedInfo.savedTileEntity.singleChest=已保存箱子内容。
+wdl.messages.onGuiClosedInfo.savedTileEntity.doubleChest=已保存大型箱子内容。
+wdl.messages.onGuiClosedInfo.savedTileEntity.enderChest=已保存末影箱内容。
+wdl.messages.onGuiClosedInfo.savedTileEntity.barrel=已保存木桶内容。
+wdl.messages.onGuiClosedInfo.savedTileEntity.beacon=已保存信标效果。
+wdl.messages.onGuiClosedInfo.savedTileEntity.blastFurnace=已保存高炉内容。
+wdl.messages.onGuiClosedInfo.savedTileEntity.brewingStand=已保存酿造台内容。
+wdl.messages.onGuiClosedInfo.savedTileEntity.dispenser=已保存发射器内容。
+wdl.messages.onGuiClosedInfo.savedTileEntity.dropper=已保存投掷器内容。
+wdl.messages.onGuiClosedInfo.savedTileEntity.furnace=已保存熔炉内容。
+wdl.messages.onGuiClosedInfo.savedTileEntity.hopper=已保存漏斗内容。
+wdl.messages.onGuiClosedInfo.savedTileEntity.lectern=已保存讲台内容。
+wdl.messages.onGuiClosedInfo.savedTileEntity.shulkerBox=已保存潜影盒内容。
+wdl.messages.onGuiClosedInfo.savedTileEntity.smoker=已保存烟熏炉内容。
 
-wdl.messages.onGuiClosedWarning.noCoordinates=onItemGuiClosed: Nothing was targeted when the container was opened; there is no location to save it to!
-wdl.messages.onGuiClosedWarning.couldNotGetTE=onItemGuiClosed could not get BE at %s.
-wdl.messages.onGuiClosedWarning.unhandledEntity=onItemGuiClosed: Unrecognised entity could not be saved: %s
-wdl.messages.onGuiClosedWarning.unhandledTileEntity=onItemGuiClosed: Unhandled Block Entity at %s: %s
-wdl.messages.onGuiClosedWarning.failedToFindDoubleChest=Could not save this double chest!  Failed to find all neighboring chest blocks.
-wdl.messages.onGuiClosedWarning.villagerCareer.notAComponent=Failed to recognize villager career: '%s' is not a translation component.  (The current trade list has still been saved; this only affects new trades being unlocked)
-wdl.messages.onGuiClosedWarning.villagerCareer.unknownProfession=Failed to recognize villager career: profession ID %s is not a known vanilla profession.  (The current trade list has still been saved; this only affects new trades being unlocked)
-wdl.messages.onGuiClosedWarning.villagerCareer.unknownTitle=Failed to recognize villager career: '%s' is not a translation key that corresponds with a known vanilla career for profession ID %s.  (The current trade list has still been saved; this only affects new trades being unlocked)
-wdl.messages.onGuiClosedWarning.villagerCareer.exception=Failed to recognize villager career: Unexpected exception %s.  (The current trade list has still been saved; this only affects new trades being unlocked)
+wdl.messages.onGuiClosedWarning.noCoordinates=onItemGuiClosed：在容器被打开时没有任何目标；没有可将其保存到的位置！
+wdl.messages.onGuiClosedWarning.couldNotGetTE=onItemGuiClosed 无法获取BE于%s。
+wdl.messages.onGuiClosedWarning.unhandledEntity=onItemGuiClosed：无法保存未识别的实体：%s
+wdl.messages.onGuiClosedWarning.unhandledTileEntity=onItemGuiClosed：未处理过的方块实体于 %s: %s
+wdl.messages.onGuiClosedWarning.failedToFindDoubleChest=无法保存这个大型箱子！  无法找到所有临近的箱子方块。
+wdl.messages.onGuiClosedWarning.villagerCareer.notAComponent=无法识别村名的职业：'%s' 不是一个翻译组件  (当前的交易列表仍然已被保存，这只影响新交易的解锁)
+wdl.messages.onGuiClosedWarning.villagerCareer.unknownProfession=无法识别村名职业：职业 ID %s 不是一个已知的原版职业。  (当前的交易列表仍然被保存，这只影响新交易的解锁)
+wdl.messages.onGuiClosedWarning.villagerCareer.unknownTitle=无法识别村名的职业：'%s' 不是一个已知的原版职业的职业ID的翻译组件 %s.  (当前的交易列表仍然被保存，这只影响新交易的解锁)
+wdl.messages.onGuiClosedWarning.villagerCareer.exception=无法识别村名的职业：意外异常 %s.  (当前的交易列表仍然被保存，这只影响新交易的解锁)
 
-wdl.messages.generalInfo.downloadStarted=Download started
-wdl.messages.generalInfo.downloadStopped=Download stopped.
-wdl.messages.generalInfo.saveStarted=Save started.
-wdl.messages.generalInfo.saveComplete.startingAgain=Save complete. Starting download again.
-wdl.messages.generalInfo.saveComplete.done=Save complete. Your single player file is ready to play!
-wdl.messages.generalInfo.worldChanged=World change detected. Download will start once current save completes.
-wdl.messages.generalInfo.downloadCanceled=Download canceled.
-wdl.messages.generalInfo.seedSet=Setting single-player world seed to %s.
-wdl.messages.generalInfo.seedAndGenSet=Setting single-player world seed to %s and using the default terrain generator (you can change the generator in the generator options)
+wdl.messages.generalInfo.downloadStarted=已开始下载
+wdl.messages.generalInfo.downloadStopped=已结束下载。
+wdl.messages.generalInfo.saveStarted=已开始保存。
+wdl.messages.generalInfo.saveComplete.startingAgain=保存完成。再次开始下载。
+wdl.messages.generalInfo.saveComplete.done=保存完成。你的单人模式文件已经可以游玩了！
+wdl.messages.generalInfo.worldChanged=检测到世界改变。当前保存完成后将开始下载。
+wdl.messages.generalInfo.downloadCanceled=已取消下载。
+wdl.messages.generalInfo.seedSet=设置单人世界种子为 %s。
+wdl.messages.generalInfo.seedAndGenSet=设置单人世界种子为 %s 并使用默认地形生成器(您可以在生成器选项中更改生成器)
 
-wdl.messages.generalError.failedToImportTE=Failed to import block entities for chunk at %s, %s: %s
-wdl.messages.generalError.failedToSaveChunk=Chunk at position %s, %s cannot be saved!  (%s)
-wdl.messages.generalError.forbidden=The server forbids downloading this world!
-wdl.messages.generalError.failedToBackUp=Error while backing up world: %s
-wdl.messages.generalError.failedToSetUpEntityUI=Error setting up Entity List UI: %s
-wdl.messages.generalError.failedToSaveEntity=Failed to save entity %s for chunk at %s, %s: %s
-wdl.messages.generalError.failedToSaveTE=Failed to save block entity %s at %s for chunk at %s, %s: %s
+wdl.messages.generalError.failedToImportTE=无法从位于坐标 %s, %s 的区块中导入方块实体：%s
+wdl.messages.generalError.failedToSaveChunk=位于坐标 %s, %s 的区块无法被保存！ (%s)
+wdl.messages.generalError.forbidden=服务器禁止下载这个世界！
+wdl.messages.generalError.failedToBackUp=备份世界时出现错误：%s
+wdl.messages.generalError.failedToSetUpEntityUI=设置实体列表UI时出现错误：%s
+wdl.messages.generalError.failedToSaveEntity=无法保存实体 %s 位于区块 %s, %s: %s
+wdl.messages.generalError.failedToSaveTE=无法保存方块实体 %s 于 %s 位于区块 %s, %s: %s
 
-wdl.toast.backupFailed=Backup Failed!
+wdl.toast.backupFailed=备份失败！
 
-wdl.messages.updates.releaseCount=Found %s releases.
-wdl.messages.updates.failedToFindMatchingRelease=Could not find a release matching %s.  You may be running a full version that hasn't been released yet, or the update info has not been finished.  This should not generally happen; consider redownloading the mod.
-wdl.messages.updates.failedToFindMatchingRelease.snapshot=Could not find a release matching %s.  You are running a development snapshot version for %s.  Note that development snapshots are unsupported.
-wdl.messages.updates.failedToFindMetadata=Could not find metadata for release %s.  Skipping hashing.
-wdl.messages.updates.newRelease=New version available!  You are running %s; the newest version is %s.  %s.
-wdl.messages.updates.newRelease.updateLink=Update here
-wdl.messages.updates.incorrectHash=Bad hash for %s (relative to %s): Expected MD5 in %s, got MD5 of %s.
-wdl.messages.updates.hashException=Bad hash for %s (relative to %s): Expected MD5 in %s, instead a %s was thrown.
-wdl.messages.updates.badHashesFound=Some files have invalid hashes!  Your installation may be corrupt or compromised.  Please use caution, and consider redownloading from the %s.
-wdl.messages.updates.updateCheckError=Failed to perform update check: %s.
-wdl.messages.updates.usingCachedUpdates=Using cached version list.
-wdl.messages.updates.grabingUpdatesFromGithub=Loading verison list from GitHub releases.
-wdl.messages.updates.untestedVersion=Minecraft version %s is old and is not completely tested.  If you encounter issues, report them at the %s.  If possible, please update to the newest Minecraft version.
+wdl.messages.updates.releaseCount=发现 %s 发行版。
+wdl.messages.updates.failedToFindMatchingRelease=找不到匹配 %s 的发行版。 你可能正在运行一个还没有发布的完整版本，或者更新信息还没有完成。 这种情况通常不会发生，可以考虑重新下载 mod。
+wdl.messages.updates.failedToFindMatchingRelease.snapshot=找不到匹配 %s 的发行版。  您正在运行一个开发快照版于 %s。 请注意开发快照版是不被支持的。
+wdl.messages.updates.failedToFindMetadata=找不到发行版 %s 的元数据。  跳过校验。
+wdl.messages.updates.newRelease=新版可用！  您正在运行 %s;最新版是 %s。  %s。
+wdl.messages.updates.newRelease.updateLink=在此更新
+wdl.messages.updates.incorrectHash=%s 校验失败 (相较于 %s)：预期的 MD5 是 %s，得到的 MD5 是 %s.
+wdl.messages.updates.hashException=%s 校验失败 (相较于 %s)：预期的 MD5 是 %s，但是抛出的是 %s 。
+wdl.messages.updates.badHashesFound=一些文件校验无效！您的安装可能已经损坏或未完全安装！请遵从注意事项，并考虑从 %s 重新下载。
+wdl.messages.updates.updateCheckError=未能执行更新检查：%s.
+wdl.messages.updates.usingCachedUpdates=使用已缓存的版本列表。
+wdl.messages.updates.grabingUpdatesFromGithub=从 GitHub releases 中加载版本列表。
+wdl.messages.updates.untestedVersion=Minecraft 版本 %s 是旧的且未被完整测试。如果你遇到问题，请在 %s 报告他们。如果可能的话，请更新到最新版本的 Minecraft。
 
-wdl.messages.permissions.init=Sending plugin channel registration.
-wdl.messages.permissions.packet0=Received settings packet #0: [canUseFunctionsUnknownToServer=%s]
-wdl.messages.permissions.packet1=Received settings packet #1: [canDownloadInGeneral=%s, canCacheChunks=%s, saveRadius=%s, canSaveEntities=%s, canSaveBlockEntities=%s, canSaveContainers=%s]
-wdl.messages.permissions.packet2=Received settings packet #2: [entityRanges=(total of %s)]
-wdl.messages.permissions.packet3=Received settings packet #3: [canRequestPermissions=%s, requestMessage=(%s long, HashCode of %s)]
-wdl.messages.permissions.packet4=Received settings packet #4: [chunkOverrides=(%s groups, %s total ranges)]
-wdl.messages.permissions.packet5.added=Received settings packet #5: Added %s ChunkRanges to %s.
-wdl.messages.permissions.packet5.set=Received settings packet #5: Changed list of ChunkRanges to %s total in %s.
-wdl.messages.permissions.packet6=Received settings packet #6: Removed %s ChunkRanges from %s with tags matching %s.
-wdl.messages.permissions.packet7=Received settings packet #7: Replaced %s ChunkRanges in %s that had a tag of %s with %s new ranges.
-wdl.messages.permissions.unknownPacket=Received unknown settings packet #%s.  See log for binary contents.
-wdl.messages.permissions.badPacket=Received malformed packet.  See log for more information.  (%s)
+wdl.messages.permissions.init=正在发送插件通道注册。
+wdl.messages.permissions.packet0=收到设置数据包 #0: [canUseFunctionsUnknownToServer=%s]
+wdl.messages.permissions.packet1=收到设置数据包 #1: [canDownloadInGeneral=%s, canCacheChunks=%s, saveRadius=%s, canSaveEntities=%s, canSaveBlockEntities=%s, canSaveContainers=%s]
+wdl.messages.permissions.packet2=收到设置数据包 #2: [entityRanges=(total of %s)]
+wdl.messages.permissions.packet3=收到设置数据包 #3: [canRequestPermissions=%s, requestMessage=(%s long, HashCode of %s)]
+wdl.messages.permissions.packet4=收到设置数据包 #4: [chunkOverrides=(%s groups, %s total ranges)]
+wdl.messages.permissions.packet5.added=收到设置数据包 #5: Added %s ChunkRanges to %s.
+wdl.messages.permissions.packet5.set=收到设置数据包 #5: Changed list of ChunkRanges to %s total in %s.
+wdl.messages.permissions.packet6=收到设置数据包 #6: Removed %s ChunkRanges from %s with tags matching %s.
+wdl.messages.permissions.packet7=收到设置数据包 #7: Replaced %s ChunkRanges in %s that had a tag of %s with %s new ranges.
+wdl.messages.permissions.unknownPacket=收到未知设置数据包 #%s.  有关二进制内容，请参阅日志。
+wdl.messages.permissions.badPacket=收到畸形数据包。  更多信息请参见日志。  (%s)
 
-wdl.saveProgress.title=Saving downloaded world
-wdl.saveProgress.chunk.title=Saving chunks
-wdl.saveProgress.chunk.saving=Saving chunk at %s, %s
-wdl.saveProgress.map.title=Saving map item data
-wdl.saveProgress.map.idcounts=Writing idcounts.dat
-wdl.saveProgress.map.saving=Writing map #%s
-wdl.saveProgress.playerData.title=Saving player data
-wdl.saveProgress.playerData.creatingNBT=Creating player NBT
-wdl.saveProgress.playerData.editingNBT=Editing player NBT
-wdl.saveProgress.playerData.extension=Editing player NBT with extension %s
-wdl.saveProgress.playerData.writingNBT=Writing player NBT
-wdl.saveProgress.worldMetadata.title=Saving world metadata
-wdl.saveProgress.worldMetadata.creatingNBT=Creating world info NBT
-wdl.saveProgress.worldMetadata.editingNBT=Editing world info NBT
-wdl.saveProgress.worldMetadata.extension=Editing world info NBT with extension %s
-wdl.saveProgress.worldMetadata.writingNBT=Writing world info NBT
-wdl.saveProgress.extension.title=Extension: %s
-wdl.saveProgress.flushingIO.title=Procrastinating...
-wdl.saveProgress.flushingIO.subtitle=(Waiting for ThreadedFileIOBase to finish: %s chunks(s) left)
-wdl.saveProgress.backingUp.title.zip=Backing up the world (creating zip)
-wdl.saveProgress.backingUp.title.folder=Backing up the world (copying folder)
-wdl.saveProgress.backingUp.title.custom=Backing up the world (running external command)
-wdl.saveProgress.backingUp.preparing=Preparing...
-wdl.saveProgress.backingUp.file=Copying %s
+wdl.saveProgress.title=正在保存下载的世界
+wdl.saveProgress.chunk.title=正在保存区块
+wdl.saveProgress.chunk.saving=正在保存位于 %s, %s 的区块
+wdl.saveProgress.map.title=正在保存地图物品数据
+wdl.saveProgress.map.idcounts=正在写入 idcounts.dat
+wdl.saveProgress.map.saving=正在写入地图 #%s
+wdl.saveProgress.playerData.title=正在保存玩家数据
+wdl.saveProgress.playerData.creatingNBT=正在创建玩家 NBT
+wdl.saveProgress.playerData.editingNBT=正在编辑玩家 NBT
+wdl.saveProgress.playerData.extension=正在编辑玩家 NBT 使用扩展 %s
+wdl.saveProgress.playerData.writingNBT=正在写入玩家 NBT
+wdl.saveProgress.worldMetadata.title=正在保存世界元数据
+wdl.saveProgress.worldMetadata.creatingNBT=正在创捷世界信息 NBT
+wdl.saveProgress.worldMetadata.editingNBT=正在编辑世界信息 NBT
+wdl.saveProgress.worldMetadata.extension=正在编辑世界信息 NBT 使用扩展 %s
+wdl.saveProgress.worldMetadata.writingNBT=正在写入世界信息 NBT
+wdl.saveProgress.extension.title=扩展：%s
+wdl.saveProgress.flushingIO.title=正在拖延...
+wdl.saveProgress.flushingIO.subtitle=(等待 ThreadedFileIOBase 完成：剩余%s 个区块)
+wdl.saveProgress.backingUp.title.zip=正在备份世界 (创建 zip)
+wdl.saveProgress.backingUp.title.folder=正在备份世界 (复制文件夹)
+wdl.saveProgress.backingUp.title.custom=正在备份世界 (运行外部指令)
+wdl.saveProgress.backingUp.preparing=正在准备...
+wdl.saveProgress.backingUp.file=正在复制 %s
 
-wdl.props.global.title=These are the default settings used across all servers when the individual server has not yet had a setting set.  You can manually modify them, if you want.
-wdl.props.base.title=These settings are shared across an entire server.  If multiworld is enabled, they act as the default values for the individual world properties; otherwise, they are used directly.
-wdl.props.world.title=These settings are used for a single world in a multiworld server.
+wdl.props.global.title=当单个服务器尚未设置设置时，这些是在所有服务器上使用的默认设置。 如果需要，您可以手动修改它们。
+wdl.props.base.title=这些设置在整个服务器上共享。 如果启用了世界，它们将作为单个世界属性的默认值; 否则，将直接使用它们。
+wdl.props.world.title=这些设置用于多世界服务器中的单个世界。
 
 #Some of these messages are using format substitutions, so that special coloring can be added.
-wdl.intro.success=The World Downloader mod has been successfully installed!
-wdl.intro.usage=For information on how to use this mod, please see the %s and the %s.
-wdl.intro.forumsLink=Official Minecraft Forum thread
-wdl.intro.wikiLink=Project Wiki
-wdl.intro.contribute=To report a bug, suggest a feature, contribute code, or help translate, check out %s.
-wdl.intro.githubRepo=GitHub repository
-wdl.intro.stolen=%s: If you downloaded this mod from a location other than the Minecraft Forum or GitHub (or another site on %s), you may have used a site that is %s redistributing this mod.
-wdl.intro.redistributionList=the redistribution list
-wdl.intro.warning=WARNING
-wdl.intro.illegally=ILLEGALLY
-wdl.intro.stolenBeware=Beware of such sites, as they can include malware.  %s
-wdl.intro.stopModReposts=More information: StopModReposts!
+wdl.intro.success=World Downloader mod 已成功安装！
+wdl.intro.usage=关于如何使用本mod的信息，请参照 %s 和 %s.
+wdl.intro.forumsLink=Minecraft官方论坛帖子
+wdl.intro.wikiLink=项目Wiki
+wdl.intro.contribute=要报告一个错误，建议一个功能，贡献代码，或帮助翻译，请查看 %s。
+wdl.intro.githubRepo=GitHub 仓库
+wdl.intro.stolen=%s：如果您不是从Minecraft论坛或GitHub（或 %s 中的其他站点）上下载到本mod的，您可能已经使用了一个 %s 再转载本mod的网站。
+wdl.intro.redistributionList=再转载名单
+wdl.intro.warning=警告
+wdl.intro.illegally=非法
+wdl.intro.stolenBeware=小心这些网站，因为它们可能包含恶意软件。  %s
+wdl.intro.stopModReposts=更多信息：StopModReposts!
 
 # Sanity checks
-wdl.sanity.failed=----- SANITY CHECKS FAILED! -----
+wdl.sanity.failed=----- 合理性检验失败！ -----
 # All sanity checks should have 1 format parameter, which is used for the exception
-wdl.sanity.tripwire=Tripwire is not being serialized correctly.  This is probably caused by a Forge bug (https://git.io/v7aEU); if running 1.12 or above, update Forge; if not, please restart Minecraft and then start downloading (do NOT relog; reloging causes the problem).  Otherwise, tripwire will not be saved (as the block doesn't load at all).  (%s)
-wdl.sanity.version=Version mismatch!  You have installed a version of the mod on a version of Minecraft it was not intended for.  In the best case, data will be saved inaccurately; in the worst case, expect crashes.  Please redownload for the correct Minecraft version.  (%s)
-# For obvious reasons this message will not be displayed translated in game
+wdl.sanity.tripwire=绊线的序列化不正确。 这可能是由于一个Forge的bug（https://git.io/v7aeu）导致的; 如果正在运行1.12及以上版本，请更新Forge; 如果不是，请重新启动Minecraft，然后开始下载（不要重新登录; 重新登录就会导致这个问题）。 否则，绊线将不会被保存(因为区块根本不会被加载)。 (%s)
+wdl.sanity.version=版本不匹配！ 你在Minecraft的一个版本上安装了一个mod的另一个版本。在最好的情况下，数据不会被准确保存; 在最坏的情况下，可能会出现崩溃。 请按照Minecraft版本重新下载正确的版本。  (%s)
+# 显然，这条消息在游戏中并不会显示翻译。
 wdl.sanity.translation=Translation strings are not present!  All messages will be the untranslated keys (e.g. `wdl.sanity.translation'), including this one.  Please redownload the mod.  If this problem persists, file a bug report.  (%s)
 wdl.sanity.mixin=Mixins/base changes do not appear to have applied!  Many parts of the mod may be broken!  This might be caused by other mods overwriting the same files (e.g. optifine).  (%s)
 wdl.sanity.encoding=Code was not compiled with the proper encoding!  Various special characters may be broken.  (%s)
