@@ -16,10 +16,10 @@
 # Translator name, preferably in the form of 'Translated to %s by <your name>'.
 # '%s' will be replaced with the language name automatically.
 # If left blank, it will not be displayed.
-wdl.translatorCredit=
+wdl.translatorCredit=KFC0803
 
-wdl.gui.wdl.title=World Downloader mod: %s 的选项
-wdl.gui.wdl.worldname=名称:
+wdl.gui.wdl.title=World Downloader mod：%s 的选项
+wdl.gui.wdl.worldname=名称：
 wdl.gui.wdl.worldOverrides.name=覆盖世界...
 wdl.gui.wdl.worldOverrides.description=修改保存世界的具体元数据，例如出生点及游戏模式。
 wdl.gui.wdl.generatorOverrides.name=覆盖世界生成器...
@@ -45,7 +45,7 @@ wdl.gui.wdl.updates.description=查看版本列表及当前版本，并配置下
 wdl.gui.wdl.updates.hasNew.name=更新... (§6有新版可用！§r)
 wdl.gui.wdl.updates.hasNew.description=查看版本列表及当前版本，配置下一次更新的条件，下载最新更新。
 
-wdl.gui.world.title=World Downloader mod: %s 的世界选项
+wdl.gui.world.title=World Downloader mod：%s 的世界选项
 wdl.gui.world.allowCheats.true=允许作弊：开
 wdl.gui.world.allowCheats.false=允许作弊：关
 wdl.gui.world.gamemode.keep=游戏模式：不做更改
@@ -89,8 +89,8 @@ wdl.gui.player.position.description=此选项可修改在下载的世界中玩�
 wdl.gui.player.setPositionToCurrentPosition.description=将位置设置为您当前的位置。
 wdl.gui.player.positionTextBox.description=使用文本框指定精确的出生点坐标。\n\n此文本框指定的坐标为 %s 。
 
-wdl.gui.generator.title=World Downloader mod:: %s 的生成选项
-wdl.gui.generator.seed=种子:
+wdl.gui.generator.title=World Downloader mod：%s 的生成选项
+wdl.gui.generator.seed=种子：
 wdl.gui.generator.generator.void=世界生成：留空
 wdl.gui.generator.generator.default=世界生成：默认
 wdl.gui.generator.generator.flat=世界生成：超平坦
@@ -110,7 +110,7 @@ wdl.gui.generator.buffetSettings=自选选项...
 
 wdl.gui.ingameMenu.downloadStatus.singlePlayer=单人模式无法下载
 wdl.gui.ingameMenu.downloadStatus.disabled=服务器禁止下载
-wdl.gui.ingameMenu.downloadStatus.request=下载需要权限Request permission to download
+wdl.gui.ingameMenu.downloadStatus.request=下载需要权限
 wdl.gui.ingameMenu.downloadStatus.saving=仍在保存...
 wdl.gui.ingameMenu.downloadStatus.stop=停止下载
 wdl.gui.ingameMenu.downloadStatus.start=下载此世界
@@ -131,7 +131,7 @@ wdl.gui.messages.reset.description=将每个消息的设置重置为默认值。
 
 wdl.gui.about.title=关于 World Downloader
 wdl.gui.about.blurb=World Downloader is a mod developed currently developed by pokechu22 and julialy and previously by nariol and cubic72, with help from others (including soccerguy3, UltiNaruto, Net32, and El_garoo) that allows downloading a copy of a multiplayer world for singleplayer use.  Source code is publicly available.
-wdl.gui.about.version=You are running %s on Minecraft version %s.
+wdl.gui.about.version=您正在运行 %s 在Minecraft版本 %s.
 wdl.gui.about.forumThread=在Minecraft论坛上查看
 wdl.gui.about.allSrc=在Github上查看mod源码
 wdl.gui.about.license=World Downloader 以 MMPLv2 协议授权。
@@ -158,16 +158,16 @@ wdl.gui.multiworldSelect.newName=< 新建名称 >
 wdl.gui.multiworldSelect.search=搜索...
 wdl.gui.multiworldSelect.done=使用选择的世界
 
-wdl.gui.multiworld.title=World Downloader: §c多世界支持
+wdl.gui.multiworld.title=World Downloader：§c多世界支持
 wdl.gui.multiworld.descirption.requiredWhen=如果至少满足以下条件之一，则需要多世界支持：\n - 服务器网站上提到了“多世界”\n - 服务器有3个以上维度（或世界）\n - 服务器有不同于官方的（主世界，下界和末地）其他维度
 wdl.gui.multiworld.descirption.whatIs=多世界支持会在下载开始前提示您所处的世界。如果禁用，但服务器是多世界服务器，则可能会覆盖对应的某些部分。
 wdl.gui.multiworld.true=多世界支持：启用
 wdl.gui.multiworld.false=多世界支持：禁用
 
-wdl.gui.backup.title=World Downloader mod: 备份选项
+wdl.gui.backup.title=World Downloader mod：备份选项
 wdl.gui.backup.backupMode=备份模式：%s
 wdl.gui.backup.description1=World Downloader 在每次保存完成后都会备份世界。你可以通过GUI控制备份如何进行。
-wdl.gui.backup.description2=§l不备份§r: 下载完成后不执行备份。\n§l复制世界文件夹§r：复制整个世界文件夹，这意味着如果您选择再次下载，您将永远拥有一个在此状态的可玩版本的世界。\n§l将世界打包为压缩包§r：在 .minecraft/backups 创建一个世界的压缩包（在1.13中备份的正常位置），您可以通过解压来还原它。推荐使用此模式\n§l自定义§r：允许运行外部程序以执行备份。
+wdl.gui.backup.description2=§l不备份§r：下载完成后不执行备份。\n§l复制世界文件夹§r：复制整个世界文件夹，这意味着如果您选择再次下载，您将永远拥有一个在此状态的可玩版本的世界。\n§l将世界打包为压缩包§r：在 .minecraft/backups 创建一个世界的压缩包（在1.13中备份的正常位置），您可以通过解压来还原它。推荐使用此模式\n§l自定义§r：允许运行外部程序以执行备份。
 wdl.gui.backup.description3=对于所有备份模式，创建的备份都是有时间戳的，因此不会覆盖旧的备份。
 wdl.gui.backup.customCommandTemplate=命令行：
 wdl.gui.backup.customCommandTemplate.description=用于执行外部备份的命令的模板。 ${destination} 和 ${source} 将分别替换为输出文件的完整路径，包括扩展名（有引号）和输入目录（有引号）。 默认使用7-zip，它是免费开源的，您可以从 7-zip.org 下载。\n\n默认只是将新文件(a)添加到归档中。 选项 -bsp1 启用进度输出，如果您要修改命令，您需要保留它。
@@ -300,7 +300,7 @@ wdl.gui.savedChunks.title=已保存的区块
 wdl.gui.savedChunks.savedNow=位于 %s, %s 的区块：已保存
 wdl.gui.savedChunks.lastSaved=位于 %s, %s 的区块：上一次保存于 %tc
 wdl.gui.savedChunks.neverSaved=位于 %s, %s 的区块：从未保存
-wdl.gui.savedChunks.savedAfterDownload=位于 %s, %s 的区块：上一次保存于 %tc 在 世 界 被 下 载 后 (e.g. 生成于单人模式)
+wdl.gui.savedChunks.savedAfterDownload=位于 %s, %s 的区块：上一次保存于 %tc 在 世 界 下 载 后 (e.g. 生成于单人模式)
 
 wdl.backup.none=无备份
 wdl.backup.folder=复制世界文件夹
@@ -327,7 +327,7 @@ wdl.messages.message.error.description=常规错误，例如“保存区块失�
 wdl.messages.message.updates.description=关于新版 WDL 何时发布的信息。
 wdl.messages.message.loadingTileEntity.description=发生于从以前保存的区块中导入方块实体时。  在一个区块中可能有多个方块实体。
 wdl.messages.message.onWorldLoad.description=在世界加载时的信息，包括玩家是否在同一个服务器，或是已经换了一个服务器，以及服务器的类型（版本）。
-wdl.messages.message.blockEvent.description=方块事件的信息。  This is only used for note blocks to include the saved pitch.
+wdl.messages.message.blockEvent.description=方块事件的信息。  这只用于让音符盒包含保存的音高。
 wdl.messages.message.mapDataSaved.description=发生于新地图（物品）的数据被保存时。 请注意，在物品展示框中时，地图数据大约每秒发送一次时，并且其位于玩家物品栏时这个过程会更频繁。
 wdl.messages.message.chunkUnloaded.description=在一个区块未加载并保存时出现。
 wdl.messages.message.guiClosedInfo.description=关于某个物品的GUI何时关闭的信息。 此消息用于声明已成功保存了物品的内容。
@@ -387,7 +387,7 @@ wdl.messages.onMapSaved.onlyDimKnown=dim=%s center=(?, ?)
 wdl.messages.onMapSaved.dimAndCenterKnown=dim=%s center=(%s, %s)
 
 wdl.messages.onChunkNoLongerNeeded.saved=onChunkNoLongerNeeded：已保存位于%s, %s 的区块
-wdl.messages.onChunkNoLongerNeeded.didNotSave=onChunkNoLongerNeeded: 由于服务器限制，无法保存位于 %s, %s 的区块！
+wdl.messages.onChunkNoLongerNeeded.didNotSave=onChunkNoLongerNeeded：由于服务器限制，无法保存位于 %s, %s 的区块！
 
 wdl.messages.onGuiClosedInfo.cannotSaveEntities=服务器配置禁止保存实体！
 wdl.messages.onGuiClosedInfo.cannotSaveTileEntities=服务器配置禁止保存方块实体！
@@ -395,7 +395,7 @@ wdl.messages.onGuiClosedInfo.savedRiddenEntity.horse=已保存骑马物品栏。
 wdl.messages.onGuiClosedInfo.savedEntity.storageMinecart=已保存贮存的矿车内容。
 wdl.messages.onGuiClosedInfo.savedEntity.hopperMinecart=已保存漏斗矿车内容。
 wdl.messages.onGuiClosedInfo.savedEntity.villager.tradesOnly=已保存村民交易。
-wdl.messages.onGuiClosedInfo.savedEntity.villager.tradesAndCareer=已保存村民交易。 (职业: %s -> %s %s)
+wdl.messages.onGuiClosedInfo.savedEntity.villager.tradesAndCareer=已保存村民交易。 (职业：%s -> %s %s)
 wdl.messages.onGuiClosedInfo.savedEntity.horse=已保存骑马物品栏。
 wdl.messages.onGuiClosedInfo.savedTileEntity.singleChest=已保存箱子内容。
 wdl.messages.onGuiClosedInfo.savedTileEntity.doubleChest=已保存大型箱子内容。
@@ -415,12 +415,12 @@ wdl.messages.onGuiClosedInfo.savedTileEntity.smoker=已保存烟熏炉内容。
 wdl.messages.onGuiClosedWarning.noCoordinates=onItemGuiClosed：在容器被打开时没有任何目标；没有可将其保存到的位置！
 wdl.messages.onGuiClosedWarning.couldNotGetTE=onItemGuiClosed 无法获取BE于%s。
 wdl.messages.onGuiClosedWarning.unhandledEntity=onItemGuiClosed：无法保存未识别的实体：%s
-wdl.messages.onGuiClosedWarning.unhandledTileEntity=onItemGuiClosed：未处理过的方块实体于 %s: %s
+wdl.messages.onGuiClosedWarning.unhandledTileEntity=onItemGuiClosed：未处理过的方块实体于 %s：%s
 wdl.messages.onGuiClosedWarning.failedToFindDoubleChest=无法保存这个大型箱子！  无法找到所有临近的箱子方块。
-wdl.messages.onGuiClosedWarning.villagerCareer.notAComponent=无法识别村名的职业：'%s' 不是一个翻译组件  (当前的交易列表仍然已被保存，这只影响新交易的解锁)
-wdl.messages.onGuiClosedWarning.villagerCareer.unknownProfession=无法识别村名职业：职业 ID %s 不是一个已知的原版职业。  (当前的交易列表仍然被保存，这只影响新交易的解锁)
-wdl.messages.onGuiClosedWarning.villagerCareer.unknownTitle=无法识别村名的职业：'%s' 不是一个已知的原版职业的职业ID的翻译组件 %s.  (当前的交易列表仍然被保存，这只影响新交易的解锁)
-wdl.messages.onGuiClosedWarning.villagerCareer.exception=无法识别村名的职业：意外异常 %s.  (当前的交易列表仍然被保存，这只影响新交易的解锁)
+wdl.messages.onGuiClosedWarning.villagerCareer.notAComponent=无法识别村名的职业：'%s' 不是一个翻译组件  (当前的交易列表已被保存，这只影响新交易的解锁)
+wdl.messages.onGuiClosedWarning.villagerCareer.unknownProfession=无法识别村名职业：职业 ID %s 不是一个已知的原版职业。  (当前的交易列表已被保存，这只影响新交易的解锁)
+wdl.messages.onGuiClosedWarning.villagerCareer.unknownTitle=无法识别村名的职业：'%s' 不是一个已知的原版职业的职业ID的翻译组件 %s.  (当前的交易列表已被保存，这只影响新交易的解锁)
+wdl.messages.onGuiClosedWarning.villagerCareer.exception=无法识别村名的职业：意外异常 %s.  (当前的交易列表已被保存，这只影响新交易的解锁)
 
 wdl.messages.generalInfo.downloadStarted=已开始下载
 wdl.messages.generalInfo.downloadStopped=已结束下载。
@@ -437,8 +437,8 @@ wdl.messages.generalError.failedToSaveChunk=位于坐标 %s, %s 的区块无法�
 wdl.messages.generalError.forbidden=服务器禁止下载这个世界！
 wdl.messages.generalError.failedToBackUp=备份世界时出现错误：%s
 wdl.messages.generalError.failedToSetUpEntityUI=设置实体列表UI时出现错误：%s
-wdl.messages.generalError.failedToSaveEntity=无法保存实体 %s 位于区块 %s, %s: %s
-wdl.messages.generalError.failedToSaveTE=无法保存方块实体 %s 于 %s 位于区块 %s, %s: %s
+wdl.messages.generalError.failedToSaveEntity=无法保存实体 %s 位于区块 %s, %s：%s
+wdl.messages.generalError.failedToSaveTE=无法保存方块实体 %s 于 %s 位于区块 %s, %s：%s
 
 wdl.toast.backupFailed=备份失败！
 
