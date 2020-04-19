@@ -1,0 +1,523 @@
+# World Downloader translation file
+# All of the text on the left side of the = is the key, while the right side is the value.
+# '%s' and similar are formatting tokens, as described on the formatter
+# docs: https://docs.oracle.com/javase/8/docs/api/java/util/Formatter.html
+# Only '%s' and '%%' are allowed.  '%s' is a string, and '%%' is an escaped percent.
+# You can reference an argument at a specific index with %i$s, where 'i'
+# is the number.
+# Everything after a '#' is a comment.
+#
+# For description messages in GUIs, you are also allowed to use \n to indicate a new line.
+# This cannot be escaped.
+#
+# Additionally, Minecraft's §-based color codes may be used.  See
+# https://minecraft.gamepedia.com/Formatting_codes for more info.
+
+# Translator name, preferably in the form of 'Translated to %s by <your name>'.
+# '%s' will be replaced with the language name automatically.
+# If left blank, it will not be displayed.
+wdl.translatorCredit=KFC0803
+
+wdl.gui.wdl.title=World Downloader mod：%s 的选项
+wdl.gui.wdl.worldname=名称：
+wdl.gui.wdl.worldOverrides.name=覆盖世界...
+wdl.gui.wdl.worldOverrides.description=修改保存世界的具体元数据，例如出生点及游戏模式。
+wdl.gui.wdl.generatorOverrides.name=覆盖世界生成器...
+wdl.gui.wdl.generatorOverrides.description=控制如何生成世界的具体信息，例如种子。
+wdl.gui.wdl.playerOverrides.name=覆盖玩家...
+wdl.gui.wdl.playerOverrides.description=控制保存玩家的具体设置，例如生命和位置。
+wdl.gui.wdl.entityOptions.name=实体选项...
+wdl.gui.wdl.entityOptions.description=控制保存哪些实体，以及这些实体的跟踪距离。
+wdl.gui.wdl.gameruleOptions.name=游戏规则...
+wdl.gui.wdl.gameruleOptions.description=选择各个游戏规则。
+wdl.gui.wdl.backupOptions.name=备份选项...
+wdl.gui.wdl.backupOptions.description=控制保存世界后如何备份。
+wdl.gui.wdl.messageOptions.name=消息选项...
+wdl.gui.wdl.messageOptions.description=控制聊天中显示的消息。
+wdl.gui.wdl.savedChunks.name=已保存的区块...
+wdl.gui.wdl.savedChunks.description=以可视化查看当前、以前和何时保存了哪些区块
+wdl.gui.wdl.permissionsInfo.name=权限信息...
+wdl.gui.wdl.permissionsInfo.description=此服务器权限配置的信息，以及请求新权限的表单。
+wdl.gui.wdl.about.name=关于World Downloader...
+wdl.gui.wdl.about.description=查看您当前安装的WDL和扩展的信息。
+wdl.gui.wdl.updates.name=更新...
+wdl.gui.wdl.updates.description=查看版本列表及当前版本，并配置下一次更新的条件。
+wdl.gui.wdl.updates.hasNew.name=更新... (§6有新版可用！§r)
+wdl.gui.wdl.updates.hasNew.description=查看版本列表及当前版本，配置下一次更新的条件，下载最新更新。
+
+wdl.gui.world.title=World Downloader mod：%s 的世界选项
+wdl.gui.world.allowCheats.true=允许作弊：开
+wdl.gui.world.allowCheats.false=允许作弊：关
+wdl.gui.world.gamemode.keep=游戏模式：不做更改
+wdl.gui.world.gamemode.creative=游戏模式：创造
+wdl.gui.world.gamemode.survival=游戏模式：生存
+wdl.gui.world.gamemode.hardcore=游戏模式：极限生存
+wdl.gui.world.time.keep=时间：不做改变
+wdl.gui.world.time.23000=时间：日出
+wdl.gui.world.time.0=时间：上午
+wdl.gui.world.time.6000=时间：中午
+wdl.gui.world.time.11500=时间：傍晚
+wdl.gui.world.time.12500=时间：日落
+wdl.gui.world.time.18000=时间：午夜
+wdl.gui.world.weather.keep=天气：不做改变
+wdl.gui.world.weather.sunny=天气：晴
+wdl.gui.world.weather.rain=天气：雨
+wdl.gui.world.weather.thunderstorm=天气：雷暴
+wdl.gui.world.spawn.auto=出生点：自动
+wdl.gui.world.spawn.player=出生点：玩家位置
+wdl.gui.world.spawn.xyz=出生点：
+wdl.gui.world.setSpawnToCurrentPosition=当前位置
+wdl.gui.world.allowCheats.description=控制下载的世界是否允许命令（例如 /gamemode）。
+wdl.gui.world.gamemode.description=控制下载的世界中使用何种游戏模式。
+wdl.gui.world.time.description=控制下载的世界的时间。
+wdl.gui.world.weather.description=控制下载的世界的天气。
+wdl.gui.world.spawn.description=控制下载的世界的出生点。\n\n§l不做更改§r：使用服务器的出生点。\n§l玩家位置§r：使用下载结束时玩家所在位置。\n§lXYZ§r：允许指定精确的坐标。
+wdl.gui.world.setSpawnToCurrentPosition.description=将您现在的位置设置为出生点。
+wdl.gui.world.spawnPos.description=使用文本框指定精确的出生点坐标。\n\n此文本框指定的坐标为 %s 。
+
+wdl.gui.player.title=World Downloader mod: %s 的玩家选项
+wdl.gui.player.health.keep=生命：不做改变
+wdl.gui.player.health.20=生命：加满
+wdl.gui.player.hunger.keep=饥饿：不做改变
+wdl.gui.player.hunger.20=饥饿：加满
+wdl.gui.player.position.keep=玩家位置：不做改变
+wdl.gui.player.position.xyz=玩家位置：
+wdl.gui.player.setPositionToCurrentPosition=当前位置
+wdl.gui.player.health.description=此选项修改在下载的世界中玩家的生命。\n\n§l不做改变§r：使用下载结束时的生命值。\n§l加满§r：将玩家生命设置为最大值。
+wdl.gui.player.hunger.description=此选项修改在下载的世界中玩家的饥饿。\n\n§l不做改变§r：使用下载结束时的饥饿值。\n§l加满§r：将玩家饥饿设置为最大值。
+wdl.gui.player.position.description=此选项可修改在下载的世界中玩家的位置。\n\n§l不做改变§r：使用下载结束时的玩家的位置\n§lXYZ§r：允许指定精确的坐标。
+wdl.gui.player.setPositionToCurrentPosition.description=将位置设置为您当前的位置。
+wdl.gui.player.positionTextBox.description=使用文本框指定精确的出生点坐标。\n\n此文本框指定的坐标为 %s 。
+
+wdl.gui.generator.title=World Downloader mod：%s 的生成选项
+wdl.gui.generator.seed=种子：
+wdl.gui.generator.generator.void=世界生成：留空
+wdl.gui.generator.generator.default=世界生成：默认
+wdl.gui.generator.generator.flat=世界生成：超平坦
+wdl.gui.generator.generator.largeBiomes=世界生成：巨型生物群系
+wdl.gui.generator.generator.amplified=世界生成：放 大 化
+wdl.gui.generator.generator.custom=世界生成：自定义
+wdl.gui.generator.generator.buffet=世界生成：自选
+wdl.gui.generator.generator.legacy=世界生成：遗留 (1.1)
+wdl.gui.generator.generateStructures.true=生成建筑：开
+wdl.gui.generator.generateStructures.false=生成建筑：关
+wdl.gui.generator.seed.description=设置用于在下载世界中生成新区块的种子。
+wdl.gui.generator.generator.description=生成新区块时使用的世界生成器。
+wdl.gui.generator.generateStructures.description=是否在新区块中生成建筑（村庄、要塞等）。\n\n§c§l警告§r：启用此选项由于结构再生将破坏下载的世界。参见 https://git.io/vdunS（大小写敏感）获取更多信息
+wdl.gui.generator.flatSettings=超平坦选项...
+wdl.gui.generator.customSettings=自定义选项...
+wdl.gui.generator.buffetSettings=自选选项...
+
+wdl.gui.ingameMenu.downloadStatus.singlePlayer=单人模式无法下载
+wdl.gui.ingameMenu.downloadStatus.disabled=服务器禁止下载
+wdl.gui.ingameMenu.downloadStatus.request=下载需要权限
+wdl.gui.ingameMenu.downloadStatus.saving=仍在保存...
+wdl.gui.ingameMenu.downloadStatus.stop=停止下载
+wdl.gui.ingameMenu.downloadStatus.start=下载此世界
+wdl.gui.ingameMenu.settings=...
+
+wdl.gui.messages.message.title=World Downloader mod：消息选项
+wdl.gui.messages.message.true=%s：开
+wdl.gui.messages.message.false=%s：关
+wdl.gui.messages.group.true=启用的群组
+wdl.gui.messages.group.false=禁用的群组
+wdl.gui.messages.all.true=显示 WDL 信息：是
+wdl.gui.messages.all.false=显示 WDL 信息：否
+wdl.gui.messages.reset=重置为默认值
+wdl.gui.messages.reset.confirm.title=确定要重置消息设置吗？
+wdl.gui.messages.reset.confirm.subtitle=您原来的设置将会永久失去！( 真的很久！)
+wdl.gui.messages.all.description=启用 / 禁用 所有 WDL 信息。\n\n§l不§r建议禁用所有，因为您可能因此错过重要的报错。
+wdl.gui.messages.reset.description=将每个消息的设置重置为默认值。
+
+wdl.gui.about.title=关于 World Downloader
+wdl.gui.about.blurb=World Downloader is a mod developed currently developed by pokechu22 and julialy and previously by nariol and cubic72, with help from others (including soccerguy3, UltiNaruto, Net32, and El_garoo) that allows downloading a copy of a multiplayer world for singleplayer use.  Source code is publicly available.
+wdl.gui.about.version=您正在运行 %s 在Minecraft版本 %s.
+wdl.gui.about.forumThread=在Minecraft论坛上查看
+wdl.gui.about.allSrc=在Github上查看mod源码
+wdl.gui.about.license=World Downloader 以 MMPLv2 协议授权。
+wdl.gui.about.fastutil.blurb=This version of the mod includes FastUtil, a Java collections library (which is distributed with modern versions of Minecraft, but not for this Minecraft version).  FastUtil is licensed under the Apache License, version 2.0.
+wdl.gui.about.fastutil.website=访问 FastUtil 网站
+wdl.gui.about.fastutil.license=查看 Apache License 2.0
+wdl.gui.about.extensions=扩展
+wdl.gui.about.debugInfo=复制调试信息
+wdl.gui.about.debugInfo.copied=已复制！
+
+wdl.gui.extensions.title=World Downloader mod：扩展
+wdl.gui.extensions.detailsCaption=详情（调整大小）
+wdl.gui.extensions.modVersion=%s v%s
+wdl.gui.extensions.enabled=§a启用
+wdl.gui.extensions.disabled=§c禁用
+#The following line is used as a fallback for extensions that have their own
+#GUI but don't give a name for the button to use.
+wdl.gui.extensions.defaultSettingsButtonText=设置...
+
+wdl.gui.multiworldSelect.title.startDownload=World Downloader - 尝试开始下载
+wdl.gui.multiworldSelect.title.changeOptions=World Downloader - 尝试更改选项
+wdl.gui.multiworldSelect.subtitle=你在哪个世界？
+wdl.gui.multiworldSelect.newName=< 新建名称 >
+wdl.gui.multiworldSelect.search=搜索...
+wdl.gui.multiworldSelect.done=使用选择的世界
+
+wdl.gui.multiworld.title=World Downloader：§c多世界支持
+wdl.gui.multiworld.descirption.requiredWhen=如果至少满足以下条件之一，则需要多世界支持：\n - 服务器网站上提到了“多世界”\n - 服务器有3个以上维度（或世界）\n - 服务器有不同于官方的（主世界，下界和末地）其他维度
+wdl.gui.multiworld.descirption.whatIs=多世界支持会在下载开始前提示您所处的世界。如果禁用，但服务器是多世界服务器，则可能会覆盖对应的某些部分。
+wdl.gui.multiworld.true=多世界支持：启用
+wdl.gui.multiworld.false=多世界支持：禁用
+
+wdl.gui.backup.title=World Downloader mod：备份选项
+wdl.gui.backup.backupMode=备份模式：%s
+wdl.gui.backup.description1=World Downloader 在每次保存完成后都会备份世界。你可以通过GUI控制备份如何进行。
+wdl.gui.backup.description2=§l不备份§r：下载完成后不执行备份。\n§l复制世界文件夹§r：复制整个世界文件夹，这意味着如果您选择再次下载，您将永远拥有一个在此状态的可玩版本的世界。\n§l将世界打包为压缩包§r：在 .minecraft/backups 创建一个世界的压缩包（在1.13中备份的正常位置），您可以通过解压来还原它。推荐使用此模式\n§l自定义§r：允许运行外部程序以执行备份。
+wdl.gui.backup.description3=对于所有备份模式，创建的备份都是有时间戳的，因此不会覆盖旧的备份。
+wdl.gui.backup.customCommandTemplate=命令行：
+wdl.gui.backup.customCommandTemplate.description=用于执行外部备份的命令的模板。 ${destination} 和 ${source} 将分别替换为输出文件的完整路径，包括扩展名（有引号）和输入目录（有引号）。 默认使用7-zip，它是免费开源的，您可以从 7-zip.org 下载。\n\n默认只是将新文件(a)添加到归档中。 选项 -bsp1 启用进度输出，如果您要修改命令，您需要保留它。
+wdl.gui.backup.customExtension=扩展：
+wdl.gui.backup.customExtension.description=进行外部备份时文件名使用的扩展名。
+wdl.gui.backup.customCommandFailed.line1=自定义备份命令无效。
+wdl.gui.backup.customCommandFailed.line2=如果继续，将忽略对备份设置所做的更改。是否继续？
+
+wdl.gui.saveProgress.progressInfo=%s (%s of %s)
+
+wdl.gui.rangePresets.title=World Downloader mod：范围预设
+wdl.gui.rangePresets.vanilla=Minecraft原版范围
+wdl.gui.rangePresets.spigot=默认spigot范围
+wdl.gui.rangePresets.server=服务器配置范围
+wdl.gui.rangePresets.upperWarning=确定要重置实体范围吗？
+wdl.gui.rangePresets.vanilla.warning=§r设置为Minecraft原版范围 - §c§n§l无法撤消。§r
+wdl.gui.rangePresets.spigot.warning=§r设置为默认spigot范围 - §c§n§l无法撤消。§r
+wdl.gui.rangePresets.server.warning=§r设置为服务器配置范围 - §c§n§l无法撤消。§r
+wdl.gui.rangePresets.vanilla.description=将范围设置为未经修改（原版）的 Minecraft 服务器使用的范围，以及一些 Bukkit 服务器使用的范围。
+wdl.gui.rangePresets.spigot.description=将范围设置为 spigot 服务器的默认值。\n spigot 允许自定义这些值，但这里使用的是默认值。
+wdl.gui.rangePresets.server.description=将范围设置为服务器实际使用的值。 此选项仅在服务器安装了 WDLCompanion 插件时可用。
+wdl.gui.rangePresets.server.installed=§a当它被安装时，此选项可用。
+wdl.gui.rangePresets.server.notInstalled=§c当它未被安装时，此选项不可用。
+wdl.gui.rangePresets.cancel.description=不做更改并取消。
+
+wdl.gui.overwriteChanges.title=World Downloader：覆盖更改？
+wdl.gui.overwriteChanges.footer=上一次下载于 %tc ，上一次游玩于 %tc
+wdl.gui.overwriteChanges.footerNeverSaved=从未下载（与服务器同名的不同世界?） - 上一次游玩于 %tc
+wdl.gui.overwriteChanges.captionTitle=本地的世界可能已经被更改了。
+wdl.gui.overwriteChanges.captionSubtitle=如果不进行备份，更改可能会丢失。
+wdl.gui.overwriteChanges.overwriteWarning1=还有一种可能是，您有一个与服务器同名的
+wdl.gui.overwriteChanges.overwriteWarning2=独立世界，它可能会被覆盖 — 请谨慎使用！
+wdl.gui.overwriteChanges.asZip.name=以 zip 格式备份（并开始下载）
+wdl.gui.overwriteChanges.asZip.description=在 .minecraft/backups 中创建一个 .zip 文件夹\n\n这种备份需要解压后才能在游戏中游玩，但是如果你只是想存档这些更改，\n\n 这种备份很有用。
+wdl.gui.overwriteChanges.asFolder.name=以文件夹备份（并开始下载）
+wdl.gui.overwriteChanges.asFolder.description=创建现有世界文件夹的副本。\n\n这种备份可以在游戏中加载，并出现在世界列表中。
+wdl.gui.overwriteChanges.startNow.name=允许覆盖（现在开始下载）
+wdl.gui.overwriteChanges.startNow.description=完全不备份。\n\n§c对世界所做的任何改变都将被覆盖。§r\n如果你没有做任何你想保留的改变，请选择此选项。
+wdl.gui.overwriteChanges.cancel.name=取消（不开始下载）
+wdl.gui.overwriteChanges.cancel.description=不要开始任何下载。\n\n您可以手动进行备份或暂时不下载。
+wdl.gui.overwriteChanges.backingUp.title=正在备份世界...
+wdl.gui.overwriteChanges.backingUp.progress=%s / %s (%s)
+wdl.gui.overwriteChanges.backingUp.zip=正在为 %s 创建zip文件。
+wdl.gui.overwriteChanges.backingUp.folder=正在为 %s 复制世界文件夹。
+
+wdl.gui.entities.title=World Downloader mod：实体配置
+wdl.gui.entities.trackDistanceMode.default=跟踪距离：默认
+wdl.gui.entities.trackDistanceMode.server=跟踪距离：服务器
+wdl.gui.entities.trackDistanceMode.user=跟踪距离：用户
+wdl.gui.entities.rangePresets=范围预设...
+wdl.gui.entities.entity.included=§a包括
+wdl.gui.entities.entity.ignored=§c忽略
+wdl.gui.entities.group.enabled=§a启用
+wdl.gui.entities.group.disabled=§c全部禁用
+wdl.gui.entities.trackDistance=跟踪距离：%s
+wdl.gui.entities.trackDistanceMode.description=跟踪距离模式。  控制跟踪距离的默认值。
+
+wdl.gui.updates.title=World Downloader mod：更新
+wdl.gui.updates.updateMinecraftVersion.client=安装于 %s 客户端
+wdl.gui.updates.updateMinecraftVersion.server=连接到 %s 服务器
+wdl.gui.updates.updateMinecraftVersion.any=任何 Minecraft 版本
+wdl.gui.updates.updateMinecraftVersion.description=在确定应该使用的下一个版本时使用什么标准。\n\n§l安装于 %1$s 客户端§r：此mod必须被安装在指定的 Minecraft 版本上。\n§l连接到 %1$s 服务器§r：可以安装在任何客户端版本，只要它可以连接到运行的服务器 %1$s。\n§l任何 Minecraft 版本§r：允许任何 Minecraft 版本。
+wdl.gui.updates.updateAllowBetas.true=使用 beta 版：是
+wdl.gui.updates.updateAllowBetas.false=使用 beta 版：否
+wdl.gui.updates.updateAllowBetas.description=在决定下一个版本时是否应该包括 beta 版本？\n\nBeta版本可能不稳定。
+wdl.gui.updates.currentVersion=%s §6(你现在正在运行这个版本)
+wdl.gui.updates.recomendedVersion=%s §6(你应该运行这个版本)
+wdl.gui.updates.pleaseWait=正在加载更新列表... 请稍候...
+wdl.gui.updates.checkFailed=检查更新失败。
+wdl.gui.updates.update.title.release=发行版 World Downloader %s 适用于 Minecraft %s
+wdl.gui.updates.update.title.prerelease=预发行版 World Downloader %s 适用于 Minecraft %s
+wdl.gui.updates.update.version=%s 版本适用于 Minecraft %s
+# Version list, inserted after 'supports' in the above key.
+# Note that listStart and listMiddle have spaces at the end.
+wdl.gui.updates.update.version.listSingle=%s
+wdl.gui.updates.update.version.listDouble=%s 和 %s
+wdl.gui.updates.update.version.listStart=%s, 
+wdl.gui.updates.update.version.listMiddle=%s, 
+wdl.gui.updates.update.version.listEnd=和 %s
+wdl.gui.updates.update.releaseDate=发布 %s
+wdl.gui.updates.update.viewOnline=在线查看 (+ 下载)
+wdl.gui.updates.update.viewForumPost=在论坛上查看
+
+#Used in various places when update info can't be found
+wdl.gui.updates.update.unknown=未知
+
+wdl.gui.permissions.current=当前权限
+wdl.gui.permissions.request=请求权限
+wdl.gui.permissions.overrides=区块覆盖
+
+wdl.gui.gamerules.title=World Downloader mod：游戏规则
+wdl.gui.gamerules.resetRule=重置
+wdl.gui.gamerules.doneInfo=Note: 规则只有在世界被下载并保存后才会生效，如果您不保存并断开连接，它将会丢失。
+
+# Descriptions of individual rules, using their (case-sensitive) name.  Based off of the wiki article: https://minecraft.gamepedia.com/Commands/gamerule
+wdl.gui.gamerules.rules.announceAdvancements=是否在聊天框中公告玩家进度的达成。
+wdl.gui.gamerules.rules.commandBlockOutput=命令方块在游戏中是否被启用。
+wdl.gui.gamerules.rules.disableElytraMovementCheck=命令方块执行命令时是否在聊天框中向管理员显示。  在单人模式下无效 (总是跳过)
+wdl.gui.gamerules.rules.doDaylightCycle=是否进行日夜交替和月相变化。
+wdl.gui.gamerules.rules.doEntityDrops=非生物实体（如 矿车）是否掉落物品。
+wdl.gui.gamerules.rules.doFireTick=火是否蔓延及自然熄灭。
+wdl.gui.gamerules.rules.doLimitedCrafting=玩家的合成配方是否需要解锁才能使用。
+wdl.gui.gamerules.rules.doMobLoot=生物（如 猪和爬行者）在死亡是否掉落物品。
+wdl.gui.gamerules.rules.doMobSpawning=生物是否自然生成。不影响刷怪箱。
+wdl.gui.gamerules.rules.doTileDrops=方块被破坏时是否掉落物品。
+wdl.gui.gamerules.rules.doWeatherCycle=天气是否变化。
+wdl.gui.gamerules.rules.keepInventory=玩家死亡后是否保留物品栏物品、经验（死亡时物品不掉落、经验不清空）。
+wdl.gui.gamerules.rules.logAdminCommands=是否在服务器日志中记录管理员使用过的命令。
+wdl.gui.gamerules.rules.maxCommandChainLength=决定了连锁型命令方块能“连锁”的总数量。  这只有在有很多命令方块的自定义地图中才有用。
+wdl.gui.gamerules.rules.maxEntityCramming=玩家或生物能同时推动其他可推动实体的数量，超过此数量时将承受每半秒3的窒息伤害。  设置成0可以停用这个规则。
+wdl.gui.gamerules.rules.mobGriefing=苦力怕、僵尸、末影人、恶魂、凋灵、末影龙、兔子、羊、村民和雪傀儡是否能放置、修改或破坏方块，以及生物是否能捡拾物品。这个规则也会影响生物寻找海龟蛋的能力。
+wdl.gui.gamerules.rules.naturalRegeneration=玩家是否能在饥饿值足够时自然恢复生命值（不影响外部治疗效果，如金苹果、生命恢复状态效果等）。
+wdl.gui.gamerules.rules.randomTickSpeed=每游戏刻每区段中随机的方块刻发生的频率（例如植物生长，树叶腐烂等）。为0时禁用随机刻，较高的数字将增大随机刻频率。
+wdl.gui.gamerules.rules.reducedDebugInfo=调试屏幕是否简化而非显示详细信息；同时影响F3+B（实体碰撞箱）和F3+G（区块边界）效果的显示。
+wdl.gui.gamerules.rules.sendCommandFeedback=玩家执行命令的返回信息是否在聊天框中显示。同时影响命令方块是否保存命令输出文本。
+wdl.gui.gamerules.rules.showDeathMessages=是否在聊天框中显示玩家以及驯养宠物（狼、猫和鹦鹉）的死亡信息。
+wdl.gui.gamerules.rules.spawnRadius=首次进入服务器的玩家和没有重生点的死亡玩家在重生时与世界重生点坐标的距离。
+wdl.gui.gamerules.rules.spectatorsGenerateChunks=是否允许旁观模式的玩家生成区块。
+wdl.gui.gamerules.rules.disableRaids=是否禁用袭击。
+wdl.gui.gamerules.rules.doInsomnia=幻翼是否在夜晚生成。
+wdl.gui.gamerules.rules.drowningDamage=玩家是否承受窒息伤害。
+wdl.gui.gamerules.rules.fallDamage=玩家是否承受跌落伤害。
+wdl.gui.gamerules.rules.fireDamage=玩家是否承受火焰伤害。
+wdl.gui.gamerules.rules.doPatrolSpawning=控制灾厄巡逻队的生成。
+wdl.gui.gamerules.rules.doTraderSpawning=控制流浪商人的生成。
+# This is a special case, since it doesn't seem to actually be on the list:
+wdl.gui.gamerules.rules.gameLoopFunction=调用每个刻的函数的名称。  （不推荐，将在1.13被移除，且函数不会被mods保存，因此这并不实用）
+
+wdl.gui.savedChunks.title=已保存的区块
+wdl.gui.savedChunks.savedNow=位于 %s, %s 的区块：已保存
+wdl.gui.savedChunks.lastSaved=位于 %s, %s 的区块：上一次保存于 %tc
+wdl.gui.savedChunks.neverSaved=位于 %s, %s 的区块：从未保存
+wdl.gui.savedChunks.savedAfterDownload=位于 %s, %s 的区块：上一次保存于 %tc 在 世 界 下 载 后 (e.g. 生成于单人模式)
+
+wdl.backup.none=无备份
+wdl.backup.folder=复制世界文件夹
+wdl.backup.zip=以 zip 格式备份
+wdl.backup.custom=运行自定义命令
+
+wdl.messages.tooltip=这是 World Downloader mod 生成的一条消息.\n你可以在 WDL 消息 GUI 中\n关闭§l%s §r 来禁用这条消息
+wdl.messages.message.info.text=常规信息
+wdl.messages.message.error.text=常规错误
+wdl.messages.message.updates.text=新版信息
+wdl.messages.message.loadingTileEntity.text=加载方块实体
+wdl.messages.message.onWorldLoad.text=加载世界
+wdl.messages.message.blockEvent.text=方块事件
+wdl.messages.message.mapDataSaved.text=已保存地图数据
+wdl.messages.message.chunkUnloaded.text=区块未加载
+wdl.messages.message.guiClosedInfo.text=关闭GUI(Info)
+wdl.messages.message.guiClosedWarning.text=关闭GUI(Warning)
+wdl.messages.message.saving.text=正在保存数据
+wdl.messages.message.removeEntity.text=正在移除实体
+wdl.messages.message.pluginChannel.text=插件频道消息
+wdl.messages.message.updateDebug.text=更新debug信息
+wdl.messages.message.info.description=常规信息，如“开始下载”及“保存完成”\n\n推荐开启，因为它包括了何时才能安全停止下载的信息，并且通常是很少的。
+wdl.messages.message.error.description=常规错误，例如“保存区块失败”及“加载方块实体失败”.\n\n推荐开启，因为它通常是一些重要信息。
+wdl.messages.message.updates.description=关于新版 WDL 何时发布的信息。
+wdl.messages.message.loadingTileEntity.description=发生于从以前保存的区块中导入方块实体时。  在一个区块中可能有多个方块实体。
+wdl.messages.message.onWorldLoad.description=在世界加载时的信息，包括玩家是否在同一个服务器，或是已经换了一个服务器，以及服务器的类型（版本）。
+wdl.messages.message.blockEvent.description=方块事件的信息。  这只用于让音符盒包含保存的音高。
+wdl.messages.message.mapDataSaved.description=发生于新地图（物品）的数据被保存时。 请注意，在物品展示框中时，地图数据大约每秒发送一次时，并且其位于玩家物品栏时这个过程会更频繁。
+wdl.messages.message.chunkUnloaded.description=在一个区块未加载并保存时出现。
+wdl.messages.message.guiClosedInfo.description=关于某个物品的GUI何时关闭的信息。 此消息用于声明已成功保存了物品的内容。
+wdl.messages.message.guiClosedWarning.description=关闭某个物品的GUI时发出警告。 这个信息是在出错时使用的——通常是在你看别的东西的时候。
+wdl.messages.message.saving.description=提供有关保存下载世界的当前进展的详细信息。
+wdl.messages.message.removeEntity.description=每当有实体从世界中删除时发生，以及是否保存了该实体。
+wdl.messages.message.pluginChannel.description=有关服务器端配置系统和用户权限的信息。
+wdl.messages.message.updateDebug.description=更新检查器的调试信息，包括网络状态信息。
+wdl.messages.category.core_recommended=核心（推荐）
+wdl.messages.category.core_debug=核心（调试）
+wdl.messages.category.core_recommended.description=通常应该启用的常规信息。
+wdl.messages.category.core_debug.description=更多冗长的信息，这些信息有时是有用的，但并不总是必要的。
+
+wdl.messages.removeEntity.allowingRemoveUserPref=removeEntityFromWorld: Allowing removal of %s (user pref)
+wdl.messages.removeEntity.allowingRemoveUnrecognizedDistance=removeEntityFromWorld: Allowing removal of %s (unrecognized distance)
+wdl.messages.removeEntity.allowingRemoveDistance=removeEntityFromWorld: Allowing removal of %s at %s (player %s, track %s, server %s)
+wdl.messages.removeEntity.savingDistance=removeEntityFromWorld: Saving %s at %s (player %s, track %s, server %s)
+wdl.messages.removeEntity.notSavingUserPreference=saveChunk: Not saving %s (User preference)
+
+wdl.messages.tileEntity.usingOld=使用来自已保存文件的旧的基岩版：%s 于 %s
+wdl.messages.tileEntity.usingNew=使用新的基岩版：%s 于 %s
+wdl.messages.tileEntity.notImporting=旧的基岩版不需要导入： %s 于 %s
+wdl.messages.tileEntity.edited=编辑基岩版于 %s 使用 %s
+
+# MC = Minecraft; this is used to display what WDL and MC think of an entity
+# First arg is the display identifier, or the raw identifier if none available
+# The second arg is MC's display entity component
+wdl.messages.entityData=%s (MC %s)
+wdl.messages.entityData.noKnownName=未知实体
+wdl.messages.entityData.internalName=Internally %s
+# First arg is display group, second is raw group
+wdl.messages.entityData.group=Grouped as %s (%s)
+
+wdl.messages.saving.savingChunks=正在保存区块...
+wdl.messages.saving.chunksSaved=已保存区块数据。
+wdl.messages.saving.flushingIO=等待 ThreadedFileIOBase 完成...
+wdl.messages.saving.backingUp=正在备份世界...
+wdl.messages.saving.savingPlayer=正在保存玩家数据...
+wdl.messages.saving.playerSaved=已保存玩家数据。
+wdl.messages.saving.savingWorld=正在保存世界元数据...
+wdl.messages.saving.worldSaved=已保存世界元数据。
+wdl.messages.saving.savingMapItemData=正在保存地图数据...
+wdl.messages.saving.mapItemDataSaved=已保存地图数据。
+
+wdl.messages.onWorldLoad.sameServer=onWorldLoad：相同的服务器！
+wdl.messages.onWorldLoad.differentServer=onWorldLoad：不同的服务器！
+wdl.messages.onWorldLoad.spigot=服务器类型 = %s。  使用spigot跟踪距离。
+wdl.messages.onWorldLoad.vanilla=服务器类型 = %s。  使用vanilla跟踪距离。
+
+wdl.messages.onBlockEvent.noteblock=onBlockEvent：音符盒： %s 音高： %s - %s
+
+# First value is map ID.  Second value is more detailed info
+wdl.messages.onMapSaved=onMapDataLoaded: 已保存地图 %s; %s
+wdl.messages.onMapSaved.neitherKnown=dim=? center=(?, ?)
+wdl.messages.onMapSaved.onlyCenterKnown=dim=? center=(%s, %s)
+wdl.messages.onMapSaved.onlyDimKnown=dim=%s center=(?, ?)
+wdl.messages.onMapSaved.dimAndCenterKnown=dim=%s center=(%s, %s)
+
+wdl.messages.onChunkNoLongerNeeded.saved=onChunkNoLongerNeeded：已保存位于%s, %s 的区块
+wdl.messages.onChunkNoLongerNeeded.didNotSave=onChunkNoLongerNeeded：由于服务器限制，无法保存位于 %s, %s 的区块！
+
+wdl.messages.onGuiClosedInfo.cannotSaveEntities=服务器配置禁止保存实体！
+wdl.messages.onGuiClosedInfo.cannotSaveTileEntities=服务器配置禁止保存方块实体！
+wdl.messages.onGuiClosedInfo.savedRiddenEntity.horse=已保存骑马物品栏。
+wdl.messages.onGuiClosedInfo.savedEntity.storageMinecart=已保存贮存的矿车内容。
+wdl.messages.onGuiClosedInfo.savedEntity.hopperMinecart=已保存漏斗矿车内容。
+wdl.messages.onGuiClosedInfo.savedEntity.villager.tradesOnly=已保存村民交易。
+wdl.messages.onGuiClosedInfo.savedEntity.villager.tradesAndCareer=已保存村民交易。 (职业：%s -> %s %s)
+wdl.messages.onGuiClosedInfo.savedEntity.horse=已保存骑马物品栏。
+wdl.messages.onGuiClosedInfo.savedTileEntity.singleChest=已保存箱子内容。
+wdl.messages.onGuiClosedInfo.savedTileEntity.doubleChest=已保存大型箱子内容。
+wdl.messages.onGuiClosedInfo.savedTileEntity.enderChest=已保存末影箱内容。
+wdl.messages.onGuiClosedInfo.savedTileEntity.barrel=已保存木桶内容。
+wdl.messages.onGuiClosedInfo.savedTileEntity.beacon=已保存信标效果。
+wdl.messages.onGuiClosedInfo.savedTileEntity.blastFurnace=已保存高炉内容。
+wdl.messages.onGuiClosedInfo.savedTileEntity.brewingStand=已保存酿造台内容。
+wdl.messages.onGuiClosedInfo.savedTileEntity.dispenser=已保存发射器内容。
+wdl.messages.onGuiClosedInfo.savedTileEntity.dropper=已保存投掷器内容。
+wdl.messages.onGuiClosedInfo.savedTileEntity.furnace=已保存熔炉内容。
+wdl.messages.onGuiClosedInfo.savedTileEntity.hopper=已保存漏斗内容。
+wdl.messages.onGuiClosedInfo.savedTileEntity.lectern=已保存讲台内容。
+wdl.messages.onGuiClosedInfo.savedTileEntity.shulkerBox=已保存潜影盒内容。
+wdl.messages.onGuiClosedInfo.savedTileEntity.smoker=已保存烟熏炉内容。
+
+wdl.messages.onGuiClosedWarning.noCoordinates=onItemGuiClosed：在容器被打开时没有任何目标；没有可将其保存到的位置！
+wdl.messages.onGuiClosedWarning.couldNotGetTE=onItemGuiClosed 无法获取BE于%s。
+wdl.messages.onGuiClosedWarning.unhandledEntity=onItemGuiClosed：无法保存未识别的实体：%s
+wdl.messages.onGuiClosedWarning.unhandledTileEntity=onItemGuiClosed：未处理过的方块实体于 %s：%s
+wdl.messages.onGuiClosedWarning.failedToFindDoubleChest=无法保存这个大型箱子！  无法找到所有临近的箱子方块。
+wdl.messages.onGuiClosedWarning.villagerCareer.notAComponent=无法识别村名的职业：'%s' 不是一个翻译组件  (当前的交易列表已被保存，这只影响新交易的解锁)
+wdl.messages.onGuiClosedWarning.villagerCareer.unknownProfession=无法识别村名职业：职业 ID %s 不是一个已知的原版职业。  (当前的交易列表已被保存，这只影响新交易的解锁)
+wdl.messages.onGuiClosedWarning.villagerCareer.unknownTitle=无法识别村名的职业：'%s' 不是一个已知的原版职业的职业ID的翻译组件 %s.  (当前的交易列表已被保存，这只影响新交易的解锁)
+wdl.messages.onGuiClosedWarning.villagerCareer.exception=无法识别村名的职业：意外异常 %s.  (当前的交易列表已被保存，这只影响新交易的解锁)
+
+wdl.messages.generalInfo.downloadStarted=已开始下载
+wdl.messages.generalInfo.downloadStopped=已结束下载。
+wdl.messages.generalInfo.saveStarted=已开始保存。
+wdl.messages.generalInfo.saveComplete.startingAgain=保存完成。再次开始下载。
+wdl.messages.generalInfo.saveComplete.done=保存完成。你的单人模式文件已经可以游玩了！
+wdl.messages.generalInfo.worldChanged=检测到世界改变。当前保存完成后将开始下载。
+wdl.messages.generalInfo.downloadCanceled=已取消下载。
+wdl.messages.generalInfo.seedSet=设置单人世界种子为 %s。
+wdl.messages.generalInfo.seedAndGenSet=设置单人世界种子为 %s 并使用默认地形生成器(您可以在生成器选项中更改生成器)
+
+wdl.messages.generalError.failedToImportTE=无法从位于坐标 %s, %s 的区块中导入方块实体：%s
+wdl.messages.generalError.failedToSaveChunk=位于坐标 %s, %s 的区块无法被保存！ (%s)
+wdl.messages.generalError.forbidden=服务器禁止下载这个世界！
+wdl.messages.generalError.failedToBackUp=备份世界时出现错误：%s
+wdl.messages.generalError.failedToSetUpEntityUI=设置实体列表UI时出现错误：%s
+wdl.messages.generalError.failedToSaveEntity=无法保存实体 %s 位于区块 %s, %s：%s
+wdl.messages.generalError.failedToSaveTE=无法保存方块实体 %s 于 %s 位于区块 %s, %s：%s
+
+wdl.toast.backupFailed=备份失败！
+
+wdl.messages.updates.releaseCount=发现 %s 发行版。
+wdl.messages.updates.failedToFindMatchingRelease=找不到匹配 %s 的发行版。 你可能正在运行一个还没有发布的完整版本，或者更新信息还没有完成。 这种情况通常不会发生，可以考虑重新下载 mod。
+wdl.messages.updates.failedToFindMatchingRelease.snapshot=找不到匹配 %s 的发行版。  您正在运行一个开发快照版于 %s。 请注意开发快照版是不被支持的。
+wdl.messages.updates.failedToFindMetadata=找不到发行版 %s 的元数据。  跳过校验。
+wdl.messages.updates.newRelease=新版可用！  您正在运行 %s;最新版是 %s。  %s。
+wdl.messages.updates.newRelease.updateLink=在此更新
+wdl.messages.updates.incorrectHash=%s 校验失败 (相较于 %s)：预期的 MD5 是 %s，得到的 MD5 是 %s.
+wdl.messages.updates.hashException=%s 校验失败 (相较于 %s)：预期的 MD5 是 %s，但是抛出的是 %s 。
+wdl.messages.updates.badHashesFound=一些文件校验无效！您的安装可能已经损坏或未完全安装！请遵从注意事项，并考虑从 %s 重新下载。
+wdl.messages.updates.updateCheckError=未能执行更新检查：%s.
+wdl.messages.updates.usingCachedUpdates=使用已缓存的版本列表。
+wdl.messages.updates.grabingUpdatesFromGithub=从 GitHub releases 中加载版本列表。
+wdl.messages.updates.untestedVersion=Minecraft 版本 %s 是旧的且未被完整测试。如果你遇到问题，请在 %s 报告他们。如果可能的话，请更新到最新版本的 Minecraft。
+
+wdl.messages.permissions.init=正在发送插件通道注册。
+wdl.messages.permissions.packet0=收到设置数据包 #0: [canUseFunctionsUnknownToServer=%s]
+wdl.messages.permissions.packet1=收到设置数据包 #1: [canDownloadInGeneral=%s, canCacheChunks=%s, saveRadius=%s, canSaveEntities=%s, canSaveBlockEntities=%s, canSaveContainers=%s]
+wdl.messages.permissions.packet2=收到设置数据包 #2: [entityRanges=(total of %s)]
+wdl.messages.permissions.packet3=收到设置数据包 #3: [canRequestPermissions=%s, requestMessage=(%s long, HashCode of %s)]
+wdl.messages.permissions.packet4=收到设置数据包 #4: [chunkOverrides=(%s groups, %s total ranges)]
+wdl.messages.permissions.packet5.added=收到设置数据包 #5: Added %s ChunkRanges to %s.
+wdl.messages.permissions.packet5.set=收到设置数据包 #5: Changed list of ChunkRanges to %s total in %s.
+wdl.messages.permissions.packet6=收到设置数据包 #6: Removed %s ChunkRanges from %s with tags matching %s.
+wdl.messages.permissions.packet7=收到设置数据包 #7: Replaced %s ChunkRanges in %s that had a tag of %s with %s new ranges.
+wdl.messages.permissions.unknownPacket=收到未知设置数据包 #%s.  有关二进制内容，请参阅日志。
+wdl.messages.permissions.badPacket=收到畸形数据包。  更多信息请参见日志。  (%s)
+
+wdl.saveProgress.title=正在保存下载的世界
+wdl.saveProgress.chunk.title=正在保存区块
+wdl.saveProgress.chunk.saving=正在保存位于 %s, %s 的区块
+wdl.saveProgress.map.title=正在保存地图物品数据
+wdl.saveProgress.map.idcounts=正在写入 idcounts.dat
+wdl.saveProgress.map.saving=正在写入地图 #%s
+wdl.saveProgress.playerData.title=正在保存玩家数据
+wdl.saveProgress.playerData.creatingNBT=正在创建玩家 NBT
+wdl.saveProgress.playerData.editingNBT=正在编辑玩家 NBT
+wdl.saveProgress.playerData.extension=正在编辑玩家 NBT 使用扩展 %s
+wdl.saveProgress.playerData.writingNBT=正在写入玩家 NBT
+wdl.saveProgress.worldMetadata.title=正在保存世界元数据
+wdl.saveProgress.worldMetadata.creatingNBT=正在创捷世界信息 NBT
+wdl.saveProgress.worldMetadata.editingNBT=正在编辑世界信息 NBT
+wdl.saveProgress.worldMetadata.extension=正在编辑世界信息 NBT 使用扩展 %s
+wdl.saveProgress.worldMetadata.writingNBT=正在写入世界信息 NBT
+wdl.saveProgress.extension.title=扩展：%s
+wdl.saveProgress.flushingIO.title=正在拖延...
+wdl.saveProgress.flushingIO.subtitle=(等待 ThreadedFileIOBase 完成：剩余%s 个区块)
+wdl.saveProgress.backingUp.title.zip=正在备份世界 (创建 zip)
+wdl.saveProgress.backingUp.title.folder=正在备份世界 (复制文件夹)
+wdl.saveProgress.backingUp.title.custom=正在备份世界 (运行外部指令)
+wdl.saveProgress.backingUp.preparing=正在准备...
+wdl.saveProgress.backingUp.file=正在复制 %s
+
+wdl.props.global.title=当单个服务器尚未设置设置时，这些是在所有服务器上使用的默认设置。 如果需要，您可以手动修改它们。
+wdl.props.base.title=这些设置在整个服务器上共享。 如果启用了世界，它们将作为单个世界属性的默认值; 否则，将直接使用它们。
+wdl.props.world.title=这些设置用于多世界服务器中的单个世界。
+
+#Some of these messages are using format substitutions, so that special coloring can be added.
+wdl.intro.success=World Downloader mod 已成功安装！
+wdl.intro.usage=关于如何使用本mod的信息，请参照 %s 和 %s.
+wdl.intro.forumsLink=Minecraft官方论坛帖子
+wdl.intro.wikiLink=项目Wiki
+wdl.intro.contribute=要报告一个错误，建议一个功能，贡献代码，或帮助翻译，请查看 %s。
+wdl.intro.githubRepo=GitHub 仓库
+wdl.intro.stolen=%s：如果您不是从Minecraft论坛或GitHub（或 %s 中的其他站点）上下载到本mod的，您可能已经使用了一个 %s 再转载本mod的网站。
+wdl.intro.redistributionList=再转载名单
+wdl.intro.warning=警告
+wdl.intro.illegally=非法
+wdl.intro.stolenBeware=小心这些网站，因为它们可能包含恶意软件。  %s
+wdl.intro.stopModReposts=更多信息：StopModReposts!
+
+# Sanity checks
+wdl.sanity.failed=----- 合理性检验失败！ -----
+# All sanity checks should have 1 format parameter, which is used for the exception
+wdl.sanity.tripwire=绊线的序列化不正确。 这可能是由于一个Forge的bug（https://git.io/v7aeu）导致的; 如果正在运行1.12及以上版本，请更新Forge; 如果不是，请重新启动Minecraft，然后开始下载（不要重新登录; 重新登录就会导致这个问题）。 否则，绊线将不会被保存(因为区块根本不会被加载)。 (%s)
+wdl.sanity.version=版本不匹配！ 你在Minecraft的一个版本上安装了一个mod的另一个版本。在最好的情况下，数据不会被准确保存; 在最坏的情况下，可能会出现崩溃。 请按照Minecraft版本重新下载正确的版本。  (%s)
+# 显然，这条消息在游戏中并不会显示翻译。
+wdl.sanity.translation=Translation strings are not present!  All messages will be the untranslated keys (e.g. `wdl.sanity.translation'), including this one.  Please redownload the mod.  If this problem persists, file a bug report.  (%s)
+wdl.sanity.mixin=Mixins/base changes do not appear to have applied!  Many parts of the mod may be broken!  This might be caused by other mods overwriting the same files (e.g. optifine).  (%s)
+wdl.sanity.encoding=Code was not compiled with the proper encoding!  Various special characters may be broken.  (%s)
