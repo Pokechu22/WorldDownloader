@@ -217,7 +217,7 @@ abstract class WDLChunkLoaderBase extends ChunkLoader {
 		// XXX: These are new, and they might conflict with the other one.  Not sure which should be used.
 		if (chunk.getBlocksToBeTicked() instanceof SerializableTickList) {
 			compound.put("TileTicks", ((SerializableTickList<?>) chunk.getBlocksToBeTicked())
-					.func_219498_a(world.getGameTime()));
+					.save(world.getGameTime()));
 		}
 
 		if (chunk.getFluidsToBeTicked() instanceof ChunkPrimerTickList) {
@@ -226,7 +226,7 @@ abstract class WDLChunkLoaderBase extends ChunkLoader {
 
 		if (chunk.getFluidsToBeTicked() instanceof SerializableTickList) {
 			compound.put("LiquidTicks", ((SerializableTickList<?>) chunk.getFluidsToBeTicked())
-					.func_219498_a(world.getGameTime()));
+					.save(world.getGameTime()));
 		}
 
 		CompoundNBT heightMaps = new CompoundNBT();
