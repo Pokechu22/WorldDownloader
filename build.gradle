@@ -59,6 +59,9 @@ if (ENABLE_UNSTABLE_BUILDS) { // This builds without issue (apart from tests), b
 project(':1.15.0').evaluationDependsOn(':share')
 project(':1.15.1').evaluationDependsOn(':share')
 project(':1.15.2').evaluationDependsOn(':share')
+if (ENABLE_UNSTABLE_BUILDS) { // This builds without issue (apart from tests), but cannot be used easily
+    project(':1.15.2-forge').evaluationDependsOn(':1.15.2')
+}
 
 allprojects {
     tasks.withType(JavaCompile) {
