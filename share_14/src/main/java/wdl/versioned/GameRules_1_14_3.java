@@ -29,6 +29,10 @@ import com.mojang.brigadier.context.CommandContextBuilder;
 import com.mojang.brigadier.tree.CommandNode;
 
 import net.minecraft.command.CommandSource;
+import net.minecraft.command.ICommandSource;
+import net.minecraft.util.math.Vec2f;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.GameRules.IRuleEntryVisitor;
 import net.minecraft.world.GameRules.RuleKey;
@@ -43,6 +47,8 @@ import wdl.versioned.VersionedFunctions.GameRuleType;
 final class GameRuleFunctions {
 	private GameRuleFunctions() { throw new AssertionError(); }
 	private static final Logger LOGGER = LogManager.getLogger();
+	private static final CommandSource DUMMY_COMMAND_SOURCE =
+			new CommandSource(ICommandSource.DUMMY, Vec3d.ZERO, Vec2f.ZERO, null, 0, "", new StringTextComponent(""), null, null);
 
 	private static class RuleInfo<T extends GameRules.RuleValue<T>> {
 		public RuleInfo(RuleKey<T> key, RuleType<T> type) {
@@ -68,7 +74,7 @@ final class GameRuleFunctions {
 		// I'm not particularly happy about the lack of a public generalized string set method...
 		public void set(GameRules rules, String value) {
 			try {
-				CommandContextBuilder<CommandSource> ctxBuilder = new CommandContextBuilder<>(null, null, null, 0);
+				CommandContextBuilder<CommandSource> ctxBuilder = new CommandContextBuilder<>(null, DUMMY_COMMAND_SOURCE, null, 0);
 				StringReader reader = new StringReader(value);
 				this.commandNode.parse(reader, ctxBuilder);
 				rules.get(this.key).updateValue(ctxBuilder.build(value), "value");
