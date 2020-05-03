@@ -14,7 +14,7 @@ buildscript {
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
-        classpath 'pokechu22.test.begradle:begradle:0.2.3-SNAPSHOT:fg2'
+        classpath 'pokechu22.test.begradle:begradle:0.2.4-SNAPSHOT:fg2'
     }
 }
 
