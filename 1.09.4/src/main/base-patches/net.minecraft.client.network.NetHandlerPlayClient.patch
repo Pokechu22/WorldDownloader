@@ -7,9 +7,9 @@
 -public class NetHandlerPlayClient implements INetHandlerPlayClient {
 +public class NetHandlerPlayClient implements INetHandlerPlayClient/* WDL >>> */, wdl.ducks.IBaseChangesApplied/* <<< WDL */ {
  	private static final Logger LOGGER = LogManager.getLogger();
- 	private final NetworkManager netManager;
- 	private final GameProfile profile;
-@@ -672,6 +672,10 @@
+ 	/**
+ 	 * The NetworkManager instance used to communicate with the server, used to respond to various packets (primarilly
+@@ -691,6 +691,10 @@
  	}
  
  	public void processChunkUnload(SPacketUnloadChunk packetIn) {
@@ -20,7 +20,7 @@
  		PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.client);
  		this.world.doPreChunk(packetIn.getX(), packetIn.getZ(), false);
  	}
-@@ -695,6 +699,10 @@
+@@ -714,6 +718,10 @@
  	 * Invoked when disconnecting, the parameter is a ChatComponent describing the reason for termination
  	 */
  	public void onDisconnect(ITextComponent reason) {
@@ -31,7 +31,7 @@
  		this.client.loadWorld((WorldClient)null);
  
  		if (this.guiScreenServer != null) {
-@@ -744,6 +752,10 @@
+@@ -763,6 +771,10 @@
  		} else {
  			this.client.ingameGUI.getChatGUI().printChatMessage(packetIn.getChatComponent());
  		}
@@ -42,7 +42,7 @@
  	}
  
  	/**
-@@ -1098,6 +1110,10 @@
+@@ -1117,6 +1129,10 @@
  	public void handleBlockAction(SPacketBlockAction packetIn) {
  		PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.client);
  		this.client.world.addBlockEvent(packetIn.getBlockPosition(), packetIn.getBlockType(), packetIn.getData1(), packetIn.getData2());
@@ -53,7 +53,7 @@
  	}
  
  	/**
-@@ -1167,6 +1183,10 @@
+@@ -1186,6 +1202,10 @@
  		MapData mapdata = ItemMap.loadMapData(packetIn.getMapId(), this.client.world);
  		packetIn.setMapdataTo(mapdata);
  		this.client.gameRenderer.getMapItemRenderer().updateMapTexture(mapdata);
@@ -64,7 +64,7 @@
  	}
  
  	public void handleEffect(SPacketEffect packetIn) {
-@@ -1532,6 +1552,10 @@
+@@ -1551,6 +1571,10 @@
  			String s1 = packetbuffer2.readString(256);
  			this.client.getSoundHandler().func_189520_a(s1, SoundCategory.func_187950_a(s));
  		}

@@ -7,9 +7,9 @@
 -public class NetHandlerPlayClient implements INetHandlerPlayClient {
 +public class NetHandlerPlayClient implements INetHandlerPlayClient/* WDL >>> */, wdl.ducks.IBaseChangesApplied/* <<< WDL */ {
  	private static final Logger LOGGER = LogManager.getLogger();
- 	private final NetworkManager netManager;
- 	private final GameProfile profile;
-@@ -691,6 +691,10 @@
+ 	/**
+ 	 * The NetworkManager instance used to communicate with the server, used to respond to various packets (primarilly
+@@ -710,6 +710,10 @@
  	}
  
  	public void processChunkUnload(SPacketUnloadChunk packetIn) {
@@ -20,7 +20,7 @@
  		PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.client);
  		this.world.doPreChunk(packetIn.getX(), packetIn.getZ(), false);
  	}
-@@ -714,6 +718,10 @@
+@@ -733,6 +737,10 @@
  	 * Invoked when disconnecting, the parameter is a ChatComponent describing the reason for termination
  	 */
  	public void onDisconnect(ITextComponent reason) {
@@ -31,7 +31,7 @@
  		this.client.loadWorld((WorldClient)null);
  
  		if (this.guiScreenServer != null) {
-@@ -764,6 +772,10 @@
+@@ -783,6 +791,10 @@
  		} else {
  			this.client.ingameGUI.getChatGUI().printChatMessage(packetIn.getChatComponent());
  		}
@@ -42,7 +42,7 @@
  	}
  
  	/**
-@@ -1134,6 +1146,10 @@
+@@ -1153,6 +1165,10 @@
  	public void handleBlockAction(SPacketBlockAction packetIn) {
  		PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.client);
  		this.client.world.addBlockEvent(packetIn.getBlockPosition(), packetIn.getBlockType(), packetIn.getData1(), packetIn.getData2());
@@ -53,7 +53,7 @@
  	}
  
  	/**
-@@ -1220,6 +1236,10 @@
+@@ -1239,6 +1255,10 @@
  
  		packetIn.setMapdataTo(mapdata);
  		mapitemrenderer.updateMapTexture(mapdata);
@@ -64,7 +64,7 @@
  	}
  
  	public void handleEffect(SPacketEffect packetIn) {
-@@ -1597,6 +1617,10 @@
+@@ -1616,6 +1636,10 @@
  			String s1 = packetbuffer2.readString(256);
  			this.client.getSoundHandler().func_189520_a(s1, SoundCategory.func_187950_a(s));
  		}

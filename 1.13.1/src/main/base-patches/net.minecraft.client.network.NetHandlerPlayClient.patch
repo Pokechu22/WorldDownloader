@@ -7,9 +7,9 @@
 -public class NetHandlerPlayClient implements INetHandlerPlayClient {
 +public class NetHandlerPlayClient implements INetHandlerPlayClient/* WDL >>> */, wdl.ducks.IBaseChangesApplied/* <<< WDL */ {
  	private static final Logger LOGGER = LogManager.getLogger();
- 	private final NetworkManager netManager;
- 	private final GameProfile profile;
-@@ -739,6 +739,10 @@
+ 	/**
+ 	 * The NetworkManager instance used to communicate with the server, used to respond to various packets (primarilly
+@@ -758,6 +758,10 @@
  	}
  
  	public void processChunkUnload(SPacketUnloadChunk packetIn) {
@@ -20,7 +20,7 @@
  		PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.client);
  		int i = packetIn.getX();
  		int j = packetIn.getZ();
-@@ -765,6 +769,10 @@
+@@ -784,6 +788,10 @@
  	 * Invoked when disconnecting, the parameter is a ChatComponent describing the reason for termination
  	 */
  	public void onDisconnect(ITextComponent reason) {
@@ -31,7 +31,7 @@
  		this.client.loadWorld((WorldClient)null);
  
  		if (this.guiScreenServer != null) {
-@@ -813,6 +821,10 @@
+@@ -832,6 +840,10 @@
  	public void handleChat(SPacketChat packetIn) {
  		PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.client);
  		this.client.ingameGUI.addChatMessage(packetIn.getType(), packetIn.getChatComponent());
@@ -42,7 +42,7 @@
  	}
  
  	/**
-@@ -1185,6 +1197,10 @@
+@@ -1204,6 +1216,10 @@
  	public void handleBlockAction(SPacketBlockAction packetIn) {
  		PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.client);
  		this.client.world.addBlockEvent(packetIn.getBlockPosition(), packetIn.getBlockType(), packetIn.getData1(), packetIn.getData2());
@@ -53,7 +53,7 @@
  	}
  
  	/**
-@@ -1277,6 +1293,10 @@
+@@ -1296,6 +1312,10 @@
  
  		packetIn.setMapdataTo(mapdata);
  		mapitemrenderer.updateMapTexture(mapdata);
@@ -64,7 +64,7 @@
  	}
  
  	public void handleEffect(SPacketEffect packetIn) {
-@@ -1783,7 +1803,10 @@
+@@ -1802,7 +1822,10 @@
  				((DebugRendererWorldGenAttempts)this.client.debugRenderer.worldGenAttempts).addAttempt(packetbuffer.readBlockPos(), packetbuffer.readFloat(), packetbuffer.readFloat(), packetbuffer.readFloat(), packetbuffer.readFloat(), packetbuffer.readFloat());
  				LOGGER.warn("Unknown custom packed identifier: {}", (Object)resourcelocation);
  			} else {

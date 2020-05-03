@@ -7,9 +7,9 @@
 -public class NetHandlerPlayClient implements INetHandlerPlayClient {
 +public class NetHandlerPlayClient implements INetHandlerPlayClient/* WDL >>> */, wdl.ducks.IBaseChangesApplied/* <<< WDL */ {
  	private static final Logger LOGGER = LogManager.getLogger();
- 	private final NetworkManager netManager;
- 	private final GameProfile profile;
-@@ -704,6 +704,10 @@
+ 	/**
+ 	 * The NetworkManager instance used to communicate with the server, used to respond to various packets (primarilly
+@@ -723,6 +723,10 @@
  	}
  
  	public void processChunkUnload(SPacketUnloadChunk packetIn) {
@@ -20,7 +20,7 @@
  		PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.client);
  		this.world.doPreChunk(packetIn.getX(), packetIn.getZ(), false);
  	}
-@@ -727,6 +731,10 @@
+@@ -746,6 +750,10 @@
  	 * Invoked when disconnecting, the parameter is a ChatComponent describing the reason for termination
  	 */
  	public void onDisconnect(ITextComponent reason) {
@@ -31,7 +31,7 @@
  		this.client.loadWorld((WorldClient)null);
  
  		if (this.guiScreenServer != null) {
-@@ -775,6 +783,10 @@
+@@ -794,6 +802,10 @@
  	public void handleChat(SPacketChat packetIn) {
  		PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.client);
  		this.client.ingameGUI.addChatMessage(packetIn.getType(), packetIn.getChatComponent());
@@ -42,7 +42,7 @@
  	}
  
  	/**
-@@ -1146,6 +1158,10 @@
+@@ -1165,6 +1177,10 @@
  	public void handleBlockAction(SPacketBlockAction packetIn) {
  		PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.client);
  		this.client.world.addBlockEvent(packetIn.getBlockPosition(), packetIn.getBlockType(), packetIn.getData1(), packetIn.getData2());
@@ -53,7 +53,7 @@
  	}
  
  	/**
-@@ -1234,6 +1250,10 @@
+@@ -1253,6 +1269,10 @@
  
  		packetIn.setMapdataTo(mapdata);
  		mapitemrenderer.updateMapTexture(mapdata);
@@ -64,7 +64,7 @@
  	}
  
  	public void handleEffect(SPacketEffect packetIn) {
-@@ -1656,6 +1676,10 @@
+@@ -1675,6 +1695,10 @@
  			String s1 = packetbuffer3.readString(256);
  			this.client.getSoundHandler().func_189520_a(s1, SoundCategory.func_187950_a(s));
  		}

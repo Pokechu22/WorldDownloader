@@ -7,9 +7,9 @@
 -public class NetHandlerPlayClient implements INetHandlerPlayClient {
 +public class NetHandlerPlayClient implements INetHandlerPlayClient/* WDL >>> */, wdl.ducks.IBaseChangesApplied/* <<< WDL */ {
  	private static final Logger LOGGER = LogManager.getLogger();
- 	private final NetworkManager netManager;
- 	private final GameProfile profile;
-@@ -662,6 +662,10 @@
+ 	/**
+ 	 * The NetworkManager instance used to communicate with the server, used to respond to various packets (primarilly
+@@ -681,6 +681,10 @@
  	}
  
  	public void processChunkUnload(SPacketUnloadChunk packetIn) {
@@ -20,7 +20,7 @@
  		PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.client);
  		this.world.doPreChunk(packetIn.getX(), packetIn.getZ(), false);
  	}
-@@ -685,6 +689,10 @@
+@@ -704,6 +708,10 @@
  	 * Invoked when disconnecting, the parameter is a ChatComponent describing the reason for termination
  	 */
  	public void onDisconnect(ITextComponent reason) {
@@ -31,7 +31,7 @@
  		this.client.loadWorld((WorldClient)null);
  
  		if (this.guiScreenServer != null) {
-@@ -734,6 +742,10 @@
+@@ -753,6 +761,10 @@
  		} else {
  			this.client.ingameGUI.getChatGUI().printChatMessage(packetIn.getChatComponent());
  		}
@@ -42,7 +42,7 @@
  	}
  
  	/**
-@@ -1112,6 +1124,10 @@
+@@ -1131,6 +1143,10 @@
  	public void handleBlockAction(SPacketBlockAction packetIn) {
  		PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.client);
  		this.client.world.addBlockEvent(packetIn.getBlockPosition(), packetIn.getBlockType(), packetIn.getData1(), packetIn.getData2());
@@ -53,7 +53,7 @@
  	}
  
  	/**
-@@ -1181,6 +1197,10 @@
+@@ -1200,6 +1216,10 @@
  		MapData mapdata = ItemMap.loadMapData(packetIn.getMapId(), this.client.world);
  		packetIn.setMapdataTo(mapdata);
  		this.client.gameRenderer.getMapItemRenderer().updateMapTexture(mapdata);
@@ -64,7 +64,7 @@
  	}
  
  	public void handleEffect(SPacketEffect packetIn) {
-@@ -1541,6 +1561,10 @@
+@@ -1560,6 +1580,10 @@
  			PathEntity pathentity = PathEntity.read(packetbuffer1);
  			this.client.debugRenderer.pathfinding.addPath(j, pathentity, f);
  		}

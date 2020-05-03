@@ -7,9 +7,9 @@
 -public class ClientPlayNetHandler implements IClientPlayNetHandler {
 +public class ClientPlayNetHandler implements IClientPlayNetHandler/* WDL >>> */, wdl.ducks.IBaseChangesApplied/* <<< WDL */ {
     private static final Logger LOGGER = LogManager.getLogger();
-    private final NetworkManager netManager;
-    private final GameProfile profile;
-@@ -775,6 +775,10 @@
+    /**
+     * The NetworkManager instance used to communicate with the server, used to respond to various packets (primarilly
+@@ -794,6 +794,10 @@
     }
  
     public void processChunkUnload(SUnloadChunkPacket packetIn) {
@@ -20,7 +20,7 @@
        PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.client);
        int i = packetIn.getX();
        int j = packetIn.getZ();
-@@ -809,6 +813,10 @@
+@@ -828,6 +832,10 @@
      * Invoked when disconnecting, the parameter is a ChatComponent describing the reason for termination
      */
     public void onDisconnect(ITextComponent reason) {
@@ -31,7 +31,7 @@
        this.client.unloadWorld();
        if (this.guiScreenServer != null) {
           if (this.guiScreenServer instanceof RealmsScreenProxy) {
-@@ -857,6 +865,10 @@
+@@ -876,6 +884,10 @@
     public void handleChat(SChatPacket packetIn) {
        PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.client);
        this.client.ingameGUI.addChatMessage(packetIn.getType(), packetIn.getChatComponent());
@@ -42,7 +42,7 @@
     }
  
     /**
-@@ -1230,6 +1242,10 @@
+@@ -1249,6 +1261,10 @@
     public void handleBlockAction(SBlockActionPacket packetIn) {
        PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.client);
        this.client.world.addBlockEvent(packetIn.getBlockPosition(), packetIn.getBlockType(), packetIn.getData1(), packetIn.getData2());
@@ -53,7 +53,7 @@
     }
  
     /**
-@@ -1318,6 +1334,10 @@
+@@ -1337,6 +1353,10 @@
  
        packetIn.setMapdataTo(mapdata);
        mapitemrenderer.updateMapTexture(mapdata);
@@ -64,7 +64,7 @@
     }
  
     public void handleEffect(SPlaySoundEventPacket packetIn) {
-@@ -1897,7 +1917,10 @@
+@@ -1916,7 +1936,10 @@
  
              this.client.debugRenderer.field_217741_m.func_217692_a(pointofinterestdebugrenderer$braininfo);
           } else {
