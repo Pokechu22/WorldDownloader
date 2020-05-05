@@ -5,6 +5,6 @@
  public class ClientBrandRetriever {
  	public static String getClientModName() {
 -		return "vanilla";
-+		return "WorldDownloader-" + wdl.VersionConstants.getModVersion();
++		return "WorldDownloader-" + wdl.VersionConstants.getModVersion() + "-mc" + wdl.VersionConstants.getExpectedVersion();
  	}
  }
