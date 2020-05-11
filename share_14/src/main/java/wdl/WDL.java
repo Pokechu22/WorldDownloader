@@ -1558,8 +1558,9 @@ public class WDL {
 	 * the user is warned in chat.
 	 *
 	 * @see SanityCheck
+	 * @return false if any sanity checks failed; true otherwise.
 	 */
-	private void runSanityCheck() {
+	public boolean runSanityCheck() {
 		Map<SanityCheck, Exception> failures = Maps.newEnumMap(SanityCheck.class);
 
 		for (SanityCheck check : SanityCheck.values()) {
@@ -1589,7 +1590,9 @@ public class WDL {
 				}
 				WDLMessages.chatMessage(WDL.serverProps, WDLMessageTypes.ERROR, "Please check the log for more info.");
 			}
+			return false;
 		}
+		return true;
 	}
 
 	/**
