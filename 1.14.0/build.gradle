@@ -154,12 +154,12 @@ sourceSets {
             compileClasspath += api.output
             runtimeClasspath += api.output
             srcDir project(':share_14').file("src/test/java")
+            exclude "wdl/MixinTest.java"
             exclude "wdl/DelegateChunkManager_1_14_3.java"
             exclude "wdl/DelegateChunkManager_1_14_4.java"
             exclude "wdl/ExtWorld_1_14_4.java"
             exclude "wdl/ExtWorld_1_15.java"
-            exclude "wdl/lwts/WDLTestTweaker_1_9.java"
-            exclude "wdl/lwts/WDLTestTweaker_1_10.java"
+            exclude "wdl/lwts/WDLTestTweaker_Forge.java"
             exclude "wdl/lwts/WDLTestTweaker.java"
         }
     }

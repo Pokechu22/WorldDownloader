@@ -13,24 +13,22 @@
  */
 package wdl;
 
-import org.junit.BeforeClass;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 import org.spongepowered.lwts.runner.DelegateRunner.DelegatedRunWith;
+import org.spongepowered.lwts.runner.LaunchWrapperDelegateRunner;
 
 /**
  * This is a more or less empty class that is used to specify the runner that
- * JUnit should use, for tests that rely upon mixins or base changes. It also
- * initializes the bootstrap, and sets up language stuff.
+ * JUnit should use.
+ *
+ * The only purpose is to make use of the {@link RunWith @RunWith} annotation,
+ * which is inherited into subclasses.
  *
  * Subclasses can use {@link DelegatedRunWith @DelegatedRunWith} to specify a
  * different runner.
- *
- * This version specifically is responsible for making the class public.
  */
-public abstract class MaybeMixinTest extends MaybeMixinTestBase {
-	// This method needs to exist because junit can't call methods from non-public
-	// classes, even if inherited via a public class
-	@BeforeClass
-	public static void init() {
-		TestBootstrap.init();
-	}
+@RunWith(LaunchWrapperDelegateRunner.class)
+@DelegatedRunWith(JUnit4.class)
+abstract class MaybeMixinTestBase {
 }

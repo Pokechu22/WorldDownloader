@@ -3,7 +3,7 @@
 /build/
 /logs/
 /run/
-/src/main/base
+/.mixin.out/
 
 # Eclipse
 .project

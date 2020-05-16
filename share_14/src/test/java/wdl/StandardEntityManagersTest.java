@@ -3,7 +3,7 @@
  * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2018 Pokechu22, julialy
+ * Copyright (c) 2018-2020 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -23,9 +23,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+import org.spongepowered.lwts.runner.DelegateRunner.DelegatedRunWith;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
@@ -35,12 +35,8 @@ import net.minecraft.entity.EntityType;
 /**
  * Tests the data contained within StandardEntityManagers.
  */
-@RunWith(Parameterized.class)
-public class StandardEntityManagersTest {
-	static {
-		MaybeMixinTest.init();
-	}
-
+@DelegatedRunWith(Parameterized.class)
+public class StandardEntityManagersTest extends MaybeMixinTest {
 	@Parameters(name="{0}")
 	public static List<Object[]> data() {
 		return StandardEntityManagers.VANILLA.getProvidedEntities().stream()
