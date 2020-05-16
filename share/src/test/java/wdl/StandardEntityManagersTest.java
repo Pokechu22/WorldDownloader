@@ -23,9 +23,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+import org.spongepowered.lwts.runner.DelegateRunner.DelegatedRunWith;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityTracker;
@@ -34,8 +34,8 @@ import net.minecraft.world.World;
 /**
  * Tests the data contained within StandardEntityManagers.
  */
-@RunWith(Parameterized.class)
-public class StandardEntityManagersTest {
+@DelegatedRunWith(Parameterized.class)
+public class StandardEntityManagersTest extends MaybeMixinTest {
 	static {
 		MaybeMixinTest.init();
 	}

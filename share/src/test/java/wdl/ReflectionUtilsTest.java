@@ -25,7 +25,7 @@ import net.minecraft.inventory.ContainerPlayer;
 
 import org.junit.Test;
 
-public class ReflectionUtilsTest {
+public class ReflectionUtilsTest extends MaybeMixinTest {
 
 	@Test
 	public void testPrimitives() {

@@ -48,7 +48,7 @@ import wdl.versioned.VersionedFunctions;
  * Tests all situations where {@link ReflectionUtils} is used, to verify that
  * the field exists.
  */
-public class ReflectionUtilsUsageTest {
+public class ReflectionUtilsUsageTest extends MaybeMixinTest {
 
 	/** Handles {@link WDL#crashed(Throwable, String)} */
 	@Test

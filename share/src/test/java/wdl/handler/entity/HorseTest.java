@@ -22,9 +22,9 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+import org.spongepowered.lwts.runner.DelegateRunner.DelegatedRunWith;
 
 import net.minecraft.entity.passive.EquineEntity;
 import net.minecraft.init.Blocks;
@@ -38,7 +38,7 @@ import wdl.ReflectionUtils;
 import wdl.VersionConstants;
 import wdl.handler.HandlerException;
 
-@RunWith(Parameterized.class)
+@DelegatedRunWith(Parameterized.class)
 public class HorseTest<T extends EquineEntity> extends AbstractEntityHandlerTest<T, ContainerHorseInventory, HorseHandler> {
 	private static enum HorseType {
 		HORSE("minecraft:horse", "net.minecraft.entity.passive.EntityHorse", 0, false),
