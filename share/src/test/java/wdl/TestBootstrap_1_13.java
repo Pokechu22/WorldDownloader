@@ -19,12 +19,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraft.client.resources.LanguageManager;
-import net.minecraft.client.resources.ResourceIndex;
-import net.minecraft.client.resources.VirtualAssetsPack;
 import net.minecraft.init.Bootstrap;
 import net.minecraft.resources.IResourcePack;
 import net.minecraft.resources.ResourcePackType;
 import net.minecraft.resources.SimpleReloadableResourceManager;
+import net.minecraft.resources.VanillaPack;
 
 /**
  * This class initializes Minecraft's bootstrap and language files.
@@ -53,7 +52,7 @@ final class TestBootstrap {
 		// (some tests depend on it)
 		LanguageManager languageManager = new LanguageManager("en_us");
 		SimpleReloadableResourceManager resourceManager = new SimpleReloadableResourceManager(ResourcePackType.CLIENT_RESOURCES);
-		IResourcePack pack = new VirtualAssetsPack(new ResourceIndex() {}); // needs modified VirtualAssetsPack, I think
+		IResourcePack pack = new VanillaPack("minecraft", "realms", "wdl");
 		resourceManager.addResourcePack(pack);
 		languageManager.onResourceManagerReload(resourceManager);
 		try {
