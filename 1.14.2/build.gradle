@@ -31,10 +31,15 @@ apply plugin: 'pokechu22.test.begradle'
 apply plugin: 'pokechu22.test.langrenamer'
 //apply plugin: 'pokechu22.test.noinplacereobf'
 
+repositories {
+    mavenLocal()
+}
+
 dependencies {
     testCompile 'junit:junit:4.12'
     testCompile 'org.hamcrest:hamcrest-library:1.3'
     testCompile 'org.mockito:mockito-core:2.22.0'
+    testCompile('org.spongepowered:lwts:1.1.0-pokechu22') { transitive = false }
     // Make sure that we have the Minecraft deps, at the correct versions
     // testCompile configurations.forgeGradleMcDeps
 }
