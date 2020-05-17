@@ -36,18 +36,26 @@ public class WDLForgeMod {
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 
-	private boolean ranSanityChecks = false;
 	private static final String MIXIN_BOOTSTRAP_LINK = "https://www.curseforge.com/minecraft/mc-mods/mixinbootstrap";
 
 	/**
-	 * Perform a one-time sanity check to make sure mixins were set up properly,
-	 * since if they weren't, the sanity checks won't run otherwise since the
-	 * download button doesn't exist.
+	 * Perform a sanity check on world load to make sure mixins were set up
+	 * properly, since if they weren't, the sanity checks won't run otherwise since
+	 * the download button doesn't exist.
 	 */
 	@SubscribeEvent
 	public void onWorldLoad(WorldEvent.Load event) {
-		if (!ranSanityChecks) {
-			ranSanityChecks = true;
+		new Thread(this::runSanityCheck, "WDL startup sanity check").start();
+	}
+
+	private void runSanityCheck() {
+		try {
+			// Wait to ensure that the message isn't hidden behind server join messages
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+		}
+
+		Minecraft.getInstance().enqueue(() -> {
 			if (!WDL.getInstance().runSanityCheck()) {
 				// This message might not be relevant for other sanity checks,
 				// but the mixin sanity checks are the most likely ones to fail.
@@ -55,13 +63,13 @@ public class WDLForgeMod {
 				ITextComponent helpMessage = new StringTextComponent("If base changes are missing, make sure ");
 				ITextComponent helpMessage2 = new StringTextComponent("MixinBootstrap");
 				helpMessage2.getStyle().setColor(TextFormatting.BLUE).setUnderlined(true)
-				.setClickEvent(new ClickEvent(Action.OPEN_URL, MIXIN_BOOTSTRAP_LINK));
+						.setClickEvent(new ClickEvent(Action.OPEN_URL, MIXIN_BOOTSTRAP_LINK));
 				helpMessage.appendSibling(helpMessage2);
 				ITextComponent helpMessage3 = new StringTextComponent(" is installed.");
 				helpMessage.appendSibling(helpMessage3);
 
 				WDLMessages.chatMessage(WDL.serverProps, WDLMessageTypes.ERROR, helpMessage);
 			}
-		}
+		});
 	}
 }
