@@ -3,7 +3,7 @@
  * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2018 Pokechu22, julialy
+ * Copyright (c) 2018-2020 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -150,14 +150,15 @@ public abstract class AbstractEntityHandlerTest<E extends Entity, C extends Cont
 	 * Makes a container as the client would have.
 	 *
 	 * @param serverEntity The entity as present on the server.
+	 * @param sneak True if the player needs to be sneaking to open the entity's inventory.
 	 */
-	protected Container createClientContainer(Entity serverEntity) {
+	protected Container createClientContainer(Entity serverEntity, boolean sneak) {
 		// Precondition for this to make sense
 		int eid = serverEntity.getEntityId();
 		assertThat("Entity is not known to the server!", serverWorld.getEntityByID(eid), is(serverEntity));
 		assertThat("Entity is not known to the client!", clientWorld.getEntityByID(eid), is(notNullValue()));
 
-		serverPlayer.setSneaking(true);
+		serverPlayer.setSneaking(sneak);
 		serverPlayer.closeScreen();
 		assertSame("Should have reset server open container", serverPlayer.openContainer, serverPlayer.container);
 		assertSame("Should have reset client open container", clientPlayer.openContainer, clientPlayer.container);

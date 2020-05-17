@@ -171,7 +171,7 @@ public class HorseTest<T extends AbstractHorseEntity> extends AbstractEntityHand
 		}
 		addEntity(horse);
 
-		runHandler(horse.getEntityId(), createClientContainer(horse));
+		runHandler(horse.getEntityId(), createClientContainer(horse, true));
 
 		checkAllEntities();
 	}

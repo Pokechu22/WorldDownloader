@@ -3,7 +3,7 @@
  * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2018 Pokechu22, julialy
+ * Copyright (c) 2018-2020 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -49,7 +49,7 @@ public class VillagerTest extends AbstractEntityHandlerTest<EntityVillager, Cont
 		villager.setOffers(recipes);
 		addEntity(villager);
 
-		runHandler(villager.getEntityId(), createClientContainer(villager));
+		runHandler(villager.getEntityId(), createClientContainer(villager, false));
 		checkAllEntities();
 	}
 
@@ -67,7 +67,7 @@ public class VillagerTest extends AbstractEntityHandlerTest<EntityVillager, Cont
 
 		HandlerException ex = null;
 		try {
-			runHandler(villager.getEntityId(), createClientContainer(villager));
+			runHandler(villager.getEntityId(), createClientContainer(villager, false));
 		} catch (HandlerException e) {
 			// Should throw an exception due to the custom name.
 			ex = e;
@@ -114,7 +114,7 @@ public class VillagerTest extends AbstractEntityHandlerTest<EntityVillager, Cont
 				VillagerHandler.CAREER_LEVEL_FIELD.setInt(villager, 1);
 				addEntity(villager);
 
-				runHandler(villager.getEntityId(), createClientContainer(villager));
+				runHandler(villager.getEntityId(), createClientContainer(villager, false));
 
 				checkAllEntities();
 				// Verify the career was also saved correctly.
