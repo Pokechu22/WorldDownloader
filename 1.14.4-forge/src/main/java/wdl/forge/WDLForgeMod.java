@@ -64,7 +64,7 @@ public class WDLForgeMod {
 				helpMessage2.getStyle().setColor(TextFormatting.BLUE).setUnderlined(true)
 						.setClickEvent(new ClickEvent(Action.OPEN_URL, MIXIN_BOOTSTRAP_LINK));
 				helpMessage.appendSibling(helpMessage2);
-				ITextComponent helpMessage3 = new StringTextComponent(" is installed.");
+				ITextComponent helpMessage3 = new StringTextComponent(" is installed and Forge 28.1.45 or newer is in use.");
 				helpMessage.appendSibling(helpMessage3);
 
 				WDLMessages.chatMessage(WDL.serverProps, WDLMessageTypes.ERROR, helpMessage);
