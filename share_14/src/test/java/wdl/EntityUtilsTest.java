@@ -3,7 +3,7 @@
  * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2018-2019 Pokechu22, julialy
+ * Copyright (c) 2018-2020 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -19,10 +19,12 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.Executor;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.IntFunction;
@@ -131,7 +133,7 @@ public class EntityUtilsTest extends MaybeMixinTest {
 				.stream(MockableChunkManager.CHUNK_MANAGER_CLASS.getDeclaredClasses())
 				.filter(MockableChunkManager.TICKET_MANAGER_CLASS::isAssignableFrom)
 				.findAny().get();
-		setToMock(tracker, MockableChunkManager.CHUNK_MANAGER_CLASS, ticketManagerClass);
+		setTicketManager(tracker, MockableChunkManager.CHUNK_MANAGER_CLASS, ticketManagerClass);
 		Long2ObjectLinkedOpenHashMap<?> chunkHolders1 = new Long2ObjectLinkedOpenHashMap<>();
 		ReflectionUtils.findAndSetPrivateField(tracker, MockableChunkManager.CHUNK_MANAGER_CLASS, Long2ObjectLinkedOpenHashMap.class, chunkHolders1);
 		Int2ObjectMap<?> trackerTrackedEntities = new Int2ObjectOpenHashMap<>();
@@ -170,9 +172,31 @@ public class EntityUtilsTest extends MaybeMixinTest {
 		world.close();
 	}
 
-	// Needed for silly wildcard reasons...
-	private static <A, B> void setToMock(A a, Class<A> aClass, Class<B> mockClass) {
-		B b = mock(mockClass);
-		ReflectionUtils.findAndSetPrivateField(a, aClass, mockClass, b);
+	/**
+	 * This method exists because the actual types are unknown (and thus local
+	 * variables are awkward to use normally), but generics let us get away this.
+	 *
+	 * @param <T_ChunkManager>       Inferred class for ChunkManager
+	 * @param <T_ProxyTicketManager> Inferred subclass of TicketManager
+	 * @param chunkManager           ChunkManager instance
+	 * @param chunkManagerClass      Class for ChunkManager
+	 * @param ticketManagerClass     Class for TicketManager (specifically the
+	 *                               ProxyClassManager inner class)
+	 */
+	private static <T_ChunkManager, T_ProxyTicketManager> void setTicketManager(T_ChunkManager chunkManager,
+			Class<T_ChunkManager> chunkManagerClass, Class<T_ProxyTicketManager> ticketManagerClass) throws Exception {
+		// Unfortunately Mockito doesn't like mocking non-public classes when used with
+		// LWTS, so we need to use the constructor directly.
+		// The first ChunkManager parameter is synthetic.
+		Constructor<T_ProxyTicketManager> constructor = ticketManagerClass.getDeclaredConstructor(chunkManagerClass,
+				Executor.class, Executor.class);
+		constructor.setAccessible(true);
+		// We can't just ignore the tasks, as even during the constructor it's expected
+		// that they run.
+		// Just executing them on the same thread seems to be fine though.
+		Executor executor = Runnable::run;
+		T_ProxyTicketManager ticketManager = constructor.newInstance(chunkManager, executor, executor);
+
+		ReflectionUtils.findAndSetPrivateField(chunkManager, chunkManagerClass, ticketManagerClass, ticketManager);
 	}
 }

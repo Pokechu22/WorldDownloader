@@ -23,9 +23,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-import org.spongepowered.lwts.runner.LaunchWrapperParameterized;
+import org.spongepowered.lwts.runner.DelegateRunner.DelegatedRunWith;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
@@ -36,7 +36,7 @@ import wdl.TestWorld.MockableChunkManager;
 /**
  * Tests the data contained within StandardEntityManagers.
  */
-@RunWith(LaunchWrapperParameterized.class)
+@DelegatedRunWith(Parameterized.class)
 public class StandardEntityManagersTest extends MaybeMixinTest {
 	@Parameters(name="{0}")
 	public static List<Object[]> data() {
