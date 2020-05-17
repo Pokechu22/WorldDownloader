@@ -98,4 +98,29 @@ public final class TestWorld {
 		public void close() { }
 	}
 
+	/**
+	 * A chunk manager that has public methods and a functioning constructor.
+	 * Intended to be mocked.
+	 */
+	public static class MockableChunkManager extends MockableChunkManagerBase {
+		@Override
+		public void setViewDistance(int viewDistance) {
+			super.setViewDistance(viewDistance);
+		}
+
+		@Override
+		public void track(Entity entityIn) {
+			super.track(entityIn);
+		}
+
+		@Override
+		public void untrack(Entity entityIn) {
+			super.untrack(entityIn);
+		}
+
+		@Override
+		public void tickEntityTracker() {
+			super.tickEntityTracker();
+		}
+	}
 }

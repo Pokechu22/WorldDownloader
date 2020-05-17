@@ -23,19 +23,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.junit.Test;
-import org.junit.runners.Parameterized;
+import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized.Parameters;
-import org.spongepowered.lwts.runner.DelegateRunner.DelegatedRunWith;
+import org.spongepowered.lwts.runner.LaunchWrapperParameterized;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import wdl.TestWorld.MockableChunkManager;
 
 /**
  * Tests the data contained within StandardEntityManagers.
  */
-@DelegatedRunWith(Parameterized.class)
+@RunWith(LaunchWrapperParameterized.class)
 public class StandardEntityManagersTest extends MaybeMixinTest {
 	@Parameters(name="{0}")
 	public static List<Object[]> data() {

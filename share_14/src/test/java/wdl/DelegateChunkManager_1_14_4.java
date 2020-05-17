@@ -19,46 +19,28 @@ import java.util.function.Supplier;
 
 import com.mojang.datafixers.DataFixer;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraft.world.server.TicketManager;
-import net.minecraft.world.server.ChunkManager;
-import net.minecraft.world.server.ServerChunkProvider;
 import net.minecraft.world.chunk.listener.IChunkStatusListener;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.feature.template.TemplateManager;
+import net.minecraft.world.server.ChunkManager;
+import net.minecraft.world.server.ServerChunkProvider;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.server.TicketManager;
 import net.minecraft.world.storage.DimensionSavedDataManager;
 
 /**
- * A chunk manager that has public methods and a functioning constructor.
- * Intended to be mocked.
+ * A chunk manager that a functioning no-arg constructor. Has a subclass that
+ * can be mocked. It needs to be public (and have public methods there) for
+ * mockito to work with when using LWTS, though that requirement doesn't exist
+ * when LWTS is not in use.
  */
-class MockableChunkManager extends ChunkManager {
-	public static final Class<? super MockableChunkManager> CHUNK_MANAGER_CLASS = ChunkManager.class;
+abstract class MockableChunkManagerBase extends ChunkManager {
+	public static final Class<? super MockableChunkManagerBase> CHUNK_MANAGER_CLASS = ChunkManager.class;
+	// This changed packages in 1.14.4
 	public static final Class<?> TICKET_MANAGER_CLASS = TicketManager.class;
 
-	public MockableChunkManager() {
+	public MockableChunkManagerBase() {
 		super(null, null, null, null, null, null, null, null, null, null, 0);
-	}
-
-	@Override
-	public void setViewDistance(int viewDistance) {
-		super.setViewDistance(viewDistance);
-	}
-
-	@Override
-	public void track(Entity entityIn) {
-		super.track(entityIn);
-	}
-
-	@Override
-	public void untrack(Entity entityIn) {
-		super.untrack(entityIn);
-	}
-
-	@Override
-	public void tickEntityTracker() {
-		super.tickEntityTracker();
 	}
 }
 

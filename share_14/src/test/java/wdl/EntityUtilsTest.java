@@ -13,8 +13,8 @@
  */
 package wdl;
 
-import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -43,6 +43,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.play.ServerPlayNetHandler;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import wdl.TestWorld.MockableChunkManager;
 import wdl.versioned.VersionedFunctions;
 
 /**
