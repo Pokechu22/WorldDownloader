@@ -784,7 +784,8 @@ public class WDLEvents {
 		public void onNHPCDisconnect(ClientPlayNetHandler sender, ITextComponent reason) {
 			if (WDL.downloading) {
 				// This is likely to be called from an unexpected thread, so queue a task
-				wdl.minecraft.enqueue(wdl::stopDownload);
+				// if on a different thread (execute will run it immediately if on the right thread)
+				wdl.minecraft.execute(wdl::stopDownload);
 
 				// This code was present on older versions of WDL which weren't missing
 				// the onDisconnect handler before.
