@@ -780,7 +780,7 @@ public class WDLEvents {
 			if (WDL.downloading) {
 				// This is likely to be called from an unexpected thread, so queue a task
 				// if on a different thread (execute will run it immediately if on the right thread)
-				Minecraft.getInstance().enqueue(wdl::stopDownload); // XXX backport name execute instead of enqueue
+				Minecraft.getInstance().execute(wdl::stopDownload);
 
 				// This code was present on older versions of WDL which weren't missing
 				// the onDisconnect handler before.

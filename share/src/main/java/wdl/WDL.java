@@ -505,7 +505,7 @@ public class WDL {
 		Thread thread = new Thread(() -> {
 			try {
 				saveEverything();
-				minecraft.enqueue(() -> {
+				minecraft.execute(() -> {
 					WDL.saving = false;
 					onSaveComplete();
 				});
@@ -627,7 +627,7 @@ public class WDL {
 		// Schedule this as a task to avoid threading issues.
 		// If directly displayed, in some rare cases the GUI will be drawn before it has been
 		// initialized, causing a crash.  Using a task stops that.
-		minecraft.enqueue(() -> { minecraft.displayGuiScreen(progressScreen); });
+		minecraft.execute(() -> { minecraft.displayGuiScreen(progressScreen); });
 
 		saveProps();
 

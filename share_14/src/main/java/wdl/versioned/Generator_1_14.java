@@ -3,7 +3,7 @@
  * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2018 Pokechu22, julialy
+ * Copyright (c) 2018-2020 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -153,7 +153,7 @@ final class GeneratorFunctions {
 	 */
 	static void makeBackupToast(String name, long fileSize) {
 		// See GuiWorldEdit.createBackup
-		Minecraft.getInstance().enqueue(() -> {
+		Minecraft.getInstance().execute(() -> {
 			ToastGui guitoast = Minecraft.getInstance().getToastGui();
 			ITextComponent top = new TranslationTextComponent("selectWorld.edit.backupCreated", name);
 			ITextComponent bot = new TranslationTextComponent("selectWorld.edit.backupSize", MathHelper.ceil(fileSize / 1048576.0));
@@ -167,7 +167,7 @@ final class GeneratorFunctions {
 	static void makeBackupFailedToast(IOException ex) {
 		// See GuiWorldEdit.createBackup
 		String message = ex.getMessage();
-		Minecraft.getInstance().enqueue(() -> {
+		Minecraft.getInstance().execute(() -> {
 			ToastGui guitoast = Minecraft.getInstance().getToastGui();
 			// NOTE: vanilla translation string was missing (MC-137308) until 1.14
 			ITextComponent top = new TranslationTextComponent("wdl.toast.backupFailed");

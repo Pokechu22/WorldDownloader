@@ -502,7 +502,7 @@ public class WDL {
 		Thread thread = new Thread(() -> {
 			try {
 				saveEverything();
-				minecraft.enqueue(() -> {
+				minecraft.execute(() -> {
 					WDL.saving = false;
 					onSaveComplete();
 				});
