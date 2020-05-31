@@ -14,9 +14,6 @@
  */
 package com.uyjulian.LiteModWDL;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import net.minecraft.client.Minecraft;
@@ -32,50 +29,40 @@ import wdl.WDLHooks;
  */
 public class PassCustomPayloadHandler extends SimpleChannelInboundHandler<Packet<?>> {
 
-	private static final Logger LOGGER = LogManager.getLogger();
 	private final Minecraft mc;
 	private final NetHandlerPlayClient nhpc;
-	private boolean firstRead = true;
+	/**
+	 * If true, on the next packet we will check whether the FML handler is present,
+	 * and if not, remove ourselves.
+	 *
+	 * If we already know the FML handler is present, then this check is not needed.
+	 */
+	private boolean checkIfRemovalNeeded;
 
-	public PassCustomPayloadHandler(Minecraft mc, NetHandlerPlayClient nhpc, boolean knownBeforeFML) {
+	public PassCustomPayloadHandler(Minecraft mc, NetHandlerPlayClient nhpc, boolean injectedBeforeFML) {
 		super(false);
-		LOGGER.info("[WDL] Created custom payload handler for "+ nhpc + ":" + knownBeforeFML);
 		this.mc = mc;
 		this.nhpc = nhpc;
-		if (knownBeforeFML) {
-			firstRead = false;
-		}
-	}
-
-	@Override
-	public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
-		LOGGER.info("[WDL] handlerAdded: " + ctx.pipeline().names());
-	}
-
-	@Override
-	public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
-		LOGGER.info("[WDL] handlerRemoved: " + ctx.pipeline().names());
+		checkIfRemovalNeeded = !injectedBeforeFML;
 	}
 
 	@Override
 	protected void channelRead0(ChannelHandlerContext ctx, Packet<?> msg) throws Exception {
-		if (firstRead) {
-			firstRead = false;
+		if (checkIfRemovalNeeded) {
+			checkIfRemovalNeeded = false;
 
-			LOGGER.info("[WDL] First read: " + msg + " " + ctx.pipeline().names());
 			boolean hasFML = ctx.pipeline().names().contains("fml:packet_handler");
 			if (!hasFML) {
-				LOGGER.info("[WDL] No need for this");
+				// Make sure to always pass the packet on to later handlers
 				ctx.fireChannelRead(msg);
+				// This handler isn't needed, as forge isn't present and isn't intercepting these packets.
 				ctx.pipeline().remove(this);
 				return;
 			}
-			LOGGER.info("[WDL] We do have FML: " + ctx.pipeline().get("fml:packet_handler"));
 		}
 
 		if (msg instanceof SPacketCustomPayload) {
 			SPacketCustomPayload packet = (SPacketCustomPayload)msg;
-			LOGGER.info("[WDL EARLY]: " + packet.getChannelName());
 			if (packet.getChannelName().equals("REGISTER") || packet.getChannelName().equals("UNREGISTER")) {
 				// Make a copy of the packet contents, because otherwise, it'll be read on multiple threads.
 				final PacketBuffer copiedBuffer = new PacketBuffer(packet.getBufferData().copy());
@@ -93,6 +80,8 @@ public class PassCustomPayloadHandler extends SimpleChannelInboundHandler<Packet
 				});
 			}
 		}
+
+		// Make sure to always pass the packet on to later handlers
 		ctx.fireChannelRead(msg);
 	}
 }
