@@ -14,7 +14,8 @@ CL: net/minecraft/world/DimensionType net/minecraft/world/dimension/DimensionTyp
 CL: net/minecraft/world/WorldProvider net/minecraft/world/dimension/Dimension
 CL: net/minecraft/world/WorldProviderEnd net/minecraft/world/dimension/EndDimension
 CL: net/minecraft/world/WorldProviderHell net/minecraft/world/dimension/NetherDimension
-CL: net/minecraft/world/WorldProviderOverworld net/minecraft/world/dimension/OverworldDimension
+CL: net/minecraft/world/WorldProviderHell$1 net/minecraft/world/dimension/NetherDimension$1
+CL: net/minecraft/world/WorldProviderSurface net/minecraft/world/dimension/OverworldDimension
 
 # https://github.com/ModCoderPack/MCPBot-Issues/issues/597 and https://github.com/ModCoderPack/MCPBot-Issues/issues/418
 CL: net/minecraft/world/chunk/storage/ExtendedBlockStorage net/minecraft/world/chunk/ChunkSection
