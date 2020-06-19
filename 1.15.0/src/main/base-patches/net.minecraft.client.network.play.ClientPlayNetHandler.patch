@@ -42,7 +42,7 @@
     }
  
     /**
-@@ -1270,6 +1282,10 @@
+@@ -1275,6 +1287,10 @@
     public void handleBlockAction(SBlockActionPacket packetIn) {
        PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.client);
        this.client.world.addBlockEvent(packetIn.getBlockPosition(), packetIn.getBlockType(), packetIn.getData1(), packetIn.getData2());
@@ -53,7 +53,7 @@
     }
  
     /**
-@@ -1360,6 +1376,10 @@
+@@ -1365,6 +1381,10 @@
  
        packetIn.setMapdataTo(mapdata);
        mapitemrenderer.updateMapTexture(mapdata);
@@ -64,7 +64,7 @@
     }
  
     public void handleEffect(SPlaySoundEventPacket packetIn) {
-@@ -2001,7 +2021,10 @@
+@@ -2006,7 +2026,10 @@
              int l5 = packetbuffer.readInt();
              this.client.debugRenderer.field_229018_q_.func_229022_a_(blockpos7, l3, s10, l5);
           } else {
