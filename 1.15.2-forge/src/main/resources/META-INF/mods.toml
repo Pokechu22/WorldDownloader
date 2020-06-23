@@ -4,7 +4,7 @@ issueTrackerURL="https://github.com/Pokechu22/WorldDownloader/issues/"
 
 [[mods]]
 modId="wdl"
-version="4.0.6.3-SNAPSHOT"
+version="4.0.7.0"
 displayName="World Downloader (Forge)"
 displayURL="https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds"
 authors="Pokechu22, julialy (formerly nariol, cubic72)"
@@ -12,7 +12,7 @@ description='''
 World Downloader is a mod that allows making backups of Minecraft worlds.
 '''
 
-[[dependencies.examplemod]]
+[[dependencies.wdl]]
     modId="minecraft"
     mandatory=true
     versionRange="[1.15.2]"
