@@ -13,7 +13,7 @@
 
 <body>
 <header>Internal tool to simplify release hidden JSON creation</header>
-<p><label><span class="form-label">choose a zip file</span><input type="file" accept=".zip,.litemod,application/zip" id="file-input" multiple="multiple"/></label></p>
+<p><label><span class="form-label">choose a zip file</span><input type="file" accept=".zip,.litemod,.jar,application/zip" id="file-input" multiple="multiple"/></label></p>
 <p><label>Loader / type<input type="text" id="loader" /></label></p>
 <p><label>Forum comment link<input type="text" id="post" /></label></p>
 <p><label>Installed minecraft version</label></p>
@@ -243,6 +243,7 @@
 
 					//Don't hash non-wdl code or otherwise volatile code.
 					if (entry.filename.indexOf("wdl") == -1 ||
+							entry.filename.indexOf("forge") == -1 ||
 							entry.filename.indexOf("package-info") != -1 ||
 							entry.filename.indexOf("ShulkerBoxHandler") != -1 ||
 							entry.filename.indexOf("NoteBlockHandler") != -1 ||
