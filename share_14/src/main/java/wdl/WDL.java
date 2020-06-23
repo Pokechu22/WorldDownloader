@@ -659,7 +659,12 @@ public class WDL {
 			progressScreen.startMajorTask(
 					I18n.format("wdl.saveProgress.flushingIO.title"), 1);
 			progressScreen.setMinorTaskProgress(() -> {
-				return I18n.format("wdl.saveProgress.flushingIO.subtitle", chunkLoader.getNumPendingChunks());
+				WDLChunkLoader chunkLoader = WDL.this.chunkLoader;
+				if (chunkLoader != null) {
+					return I18n.format("wdl.saveProgress.flushingIO.subtitle", chunkLoader.getNumPendingChunks());
+				} else {
+					return "";
+				}
 			}, 1);
 
 			// XXX Still needed?
