@@ -3,7 +3,7 @@
  * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017-2019 Pokechu22, julialy
+ * Copyright (c) 2017-2020 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -14,6 +14,7 @@
 package wdl;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.HangingEntity;
 import wdl.api.IEntityEditor;
 import wdl.api.IWDLMod;
 import wdl.api.IWDLModDescripted;
@@ -65,6 +66,10 @@ public class EntityRealigner implements IEntityEditor, IWDLModDescripted {
 
 	@Override
 	public boolean shouldEdit(Entity e) {
+		// Hanging entities are known to have issues with realignment.
+		if (e instanceof HangingEntity) {
+			return false;
+		}
 		// We make sure that at least one of serverPosX, y, and
 		// z is not 0 because an entity with a server pos of 0,
 		// 0, 0 probably has a different way of setting up its
