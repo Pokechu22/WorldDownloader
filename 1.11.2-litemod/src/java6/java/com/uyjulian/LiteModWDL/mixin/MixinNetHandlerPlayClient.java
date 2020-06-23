@@ -60,7 +60,9 @@ public abstract class MixinNetHandlerPlayClient implements INetHandlerPlayClient
 		}
 	}
 
-	@Shadow
+	// Automatic remapping sometimes fails; see
+	// https://github.com/Pokechu22/WorldDownloader/issues/175
+	@Shadow(remap = false, aliases = { "g", "field_147300_g" })
 	private WorldClient world;
 
 	@Inject(method="processChunkUnload", at=@At("HEAD"))

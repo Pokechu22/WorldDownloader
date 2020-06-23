@@ -33,7 +33,9 @@ import wdl.ducks.IBaseChangesApplied;
 
 @Mixin(ClientPlayNetHandler.class)
 public abstract class MixinNetHandlerPlayClient implements IClientPlayNetHandler, IBaseChangesApplied {
-	@Shadow
+	// Automatic remapping sometimes fails; see
+	// https://github.com/Pokechu22/WorldDownloader/issues/175
+	@Shadow(remap = false, aliases = { "f", "field_147300_g" })
 	private ClientWorld world;
 
 	@Inject(method="processChunkUnload", at=@At("HEAD"))
