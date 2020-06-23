@@ -243,7 +243,7 @@
 
 					//Don't hash non-wdl code or otherwise volatile code.
 					if (entry.filename.indexOf("wdl") == -1 ||
-							entry.filename.indexOf("forge") == -1 ||
+							entry.filename.indexOf("forge") != -1 ||
 							entry.filename.indexOf("package-info") != -1 ||
 							entry.filename.indexOf("ShulkerBoxHandler") != -1 ||
 							entry.filename.indexOf("NoteBlockHandler") != -1 ||
