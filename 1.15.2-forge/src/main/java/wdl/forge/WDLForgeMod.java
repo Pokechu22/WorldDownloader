@@ -56,11 +56,11 @@ public class WDLForgeMod {
 		}
 
 		Minecraft.getInstance().enqueue(() -> {
-			if (!WDL.getInstance().runSanityCheck()) {
+			if (!WDL.getInstance().runSanityCheck(true)) {
 				// This message might not be relevant for other sanity checks,
 				// but the mixin sanity checks are the most likely ones to fail.
 				// These can't be translated, though, because translations might not be working.
-				ITextComponent helpMessage = new StringTextComponent("If base changes are missing, make sure ");
+				ITextComponent helpMessage = new StringTextComponent("If mixin changes are missing, make sure ");
 				ITextComponent helpMessage2 = new StringTextComponent("MixinBootstrap");
 				helpMessage2.getStyle().setColor(TextFormatting.BLUE).setUnderlined(true)
 						.setClickEvent(new ClickEvent(Action.OPEN_URL, MIXIN_BOOTSTRAP_LINK));

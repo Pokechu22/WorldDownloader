@@ -432,7 +432,7 @@ public class WDL {
 
 		saveHandler = VersionedFunctions.getSaveHandler(minecraft, getWorldFolderName(worldName));
 
-		runSanityCheck();
+		runSanityCheck(false);
 
 		minecraft.displayGuiScreen(null);
 
@@ -1567,9 +1567,10 @@ public class WDL {
 	 * the user is warned in chat.
 	 *
 	 * @see SanityCheck
+	 * @param stopOnError True if checking should stop on the first error.
 	 * @return false if any sanity checks failed; true otherwise.
 	 */
-	public boolean runSanityCheck() {
+	public boolean runSanityCheck(boolean stopOnError) {
 		Map<SanityCheck, Exception> failures = Maps.newEnumMap(SanityCheck.class);
 
 		for (SanityCheck check : SanityCheck.values()) {
@@ -1583,6 +1584,9 @@ public class WDL {
 			} catch (Exception ex) {
 				LOGGER.trace("{} failed", check, ex);
 				failures.put(check, ex);
+				if (stopOnError) {
+					break;
+				}
 			}
 		}
 		if (!failures.isEmpty()) {
