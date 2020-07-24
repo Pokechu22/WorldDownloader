@@ -43,7 +43,7 @@ final class GuiFunctions {
 	 */
 	static ClientPlayerEntity makePlayer(Minecraft minecraft, World world, ClientPlayNetHandler nhpc, ClientPlayerEntity base) {
 		return new ClientPlayerEntity(minecraft, (ClientWorld)world, nhpc,
-				base.getStats(), base.getRecipeBook());
+				base.getStats(), base.getRecipeBook(), false, false);
 	}
 
 	/* (non-javadoc)
@@ -167,9 +167,9 @@ final class GuiFunctions {
 	 * @see VersionedFunctions#applyLinkFormatting
 	 */
 	static Style createLinkFormatting(String url) {
-		return new Style()
+		return Style.EMPTY_STYLE
 				.setColor(TextFormatting.BLUE)
-				.setUnderlined(true)
+				.applyFormatting(TextFormatting.BLUE)
 				.setClickEvent(new ClickEvent(Action.OPEN_URL, url));
 	}
 }

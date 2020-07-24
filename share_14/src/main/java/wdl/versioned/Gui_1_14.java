@@ -26,6 +26,10 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.Util;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.ClickEvent.Action;
 import net.minecraft.world.World;
 
 /**
@@ -168,14 +172,24 @@ final class GuiFunctions {
 	/* (non-javadoc)
 	 * @see VersionedFunctions#glColor4f
 	 */
-	public static void glColor4f(float r, float g, float b, float a) {
+	static void glColor4f(float r, float g, float b, float a) {
 		GlStateManager.color4f(r, g, b, a);
 	}
 
 	/* (non-javadoc)
 	 * @see VersionedFunctions#glTranslatef
 	 */
-	public static void glTranslatef(float x, float y, float z) {
+	static void glTranslatef(float x, float y, float z) {
 		GlStateManager.translatef(x, y, z);
+	}
+
+	/* (non-javadoc)
+	 * @see VersionedFunctions#applyLinkFormatting
+	 */
+	static Style createLinkFormatting(String url) {
+		return new Style()
+				.setColor(TextFormatting.BLUE)
+				.setUnderlined(true)
+				.setClickEvent(new ClickEvent(Action.OPEN_URL, url));
 	}
 }

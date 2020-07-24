@@ -133,6 +133,8 @@ func_240715_a_,setClickEvent,2,
 func_240716_a_,setHoverEvent,2,
 func_240714_a_,setInsertion,2,
 func_240719_a_,setFont,2,
+func_240721_b_,applyFormatting,2,This variant does not reset when used with a color.
+func_240723_c_,applyFormattingAlt,2,This variant resets when used with a color
 func_230530_a_,setStyle,2,
 func_230529_a_,appendSibling,2,
 func_240702_b_,appendText,2,

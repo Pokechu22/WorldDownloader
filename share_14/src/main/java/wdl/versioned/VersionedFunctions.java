@@ -50,6 +50,7 @@ import net.minecraft.network.play.server.SCustomPayloadPlayPacket;
 import net.minecraft.network.play.server.SMapDataPacket;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.Style;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -543,6 +544,17 @@ public final class VersionedFunctions {
 	 */
 	public static void glTranslatef(float x, float y, float z) {
 		GuiFunctions.glTranslatef(x, y, z);
+	}
+
+	/**
+	 * Creates a link style for the given URL: blue, underlined, and with the right
+	 * click event.
+	 *
+	 * @param url The URL to open.
+	 * @return A new style
+	 */
+	public static Style createLinkFormatting(String url) {
+		return GuiFunctions.createLinkFormatting(url);
 	}
 
 	/**

@@ -51,6 +51,10 @@ import net.minecraft.network.play.server.SPacketCustomPayload;
 import net.minecraft.network.play.server.SPacketMaps;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.ClickEvent.Action;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -489,6 +493,21 @@ public final class VersionedFunctions {
 	 */
 	public static void openLink(String url) {
 		GuiFunctions.openLink(url);
+	}
+
+	/**
+	 * Creates a link style for the given URL: blue, underlined, and with the right
+	 * click event.
+	 *
+	 * @param url The URL to open.
+	 * @return A new style
+	 */
+	public static Style createLinkFormatting(String url) {
+		// Forwards-compatibility with 1.14
+		return new Style()
+				.setColor(TextFormatting.BLUE)
+				.setUnderlined(true)
+				.setClickEvent(new ClickEvent(Action.OPEN_URL, url));
 	}
 
 	/**

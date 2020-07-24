@@ -23,14 +23,13 @@ import javax.annotation.Nullable;
 
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.event.ClickEvent;
-import net.minecraft.util.text.event.ClickEvent.Action;
 import wdl.VersionConstants;
 import wdl.WDL;
 import wdl.WDLMessageTypes;
 import wdl.WDLMessages;
 import wdl.config.settings.MiscSettings;
 import wdl.update.Release.HashData;
+import wdl.versioned.VersionedFunctions;
 
 /**
  * Performs the update checking.
@@ -192,24 +191,20 @@ public class WDLUpdateChecker extends Thread {
 						"wdl.intro.success");
 				TextComponentTranslation mcfThread = new TextComponentTranslation(
 						"wdl.intro.forumsLink");
-				mcfThread.getStyle().setColor(TextFormatting.BLUE).setUnderlined(true)
-				.setClickEvent(new ClickEvent(Action.OPEN_URL, FORUMS_THREAD_USAGE_LINK));
+				mcfThread.setStyle(VersionedFunctions.createLinkFormatting(FORUMS_THREAD_USAGE_LINK));
 				TextComponentTranslation wikiLink = new TextComponentTranslation(
 						"wdl.intro.wikiLink");
-				wikiLink.getStyle().setColor(TextFormatting.BLUE).setUnderlined(true)
-				.setClickEvent(new ClickEvent(Action.OPEN_URL, WIKI_LINK));
+				wikiLink.setStyle(VersionedFunctions.createLinkFormatting(WIKI_LINK));
 				TextComponentTranslation usage = new TextComponentTranslation(
 						"wdl.intro.usage", mcfThread, wikiLink);
 				TextComponentTranslation githubRepo = new TextComponentTranslation(
 						"wdl.intro.githubRepo");
-				githubRepo.getStyle().setColor(TextFormatting.BLUE).setUnderlined(true)
-				.setClickEvent(new ClickEvent(Action.OPEN_URL, GITHUB_LINK));
+				githubRepo.setStyle(VersionedFunctions.createLinkFormatting(GITHUB_LINK));
 				TextComponentTranslation contribute = new TextComponentTranslation(
 						"wdl.intro.contribute", githubRepo);
 				TextComponentTranslation redistributionList = new TextComponentTranslation(
 						"wdl.intro.redistributionList");
-				redistributionList.getStyle().setColor(TextFormatting.BLUE).setUnderlined(true)
-				.setClickEvent(new ClickEvent(Action.OPEN_URL, REDISTRIBUTION_LINK));
+				redistributionList.setStyle(VersionedFunctions.createLinkFormatting(REDISTRIBUTION_LINK));
 				TextComponentTranslation warning = new TextComponentTranslation(
 						"wdl.intro.warning");
 				warning.getStyle().setColor(TextFormatting.DARK_RED).setBold(true);
@@ -220,8 +215,7 @@ public class WDLUpdateChecker extends Thread {
 						"wdl.intro.stolen", warning, redistributionList, illegally);
 				TextComponentTranslation smr = new TextComponentTranslation(
 						"wdl.intro.stopModReposts");
-				smr.getStyle().setColor(TextFormatting.BLUE).setUnderlined(true)
-				.setClickEvent(new ClickEvent(Action.OPEN_URL, SMR_LINK));
+				smr.setStyle(VersionedFunctions.createLinkFormatting(SMR_LINK));
 				TextComponentTranslation stolenBeware = new TextComponentTranslation(
 						"wdl.intro.stolenBeware", smr);
 
@@ -275,10 +269,7 @@ public class WDLUpdateChecker extends Thread {
 
 				TextComponentTranslation updateLink = new TextComponentTranslation(
 						"wdl.messages.updates.newRelease.updateLink");
-				updateLink.getStyle().setColor(TextFormatting.BLUE)
-				.setUnderlined(true).setClickEvent(
-						new ClickEvent(Action.OPEN_URL,
-								recomendedRelease.URL));
+				updateLink.setStyle(VersionedFunctions.createLinkFormatting(recomendedRelease.URL));
 
 				// Show the new version available message, and give a link.
 				WDLMessages.chatMessageTranslated(WDL.serverProps,
@@ -290,8 +281,7 @@ public class WDLUpdateChecker extends Thread {
 			if (VersionConstants.isUntestedVersion()) {
 				TextComponentTranslation githubIssues = new TextComponentTranslation(
 						"wdl.intro.githubRepo");
-				githubIssues.getStyle().setColor(TextFormatting.BLUE).setUnderlined(true)
-						.setClickEvent(new ClickEvent(Action.OPEN_URL, GITHUB_ISSUES_LINK));
+				githubIssues.setStyle(VersionedFunctions.createLinkFormatting(GITHUB_ISSUES_LINK));
 				WDLMessages.chatMessageTranslated(WDL.serverProps,
 						WDLMessageTypes.UPDATES, "wdl.messages.updates.untestedVersion",
 						VersionConstants.getMinecraftVersion(), githubIssues);
@@ -345,10 +335,7 @@ public class WDLUpdateChecker extends Thread {
 			if (failed.size() > 0) {
 				TextComponentTranslation mcfThread = new TextComponentTranslation(
 						"wdl.intro.forumsLink");
-				mcfThread.getStyle().setColor(TextFormatting.BLUE)
-				.setUnderlined(true).setClickEvent(
-						new ClickEvent(Action.OPEN_URL,
-								FORUMS_THREAD_USAGE_LINK));
+				mcfThread.setStyle(VersionedFunctions.createLinkFormatting(FORUMS_THREAD_USAGE_LINK));
 				WDLMessages.chatMessageTranslated(WDL.serverProps,
 						WDLMessageTypes.UPDATES, "wdl.messages.updates.badHashesFound", mcfThread);
 			}
