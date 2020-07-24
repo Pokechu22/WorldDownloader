@@ -113,6 +113,9 @@ sourceSets {
             exclude "wdl/versioned/Gui_1_15.java"
             exclude "wdl/versioned/Handlers_1_15.java"
             exclude "wdl/versioned/NBT_1_15.java"
+            exclude "wdl/gui/widget/ExtButton_1_16.java"
+            exclude "wdl/gui/widget/ExtGuiList_1_16.java"
+            exclude "wdl/gui/widget/ExtGuiScreen_1_16.java"
         }
         resources {
             srcDir project(':share').file("src/main/resources")

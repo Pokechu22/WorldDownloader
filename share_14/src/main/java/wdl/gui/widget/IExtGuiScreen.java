@@ -3,7 +3,7 @@
  * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2018 Pokechu22, julialy
+ * Copyright (c) 2018-2020 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -80,4 +80,13 @@ public interface IExtGuiScreen {
 	 * @return True if the attempt should go through.
 	 */
 	public abstract boolean onCloseAttempt();
+
+	/**
+	 * Called when it is time to render this GUI.  When overriden, the supermethod must be called.
+	 *
+	 * @param mouseX The mouse's horizontal coordinate.
+	 * @param mouseY The mouse's vertical coordinate.
+	 * @param partialTicks Time inside of the tick, when multiple frames are rendered in one tick.
+	 */
+	public abstract void render(int mouseX, int mouseY, float partialTicks);
 }
