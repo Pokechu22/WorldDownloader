@@ -73,6 +73,7 @@ minecraft {
 
 extraSrgs {
     addMethods file('../srgs/1.16_methods.csv')
+    addFields file('../srgs/1.16_fields.csv')
     addParams file('../srgs/1.16_params.csv')
 }
 
