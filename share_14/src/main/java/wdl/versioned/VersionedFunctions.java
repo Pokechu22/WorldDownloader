@@ -46,6 +46,7 @@ import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.StringNBT;
 import net.minecraft.network.play.client.CCustomPayloadPacket;
+import net.minecraft.network.play.server.SChatPacket;
 import net.minecraft.network.play.server.SCustomPayloadPlayPacket;
 import net.minecraft.network.play.server.SMapDataPacket;
 import net.minecraft.tileentity.TileEntity;
@@ -281,6 +282,15 @@ public final class VersionedFunctions {
 	 */
 	public static SCustomPayloadPlayPacket makeServerPluginMessagePacket(@ChannelName String channel, byte[] bytes) {
 		return PacketFunctions.makeServerPluginMessagePacket(channel, bytes);
+	}
+
+	/**
+	 * Creates a server chat packet.  Intended for use in tests.
+	 * @param message The chat message
+	 * @return The new packet.
+	 */
+	public static SChatPacket makeChatPacket(String message) {
+		return PacketFunctions.makeChatPacket(message);
 	}
 
 	/**

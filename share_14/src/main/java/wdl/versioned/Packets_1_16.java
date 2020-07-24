@@ -19,6 +19,7 @@ import net.minecraft.network.play.client.CCustomPayloadPacket;
 import net.minecraft.network.play.server.SChatPacket;
 import net.minecraft.network.play.server.SCustomPayloadPlayPacket;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Util;
 import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.StringTextComponent;
 import wdl.versioned.VersionedFunctions.ChannelName;
@@ -53,7 +54,7 @@ final class PacketFunctions {
 	 * @see VersionedFunctions#makeChatPacket
 	 */
 	static SChatPacket makeChatPacket(String message) {
-		return new SChatPacket(new StringTextComponent(message), ChatType.SYSTEM);
+		return new SChatPacket(new StringTextComponent(message), ChatType.SYSTEM, Util.ZEROD_UUID);
 	}
 
 	/* (non-javadoc)

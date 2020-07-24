@@ -105,7 +105,7 @@ public class WDLHooksTest extends AbstractWorldBehaviorTest {
 	public void testHandleChat() {
 		doWithMockHooks(mock -> {
 			makeMockWorld();
-			SChatPacket packet = new SChatPacket(new StringTextComponent("Hello world"));
+			SChatPacket packet = VersionedFunctions.makeChatPacket("Hello world");
 			clientPlayer.connection.handleChat(packet);
 
 			verify(mock).onNHPCHandleChat(clientPlayer.connection, packet);

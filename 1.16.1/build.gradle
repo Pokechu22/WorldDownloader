@@ -138,6 +138,7 @@ sourceSets {
             exclude "wdl/versioned/Gui_1_14.java"
             exclude "wdl/versioned/Gui_1_15.java"
             exclude "wdl/versioned/NBT_1_14.java"
+            exclude "wdl/versioned/Packets_1_14.java"
             exclude "wdl/gui/widget/ExtButton_1_14.java"
             exclude "wdl/gui/widget/ExtGuiList_1_14.java"
             exclude "wdl/gui/widget/ExtGuiScreen_1_14.java"
