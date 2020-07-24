@@ -1,5 +1,13 @@
 searge,name,side,desc
-func_176610_l,getSerializedName,2,Conflicts with several enum getNames.
+func_220363_a,getName2,2,Conflicts with {@link IStringSerializable#getName} (EntityClassification)
+func_222352_a,getName2,2,Conflicts with {@link IStringSerializable#getName} (Biome.Classification)
+func_222361_a,getName2,2,Conflicts with {@link IStringSerializable#getName} (Biome.RainType)
+func_222671_a,getName2,2,Conflicts with {@link IStringSerializable#getName} (GenerationStage.Carving)
+func_222676_a,getName2,2,Conflicts with {@link IStringSerializable#getName} (GenerationStage.Decoration)
+func_214714_a,getName2,2,Conflicts with {@link IStringSerializable#getName} (MineshaftStructure.Type)
+func_215135_a,getName2,2,Conflicts with {@link IStringSerializable#getName} (OceanRuinStructure.Decoration)
+func_214936_a,getName2,2,Conflicts with {@link IStringSerializable#getName} (JigsawPattern.PlacementBehaviour)
+func_214737_a,getName2,2,Conflicts with {@link IStringSerializable#getName} (OreFeatureConfig.FillerBlockType)
 func_231171_q_,getTitle,0,
 func_231167_h_,getNarrationMessage,0,
 func_230430_a_,render,0,
