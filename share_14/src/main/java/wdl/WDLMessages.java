@@ -33,6 +33,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.util.text.event.HoverEvent.Action;
@@ -235,7 +236,7 @@ public class WDLMessages {
 			}
 		}
 
-		final ITextComponent component;
+		final TextComponent component;
 		if (I18n.hasKey(translationKey)) {
 			component = new TranslationTextComponent(translationKey, args);
 		} else {
@@ -286,7 +287,7 @@ public class WDLMessages {
 				type.getDisplayName().getFormattedText()).replace("\\n", "\n");
 		ITextComponent tooltip = new StringTextComponent(tooltipText);
 
-		ITextComponent text = new StringTextComponent("");
+		TextComponent text = new StringTextComponent("");
 
 		ITextComponent header = new StringTextComponent("[WorldDL]");
 		header.getStyle().setColor(type.getTitleColor());
@@ -326,7 +327,7 @@ public class WDLMessages {
 				String displayGroup = EntityUtils.getDisplayGroup(group);
 				wdlName = new StringTextComponent(displayIdentifier);
 
-				ITextComponent hoverText = new StringTextComponent("");
+				TextComponent hoverText = new StringTextComponent("");
 				hoverText.appendSibling(new TranslationTextComponent("wdl.messages.entityData.internalName", identifier));
 				hoverText.appendText("\n");
 				hoverText.appendSibling(new TranslationTextComponent("wdl.messages.entityData.group", displayGroup, group));
