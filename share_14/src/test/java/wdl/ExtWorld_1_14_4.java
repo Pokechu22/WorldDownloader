@@ -47,7 +47,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vecotor.Vector3d;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.World;
@@ -106,7 +106,7 @@ abstract class ExtWorldClient extends ClientWorld {
 		player.setHeldItem(Hand.MAIN_HAND, new ItemStack(block));
 		BlockItemUseContext context = new BlockItemUseContext(
 				new ItemUseContext(player, Hand.MAIN_HAND,
-						new BlockRayTraceResult(new Vec3d(pos), direction, pos, false)));
+						new BlockRayTraceResult(new Vector3d(pos), direction, pos, false)));
 		BlockState state = block.getStateForPlacement(context);
 		setBlockState(pos, state);
 	}
@@ -207,7 +207,7 @@ abstract class ExtWorldServer extends ServerWorld {
 		player.rotationYaw = direction.getHorizontalAngle();
 		BlockItemUseContext context = new BlockItemUseContext(
 				new ItemUseContext(player, Hand.MAIN_HAND,
-						new BlockRayTraceResult(new Vec3d(pos), direction, pos, false)));
+						new BlockRayTraceResult(new Vector3d(pos), direction, pos, false)));
 		BlockState state = block.getStateForPlacement(context);
 		setBlockState(pos, state);
 	}
@@ -221,7 +221,7 @@ abstract class ExtWorldServer extends ServerWorld {
 	/** Right-clicks a block. */
 	public void interactBlock(BlockPos pos, PlayerEntity player) {
 		BlockState state = this.getBlockState(pos);
-		BlockRayTraceResult rayTraceResult = new BlockRayTraceResult(new Vec3d(pos), Direction.DOWN, pos, false);
+		BlockRayTraceResult rayTraceResult = new BlockRayTraceResult(new Vector3d(pos), Direction.DOWN, pos, false);
 		state.func_215687_a(this, player, Hand.MAIN_HAND, rayTraceResult);
 	}
 

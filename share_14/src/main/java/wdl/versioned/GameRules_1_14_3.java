@@ -30,8 +30,8 @@ import com.mojang.brigadier.tree.CommandNode;
 
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.ICommandSource;
-import net.minecraft.util.math.Vec2f;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector2f;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.GameRules.IRuleEntryVisitor;
@@ -48,7 +48,7 @@ final class GameRuleFunctions {
 	private GameRuleFunctions() { throw new AssertionError(); }
 	private static final Logger LOGGER = LogManager.getLogger();
 	private static final CommandSource DUMMY_COMMAND_SOURCE =
-			new CommandSource(ICommandSource.DUMMY, Vec3d.ZERO, Vec2f.ZERO, null, 0, "", new StringTextComponent(""), null, null);
+			new CommandSource(ICommandSource.DUMMY, Vector3d.ZERO, Vector2f.ZERO, null, 0, "", new StringTextComponent(""), null, null);
 
 	private static class RuleInfo<T extends GameRules.RuleValue<T>> {
 		public RuleInfo(RuleKey<T> key, RuleType<T> type) {

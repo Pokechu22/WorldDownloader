@@ -43,7 +43,7 @@ import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.entity.passive.PigEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.play.ServerPlayNetHandler;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import wdl.TestWorld.MockableChunkManager;
 import wdl.versioned.VersionedFunctions;
@@ -60,10 +60,10 @@ public class EntityUtilsTest extends MaybeMixinTest {
 	public void testTrackerSimple() throws Exception  {
 		runTrackerTest(world -> new PigEntity(EntityType.PIG, world), 80, 10, 300,
 				(tick, entity) -> true,
-				(tick) -> new Vec3d(-150 + tick, tick, -150 + tick));
+				(tick) -> new Vector3d(-150 + tick, tick, -150 + tick));
 		runTrackerTest(world -> new ArmorStandEntity(EntityType.ARMOR_STAND, world), 160, 10, 300,
 				(tick, entity) -> true,
-				(tick) -> new Vec3d(150 * Math.sin(tick * 300 / (2 * Math.PI)), tick,
+				(tick) -> new Vector3d(150 * Math.sin(tick * 300 / (2 * Math.PI)), tick,
 						150 * Math.cos(tick * 300 / (2 * Math.PI))));
 	}
 
@@ -74,10 +74,10 @@ public class EntityUtilsTest extends MaybeMixinTest {
 	public void testTrackerRemove() throws Exception {
 		runTrackerTest(ZombieEntity::new, 80, 10, 110, // Why does this still work?
 				(tick, entity) -> tick <= 100,
-				(tick) -> new Vec3d(-150 + tick, tick, -150 + tick));
+				(tick) -> new Vector3d(-150 + tick, tick, -150 + tick));
 		runTrackerTest(world -> new CreeperEntity(EntityType.CREEPER, world), 80, 10, 110,
 				(tick, entity) -> tick <= 100 || VersionedFunctions.getEntityX(entity) <= (-150 + tick),
-				(tick) -> new Vec3d(-150 + tick, tick, -150 + tick));
+				(tick) -> new Vector3d(-150 + tick, tick, -150 + tick));
 	}
 
 	/**
@@ -92,7 +92,7 @@ public class EntityUtilsTest extends MaybeMixinTest {
 	 * @param posFunc            Function providing player position by tick.
 	 */
 	protected void runTrackerTest(Function<World, ? extends Entity> entitySupplier, int threshold,
-			int serverViewDistance, int numTicks, BiPredicate<Integer, Entity> keepEntity, IntFunction<Vec3d> posFunc) throws Exception {
+			int serverViewDistance, int numTicks, BiPredicate<Integer, Entity> keepEntity, IntFunction<Vector3d> posFunc) throws Exception {
 		TestWorld.ServerWorld world = TestWorld.makeServer();
 
 		ServerPlayerEntity player = mock(ServerPlayerEntity.class, RETURNS_DEEP_STUBS);
@@ -156,7 +156,7 @@ public class EntityUtilsTest extends MaybeMixinTest {
 		}
 
 		for (int tick = 0; tick <= numTicks; tick++) {
-			Vec3d pos = posFunc.apply(tick);
+			Vector3d pos = posFunc.apply(tick);
 			VersionedFunctions.setEntityPos(player, pos.x, pos.y, pos.z);
 			for (Iterator<Entity> itr = entities.iterator(); itr.hasNext();) {
 				Entity e = itr.next();

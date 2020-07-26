@@ -22,7 +22,7 @@ import net.minecraft.entity.player.ChatVisibility;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import wdl.WDL;
 import wdl.gui.widget.WDLScreen;
@@ -169,8 +169,8 @@ public abstract class GuiTurningCameraBase extends WDLScreen {
 	 * @return A new distance, equal to or less than <code>currentDistance</code>.
 	 */
 	private double truncateDistanceIfBlockInWay(double camX, double camZ, double currentDistance) {
-		Vec3d playerPos = wdl.player.getPositionVector().add(0, wdl.player.getEyeHeight(), 0);
-		Vec3d offsetPos = playerPos.add(-currentDistance * camX, 0, currentDistance * camZ);
+		Vector3d playerPos = wdl.player.getPositionVec().add(0, wdl.player.getEyeHeight(), 0);
+		Vector3d offsetPos = playerPos.add(-currentDistance * camX, 0, currentDistance * camZ);
 
 		// NOTE: Vec3.addVector and Vec3.add return new vectors and leave the
 		// current vector unmodified.
@@ -186,8 +186,8 @@ public abstract class GuiTurningCameraBase extends WDLScreen {
 				offsetZ = 0;
 			}
 
-			Vec3d from = playerPos.add(offsetX, offsetY, offsetZ);
-			Vec3d to = offsetPos.add(offsetX, offsetY, offsetZ);
+			Vector3d from = playerPos.add(offsetX, offsetY, offsetZ);
+			Vector3d to = offsetPos.add(offsetX, offsetY, offsetZ);
 
 			RayTraceResult pos = minecraft.world.rayTraceBlocks(new RayTraceContext(from, to, RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, wdl.player));
 

@@ -26,8 +26,8 @@ archivesBaseName = "WorldDownloader"
 libsDirName = "../../libs/${version}"
 
 
+apply plugin: 'pokechu22.test.customsrg'
 apply plugin: 'pokechu22.test.begradle'
-//apply plugin: 'pokechu22.test.customsrg'
 apply plugin: 'pokechu22.test.langrenamer'
 //apply plugin: 'pokechu22.test.noinplacereobf'
 
@@ -69,6 +69,10 @@ minecraft {
         'es_es': ['es_ar', 'es_cl', 'es_mx', 'es_uy', 'es_ve'],
         'fr_fr': ['fr_ca']
     ]
+}
+
+extraSrgs {
+    addSrg file('../srgs/VecToVector.srg')
 }
 
 configurations {

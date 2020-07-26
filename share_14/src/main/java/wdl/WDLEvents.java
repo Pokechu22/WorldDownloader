@@ -438,7 +438,7 @@ public class WDLEvents {
 						WDL.serverProps,
 						WDLMessageTypes.REMOVE_ENTITY,
 						"wdl.messages.removeEntity.savingDistance", entity,
-						entity.getPositionVector().toString(), wdl.player.getPositionVector(), threshold, serverViewDistance);
+						entity.getPositionVec().toString(), wdl.player.getPositionVec(), threshold, serverViewDistance);
 				ChunkPos pos = new ChunkPos(entity.chunkCoordX, entity.chunkCoordZ);
 				UUID uuid = entity.getUniqueID();
 				if (wdl.entityPositions.containsKey(uuid)) {
@@ -454,7 +454,7 @@ public class WDLEvents {
 						WDL.serverProps,
 						WDLMessageTypes.REMOVE_ENTITY,
 						"wdl.messages.removeEntity.allowingRemoveDistance", entity,
-						entity.getPositionVector().toString(), wdl.player.getPositionVector(), threshold, serverViewDistance);
+						entity.getPositionVec().toString(), wdl.player.getPositionVec(), threshold, serverViewDistance);
 			}
 		}
 	}

@@ -3,7 +3,7 @@
  * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2018-2019 Pokechu22, julialy
+ * Copyright (c) 2018-2020 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -47,7 +47,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.World;
@@ -107,7 +107,7 @@ abstract class ExtWorldClient extends ClientWorld {
 		player.setHeldItem(Hand.MAIN_HAND, new ItemStack(block));
 		BlockItemUseContext context = new BlockItemUseContext(
 				new ItemUseContext(player, Hand.MAIN_HAND,
-						new BlockRayTraceResult(new Vec3d(pos), direction, pos, false)));
+						new BlockRayTraceResult(new Vector3d(pos), direction, pos, false)));
 		BlockState state = block.getStateForPlacement(context);
 		setBlockState(pos, state);
 	}
@@ -205,7 +205,7 @@ abstract class ExtWorldServer extends ServerWorld {
 		player.rotationYaw = direction.getHorizontalAngle();
 		BlockItemUseContext context = new BlockItemUseContext(
 				new ItemUseContext(player, Hand.MAIN_HAND,
-						new BlockRayTraceResult(new Vec3d(pos), direction, pos, false)));
+						new BlockRayTraceResult(new Vector3d(pos), direction, pos, false)));
 		BlockState state = block.getStateForPlacement(context);
 		setBlockState(pos, state);
 	}
@@ -219,7 +219,7 @@ abstract class ExtWorldServer extends ServerWorld {
 	/** Right-clicks a block. */
 	public void interactBlock(BlockPos pos, PlayerEntity player) {
 		BlockState state = this.getBlockState(pos);
-		BlockRayTraceResult rayTraceResult = new BlockRayTraceResult(new Vec3d(pos), Direction.DOWN, pos, false);
+		BlockRayTraceResult rayTraceResult = new BlockRayTraceResult(new Vector3d(pos), Direction.DOWN, pos, false);
 		state.onBlockActivated(this, player, Hand.MAIN_HAND, rayTraceResult);
 	}
 
