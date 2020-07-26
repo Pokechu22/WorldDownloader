@@ -1,0 +1,11 @@
+--- a/net/minecraft/server/dedicated/PropertyManager.java
++++ b/net/minecraft/server/dedicated/PropertyManager.java
+@@ -92,7 +92,7 @@
+       String s = this.func_218976_c(p_218981_1_);
+       V v = MoreObjects.firstNonNull((V)(s != null ? p_218981_2_.apply(s) : null), p_218981_4_);
+       this.field_73672_b.put(p_218981_1_, (V)p_218981_3_.apply(v));
+-      return new PropertyManager.Property<>(p_218981_1_, v, p_218981_3_);
++      return new PropertyManager.Property(p_218981_1_, v, p_218981_3_);
+    }
+ 
+    protected <V> V func_218977_a(String p_218977_1_, Function<String, V> p_218977_2_, UnaryOperator<V> p_218977_3_, Function<V, String> p_218977_4_, V p_218977_5_) {

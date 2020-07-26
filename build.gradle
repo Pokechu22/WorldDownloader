@@ -47,8 +47,8 @@ if (ENABLE_UNSTABLE_BUILDS) { // see gradle.properties
     project(':1.13.0').evaluationDependsOn(':share')
     project(':1.13.1').evaluationDependsOn(':share')
     project(':1.13.2').evaluationDependsOn(':share')
-    project(':1.14.0').evaluationDependsOn(':share')
 }
+project(':1.14.0').evaluationDependsOn(':share')
 project(':1.14.1').evaluationDependsOn(':share')
 project(':1.14.2').evaluationDependsOn(':share')
 project(':1.14.3').evaluationDependsOn(':share')

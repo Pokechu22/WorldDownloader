@@ -26,12 +26,10 @@ archivesBaseName = "WorldDownloader"
 libsDirName = "../../libs/${version}"
 
 
+apply plugin: 'pokechu22.test.customsrg'
 apply plugin: 'pokechu22.test.begradle'
-//apply plugin: 'pokechu22.test.customsrg'
 apply plugin: 'pokechu22.test.langrenamer'
 //apply plugin: 'pokechu22.test.noinplacereobf'
-
-setupDecompWorkspace.enabled = false // XXX Recompile fails in 1.14.0
 
 repositories {
     mavenLocal()
@@ -71,6 +69,11 @@ minecraft {
         'es_es': ['es_ar', 'es_cl', 'es_mx', 'es_uy', 'es_ve'],
         'fr_fr': ['fr_ca']
     ]
+}
+
+extraSrgs {
+    addPatch('client/net/minecraft/server/dedicated/PropertyManager.patch', file('../srgs/PropertyManager_1.14.0.patch'))
+    addPatch('client/net/minecraft/util/registry/Registry.patch', file('../srgs/Registry_1.14.0.patch'))
 }
 
 configurations {
