@@ -96,7 +96,6 @@ sourceSets {
             exclude "wdl/versioned/Registries_1_13_1.java"
             exclude "wdl/versioned/Types_1_9_2.java"
             exclude "wdl/versioned/Types_1_13.java"
-            exclude "wdl/versioned/Types_1_13_1.java"
             exclude "wdl/versioned/Types_1_13_2.java"
             exclude "wdl/gui/widget/ExtButton_1_11.java"
             exclude "wdl/gui/widget/ExtButton_1_13.java"
