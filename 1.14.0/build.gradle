@@ -72,6 +72,7 @@ minecraft {
 }
 
 extraSrgs {
+    addSrg file('../srgs/VecToVector.srg')
     addPatch('client/net/minecraft/server/dedicated/PropertyManager.patch', file('../srgs/PropertyManager_1.14.0.patch'))
     addPatch('client/net/minecraft/util/registry/Registry.patch', file('../srgs/Registry_1.14.0.patch'))
 }
