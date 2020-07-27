@@ -73,6 +73,7 @@ minecraft {
 
 extraSrgs {
     addSrg file('../srgs/VecToVector.srg')
+    addPatch('client/net/minecraft/client/particle/Particle.java.patch', file('../srgs/Particle_1.14.3.patch'))
 }
 
 configurations {
