@@ -45,7 +45,7 @@ dependencies {
 
 minecraft {
     //suppressMappingVersionWarnings = true
-    mappings channel: 'snapshot', version: '20200727-1.15.1'
+    mappings channel: 'snapshot', version: '20200728-1.15.1'
     runs {
         client {
             workingDirectory project.file('run')
