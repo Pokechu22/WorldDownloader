@@ -3,7 +3,7 @@
  * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017-2018 Pokechu22, julialy
+ * Copyright (c) 2017-2020 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -17,7 +17,6 @@ import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.widget.TextFieldWidget;
 import wdl.versioned.VersionedFunctions;
 
 public class Utils {
@@ -130,29 +129,5 @@ public class Utils {
 	 */
 	public static void drawBorder(int topMargin, int bottomMargin, int top, int left, int bottom, int right) {
 		VersionedFunctions.drawBorder(topMargin, bottomMargin, top, left, bottom, right);
-	}
-
-	/**
-	 * Is the mouse over the given text box?
-	 * @param mouseX The mouse's current (scaled) x.
-	 * @param mouseY The mouse's current (scaled) y.
-	 * @param textBox The text box.
-	 * @return Whether the mouse is over the given text box.
-	 */
-	public static boolean isHoveredTextBox(int mouseX, int mouseY,
-			TextFieldWidget textBox) {
-		if (!textBox.getVisible()) {
-			return false;
-		}
-
-		int scaledX = mouseX - textBox.x;
-		int scaledY = mouseY - textBox.y;
-
-		// Standard text box height -- there is no actual getter for the real
-		// one.
-		final int height = 20;
-
-		return scaledX >= 0 && scaledX < textBox.getWidth() && scaledY >= 0
-				&& scaledY < height;
 	}
 }

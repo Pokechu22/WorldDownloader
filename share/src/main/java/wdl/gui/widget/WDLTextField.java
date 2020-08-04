@@ -14,21 +14,20 @@
 package wdl.gui.widget;
 
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.util.text.ITextComponent;
 
 /**
- * Extendible text field, to deal with changing constructors between versions.
- * The actual implementation is {@link WDLTextField}.
+ * A text field that works across versions.
  */
-abstract class ExtTextField extends TextFieldWidget {
-	/**
-	 * @deprecated Do not use; use {@link #setEnabled} instead.
-	 */
+public class WDLTextField extends ExtTextField {
 	@Deprecated
-	protected static final Void active = null;
+	public WDLTextField(FontRenderer fontRenderer,
+			int x, int y, int width, int height) {
+		this(fontRenderer, x, y, width, height, null);
+	}
 
-	public ExtTextField(FontRenderer fontRenderer, int x, int y, int width, int height, ITextComponent text) {
-		super(fontRenderer, x, y, width, height, text.getString());
+	public WDLTextField(FontRenderer fontRenderer,
+			int x, int y, int width, int height, ITextComponent text) {
+		super(fontRenderer, x, y, width, height, text);
 	}
 }

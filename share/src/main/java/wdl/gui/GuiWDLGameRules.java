@@ -3,7 +3,7 @@
  * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017-2019 Pokechu22, julialy
+ * Copyright (c) 2017-2020 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -92,7 +92,7 @@ public class GuiWDLGameRules extends WDLScreen {
 
 				drawString(font, this.ruleName, x, y + 6, 0xFFFFFFFF);
 
-				if (this.isHoveredControl(mouseX, mouseY)) {
+				if (this.isControlHovered()) {
 					String key = "wdl.gui.gamerules.rules." + ruleName;
 					if (I18n.hasKey(key)) { // may return false for mods
 						hoveredToolTip = I18n.format(key);
@@ -106,7 +106,7 @@ public class GuiWDLGameRules extends WDLScreen {
 				return super.mouseDown(mouseX, mouseY, mouseButton);
 			}
 
-			protected abstract boolean isHoveredControl(int mouseX, int mouseY);
+			protected abstract boolean isControlHovered();
 
 			@Override
 			public boolean isSelected() {
@@ -125,7 +125,7 @@ public class GuiWDLGameRules extends WDLScreen {
 			public IntRuleEntry(String ruleName) {
 				super(ruleName);
 				field = this.addTextField(new GuiNumericTextField(
-						0, font, 0, 0, 100, 20), 0, 0);
+						font, 0, 0, 100, 20), 0, 0);
 				field.setText(getRule(ruleName));
 			}
 
@@ -150,8 +150,8 @@ public class GuiWDLGameRules extends WDLScreen {
 			}
 
 			@Override
-			protected boolean isHoveredControl(int mouseX, int mouseY) {
-				return Utils.isHoveredTextBox(mouseX, mouseY, field);
+			protected boolean isControlHovered() {
+				return field.isHovered();
 			}
 
 			@Override
@@ -181,7 +181,7 @@ public class GuiWDLGameRules extends WDLScreen {
 			}
 
 			@Override
-			protected boolean isHoveredControl(int mouseX, int mouseY) {
+			protected boolean isControlHovered() {
 				return button.isHovered();
 			}
 		}

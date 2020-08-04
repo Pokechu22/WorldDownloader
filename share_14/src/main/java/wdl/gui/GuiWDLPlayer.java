@@ -126,11 +126,11 @@ public class GuiWDLPlayer extends WDLScreen {
 			this.drawString(this.font, "Z:", this.width / 2 + 37,
 					this.posTextY, 0xFFFFFF);
 
-			if (Utils.isHoveredTextBox(mouseX, mouseY, posX)) {
+			if (posX.isHovered()) {
 				tooltip = I18n.format("wdl.gui.player.positionTextBox.description", "X");
-			} else if (Utils.isHoveredTextBox(mouseX, mouseY, posY)) {
+			} else if (posY.isHovered()) {
 				tooltip = I18n.format("wdl.gui.player.positionTextBox.description", "Y");
-			} else if (Utils.isHoveredTextBox(mouseX, mouseY, posZ)) {
+			} else if (posZ.isHovered()) {
 				tooltip = I18n.format("wdl.gui.player.positionTextBox.description", "Z");
 			}
 
@@ -157,7 +157,7 @@ public class GuiWDLPlayer extends WDLScreen {
 	}
 
 	private void upadatePlayerPosVisibility() {
-		boolean show = config.getValue(PlayerSettings.PLAYER_POSITION) == PlayerSettings.PlayerPos.XYZ;;
+		boolean show = config.getValue(PlayerSettings.PLAYER_POSITION) == PlayerSettings.PlayerPos.XYZ;
 
 		showPosFields = show;
 		posX.setVisible(show);

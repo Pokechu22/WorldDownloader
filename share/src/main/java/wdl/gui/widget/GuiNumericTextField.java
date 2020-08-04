@@ -3,7 +3,7 @@
  * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017-2018 Pokechu22, julialy
+ * Copyright (c) 2017-2020 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -15,15 +15,22 @@ package wdl.gui.widget;
 
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 
 /**
  * {@link GuiTextField} that only accepts numbers.
  */
-public class GuiNumericTextField extends GuiTextField {
-	public GuiNumericTextField(int id, FontRenderer fontRenderer,
+public class GuiNumericTextField extends WDLTextField {
+	@Deprecated
+	public GuiNumericTextField(FontRenderer fontRenderer,
 			int x, int y, int width, int height) {
-		super(id, fontRenderer, x, y, width,
-				height);
+		this(fontRenderer, x, y, width, height, new TextComponentString("Text field")); // XXX Accessibility data
+	}
+
+	public GuiNumericTextField(FontRenderer fontRenderer,
+			int x, int y, int width, int height, ITextComponent text) {
+		super(fontRenderer, x, y, width, height, text);
 		setText("0");
 	}
 

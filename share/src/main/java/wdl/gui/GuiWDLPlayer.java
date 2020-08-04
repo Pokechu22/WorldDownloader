@@ -3,7 +3,7 @@
  * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017-2019 Pokechu22, julialy
+ * Copyright (c) 2017-2020 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -70,11 +70,11 @@ public class GuiWDLPlayer extends WDLScreen {
 		});
 		y += 22;
 		this.posTextY = y + 4;
-		this.posX = this.addTextField(new GuiNumericTextField(40, this.font,
+		this.posX = this.addTextField(new GuiNumericTextField(this.font,
 				this.width / 2 - 87, y, 50, 16));
-		this.posY = this.addTextField(new GuiNumericTextField(41, this.font,
+		this.posY = this.addTextField(new GuiNumericTextField(this.font,
 				this.width / 2 - 19, y, 50, 16));
-		this.posZ = this.addTextField(new GuiNumericTextField(42, this.font,
+		this.posZ = this.addTextField(new GuiNumericTextField(this.font,
 				this.width / 2 + 48, y, 50, 16));
 		this.posX.setValue(config.getValue(PlayerSettings.PLAYER_X));
 		this.posY.setValue(config.getValue(PlayerSettings.PLAYER_Y));
@@ -125,11 +125,11 @@ public class GuiWDLPlayer extends WDLScreen {
 			this.drawString(this.font, "Z:", this.width / 2 + 37,
 					this.posTextY, 0xFFFFFF);
 
-			if (Utils.isHoveredTextBox(mouseX, mouseY, posX)) {
+			if (posX.isHovered()) {
 				tooltip = I18n.format("wdl.gui.player.positionTextBox.description", "X");
-			} else if (Utils.isHoveredTextBox(mouseX, mouseY, posY)) {
+			} else if (posY.isHovered()) {
 				tooltip = I18n.format("wdl.gui.player.positionTextBox.description", "Y");
-			} else if (Utils.isHoveredTextBox(mouseX, mouseY, posZ)) {
+			} else if (posZ.isHovered()) {
 				tooltip = I18n.format("wdl.gui.player.positionTextBox.description", "Z");
 			}
 
@@ -156,7 +156,7 @@ public class GuiWDLPlayer extends WDLScreen {
 	}
 
 	private void upadatePlayerPosVisibility() {
-		boolean show = config.getValue(PlayerSettings.PLAYER_POSITION) == PlayerSettings.PlayerPos.XYZ;;
+		boolean show = config.getValue(PlayerSettings.PLAYER_POSITION) == PlayerSettings.PlayerPos.XYZ;
 
 		showPosFields = show;
 		posX.setVisible(show);

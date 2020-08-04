@@ -117,6 +117,7 @@ sourceSets {
             exclude "wdl/gui/widget/ExtGuiList_1_13.java"
             exclude "wdl/gui/widget/ExtGuiScreen_1_9.java"
             exclude "wdl/gui/widget/ExtGuiScreen_1_13.java"
+            exclude "wdl/gui/widget/ExtTextField_1_13.java"
         }
         resources {
             srcDir "src/main/resources"

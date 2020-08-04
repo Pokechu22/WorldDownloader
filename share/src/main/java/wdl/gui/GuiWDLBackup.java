@@ -3,7 +3,7 @@
  * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017-2019 Pokechu22, julialy
+ * Copyright (c) 2017-2020 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -21,7 +21,6 @@ import javax.annotation.Nullable;
 import com.google.common.io.Files;
 
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.resources.I18n;
 import wdl.WDL;
@@ -30,9 +29,10 @@ import wdl.WorldBackup.ICustomBackupProgressMonitor;
 import wdl.WorldBackup.WorldBackupType;
 import wdl.config.IConfiguration;
 import wdl.config.settings.MiscSettings;
-import wdl.gui.widget.WDLButton;
 import wdl.gui.widget.ButtonDisplayGui;
+import wdl.gui.widget.WDLButton;
 import wdl.gui.widget.WDLScreen;
+import wdl.gui.widget.WDLTextField;
 
 /**
  * GUI allowing control over the way the world is backed up.
@@ -48,9 +48,9 @@ public class GuiWDLBackup extends WDLScreen {
 	private WorldBackupType backupType;
 	private WDLButton backupTypeButton;
 	private WDLButton doneButton;
-	private GuiTextField customBackupCommandTemplateFld;
+	private WDLTextField customBackupCommandTemplateFld;
 	private String customBackupCommandTemplate;
-	private GuiTextField customBackupExtensionFld;
+	private WDLTextField customBackupExtensionFld;
 	private String customBackupExtension;
 	private long checkValidTime = 0;
 	private volatile boolean checkingCommandValid = false;
@@ -89,11 +89,11 @@ public class GuiWDLBackup extends WDLScreen {
 			}
 		});
 
-		customBackupCommandTemplateFld = this.addTextField(new GuiTextField(1, font,
+		customBackupCommandTemplateFld = this.addTextField(new WDLTextField(font,
 				width / 2 - 100, 54, 200, 20));
 		customBackupCommandTemplateFld.setMaxStringLength(255);
 		customBackupCommandTemplateFld.setText(this.customBackupCommandTemplate);
-		customBackupExtensionFld = this.addTextField(new GuiTextField(2, font,
+		customBackupExtensionFld = this.addTextField(new WDLTextField(font,
 				width / 2 + 160, 54, 40, 20));
 		customBackupExtensionFld.setText(this.customBackupExtension);
 
@@ -285,9 +285,9 @@ public class GuiWDLBackup extends WDLScreen {
 			}
 		}
 
-		if (Utils.isHoveredTextBox(mouseX, mouseY, customBackupCommandTemplateFld)) {
+		if (customBackupCommandTemplateFld.isHovered()) {
 			Utils.drawGuiInfoBox(I18n.format("wdl.gui.backup.customCommandTemplate.description"), width, height, 48);
-		} else if (Utils.isHoveredTextBox(mouseX, mouseY, customBackupExtensionFld)) {
+		} else if (customBackupExtensionFld.isHovered()) {
 			Utils.drawGuiInfoBox(I18n.format("wdl.gui.backup.customExtension.description"), width, height, 48);
 		} else if (commandInvalidReason == null || backupTypeButton.isHovered()) {
 			// Only draw the large description if the command is valid (i.e. there isn't other text)

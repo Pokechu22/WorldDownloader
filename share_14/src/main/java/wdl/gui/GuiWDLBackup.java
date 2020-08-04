@@ -50,9 +50,9 @@ public class GuiWDLBackup extends WDLScreen {
 	private WorldBackupType backupType;
 	private WDLButton backupTypeButton;
 	private WDLButton doneButton;
-	private TextFieldWidget customBackupCommandTemplateFld;
+	private WDLTextField customBackupCommandTemplateFld;
 	private String customBackupCommandTemplate;
-	private TextFieldWidget customBackupExtensionFld;
+	private WDLTextField customBackupExtensionFld;
 	private String customBackupExtension;
 	private long checkValidTime = 0;
 	private volatile boolean checkingCommandValid = false;
@@ -289,9 +289,9 @@ public class GuiWDLBackup extends WDLScreen {
 			}
 		}
 
-		if (Utils.isHoveredTextBox(mouseX, mouseY, customBackupCommandTemplateFld)) {
+		if (customBackupCommandTemplateFld.isHovered()) {
 			Utils.drawGuiInfoBox(I18n.format("wdl.gui.backup.customCommandTemplate.description"), width, height, 48);
-		} else if (Utils.isHoveredTextBox(mouseX, mouseY, customBackupExtensionFld)) {
+		} else if (customBackupExtensionFld.isHovered()) {
 			Utils.drawGuiInfoBox(I18n.format("wdl.gui.backup.customExtension.description"), width, height, 48);
 		} else if (commandInvalidReason == null || backupTypeButton.isHovered()) {
 			// Only draw the large description if the command is valid (i.e. there isn't other text)

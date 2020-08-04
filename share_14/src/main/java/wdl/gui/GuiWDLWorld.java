@@ -150,11 +150,11 @@ public class GuiWDLWorld extends WDLScreen {
 		} else if (pickSpawnBtn.isHovered()) {
 			tooltip = I18n.format("wdl.gui.world.setSpawnToCurrentPosition.description");
 		} else if (showSpawnFields) {
-			if (Utils.isHoveredTextBox(mouseX, mouseY, spawnX)) {
+			if (spawnX.isHovered()) {
 				tooltip = I18n.format("wdl.gui.world.spawnPos.description", "X");
-			} else if (Utils.isHoveredTextBox(mouseX, mouseY, spawnY)) {
+			} else if (spawnY.isHovered()) {
 				tooltip = I18n.format("wdl.gui.world.spawnPos.description", "Y");
-			} else if (Utils.isHoveredTextBox(mouseX, mouseY, spawnZ)) {
+			} else if (spawnZ.isHovered()) {
 				tooltip = I18n.format("wdl.gui.world.spawnPos.description", "Z");
 			}
 		}

@@ -92,7 +92,7 @@ public class GuiWDLGameRules extends WDLScreen {
 
 				drawString(font, this.ruleName, x, y + 6, 0xFFFFFFFF);
 
-				if (this.isHoveredControl(mouseX, mouseY)) {
+				if (this.isControlHovered()) {
 					String key = "wdl.gui.gamerules.rules." + ruleName;
 					if (I18n.hasKey(key)) { // may return false for mods
 						hoveredToolTip = I18n.format(key);
@@ -106,7 +106,7 @@ public class GuiWDLGameRules extends WDLScreen {
 				return super.mouseDown(mouseX, mouseY, mouseButton);
 			}
 
-			protected abstract boolean isHoveredControl(int mouseX, int mouseY);
+			protected abstract boolean isControlHovered();
 
 			@Override
 			public boolean isSelected() {
@@ -150,8 +150,8 @@ public class GuiWDLGameRules extends WDLScreen {
 			}
 
 			@Override
-			protected boolean isHoveredControl(int mouseX, int mouseY) {
-				return Utils.isHoveredTextBox(mouseX, mouseY, field);
+			protected boolean isControlHovered() {
+				return field.isHovered();
 			}
 
 			@Override
@@ -181,7 +181,7 @@ public class GuiWDLGameRules extends WDLScreen {
 			}
 
 			@Override
-			protected boolean isHoveredControl(int mouseX, int mouseY) {
+			protected boolean isControlHovered() {
 				return button.isHovered();
 			}
 		}

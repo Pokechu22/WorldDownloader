@@ -117,7 +117,7 @@ public class GuiWDLGenerator extends WDLScreen {
 
 		String tooltip = null;
 
-		if (Utils.isHoveredTextBox(mouseX, mouseY, seedField)) {
+		if (seedField.isHovered()) {
 			tooltip = I18n.format("wdl.gui.generator.seed.description");
 		} else if (generatorBtn.isHovered()) {
 			tooltip = generatorBtn.getTooltip();
