@@ -66,6 +66,7 @@ wdl.gui.world.weather.thunderstorm=Weather: Thunderstorm
 wdl.gui.world.spawn.auto=Spawn Position: Automatic
 wdl.gui.world.spawn.player=Spawn Position: Player position
 wdl.gui.world.spawn.xyz=Spawn Position:
+wdl.gui.world.spawn.coord=World Spawn %s Coordinate
 wdl.gui.world.setSpawnToCurrentPosition=Current position
 wdl.gui.world.allowCheats.description=Controls whether commands (such as /gamemode) are allowed in the downloaded world.
 wdl.gui.world.gamemode.description=Controls which gamemode is used in the downloaded world.
@@ -82,6 +83,7 @@ wdl.gui.player.hunger.keep=Hunger: Don't change
 wdl.gui.player.hunger.20=Hunger: Full
 wdl.gui.player.position.keep=Player Position: Don't change
 wdl.gui.player.position.xyz=Player Position:
+wdl.gui.player.position.coord=Player %s Coordinate
 wdl.gui.player.setPositionToCurrentPosition=Current position
 wdl.gui.player.health.description=This option sets the health that the player has in the downloaded copy of the world.\n\n§lDon't change§r: Keep the health at its value from when the download was stopped.\n§lFull§r: Set the player's health to the maximum value.
 wdl.gui.player.hunger.description=This option sets the hunger that the player has in the downloaded copy of the world.\n\n§lDon't change§r: Keep the hunger at its value from when the download was stopped.\n§lFull§r: Set the player's hunger to the maximum value.
@@ -261,6 +263,7 @@ wdl.gui.permissions.overrides=Chunk Overrides
 wdl.gui.gamerules.title=World Downloader mod: Game rules
 wdl.gui.gamerules.resetRule=Reset
 wdl.gui.gamerules.doneInfo=Note: Rules are only saved once the world has been downloaded and saved, and will be lost if you disconnect without saving.
+wdl.gui.gamerules.ruleValue=Value of rule %s
 
 # Descriptions of individual rules, using their (case-sensitive) name.  Based off of the wiki article: https://minecraft.gamepedia.com/Commands/gamerule
 wdl.gui.gamerules.rules.announceAdvancements=Should advancements should be announced?

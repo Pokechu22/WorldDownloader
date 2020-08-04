@@ -21,6 +21,7 @@ import javax.annotation.Nullable;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.GameRules;
 import wdl.WDL;
 import wdl.gui.widget.ButtonDisplayGui;
@@ -125,7 +126,9 @@ public class GuiWDLGameRules extends WDLScreen {
 			public IntRuleEntry(String ruleName) {
 				super(ruleName);
 				field = this.addTextField(new GuiNumericTextField(
-						font, 0, 0, 100, 20), 0, 0);
+						font, 0, 0, 100, 20,
+						new TranslationTextComponent("wdl.gui.gamerules.ruleValue", ruleName)),
+						0, 0);
 				field.setText(getRule(ruleName));
 			}
 

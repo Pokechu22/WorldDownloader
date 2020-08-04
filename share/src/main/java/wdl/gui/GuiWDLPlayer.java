@@ -71,11 +71,14 @@ public class GuiWDLPlayer extends WDLScreen {
 		y += 22;
 		this.posTextY = y + 4;
 		this.posX = this.addTextField(new GuiNumericTextField(this.font,
-				this.width / 2 - 87, y, 50, 16));
+				this.width / 2 - 87, y, 50, 16,
+				new TextComponentTranslation("wdl.gui.player.position.coord", "X")));
 		this.posY = this.addTextField(new GuiNumericTextField(this.font,
-				this.width / 2 - 19, y, 50, 16));
+				this.width / 2 - 19, y, 50, 16,
+				new TextComponentTranslation("wdl.gui.player.position.coord", "Y")));
 		this.posZ = this.addTextField(new GuiNumericTextField(this.font,
-				this.width / 2 + 48, y, 50, 16));
+				this.width / 2 + 48, y, 50, 16,
+				new TextComponentTranslation("wdl.gui.player.position.coord", "Z")));
 		this.posX.setValue(config.getValue(PlayerSettings.PLAYER_X));
 		this.posY.setValue(config.getValue(PlayerSettings.PLAYER_Y));
 		this.posZ.setValue(config.getValue(PlayerSettings.PLAYER_Z));

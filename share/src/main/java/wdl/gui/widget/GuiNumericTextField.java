@@ -16,21 +16,14 @@ package wdl.gui.widget;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
 
 /**
  * {@link GuiTextField} that only accepts numbers.
  */
 public class GuiNumericTextField extends WDLTextField {
-	@Deprecated
 	public GuiNumericTextField(FontRenderer fontRenderer,
-			int x, int y, int width, int height) {
-		this(fontRenderer, x, y, width, height, new TextComponentString("Text field")); // XXX Accessibility data
-	}
-
-	public GuiNumericTextField(FontRenderer fontRenderer,
-			int x, int y, int width, int height, ITextComponent text) {
-		super(fontRenderer, x, y, width, height, text);
+			int x, int y, int width, int height, ITextComponent label) {
+		super(fontRenderer, x, y, width, height, label);
 		setText("0");
 	}
 

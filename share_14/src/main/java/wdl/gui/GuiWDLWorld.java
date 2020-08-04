@@ -81,11 +81,14 @@ public class GuiWDLWorld extends WDLScreen {
 		y += 22;
 		this.spawnTextY = y + 4;
 		this.spawnX = this.addTextField(new GuiNumericTextField(this.font,
-				this.width / 2 - 87, y, 50, 16));
+				this.width / 2 - 87, y, 50, 16,
+				new TranslationTextComponent("wdl.gui.world.spawn.coord", "X")));
 		this.spawnY = this.addTextField(new GuiNumericTextField(this.font,
-				this.width / 2 - 19, y, 50, 16));
+				this.width / 2 - 19, y, 50, 16,
+				new TranslationTextComponent("wdl.gui.world.spawn.coord", "Y")));
 		this.spawnZ = this.addTextField(new GuiNumericTextField(this.font,
-				this.width / 2 + 48, y, 50, 16));
+				this.width / 2 + 48, y, 50, 16,
+				new TranslationTextComponent("wdl.gui.world.spawn.coord", "Z")));
 		spawnX.setValue(config.getValue(WorldSettings.SPAWN_X));
 		spawnY.setValue(config.getValue(WorldSettings.SPAWN_Y));
 		spawnZ.setValue(config.getValue(WorldSettings.SPAWN_Z));
