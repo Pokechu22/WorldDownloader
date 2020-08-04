@@ -146,3 +146,6 @@ func_240723_c_,applyFormattingAlt,2,This variant resets when used with a color
 func_230530_a_,setStyle,2,
 func_230529_a_,appendSibling,2,
 func_240702_b_,appendText,2,
+func_233602_m_,getTrackingRange,2,
+func_233606_a_,setTrackingRange,2,
+func_233608_b_,setUpdateFrequency,2,
