@@ -22,7 +22,6 @@ import com.google.common.io.Files;
 
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TranslationTextComponent;
 import wdl.WDL;

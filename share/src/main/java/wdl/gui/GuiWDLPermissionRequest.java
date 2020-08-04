@@ -18,7 +18,6 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextComponentString;
 import wdl.WDL;
@@ -27,6 +26,7 @@ import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.TextList;
 import wdl.gui.widget.WDLButton;
 import wdl.gui.widget.WDLScreen;
+import wdl.gui.widget.WDLTextField;
 
 /**
  * GUI for requesting permissions.  Again, this is a work in progress.
@@ -44,7 +44,7 @@ public class GuiWDLPermissionRequest extends WDLScreen {
 	/**
 	 * Field in which the wanted request is entered.
 	 */
-	private GuiTextField requestField;
+	private WDLTextField requestField;
 	/**
 	 * Button for submitting the request.
 	 */
@@ -76,7 +76,7 @@ public class GuiWDLPermissionRequest extends WDLScreen {
 					+ request.getValue() + "'.");
 		}
 
-		this.requestField = this.addTextField(new GuiTextField(0, font,
+		this.requestField = this.addTextField(new WDLTextField(font,
 				width / 2 - 155, 18, 150, 20));
 
 		this.submitButton = this.addButton(new WDLButton(

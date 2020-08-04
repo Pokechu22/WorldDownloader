@@ -19,7 +19,6 @@ import java.util.function.BiFunction;
 import javax.annotation.Nullable;
 
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TranslationTextComponent;
 import wdl.WDL;
@@ -111,7 +110,7 @@ public class GuiWDL extends WDLScreen {
 	private final WDL wdl;
 	private final IConfiguration config;
 
-	private TextFieldWidget worldname;
+	private WDLTextField worldname;
 
 	public GuiWDL(@Nullable Screen parent, WDL wdl) {
 		super(new TranslationTextComponent("wdl.gui.wdl.title", WDL.baseFolderName));

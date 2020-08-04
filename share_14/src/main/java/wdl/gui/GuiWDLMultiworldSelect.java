@@ -17,7 +17,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -178,11 +177,11 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 	/**
 	 * The "New name" field.
 	 */
-	private TextFieldWidget newNameField;
+	private WDLTextField newNameField;
 	/**
 	 * The "Search" field.  Allows filtering.
 	 */
-	private TextFieldWidget searchField;
+	private WDLTextField searchField;
 	/**
 	 * The "New world" button.
 	 */

@@ -18,7 +18,6 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.StringTextComponent;
 import wdl.WDL;
@@ -45,7 +44,7 @@ public class GuiWDLPermissionRequest extends WDLScreen {
 	/**
 	 * Field in which the wanted request is entered.
 	 */
-	private TextFieldWidget requestField;
+	private WDLTextField requestField;
 	/**
 	 * Button for submitting the request.
 	 */

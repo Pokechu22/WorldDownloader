@@ -16,7 +16,6 @@ package wdl.gui;
 import javax.annotation.Nullable;
 
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -35,7 +34,7 @@ public class GuiWDLGenerator extends WDLScreen {
 	private final Screen parent;
 	private final WDL wdl;
 	private final IConfiguration config;
-	private TextFieldWidget seedField;
+	private WDLTextField seedField;
 	private SettingButton generatorBtn;
 	private SettingButton generateStructuresBtn;
 	private WDLButton settingsPageBtn;
