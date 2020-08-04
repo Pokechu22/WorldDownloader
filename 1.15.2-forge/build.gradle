@@ -177,6 +177,7 @@ sourceSets {
             runtimeClasspath += api.output
             srcDir project(':share_14').file("src/test/java")
             exclude "wdl/NoMixinTest.java"
+            exclude "wdl/TestBootstrap_1_16.java"
             exclude "wdl/DelegateChunkManager_1_14.java"
             exclude "wdl/DelegateChunkManager_1_14_3.java"
             exclude "wdl/ExtWorld_1_14.java"
