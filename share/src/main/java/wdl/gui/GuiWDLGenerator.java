@@ -17,6 +17,7 @@ import javax.annotation.Nullable;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import wdl.WDL;
 import wdl.config.IConfiguration;
@@ -57,7 +58,8 @@ public class GuiWDLGenerator extends WDLScreen {
 
 		int y = this.height / 4 - 15;
 		this.seedField = this.addTextField(new WDLTextField(this.font,
-				this.width / 2 - (100 - seedWidth), y, 200 - seedWidth, 18));
+				this.width / 2 - (100 - seedWidth), y, 200 - seedWidth, 18,
+				new TextComponentString(this.seedText)));
 		this.seedField.setText(config.getValue(GeneratorSettings.SEED));
 		y += 22;
 		this.generatorBtn = this.addButton(new SettingButton(

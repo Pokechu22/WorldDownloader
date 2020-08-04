@@ -19,6 +19,7 @@ import java.util.List;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import wdl.WDL;
 import wdl.config.Configuration;
 import wdl.config.IConfiguration;
@@ -309,10 +310,12 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 		});
 
 		this.newNameField = this.addTextField(new WDLTextField(this.font,
-				this.width / 2 - 155, 29, 150, 20));
+				this.width / 2 - 155, 29, 150, 20,
+				new TextComponentTranslation("wdl.gui.multiworldSelect.newName")));
 
 		this.searchField = this.addTextField(new WDLTextField(this.font,
-				this.width / 2 + 5, 29, 150, 20));
+				this.width / 2 + 5, 29, 150, 20,
+				new TextComponentTranslation("wdl.gui.multiworldSelect.search")));
 		this.searchField.setText(searchText);
 	}
 

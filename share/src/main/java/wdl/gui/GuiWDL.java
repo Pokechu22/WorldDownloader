@@ -125,7 +125,7 @@ public class GuiWDL extends WDLScreen {
 	@Override
 	public void init() {
 		this.worldname = this.addTextField(new WDLTextField(this.font,
-				this.width / 2 - 155, 19, 150, 18));
+				this.width / 2 - 155, 19, 150, 18, new TextComponentTranslation("wdl.gui.wdl.worldname")));
 		this.worldname.setText(this.config.getValue(MiscSettings.SERVER_NAME));
 
 		this.addButton(new ButtonDisplayGui(this.width / 2 - 100, this.height - 29,

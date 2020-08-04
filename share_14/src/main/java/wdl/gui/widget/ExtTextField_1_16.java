@@ -34,7 +34,7 @@ abstract class ExtTextField extends TextFieldWidget {
 	@Nullable
 	private MatrixStack matrixStack = null;
 
-	public ExtTextField(FontRenderer fontRenderer, int x, int y, int width, int height, ITextComponent text) {
-		super(fontRenderer, x, y, width, height, text);
+	public ExtTextField(FontRenderer fontRenderer, int x, int y, int width, int height, ITextComponent label) {
+		super(fontRenderer, x, y, width, height, label);
 	}
 }

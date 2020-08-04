@@ -20,14 +20,8 @@ import net.minecraft.util.text.ITextComponent;
  * A text field that works across versions.
  */
 public class WDLTextField extends ExtTextField {
-	@Deprecated
 	public WDLTextField(FontRenderer fontRenderer,
-			int x, int y, int width, int height) {
-		this(fontRenderer, x, y, width, height, null);
-	}
-
-	public WDLTextField(FontRenderer fontRenderer,
-			int x, int y, int width, int height, ITextComponent text) {
-		super(fontRenderer, x, y, width, height, text);
+			int x, int y, int width, int height, ITextComponent label) {
+		super(fontRenderer, x, y, width, height, label);
 	}
 }

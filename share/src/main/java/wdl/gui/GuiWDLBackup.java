@@ -23,6 +23,7 @@ import com.google.common.io.Files;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.TextComponentTranslation;
 import wdl.WDL;
 import wdl.WorldBackup;
 import wdl.WorldBackup.ICustomBackupProgressMonitor;
@@ -90,11 +91,13 @@ public class GuiWDLBackup extends WDLScreen {
 		});
 
 		customBackupCommandTemplateFld = this.addTextField(new WDLTextField(font,
-				width / 2 - 100, 54, 200, 20));
+				width / 2 - 100, 54, 200, 20,
+				new TextComponentTranslation("wdl.gui.backup.customCommandTemplate")));
 		customBackupCommandTemplateFld.setMaxStringLength(255);
 		customBackupCommandTemplateFld.setText(this.customBackupCommandTemplate);
 		customBackupExtensionFld = this.addTextField(new WDLTextField(font,
-				width / 2 + 160, 54, 40, 20));
+				width / 2 + 160, 54, 40, 20,
+				new TextComponentTranslation("wdl.gui.backup.customExtension")));
 		customBackupExtensionFld.setText(this.customBackupExtension);
 
 		updateFieldVisibility();

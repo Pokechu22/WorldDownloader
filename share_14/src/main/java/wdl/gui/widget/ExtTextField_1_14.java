@@ -28,7 +28,7 @@ abstract class ExtTextField extends TextFieldWidget {
 	@Deprecated
 	protected static final Void active = null;
 
-	public ExtTextField(FontRenderer fontRenderer, int x, int y, int width, int height, ITextComponent text) {
-		super(fontRenderer, x, y, width, height, text.getString());
+	public ExtTextField(FontRenderer fontRenderer, int x, int y, int width, int height, ITextComponent label) {
+		super(fontRenderer, x, y, width, height, label.getString());
 	}
 }

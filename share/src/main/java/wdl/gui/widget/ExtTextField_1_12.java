@@ -32,11 +32,11 @@ abstract class ExtTextField extends GuiTextField {
 	 */
 	private int mouseX, mouseY;
 
-	public ExtTextField(FontRenderer fontRenderer, int x, int y, int width, int height, ITextComponent text) {
+	public ExtTextField(FontRenderer fontRenderer, int x, int y, int width, int height, ITextComponent label) {
 		super(-1, fontRenderer, x, y, width, height);
 		this.width = width;
 		this.height = height;
-		// Text parameter is unused, but provided for narrator purposes in later versions
+		// Label parameter is unused, but provided for narrator purposes in later versions
 	}
 
 	@Override
