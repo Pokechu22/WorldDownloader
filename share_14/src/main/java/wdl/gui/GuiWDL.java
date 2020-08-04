@@ -3,7 +3,7 @@
  * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017-2019 Pokechu22, julialy
+ * Copyright (c) 2017-2020 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -30,6 +30,7 @@ import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.GuiList;
 import wdl.gui.widget.WDLButton;
 import wdl.gui.widget.WDLScreen;
+import wdl.gui.widget.WDLTextField;
 import wdl.update.WDLUpdateChecker;
 
 public class GuiWDL extends WDLScreen {
@@ -124,8 +125,8 @@ public class GuiWDL extends WDLScreen {
 	 */
 	@Override
 	public void init() {
-		this.worldname = this.addTextField(new TextFieldWidget(this.font,
-				this.width / 2 - 155, 19, 150, 18, I18n.format("wdl.gui.wdl.worldname")));
+		this.worldname = this.addTextField(new WDLTextField(this.font,
+				this.width / 2 - 155, 19, 150, 18, new TranslationTextComponent("wdl.gui.wdl.worldname")));
 		this.worldname.setText(this.config.getValue(MiscSettings.SERVER_NAME));
 
 		this.addButton(new ButtonDisplayGui(this.width / 2 - 100, this.height - 29,

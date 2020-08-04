@@ -3,7 +3,7 @@
  * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017-2019 Pokechu22, julialy
+ * Copyright (c) 2017-2020 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -80,11 +80,11 @@ public class GuiWDLWorld extends WDLScreen {
 		});
 		y += 22;
 		this.spawnTextY = y + 4;
-		this.spawnX = this.addTextField(new GuiNumericTextField(40, this.font,
+		this.spawnX = this.addTextField(new GuiNumericTextField(this.font,
 				this.width / 2 - 87, y, 50, 16));
-		this.spawnY = this.addTextField(new GuiNumericTextField(41, this.font,
+		this.spawnY = this.addTextField(new GuiNumericTextField(this.font,
 				this.width / 2 - 19, y, 50, 16));
-		this.spawnZ = this.addTextField(new GuiNumericTextField(42, this.font,
+		this.spawnZ = this.addTextField(new GuiNumericTextField(this.font,
 				this.width / 2 + 48, y, 50, 16));
 		spawnX.setValue(config.getValue(WorldSettings.SPAWN_X));
 		spawnY.setValue(config.getValue(WorldSettings.SPAWN_Y));

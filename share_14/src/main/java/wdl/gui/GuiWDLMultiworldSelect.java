@@ -20,11 +20,13 @@ import java.util.List;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import wdl.WDL;
 import wdl.config.Configuration;
 import wdl.config.IConfiguration;
 import wdl.config.settings.MiscSettings;
 import wdl.gui.widget.WDLButton;
+import wdl.gui.widget.WDLTextField;
 
 /**
  * A GUI for selecting which world the player is currently in.
@@ -308,11 +310,13 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 			}
 		});
 
-		this.newNameField = this.addTextField(new TextFieldWidget(this.font,
-				this.width / 2 - 155, 29, 150, 20, I18n.format("wdl.gui.multiworldSelect.newName")));
+		this.newNameField = this.addTextField(new WDLTextField(this.font,
+				this.width / 2 - 155, 29, 150, 20,
+				new TranslationTextComponent("wdl.gui.multiworldSelect.newName")));
 
-		this.searchField = this.addTextField(new TextFieldWidget(this.font,
-				this.width / 2 + 5, 29, 150, 20, I18n.format("wdl.gui.multiworldSelect.search")));
+		this.searchField = this.addTextField(new WDLTextField(this.font,
+				this.width / 2 + 5, 29, 150, 20,
+				new TranslationTextComponent("wdl.gui.multiworldSelect.search")));
 		this.searchField.setText(searchText);
 	}
 

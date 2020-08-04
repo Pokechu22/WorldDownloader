@@ -3,7 +3,7 @@
  * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017-2019 Pokechu22, julialy
+ * Copyright (c) 2017-2020 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -18,6 +18,7 @@ import javax.annotation.Nullable;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import wdl.WDL;
 import wdl.config.IConfiguration;
@@ -26,6 +27,7 @@ import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.SettingButton;
 import wdl.gui.widget.WDLButton;
 import wdl.gui.widget.WDLScreen;
+import wdl.gui.widget.WDLTextField;
 import wdl.versioned.VersionedFunctions;
 
 public class GuiWDLGenerator extends WDLScreen {
@@ -56,8 +58,8 @@ public class GuiWDLGenerator extends WDLScreen {
 		int seedWidth = font.getStringWidth(seedText + " ");
 
 		int y = this.height / 4 - 15;
-		this.seedField = this.addTextField(new TextFieldWidget(this.font,
-				this.width / 2 - (100 - seedWidth), y, 200 - seedWidth, 18, seedText));
+		this.seedField = this.addTextField(new WDLTextField(this.font,
+				this.width / 2 - (100 - seedWidth), y, 200 - seedWidth, 18, new StringTextComponent(seedText)));
 		this.seedField.setText(config.getValue(GeneratorSettings.SEED));
 		y += 22;
 		this.generatorBtn = this.addButton(new SettingButton(
