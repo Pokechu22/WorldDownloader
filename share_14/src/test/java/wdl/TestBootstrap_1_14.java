@@ -13,8 +13,6 @@
  */
 package wdl;
 
-import java.io.IOException;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -34,6 +32,8 @@ final class TestBootstrap {
 	private static final Logger LOGGER = LogManager.getLogger();
 	private static boolean ran = false;
 
+	// No files are left open, and the objects have a longer lifespan in e.g. LanguageMap
+	@SuppressWarnings("resource")
 	static void init() {
 		if (ran) {
 			return;
@@ -52,11 +52,6 @@ final class TestBootstrap {
 		IResourcePack pack = new VanillaPack("minecraft", "realms", "wdl");
 		resourceManager.addResourcePack(pack);
 		languageManager.onResourceManagerReload(resourceManager);
-		try {
-			pack.close(); // Does nothing (call is only present to suppress warnings)
-		} catch (IOException ex) {
-			throw new AssertionError(ex); // Should not happen
-		}
 		LOGGER.debug("Set up I18n.");
 	}
 }
