@@ -43,6 +43,12 @@ dependencies {
     // testCompile configurations.forgeGradleMcDeps
 }
 
+sourceSets {
+    main
+    test
+    api
+}
+
 minecraft {
     //suppressMappingVersionWarnings = true
     mappings channel: 'snapshot', version: '20200728-1.15.1'
@@ -126,6 +132,8 @@ extraSrgs {
 sourceSets {
     main {
         java {
+            compileClasspath += api.output
+            runtimeClasspath += api.output
             srcDir "src/main/java"
             srcDir project(':share').file("src/main/java")
             exclude "wdl/StandardEntityManagers_1_10.java"
@@ -175,6 +183,8 @@ sourceSets {
     }
     test {
         java {
+            compileClasspath += api.output
+            runtimeClasspath += api.output
             srcDir project(':share').file("src/test/java")
             exclude "wdl/MixinTest.java"
             exclude "wdl/TestBootstrap_1_9.java"
