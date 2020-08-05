@@ -64,7 +64,7 @@
     }
  
     public void handleEffect(SPacketEffect packetIn) {
-@@ -1749,7 +1769,10 @@
+@@ -1748,7 +1768,10 @@
              ((DebugRendererWorldGenAttempts)this.client.debugRenderer.worldGenAttempts).addAttempt(packetbuffer.readBlockPos(), packetbuffer.readFloat(), packetbuffer.readFloat(), packetbuffer.readFloat(), packetbuffer.readFloat(), packetbuffer.readFloat());
              LOGGER.warn("Unknown custom packed identifier: {}", (Object)resourcelocation);
           } else {

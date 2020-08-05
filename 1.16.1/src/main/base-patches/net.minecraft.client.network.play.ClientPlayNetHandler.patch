@@ -64,7 +64,7 @@
     }
  
     public void handleEffect(SPlaySoundEventPacket packetIn) {
-@@ -2062,7 +2082,10 @@
+@@ -2061,7 +2081,10 @@
              int l5 = packetbuffer.readInt();
              this.client.debugRenderer.field_229018_q_.func_229022_a_(blockpos8, l3, s10, l5);
           } else {
