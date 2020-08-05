@@ -17,21 +17,29 @@ package wdl;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.BitSet;
 import java.util.Map.Entry;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.shorts.ShortList;
+import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.LongArrayNBT;
+import net.minecraft.util.SharedConstants;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.SectionPos;
 import net.minecraft.util.palette.UpgradeData;
+import net.minecraft.world.ITickList;
 import net.minecraft.world.LightType;
 import net.minecraft.world.SerializableTickList;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeContainer;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.chunk.ChunkPrimerTickList;
 import net.minecraft.world.chunk.ChunkSection;
 import net.minecraft.world.chunk.ChunkStatus;
@@ -44,6 +52,7 @@ import net.minecraft.world.chunk.storage.RegionFileCache;
 import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.dimension.EndDimension;
 import net.minecraft.world.dimension.NetherDimension;
+import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.lighting.WorldLightManager;
 import net.minecraft.world.server.ServerTickList;
@@ -225,7 +234,7 @@ abstract class WDLChunkLoaderBase extends ChunkLoader {
 		// XXX: These are new, and they might conflict with the other one.  Not sure which should be used.
 		if (chunk.getBlocksToBeTicked() instanceof SerializableTickList) {
 			compound.put("TileTicks", ((SerializableTickList<?>) chunk.getBlocksToBeTicked())
-					.save(world.getGameTime()));
+					.func_234857_b_());
 		}
 
 		if (chunk.getFluidsToBeTicked() instanceof ChunkPrimerTickList) {
@@ -234,7 +243,7 @@ abstract class WDLChunkLoaderBase extends ChunkLoader {
 
 		if (chunk.getFluidsToBeTicked() instanceof SerializableTickList) {
 			compound.put("LiquidTicks", ((SerializableTickList<?>) chunk.getFluidsToBeTicked())
-					.save(world.getGameTime()));
+					.func_234857_b_());
 		}
 
 		CompoundNBT heightMaps = new CompoundNBT();
