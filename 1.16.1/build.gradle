@@ -132,6 +132,7 @@ sourceSets {
             srcDir "src/main/java"
             srcDir project(':share_14').file("src/main/java")
             exclude "wdl/WDLChunkLoader_1_14.java"
+            exclude "wdl/WDLChunkLoader_1_15.java"
             exclude "wdl/versioned/GameRules_1_14.java"
             exclude "wdl/versioned/Generator_1_14.java"
             exclude "wdl/versioned/Handlers_1_14.java"
@@ -170,8 +171,10 @@ sourceSets {
             exclude "wdl/TestBootstrap_1_14.java"
             exclude "wdl/DelegateChunkManager_1_14.java"
             exclude "wdl/DelegateChunkManager_1_14_3.java"
+            exclude "wdl/DelegateChunkManager_1_14_4.java"
             exclude "wdl/ExtWorld_1_14.java"
             exclude "wdl/ExtWorld_1_14_4.java"
+            exclude "wdl/ExtWorld_1_15.java"
             exclude "wdl/lwts/WDLTestTweaker_Forge.java"
             exclude "wdl/lwts/WDLTestTweaker.java"
         }
