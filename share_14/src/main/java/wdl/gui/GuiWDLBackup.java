@@ -20,7 +20,6 @@ import javax.annotation.Nullable;
 
 import com.google.common.io.Files;
 
-import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.ITextComponent;
@@ -35,6 +34,7 @@ import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.WDLButton;
 import wdl.gui.widget.WDLScreen;
 import wdl.gui.widget.WDLTextField;
+import wdl.versioned.VersionedFunctions;
 
 /**
  * GUI allowing control over the way the world is backed up.
@@ -305,7 +305,7 @@ public class GuiWDLBackup extends WDLScreen {
 		if (this.isCommandValid) {
 			return parent;
 		} else {
-			return new ConfirmScreen((result) -> {
+			return VersionedFunctions.createConfirmScreen((result) -> {
 				if (result) {
 					minecraft.displayGuiScreen(parent);
 				} else {
@@ -313,7 +313,7 @@ public class GuiWDLBackup extends WDLScreen {
 				}
 			}, new TranslationTextComponent("wdl.gui.backup.customCommandFailed.line1"),
 					new TranslationTextComponent("wdl.gui.backup.customCommandFailed.line2"),
-					I18n.format("gui.yes"), I18n.format("gui.cancel"));
+					new TranslationTextComponent("gui.yes"), new TranslationTextComponent("gui.cancel"));
 		}
 	}
 }

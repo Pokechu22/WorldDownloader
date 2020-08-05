@@ -17,15 +17,18 @@ import static org.lwjgl.opengl.GL11.*;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.network.play.ClientPlayNetHandler;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.Util;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
@@ -171,5 +174,13 @@ final class GuiFunctions {
 				.setColor(TextFormatting.BLUE)
 				.applyFormatting(TextFormatting.BLUE)
 				.setClickEvent(new ClickEvent(Action.OPEN_URL, url));
+	}
+
+	/* (non-javadoc)
+	 * @See VersionedFunctions#createConfirmScreen
+	 */
+	static ConfirmScreen createConfirmScreen(BooleanConsumer action, ITextComponent line1,
+			ITextComponent line2, ITextComponent confirm, ITextComponent cancel) {
+		return new ConfirmScreen(action, line1, line2, confirm, cancel);
 	}
 }

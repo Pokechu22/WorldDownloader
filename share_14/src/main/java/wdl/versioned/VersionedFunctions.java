@@ -3,7 +3,7 @@
  * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017-2019 Pokechu22, julialy
+ * Copyright (c) 2017-2020 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -30,12 +30,14 @@ import javax.annotation.meta.TypeQualifierNickname;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableList;
 
+import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.network.play.ClientPlayNetHandler;
 import net.minecraft.entity.Entity;
@@ -51,6 +53,7 @@ import net.minecraft.network.play.server.SCustomPayloadPlayPacket;
 import net.minecraft.network.play.server.SMapDataPacket;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
@@ -565,6 +568,21 @@ public final class VersionedFunctions {
 	 */
 	public static Style createLinkFormatting(String url) {
 		return GuiFunctions.createLinkFormatting(url);
+	}
+
+	/**
+	 * Creates a {@link ConfirmScreen}.
+	 *
+	 * @param action The callback for when one of the buttons is clicked.
+	 * @param line1 The first line of text.
+	 * @param line2 The second line of text.
+	 * @param confirm Text for the confirm button.
+	 * @param cancel Text for the cancel button.
+	 * @return The new ConfirmScreen.
+	 */
+	public static ConfirmScreen createConfirmScreen(BooleanConsumer action, ITextComponent line1,
+			ITextComponent line2, ITextComponent confirm, ITextComponent cancel) {
+		return GuiFunctions.createConfirmScreen(action, line1, line2, confirm, cancel);
 	}
 
 	/**
