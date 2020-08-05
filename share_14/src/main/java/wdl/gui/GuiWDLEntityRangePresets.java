@@ -20,7 +20,6 @@ import javax.annotation.Nullable;
 
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import wdl.EntityUtils;
@@ -94,22 +93,25 @@ public class GuiWDLEntityRangePresets extends WDLScreen {
 	public void render(int mouseX, int mouseY, float partialTicks) {
 		Utils.drawListBackground(23, 32, 0, 0, height, width);
 
-		String infoText = null;
+		ITextComponent infoText = null;
 
 		if (vanillaButton.isHovered()) {
-			infoText = I18n.format("wdl.gui.rangePresets.vanilla.description");
+			infoText = new TranslationTextComponent("wdl.gui.rangePresets.vanilla.description");
 		} else if (spigotButton.isHovered()) {
-			infoText = I18n.format("wdl.gui.rangePresets.spigot.description");
+			infoText = new TranslationTextComponent("wdl.gui.rangePresets.spigot.description");
 		} else if (serverButton.isHovered()) {
-			infoText = I18n.format("wdl.gui.rangePresets.server.description") + "\n\n";
+			// Laid out awkwardly due to 1.16's IFormattableTextComponent
+			TranslationTextComponent desc = new TranslationTextComponent("wdl.gui.rangePresets.server.description");
 
 			if (serverButton.isEnabled()) {
-				infoText += I18n.format("wdl.gui.rangePresets.server.installed");
+				infoText = desc.appendText("\n\n").appendSibling(
+						new TranslationTextComponent("wdl.gui.rangePresets.server.installed"));
 			} else {
-				infoText += I18n.format("wdl.gui.rangePresets.server.notInstalled");
+				infoText = desc.appendText("\n\n").appendSibling(
+						new TranslationTextComponent("wdl.gui.rangePresets.server.notInstalled"));
 			}
 		} else if (cancelButton.isHovered()) {
-			infoText = I18n.format("wdl.gui.rangePresets.cancel.description");
+			infoText = new TranslationTextComponent("wdl.gui.rangePresets.cancel.description");
 		}
 
 		if (infoText != null) {

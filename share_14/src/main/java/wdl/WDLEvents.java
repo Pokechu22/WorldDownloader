@@ -53,6 +53,8 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.storage.MapData;
 import wdl.MapDataHandler.MapDataResult;
@@ -803,7 +805,7 @@ public class WDLEvents {
 
 		private class StartDownloadButton extends WDLButton {
 			public StartDownloadButton(Screen menu, int x, int y, int width, int height) {
-				super(x, y, width, height, null);
+				super(x, y, width, height, new StringTextComponent(""));
 				this.menu = menu;
 			}
 
@@ -812,37 +814,37 @@ public class WDLEvents {
 
 			@Override
 			public void beforeDraw() {
-				final String displayString;
+				final ITextComponent displayString;
 				final boolean enabled;
 				if (wdl.minecraft.isIntegratedServerRunning()) {
 					// Singleplayer
-					displayString = I18n
-							.format("wdl.gui.ingameMenu.downloadStatus.singlePlayer");
+					displayString = new TranslationTextComponent(
+							"wdl.gui.ingameMenu.downloadStatus.singlePlayer");
 					enabled = false;
 				} else if (!WDLPluginChannels.canDownloadAtAll()) {
 					if (WDLPluginChannels.canRequestPermissions()) {
 						// Allow requesting permissions.
-						displayString = I18n
-								.format("wdl.gui.ingameMenu.downloadStatus.request");
+						displayString = new TranslationTextComponent(
+								"wdl.gui.ingameMenu.downloadStatus.request");
 						enabled = true;
 					} else {
 						// Out of date plugin :/
-						displayString = I18n
-								.format("wdl.gui.ingameMenu.downloadStatus.disabled");
+						displayString = new TranslationTextComponent(
+								"wdl.gui.ingameMenu.downloadStatus.disabled");
 						enabled = false;
 					}
 				} else if (WDL.saving) {
 					// Normally not accessible; only happens as a major fallback...
-					displayString = I18n
-							.format("wdl.gui.ingameMenu.downloadStatus.saving");
+					displayString = new TranslationTextComponent(
+							"wdl.gui.ingameMenu.downloadStatus.saving");
 					enabled = false;
 				} else if (WDL.downloading) {
-					displayString = I18n
-							.format("wdl.gui.ingameMenu.downloadStatus.stop");
+					displayString = new TranslationTextComponent(
+							"wdl.gui.ingameMenu.downloadStatus.stop");
 					enabled = true;
 				} else {
-					displayString = I18n
-							.format("wdl.gui.ingameMenu.downloadStatus.start");
+					displayString = new TranslationTextComponent(
+							"wdl.gui.ingameMenu.downloadStatus.start");
 					enabled = true;
 				}
 				this.setEnabled(enabled);
@@ -881,7 +883,7 @@ public class WDLEvents {
 		}
 
 		private class SettingsButton extends WDLButton {
-			public SettingsButton(Screen menu, int x, int y, int width, int height, String displayString) {
+			public SettingsButton(Screen menu, int x, int y, int width, int height, ITextComponent displayString) {
 				super(x, y, width, height, displayString);
 				this.menu = menu;
 			}
@@ -936,7 +938,7 @@ public class WDLEvents {
 
 			addButton.accept(new SettingsButton(gui,
 					gui.width / 2 + 74, insertAtYPos, 28, 20,
-					I18n.format("wdl.gui.ingameMenu.settings")));
+					new TranslationTextComponent("wdl.gui.ingameMenu.settings")));
 		}
 
 		@Override

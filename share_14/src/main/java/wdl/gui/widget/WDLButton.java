@@ -14,17 +14,11 @@
 package wdl.gui.widget;
 
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 
 /**
  * A Button class that works across versions.
  */
 public abstract class WDLButton extends ExtButton {
-	@Deprecated
-	public WDLButton(int x, int y, int widthIn, int heightIn, String buttonText) {
-		this(x, y, widthIn, heightIn, new StringTextComponent(buttonText));
-	}
-
 	public WDLButton(int x, int y, int widthIn, int heightIn, ITextComponent buttonText) {
 		super(x, y, widthIn, heightIn, buttonText);
 	}

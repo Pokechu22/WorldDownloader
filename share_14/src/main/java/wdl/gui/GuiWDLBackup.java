@@ -45,7 +45,7 @@ public class GuiWDLBackup extends WDLScreen {
 	private final WDL wdl;
 	private final IConfiguration config;
 
-	private String description;
+	private final ITextComponent description;
 
 	private WorldBackupType backupType;
 	private WDLButton backupTypeButton;
@@ -69,9 +69,9 @@ public class GuiWDLBackup extends WDLScreen {
 		this.customBackupCommandTemplate = config.getValue(MiscSettings.BACKUP_COMMAND_TEMPLATE);
 		this.customBackupExtension = config.getValue(MiscSettings.BACKUP_EXTENSION);
 
-		this.description = I18n.format("wdl.gui.backup.description1") + "\n\n"
-				+ I18n.format("wdl.gui.backup.description2") + "\n\n"
-				+ I18n.format("wdl.gui.backup.description3");
+		this.description = new TranslationTextComponent("wdl.gui.backup.description1").appendText("\n\n")
+				.appendSibling(new TranslationTextComponent("wdl.gui.backup.description2")).appendText("\n\n")
+				.appendSibling(new TranslationTextComponent("wdl.gui.backup.description3"));
 	}
 
 	@Override
@@ -290,9 +290,9 @@ public class GuiWDLBackup extends WDLScreen {
 		}
 
 		if (customBackupCommandTemplateFld.isHovered()) {
-			Utils.drawGuiInfoBox(I18n.format("wdl.gui.backup.customCommandTemplate.description"), width, height, 48);
+			Utils.drawGuiInfoBox(new TranslationTextComponent("wdl.gui.backup.customCommandTemplate.description"), width, height, 48);
 		} else if (customBackupExtensionFld.isHovered()) {
-			Utils.drawGuiInfoBox(I18n.format("wdl.gui.backup.customExtension.description"), width, height, 48);
+			Utils.drawGuiInfoBox(new TranslationTextComponent("wdl.gui.backup.customExtension.description"), width, height, 48);
 		} else if (commandInvalidReason == null || backupTypeButton.isHovered()) {
 			// Only draw the large description if the command is valid (i.e. there isn't other text)
 			// or the mouse is directly over the backup type button (i.e. the info is useful)
