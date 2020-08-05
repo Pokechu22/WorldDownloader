@@ -109,6 +109,6 @@ public class GuiWDLAbout extends WDLScreen {
 	@Override
 	protected void renderTitle(int mouseX, int mouseY, float partialTicks) {
 		// Draw at y=2 instead of y=8, to avoid drawing over the buttons
-		this.drawCenteredString(this.font, this.title.getFormattedText(), this.width / 2, 2, 0xFFFFFF);
+		this.drawCenteredString(this.font, this.title.getString(), this.width / 2, 2, 0xFFFFFF);
 	}
 }

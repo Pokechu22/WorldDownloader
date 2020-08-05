@@ -68,7 +68,7 @@ public class GuiWDLExtensions extends WDLScreen {
 		public ModList() {
 			super(GuiWDLExtensions.this.minecraft, GuiWDLExtensions.this.width,
 					bottomLocation, TOP_HEIGHT, bottomLocation, 22);
-			this.renderSelection = true;
+			this.setRenderSelection(true);
 		}
 
 		@Nullable
