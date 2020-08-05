@@ -16,6 +16,8 @@ package wdl.gui;
 import java.io.IOException;
 
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import wdl.WDL;
 import wdl.WDLMessageTypes;
 import wdl.WDLMessages;
@@ -155,7 +157,7 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements IBac
 		int y = infoBoxY + 22;
 
 		backupAsZipButton = this.addButton(new WDLButton(x, y, 200, 20,
-				I18n.format("wdl.gui.overwriteChanges.asZip.name")) {
+				new TranslationTextComponent("wdl.gui.overwriteChanges.asZip.name")) {
 			public @Override void performAction() {
 				if (backingUp) return;
 				backingUp = true;
@@ -164,7 +166,7 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements IBac
 		});
 		y += 22;
 		backupAsFolderButton = this.addButton(new WDLButton(x, y, 200, 20,
-				I18n.format("wdl.gui.overwriteChanges.asFolder.name")) {
+				new TranslationTextComponent("wdl.gui.overwriteChanges.asFolder.name")) {
 			public @Override void performAction() {
 				if (backingUp) return;
 				backingUp = true;
@@ -173,14 +175,14 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements IBac
 		});
 		y += 22;
 		downloadNowButton = this.addButton(new WDLButton(x, y, 200, 20,
-				I18n.format("wdl.gui.overwriteChanges.startNow.name")) {
+				new TranslationTextComponent("wdl.gui.overwriteChanges.startNow.name")) {
 			public @Override void performAction() {
 				callback.run();
 			}
 		});
 		y += 22;
 		cancelButton = this.addButton(new WDLButton(x, y, 200, 20,
-				I18n.format("wdl.gui.overwriteChanges.cancel.name")) {
+				new TranslationTextComponent("wdl.gui.overwriteChanges.cancel.name")) {
 			public @Override void performAction() {
 				cancel.run();
 			}
@@ -235,15 +237,15 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements IBac
 
 			super.render(mouseX, mouseY, partialTicks);
 
-			String tooltip = null;
+			ITextComponent tooltip = null;
 			if (backupAsZipButton.isHovered()) {
-				tooltip = I18n.format("wdl.gui.overwriteChanges.asZip.description");
+				tooltip = new TranslationTextComponent("wdl.gui.overwriteChanges.asZip.description");
 			} else if (backupAsFolderButton.isHovered()) {
-				tooltip = I18n.format("wdl.gui.overwriteChanges.asFolder.description");
+				tooltip = new TranslationTextComponent("wdl.gui.overwriteChanges.asFolder.description");
 			} else if (downloadNowButton.isHovered()) {
-				tooltip = I18n.format("wdl.gui.overwriteChanges.startNow.description");
+				tooltip = new TranslationTextComponent("wdl.gui.overwriteChanges.startNow.description");
 			} else if (cancelButton.isHovered()) {
-				tooltip = I18n.format("wdl.gui.overwriteChanges.cancel.description");
+				tooltip = new TranslationTextComponent("wdl.gui.overwriteChanges.cancel.description");
 			}
 
 			Utils.drawGuiInfoBox(tooltip, width, height, 48);

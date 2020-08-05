@@ -17,6 +17,7 @@ import javax.annotation.Nullable;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import wdl.WDL;
@@ -78,7 +79,7 @@ public class GuiWDLGenerator extends WDLScreen {
 		y += 22;
 		this.settingsPageBtn = this.addButton(new ButtonDisplayGui(
 				this.width / 2 - 100, y, 200, 20,
-				"", this::makeGeneratorSettingsGui));
+				new StringTextComponent(""), this::makeGeneratorSettingsGui));
 		updateSettingsButtonVisibility();
 
 		this.addButton(new ButtonDisplayGui(this.width / 2 - 100, height - 29,
@@ -114,10 +115,10 @@ public class GuiWDLGenerator extends WDLScreen {
 
 		super.render(mouseX, mouseY, partialTicks);
 
-		String tooltip = null;
+		ITextComponent tooltip = null;
 
 		if (seedField.isHovered()) {
-			tooltip = I18n.format("wdl.gui.generator.seed.description");
+			tooltip = new TranslationTextComponent("wdl.gui.generator.seed.description");
 		} else if (generatorBtn.isHovered()) {
 			tooltip = generatorBtn.getTooltip();
 		} else if (generateStructuresBtn.isHovered()) {
@@ -134,15 +135,15 @@ public class GuiWDLGenerator extends WDLScreen {
 		switch (this.config.getValue(GeneratorSettings.GENERATOR)) {
 		case FLAT:
 			settingsPageBtn.visible = true;
-			settingsPageBtn.setMessage(I18n.format("wdl.gui.generator.flatSettings"));
+			settingsPageBtn.setMessage(new TranslationTextComponent("wdl.gui.generator.flatSettings"));
 			break;
 		case CUSTOMIZED:
 			settingsPageBtn.visible = true;
-			settingsPageBtn.setMessage(I18n.format("wdl.gui.generator.customSettings"));
+			settingsPageBtn.setMessage(new TranslationTextComponent("wdl.gui.generator.customSettings"));
 			break;
 		case BUFFET:
 			settingsPageBtn.visible = true;
-			settingsPageBtn.setMessage(I18n.format("wdl.gui.generator.buffetSettings"));
+			settingsPageBtn.setMessage(new TranslationTextComponent("wdl.gui.generator.buffetSettings"));
 			break;
 		default:
 			settingsPageBtn.visible = false;

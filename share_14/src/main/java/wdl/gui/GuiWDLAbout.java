@@ -17,6 +17,7 @@ import javax.annotation.Nullable;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.TranslationTextComponent;
 import wdl.VersionConstants;
 import wdl.WDL;
 import wdl.gui.widget.ButtonDisplayGui;
@@ -57,14 +58,14 @@ public class GuiWDLAbout extends WDLScreen {
 	@Override
 	public void init() {
 		this.addButton(new ButtonDisplayGui((this.width / 2) - 155, 18, 150, 20,
-				I18n.format("wdl.gui.about.extensions"), () -> new GuiWDLExtensions(this)));
+				new TranslationTextComponent("wdl.gui.about.extensions"), () -> new GuiWDLExtensions(this)));
 		this.addButton(new WDLButton((this.width / 2) + 5, 18, 150, 20,
-				I18n.format("wdl.gui.about.debugInfo")) {
+				new TranslationTextComponent("wdl.gui.about.debugInfo")) {
 			public @Override void performAction() {
 				// Copy debug info
 				VersionedFunctions.setClipboardString(wdl.getDebugInfo());
 				// Change text to "copied" once clicked
-				this.setMessage(I18n.format("wdl.gui.about.debugInfo.copied"));
+				this.setMessage(new TranslationTextComponent("wdl.gui.about.debugInfo.copied"));
 			}
 		});
 		this.addButton(new ButtonDisplayGui((this.width / 2) - 100, this.height - 29,

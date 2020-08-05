@@ -3,7 +3,7 @@
  * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017-2019 Pokechu22, julialy
+ * Copyright (c) 2017-2020 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -21,7 +21,7 @@ import com.google.common.collect.ListMultimap;
 
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import wdl.MessageTypeCategory;
 import wdl.WDL;
@@ -41,7 +41,7 @@ public class GuiWDLMessages extends WDLScreen {
 	 * Set from inner classes; this is the text to draw.
 	 */
 	@Nullable
-	private String hoveredButtonTooltip = null;
+	private ITextComponent hoveredButtonTooltip = null;
 
 	private class GuiMessageTypeList extends GuiList<GuiMessageTypeList.Entry> {
 		public GuiMessageTypeList() {
@@ -137,7 +137,7 @@ public class GuiWDLMessages extends WDLScreen {
 				(this.width / 2) - 155, 18, 150, 20));
 		resetButton = this.addButton(new ButtonDisplayGui(
 				(this.width / 2) + 5, 18, 150, 20,
-				I18n.format("wdl.gui.messages.reset"),
+				new TranslationTextComponent("wdl.gui.messages.reset"),
 				() -> new ConfirmScreen(result -> confirmResult(result, ID_RESET_ALL),
 						new TranslationTextComponent("wdl.gui.messages.reset.confirm.title"),
 						new TranslationTextComponent("wdl.gui.messages.reset.confirm.subtitle"))));
@@ -178,13 +178,13 @@ public class GuiWDLMessages extends WDLScreen {
 		this.renderBackground();
 		super.render(mouseX, mouseY, partialTicks);
 
-		String tooltip = null;
+		ITextComponent tooltip = null;
 		if (hoveredButtonTooltip != null) {
 			tooltip = hoveredButtonTooltip;
 		} else if (enableAllButton.isHovered()) {
 			tooltip = enableAllButton.getTooltip();
 		} else if (resetButton.isHovered()) {
-			tooltip = I18n.format("wdl.gui.messages.reset.description");
+			tooltip = new TranslationTextComponent("wdl.gui.messages.reset.description");
 		}
 
 		if (tooltip != null) {

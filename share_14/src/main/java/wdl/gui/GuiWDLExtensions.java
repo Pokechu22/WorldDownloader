@@ -3,7 +3,7 @@
  * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017-2019 Pokechu22, julialy
+ * Copyright (c) 2017-2020 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -20,7 +20,9 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import wdl.api.IWDLModWithGui;
 import wdl.api.WDLApi;
 import wdl.api.WDLApi.ModInfo;
@@ -104,7 +106,8 @@ public class GuiWDLExtensions extends WDLScreen {
 						buttonName = I18n.format("wdl.gui.extensions.defaultSettingsButtonText");
 					}
 
-					this.addButton(new WDLButton(0, 0, 80, 20, guiMod.getButtonName()) {
+					this.addButton(new WDLButton(0, 0, 80, 20,
+							new StringTextComponent(guiMod.getButtonName())) {
 						public @Override void performAction() {
 							if (mod.mod instanceof IWDLModWithGui) {
 								((IWDLModWithGui) mod.mod).openGui(GuiWDLExtensions.this);
@@ -114,12 +117,12 @@ public class GuiWDLExtensions extends WDLScreen {
 				}
 
 				this.addButton(new WDLButton(0, 0, 80, 20,
-						I18n.format("wdl.gui.extensions."
+						new TranslationTextComponent("wdl.gui.extensions."
 								+ (mod.isEnabled() ? "enabled" : "disabled"))) {
 					public @Override void performAction() {
 						mod.toggleEnabled();
 
-						this.setMessage(I18n.format("wdl.gui.extensions."
+						this.setMessage(new TranslationTextComponent("wdl.gui.extensions."
 								+ (mod.isEnabled() ? "enabled" : "disabled")));
 
 						if (!mod.isEnabled()) {

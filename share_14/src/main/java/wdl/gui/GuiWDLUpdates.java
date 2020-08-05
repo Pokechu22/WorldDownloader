@@ -3,7 +3,7 @@
  * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017-2019 Pokechu22, julialy
+ * Copyright (c) 2017-2020 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -22,14 +22,15 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import wdl.VersionConstants;
 import wdl.WDL;
-import wdl.gui.widget.WDLButton;
-import wdl.gui.widget.WDLScreen;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.GuiList;
 import wdl.gui.widget.GuiList.GuiListEntry;
 import wdl.gui.widget.TextList;
+import wdl.gui.widget.WDLButton;
+import wdl.gui.widget.WDLScreen;
 import wdl.update.Release;
 import wdl.update.WDLUpdateChecker;
 import wdl.versioned.VersionedFunctions;
@@ -304,7 +305,7 @@ public class GuiWDLUpdates extends WDLScreen {
 		public void init() {
 			this.addButton(new WDLButton(
 					this.width / 2 - 155, 18, 150, 20,
-					I18n.format("wdl.gui.updates.update.viewOnline")) {
+					new TranslationTextComponent("wdl.gui.updates.update.viewOnline")) {
 				public @Override void performAction() {
 					VersionedFunctions.openLink(release.URL);
 				}
@@ -312,7 +313,7 @@ public class GuiWDLUpdates extends WDLScreen {
 			if (release.hiddenInfo != null) {
 				this.addButton(new WDLButton(
 						this.width / 2 + 5, 18, 150, 20,
-						I18n.format("wdl.gui.updates.update.viewForumPost")) {
+						new TranslationTextComponent("wdl.gui.updates.update.viewForumPost")) {
 					public @Override void performAction() {
 						VersionedFunctions.openLink(release.hiddenInfo.post);
 					}

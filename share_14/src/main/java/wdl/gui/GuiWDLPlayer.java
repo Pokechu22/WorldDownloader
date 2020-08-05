@@ -16,7 +16,7 @@ package wdl.gui;
 import javax.annotation.Nullable;
 
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import wdl.WDL;
 import wdl.config.IConfiguration;
@@ -89,7 +89,7 @@ public class GuiWDLPlayer extends WDLScreen {
 		y += 18;
 		this.pickPosBtn = this.addButton(new WDLButton(
 				this.width / 2 - 0, y, 100, 20,
-				I18n.format("wdl.gui.player.setPositionToCurrentPosition")) {
+				new TranslationTextComponent("wdl.gui.player.setPositionToCurrentPosition")) {
 			public @Override void performAction() {
 				setPlayerPosToPlayerPosition();
 			}
@@ -119,7 +119,7 @@ public class GuiWDLPlayer extends WDLScreen {
 	public void render(int mouseX, int mouseY, float partialTicks) {
 		Utils.drawListBackground(23, 32, 0, 0, height, width);
 
-		String tooltip = null;
+		ITextComponent tooltip = null;
 
 		if (this.showPosFields) {
 			this.drawString(this.font, "X:", this.width / 2 - 99,
@@ -130,15 +130,15 @@ public class GuiWDLPlayer extends WDLScreen {
 					this.posTextY, 0xFFFFFF);
 
 			if (posX.isHovered()) {
-				tooltip = I18n.format("wdl.gui.player.positionTextBox.description", "X");
+				tooltip = new TranslationTextComponent("wdl.gui.player.positionTextBox.description", "X");
 			} else if (posY.isHovered()) {
-				tooltip = I18n.format("wdl.gui.player.positionTextBox.description", "Y");
+				tooltip = new TranslationTextComponent("wdl.gui.player.positionTextBox.description", "Y");
 			} else if (posZ.isHovered()) {
-				tooltip = I18n.format("wdl.gui.player.positionTextBox.description", "Z");
+				tooltip = new TranslationTextComponent("wdl.gui.player.positionTextBox.description", "Z");
 			}
 
 			if (pickPosBtn.isHovered()) {
-				tooltip = I18n.format("wdl.gui.player.setPositionToCurrentPosition.description");
+				tooltip = new TranslationTextComponent("wdl.gui.player.setPositionToCurrentPosition.description");
 			}
 		}
 

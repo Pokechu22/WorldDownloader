@@ -3,7 +3,7 @@
  * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017-2019 Pokechu22, julialy
+ * Copyright (c) 2017-2020 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -20,11 +20,11 @@ import com.google.common.collect.Multimap;
 
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import wdl.WDL;
 import wdl.WDLPluginChannels;
 import wdl.WDLPluginChannels.ChunkRange;
@@ -136,14 +136,14 @@ public class GuiWDLChunkOverrides extends WDLScreen {
 		});
 
 		this.addButton(new WDLButton(width / 2 - 80, 18, 80, 20,
-				"Send request") {
+				new StringTextComponent("Send request")) {
 			public @Override void performAction() {
 				WDLPluginChannels.sendRequests();
 			}
 		});
 
 		this.startDownloadButton = this.addButton(new WDLButton(width / 2 + 5, 18, 150, 20,
-				"Start download in these ranges") {
+				new StringTextComponent("Start download in these ranges")) {
 			public @Override void performAction() {
 				if (!WDLPluginChannels.canDownloadAtAll()) {
 					setEnabled(false);
@@ -158,11 +158,13 @@ public class GuiWDLChunkOverrides extends WDLScreen {
 				200, 20, this.parent));
 
 		this.addButton(new ButtonDisplayGui(this.width / 2 - 155, 39, 100, 20,
-				I18n.format("wdl.gui.permissions.current"), () -> new GuiWDLPermissions(this.parent, this.wdl)));
+				new TranslationTextComponent("wdl.gui.permissions.current"),
+				() -> new GuiWDLPermissions(this.parent, this.wdl)));
 		this.addButton(new ButtonDisplayGui(this.width / 2 - 50, 39, 100, 20,
-				I18n.format("wdl.gui.permissions.request"), () -> new GuiWDLPermissionRequest(this.parent, this.wdl)));
+				new TranslationTextComponent("wdl.gui.permissions.request"),
+				() -> new GuiWDLPermissionRequest(this.parent, this.wdl)));
 		this.addButton(new WDLButton(this.width / 2 + 55, 39, 100, 20,
-				I18n.format("wdl.gui.permissions.overrides")) {
+				new TranslationTextComponent("wdl.gui.permissions.overrides")) {
 			public @Override void performAction() {
 				// Would open this GUI; do nothing.
 			};
@@ -382,7 +384,7 @@ public class GuiWDLChunkOverrides extends WDLScreen {
 		 * @param mode
 		 */
 		public RequestModeButton(int x, int y, Mode mode) {
-			super(x, y, 20, 20, "");
+			super(x, y, 20, 20, new StringTextComponent(""));
 			this.mode = mode;
 		}
 

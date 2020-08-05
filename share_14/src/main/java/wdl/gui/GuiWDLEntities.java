@@ -3,7 +3,7 @@
  * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017-2019 Pokechu22, julialy
+ * Copyright (c) 2017-2020 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -23,7 +23,8 @@ import com.google.common.collect.Multimap;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import wdl.EntityUtils;
 import wdl.WDL;
 import wdl.WDLMessageTypes;
@@ -145,11 +146,11 @@ public class GuiWDLEntities extends WDLScreen {
 			/**
 			 * Gets the text for the on/off button.
 			 */
-			private String getButtonText() {
+			private ITextComponent getButtonText() {
 				if (groupEnabled) {
-					return I18n.format("wdl.gui.entities.group.enabled");
+					return new TranslationTextComponent("wdl.gui.entities.group.enabled");
 				} else {
-					return I18n.format("wdl.gui.entities.group.disabled");
+					return new TranslationTextComponent("wdl.gui.entities.group.disabled");
 				}
 			}
 		}
@@ -236,11 +237,11 @@ public class GuiWDLEntities extends WDLScreen {
 			/**
 			 * Gets the text for the on/off button.
 			 */
-			private String getButtonText() {
+			private ITextComponent getButtonText() {
 				if (category.isGroupEnabled() && entityEnabled) {
-					return I18n.format("wdl.gui.entities.entity.included");
+					return new TranslationTextComponent("wdl.gui.entities.entity.included");
 				} else {
-					return I18n.format("wdl.gui.entities.entity.ignored");
+					return new TranslationTextComponent("wdl.gui.entities.entity.ignored");
 				}
 			}
 		}
@@ -286,7 +287,7 @@ public class GuiWDLEntities extends WDLScreen {
 			}
 		});
 		presetsButton = this.addButton(new ButtonDisplayGui(this.width / 2 + 5, 18, 150, 20,
-				I18n.format("wdl.gui.entities.rangePresets"),
+				new TranslationTextComponent("wdl.gui.entities.rangePresets"),
 				() -> new GuiWDLEntityRangePresets(this, wdl, config)));
 
 		this.presetsButton.setEnabled(this.canEditRanges());

@@ -3,7 +3,7 @@
  * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017-2019 Pokechu22, julialy
+ * Copyright (c) 2017-2020 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -16,14 +16,14 @@ package wdl.gui;
 import javax.annotation.Nullable;
 
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import wdl.WDL;
 import wdl.WDLPluginChannels;
-import wdl.gui.widget.WDLButton;
-import wdl.gui.widget.WDLScreen;
 import wdl.gui.widget.ButtonDisplayGui;
 import wdl.gui.widget.TextList;
+import wdl.gui.widget.WDLButton;
+import wdl.gui.widget.WDLScreen;
 
 /**
  * GUI that shows the current permissions for the user.
@@ -64,26 +64,28 @@ public class GuiWDLPermissions extends WDLScreen {
 				200, 20, this.parent));
 
 		this.addButton(new WDLButton(this.width / 2 - 155, 39, 100, 20,
-				I18n.format("wdl.gui.permissions.current")) {
+				new TranslationTextComponent("wdl.gui.permissions.current")) {
 			public @Override void performAction() {
 				// Would open this GUI; do nothing.
 			};
 		});
 		if (WDLPluginChannels.canRequestPermissions()) {
 			this.addButton(new ButtonDisplayGui(this.width / 2 - 50, 39, 100, 20,
-					I18n.format("wdl.gui.permissions.request"), () -> new GuiWDLPermissionRequest(this.parent, this.wdl)));
+					new TranslationTextComponent("wdl.gui.permissions.request"),
+					() -> new GuiWDLPermissionRequest(this.parent, this.wdl)));
 			this.addButton(new ButtonDisplayGui(this.width / 2 + 55, 39, 100, 20,
-					I18n.format("wdl.gui.permissions.overrides"), () -> new GuiWDLChunkOverrides(this.parent, this.wdl)));
+					new TranslationTextComponent("wdl.gui.permissions.overrides"),
+					() -> new GuiWDLChunkOverrides(this.parent, this.wdl)));
 		}
 
 		this.addButton(new WDLButton((this.width / 2) + 5, 18, 150, 20,
-				"Reload permissions") {
+				new StringTextComponent("Reload permissions")) {
 			public @Override void performAction() {
 				// Send the init packet.
 				WDLPluginChannels.sendInitPacket("Refresh?");
 
 				setEnabled(false);
-				setMessage("Refreshing...");
+				setMessage(new StringTextComponent("Refreshing..."));
 
 				refreshTicks = 50; // 2.5 seconds
 			}

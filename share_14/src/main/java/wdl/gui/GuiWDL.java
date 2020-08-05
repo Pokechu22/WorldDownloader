@@ -20,6 +20,7 @@ import javax.annotation.Nullable;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import wdl.WDL;
 import wdl.WDLPluginChannels;
@@ -36,7 +37,7 @@ public class GuiWDL extends WDLScreen {
 	/**
 	 * Tooltip to display on the given frame.
 	 */
-	private String displayedTooltip = null;
+	private ITextComponent displayedTooltip = null;
 
 	private class GuiWDLButtonList extends GuiList<GuiWDLButtonList.ButtonEntry> {
 		public GuiWDLButtonList() {
@@ -47,7 +48,7 @@ public class GuiWDL extends WDLScreen {
 		private class ButtonEntry extends GuiList.GuiListEntry<ButtonEntry> {
 			private final WDLButton button;
 
-			private final String tooltip;
+			private final ITextComponent tooltip;
 
 			/**
 			 * Constructor.
@@ -65,13 +66,13 @@ public class GuiWDL extends WDLScreen {
 			 */
 			public ButtonEntry(String key, BiFunction<Screen, WDL, Screen> openFunc, boolean needsPerms) {
 				this.button = this.addButton(new ButtonDisplayGui(0, 0, 200, 20,
-						I18n.format("wdl.gui.wdl." + key + ".name"),
+						new TranslationTextComponent("wdl.gui.wdl." + key + ".name"),
 						() -> openFunc.apply(GuiWDL.this, GuiWDL.this.wdl)), -100, 0);
 				if (needsPerms) {
 					button.setEnabled(WDLPluginChannels.canDownloadAtAll());
 				}
 
-				this.tooltip = I18n.format("wdl.gui.wdl." + key + ".description");
+				this.tooltip = new TranslationTextComponent("wdl.gui.wdl." + key + ".description");
 			}
 
 			@Override

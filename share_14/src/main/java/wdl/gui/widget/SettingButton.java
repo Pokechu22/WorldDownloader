@@ -3,7 +3,7 @@
  * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2018 Pokechu22, julialy
+ * Copyright (c) 2018-2020 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -13,6 +13,7 @@
  */
 package wdl.gui.widget;
 
+import net.minecraft.util.text.ITextComponent;
 import wdl.config.CyclableSetting;
 import wdl.config.IConfiguration;
 
@@ -28,14 +29,13 @@ public class SettingButton extends WDLButton {
 	}
 
 	public SettingButton(CyclableSetting<?> setting, IConfiguration config, int x, int y, int width, int height) {
-		super(x, y, width, height, "");
+		super(x, y, width, height, config.getButtonText(setting));
 		this.setting = setting;
 		this.config = config;
-		this.updateDisplayString();
 	}
 
 	private void updateDisplayString() {
-		setMessage(config.getButtonText(setting).getFormattedText());
+		setMessage(config.getButtonText(setting));
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public class SettingButton extends WDLButton {
 	/**
 	 * Gets a translated tooltip for this button.
 	 */
-	public String getTooltip() {
-		return setting.getDescription().getFormattedText();
+	public ITextComponent getTooltip() {
+		return setting.getDescription();
 	}
 }

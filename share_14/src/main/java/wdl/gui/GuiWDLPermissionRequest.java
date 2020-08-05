@@ -18,8 +18,8 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import wdl.WDL;
 import wdl.WDLPluginChannels;
 import wdl.gui.widget.ButtonDisplayGui;
@@ -81,10 +81,10 @@ public class GuiWDLPermissionRequest extends WDLScreen {
 
 		this.submitButton = this.addButton(new WDLButton(
 				width / 2 + 5, 18, 150, 20,
-				"Submit request") {
+				new StringTextComponent("Submit request")) {
 			public @Override void performAction() {
 				WDLPluginChannels.sendRequests();
-				setMessage("Submitted!");
+				setMessage(new StringTextComponent("Submitted!"));
 			}
 		});
 		this.submitButton.setEnabled(!(WDLPluginChannels.getRequests().isEmpty()));
@@ -93,15 +93,17 @@ public class GuiWDLPermissionRequest extends WDLScreen {
 				200, 20, this.parent));
 
 		this.addButton(new ButtonDisplayGui(this.width / 2 - 155, 39, 100, 20,
-				I18n.format("wdl.gui.permissions.current"), () -> new GuiWDLPermissions(this.parent, this.wdl)));
+				new TranslationTextComponent("wdl.gui.permissions.current"),
+				() -> new GuiWDLPermissions(this.parent, this.wdl)));
 		this.addButton(new WDLButton(this.width / 2 - 50, 39, 100, 20,
-				I18n.format("wdl.gui.permissions.request")) {
+				new TranslationTextComponent("wdl.gui.permissions.request")) {
 			public @Override void performAction() {
 				// Would open this GUI; do nothing.
 			}
 		});
 		this.addButton(new ButtonDisplayGui(this.width / 2 + 55, 39, 100, 20,
-				I18n.format("wdl.gui.permissions.overrides"), () -> new GuiWDLChunkOverrides(this.parent, this.wdl)));
+				new TranslationTextComponent("wdl.gui.permissions.overrides"),
+				() -> new GuiWDLChunkOverrides(this.parent, this.wdl)));
 	}
 
 	@Override

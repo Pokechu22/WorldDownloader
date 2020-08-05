@@ -16,7 +16,7 @@ package wdl.gui;
 import javax.annotation.Nullable;
 
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import wdl.WDL;
 import wdl.config.IConfiguration;
@@ -97,7 +97,7 @@ public class GuiWDLWorld extends WDLScreen {
 		this.spawnZ.setMaxStringLength(7);
 		y += 18;
 		this.pickSpawnBtn = this.addButton(new WDLButton(this.width / 2, y, 100, 20,
-				I18n.format("wdl.gui.world.setSpawnToCurrentPosition")) {
+				new TranslationTextComponent("wdl.gui.world.setSpawnToCurrentPosition")) {
 			public @Override void performAction() {
 				setSpawnToPlayerPosition();
 			}
@@ -138,7 +138,7 @@ public class GuiWDLWorld extends WDLScreen {
 
 		super.render(mouseX, mouseY, partialTicks);
 
-		String tooltip = null;
+		ITextComponent tooltip = null;
 
 		if (allowCheatsBtn.isHovered()) {
 			tooltip = allowCheatsBtn.getTooltip();
@@ -151,14 +151,14 @@ public class GuiWDLWorld extends WDLScreen {
 		} else if (spawnBtn.isHovered()) {
 			tooltip = spawnBtn.getTooltip();
 		} else if (pickSpawnBtn.isHovered()) {
-			tooltip = I18n.format("wdl.gui.world.setSpawnToCurrentPosition.description");
+			tooltip = new TranslationTextComponent("wdl.gui.world.setSpawnToCurrentPosition.description");
 		} else if (showSpawnFields) {
 			if (spawnX.isHovered()) {
-				tooltip = I18n.format("wdl.gui.world.spawnPos.description", "X");
+				tooltip = new TranslationTextComponent("wdl.gui.world.spawnPos.description", "X");
 			} else if (spawnY.isHovered()) {
-				tooltip = I18n.format("wdl.gui.world.spawnPos.description", "Y");
+				tooltip = new TranslationTextComponent("wdl.gui.world.spawnPos.description", "Y");
 			} else if (spawnZ.isHovered()) {
-				tooltip = I18n.format("wdl.gui.world.spawnPos.description", "Z");
+				tooltip = new TranslationTextComponent("wdl.gui.world.spawnPos.description", "Z");
 			}
 		}
 

@@ -23,6 +23,7 @@ import com.google.common.io.Files;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import wdl.WDL;
 import wdl.WorldBackup;
@@ -106,8 +107,8 @@ public class GuiWDLBackup extends WDLScreen {
 				200, 20, this::getParentOrWarning));
 	}
 
-	private String getBackupButtonText() {
-		return I18n.format("wdl.gui.backup.backupMode",
+	private ITextComponent getBackupButtonText() {
+		return new TranslationTextComponent("wdl.gui.backup.backupMode",
 				backupType.getDescription());
 	}
 

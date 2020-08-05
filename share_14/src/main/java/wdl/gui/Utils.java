@@ -17,6 +17,7 @@ import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.util.text.ITextComponent;
 import wdl.versioned.VersionedFunctions;
 
 public class Utils {
@@ -34,7 +35,7 @@ public class Utils {
 	 * @param bottomPadding
 	 *            The amount of space to put below the bottom of the info box.
 	 */
-	public static void drawGuiInfoBox(String text, int guiWidth, int guiHeight,
+	public static void drawGuiInfoBox(ITextComponent text, int guiWidth, int guiHeight,
 			int bottomPadding) {
 		drawGuiInfoBox(text, 300, 100, guiWidth, guiHeight, bottomPadding);
 	}
@@ -55,7 +56,7 @@ public class Utils {
 	 * @param bottomPadding
 	 *            The amount of space to put below the bottom of the info box.
 	 */
-	public static void drawGuiInfoBox(String text, int infoBoxWidth,
+	public static void drawGuiInfoBox(ITextComponent text, int infoBoxWidth,
 			int infoBoxHeight, int guiWidth, int guiHeight, int bottomPadding) {
 		if (text == null) {
 			return;
@@ -68,7 +69,7 @@ public class Utils {
 		AbstractGui.fill(infoX, infoY, infoX + infoBoxWidth, infoY
 				+ infoBoxHeight, 0x7F000000);
 
-		List<String> lines = wordWrap(text, infoBoxWidth - 10);
+		List<String> lines = wordWrap(text.getFormattedText(), infoBoxWidth - 10);
 
 		for (String s : lines) {
 			mc.fontRenderer.drawString(s, infoX + 5, y, 0xFFFFFF);

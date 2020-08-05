@@ -3,7 +3,7 @@
  * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017-2018 Pokechu22, julialy
+ * Copyright (c) 2017-2020 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -61,17 +61,17 @@ public class GuiWDLEntityRangePresets extends WDLScreen {
 
 		this.vanillaButton = this.addButton(new ButtonDisplayGui(
 				this.width / 2 - 100, y, 200, 20,
-				I18n.format("wdl.gui.rangePresets.vanilla"),
+				new TranslationTextComponent("wdl.gui.rangePresets.vanilla"),
 				makeYesNoGui("wdl.gui.rangePresets.vanilla.warning", ID_VANILLA)));
 		y += 22;
 		this.spigotButton = this.addButton(new ButtonDisplayGui(
 				this.width / 2 - 100, y, 200, 20,
-				I18n.format("wdl.gui.rangePresets.spigot"),
+				new TranslationTextComponent("wdl.gui.rangePresets.spigot"),
 				makeYesNoGui("wdl.gui.rangePresets.spigot.warning", ID_SPIGOT)));
 		y += 22;
 		this.serverButton = this.addButton(new ButtonDisplayGui(
 				this.width / 2 - 100, y, 200, 20,
-				I18n.format("wdl.gui.rangePresets.server"),
+				new TranslationTextComponent("wdl.gui.rangePresets.server"),
 				makeYesNoGui("wdl.gui.rangePresets.spigot.warning", ID_SERVER)));
 
 		serverButton.setEnabled(WDLPluginChannels.hasServerEntityRange());
@@ -80,7 +80,7 @@ public class GuiWDLEntityRangePresets extends WDLScreen {
 
 		this.cancelButton = this.addButton(new ButtonDisplayGui(
 				this.width / 2 - 100, this.height - 29, 200, 20,
-				I18n.format("gui.cancel"), this.parent));
+				new TranslationTextComponent("gui.cancel"), this.parent));
 	}
 
 	private Supplier<ConfirmScreen> makeYesNoGui(String message, int id) {
