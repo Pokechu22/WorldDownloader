@@ -183,7 +183,7 @@ final class GeneratorFunctions {
 	/* (non-javadoc)
 	 * @see GeneratorFunctions#createGeneratorOptionsTag
 	 */
-	public static NBTTagCompound createGeneratorOptionsTag(String generatorOptions) {
+	static NBTTagCompound createGeneratorOptionsTag(String generatorOptions) {
 		try {
 			return JsonToNBT.getTagFromJson(generatorOptions);
 		} catch (CommandSyntaxException e) {

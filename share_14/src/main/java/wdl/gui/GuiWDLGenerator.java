@@ -142,6 +142,9 @@ public class GuiWDLGenerator extends WDLScreen {
 			settingsPageBtn.setMessage(new TranslationTextComponent("wdl.gui.generator.customSettings"));
 			break;
 		case BUFFET:
+		case SINGLE_BIOME_SURFACE: // TODO: Different messages for these?
+		case SINGLE_BIOME_CAVES:
+		case SINGLE_BIOME_FLOATING_ISLANDS:
 			settingsPageBtn.visible = true;
 			settingsPageBtn.setMessage(new TranslationTextComponent("wdl.gui.generator.buffetSettings"));
 			break;

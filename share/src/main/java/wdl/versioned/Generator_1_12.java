@@ -175,7 +175,7 @@ final class GeneratorFunctions {
 	/* (non-javadoc)
 	 * @see GeneratorFunctions#createGeneratorOptionsTag
 	 */
-	public static NBTTagString createGeneratorOptionsTag(String generatorOptions) {
+	static NBTTagString createGeneratorOptionsTag(String generatorOptions) {
 		return new NBTTagString(generatorOptions);
 	}
 }

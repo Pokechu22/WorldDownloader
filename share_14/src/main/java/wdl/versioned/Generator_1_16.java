@@ -17,28 +17,32 @@ package wdl.versioned;
 import java.io.IOException;
 import java.util.function.Consumer;
 
-import javax.annotation.Nullable;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.serialization.JsonOps;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.CreateBuffetWorldScreen;
 import net.minecraft.client.gui.screen.CreateFlatWorldScreen;
-import net.minecraft.client.gui.screen.CreateWorldScreen;
 import net.minecraft.client.gui.screen.FlatPresetsScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.toasts.SystemToast;
 import net.minecraft.client.gui.toasts.ToastGui;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.util.JSONUtils;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biomes;
+import net.minecraft.world.gen.FlatGenerationSettings;
 import wdl.config.settings.GeneratorSettings.Generator;
 
 final class GeneratorFunctions {
@@ -49,7 +53,8 @@ final class GeneratorFunctions {
 	 * @see VersionedFunctions#isAvailableGenerator
 	 */
 	static boolean isAvaliableGenerator(Generator generator) {
-		return generator != Generator.CUSTOMIZED;
+		return generator != Generator.CUSTOMIZED
+				&& generator != Generator.BUFFET;
 	}
 
 	/* (non-javadoc)
@@ -61,19 +66,34 @@ final class GeneratorFunctions {
 		switch (generator) {
 		case FLAT:
 			return new FlatPresetsScreen(new GuiCreateFlatWorldProxy(parent, generatorConfig, callback));
-		case BUFFET: {
-			CompoundNBT generatorNBT;
-			try {
-				generatorNBT = JsonToNBT.getTagFromJson(generatorConfig);
-			} catch (CommandSyntaxException ex) {
-				generatorNBT = new CompoundNBT();
-			}
-			return new CreateBuffetWorldScreen(new GuiCreateWorldProxy(parent, generatorNBT, callback), generatorNBT);
+		case SINGLE_BIOME_SURFACE:
+		case SINGLE_BIOME_CAVES:
+		case SINGLE_BIOME_FLOATING_ISLANDS: {
+			return new CreateBuffetWorldScreen(parent, convertBiomeToConfig(callback), convertConfigToBiome(generatorConfig));
 		}
 		default:
 			LOGGER.warn("Generator lacks extra settings; cannot make a settings GUI: " + generator);
 			return parent;
 		}
+	}
+
+	private static Consumer<Biome> convertBiomeToConfig(Consumer<String> callback) {
+		// TODO
+		return biome -> {
+			Biome.field_235051_b_
+					.encodeStart(JsonOps.INSTANCE, biome)
+					.map(JsonElement::toString)
+					.getOrThrow(true, LOGGER::error);
+		};
+	}
+
+	private static Biome convertConfigToBiome(String config) {
+		// TODO
+		JsonObject jsonobject = config.isEmpty() ? new JsonObject() : JSONUtils.fromJson(config);
+		return Biome.field_235051_b_
+				.parse(JsonOps.INSTANCE, jsonobject)
+				.resultOrPartial(LOGGER::error)
+				.orElse(Biomes.THE_VOID);
 	}
 
 	/**
@@ -84,63 +104,32 @@ final class GeneratorFunctions {
 	 */
 	private static class GuiCreateFlatWorldProxy extends CreateFlatWorldScreen {
 		private final Screen parent;
-		private final String generatorConfig;
-		private final Consumer<String> callback;
 
-		public GuiCreateFlatWorldProxy(Screen parent, String generatorConfig, Consumer<String> callback) {
-			super(null, new CompoundNBT());
+		public GuiCreateFlatWorldProxy(Screen parent, String config, Consumer<String> callback) {
+			super(parent, convertSettingsToConfig(callback), convertConfigToSettings(config));
 			this.parent = parent;
-			this.generatorConfig = generatorConfig;
-			this.callback = callback;
+		}
+
+		private static Consumer<FlatGenerationSettings> convertSettingsToConfig(Consumer<String> callback) {
+			return settings -> {
+				FlatGenerationSettings.field_236932_a_
+						.encodeStart(JsonOps.INSTANCE, settings)
+						.map(JsonElement::toString)
+						.getOrThrow(true, LOGGER::error);
+			};
+		}
+
+		private static FlatGenerationSettings convertConfigToSettings(String config) {
+			JsonObject jsonobject = config.isEmpty() ? new JsonObject() : JSONUtils.fromJson(config);
+			return FlatGenerationSettings.field_236932_a_
+					.parse(JsonOps.INSTANCE, jsonobject)
+					.resultOrPartial(LOGGER::error)
+					.orElseGet(FlatGenerationSettings::getDefaultFlatGenerator);
 		}
 
 		@Override
 		public void init() {
 			minecraft.displayGuiScreen(parent);
-		}
-
-		@Override
-		public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-			// Do nothing
-		}
-
-		@Override
-		public String getPreset() {
-			return generatorConfig;
-		}
-
-		@Override
-		public void setPreset(@Nullable String preset) {
-			super.setPreset(preset);
-			// Note: super.setPreset fills in the FlatGenSettings instance.
-			// Then we can call getGeneratorOptions to get it as NBT.
-			callback.accept(this.getGeneratorOptions().toString());
-		}
-	}
-
-	/**
-	 * Fake implementation of {@link GuiCreateWorld} that allows use of
-	 * {@link GuiCustomizeWorldScreen}.  Doesn't actually do anything; just passed in
-	 * to the constructor to forward the information we need and to switch
-	 * back to the main GUI afterwards.
-	 */
-	private static class GuiCreateWorldProxy extends CreateWorldScreen {
-		private final Screen parent;
-		private final Consumer<String> callback;
-
-		public GuiCreateWorldProxy(Screen parent, CompoundNBT generatorNBT, Consumer<String> callback) {
-			super(parent);
-
-			this.parent = parent;
-			this.callback = callback;
-
-			this.chunkProviderSettingsJson = generatorNBT;
-		}
-
-		@Override
-		public void init() {
-			callback.accept(this.chunkProviderSettingsJson.toString());
-			minecraft.displayGuiScreen(this.parent);
 		}
 
 		@Override
@@ -185,7 +174,7 @@ final class GeneratorFunctions {
 	/* (non-javadoc)
 	 * @see GeneratorFunctions#createGeneratorOptionsTag
 	 */
-	public static CompoundNBT createGeneratorOptionsTag(String generatorOptions) {
+	static CompoundNBT createGeneratorOptionsTag(String generatorOptions) {
 		try {
 			return JsonToNBT.getTagFromJson(generatorOptions);
 		} catch (CommandSyntaxException e) {

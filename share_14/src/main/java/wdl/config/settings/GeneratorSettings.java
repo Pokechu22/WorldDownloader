@@ -57,6 +57,9 @@ public final class GeneratorSettings {
 		AMPLIFIED("amplified", "amplified", 0, ""),
 		CUSTOMIZED("custom", "custom", 0, ""),
 		BUFFET("buffet", "buffet", 0, ""),
+		SINGLE_BIOME_SURFACE("single_biome_surface", "single_biome_surface", 0, ""),
+		SINGLE_BIOME_CAVES("single_biome_caves", "single_biome_caves", 0, ""),
+		SINGLE_BIOME_FLOATING_ISLANDS("single_biome_floating_islands", "single_biome_floating_islands", 0, ""),
 		LEGACY("legacy", "default_1_1", 0, ""); // XXX do we really need this?
 
 		private final String confName;
