@@ -34,7 +34,6 @@ public final class TestWorld {
 		return makeServer(DimensionType.OVERWORLD);
 	}
 
-	@SuppressWarnings("resource")
 	public static ServerWorld makeServer(DimensionType dim) {
 		return new ServerWorld(dim);
 	}

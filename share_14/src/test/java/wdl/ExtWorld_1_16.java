@@ -49,11 +49,9 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.DimensionType;
-import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeContainer;
 import net.minecraft.world.biome.Biomes;
-import net.minecraft.world.chunk.AbstractChunkProvider;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkStatus;
 import net.minecraft.world.chunk.IChunk;
@@ -66,25 +64,15 @@ import net.minecraft.world.storage.ServerWorldInfo;
 abstract class ExtWorldClient extends ClientWorld {
 	private static final int VIEW_DISTANCE = 16;
 
-	public ExtWorldClient(ClientPlayNetHandler netHandler, DimensionType dim) {
+	@SuppressWarnings("resource")
+	public ExtWorldClient(DimensionType dim) {
 		super(mock(ClientPlayNetHandler.class), mock(ClientWorldInfo.class),
 				null, null, dim, VIEW_DISTANCE, () -> EmptyProfiler.INSTANCE,
 				mock(WorldRenderer.class), false, 0L);
-		getChunkProvider(); // Make sure it's injected
-	}
 
-	private boolean injectedChunkProvider = false;
-
-	@SuppressWarnings("resource")
-	@Override
-	public ClientChunkProvider getChunkProvider() {
-		if (!injectedChunkProvider) {
-			// Also, note that this is changing a final field, but doesn't seem to be causing any issues...
-			ReflectionUtils.findAndSetPrivateField(this, World.class, AbstractChunkProvider.class, new SimpleChunkProvider());
-			assertThat(this.chunkProvider, is(instanceOf(SimpleChunkProvider.class)));
-			injectedChunkProvider = true;
-		}
-		return super.getChunkProvider();
+		// Note that this is changing a final field, but doesn't seem to be causing any issues...
+		ReflectionUtils.findAndSetPrivateField(this, ClientWorld.class, ClientChunkProvider.class, new SimpleChunkProvider());
+		assertThat(super.getChunkProvider(), is(instanceOf(SimpleChunkProvider.class)));
 	}
 
 	private final RecipeManager recipeManager = mock(RecipeManager.class);
@@ -162,11 +150,15 @@ abstract class ExtWorldClient extends ClientWorld {
 }
 
 abstract class ExtWorldServer extends ServerWorld {
-	public ExtWorldServer(MinecraftServer server, DimensionType dim) {
+	@SuppressWarnings("resource")
+	public ExtWorldServer(DimensionType dim) {
 		super(mock(MinecraftServer.class, withSettings().defaultAnswer(RETURNS_MOCKS)),
 				task -> task.run(), mock(LevelSave.class), mock(ServerWorldInfo.class),
 				null, null, dim, null, null, false, 0, null, false);
-		getChunkProvider(); // Make sure it's injected
+
+		// Note that this is changing a final field, but doesn't seem to be causing any issues...
+		ReflectionUtils.findAndSetPrivateField(this, ServerWorld.class, ServerChunkProvider.class, new SimpleChunkProvider());
+		assertThat(super.getChunkProvider(), is(instanceOf(SimpleChunkProvider.class)));
 	}
 
 	/**
@@ -176,20 +168,6 @@ abstract class ExtWorldServer extends ServerWorld {
 
 	private final RecipeManager recipeManager = mock(RecipeManager.class);
 	private final ServerScoreboard scoreboard = mock(ServerScoreboard.class, withSettings().useConstructor(new Object[] {null}));
-	private boolean injectedChunkProvider = false;
-
-	@SuppressWarnings("resource")
-	@Override
-	public ServerChunkProvider getChunkProvider() {
-		if (!injectedChunkProvider) {
-			// NOTE: we have to do this here instead of the constructor, since it's called in the parent's constructor
-			// Also, note that this is changing a final field, but doesn't seem to be causing any issues...
-			ReflectionUtils.findAndSetPrivateField(this, World.class, AbstractChunkProvider.class, new SimpleChunkProvider());
-			assertThat(this.chunkProvider, is(instanceOf(SimpleChunkProvider.class)));
-			injectedChunkProvider = true;
-		}
-		return super.getChunkProvider();
-	}
 
 	@Override
 	public RecipeManager getRecipeManager() {
