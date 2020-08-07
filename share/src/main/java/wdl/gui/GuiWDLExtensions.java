@@ -159,7 +159,7 @@ public class GuiWDLExtensions extends WDLScreen {
 				super.drawEntry(x, y, width, height, mouseX, mouseY);
 
 				int centerY = y + height / 2 - font.FONT_HEIGHT / 2;
-				font.drawString(label, x, centerY, 0xFFFFFF);
+				drawString(font, label, x, centerY, 0xFFFFFF);
 			}
 
 			@Override

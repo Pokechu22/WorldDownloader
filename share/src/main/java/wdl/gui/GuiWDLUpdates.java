@@ -100,12 +100,12 @@ public class GuiWDLUpdates extends WDLScreen {
 					title = this.title;
 				}
 
-				font.drawString(title, x, y + fontHeight * 0, 0xFFFFFF);
-				font.drawString(caption, x, y + fontHeight * 1, 0x808080);
-				font.drawString(body1, x, y + fontHeight * 2, 0xFFFFFF);
-				font.drawString(body2, x, y + fontHeight * 3, 0xFFFFFF);
-				font.drawString(body3, x, y + fontHeight * 4, 0xFFFFFF);
-				font.drawString(time, x, y + fontHeight * 5, 0x808080);
+				drawString(font, title, x, y + fontHeight * 0, 0xFFFFFF);
+				drawString(font, caption, x, y + fontHeight * 1, 0x808080);
+				drawString(font, body1, x, y + fontHeight * 2, 0xFFFFFF);
+				drawString(font, body2, x, y + fontHeight * 3, 0xFFFFFF);
+				drawString(font, body3, x, y + fontHeight * 4, 0xFFFFFF);
+				drawString(font, time, x, y + fontHeight * 5, 0x808080);
 
 				if (mouseX > x && mouseX < x + entryWidth && mouseY > y
 						&& mouseY < y + itemHeight) {

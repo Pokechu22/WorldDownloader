@@ -134,7 +134,7 @@ public class GuiWDLEntities extends WDLScreen {
 			public void drawEntry(int x, int y, int width, int height, int mouseX, int mouseY) {
 				this.enableGroupButton.setMessage(getButtonText());
 				super.drawEntry(x, y, width, height, mouseX, mouseY);
-				minecraft.fontRenderer.drawString(this.displayGroup, (x + 110 / 2)
+				drawString(font, this.displayGroup, (x + 110 / 2)
 						- (this.labelWidth / 2), y + height
 						- minecraft.fontRenderer.FONT_HEIGHT - 1, 0xFFFFFF);
 			}
@@ -220,7 +220,7 @@ public class GuiWDLEntities extends WDLScreen {
 
 				super.drawEntry(x, y, width, height, mouseX, mouseY);
 
-				minecraft.fontRenderer.drawString(this.displayEntity,
+				drawString(font, this.displayEntity,
 						x, y + height / 2 - minecraft.fontRenderer.FONT_HEIGHT / 2, 0xFFFFFF);
 			}
 
