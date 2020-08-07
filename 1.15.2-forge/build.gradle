@@ -234,3 +234,7 @@ test {
     dependsOn extractNatives
     systemProperty 'java.library.path', file('build/natives')
 }
+// As does eclipse
+eclipseClasspath {
+    dependsOn extractNatives
+}
