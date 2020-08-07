@@ -107,7 +107,8 @@ abstract class ExtWorldClient extends ClientWorld {
 		player.setHeldItem(Hand.MAIN_HAND, new ItemStack(block));
 		BlockItemUseContext context = new BlockItemUseContext(
 				new ItemUseContext(player, Hand.MAIN_HAND,
-						new BlockRayTraceResult(new Vector3d(pos), direction, pos, false)));
+						new BlockRayTraceResult(new Vector3d(pos.getX(), pos.getY(), pos.getZ()),
+								direction, pos, false)));
 		BlockState state = block.getStateForPlacement(context);
 		setBlockState(pos, state);
 	}
@@ -205,7 +206,8 @@ abstract class ExtWorldServer extends ServerWorld {
 		player.rotationYaw = direction.getHorizontalAngle();
 		BlockItemUseContext context = new BlockItemUseContext(
 				new ItemUseContext(player, Hand.MAIN_HAND,
-						new BlockRayTraceResult(new Vector3d(pos), direction, pos, false)));
+						new BlockRayTraceResult(new Vector3d(pos.getX(), pos.getY(), pos.getZ()),
+								direction, pos, false)));
 		BlockState state = block.getStateForPlacement(context);
 		setBlockState(pos, state);
 	}
@@ -219,7 +221,9 @@ abstract class ExtWorldServer extends ServerWorld {
 	/** Right-clicks a block. */
 	public void interactBlock(BlockPos pos, PlayerEntity player) {
 		BlockState state = this.getBlockState(pos);
-		BlockRayTraceResult rayTraceResult = new BlockRayTraceResult(new Vector3d(pos), Direction.DOWN, pos, false);
+		BlockRayTraceResult rayTraceResult = new BlockRayTraceResult(
+				new Vector3d(pos.getX(), pos.getY(), pos.getZ()),
+				Direction.DOWN, pos, false);
 		state.onBlockActivated(this, player, Hand.MAIN_HAND, rayTraceResult);
 	}
 
