@@ -13,7 +13,6 @@
  */
 package wdl;
 
-import java.io.File;
 import java.util.concurrent.Executor;
 import java.util.function.Supplier;
 
@@ -27,6 +26,7 @@ import net.minecraft.world.server.ServerChunkProvider;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.server.TicketManager;
 import net.minecraft.world.storage.DimensionSavedDataManager;
+import net.minecraft.world.storage.SaveFormat;
 
 /**
  * A chunk manager that a functioning no-arg constructor. Has a subclass that
@@ -40,7 +40,7 @@ abstract class MockableChunkManagerBase extends ChunkManager {
 	public static final Class<?> TICKET_MANAGER_CLASS = TicketManager.class;
 
 	public MockableChunkManagerBase() {
-		super(null, null, null, null, null, null, null, null, null, null, 0);
+		super(null, null, null, null, null, null, null, null, null, null, 0, false);
 	}
 }
 
@@ -49,10 +49,11 @@ abstract class MockableChunkManagerBase extends ChunkManager {
  * removed from ChunkManager).
  */
 abstract class ExtServerChunkProvider extends ServerChunkProvider {
-	protected ExtServerChunkProvider(ServerWorld worldIn, File worldDirectory, DataFixer dataFixer,
-			TemplateManager p_i51537_4_, Executor p_i51537_5_, ChunkGenerator<?> p_i51537_6_, int viewDistance,
-			IChunkStatusListener p_i51537_8_, Supplier<DimensionSavedDataManager> p_i51537_9_) {
-		super(worldIn, worldDirectory, dataFixer, p_i51537_4_, p_i51537_5_, p_i51537_6_, viewDistance, p_i51537_8_,
-				p_i51537_9_);
+	protected ExtServerChunkProvider(ServerWorld worldIn, SaveFormat.LevelSave p_i232603_2_,
+			DataFixer dataFixer, TemplateManager p_i232603_4_, Executor p_i232603_5_, ChunkGenerator p_i232603_6_,
+			int viewDistance, boolean p_i232603_8_, IChunkStatusListener p_i232603_9_,
+			Supplier<DimensionSavedDataManager> p_i232603_10_) {
+		super(worldIn, p_i232603_2_, dataFixer, p_i232603_4_, p_i232603_5_, p_i232603_6_, viewDistance,
+				p_i232603_8_, p_i232603_9_, p_i232603_10_);
 	}
 }

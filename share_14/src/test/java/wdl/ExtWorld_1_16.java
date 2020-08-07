@@ -13,9 +13,9 @@
  */
 package wdl;
 
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-import static org.hamcrest.Matchers.*;
 
 import java.util.Arrays;
 import java.util.function.BooleanSupplier;
@@ -36,7 +36,7 @@ import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.item.crafting.RecipeManager;
-import net.minecraft.profiler.IProfiler;
+import net.minecraft.profiler.EmptyProfiler;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.scoreboard.ServerScoreboard;
 import net.minecraft.server.MinecraftServer;
@@ -48,10 +48,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.Difficulty;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldSettings;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeContainer;
 import net.minecraft.world.biome.Biomes;
@@ -59,18 +57,19 @@ import net.minecraft.world.chunk.AbstractChunkProvider;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkStatus;
 import net.minecraft.world.chunk.IChunk;
-import net.minecraft.world.server.ServerChunkProvider;
-import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.storage.SaveHandler;
-import net.minecraft.world.storage.WorldInfo;
+import net.minecraft.world.server.ServerChunkProvider;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.storage.SaveFormat.LevelSave;
+import net.minecraft.world.storage.ServerWorldInfo;
 
 abstract class ExtWorldClient extends ClientWorld {
 	private static final int VIEW_DISTANCE = 16;
 
-	public ExtWorldClient(ClientPlayNetHandler netHandler, WorldSettings settings, DimensionType dim,
-			Difficulty difficulty, IProfiler profilerIn) {
-		super(netHandler, settings, dim, VIEW_DISTANCE, profilerIn, mock(WorldRenderer.class));
+	public ExtWorldClient(ClientPlayNetHandler netHandler, DimensionType dim) {
+		super(mock(ClientPlayNetHandler.class), mock(ClientWorldInfo.class),
+				null, null, dim, VIEW_DISTANCE, () -> EmptyProfiler.INSTANCE,
+				mock(WorldRenderer.class), false, 0L);
 		getChunkProvider(); // Make sure it's injected
 	}
 
@@ -163,9 +162,10 @@ abstract class ExtWorldClient extends ClientWorld {
 }
 
 abstract class ExtWorldServer extends ServerWorld {
-	public ExtWorldServer(MinecraftServer server, SaveHandler saveHandlerIn, WorldInfo info, DimensionType dim,
-			IProfiler profilerIn) {
-		super(server, task -> task.run(), saveHandlerIn, info, dim, profilerIn, null);
+	public ExtWorldServer(MinecraftServer server, DimensionType dim) {
+		super(mock(MinecraftServer.class, withSettings().defaultAnswer(RETURNS_MOCKS)),
+				task -> task.run(), mock(LevelSave.class), mock(ServerWorldInfo.class),
+				null, null, dim, null, null, false, 0, null, false);
 		getChunkProvider(); // Make sure it's injected
 	}
 
@@ -245,11 +245,6 @@ abstract class ExtWorldServer extends ServerWorld {
 	}
 
 	@Override
-	public void createSpawnPosition(WorldSettings p_73052_1_) {
-		// Do nothing
-	}
-
-	@Override
 	public void playSound(double p_184134_1_, double p_184134_3_, double p_184134_5_, SoundEvent p_184134_7_,
 			SoundCategory p_184134_8_, float p_184134_9_, float p_184134_10_, boolean p_184134_11_) {
 		// Do nothing
@@ -269,7 +264,7 @@ abstract class ExtWorldServer extends ServerWorld {
 		private final Long2ObjectMap<Chunk> map = new Long2ObjectOpenHashMap<>();
 
 		public SimpleChunkProvider() {
-			super(ExtWorldServer.this, null, null, null, task -> task.run(), null, 0, null, null);
+			super(ExtWorldServer.this, null, null, null, task -> task.run(), null, 0, false, null, null);
 		}
 
 		@Override
@@ -297,7 +292,7 @@ abstract class ExtWorldServer extends ServerWorld {
 		}
 
 		@Override
-		public ChunkGenerator<?> getChunkGenerator() {
+		public ChunkGenerator getChunkGenerator() {
 			return null; // This is allowed, albeit awkward; see ChunkProviderClient
 		}
 	}

@@ -13,9 +13,9 @@
  */
 package wdl;
 
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-import static org.hamcrest.Matchers.*;
 
 import java.util.Arrays;
 import java.util.function.BooleanSupplier;
@@ -36,7 +36,7 @@ import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.item.crafting.RecipeManager;
-import net.minecraft.profiler.IProfiler;
+import net.minecraft.profiler.EmptyProfiler;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.scoreboard.ServerScoreboard;
 import net.minecraft.server.MinecraftServer;
@@ -48,10 +48,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.Difficulty;
-import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSettings;
+import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeContainer;
 import net.minecraft.world.biome.Biomes;
@@ -59,18 +58,20 @@ import net.minecraft.world.chunk.AbstractChunkProvider;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkStatus;
 import net.minecraft.world.chunk.IChunk;
-import net.minecraft.world.server.ServerChunkProvider;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.gen.ChunkGenerator;
+import net.minecraft.world.server.ServerChunkProvider;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.storage.SaveHandler;
 import net.minecraft.world.storage.WorldInfo;
 
 abstract class ExtWorldClient extends ClientWorld {
 	private static final int VIEW_DISTANCE = 16;
 
-	public ExtWorldClient(ClientPlayNetHandler netHandler, WorldSettings settings, DimensionType dim,
-			Difficulty difficulty, IProfiler profilerIn) {
-		super(netHandler, settings, dim, VIEW_DISTANCE, profilerIn, mock(WorldRenderer.class));
+	public ExtWorldClient(DimensionType dim) {
+		super(mock(ClientPlayNetHandler.class),
+				new WorldSettings(0L, null, false, false, WorldType.DEFAULT), dim,
+				VIEW_DISTANCE, EmptyProfiler.INSTANCE, mock(WorldRenderer.class));
 		getChunkProvider(); // Make sure it's injected
 	}
 
@@ -162,9 +163,10 @@ abstract class ExtWorldClient extends ClientWorld {
 }
 
 abstract class ExtWorldServer extends ServerWorld {
-	public ExtWorldServer(MinecraftServer server, SaveHandler saveHandlerIn, WorldInfo info, DimensionType dim,
-			IProfiler profilerIn) {
-		super(server, task -> task.run(), saveHandlerIn, info, dim, profilerIn, null);
+	public ExtWorldServer(DimensionType dim) {
+		super(mock(MinecraftServer.class, withSettings().defaultAnswer(RETURNS_MOCKS)),
+				task -> task.run(), mock(SaveHandler.class), new WorldInfo() {},
+				dim, EmptyProfiler.INSTANCE, null);
 		getChunkProvider(); // Make sure it's injected
 	}
 
