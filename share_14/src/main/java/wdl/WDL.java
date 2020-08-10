@@ -67,7 +67,6 @@ import net.minecraft.world.chunk.ChunkSection;
 import net.minecraft.world.chunk.EmptyChunk;
 import net.minecraft.world.storage.MapData;
 import net.minecraft.world.storage.SaveHandler;
-import net.minecraft.world.storage.SessionLockException;
 import net.minecraft.world.storage.WorldInfo;
 import wdl.WorldBackup.WorldBackupType;
 import wdl.api.APIImpl;
@@ -426,7 +425,8 @@ public class WDL {
 		try {
 			saveHandler = VersionedFunctions.getSaveHandler(minecraft, getWorldFolderName(worldName));
 		} catch (Exception e) {
-			throw new RuntimeException(e); // TODO
+			throw new RuntimeException(
+					"WorldDownloader: Couldn't create saveHandler for saving the world!", e);
 		}
 
 		runSanityCheck(false);
@@ -635,7 +635,7 @@ public class WDL {
 
 		try {
 			saveHandler.checkSessionLock();
-		} catch (SessionLockException e) {
+		} catch (Exception e) {
 			throw new RuntimeException(
 					"WorldDownloader: Couldn't get session lock for saving the world!", e);
 		}
