@@ -15,6 +15,7 @@ package wdl.versioned;
 
 
 import java.io.File;
+import java.io.IOException;
 
 import javax.annotation.Nullable;
 
@@ -45,7 +46,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.storage.SaveHandler;
+import net.minecraft.world.storage.SaveFormat.LevelSave;
 import wdl.handler.block.BarrelHandler;
 import wdl.handler.block.BeaconHandler;
 import wdl.handler.block.BlastFurnaceHandler;
@@ -167,40 +168,41 @@ final class HandlerFunctions {
 	 * @see VersionedFunctions#getSaveHandler
 	 */
 	static ISaveHandlerWrapper getSaveHandler(Minecraft minecraft, String worldName) throws Exception {
-		// Null => No server to use when saving player data.  This is fine for WDL
-		// we handle player data manually.
-		return new SaveHandlerWrapper(minecraft.getSaveLoader().getSaveLoader(worldName, null));
+		return new LevelSaveWrapper(minecraft.getSaveLoader().func_237274_c_(worldName));
 	}
 
-	static class SaveHandlerWrapper implements ISaveHandlerWrapper {
-		private final SaveHandler handler;
-		public SaveHandlerWrapper(SaveHandler handler) {
-			this.handler = handler;
+	static class LevelSaveWrapper implements ISaveHandlerWrapper {
+		public final LevelSave save;
+		public LevelSaveWrapper(LevelSave save) {
+			this.save = save;
 		}
 
 		@Override
 		public void close() throws Exception {
-			// Nothing needs to be done
+			this.save.close();
 		}
 
 		@Override
 		public File getWorldDirectory() {
-			return handler.getWorldDirectory();
+			// TODO Auto-generated method stub
+			return null;
 		}
 
 		@Override
 		public void checkSessionLock() throws Exception {
-			handler.checkSessionLock();
+			// TODO Auto-generated method stub
+			
 		}
 
 		@Override
 		public Object getWrapped() {
-			return handler;
+			// TODO Auto-generated method stub
+			return null;
 		}
 
 		@Override
 		public String toString() {
-			return "SaveHandlerWrapper [handler=" + handler + "]";
+			return "LevelSaveWrapper [save=" + save + "]";
 		}
 	}
 

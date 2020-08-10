@@ -3,7 +3,7 @@
  * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017-2019 Pokechu22, julialy
+ * Copyright (c) 2017-2020 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -41,13 +41,13 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ChunkLoader;
 import net.minecraft.world.chunk.storage.RegionFile;
 import net.minecraft.world.dimension.Dimension;
-import net.minecraft.world.storage.SaveHandler;
 import wdl.api.IEntityEditor;
 import wdl.api.ITileEntityEditor;
 import wdl.api.ITileEntityEditor.TileEntityCreationMode;
 import wdl.api.ITileEntityImportationIdentifier;
 import wdl.api.WDLApi;
 import wdl.api.WDLApi.ModInfo;
+import wdl.versioned.ISaveHandlerWrapper;
 import wdl.versioned.VersionedFunctions;
 
 /**
@@ -61,7 +61,7 @@ public class WDLChunkLoader extends WDLChunkLoaderBase {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	public static WDLChunkLoader create(WDL wdl,
-			SaveHandler handler, Dimension dimension) {
+			ISaveHandlerWrapper handler, Dimension dimension) {
 		return new WDLChunkLoader(wdl, getWorldSaveFolder(handler, dimension));
 	}
 

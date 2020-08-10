@@ -61,7 +61,6 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.storage.MapData;
-import net.minecraft.world.storage.SaveHandler;
 import wdl.config.settings.GeneratorSettings.Generator;
 import wdl.handler.block.BlockHandler;
 import wdl.handler.blockaction.BlockActionHandler;
@@ -144,8 +143,9 @@ public final class VersionedFunctions {
 	 * @param minecraft The Minecraft instance
 	 * @param worldName The name of the world.
 	 * @return The SaveHandler.
+	 * @throws Exception in some versions when e.g. an IO error occurs
 	 */
-	public static SaveHandler getSaveHandler(Minecraft minecraft, String worldName) {
+	public static ISaveHandlerWrapper getSaveHandler(Minecraft minecraft, String worldName) throws Exception {
 		return HandlerFunctions.getSaveHandler(minecraft, worldName);
 	}
 

@@ -88,6 +88,7 @@ import wdl.gui.GuiWDLMultiworldSelect;
 import wdl.gui.GuiWDLOverwriteChanges;
 import wdl.gui.GuiWDLSaveProgress;
 import wdl.update.GithubInfoGrabber;
+import wdl.versioned.ISaveHandlerWrapper;
 import wdl.versioned.VersionedFunctions;
 
 /**
@@ -165,7 +166,7 @@ public class WDL {
 	/**
 	 * For player files and the level.dat file.
 	 */
-	public SaveHandler saveHandler;
+	public ISaveHandlerWrapper saveHandler;
 	/**
 	 * For the chunks (despite the name it does also SAVE chunks)
 	 */
@@ -422,7 +423,11 @@ public class WDL {
 			return;
 		}
 
-		saveHandler = VersionedFunctions.getSaveHandler(minecraft, getWorldFolderName(worldName));
+		try {
+			saveHandler = VersionedFunctions.getSaveHandler(minecraft, getWorldFolderName(worldName));
+		} catch (Exception e) {
+			throw new RuntimeException(e); // TODO
+		}
 
 		runSanityCheck(false);
 

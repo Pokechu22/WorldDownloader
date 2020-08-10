@@ -3,7 +3,7 @@
  * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2018-2019 Pokechu22, julialy
+ * Copyright (c) 2018-2020 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -47,9 +47,8 @@ import net.minecraft.world.dimension.NetherDimension;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.lighting.WorldLightManager;
 import net.minecraft.world.server.ServerTickList;
-import net.minecraft.world.storage.SaveHandler;
-import net.minecraft.world.storage.SessionLockException;
 import wdl.config.settings.MiscSettings;
+import wdl.versioned.ISaveHandlerWrapper;
 import wdl.versioned.VersionedFunctions;
 
 /**
@@ -64,7 +63,7 @@ abstract class WDLChunkLoaderBase extends ChunkLoader {
 	 * Gets the save folder for the given WorldProvider, respecting Forge's
 	 * dimension names if forge is present.
 	 */
-	protected static File getWorldSaveFolder(SaveHandler handler,
+	protected static File getWorldSaveFolder(ISaveHandlerWrapper handler,
 			Dimension dimension) {
 		File baseFolder = handler.getWorldDirectory();
 		// XXX No forge support at this time
@@ -112,7 +111,7 @@ abstract class WDLChunkLoaderBase extends ChunkLoader {
 	 * Note that while the normal implementation swallows Exceptions, this
 	 * version does not.
 	 */
-	public synchronized void saveChunk(World world, IChunk chunk) throws SessionLockException, IOException {
+	public synchronized void saveChunk(World world, IChunk chunk) throws Exception {
 		wdl.saveHandler.checkSessionLock();
 
 		CompoundNBT levelTag = writeChunkToNBT((Chunk)chunk, world);

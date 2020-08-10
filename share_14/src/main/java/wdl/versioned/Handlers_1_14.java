@@ -3,7 +3,7 @@
  * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017-2019 Pokechu22, julialy
+ * Copyright (c) 2017-2020 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -13,6 +13,8 @@
  */
 package wdl.versioned;
 
+
+import java.io.File;
 
 import javax.annotation.Nullable;
 
@@ -164,10 +166,42 @@ final class HandlerFunctions {
 	/* (non-javadoc)
 	 * @see VersionedFunctions#getSaveHandler
 	 */
-	static SaveHandler getSaveHandler(Minecraft minecraft, String worldName) {
+	static ISaveHandlerWrapper getSaveHandler(Minecraft minecraft, String worldName) throws Exception {
 		// Null => No server to use when saving player data.  This is fine for WDL
 		// we handle player data manually.
-		return (SaveHandler)minecraft.getSaveLoader().getSaveLoader(worldName, null);
+		return new SaveHandlerWrapper(minecraft.getSaveLoader().getSaveLoader(worldName, null));
+	}
+
+	static class SaveHandlerWrapper implements ISaveHandlerWrapper {
+		private final SaveHandler handler;
+		public SaveHandlerWrapper(SaveHandler handler) {
+			this.handler = handler;
+		}
+
+		@Override
+		public void close() throws Exception {
+			// Nothing needs to be done
+		}
+
+		@Override
+		public File getWorldDirectory() {
+			return handler.getWorldDirectory();
+		}
+
+		@Override
+		public void checkSessionLock() throws Exception {
+			handler.checkSessionLock();
+		}
+
+		@Override
+		public Object getWrapped() {
+			return handler;
+		}
+
+		@Override
+		public String toString() {
+			return "SaveHandlerWrapper [handler=" + handler + "]";
+		}
 	}
 
 	/* (non-javadoc)
