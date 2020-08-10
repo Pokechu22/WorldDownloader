@@ -2,7 +2,7 @@
  * This file is part of the World Downloader API.
  * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds
  *
- * Copyright (c) 2017 Pokechu22, julialy
+ * Copyright (c) 2017-2020 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -15,8 +15,6 @@ package wdl.api;
 
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.world.storage.SaveHandler;
-import net.minecraft.world.storage.WorldInfo;
 
 /**
  * {@link IWDLMod} that edits the world info NBT file (level.dat).
@@ -35,6 +33,6 @@ public interface IWorldInfoEditor extends IWDLMod {
 	 *            The current {@link NBTTagCompound} that is being saved. Edit
 	 *            or add info to this.
 	 */
-	public abstract void editWorldInfo(ClientWorld world, WorldInfo info,
-			SaveHandler saveHandler, CompoundNBT tag);
+	public abstract void editWorldInfo(ClientWorld world, Object info,
+			Object saveHandler, CompoundNBT tag);
 }

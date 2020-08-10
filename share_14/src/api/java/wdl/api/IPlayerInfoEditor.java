@@ -2,7 +2,7 @@
  * This file is part of the World Downloader API.
  * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds
  *
- * Copyright (c) 2017 Pokechu22, julialy
+ * Copyright (c) 2017-2020 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -15,7 +15,6 @@ package wdl.api;
 
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.world.storage.SaveHandler;
 
 /**
  * {@link IWDLMod} that edits the player info NBT file.
@@ -33,5 +32,5 @@ public interface IPlayerInfoEditor extends IWDLMod {
 	 *            or add info to this.
 	 */
 	public abstract void editPlayerInfo(ClientPlayerEntity player,
-			SaveHandler saveHandler, CompoundNBT tag);
+			Object saveHandler, CompoundNBT tag);
 }
