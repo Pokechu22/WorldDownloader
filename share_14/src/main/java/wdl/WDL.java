@@ -761,7 +761,7 @@ public class WDL {
 					I18n.format("wdl.saveProgress.playerData.extension",
 							info.getDisplayName()), taskNum);
 
-			info.mod.editPlayerInfo(player, saveHandler, playerNBT);
+			info.mod.editPlayerInfo(player, saveHandler.getWrapped(), playerNBT);
 
 			taskNum++;
 		}
@@ -845,7 +845,7 @@ public class WDL {
 							info.getDisplayName()), taskNum);
 
 			info.mod.editWorldInfo(worldClient, worldClient.getWorldInfo(),
-					saveHandler, worldInfoNBT);
+					saveHandler.getWrapped(), worldInfoNBT);
 
 			taskNum++;
 		}
