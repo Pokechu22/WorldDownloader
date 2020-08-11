@@ -474,7 +474,13 @@ public class WDL {
 			} catch (IOException ex) {
 				LOGGER.warn("Failed to close chunkLoader", ex);
 			}
+			try {
+				saveHandler.close();
+			} catch (Exception ex) {
+				LOGGER.warn("Failed to close saveHandler", ex);
+			}
 			chunkLoader = null;
+			saveHandler = null;
 			startOnChange = false;
 			saving = false;
 			downloading = false;
@@ -714,8 +720,17 @@ public class WDL {
 				}
 			}
 
+			File worldDirectory = saveHandler.getWorldDirectory();
+
 			try {
-				WorldBackup.backupWorld(saveHandler.getWorldDirectory(),
+				saveHandler.close();
+			} catch (Exception ex) {
+				LOGGER.warn("Failed to close saveHandler", ex);
+			}
+			saveHandler = null;
+
+			try {
+				WorldBackup.backupWorld(worldDirectory,
 						getWorldFolderName(worldName), backupType, new BackupState(),
 						serverProps.getValue(MiscSettings.BACKUP_COMMAND_TEMPLATE),
 						serverProps.getValue(MiscSettings.BACKUP_EXTENSION));
