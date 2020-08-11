@@ -54,6 +54,10 @@ interface IExtButton {
 	 */
 	abstract void setMessage(ITextComponent message);
 	/**
+	 * Gets the message the narrator should read.
+	 */
+	abstract ITextComponent getNarratorMessage();
+	/**
 	 * Sets whether or not this button is enabled/active.
 	 */
 	abstract void setEnabled(boolean enabled);

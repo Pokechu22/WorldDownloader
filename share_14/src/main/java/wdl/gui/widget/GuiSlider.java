@@ -14,8 +14,8 @@
 package wdl.gui.widget;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import wdl.versioned.VersionedFunctions;
 
@@ -84,8 +84,8 @@ public class GuiSlider extends ExtButton {
 	}
 
 	@Override
-	protected String getNarrationMessage() {
-		return I18n.format("gui.narrate.slider", this.getMessage());
+	public ITextComponent getNarratorMessage() {
+		return new TranslationTextComponent("gui.narrate.slider", this.getMessage());
 	}
 
 	@Override

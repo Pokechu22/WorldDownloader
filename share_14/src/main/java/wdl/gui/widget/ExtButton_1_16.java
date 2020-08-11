@@ -20,6 +20,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.button.AbstractButton;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 
@@ -98,6 +99,22 @@ abstract class ExtButton extends AbstractButton implements IExtButton {
 	@Override
 	public void setMessage(ITextComponent message) {
 		super.setMessage(message);
+	}
+
+	@Override
+	protected final IFormattableTextComponent getNarrationMessage() {
+		ITextComponent component = this.getNarratorMessage();
+		if (component instanceof IFormattableTextComponent) {
+			return (IFormattableTextComponent)component;
+		} else {
+			// XXX This is kinda hacky... is there a better solution?
+			return new StringTextComponent("").appendSibling(component);
+		}
+	}
+
+	@Override
+	public ITextComponent getNarratorMessage() {
+		return super.getNarrationMessage();
 	}
 
 	@Override

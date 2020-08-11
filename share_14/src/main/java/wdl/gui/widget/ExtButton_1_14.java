@@ -16,6 +16,7 @@ package wdl.gui.widget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.button.AbstractButton;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 
 /**
  * Extendible button, to deal with changing method signatures between versions.
@@ -88,6 +89,16 @@ abstract class ExtButton extends AbstractButton implements IExtButton {
 	@Override
 	public void setMessage(ITextComponent message) {
 		super.setMessage(message.getFormattedText());
+	}
+
+	@Override
+	protected final String getNarrationMessage() {
+		return getNarratorMessage().getString();
+	}
+
+	@Override
+	public ITextComponent getNarratorMessage() {
+		return new StringTextComponent(super.getNarrationMessage());
 	}
 
 	@Override
