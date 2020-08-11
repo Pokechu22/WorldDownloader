@@ -3,7 +3,7 @@
  * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2018 Pokechu22, julialy
+ * Copyright (c) 2018-2020 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.GameRules;
 import wdl.versioned.VersionedFunctions.GameRuleType;
 
@@ -86,5 +87,14 @@ final class GameRuleFunctions {
 						(a, b) -> {throw new IllegalArgumentException("Mutliple rules with the same name!  " + a + "," + b);},
 						TreeMap::new));
 		return Collections.unmodifiableMap(result);
+	}
+
+	/* (non-javadoc)
+	 * @see VersionedFunctions#loadGameRules
+	 */
+	static GameRules loadGameRules(CompoundNBT tag) {
+		GameRules rules = new GameRules();
+		rules.read(tag);
+		return rules;
 	}
 }

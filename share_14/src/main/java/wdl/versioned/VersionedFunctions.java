@@ -434,6 +434,15 @@ public final class VersionedFunctions {
 	}
 
 	/**
+	 * Creates a new GameRules object populated with the given NBT.
+	 *
+	 * @return The new GameRules object
+	 */
+	public static GameRules loadGameRules(CompoundNBT nbt) {
+		return GameRuleFunctions.loadGameRules(nbt);
+	}
+
+	/**
 	 * Returns true if the given generator can be used in this Minecraft version.
 	 * @param generator The generator
 	 * @return True if it is usable.

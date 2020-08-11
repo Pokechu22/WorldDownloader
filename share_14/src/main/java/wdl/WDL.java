@@ -1059,24 +1059,20 @@ public class WDL {
 		File worldFolder = new File(savesDir, folder);
 		File levelDatFile = new File(worldFolder, "level.dat");
 
-		GameRules rules = new GameRules();
-
 		if (!levelDatFile.exists()) {
-			return rules;
+			return new GameRules();
 		}
 
-		CompoundNBT gameRules;
 		try (FileInputStream stream = new FileInputStream(levelDatFile)) {
 			CompoundNBT compound = CompressedStreamTools.readCompressed(stream);
-			gameRules = compound.getCompound("Data").getCompound("GameRules");
+			CompoundNBT gameRules = compound.getCompound("Data").getCompound("GameRules");
+
+			return VersionedFunctions.loadGameRules(gameRules);
 		} catch (Exception e) {
 			LOGGER.warn("[WDL] Error while loading existing gamerules; the defaults will be used instead: ", e);
 
-			return rules;
+			return new GameRules();
 		}
-
-		rules.read(gameRules);
-		return rules;
 	}
 
 	/**

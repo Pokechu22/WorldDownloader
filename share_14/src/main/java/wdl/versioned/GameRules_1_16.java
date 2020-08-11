@@ -27,10 +27,12 @@ import org.apache.logging.log4j.Logger;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.context.CommandContextBuilder;
 import com.mojang.brigadier.tree.CommandNode;
+import com.mojang.serialization.Dynamic;
 
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.ICommandSource;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.NBTDynamicOps;
 import net.minecraft.util.math.vector.Vector2f;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.StringTextComponent;
@@ -149,8 +151,6 @@ final class GameRuleFunctions {
 	 * @see VersionedFunctions#loadGameRules
 	 */
 	static GameRules loadGameRules(CompoundNBT tag) {
-		GameRules rules = new GameRules();
-		rules.read(tag);
-		return rules;
+		return new GameRules(new Dynamic<>(NBTDynamicOps.INSTANCE, tag));
 	}
 }
