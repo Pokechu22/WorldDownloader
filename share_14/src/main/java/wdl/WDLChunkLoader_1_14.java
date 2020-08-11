@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map.Entry;
 
+import javax.annotation.Nullable;
+
 import it.unimi.dsi.fastutil.shorts.ShortList;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
@@ -39,11 +41,10 @@ import net.minecraft.world.chunk.NibbleArray;
 import net.minecraft.world.chunk.UpgradeData;
 import net.minecraft.world.chunk.storage.ChunkLoader;
 import net.minecraft.world.chunk.storage.RegionFile;
-import net.minecraft.world.dimension.Dimension;
-import net.minecraft.world.dimension.EndDimension;
-import net.minecraft.world.dimension.NetherDimension;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.lighting.WorldLightManager;
+import wdl.config.settings.MiscSettings;
+import wdl.versioned.IDimensionWrapper;
 import wdl.versioned.ISaveHandlerWrapper;
 import wdl.versioned.VersionedFunctions;
 
@@ -60,18 +61,21 @@ abstract class WDLChunkLoaderBase extends ChunkLoader {
 	 * dimension names if forge is present.
 	 */
 	protected static File getWorldSaveFolder(ISaveHandlerWrapper handler,
-			Dimension dimension) {
+			IDimensionWrapper dimension) {
 		File baseFolder = handler.getWorldDirectory();
 		// XXX No forge support at this time
 
 		File dimensionFolder;
-		if (dimension instanceof NetherDimension) {
-			dimensionFolder = new File(baseFolder, "DIM-1");
-		} else if (dimension instanceof EndDimension) {
-			dimensionFolder = new File(baseFolder, "DIM1");
-		} else {
-			// Assume that this is the overworld.
+		if (WDL.serverProps.getValue(MiscSettings.FORCE_DIMENSION_TO_OVERWORLD)) {
 			dimensionFolder = baseFolder;
+		} else {
+			@Nullable String dimName = dimension.getFolderName();
+			if (dimName == null) {
+				// Assume that this is the overworld.
+				dimensionFolder = baseFolder;
+			} else {
+				dimensionFolder = new File(baseFolder, dimName);
+			}
 		}
 
 		return new File(dimensionFolder, "region");

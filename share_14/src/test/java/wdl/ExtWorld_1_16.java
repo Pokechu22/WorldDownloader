@@ -60,15 +60,16 @@ import net.minecraft.world.server.ServerChunkProvider;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.storage.SaveFormat.LevelSave;
 import net.minecraft.world.storage.ServerWorldInfo;
+import wdl.versioned.IDimensionWrapper;
 
 abstract class ExtWorldClient extends ClientWorld {
 	private static final int VIEW_DISTANCE = 16;
 
 	@SuppressWarnings("resource")
-	public ExtWorldClient(DimensionType dim) {
+	public ExtWorldClient(IDimensionWrapper dim) {
 		super(mock(ClientPlayNetHandler.class), mock(ClientWorldInfo.class),
-				null, null, dim, VIEW_DISTANCE, () -> EmptyProfiler.INSTANCE,
-				mock(WorldRenderer.class), false, 0L);
+				null, null, (DimensionType) dim.getType(), VIEW_DISTANCE,
+				() -> EmptyProfiler.INSTANCE, mock(WorldRenderer.class), false, 0L);
 
 		// Note that this is changing a final field, but doesn't seem to be causing any issues...
 		ReflectionUtils.findAndSetPrivateField(this, ClientWorld.class, ClientChunkProvider.class, new SimpleChunkProvider());
@@ -151,10 +152,10 @@ abstract class ExtWorldClient extends ClientWorld {
 
 abstract class ExtWorldServer extends ServerWorld {
 	@SuppressWarnings("resource")
-	public ExtWorldServer(DimensionType dim) {
+	public ExtWorldServer(IDimensionWrapper dim) {
 		super(mock(MinecraftServer.class, withSettings().defaultAnswer(RETURNS_MOCKS)),
 				task -> task.run(), mock(LevelSave.class), mock(ServerWorldInfo.class),
-				null, null, dim, null, null, false, 0, null, false);
+				null, null, (DimensionType) dim.getType(), null, null, false, 0, null, false);
 
 		// Note that this is changing a final field, but doesn't seem to be causing any issues...
 		ReflectionUtils.findAndSetPrivateField(this, ServerWorld.class, ServerChunkProvider.class, new SimpleChunkProvider());

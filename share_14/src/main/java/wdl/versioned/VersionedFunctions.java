@@ -59,7 +59,6 @@ import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.storage.MapData;
 import wdl.config.settings.GeneratorSettings.Generator;
 import wdl.handler.block.BlockHandler;
@@ -72,6 +71,19 @@ import wdl.handler.entity.EntityHandler;
  */
 public final class VersionedFunctions {
 	private VersionedFunctions() { throw new AssertionError(); }
+
+	public static final IDimensionWrapper NETHER = HandlerFunctions.NETHER;
+	public static final IDimensionWrapper OVERWORLD = HandlerFunctions.OVERWORLD;
+	public static final IDimensionWrapper END = HandlerFunctions.END;
+
+	/**
+	 * Gets the dimension of the given world.
+	 *
+	 * @return the dimension wrapper
+	 */
+	public static IDimensionWrapper getDimension(World world) {
+		return HandlerFunctions.getDimension(world);
+	}
 
 	/**
 	 * Returns true if the given world has skylight data.
@@ -336,7 +348,7 @@ public final class VersionedFunctions {
 	 * the {@link MapData#dimension} field is a byte, while in other ones it is
 	 * a DimensionType (which might start out null).
 	 */
-	public static void setMapDimension(MapData map, DimensionType dim) {
+	public static void setMapDimension(MapData map, IDimensionWrapper dim) {
 		MapFunctions.setMapDimension(map, dim);
 	}
 

@@ -3,7 +3,7 @@
  * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2018 Pokechu22, julialy
+ * Copyright (c) 2018-2020 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -25,15 +25,14 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.play.server.SMapDataPacket;
-import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.storage.MapData;
 import net.minecraft.world.storage.MapData.MapInfo;
 import wdl.MapDataHandler.MapDataResult;
+import wdl.versioned.IDimensionWrapper;
 import wdl.versioned.VersionedFunctions;
 
 public class MapDataHandlerTest extends MaybeMixinTest {
-	// (n.b. DimensionType.values() doesn't exist in 1.13.1+)
-	private static final DimensionType[] DIMENSIONS = { DimensionType.getById(-1) /* NETHER or THE_NETHER */, DimensionType.OVERWORLD, DimensionType.THE_END };
+	private static final IDimensionWrapper[] DIMENSIONS = { VersionedFunctions.NETHER, VersionedFunctions.OVERWORLD, VersionedFunctions.END };
 	private static final ItemStack SOME_MAP_ITEM = new ItemStack(Items.FILLED_MAP);
 
 	/**
@@ -41,7 +40,7 @@ public class MapDataHandlerTest extends MaybeMixinTest {
 	 */
 	@Test
 	public void testDimension() {
-		for (DimensionType dim : DIMENSIONS) {
+		for (IDimensionWrapper dim : DIMENSIONS) {
 			PlayerEntity owner = new RemoteClientPlayerEntity(TestWorld.makeClient(dim), mock(GameProfile.class));
 			owner.inventory.setInventorySlotContents(10, SOME_MAP_ITEM);
 			MapData map = new MapData("test");
@@ -96,7 +95,7 @@ public class MapDataHandlerTest extends MaybeMixinTest {
 				MapData map = new MapData("test");
 				map.scale = scale;
 				map.trackingPosition = true;
-				VersionedFunctions.setMapDimension(map, DimensionType.OVERWORLD);
+				VersionedFunctions.setMapDimension(map, VersionedFunctions.OVERWORLD);
 				map.calculateMapCenter(posX, posZ, map.scale);
 				map.updateVisiblePlayers(owner, SOME_MAP_ITEM);
 
@@ -126,7 +125,7 @@ public class MapDataHandlerTest extends MaybeMixinTest {
 			double posZ = 0;
 			VersionedFunctions.setEntityPos(owner, posX, 0, posZ);
 			map.scale = scale;
-			VersionedFunctions.setMapDimension(map, DimensionType.OVERWORLD);
+			VersionedFunctions.setMapDimension(map, VersionedFunctions.OVERWORLD);
 			map.calculateMapCenter(posX, posZ, map.scale);
 
 			posX += 68 * (1 << scale); // i.e. a bit off the top

@@ -3,7 +3,7 @@
  * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2018 Pokechu22, julialy
+ * Copyright (c) 2018-2020 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -20,8 +20,8 @@ import net.minecraft.item.FilledMapItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.server.SMapDataPacket;
 import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.storage.MapData;
+import wdl.versioned.HandlerFunctions.DimensionWrapper;
 
 /**
  * Functions related to maps (the item).
@@ -57,7 +57,7 @@ final class MapFunctions {
 	/* (non-javadoc)
 	 * {@see VersionedFunctions#setMapDimension}
 	 */
-	static void setMapDimension(MapData map, DimensionType dim) {
-		map.dimension = dim;
+	static void setMapDimension(MapData map, IDimensionWrapper dim) {
+		map.dimension = ((DimensionWrapper) dim).getType();
 	}
 }

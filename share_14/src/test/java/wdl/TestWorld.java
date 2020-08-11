@@ -17,29 +17,30 @@ import java.util.UUID;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.dimension.DimensionType;
+import wdl.versioned.IDimensionWrapper;
+import wdl.versioned.VersionedFunctions;
 
 public final class TestWorld {
 	private TestWorld() { throw new AssertionError(); }
 
 	public static ClientWorld makeClient() {
-		return makeClient(DimensionType.OVERWORLD);
+		return makeClient(VersionedFunctions.OVERWORLD);
 	}
 
-	public static ClientWorld makeClient(DimensionType dim) {
+	public static ClientWorld makeClient(IDimensionWrapper dim) {
 		return new ClientWorld(dim);
 	}
 
 	public static ServerWorld makeServer() {
-		return makeServer(DimensionType.OVERWORLD);
+		return makeServer(VersionedFunctions.OVERWORLD);
 	}
 
-	public static ServerWorld makeServer(DimensionType dim) {
+	public static ServerWorld makeServer(IDimensionWrapper dim) {
 		return new ServerWorld(dim);
 	}
 
 	public static final class ClientWorld extends ExtWorldClient implements AutoCloseable {
-		private ClientWorld(DimensionType dim) {
+		private ClientWorld(IDimensionWrapper dim) {
 			super(dim);
 		}
 
@@ -54,7 +55,7 @@ public final class TestWorld {
 		public void close() { }
 	}
 	public static final class ServerWorld extends ExtWorldServer implements AutoCloseable {
-		private ServerWorld(DimensionType dim) {
+		private ServerWorld(IDimensionWrapper dim) {
 			super(dim);
 		}
 

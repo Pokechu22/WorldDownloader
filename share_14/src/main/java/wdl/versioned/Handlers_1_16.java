@@ -15,7 +15,8 @@ package wdl.versioned;
 
 
 import java.io.File;
-import java.io.IOException;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 import javax.annotation.Nullable;
 
@@ -43,7 +44,10 @@ import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.CommandBlockTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.storage.SaveFormat.LevelSave;
@@ -71,12 +75,26 @@ import wdl.handler.entity.VillagerHandler;
 final class HandlerFunctions {
 	private HandlerFunctions() { throw new AssertionError(); }
 
+	static final DimensionWrapper NETHER = new DimensionWrapper(DimensionType.field_236000_d_, World.field_234919_h_);
+	static final DimensionWrapper OVERWORLD = new DimensionWrapper(DimensionType.field_235999_c_, World.field_234918_g_);
+	static final DimensionWrapper END = new DimensionWrapper(DimensionType.field_236001_e_, World.field_234920_i_);
+
+	// TODO: This doesn't interact with the values above, but I'm not sure how to best handle that
+	private static Map<World, DimensionWrapper> dimensions = new WeakHashMap<>();
+
+	/* (non-javadoc)
+	 * @see VersionedFunctions#getDimension
+	 */
+	static DimensionWrapper getDimension(World world) {
+		return dimensions.computeIfAbsent(world, DimensionWrapper::new);
+	}
+
 	/* (non-javadoc)
 	 * @see VersionedFunctions#hasSkyLight
 	 */
 	static boolean hasSkyLight(World world) {
 		// 1.11+: use hasSkyLight
-		return world.dimension.hasSkyLight();
+		return getDimension(world).getType().hasSkyLight();
 	}
 
 	/* (non-javadoc)
@@ -203,6 +221,48 @@ final class HandlerFunctions {
 		@Override
 		public String toString() {
 			return "LevelSaveWrapper [save=" + save + "]";
+		}
+	}
+
+	static class DimensionWrapper implements IDimensionWrapper {
+		private final DimensionType dimensionType;
+		private final RegistryKey<DimensionType> dimensionTypeKey;
+		private final RegistryKey<World> worldKey;
+
+		public DimensionWrapper(World world) {
+			this.dimensionType = world.func_230315_m_();
+			this.dimensionTypeKey = world.func_234922_V_();
+			this.worldKey = world.func_234923_W_();
+		}
+
+		public DimensionWrapper(RegistryKey<DimensionType> dimensionTypeKey,
+				RegistryKey<World> worldKey) {
+			// Get the DimensionType registry, and then the dimensiontype from it
+			RegistryKey<Registry<DimensionType>> dimTypeRegKey = Registry.field_239698_ad_;
+			@SuppressWarnings("unchecked")
+			Registry<DimensionType> dimTypeReg = (Registry<DimensionType>) Registry.REGISTRY.func_230516_a_(dimTypeRegKey);
+			this.dimensionType = dimTypeReg.func_230516_a_(dimensionTypeKey);
+			this.dimensionTypeKey = dimensionTypeKey;
+			this.worldKey = worldKey;
+		}
+
+		@Override
+		public String getFolderName() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public DimensionType getType() {
+			return this.dimensionType;
+		}
+
+		public RegistryKey<DimensionType> getTypeKey() {
+			return this.dimensionTypeKey;
+		}
+
+		public RegistryKey<World> getWorldKey() {
+			return this.worldKey;
 		}
 	}
 

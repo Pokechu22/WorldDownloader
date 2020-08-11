@@ -15,6 +15,8 @@ package wdl.versioned;
 
 
 import java.io.File;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 import javax.annotation.Nullable;
 
@@ -45,6 +47,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.storage.SaveHandler;
 import wdl.handler.block.BarrelHandler;
 import wdl.handler.block.BeaconHandler;
@@ -69,6 +72,25 @@ import wdl.handler.entity.VillagerHandler;
 
 final class HandlerFunctions {
 	private HandlerFunctions() { throw new AssertionError(); }
+
+	static final IDimensionWrapper NETHER = new DimensionWrapper(DimensionType.THE_NETHER);
+	static final IDimensionWrapper OVERWORLD = new DimensionWrapper(DimensionType.OVERWORLD);
+	static final IDimensionWrapper END = new DimensionWrapper(DimensionType.THE_END);
+
+	private static Map<DimensionType, IDimensionWrapper> dimensions = new WeakHashMap<>();
+	static {
+		dimensions.put(DimensionType.THE_NETHER, NETHER);
+		dimensions.put(DimensionType.OVERWORLD, OVERWORLD);
+		dimensions.put(DimensionType.THE_END, END);
+	}
+
+	/* (non-javadoc)
+	 * @see VersionedFunctions#getDimension
+	 */
+	static IDimensionWrapper getDimension(World world) {
+		// Handle other dimensions for some level of forge compatibility.
+		return dimensions.computeIfAbsent(world.dimension.getType(), DimensionWrapper::new);
+	}
 
 	/* (non-javadoc)
 	 * @see VersionedFunctions#hasSkyLight
@@ -201,6 +223,24 @@ final class HandlerFunctions {
 		@Override
 		public String toString() {
 			return "SaveHandlerWrapper [handler=" + handler + "]";
+		}
+	}
+
+	static class DimensionWrapper implements IDimensionWrapper {
+		private final DimensionType type;
+		public DimensionWrapper(DimensionType type) {
+			this.type = type;
+		}
+
+		@Override
+		public String getFolderName() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public DimensionType getType() {
+			return type;
 		}
 	}
 

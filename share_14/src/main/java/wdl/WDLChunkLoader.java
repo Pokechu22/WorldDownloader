@@ -40,13 +40,13 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ChunkLoader;
 import net.minecraft.world.chunk.storage.RegionFile;
-import net.minecraft.world.dimension.Dimension;
 import wdl.api.IEntityEditor;
 import wdl.api.ITileEntityEditor;
 import wdl.api.ITileEntityEditor.TileEntityCreationMode;
 import wdl.api.ITileEntityImportationIdentifier;
 import wdl.api.WDLApi;
 import wdl.api.WDLApi.ModInfo;
+import wdl.versioned.IDimensionWrapper;
 import wdl.versioned.ISaveHandlerWrapper;
 import wdl.versioned.VersionedFunctions;
 
@@ -61,7 +61,7 @@ public class WDLChunkLoader extends WDLChunkLoaderBase {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	public static WDLChunkLoader create(WDL wdl,
-			ISaveHandlerWrapper handler, Dimension dimension) {
+			ISaveHandlerWrapper handler, IDimensionWrapper dimension) {
 		return new WDLChunkLoader(wdl, getWorldSaveFolder(handler, dimension));
 	}
 

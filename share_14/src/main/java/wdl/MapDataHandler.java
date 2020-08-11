@@ -33,9 +33,9 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.storage.MapData;
 import net.minecraft.world.storage.MapDecoration;
+import wdl.versioned.IDimensionWrapper;
 import wdl.versioned.VersionedFunctions;
 
 /**
@@ -287,7 +287,7 @@ public final class MapDataHandler {
 		 * The dimension found, or null if it wasn't.
 		 */
 		@Nullable
-		public DimensionType dim = null;
+		public IDimensionWrapper dim = null;
 
 		/**
 		 * Sets the dimension of the map, assuming that it's known. The game crashes if
@@ -296,13 +296,13 @@ public final class MapDataHandler {
 		void fixDimension() {
 			if (confirmedOwner != null) {
 				assert confirmedOwner.world != null;
-				DimensionType dim = confirmedOwner.world.dimension.getType();
+				IDimensionWrapper dim = VersionedFunctions.getDimension(confirmedOwner.world);
 				assert dim != null;
 				VersionedFunctions.setMapDimension(map, dim);
 				this.dim = dim;
 			} else if (VersionedFunctions.isMapDimensionNull(map)) {
 				// Ensure that some dimension is set, so that the game doesn't crash.
-				VersionedFunctions.setMapDimension(map, DimensionType.OVERWORLD);
+				VersionedFunctions.setMapDimension(map, VersionedFunctions.OVERWORLD);
 				// The dimension wasn't confirmed, so don't notify this in chat
 			}
 		}
