@@ -66,8 +66,8 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkSection;
 import net.minecraft.world.chunk.EmptyChunk;
 import net.minecraft.world.storage.MapData;
-import net.minecraft.world.storage.SaveHandler;
-import net.minecraft.world.storage.WorldInfo;
+//import net.minecraft.world.storage.SaveHandler;
+//import net.minecraft.world.storage.WorldInfo;
 import wdl.WorldBackup.WorldBackupType;
 import wdl.api.APIImpl;
 import wdl.api.IPlayerInfoEditor;
@@ -1307,7 +1307,8 @@ public class WDL {
 			LOGGER.info("Failed to call FML writeVersionData", ex);
 		}
 
-		try {
+		// XXX: Fix this and re-add it
+		/*try {
 			Class<?> fmlCommonHandler = Class.forName("net.minecraftforge.fml.common.FMLCommonHandler");
 			Object instance = fmlCommonHandler.getMethod("instance").invoke(null);
 			Method handleWorldDataSave = fmlCommonHandler.getMethod("handleWorldDataSave",
@@ -1315,7 +1316,7 @@ public class WDL {
 			handleWorldDataSave.invoke(instance, saveHandler, worldClient.getWorldInfo(), rootWorldInfoNBT);
 		} catch (Throwable ex) {
 			LOGGER.info("Failed to call FML handleWorldDataSave", ex);
-		}
+		}*/
 	}
 
 	/**
