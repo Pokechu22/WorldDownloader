@@ -795,14 +795,6 @@ public class WDL {
 	}
 
 	/**
-	 * Hardcoded, unchanging anvil save version ID.
-	 *
-	 * 19132: McRegion; 19133: Anvil.  If it's necessary to specify a new
-	 * version, many other parts of the mod will be broken anyways.
-	 */
-	private static final int ANVIL_SAVE_VERSION = 19133;
-
-	/**
 	 * Save the world metadata (time, gamemode, seed, ...) into the level.dat
 	 * file.
 	 */
@@ -819,15 +811,7 @@ public class WDL {
 		progressScreen.setMinorTaskProgress(
 				I18n.format("wdl.saveProgress.worldMetadata.creatingNBT"), 1);
 
-		// Set the save version, which isn't done automatically for some
-		// strange reason.
-		worldClient.getWorldInfo().setSaveVersion(ANVIL_SAVE_VERSION);
-
-		// cloneNBTCompound takes the PLAYER's nbt file, and puts it in the
-		// right place.
-		// This is needed because single player uses that data.
-		CompoundNBT worldInfoNBT = worldClient.getWorldInfo()
-				.cloneNBTCompound(playerInfoNBT);
+		CompoundNBT worldInfoNBT = VersionedFunctions.getWorldInfoNbt(worldClient, playerInfoNBT);
 
 		// There's a root tag that stores the above one.
 		CompoundNBT rootWorldInfoNBT = new CompoundNBT();

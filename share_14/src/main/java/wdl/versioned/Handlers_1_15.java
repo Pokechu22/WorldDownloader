@@ -40,6 +40,7 @@ import net.minecraft.block.HopperBlock;
 import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.block.TrappedChestBlock;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.CommandBlockTileEntity;
@@ -242,6 +243,27 @@ final class HandlerFunctions {
 		public DimensionType getType() {
 			return type;
 		}
+	}
+
+	/**
+	 * Hardcoded, unchanging anvil save version ID.
+	 *
+	 * 19132: McRegion; 19133: Anvil.  If it's necessary to specify a new
+	 * version, many other parts of the mod will be broken anyways.
+	 */
+	private static final int ANVIL_SAVE_VERSION = 19133;
+
+	/* (non-javadoc)
+	 * @see VersionedFunctions#getWorldInfoNbt
+	 */
+	static CompoundNBT getWorldInfoNbt(ClientWorld world, CompoundNBT playerNBT) {
+		// Set the save version, which isn't done automatically for some
+		// strange reason.
+		world.getWorldInfo().setSaveVersion(ANVIL_SAVE_VERSION);
+
+		// cloneNBTCompound takes the PLAYER's nbt file, and puts it in the right place.
+		// This is needed because single player uses that data.
+		return world.getWorldInfo().cloneNBTCompound(playerNBT);
 	}
 
 	/* (non-javadoc)

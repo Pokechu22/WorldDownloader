@@ -40,6 +40,7 @@ import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.network.play.ClientPlayNetHandler;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -159,6 +160,17 @@ public final class VersionedFunctions {
 	 */
 	public static ISaveHandlerWrapper getSaveHandler(Minecraft minecraft, String worldName) throws Exception {
 		return HandlerFunctions.getSaveHandler(minecraft, worldName);
+	}
+
+	/**
+	 * Gets the world info NBT, which goes into level.dat.
+	 *
+	 * @param world The world.
+	 * @param playerNBT The player's NBT data.
+	 * @return The world info NBT data.
+	 */
+	public static CompoundNBT getWorldInfoNbt(ClientWorld world, CompoundNBT playerNBT) {
+		return HandlerFunctions.getWorldInfoNbt(world, playerNBT);
 	}
 
 	/**

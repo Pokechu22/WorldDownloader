@@ -23,6 +23,7 @@ import javax.annotation.Nullable;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableList;
+import com.mojang.serialization.Lifecycle;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -40,17 +41,26 @@ import net.minecraft.block.HopperBlock;
 import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.block.TrappedChestBlock;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.client.world.ClientWorld.ClientWorldInfo;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.server.IDynamicRegistries;
 import net.minecraft.tileentity.CommandBlockTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.RegistryKey;
+import net.minecraft.util.datafix.codec.DatapackCodec;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.DimensionType;
+import net.minecraft.world.GameRules;
+import net.minecraft.world.GameType;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldSettings;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.gen.settings.DimensionGeneratorSettings;
 import net.minecraft.world.storage.SaveFormat.LevelSave;
+import net.minecraft.world.storage.ServerWorldInfo;
 import wdl.handler.block.BarrelHandler;
 import wdl.handler.block.BeaconHandler;
 import wdl.handler.block.BlastFurnaceHandler;
@@ -264,6 +274,18 @@ final class HandlerFunctions {
 		public RegistryKey<World> getWorldKey() {
 			return this.worldKey;
 		}
+	}
+
+	/* (non-javadoc)
+	 * @see VersionedFunctions#getWorldInfoNbt
+	 */
+	static CompoundNBT getWorldInfoNbt(ClientWorld world, CompoundNBT playerNBT) {
+		ClientWorldInfo clientInfo = world.getWorldInfo();
+		WorldSettings worldSettings = new WorldSettings("LevelName", GameType.CREATIVE, false,
+				clientInfo.getDifficulty(), true, new GameRules(), DatapackCodec.field_234880_a_);
+		DimensionGeneratorSettings genSettings = DimensionGeneratorSettings.func_236210_a_();
+		ServerWorldInfo worldInfo = new ServerWorldInfo(worldSettings, genSettings, Lifecycle.stable());
+		return worldInfo.func_230411_a_(IDynamicRegistries.func_239770_b_(), playerNBT);
 	}
 
 	/* (non-javadoc)
