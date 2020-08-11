@@ -55,7 +55,7 @@ public class GuiWDLMultiworld extends WDLScreen {
 				+ I18n.format("wdl.gui.multiworld.descirption.whatIs");
 
 		infoBoxWidth = 320;
-		infoBoxLines = Utils.wordWrap(multiworldMessage, infoBoxWidth - 20);
+		infoBoxLines = wordWrap(multiworldMessage, infoBoxWidth - 20);
 		infoBoxHeight = (font.FONT_HEIGHT * (infoBoxLines.size() + 1)) + 40;
 
 		infoBoxX = this.width / 2 - infoBoxWidth / 2;
@@ -90,7 +90,7 @@ public class GuiWDLMultiworld extends WDLScreen {
 	@Override
 	public void render(int mouseX, int mouseY, float partialTicks) {
 		this.renderBackground();
-		Utils.drawBorder(32, 32, 0, 0, height, width);
+		this.drawBorder(32, 32, 0, 0, height, width);
 
 		fill(infoBoxX, infoBoxY, infoBoxX + infoBoxWidth, infoBoxY
 				+ infoBoxHeight, 0xB0000000);

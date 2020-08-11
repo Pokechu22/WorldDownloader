@@ -125,7 +125,7 @@ public class GuiWDLWorld extends WDLScreen {
 	 */
 	@Override
 	public void render(int mouseX, int mouseY, float partialTicks) {
-		Utils.drawListBackground(23, 32, 0, 0, height, width);
+		this.drawListBackground(23, 32, 0, 0, height, width);
 
 		if (this.showSpawnFields) {
 			this.drawString(this.font, "X:", this.width / 2 - 99,
@@ -162,7 +162,7 @@ public class GuiWDLWorld extends WDLScreen {
 			}
 		}
 
-		Utils.drawGuiInfoBox(tooltip, width, height, 48);
+		this.drawGuiInfoBox(tooltip, width, height, 48);
 	}
 
 	/**

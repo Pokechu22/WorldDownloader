@@ -66,7 +66,7 @@ public class GuiWDLExtensions extends WDLScreen {
 
 	private class ModList extends GuiList<ModList.ModEntry> {
 		public ModList() {
-			super(GuiWDLExtensions.this.minecraft, GuiWDLExtensions.this.width,
+			super(GuiWDLExtensions.this, GuiWDLExtensions.this.width,
 					bottomLocation, TOP_HEIGHT, bottomLocation, 22);
 			this.setRenderSelection(true);
 		}
@@ -196,7 +196,8 @@ public class GuiWDLExtensions extends WDLScreen {
 
 	private class ModDetailList extends TextList {
 		public ModDetailList() {
-			super(GuiWDLExtensions.this.minecraft, GuiWDLExtensions.this.width,
+			super(GuiWDLExtensions.this, GuiWDLExtensions.this.font,
+					GuiWDLExtensions.this.width,
 					GuiWDLExtensions.this.height - bottomLocation,
 					MIDDLE_HEIGHT, BOTTOM_HEIGHT);
 		}

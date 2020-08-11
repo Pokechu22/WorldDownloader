@@ -369,7 +369,7 @@ public class GuiWDLMultiworldSelect extends GuiTurningCameraBase {
 			prevButton.setEnabled(true);
 		}
 
-		Utils.drawBorder(53, 53, 0, 0, height, width);
+		this.drawBorder(53, 53, 0, 0, height, width);
 
 		this.drawCenteredString(this.font,
 				I18n.format("wdl.gui.multiworldSelect.subtitle"),

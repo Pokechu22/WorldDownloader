@@ -91,7 +91,7 @@ public class GuiWDLEntityRangePresets extends WDLScreen {
 
 	@Override
 	public void render(int mouseX, int mouseY, float partialTicks) {
-		Utils.drawListBackground(23, 32, 0, 0, height, width);
+		this.drawListBackground(23, 32, 0, 0, height, width);
 
 		ITextComponent infoText = null;
 
@@ -115,7 +115,7 @@ public class GuiWDLEntityRangePresets extends WDLScreen {
 		}
 
 		if (infoText != null) {
-			Utils.drawGuiInfoBox(infoText, width, height, 48);
+			this.drawGuiInfoBox(infoText, width, height, 48);
 		}
 
 		super.render(mouseX, mouseY, partialTicks);

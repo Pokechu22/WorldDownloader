@@ -3,7 +3,7 @@
  * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2017-2018 Pokechu22, julialy
+ * Copyright (c) 2017-2020 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -13,7 +13,7 @@
  */
 package wdl.gui.widget;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import wdl.gui.widget.GuiList.GuiListEntry;
 
 /**
@@ -22,20 +22,22 @@ import wdl.gui.widget.GuiList.GuiListEntry;
 public class TextEntry extends GuiListEntry<TextEntry> {
 	private final String text;
 	private final int color;
-	protected final Minecraft mc;
+	protected final WDLScreen screen;
+	protected final FontRenderer font;
 
 	/**
 	 * Creates a new TextEntry with the default color.
 	 */
-	public TextEntry(Minecraft mc, String text) {
-		this(mc, text, 0xFFFFFF);
+	public TextEntry(WDLScreen screen, FontRenderer font, String text) {
+		this(screen, font, text, 0xFFFFFF);
 	}
 
 	/**
 	 * Creates a new TextEntry.
 	 */
-	public TextEntry(Minecraft mc, String text, int color) {
-		this.mc = mc;
+	public TextEntry(WDLScreen screen, FontRenderer font, String text, int color) {
+		this.screen = screen;
+		this.font = font;
 		this.text = text;
 		this.color = color;
 	}
@@ -45,6 +47,6 @@ public class TextEntry extends GuiListEntry<TextEntry> {
 		if (y < 0) {
 			return;
 		}
-		mc.fontRenderer.drawStringWithShadow(text, x, y + 1, color);
+		screen.drawString(font, text, x, y + 1, color);
 	}
 }

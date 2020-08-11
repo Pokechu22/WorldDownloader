@@ -45,7 +45,7 @@ public class GuiWDLMessages extends WDLScreen {
 
 	private class GuiMessageTypeList extends GuiList<GuiMessageTypeList.Entry> {
 		public GuiMessageTypeList() {
-			super(GuiWDLMessages.this.minecraft, GuiWDLMessages.this.width,
+			super(GuiWDLMessages.this, GuiWDLMessages.this.width,
 					GuiWDLMessages.this.height, 39,
 					GuiWDLMessages.this.height - 32, 20);
 		}
@@ -188,7 +188,7 @@ public class GuiWDLMessages extends WDLScreen {
 		}
 
 		if (tooltip != null) {
-			Utils.drawGuiInfoBox(tooltip, width, height, 48);
+			this.drawGuiInfoBox(tooltip, width, height, 48);
 		}
 	}
 }

@@ -217,7 +217,7 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements IBac
 			}
 		} else {
 			renderBackground();
-			Utils.drawBorder(32, 22, 0, 0, height, width);
+			this.drawBorder(32, 22, 0, 0, height, width);
 
 			drawCenteredString(font, footer, width / 2, height - 8
 					- font.FONT_HEIGHT, 0xFFFFFF);
@@ -248,7 +248,7 @@ public class GuiWDLOverwriteChanges extends GuiTurningCameraBase implements IBac
 				tooltip = new TranslationTextComponent("wdl.gui.overwriteChanges.cancel.description");
 			}
 
-			Utils.drawGuiInfoBox(tooltip, width, height, 48);
+			this.drawGuiInfoBox(tooltip, width, height, 48);
 		}
 	}
 

@@ -117,7 +117,7 @@ public class GuiWDLPlayer extends WDLScreen {
 	 */
 	@Override
 	public void render(int mouseX, int mouseY, float partialTicks) {
-		Utils.drawListBackground(23, 32, 0, 0, height, width);
+		this.drawListBackground(23, 32, 0, 0, height, width);
 
 		ITextComponent tooltip = null;
 
@@ -155,7 +155,7 @@ public class GuiWDLPlayer extends WDLScreen {
 		super.render(mouseX, mouseY, partialTicks);
 
 		if (tooltip != null) {
-			Utils.drawGuiInfoBox(tooltip, width, height, 48);
+			this.drawGuiInfoBox(tooltip, width, height, 48);
 		}
 	}
 

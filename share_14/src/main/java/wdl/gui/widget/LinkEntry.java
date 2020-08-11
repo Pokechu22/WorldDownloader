@@ -1,7 +1,19 @@
+/*
+ * This file is part of World Downloader: A mod to make backups of your multiplayer worlds.
+ * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds
+ *
+ * Copyright (c) 2014 nairol, cubic72
+ * Copyright (c) 2017-2020 Pokechu22, julialy
+ *
+ * This project is licensed under the MMPLv2.  The full text of the MMPL can be
+ * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
+ * For information about this the MMPLv2, see https://stopmodreposts.org/
+ *
+ * Do not redistribute (in modified or unmodified form) without prior permission.
+ */
 package wdl.gui.widget;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.FontRenderer;
 import wdl.versioned.VersionedFunctions;
 
 /**
@@ -14,12 +26,12 @@ public class LinkEntry extends TextEntry {
 
 	private int x;
 
-	public LinkEntry(Minecraft mc, String text, String link) {
-		super(mc, text, 0x5555FF);
+	public LinkEntry(WDLScreen screen, FontRenderer font, String text, String link) {
+		super(screen, font, text, 0x5555FF);
 
 		this.link = link;
-		this.textWidth = mc.fontRenderer.getStringWidth(text);
-		this.linkWidth = mc.fontRenderer.getStringWidth(link);
+		this.textWidth = font.getStringWidth(text);
+		this.linkWidth = font.getStringWidth(link);
 	}
 
 	@Override
@@ -40,10 +52,10 @@ public class LinkEntry extends TextEntry {
 			if (drawX + linkWidth + 4 > width + x) {
 				drawX = width + x - (4 + linkWidth);
 			}
-			AbstractGui.fill(drawX, mouseY - 2, drawX + linkWidth + 4,
-					mouseY + mc.fontRenderer.FONT_HEIGHT + 2, 0x80000000);
+			screen.fill(drawX, mouseY - 2, drawX + linkWidth + 4,
+					mouseY + font.FONT_HEIGHT + 2, 0x80000000);
 
-			mc.fontRenderer.drawStringWithShadow(link, drawX + 2, mouseY, 0xFFFFFF);
+			screen.drawString(font, link, drawX + 2, mouseY, 0xFFFFFF);
 		}
 	}
 

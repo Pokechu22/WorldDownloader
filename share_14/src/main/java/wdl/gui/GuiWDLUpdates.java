@@ -49,7 +49,7 @@ public class GuiWDLUpdates extends WDLScreen {
 
 	private class UpdateList extends GuiList<UpdateList.VersionEntry> {
 		public UpdateList() {
-			super(GuiWDLUpdates.this.minecraft, GuiWDLUpdates.this.width,
+			super(GuiWDLUpdates.this, GuiWDLUpdates.this.width,
 					GuiWDLUpdates.this.height, TOP_MARGIN,
 					GuiWDLUpdates.this.height - BOTTOM_MARGIN,
 					(font.FONT_HEIGHT + 1) * 6 + 2);
@@ -76,7 +76,7 @@ public class GuiWDLUpdates extends WDLScreen {
 				this.title = buildReleaseTitle(release);
 				this.caption = buildVersionInfo(release);
 
-				List<String> body = Utils.wordWrap(release.textOnlyBody, getEntryWidth());
+				List<String> body = GuiWDLUpdates.this.wordWrap(release.textOnlyBody, getEntryWidth());
 
 				body1 = (body.size() >= 1 ? body.get(0) : "");
 				body2 = (body.size() >= 2 ? body.get(1) : "");
@@ -322,7 +322,7 @@ public class GuiWDLUpdates extends WDLScreen {
 			this.addButton(new ButtonDisplayGui(
 					this.width / 2 - 100, this.height - 29, 200, 20, this.parent));
 
-			TextList list = new TextList(minecraft, width, height, TOP_MARGIN, BOTTOM_MARGIN);
+			TextList list = new TextList(this, this.font, width, height, TOP_MARGIN, BOTTOM_MARGIN);
 
 			list.addLine(buildReleaseTitle(release));
 			list.addLine(I18n.format("wdl.gui.updates.update.releaseDate", release.date));

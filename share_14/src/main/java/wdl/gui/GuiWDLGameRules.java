@@ -54,7 +54,7 @@ public class GuiWDLGameRules extends WDLScreen {
 		private RuleEntry lastClickedEntry = null;
 
 		public GuiGameRuleList() {
-			super(GuiWDLGameRules.this.minecraft, GuiWDLGameRules.this.width,
+			super(GuiWDLGameRules.this, GuiWDLGameRules.this.width,
 					GuiWDLGameRules.this.height, 39,
 					GuiWDLGameRules.this.height - 32, 24);
 			List<RuleEntry> entries = this.getEntries();
@@ -282,10 +282,10 @@ public class GuiWDLGameRules extends WDLScreen {
 		super.render(mouseX, mouseY, partialTicks);
 
 		if (this.doneButton.isHovered()) {
-			Utils.drawGuiInfoBox(new TranslationTextComponent("wdl.gui.gamerules.doneInfo"),
+			this.drawGuiInfoBox(new TranslationTextComponent("wdl.gui.gamerules.doneInfo"),
 					width, height, 48);
 		} else if (hoveredToolTip != null) {
-			Utils.drawGuiInfoBox(hoveredToolTip, width, height, 48);
+			this.drawGuiInfoBox(hoveredToolTip, width, height, 48);
 		}
 	}
 

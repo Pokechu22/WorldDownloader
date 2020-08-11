@@ -41,7 +41,7 @@ public class GuiWDL extends WDLScreen {
 
 	private class GuiWDLButtonList extends GuiList<GuiWDLButtonList.ButtonEntry> {
 		public GuiWDLButtonList() {
-			super(GuiWDL.this.minecraft, GuiWDL.this.width, GuiWDL.this.height, 39,
+			super(GuiWDL.this, GuiWDL.this.width, GuiWDL.this.height, 39,
 					GuiWDL.this.height - 32, 20);
 		}
 
@@ -164,6 +164,6 @@ public class GuiWDL extends WDLScreen {
 		this.drawString(this.font, name, this.worldname.x
 				- this.font.getStringWidth(name + " "), 26, 0xFFFFFF);
 
-		Utils.drawGuiInfoBox(displayedTooltip, width, height, 48);
+		this.drawGuiInfoBox(displayedTooltip, width, height, 48);
 	}
 }

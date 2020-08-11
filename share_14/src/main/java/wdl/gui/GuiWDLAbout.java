@@ -75,7 +75,7 @@ public class GuiWDLAbout extends WDLScreen {
 
 		String mcVersion = VersionConstants.getMinecraftVersionInfo();
 
-		list = this.addList(new TextList(minecraft, width, height, 39, 32));
+		list = this.addList(new TextList(this, this.font, width, height, 39, 32));
 		list.addLine(I18n.format("wdl.gui.about.blurb"));
 		list.addBlankLine();
 		list.addLine(I18n.format("wdl.gui.about.version", wdlVersion,

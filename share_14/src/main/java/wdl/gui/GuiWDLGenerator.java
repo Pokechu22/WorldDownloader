@@ -108,7 +108,7 @@ public class GuiWDLGenerator extends WDLScreen {
 	 */
 	@Override
 	public void render(int mouseX, int mouseY, float partialTicks) {
-		Utils.drawListBackground(23, 32, 0, 0, height, width);
+		this.drawListBackground(23, 32, 0, 0, height, width);
 
 		this.drawString(this.font, seedText, this.width / 2 - 100,
 				this.height / 4 - 10, 0xFFFFFF);
@@ -124,7 +124,7 @@ public class GuiWDLGenerator extends WDLScreen {
 		} else if (generateStructuresBtn.isHovered()) {
 			tooltip = generateStructuresBtn.getTooltip();
 		}
-		Utils.drawGuiInfoBox(tooltip, width, height, 48);
+		this.drawGuiInfoBox(tooltip, width, height, 48);
 	}
 
 	/**

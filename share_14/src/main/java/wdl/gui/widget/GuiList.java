@@ -13,13 +13,15 @@
  */
 package wdl.gui.widget;
 
-import net.minecraft.client.Minecraft;
 import wdl.gui.widget.GuiList.GuiListEntry;
 
 
 public abstract class GuiList<T extends GuiListEntry<T>> extends ExtGuiList<T> {
-	public GuiList(Minecraft mcIn, int widthIn, int heightIn, int topIn, int bottomIn, int entryHeight) {
-		super(mcIn, widthIn, heightIn, topIn, bottomIn, entryHeight);
+	protected final WDLScreen screen;
+
+	public GuiList(WDLScreen screen, int widthIn, int heightIn, int topIn, int bottomIn, int entryHeight) {
+		super(screen.getMinecraft(), widthIn, heightIn, topIn, bottomIn, entryHeight);
+		this.screen = screen;
 	}
 
 	public static class GuiListEntry<T extends GuiListEntry<T>> extends ExtGuiListEntry<T> {

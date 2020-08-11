@@ -247,7 +247,7 @@ public class GuiWDLEntities extends WDLScreen {
 		}
 
 		public GuiEntityList() {
-			super(GuiWDLEntities.this.minecraft, GuiWDLEntities.this.width,
+			super(GuiWDLEntities.this, GuiWDLEntities.this.width,
 					GuiWDLEntities.this.height, 39,
 					GuiWDLEntities.this.height - 32, 20);
 		}
@@ -307,7 +307,7 @@ public class GuiWDLEntities extends WDLScreen {
 		super.render(mouseX, mouseY, partialTicks);
 
 		if (this.rangeModeButton.isHovered()) {
-			Utils.drawGuiInfoBox(this.rangeModeButton.getTooltip(), width, height, 48);
+			this.drawGuiInfoBox(this.rangeModeButton.getTooltip(), width, height, 48);
 		}
 	}
 

@@ -13,6 +13,7 @@
  */
 package wdl.gui.widget;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
@@ -47,5 +48,9 @@ public class WDLScreen extends ExtGuiScreen {
 	@Override
 	public boolean onCloseAttempt() {
 		return true;
+	}
+
+	Minecraft getMinecraft() {
+		return this.minecraft;
 	}
 }

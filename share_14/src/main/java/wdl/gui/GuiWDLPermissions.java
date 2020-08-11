@@ -91,7 +91,7 @@ public class GuiWDLPermissions extends WDLScreen {
 			}
 		});
 
-		this.list = this.addList(new TextList(minecraft, width, height, TOP_MARGIN, BOTTOM_MARGIN));
+		this.list = this.addList(new TextList(this, this.font, width, height, TOP_MARGIN, BOTTOM_MARGIN));
 
 		list.addLine("\u00A7c\u00A7lThis is a work in progress.");
 

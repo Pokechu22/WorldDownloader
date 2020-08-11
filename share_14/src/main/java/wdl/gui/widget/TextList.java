@@ -15,22 +15,23 @@ package wdl.gui.widget;
 
 import java.util.List;
 
-import net.minecraft.client.Minecraft;
-import wdl.gui.Utils;
+import net.minecraft.client.gui.FontRenderer;
 
 /**
  * {@link GuiListExtended} that provides scrollable lines of text, and support
  * for embedding links in it.
  */
 public class TextList extends GuiList<TextEntry> {
+	private final FontRenderer font;
 
 	/**
 	 * Creates a new TextList with no text.
 	 */
-	public TextList(Minecraft mc, int width, int height, int topMargin,
+	public TextList(WDLScreen screen, FontRenderer font, int width, int height, int topMargin,
 			int bottomMargin) {
-		super(mc, width, height, topMargin, height - bottomMargin,
-				mc.fontRenderer.FONT_HEIGHT + 1);
+		super(screen, width, height, topMargin, height - bottomMargin,
+				font.FONT_HEIGHT + 1);
+		this.font = font;
 	}
 
 	@Override
@@ -44,20 +45,20 @@ public class TextList extends GuiList<TextEntry> {
 	}
 
 	public void addLine(String text) {
-		List<String> lines = Utils.wordWrap(text, getEntryWidth());
+		List<String> lines = screen.wordWrap(text, getEntryWidth());
 		lines.stream()
-				.map(line -> new TextEntry(minecraft, line, 0xFFFFFF))
+				.map(line -> new TextEntry(screen, font, line, 0xFFFFFF))
 				.forEach(getEntries()::add);
 	}
 
 	public void addBlankLine() {
-		getEntries().add(new TextEntry(minecraft, "", 0xFFFFFF));
+		getEntries().add(new TextEntry(screen, font, "", 0xFFFFFF));
 	}
 
 	public void addLinkLine(String text, String URL) {
-		List<String> lines = Utils.wordWrap(text, getEntryWidth());
+		List<String> lines = screen.wordWrap(text, getEntryWidth());
 		lines.stream()
-				.map(line -> new LinkEntry(minecraft, line, URL))
+				.map(line -> new LinkEntry(screen, font, line, URL))
 				.forEach(getEntries()::add);
 	}
 

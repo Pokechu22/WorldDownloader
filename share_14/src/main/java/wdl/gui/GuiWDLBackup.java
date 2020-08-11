@@ -260,7 +260,7 @@ public class GuiWDLBackup extends WDLScreen {
 
 	@Override
 	public void render(int mouseX, int mouseY, float partialTicks) {
-		Utils.drawListBackground(23, 32, 0, 0, height, width);
+		this.drawListBackground(23, 32, 0, 0, height, width);
 
 		super.render(mouseX, mouseY, partialTicks);
 
@@ -281,7 +281,7 @@ public class GuiWDLBackup extends WDLScreen {
 			}
 		}
 		if (commandInvalidReason != null) {
-			List<String> lines = Utils.wordWrap(commandInvalidReason, this.width - 50);
+			List<String> lines = this.wordWrap(commandInvalidReason, this.width - 50);
 			int y = 80;
 			for (String line : lines) {
 				this.drawString(font, line, 50, y, 0xFF0000);
@@ -290,13 +290,13 @@ public class GuiWDLBackup extends WDLScreen {
 		}
 
 		if (customBackupCommandTemplateFld.isHovered()) {
-			Utils.drawGuiInfoBox(new TranslationTextComponent("wdl.gui.backup.customCommandTemplate.description"), width, height, 48);
+			this.drawGuiInfoBox(new TranslationTextComponent("wdl.gui.backup.customCommandTemplate.description"), width, height, 48);
 		} else if (customBackupExtensionFld.isHovered()) {
-			Utils.drawGuiInfoBox(new TranslationTextComponent("wdl.gui.backup.customExtension.description"), width, height, 48);
+			this.drawGuiInfoBox(new TranslationTextComponent("wdl.gui.backup.customExtension.description"), width, height, 48);
 		} else if (commandInvalidReason == null || backupTypeButton.isHovered()) {
 			// Only draw the large description if the command is valid (i.e. there isn't other text)
 			// or the mouse is directly over the backup type button (i.e. the info is useful)
-			Utils.drawGuiInfoBox(description, width - 50, 3 * this.height / 5, width,
+			this.drawGuiInfoBox(description, width - 50, 3 * this.height / 5, width,
 					height, 48);
 		}
 	}

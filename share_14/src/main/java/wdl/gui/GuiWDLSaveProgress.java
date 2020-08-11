@@ -155,7 +155,7 @@ public class GuiWDLSaveProgress extends GuiTurningCameraBase {
 		if (this.doneWorking) {
 			this.minecraft.displayGuiScreen((Screen) null);
 		} else {
-			Utils.drawBorder(32, 32, 0, 0, height, width);
+			this.drawBorder(32, 32, 0, 0, height, width);
 
 			String majorTaskInfo = majorTaskMessage;
 			if (majorTaskCount > 1) {

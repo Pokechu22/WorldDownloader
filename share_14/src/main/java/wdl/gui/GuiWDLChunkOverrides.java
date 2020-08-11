@@ -267,7 +267,7 @@ public class GuiWDLChunkOverrides extends WDLScreen {
 		vLine(playerPosX, playerPosZ - 4, playerPosZ + 4, 0xFFFFFFFF);
 
 		// Draw the main borders now so that ranges are hidden behind it.
-		Utils.drawBorder(TOP_MARGIN, BOTTOM_MARGIN, 0, 0, height, width);
+		this.drawBorder(TOP_MARGIN, BOTTOM_MARGIN, 0, 0, height, width);
 
 		super.render(mouseX, mouseY, partialTicks);
 
