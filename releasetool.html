@@ -19,6 +19,8 @@
 <p><label>Installed minecraft version</label></p>
 <p><select id="main-version">
 <optgroup label="-- select --"><option disabled selected> -- </option></optgroup>
+<optgroup label="Protocol 736"><option>1.16.1</option></optgroup>
+<optgroup label="Protocol 735"><option>1.16</option></optgroup>
 <optgroup label="Protocol 578"><option>1.15.2</option></optgroup>
 <optgroup label="Protocol 575"><option>1.15.1</option></optgroup>
 <optgroup label="Protocol 573"><option>1.15</option></optgroup>
@@ -46,6 +48,8 @@
 <p><label>Supported minecraft versions (hold shift or control)</label></p>
 <p><select id="supported-versions" size="23" multiple>
 <optgroup label="-- select --"><option disabled selected> -- </option></optgroup>
+<optgroup label="Protocol 736"><option>1.16.1</option></optgroup>
+<optgroup label="Protocol 735"><option>1.16</option></optgroup>
 <optgroup label="Protocol 578"><option>1.15.2</option></optgroup>
 <optgroup label="Protocol 575"><option>1.15.1</option></optgroup>
 <optgroup label="Protocol 573"><option>1.15</option></optgroup>
@@ -245,6 +249,7 @@
 					if (entry.filename.indexOf("wdl") == -1 ||
 							entry.filename.indexOf("forge") != -1 ||
 							entry.filename.indexOf("package-info") != -1 ||
+							entry.filename.indexOf("Utils") != -1 ||
 							entry.filename.indexOf("ShulkerBoxHandler") != -1 ||
 							entry.filename.indexOf("NoteBlockHandler") != -1 ||
 							entry.filename.indexOf("BaseLargeChestHandler") != -1 ||
@@ -255,6 +260,9 @@
 							entry.filename.indexOf("LecternHandler") != -1 ||
 							entry.filename.indexOf("SmokerHandler") != -1 ||
 							entry.filename.indexOf("GameRuleFunctions") != -1 || // For inner classes
+							entry.filename.indexOf("IDimensionWrapper") != -1 ||
+							entry.filename.indexOf("ISaveHandlerWrapper") != -1 ||
+							entry.filename.indexOf("HandlerFunctions") != -1 ||
 							entry.filename.indexOf("data") != -1 ||
 							entry.filename.indexOf("assets") != -1) {
 						nextEntry();
