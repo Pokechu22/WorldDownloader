@@ -16,7 +16,6 @@ package wdl;
 import java.util.UUID;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.util.math.BlockPos;
 import wdl.versioned.IDimensionWrapper;
 import wdl.versioned.VersionedFunctions;
 
@@ -63,11 +62,6 @@ public final class TestWorld {
 			e.setEntityId(eid);
 			e.setUniqueId(new UUID(0, eid));
 			this.addEntity(e);
-		}
-
-		@Override
-		public BlockPos getSpawnPoint() {
-			return BlockPos.ZERO;
 		}
 
 		// Provided for 1.13 support.  Does nothing.
