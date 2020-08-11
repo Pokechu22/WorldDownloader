@@ -75,7 +75,8 @@ final class HandlerFunctions {
 	private HandlerFunctions() { throw new AssertionError(); }
 
 	// NETHER or THE_NETHER - I'm not going to add yet another split class for this, at least not yet
-	static final DimensionWrapper NETHER = new DimensionWrapper(DimensionType.getById(-1)); 
+	private static final int NETHER_ID = -1;
+	static final DimensionWrapper NETHER = new DimensionWrapper(DimensionType.getById(NETHER_ID)); 
 	static final DimensionWrapper OVERWORLD = new DimensionWrapper(DimensionType.OVERWORLD);
 	static final DimensionWrapper END = new DimensionWrapper(DimensionType.THE_END);
 
@@ -236,7 +237,11 @@ final class HandlerFunctions {
 
 		@Override
 		public String getFolderName() {
-			// TODO Auto-generated method stub
+			if (this.type == DimensionType.THE_END) {
+				return "DIM1";
+			} else if (this.type.getId() == NETHER_ID) {
+				return "DIM-1";
+			}
 			return null;
 		}
 

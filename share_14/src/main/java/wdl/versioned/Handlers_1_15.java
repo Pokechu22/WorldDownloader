@@ -235,7 +235,11 @@ final class HandlerFunctions {
 
 		@Override
 		public String getFolderName() {
-			// TODO Auto-generated method stub
+			if (type == DimensionType.THE_END) {
+				return "DIM1";
+			} else if (type == DimensionType.THE_NETHER) {
+				return "DIM-1";
+			}
 			return null;
 		}
 

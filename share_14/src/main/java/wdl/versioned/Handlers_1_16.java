@@ -212,20 +212,20 @@ final class HandlerFunctions {
 
 		@Override
 		public File getWorldDirectory() {
-			// TODO Auto-generated method stub
-			return null;
+			// XXX: This is rather dubious
+			return this.save.func_237291_a_(OVERWORLD.getWorldKey());
 		}
 
 		@Override
 		public void checkSessionLock() throws Exception {
-			// TODO Auto-generated method stub
-			
+			// Happens automatically?  func_237301_i_ does it, but it's not public.
+			// Use func_237298_f_, which calls it and otherwise doesn't do much (it gets icon.png)
+			this.save.func_237298_f_();
 		}
 
 		@Override
 		public Object getWrapped() {
-			// TODO Auto-generated method stub
-			return null;
+			return this.save;
 		}
 
 		@Override
@@ -247,10 +247,7 @@ final class HandlerFunctions {
 
 		public DimensionWrapper(RegistryKey<DimensionType> dimensionTypeKey,
 				RegistryKey<World> worldKey) {
-			// Get the DimensionType registry, and then the dimensiontype from it
-			RegistryKey<Registry<DimensionType>> dimTypeRegKey = Registry.field_239698_ad_;
-			@SuppressWarnings("unchecked")
-			Registry<DimensionType> dimTypeReg = (Registry<DimensionType>) Registry.REGISTRY.func_230516_a_(dimTypeRegKey);
+			Registry<DimensionType> dimTypeReg = IDynamicRegistries.func_239770_b_().func_230520_a_();
 			this.dimensionType = dimTypeReg.func_230516_a_(dimensionTypeKey);
 			this.dimensionTypeKey = dimensionTypeKey;
 			this.worldKey = worldKey;
@@ -258,7 +255,6 @@ final class HandlerFunctions {
 
 		@Override
 		public String getFolderName() {
-			// TODO Auto-generated method stub
 			return null;
 		}
 
