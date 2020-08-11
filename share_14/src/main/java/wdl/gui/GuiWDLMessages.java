@@ -69,7 +69,7 @@ public class GuiWDLMessages extends WDLScreen {
 
 				super.drawEntry(x, y, width, height, mouseX, mouseY);
 
-				drawCenteredString(font, category.getDisplayName().getFormattedText(),
+				drawCenteredString(font, category.getDisplayName().getString(), // XXX this should be formatted
 						GuiWDLMessages.this.width / 2 - 40, y + height
 						- minecraft.fontRenderer.FONT_HEIGHT - 1, 0xFFFFFF);
 
