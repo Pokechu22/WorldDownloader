@@ -13,7 +13,6 @@
  */
 package wdl;
 
-import org.junit.BeforeClass;
 import org.spongepowered.lwts.runner.DelegateRunner.DelegatedRunWith;
 
 /**
@@ -27,10 +26,9 @@ import org.spongepowered.lwts.runner.DelegateRunner.DelegatedRunWith;
  * This version specifically is responsible for making the class public.
  */
 public abstract class MaybeMixinTest extends MaybeMixinTestBase {
-	// This method needs to exist because junit can't call methods from non-public
-	// classes, even if inherited via a public class
-	@BeforeClass
-	public static void init() {
+	// NOTE: @BeforeClass doesn't work here, since test parameters are evaluated
+	// before BeforeClass is.  This causes load-order problems if MC code is called.
+	static {
 		TestBootstrap.init();
 	}
 }
