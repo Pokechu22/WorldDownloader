@@ -21,6 +21,8 @@ import java.util.Arrays;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 
+import com.mojang.datafixers.DataFixer;
+
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.minecraft.block.Block;
@@ -42,6 +44,7 @@ import net.minecraft.scoreboard.ServerScoreboard;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -49,6 +52,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.DimensionType;
+import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeContainer;
 import net.minecraft.world.biome.Biomes;
@@ -67,7 +71,8 @@ abstract class ExtWorldClient extends ClientWorld {
 
 	@SuppressWarnings("resource")
 	public ExtWorldClient(IDimensionWrapper dim) {
-		super(mock(ClientPlayNetHandler.class), mock(ClientWorldInfo.class),
+		super(mock(ClientPlayNetHandler.class, withSettings().defaultAnswer(RETURNS_DEEP_STUBS)),
+				mock(ClientWorldInfo.class, withSettings().defaultAnswer(RETURNS_DEEP_STUBS)),
 				null, null, (DimensionType) dim.getType(), VIEW_DISTANCE,
 				() -> EmptyProfiler.INSTANCE, mock(WorldRenderer.class), false, 0L);
 
@@ -151,11 +156,12 @@ abstract class ExtWorldClient extends ClientWorld {
 }
 
 abstract class ExtWorldServer extends ServerWorld {
-	@SuppressWarnings("resource")
+	@SuppressWarnings({ "resource", "unchecked" })
 	public ExtWorldServer(IDimensionWrapper dim) {
 		super(mock(MinecraftServer.class, withSettings().defaultAnswer(RETURNS_MOCKS)),
 				task -> task.run(), mock(LevelSave.class), mock(ServerWorldInfo.class),
-				null, null, (DimensionType) dim.getType(), null, null, false, 0, null, false);
+				(RegistryKey<World>) dim.getWorldKey(), (RegistryKey<DimensionType>) dim.getTypeKey(),
+				(DimensionType) dim.getType(), null, null, false, 0, null, false);
 
 		// Note that this is changing a final field, but doesn't seem to be causing any issues...
 		ReflectionUtils.findAndSetPrivateField(this, ServerWorld.class, ServerChunkProvider.class, new SimpleChunkProvider());
@@ -243,7 +249,8 @@ abstract class ExtWorldServer extends ServerWorld {
 		private final Long2ObjectMap<Chunk> map = new Long2ObjectOpenHashMap<>();
 
 		public SimpleChunkProvider() {
-			super(ExtWorldServer.this, null, null, null, task -> task.run(), null, 0, false, null, null);
+			super(ExtWorldServer.this, mock(LevelSave.class), mock(DataFixer.class),
+					null, task -> task.run(), null, 0, false, null, null);
 		}
 
 		@Override

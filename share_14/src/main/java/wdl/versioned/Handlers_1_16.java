@@ -263,10 +263,12 @@ final class HandlerFunctions {
 			return this.dimensionType;
 		}
 
+		@Override
 		public RegistryKey<DimensionType> getTypeKey() {
 			return this.dimensionTypeKey;
 		}
 
+		@Override
 		public RegistryKey<World> getWorldKey() {
 			return this.worldKey;
 		}

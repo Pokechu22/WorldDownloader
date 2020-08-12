@@ -19,4 +19,6 @@ public interface IDimensionWrapper {
 	@Nullable
 	public String getFolderName();
 	public Object getType();
+	public Object getTypeKey();
+	public Object getWorldKey();
 }

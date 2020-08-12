@@ -247,6 +247,16 @@ final class HandlerFunctions {
 		public DimensionType getType() {
 			return type;
 		}
+
+		@Override
+		public Object getTypeKey() {
+			return null;
+		}
+
+		@Override
+		public Object getWorldKey() {
+			return null;
+		}
 	}
 
 	/**

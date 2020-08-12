@@ -21,6 +21,7 @@ import static wdl.config.settings.SettingTestUtils.*;
 import org.junit.Test;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import wdl.MaybeMixinTest;
 import wdl.config.Configuration;
 import wdl.config.DefaultConfiguration;
@@ -64,7 +65,7 @@ public class WorldSettingsTest extends MaybeMixinTest {
 		config.setValue(WorldSettings.SPAWN_X, 42);
 		config.setValue(WorldSettings.SPAWN_Y, 43);
 		config.setValue(WorldSettings.SPAWN_Z, 44);
-		Entity entity = mock(Entity.class, withSettings().defaultAnswer(CALLS_REAL_METHODS));
+		Entity entity = mock(Entity.class, withSettings().defaultAnswer(CALLS_REAL_METHODS).useConstructor(EntityType.PLAYER, null));
 		VersionedFunctions.setEntityPos(entity, 90, 24, 36);
 
 		// All of these are invalid.
