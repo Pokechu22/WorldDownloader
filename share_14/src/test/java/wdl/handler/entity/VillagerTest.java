@@ -88,6 +88,23 @@ public class VillagerTest extends AbstractEntityHandlerTest<VillagerEntity, Merc
 		assertSameNBT(serverNbt.getCompound("Offers"), clientNbt.getCompound("Offers"));
 	}
 
+	@Test
+	public void testMultipleTrades() throws HandlerException {
+		makeMockWorld();
+
+		VillagerEntity villager = new VillagerEntity(EntityType.VILLAGER, serverWorld);
+		MerchantOffers recipes = villager.getOffers();
+		recipes.clear();
+		recipes.add(new MerchantOffer(new ItemStack(Items.DIAMOND, 64), ItemStack.EMPTY, new ItemStack(Items.EMERALD), 1, 1, 5));
+		recipes.add(new MerchantOffer(new ItemStack(Items.DIAMOND, 64), new ItemStack(Items.LAVA_BUCKET), new ItemStack(Items.BUCKET), 1, 1, 5));
+		recipes.add(new MerchantOffer(new ItemStack(Items.GOLDEN_HOE), ItemStack.EMPTY, new ItemStack(Items.GOLDEN_HOE), 1, 4, 9));
+		ReflectionUtils.findAndSetPrivateField(villager, AbstractVillagerEntity.class, MerchantOffers.class, recipes);
+		addEntity(villager);
+
+		runHandler(villager.getEntityId(), createClientContainer(villager, false));
+		checkAllEntities();
+	}
+
 	@Override
 	protected List<String> getIgnoreTags() {
 		// We have no way to get this value, and it's not useful anyways.
