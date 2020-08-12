@@ -26,6 +26,8 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.spongepowered.lwts.runner.DelegateRunner.DelegatedRunWith;
 
+import com.google.common.collect.ImmutableList;
+
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.horse.AbstractHorseEntity;
@@ -174,5 +176,14 @@ public class HorseTest<T extends AbstractHorseEntity> extends AbstractEntityHand
 		runHandler(horse.getEntityId(), createClientContainer(horse, true));
 
 		checkAllEntities();
+	}
+
+	@Override
+	protected List<String> getIgnoreTags() {
+		// There's a server-only setDropChance(EquipmentSlotType.CHEST, 0.0F) call in HorseEntity.
+		// Since this will be run when the world is loaded in singleplayer, it doesn't matter.
+		return ImmutableList.<String>builder()
+				.addAll(super.getIgnoreTags())
+				.add("ArmorDropChances").build();
 	}
 }
