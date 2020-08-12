@@ -32,6 +32,8 @@ import java.util.function.IntFunction;
 import org.junit.Test;
 import org.mockito.AdditionalAnswers;
 
+import com.mojang.authlib.GameProfile;
+
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectLinkedOpenHashMap;
@@ -43,6 +45,7 @@ import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.entity.passive.PigEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.play.ServerPlayNetHandler;
+import net.minecraft.server.management.PlayerInteractionManager;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import wdl.TestWorld.MockableChunkManager;
@@ -95,7 +98,10 @@ public class EntityUtilsTest extends MaybeMixinTest {
 			int serverViewDistance, int numTicks, BiPredicate<Integer, Entity> keepEntity, IntFunction<Vector3d> posFunc) throws Exception {
 		TestWorld.ServerWorld world = TestWorld.makeServer();
 
-		ServerPlayerEntity player = mock(ServerPlayerEntity.class, RETURNS_DEEP_STUBS);
+		GameProfile profile = mock(GameProfile.class);
+		when(profile.getName()).thenReturn("Nobody");
+		ServerPlayerEntity player = mock(ServerPlayerEntity.class, withSettings().useConstructor(
+				world.getServer(), world, profile, mock(PlayerInteractionManager.class)).defaultAnswer(CALLS_REAL_METHODS));
 		List<Entity> trackedEntities = new ArrayList<>();
 		when(player.toString()).thenCallRealMethod();
 		doAnswer(AdditionalAnswers.<Entity>answerVoid(trackedEntities::add)).when(player).addEntity(any());
