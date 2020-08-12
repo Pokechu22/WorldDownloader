@@ -69,11 +69,12 @@ import wdl.versioned.IDimensionWrapper;
 abstract class ExtWorldClient extends ClientWorld {
 	private static final int VIEW_DISTANCE = 16;
 
-	@SuppressWarnings("resource")
+	@SuppressWarnings({ "resource", "unchecked" })
 	public ExtWorldClient(IDimensionWrapper dim) {
 		super(mock(ClientPlayNetHandler.class, withSettings().defaultAnswer(RETURNS_DEEP_STUBS)),
 				mock(ClientWorldInfo.class, withSettings().defaultAnswer(RETURNS_DEEP_STUBS)),
-				null, null, (DimensionType) dim.getType(), VIEW_DISTANCE,
+				(RegistryKey<World>) dim.getWorldKey(), (RegistryKey<DimensionType>) dim.getTypeKey(),
+				(DimensionType) dim.getType(), VIEW_DISTANCE,
 				() -> EmptyProfiler.INSTANCE, mock(WorldRenderer.class), false, 0L);
 
 		// Note that this is changing a final field, but doesn't seem to be causing any issues...
