@@ -41,7 +41,9 @@ public class MapDataHandlerTest extends MaybeMixinTest {
 	@Test
 	public void testDimension() {
 		for (IDimensionWrapper dim : DIMENSIONS) {
-			PlayerEntity owner = new RemoteClientPlayerEntity(TestWorld.makeClient(dim), mock(GameProfile.class));
+			GameProfile profile = mock(GameProfile.class);
+			when(profile.getName()).thenReturn("Nobody");
+			PlayerEntity owner = new RemoteClientPlayerEntity(TestWorld.makeClient(dim), profile);
 			owner.inventory.setInventorySlotContents(10, SOME_MAP_ITEM);
 			MapData map = new MapData("test");
 			map.trackingPosition = true;
@@ -61,7 +63,9 @@ public class MapDataHandlerTest extends MaybeMixinTest {
 	 */
 	@Test
 	public void testDefaultDimension() {
-		PlayerEntity owner = new RemoteClientPlayerEntity(TestWorld.makeClient(), mock(GameProfile.class));
+		GameProfile profile = mock(GameProfile.class);
+		when(profile.getName()).thenReturn("Nobody");
+		PlayerEntity owner = new RemoteClientPlayerEntity(TestWorld.makeClient(), profile);
 		owner.inventory.setInventorySlotContents(10, SOME_MAP_ITEM);
 		MapData map = new MapData("test");
 		map.trackingPosition = true;
@@ -87,7 +91,9 @@ public class MapDataHandlerTest extends MaybeMixinTest {
 		};
 		for (int[] pos : positions) {
 			for (byte scale = 0; scale <= 4; scale++) {
-				PlayerEntity owner = new RemoteClientPlayerEntity(TestWorld.makeClient(), mock(GameProfile.class));
+				GameProfile profile = mock(GameProfile.class);
+				when(profile.getName()).thenReturn("Nobody");
+				PlayerEntity owner = new RemoteClientPlayerEntity(TestWorld.makeClient(), profile);
 				owner.inventory.setInventorySlotContents(10, SOME_MAP_ITEM);
 				double posX = pos[0];
 				double posZ = pos[1];
@@ -119,7 +125,9 @@ public class MapDataHandlerTest extends MaybeMixinTest {
 			map.scale = scale;
 			map.trackingPosition = true;
 
-			PlayerEntity owner = new RemoteClientPlayerEntity(TestWorld.makeClient(), mock(GameProfile.class));
+			GameProfile profile = mock(GameProfile.class);
+			when(profile.getName()).thenReturn("Nobody");
+			PlayerEntity owner = new RemoteClientPlayerEntity(TestWorld.makeClient(), profile);
 			owner.inventory.setInventorySlotContents(10, SOME_MAP_ITEM);
 			double posX = 900;
 			double posZ = 0;
