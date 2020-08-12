@@ -904,18 +904,30 @@ public class WDLEvents {
 			}
 		}
 
+		private boolean isAdvancementsButton(Button button) {
+			Object message = button.getMessage(); // String or ITextComponent
+			if (message instanceof String) {
+				return message.equals(I18n.format("gui.advancements"));
+			} else if (message instanceof TranslationTextComponent) {
+				// Though the method returns an ITextComponent,
+				// for the screen it'll be a translation component.
+				return ((TranslationTextComponent) message).getKey().equals("gui.advancements");
+			} else {
+				return false;
+			}
+		}
+
 		@Override
 		public void injectWDLButtons(IngameMenuScreen gui, Collection<Widget> buttonList,
 				Consumer<Widget> addButton) {
 			int insertAtYPos = 0;
 
-			String advancementsText = I18n.format("gui.advancements");
 			for (Object o : buttonList) {
 				if (!(o instanceof Button)) {
 					continue;
 				}
 				Button btn = (Button)o;
-				if (btn.getMessage().equals(advancementsText)) { // Button "Achievements"
+				if (isAdvancementsButton(btn)) {
 					insertAtYPos = btn.y + 24;
 					break;
 				}
