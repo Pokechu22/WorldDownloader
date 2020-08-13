@@ -91,7 +91,7 @@ public class VillagerTest extends AbstractEntityHandlerTest<EntityVillager, Cont
 		MerchantRecipeList recipes = new MerchantRecipeList();
 		recipes.add(new MerchantRecipe(new ItemStack(Items.DIAMOND, 64), new ItemStack(Items.EMERALD)));
 		recipes.add(new MerchantRecipe(new ItemStack(Items.DIAMOND, 64), new ItemStack(Items.LAVA_BUCKET), new ItemStack(Items.BUCKET)));
-		recipes.add(new MerchantRecipe(new ItemStack(Items.GOLDEN_HOE), new ItemStack(Items.GOLDEN_HOE)));
+		recipes.add(new MerchantRecipe(new ItemStack(Items.POISONOUS_POTATO), new ItemStack(Items.POISONOUS_POTATO)));
 		villager.setOffers(recipes);
 		addEntity(villager);
 
