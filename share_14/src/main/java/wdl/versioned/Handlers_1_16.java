@@ -255,6 +255,11 @@ final class HandlerFunctions {
 
 		@Override
 		public String getFolderName() {
+			if (this.worldKey == World.field_234920_i_) {
+				return "DIM1";
+			} else if (this.worldKey == World.field_234919_h_) {
+				return "DIM-1";
+			}
 			return null;
 		}
 
