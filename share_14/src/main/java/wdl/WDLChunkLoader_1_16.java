@@ -288,4 +288,8 @@ abstract class WDLChunkLoaderBase extends ChunkLoader {
 	protected RegionFile createRegionFile(File file) throws IOException {
 		return new RegionFile(file, this.chunkSaveLocation, /*enable flushing*/false);
 	}
+
+	public void flush() {
+		this.func_227079_i_();
+	}
 }

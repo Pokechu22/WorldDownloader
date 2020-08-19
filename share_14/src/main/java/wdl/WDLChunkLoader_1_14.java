@@ -284,4 +284,8 @@ abstract class WDLChunkLoaderBase extends ChunkLoader {
 	protected RegionFile createRegionFile(File file) throws IOException {
 		return new RegionFile(file);
 	}
+
+	public void flush() {
+		// Do nothing; not clear what kind of flushing can be done in 1.14
+	}
 }

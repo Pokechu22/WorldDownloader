@@ -678,8 +678,7 @@ public class WDL {
 				}
 			}, 1);
 
-			// XXX Still needed?
-			//ThreadedFileIOBase.getThreadedIOInstance().waitForFinish();
+			chunkLoader.flush();
 		} catch (Exception e) {
 			throw new RuntimeException("Threw exception waiting for asynchronous IO to finish. Hmmm.", e);
 		}
