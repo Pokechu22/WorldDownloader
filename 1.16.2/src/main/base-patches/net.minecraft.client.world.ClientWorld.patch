@@ -1,6 +1,6 @@
 --- net/minecraft/client/world/ClientWorld.java
 +++ net/minecraft/client/world/ClientWorld.java
-@@ -72,7 +72,7 @@
+@@ -73,7 +73,7 @@
  import net.minecraft.world.storage.ISpawnWorldInfo;
  import net.minecraft.world.storage.MapData;
  
@@ -9,7 +9,7 @@
     private final Int2ObjectMap<Entity> entitiesById = new Int2ObjectOpenHashMap<>();
     private final ClientPlayNetHandler connection;
     private final WorldRenderer worldRenderer;
-@@ -115,6 +115,10 @@
+@@ -116,6 +116,10 @@
        this.getProfiler().startSection("blocks");
        this.field_239129_E_.tick(hasTimeLeft);
        this.getProfiler().endSection();
@@ -20,7 +20,7 @@
     }
  
     private void func_239141_x_() {
-@@ -293,6 +297,10 @@
+@@ -294,6 +298,10 @@
     }
  
     public void removeEntityFromWorld(int eid) {
