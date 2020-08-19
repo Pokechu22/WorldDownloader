@@ -18,6 +18,7 @@ import static org.lwjgl.opengl.GL11.*;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
+import net.minecraft.client.GameSettings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.AbstractGui;
@@ -47,6 +48,27 @@ final class GuiFunctions {
 	static ClientPlayerEntity makePlayer(Minecraft minecraft, World world, ClientPlayNetHandler nhpc, ClientPlayerEntity base) {
 		return new ClientPlayerEntity(minecraft, (ClientWorld)world, nhpc,
 				base.getStats(), base.getRecipeBook());
+	}
+
+	/* (non-javadoc)
+	 * @see VersionedFunctions#getPointOfView
+	 */
+	static Object getPointOfView(GameSettings settings) {
+		return settings.thirdPersonView;
+	}
+
+	/* (non-javadoc)
+	 * @see VersionedFunctions#setFirstPersonPointOfView
+	 */
+	static void setFirstPersonPointOfView(GameSettings settings) {
+		settings.thirdPersonView = 0;
+	}
+
+	/* (non-javadoc)
+	 * @see VersionedFunctions#restorePointOfView
+	 */
+	static void restorePointOfView(GameSettings settings, Object value) {
+		settings.thirdPersonView = (int)value;
 	}
 
 	/* (non-javadoc)

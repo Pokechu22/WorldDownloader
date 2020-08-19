@@ -14,7 +14,8 @@
 package wdl.versioned;
 
 import net.minecraft.block.Block;
-import net.minecraft.util.registry.IRegistry;
+import net.minecraft.util.registry.DynamicRegistries;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
 
 /**
@@ -30,12 +31,13 @@ final class RegistryFunctions {
 	 * @see VersionedFunctions#getBlockId
 	 */
 	static final int getBlockId(Block block) {
-		return IRegistry.BLOCK.getId(block);
+		return Registry.BLOCK.getId(block);
 	}
 	/* (non-javadoc)
 	 * @see VersionedFunctions#getBiomeId
 	 */
 	static final int getBiomeId(Biome biome) {
-		return IRegistry.BIOME.getId(biome);
+		Registry<Biome> biomes = DynamicRegistries.func_239770_b_().func_243612_b(Registry.field_239720_u_);
+		return biomes.getId(biome);
 	}
 }

@@ -40,9 +40,9 @@ public abstract class GuiTurningCameraBase extends WDLScreen {
 	 */
 	private float yaw;
 	/**
-	 * The previous mode for the camera (First person, 3rd person, ect)
+	 * The previous mode for the camera (First person, 3rd person, etc)
 	 */
-	private int oldCameraMode;
+	private Object oldCameraMode;
 	/**
 	 * The previous state as to whether the hud was hidden with F1.
 	 */
@@ -91,7 +91,7 @@ public abstract class GuiTurningCameraBase extends WDLScreen {
 					VersionedFunctions.getEntityY(wdl.player), VersionedFunctions.getEntityZ(wdl.player),
 					wdl.player.rotationYaw, 0.0F);
 			this.yaw = wdl.player.rotationYaw;
-			this.oldCameraMode = wdl.minecraft.gameSettings.thirdPersonView;
+			this.oldCameraMode = VersionedFunctions.getPointOfView(wdl.minecraft.gameSettings);
 			this.oldHideHud = wdl.minecraft.gameSettings.hideGUI;
 			this.oldShowDebug = wdl.minecraft.gameSettings.showDebugInfo;
 			this.oldChatVisibility = wdl.minecraft.gameSettings.chatVisibility;
@@ -245,7 +245,7 @@ public abstract class GuiTurningCameraBase extends WDLScreen {
 	private void activateRenderViewEntity() {
 		if (!this.initializedCamera) return;
 
-		wdl.minecraft.gameSettings.thirdPersonView = 0;
+		VersionedFunctions.setFirstPersonPointOfView(wdl.minecraft.gameSettings);
 		wdl.minecraft.gameSettings.hideGUI = true;
 		wdl.minecraft.gameSettings.showDebugInfo = false;
 		wdl.minecraft.gameSettings.chatVisibility = ChatVisibility.HIDDEN;
@@ -258,7 +258,7 @@ public abstract class GuiTurningCameraBase extends WDLScreen {
 	private void deactivateRenderViewEntity() {
 		if (!this.initializedCamera) return;
 
-		wdl.minecraft.gameSettings.thirdPersonView = this.oldCameraMode;
+		VersionedFunctions.restorePointOfView(wdl.minecraft.gameSettings, this.oldCameraMode);
 		wdl.minecraft.gameSettings.hideGUI = oldHideHud;
 		wdl.minecraft.gameSettings.showDebugInfo = oldShowDebug;
 		wdl.minecraft.gameSettings.chatVisibility = oldChatVisibility;

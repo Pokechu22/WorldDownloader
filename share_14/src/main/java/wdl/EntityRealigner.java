@@ -18,7 +18,6 @@ import net.minecraft.entity.item.HangingEntity;
 import wdl.api.IEntityEditor;
 import wdl.api.IWDLMod;
 import wdl.api.IWDLModDescripted;
-import wdl.versioned.VersionedFunctions;
 
 /**
  * Realigns entities to their serverside positions, to mitigate entity drift.
@@ -27,6 +26,7 @@ import wdl.versioned.VersionedFunctions;
  * <br/>
  * This is also an example of how an {@link IWDLMod} would be implemented.
  */
+@Deprecated
 public class EntityRealigner implements IEntityEditor, IWDLModDescripted {
 	@Override
 	public boolean isValidEnvironment(String version) {
@@ -79,15 +79,16 @@ public class EntityRealigner implements IEntityEditor, IWDLModDescripted {
 		// https://github.com/uyjulian/LiteModWDL/issues/4.
 		// (I also think this is the cause for the "world going
 		// invisible" issue).
-		return e.serverPosX != 0 || e.serverPosY != 0 || e.serverPosZ != 0;
+		//return e.serverPosX != 0 || e.serverPosY != 0 || e.serverPosZ != 0;
+		return false;
 	}
 
 	@Override
 	public void editEntity(Entity e) {
-		double posX = convertServerPos(e.serverPosX);
-		double posY = convertServerPos(e.serverPosY);
-		double posZ = convertServerPos(e.serverPosZ);
-		VersionedFunctions.setEntityPos(e, posX, posY, posZ);
+		//double posX = convertServerPos(e.serverPosX);
+		//double posY = convertServerPos(e.serverPosY);
+		//double posZ = convertServerPos(e.serverPosZ);
+		//VersionedFunctions.setEntityPos(e, posX, posY, posZ);
 	}
 
 	/**
@@ -101,7 +102,7 @@ public class EntityRealigner implements IEntityEditor, IWDLModDescripted {
 	 * @param serverPos
 	 * @return The double version of the position.
 	 */
-	private static double convertServerPos(long serverPos) {
-		return serverPos / 4096.0;
-	}
+	//private static double convertServerPos(long serverPos) {
+		//return serverPos / 4096.0;
+	//}
 }

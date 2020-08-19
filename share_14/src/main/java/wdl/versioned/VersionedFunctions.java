@@ -35,6 +35,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
+import net.minecraft.client.GameSettings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.screen.ConfirmScreen;
@@ -527,6 +528,35 @@ public final class VersionedFunctions {
 	 */
 	public static ClientPlayerEntity makePlayer(Minecraft minecraft, World world, ClientPlayNetHandler nhpc, ClientPlayerEntity base) {
 		return GuiFunctions.makePlayer(minecraft, world, nhpc, base);
+	}
+
+	/**
+	 * Gets the current point of view (1st/3rd person) for the given GameSettings.
+	 *
+	 * @param settings The GameSettings
+	 * @return An object of an unknown type.
+	 */
+	public static Object getPointOfView(GameSettings settings) {
+		return GuiFunctions.getPointOfView(settings);
+	}
+
+	/**
+	 * Sets first-person point of view for the given GameSettings.
+	 *
+	 * @param settings The GameSettings
+	 */
+	public static void setFirstPersonPointOfView(GameSettings settings) {
+		GuiFunctions.setFirstPersonPointOfView(settings);
+	}
+
+	/**
+	 * Restores the current point of view (1st/3rd person) for the given GameSettings.
+	 *
+	 * @param settings The GameSettings
+	 * @param value The object returned by an earlier call to {@link #getPointOfView}.
+	 */
+	public static void restorePointOfView(GameSettings settings, Object value) {
+		GuiFunctions.restorePointOfView(settings, value);
 	}
 
 	/**

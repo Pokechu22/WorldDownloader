@@ -39,7 +39,7 @@ public abstract class GuiTurningCameraBase extends WDLScreen {
 	 */
 	private float yaw;
 	/**
-	 * The previous mode for the camera (First person, 3rd person, ect)
+	 * The previous mode for the camera (First person, 3rd person, etc)
 	 */
 	private int oldCameraMode;
 	/**
