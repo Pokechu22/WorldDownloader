@@ -1,5 +1,6 @@
 modLoader="javafml"
-loaderVersion="[31,)"
+loaderVersion="[33,)"
+license="MMPLv2"
 issueTrackerURL="https://github.com/Pokechu22/WorldDownloader/issues/"
 
 [[mods]]
@@ -15,6 +16,6 @@ World Downloader is a mod that allows making backups of Minecraft worlds.
 [[dependencies.wdl]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.15.2]"
+    versionRange="[1.16.2]"
     ordering="NONE"
     side="CLIENT"

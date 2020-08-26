@@ -25,7 +25,6 @@ group = "wdl"
 archivesBaseName = "WorldDownloader"
 libsDirName = "../../libs/${version}"
 
-
 apply plugin: 'pokechu22.test.customsrg'
 apply plugin: 'pokechu22.test.begradle'
 apply plugin: 'pokechu22.test.langrenamer'

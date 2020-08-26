@@ -30,7 +30,6 @@ group = "wdl"
 archivesBaseName = "WorldDownloader-forge"
 libsDirName = "../../libs/${version}"
 
-
 apply plugin: 'pokechu22.test.customsrg'
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
