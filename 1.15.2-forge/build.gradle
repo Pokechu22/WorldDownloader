@@ -64,7 +64,7 @@ sourceSets {
 
 minecraft {
     //suppressMappingVersionWarnings = true
-    mappings channel: 'snapshot', version: '20200809-1.15.1'
+    mappings channel: 'snapshot', version: '20200826-1.15.1'
     runs {
         client {
             // These args are needed in the development environment only
