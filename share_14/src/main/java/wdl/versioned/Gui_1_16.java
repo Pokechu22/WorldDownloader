@@ -194,7 +194,7 @@ final class GuiFunctions {
 	static Style createLinkFormatting(String url) {
 		return Style.EMPTY_STYLE
 				.setColor(TextFormatting.BLUE)
-				.applyFormatting(TextFormatting.BLUE)
+				.applyFormatting(TextFormatting.UNDERLINE)
 				.setClickEvent(new ClickEvent(Action.OPEN_URL, url));
 	}
 
