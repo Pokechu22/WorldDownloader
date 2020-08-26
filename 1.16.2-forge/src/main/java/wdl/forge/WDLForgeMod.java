@@ -60,9 +60,11 @@ public class WDLForgeMod {
 				// This message might not be relevant for other sanity checks,
 				// but the mixin sanity checks are the most likely ones to fail.
 				// These can't be translated, though, because translations might not be working.
-				ITextComponent helpMessage = new StringTextComponent("If mixin changes are missing, make sure ");
+				StringTextComponent helpMessage = new StringTextComponent("If mixin changes are missing, make sure ");
 				ITextComponent helpMessage2 = new StringTextComponent("MixinBootstrap");
-				helpMessage2.getStyle().setColor(TextFormatting.BLUE).setUnderlined(true)
+				helpMessage2.getStyle()
+						.setColor(TextFormatting.BLUE)
+						.applyFormatting(TextFormatting.UNDERLINE)
 						.setClickEvent(new ClickEvent(Action.OPEN_URL, MIXIN_BOOTSTRAP_LINK));
 				helpMessage.appendSibling(helpMessage2);
 				ITextComponent helpMessage3 = new StringTextComponent(" is installed.");

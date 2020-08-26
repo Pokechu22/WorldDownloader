@@ -27,7 +27,7 @@ import wdl.ducks.IBaseChangesApplied;
 public abstract class MixinWorldClient extends World implements IBaseChangesApplied {
 
 	protected MixinWorldClient() {
-		super(null, null, null, null, true);
+		super(null, null, null, null, true, true, 0);
 	}
 
 	@Inject(method="tick", at=@At("RETURN"))

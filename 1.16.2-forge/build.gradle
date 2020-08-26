@@ -151,6 +151,7 @@ sourceSets {
             compileClasspath += api.output
             runtimeClasspath += api.output
             srcDir "src/main/java"
+            srcDir project(':1.16.2').file("src/main/java")
             srcDir project(':share_14').file("src/main/java")
             exclude "wdl/WDLChunkLoader_1_14.java"
             exclude "wdl/WDLChunkLoader_1_15.java"
