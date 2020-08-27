@@ -70,7 +70,6 @@ minecraft {
             // These args are needed in the development environment only
             args("--mixin", "mixins.ForgeWDL.json")
             workingDirectory project.file('run')
-            main 'mcp.client.Start'
             mods {
                 wdl {
                     source sourceSets.main
@@ -101,6 +100,8 @@ configurations {
 }
 
 dependencies {
+    //minecraft 'net.minecraftforge:forge:1.16.2-33.0.22'
+    // BEGradle doesn't currently work with patcher dependencies
     minecraft 'net.minecraft:client:1.16.2'
     implementation 'net.minecraftforge:forge:1.16.2-33.0.22:universal'
     implementation 'net.minecraftforge:eventbus:2.2.+:service'
@@ -178,6 +179,8 @@ sourceSets {
         resources {
             srcDir project(':share').file("src/main/resources")
         }
+        // Refmap declaration must match the refmap name specified in the json config
+        ext.refMap = "mixins.ForgeWDL.refmap.json"
     }
     test {
         java {
