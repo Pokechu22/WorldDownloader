@@ -51,11 +51,10 @@ abstract class ExtGuiScreen extends net.minecraft.client.gui.screen.Screen imple
 	private final List<TextFieldWidget> textFieldList = new ArrayList<>();
 	@Nullable
 	private MatrixStack matrixStack = null;
-	private final CharacterManager characterManager;
+	private CharacterManager characterManager;
 
 	protected ExtGuiScreen(ITextComponent title) {
 		super(title);
-		this.characterManager = ReflectionUtils.findAndGetPrivateField(this.font, CharacterManager.class);
 	}
 
 	// Called before init
@@ -64,6 +63,7 @@ abstract class ExtGuiScreen extends net.minecraft.client.gui.screen.Screen imple
 		this.listList.clear();
 		this.textFieldList.clear();
 		super.init(mc, width, height);
+		this.characterManager = ReflectionUtils.findAndGetPrivateField(this.font, CharacterManager.class);
 	}
 
 	@Override
