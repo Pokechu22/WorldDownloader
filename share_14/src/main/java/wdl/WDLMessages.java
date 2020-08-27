@@ -218,7 +218,7 @@ public class WDLMessages {
 		for (int i = 0; i < args.length; i++) {
 			if (args[i] == null) {
 				StringTextComponent text = new StringTextComponent("null");
-				text.getStyle().setHoverEvent(new HoverEvent(Action.SHOW_TEXT, new StringTextComponent("~~null~~")));
+				text.setStyle(text.getStyle().setHoverEvent(new HoverEvent(Action.SHOW_TEXT, new StringTextComponent("~~null~~"))));
 				args[i] = text;
 			} else if (args[i] instanceof Entity) {
 				Entity e = (Entity)args[i];
@@ -289,15 +289,14 @@ public class WDLMessages {
 
 		TextComponent text = new StringTextComponent("");
 
-		ITextComponent header = new StringTextComponent("[WorldDL]");
-		header.getStyle().setColor(type.getTitleColor());
-		header.getStyle().setHoverEvent(
-				new HoverEvent(Action.SHOW_TEXT, tooltip));
+		StringTextComponent header = new StringTextComponent("[WorldDL]");
+		header.setStyle(header.getStyle().setColor(type.getTitleColor())
+				.setHoverEvent(new HoverEvent(Action.SHOW_TEXT, tooltip)));
 
 		// If the message has its own style, it'll use that instead.
 		// TODO: Better way?
 		StringTextComponent messageFormat = new StringTextComponent(" ");
-		messageFormat.getStyle().setColor(type.getTextColor());
+		messageFormat.setStyle(messageFormat.getStyle().setColor(type.getTextColor()));
 
 		messageFormat.appendSibling(message);
 		text.appendSibling(header);
@@ -332,7 +331,8 @@ public class WDLMessages {
 				hoverText.appendText("\n");
 				hoverText.appendSibling(new TranslationTextComponent("wdl.messages.entityData.group", displayGroup, group));
 
-				wdlName.getStyle().setHoverEvent(new HoverEvent(Action.SHOW_TEXT, hoverText));
+				((TextComponent)wdlName).setStyle(
+						wdlName.getStyle().setHoverEvent(new HoverEvent(Action.SHOW_TEXT, hoverText)));
 			}
 		} catch (Exception ex) {
 			LOGGER.warn("[WDL] Exception in entity name!", ex);
@@ -350,7 +350,7 @@ public class WDLMessages {
 
 	@Nonnull
 	private static ITextComponent convertThrowableToComponent(@Nonnull Throwable t) {
-		ITextComponent component = new StringTextComponent(t.toString());
+		StringTextComponent component = new StringTextComponent(t.toString());
 
 		// https://stackoverflow.com/a/1149721/3991344
 		StringWriter sw = new StringWriter();
@@ -363,7 +363,7 @@ public class WDLMessages {
 		HoverEvent event = new HoverEvent(Action.SHOW_TEXT,
 				new StringTextComponent(exceptionAsString));
 
-		component.getStyle().setHoverEvent(event);
+		component.setStyle(component.getStyle().setHoverEvent(event));
 
 		return component;
 	}

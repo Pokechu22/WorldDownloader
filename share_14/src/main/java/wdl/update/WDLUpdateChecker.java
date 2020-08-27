@@ -207,10 +207,10 @@ public class WDLUpdateChecker extends Thread {
 				redistributionList.setStyle(VersionedFunctions.createLinkFormatting(REDISTRIBUTION_LINK));
 				TranslationTextComponent warning = new TranslationTextComponent(
 						"wdl.intro.warning");
-				warning.getStyle().setColor(TextFormatting.DARK_RED).setBold(true);
+				warning.setStyle(warning.getStyle().setColor(TextFormatting.DARK_RED).setBold(true));
 				TranslationTextComponent illegally = new TranslationTextComponent(
 						"wdl.intro.illegally");
-				illegally.getStyle().setColor(TextFormatting.DARK_RED).setBold(true);
+				illegally.setStyle(illegally.getStyle().setColor(TextFormatting.DARK_RED).setBold(true));
 				TranslationTextComponent stolen = new TranslationTextComponent(
 						"wdl.intro.stolen", warning, redistributionList, illegally);
 				TranslationTextComponent smr = new TranslationTextComponent(
