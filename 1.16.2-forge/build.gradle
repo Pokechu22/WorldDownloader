@@ -193,8 +193,6 @@ sourceSets {
             exclude "wdl/ExtWorld_1_14_4.java"
             exclude "wdl/ExtWorld_1_15.java"
             exclude "wdl/ExtWorld_1_16.java"
-            exclude "wdl/lwts/WDLTestTweaker_Forge.java"
-            exclude "wdl/lwts/WDLTestTweaker.java"
         }
     }
     api {
