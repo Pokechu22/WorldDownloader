@@ -122,9 +122,9 @@ abstract class ExtWorldClient extends ClientWorld {
 
 	private static final BiomeContainer NO_BIOMES;
 	static {
-		Biome[] biomes = new Biome[BiomeContainer.BIOMES_SIZE];
-		Arrays.fill(biomes, Biomes.THE_VOID);
 		Registry<Biome> biomesReg = DynamicRegistries.func_239770_b_().func_243612_b(Registry.field_239720_u_);
+		Biome[] biomes = new Biome[BiomeContainer.BIOMES_SIZE];
+		Arrays.fill(biomes, biomesReg.func_230516_a_(Biomes.THE_VOID));
 		NO_BIOMES = new BiomeContainer(biomesReg, biomes);
 	}
 
@@ -241,9 +241,9 @@ abstract class ExtWorldServer extends ServerWorld {
 
 	private static final BiomeContainer NO_BIOMES;
 	static {
-		Biome[] biomes = new Biome[BiomeContainer.BIOMES_SIZE];
-		Arrays.fill(biomes, Biomes.THE_VOID);
 		Registry<Biome> biomesReg = DynamicRegistries.func_239770_b_().func_243612_b(Registry.field_239720_u_);
+		Biome[] biomes = new Biome[BiomeContainer.BIOMES_SIZE];
+		Arrays.fill(biomes, biomesReg.func_230516_a_(Biomes.THE_VOID));
 		NO_BIOMES = new BiomeContainer(biomesReg, biomes);
 	}
 
