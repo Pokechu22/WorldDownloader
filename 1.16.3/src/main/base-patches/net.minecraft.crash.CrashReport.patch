@@ -1,0 +1,33 @@
+--- net/minecraft/crash/CrashReport.java
++++ net/minecraft/crash/CrashReport.java
+@@ -20,7 +20,7 @@
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
+ 
+-public class CrashReport {
++public class CrashReport/* WDL >>> */ implements wdl.ducks.IBaseChangesApplied/* <<< WDL */ {
+    private static final Logger LOGGER = LogManager.getLogger();
+    private final String description;
+    private final Throwable cause;
+@@ -71,6 +71,21 @@
+          List<String> list = Util.getJvmFlags().collect(Collectors.toList());
+          return String.format("%d total; %s", list.size(), list.stream().collect(Collectors.joining(" ")));
+       });
++      /* WDL >>> */
++      try {
++         wdl.WDLHooks.onCrashReportPopulateEnvironment(this);
++      } catch (Throwable t) {
++         try {
++            final Logger LOGGER = LogManager.getLogger();
++            LOGGER.fatal("World Downloader: Failed to add crash info", t);
++            this.getCategory().addCrashSectionThrowable("World Downloader - Fatal error in crash handler (see log)", t);
++         } catch (Throwable t2) {
++            System.err.println("WDL: Double failure adding info to crash report!");
++            t.printStackTrace();
++            t2.printStackTrace();
++         }
++      }
++      /* <<< WDL */
+    }
+ 
+    /**
