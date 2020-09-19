@@ -34,6 +34,7 @@ public class VillagerHandler extends EntityHandler<VillagerEntity, MerchantConta
 				container, IMerchant.class);
 		MerchantOffers recipes = merchant.getOffers();
 		ReflectionUtils.findAndSetPrivateField(villager, AbstractVillagerEntity.class, MerchantOffers.class, recipes);
+		villager.setXp(merchant.getXp());
 
 		return new TranslationTextComponent("wdl.messages.onGuiClosedInfo.savedEntity.villager.tradesOnly");
 		// Other data is actually transfered properly now, fortunately
