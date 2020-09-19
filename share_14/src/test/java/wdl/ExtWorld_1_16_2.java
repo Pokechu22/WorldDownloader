@@ -21,6 +21,8 @@ import java.util.Arrays;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 
+import javax.annotation.Nullable;
+
 import com.mojang.datafixers.DataFixer;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
@@ -62,6 +64,7 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkStatus;
 import net.minecraft.world.chunk.IChunk;
 import net.minecraft.world.gen.ChunkGenerator;
+import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.server.ServerChunkProvider;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.storage.SaveFormat.LevelSave;
@@ -237,6 +240,13 @@ abstract class ExtWorldServer extends ServerWorld {
 	public void playSound(double p_184134_1_, double p_184134_3_, double p_184134_5_, SoundEvent p_184134_7_,
 			SoundCategory p_184134_8_, float p_184134_9_, float p_184134_10_, boolean p_184134_11_) {
 		// Do nothing
+	}
+
+	@Nullable
+	@Override
+	public BlockPos func_241117_a_(Structure<?> name, BlockPos pos, int radius, boolean skipExistingChunks) {
+		// We don't have structures
+		return null;
 	}
 
 	private static final BiomeContainer NO_BIOMES;

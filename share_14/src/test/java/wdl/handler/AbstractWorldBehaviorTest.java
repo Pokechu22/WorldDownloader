@@ -17,6 +17,9 @@ import static org.junit.Assume.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
@@ -44,6 +47,8 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.play.ServerPlayNetHandler;
 import net.minecraft.server.MinecraftServer;
@@ -163,15 +168,89 @@ public abstract class AbstractWorldBehaviorTest extends MaybeMixinTest {
 	/**
 	 * Compares the two compounds, raising an assertion error if they do not match.
 	 *
-	 * @param expected The expected NBT
-	 * @param actual The actual NBT
+	 * @param expected The expected (server) NBT
+	 * @param actual The actual (client) NBT
 	 */
 	protected void assertSameNBT(CompoundNBT expected, CompoundNBT actual) {
-		// Don't use real AssertionError, but instead use a special JUnit one,
-		// which has an interactive comparison tool
 		if (!expected.equals(actual)) {
+			// Don't use real AssertionError, but instead use a special JUnit one,
+			// which has an interactive comparison tool
 			throw new ComparisonFailure("Mismatched NBT!", VersionedFunctions.nbtString(expected), VersionedFunctions.nbtString(actual));
 		}
+	}
+
+	/**
+	 * Compares the two compounds, raising an assertion error if they do not match.
+	 *
+	 * @param expected The expected (server) NBT
+	 * @param actual The actual (client) NBT
+	 * @param ignoring Tags names to ignore in the comparison.
+	 */
+	protected void assertSameNBT(CompoundNBT expected, CompoundNBT actual, Collection<String> ignoring) {
+		if (!nbtEquals(expected, actual, ignoring)) {
+			// Don't use real AssertionError, but instead use a special JUnit one,
+			// which has an interactive comparison tool (for the whole tag, not just this one mismatch)
+			throw new ComparisonFailure("Mismatched NBT!", VersionedFunctions.nbtString(expected), VersionedFunctions.nbtString(actual));
+		}
+	}
+
+	// We can't use expected.equals(actual) here since it doesn't have ignore functionality, and we
+	// want to *recursively* ignore specific tags (not just on the top level) so
+	// removing them from the top isn't an option either.
+	private boolean nbtEquals(CompoundNBT expected, CompoundNBT actual, Collection<String> ignoring) {
+		Set<String> expectedKeys = new HashSet<>(expected.keySet());
+		Set<String> actualKeys = new HashSet<>(actual.keySet());
+
+		expectedKeys.removeAll(ignoring);
+		actualKeys.removeAll(ignoring);
+
+		if (!expectedKeys.equals(actualKeys)) {
+			return false;
+		}
+
+		for (String key : expectedKeys) {
+			INBT expectedValue = expected.get(key);
+			INBT actualValue = actual.get(key);
+			if (expectedValue instanceof CompoundNBT && actualValue instanceof CompoundNBT) {
+				if (!nbtEquals((CompoundNBT) expectedValue, (CompoundNBT) actualValue, ignoring)) {
+					return false;
+				}
+			} else if (expectedValue instanceof ListNBT && actualValue instanceof ListNBT) {
+				if (!nbtEquals((ListNBT) expectedValue, (ListNBT) actualValue, ignoring)) {
+					return false;
+				}
+			} else {
+				if (!expectedValue.equals(actualValue)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	private boolean nbtEquals(ListNBT expected, ListNBT actual, Collection<String> ignoring) {
+		if (expected.size() != actual.size()) {
+			return false;
+		}
+
+		for (int i = 0; i < expected.size(); i++) {
+			INBT expectedValue = expected.get(i);
+			INBT actualValue = actual.get(i);
+			if (expectedValue instanceof CompoundNBT && actualValue instanceof CompoundNBT) {
+				if (!nbtEquals((CompoundNBT) expectedValue, (CompoundNBT) actualValue, ignoring)) {
+					return false;
+				}
+			} else if (expectedValue instanceof ListNBT && actualValue instanceof ListNBT) {
+				if (!nbtEquals((ListNBT) expectedValue, (ListNBT) actualValue, ignoring)) {
+					return false;
+				}
+			} else {
+				if (!expectedValue.equals(actualValue)) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 
 	/**

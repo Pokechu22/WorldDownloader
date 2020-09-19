@@ -21,6 +21,8 @@ import java.util.Arrays;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 
+import javax.annotation.Nullable;
+
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.minecraft.block.Block;
@@ -234,6 +236,13 @@ abstract class ExtWorldServer extends ServerWorld {
 	public void playSound(double p_184134_1_, double p_184134_3_, double p_184134_5_, SoundEvent p_184134_7_,
 			SoundCategory p_184134_8_, float p_184134_9_, float p_184134_10_, boolean p_184134_11_) {
 		// Do nothing
+	}
+
+	@Nullable
+	@Override
+	public BlockPos findNearestStructure(String name, BlockPos pos, int radius, boolean skipExistingChunks) {
+		// We don't have structures
+		return null;
 	}
 
 	private static final Biome[] NO_BIOMES = new Biome[16*16];

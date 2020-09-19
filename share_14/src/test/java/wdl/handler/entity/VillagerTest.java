@@ -27,13 +27,13 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.merchant.villager.VillagerData;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
-import net.minecraft.entity.villager.IVillagerType;
 import net.minecraft.inventory.container.MerchantContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.MerchantOffer;
 import net.minecraft.item.MerchantOffers;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import wdl.handler.HandlerException;
 
@@ -107,8 +107,9 @@ public class VillagerTest extends AbstractEntityHandlerTest<VillagerEntity, Merc
 	@Override
 	protected List<String> getIgnoreTags() {
 		// We have no way to get this value, and it's not useful anyways.
-		// Damage on full tools also is added clientside, but not present serverside.
-		return ImmutableList.<String>builder().addAll(super.getIgnoreTags()).add("CareerLevel").add("Damage").build();
+		// "tag" on tools is also somewhat volatile (mainly because Damage is added
+		// clientside for tools with full durability, but not serverside)
+		return ImmutableList.<String>builder().addAll(super.getIgnoreTags()).add("CareerLevel").add("tag").build();
 	}
 
 	/**
@@ -123,12 +124,17 @@ public class VillagerTest extends AbstractEntityHandlerTest<VillagerEntity, Merc
 	 */
 	@Test
 	public void testProfessionIdentification() throws Exception {
-		for (IVillagerType type : Registry.VILLAGER_TYPE) {  // Biome
+		// Note: type is the biome the villager is from. We can't iterate directly over
+		// the registry since the type is VillagerType in 1.16+ and IVillagerType
+		// earlier; it's not something that's worth renaming.
+		// Using forEach would work since lambdas infer types, except that we need to
+		// throw a checked exception which isn't allowed.
+		for (ResourceLocation type : Registry.VILLAGER_TYPE.keySet()) {
 			for (VillagerProfession prof : Registry.VILLAGER_PROFESSION) {
 				for (int level = 1; level <= 5; level++) {
 					makeMockWorld();
 					VillagerEntity villager = new VillagerEntity(EntityType.VILLAGER, serverWorld);
-					villager.setVillagerData(new VillagerData(type, prof, level));
+					villager.setVillagerData(new VillagerData(Registry.VILLAGER_TYPE.getOrDefault(type), prof, level));
 					addEntity(villager);
 					if (prof != VillagerProfession.NITWIT && prof != VillagerProfession.NONE) {
 						// Nitwits and "none" have no containers to test with.
@@ -148,7 +154,9 @@ public class VillagerTest extends AbstractEntityHandlerTest<VillagerEntity, Merc
 		makeMockWorld();
 
 		VillagerEntity villager = new VillagerEntity(EntityType.VILLAGER, serverWorld);
-		villager.setVillagerData(new VillagerData(IVillagerType.DESERT, VillagerProfession.CARTOGRAPHER, 2));
+		villager.setVillagerData(villager.getVillagerData()
+				.withProfession(VillagerProfession.CARTOGRAPHER)
+				.withLevel(2));
 		villager.setXp(1);
 		MerchantOffers recipes = new MerchantOffers();
 		recipes.add(new MerchantOffer(new ItemStack(Items.DIAMOND, 64), ItemStack.EMPTY, new ItemStack(Items.EMERALD), 1, 1, 5));

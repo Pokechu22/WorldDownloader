@@ -208,11 +208,8 @@ public abstract class AbstractEntityHandlerTest<E extends Entity, C extends Cont
 		expected.writeWithoutTypeId(expectedNBT);
 		CompoundNBT actualNBT = new CompoundNBT();
 		actual.writeWithoutTypeId(actualNBT);
-		for (String key : getIgnoreTags()) {
-			expectedNBT.remove(key);
-			actualNBT.remove(key);
-		}
-		assertSameNBT(expectedNBT, actualNBT);
+
+		assertSameNBT(expectedNBT, actualNBT, getIgnoreTags());
 	}
 
 	/**
