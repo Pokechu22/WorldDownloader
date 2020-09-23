@@ -244,7 +244,7 @@ abstract class ExtWorldServer extends ServerWorld {
 
 	@Nullable
 	@Override
-	public BlockPos func_241117_a_(Structure<?> name, BlockPos pos, int radius, boolean skipExistingChunks) {
+	public BlockPos findNearestStructure(Structure<?> name, BlockPos pos, int radius, boolean skipExistingChunks) {
 		// We don't have structures
 		return null;
 	}
