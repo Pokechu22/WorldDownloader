@@ -44,6 +44,7 @@ import net.minecraft.util.datafix.codec.DatapackCodec;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.DynamicRegistries;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.WorldSettingsImport;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -57,6 +58,7 @@ import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.gen.DimensionSettings;
 import net.minecraft.world.gen.FlatGenerationSettings;
 import net.minecraft.world.gen.settings.DimensionGeneratorSettings;
+import wdl.WDL;
 import wdl.config.settings.GeneratorSettings.Generator;
 
 final class GeneratorFunctions {
@@ -143,16 +145,21 @@ final class GeneratorFunctions {
 		}
 
 		private static String convertSettingsToConfig(FlatGenerationSettings settings) {
+			// XXX This doesn't seem to work quite right; the biome's data is still serialized instead of the biome key
+			WorldSettingsImport<JsonElement> ops = WorldSettingsImport.func_244335_a(JsonOps.INSTANCE,
+					WDL.getInstance().minecraft.getResourceManager(), DynamicRegistries.func_239770_b_());
 			return FlatGenerationSettings.field_236932_a_
-					.encodeStart(JsonOps.INSTANCE, settings)
+					.encodeStart(ops, settings)
 					.map(JsonElement::toString)
 					.getOrThrow(true, LOGGER::error);
 		}
 
 		private static FlatGenerationSettings convertConfigToSettings(String config) {
+			WorldSettingsImport<JsonElement> ops = WorldSettingsImport.func_244335_a(JsonOps.INSTANCE,
+					WDL.getInstance().minecraft.getResourceManager(), DynamicRegistries.func_239770_b_());
 			JsonObject jsonobject = config.isEmpty() ? new JsonObject() : JSONUtils.fromJson(config);
 			return FlatGenerationSettings.field_236932_a_
-					.parse(JsonOps.INSTANCE, jsonobject)
+					.parse(ops, jsonobject)
 					.resultOrPartial(LOGGER::error)
 					.orElseGet(() -> {
 						Registry<Biome> biomesReg = DynamicRegistries.func_239770_b_().func_243612_b(Registry.field_239720_u_);
