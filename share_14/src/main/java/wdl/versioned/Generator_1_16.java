@@ -169,16 +169,139 @@ final class GeneratorFunctions {
 	/* (non-javadoc)
 	 * @see VersionedFunctions#VOID_FLAT_CONFIG
 	 */
-	static final String VOID_FLAT_CONFIG = "{layers:[{block:\"minecraft:air\",height:1b}],biome:\"minecraft:the_void\"}";
+	static final String VOID_FLAT_CONFIG = "{features:0,lakes:0,layers:[{block:\"minecraft:air\",height:1b}],biome:\"minecraft:the_void\",structures:{structures:{}}}";
 
 	/* (non-javadoc)
-	 * @see GeneratorFunctions#createGeneratorOptionsTag
+	 * @see GeneratorFunctions#writeGeneratorOptions
+	 *
+	 * An example (normal terrain):
+	 * 
+	 * <pre>
+	 * + WorldGenSettings: 4 entries
+	 *   + bonus_chest: 0
+	 *   + generate_features: 1
+	 *   + seed: -4511540289422318412
+	 *   + dimensions: 3 entries
+	 *     + minecraft:overworld: 2 entries
+	 *     | + type: minecraft:overworld
+	 *     | + generator: 4 entries
+	 *     |   + seed: -4511540289422318412
+	 *     |   + settings: minecraft:overworld
+	 *     |   + type: minecraft:noise
+	 *     |   + biome_source: 3 entries
+	 *     |     + large_biomes: 0
+	 *     |     + seed: -4511540289422318412
+	 *     |     + type: minecraft:vanilla_layered
+	 *     + minecraft:the_end: 2 entries
+	 *     | + type: minecraft:the_end
+	 *     | + generator: 4 entries
+	 *     |   + seed: -4511540289422318412
+	 *     |   + settings: minecraft:end
+	 *     |   + type: minecraft:noise
+	 *     |   + biome_source: 2 entries
+	 *     |     + seed: -4511540289422318412
+	 *     |     + type: minecraft:the_end
+	 *     + minecraft:the_nether: 2 entries
+	 *       + type: minecraft:the_nether
+	 *       + generator: 4 entries
+	 *         + seed: -4511540289422318412
+	 *         + settings: minecraft:nether
+	 *         + type: minecraft:noise
+	 *         + biome_source: 3 entries
+	 *           + seed: -4511540289422318412
+	 *           + preset: minecraft:nether
+	 *           + type: minecraft:multi_noise
+	 * </pre>
 	 */
-	static CompoundNBT createGeneratorOptionsTag(String generatorOptions) {
-		try {
-			return JsonToNBT.getTagFromJson(generatorOptions);
-		} catch (CommandSyntaxException e) {
-			return new CompoundNBT();
+	static void writeGeneratorOptions(CompoundNBT worldInfoNBT, long randomSeed, boolean mapFeatures, String generatorName, String generatorOptions, int generatorVersion) {
+		CompoundNBT genSettings = new CompoundNBT();
+		genSettings.putBoolean("bonus_chest", false);
+		genSettings.putBoolean("generate_features", mapFeatures);
+		genSettings.putLong("seed", randomSeed);
+		CompoundNBT dimensions = new CompoundNBT();
+		dimensions.put("minecraft:overworld", createOverworld(randomSeed, generatorName, generatorOptions, generatorVersion));
+		dimensions.put("minecraft:the_end", createDefaultEnd(randomSeed));
+		dimensions.put("minecraft:the_nether", createDefaultNether(randomSeed));
+		genSettings.put("dimensions", dimensions);
+		worldInfoNBT.put("WorldGenSettings", genSettings);
+	}
+
+	private static CompoundNBT createOverworld(long seed, String name, String options, int version) {
+		// TODO: this isn't a complete implementation (e.g. it doesn't handle buffet)
+		if (name.equals("flat")) {
+			return createFlatGenerator(seed, options);
 		}
+		boolean isAmplified = name.equals("amplified");
+		boolean isLargeBiomes = name.equals("largeBiomes");
+		boolean isLegacy = name.equals("default_1_1") || (name.equals("default") && version == 0);
+		return createOverworldGenerator(seed, isAmplified, isLargeBiomes, isLegacy);
+	}
+
+	private static CompoundNBT createFlatGenerator(long seed, String options) {
+		CompoundNBT result = new CompoundNBT();
+		result.putString("type", "minecraft:overworld");
+		CompoundNBT generator = new CompoundNBT();
+		generator.putString("type", "minecraft:flat");
+		CompoundNBT settings;
+		try {
+			settings = JsonToNBT.getTagFromJson(options);
+		} catch (CommandSyntaxException e) {
+			settings = new CompoundNBT();
+		}
+		generator.put("settings", settings);
+		result.put("generator", generator);
+		return result;
+	}
+
+	private static CompoundNBT createOverworldGenerator(long seed, boolean amplified, boolean largeBiomes, boolean legacy) {
+		// Refer to WorldGenSetting.func_233427_a_ and func_233423_a_
+		CompoundNBT result = new CompoundNBT();
+		result.putString("type", "minecraft:overworld");
+		CompoundNBT generator = new CompoundNBT();
+		generator.putLong("seed", seed);
+		generator.putString("settings", amplified ? "minecraft:amplified" : "minecraft:overworld");
+		generator.putString("type", "minecraft:noise");
+		CompoundNBT biomeSource = new CompoundNBT();
+		biomeSource.putBoolean("large_biomes", largeBiomes);
+		biomeSource.putLong("seed", seed);
+		biomeSource.putString("type", "minecraft:vanilla_layered");
+		if (legacy) {
+			biomeSource.putBoolean("legacy_biome_init_layer", true);
+		}
+		generator.put("biome_source", biomeSource);
+		result.put("generator", generator);
+		return result;
+	}
+
+	// TODO: These should be configurable
+	private static CompoundNBT createDefaultNether(long seed) {
+		CompoundNBT result = new CompoundNBT();
+		result.putString("type", "minecraft:the_nether");
+		CompoundNBT generator = new CompoundNBT();
+		generator.putLong("seed", seed);
+		generator.putString("settings", "minecraft:nether");
+		generator.putString("type", "minecraft:noise");
+		CompoundNBT biomeSource = new CompoundNBT();
+		biomeSource.putLong("seed", seed);
+		biomeSource.putString("preset", "minecraft:nether");
+		biomeSource.putString("type", "minecraft:multi_noise");
+		generator.put("biome_source", biomeSource);
+		result.put("generator", generator);
+		return result;
+	}
+
+	private static CompoundNBT createDefaultEnd(long seed) {
+		CompoundNBT result = new CompoundNBT();
+		result.putString("type", "minecraft:the_end");
+		CompoundNBT generator = new CompoundNBT();
+		generator.putLong("seed", seed);
+		generator.putString("settings", "minecraft:end");
+		generator.putString("type", "minecraft:noise");
+		CompoundNBT biomeSource = new CompoundNBT();
+		biomeSource.putLong("seed", seed);
+		biomeSource.putString("type", "minecraft:the_end");
+		generator.put("biome_source", biomeSource);
+		result.put("generator", generator);
+		return result;
 	}
 }

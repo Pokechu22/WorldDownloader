@@ -509,13 +509,17 @@ public final class VersionedFunctions {
 	public static final String VOID_FLAT_CONFIG = GeneratorFunctions.VOID_FLAT_CONFIG;
 
 	/**
-	 * Creates the generator options tag,
+	 * Writes the generator options into the given NBT.
 	 *
-	 * @param generatorOptions The content.  Either a string or an SNBT representation of the data.
-	 * @return An NBT tag of some type.
+	 * @param worldInfoNBT The Data tag for the world.
+	 * @param randomSeed The world's seed.
+	 * @param mapFeatures True if structures should be generated.
+	 * @param generatorName The name of the generator.
+	 * @param generatorOptions Parameters for the generator
+	 * @param generatorVersion The generator's version (used for default_1_1)
 	 */
-	public static INBT createGeneratorOptionsTag(String generatorOptions) {
-		return GeneratorFunctions.createGeneratorOptionsTag(generatorOptions);
+	public static void writeGeneratorOptions(CompoundNBT worldInfoNBT, long randomSeed, boolean mapFeatures, String generatorName, String generatorOptions, int generatorVersion) {
+		GeneratorFunctions.writeGeneratorOptions(worldInfoNBT, randomSeed, mapFeatures, generatorName, generatorOptions, generatorVersion);
 	}
 
 	/**

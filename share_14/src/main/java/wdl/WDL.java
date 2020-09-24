@@ -1234,21 +1234,11 @@ public class WDL {
 			}
 		}
 
-		worldInfoNBT.putLong("RandomSeed", seed);
-
-		// MapFeatures
 		boolean mapFeatures = worldProps.getValue(GeneratorSettings.GENERATE_STRUCTURES);
-		worldInfoNBT.putBoolean("MapFeatures", mapFeatures);
-		// generatorName
 		String generatorName = worldProps.getValue(GeneratorSettings.GENERATOR_NAME);
-		worldInfoNBT.putString("generatorName", generatorName);
-		// generatorOptions
 		String generatorOptions = worldProps.getValue(GeneratorSettings.GENERATOR_OPTIONS);
-		// NOTE: The type varies between versions; in 1.12.2 it's a string tag and in 1.13 it's a compound.
-		worldInfoNBT.put("generatorOptions", VersionedFunctions.createGeneratorOptionsTag(generatorOptions));
-		// generatorVersion
 		int generatorVersion = worldProps.getValue(GeneratorSettings.GENERATOR_VERSION);
-		worldInfoNBT.putInt("generatorVersion", generatorVersion);
+		VersionedFunctions.writeGeneratorOptions(worldInfoNBT, seed, mapFeatures, generatorName, generatorOptions, generatorVersion);
 
 		// Weather
 		WorldSettings.Weather weather = worldProps.getValue(WorldSettings.WEATHER);

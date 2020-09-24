@@ -184,14 +184,23 @@ final class GeneratorFunctions {
 	 */
 	static final String VOID_FLAT_CONFIG = "{layers:[{block:\"minecraft:air\",height:1b}],biome:\"minecraft:the_void\"}";
 
-	/* (non-javadoc)
-	 * @see GeneratorFunctions#createGeneratorOptionsTag
-	 */
-	static CompoundNBT createGeneratorOptionsTag(String generatorOptions) {
+	private static CompoundNBT createGeneratorOptionsTag(String generatorOptions) {
 		try {
 			return JsonToNBT.getTagFromJson(generatorOptions);
 		} catch (CommandSyntaxException e) {
 			return new CompoundNBT();
 		}
+	}
+
+	/* (non-javadoc)
+	 * @see GeneratorFunctions#writeGeneratorOptions
+	 */
+	static void writeGeneratorOptions(CompoundNBT worldInfoNBT, long randomSeed, boolean mapFeatures, String generatorName, String generatorOptions, int generatorVersion) {
+		worldInfoNBT.putLong("RandomSeed", randomSeed);
+		worldInfoNBT.putBoolean("MapFeatures", mapFeatures);
+		worldInfoNBT.putString("generatorName", generatorName);
+		// NOTE: The type varies between versions; in 1.12.2 it's a string tag and in 1.13 it's a compound.
+		worldInfoNBT.put("generatorOptions", createGeneratorOptionsTag(generatorOptions));
+		worldInfoNBT.putInt("generatorVersion", generatorVersion);
 	}
 }
