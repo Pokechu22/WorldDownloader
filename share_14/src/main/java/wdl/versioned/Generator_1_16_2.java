@@ -15,7 +15,10 @@ package wdl.versioned;
 
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.function.Consumer;
+
+import javax.annotation.Nullable;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,6 +32,7 @@ import com.mojang.serialization.JsonOps;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.CreateBuffetWorldScreen;
 import net.minecraft.client.gui.screen.CreateFlatWorldScreen;
+import net.minecraft.client.gui.screen.CreateWorldScreen;
 import net.minecraft.client.gui.screen.FlatPresetsScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.toasts.SystemToast;
@@ -36,15 +40,23 @@ import net.minecraft.client.gui.toasts.ToastGui;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.util.JSONUtils;
+import net.minecraft.util.datafix.codec.DatapackCodec;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.DynamicRegistries;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.Difficulty;
+import net.minecraft.world.DimensionType;
+import net.minecraft.world.GameRules;
+import net.minecraft.world.GameType;
+import net.minecraft.world.WorldSettings;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
+import net.minecraft.world.gen.DimensionSettings;
 import net.minecraft.world.gen.FlatGenerationSettings;
+import net.minecraft.world.gen.settings.DimensionGeneratorSettings;
 import wdl.config.settings.GeneratorSettings.Generator;
 
 final class GeneratorFunctions {
@@ -120,19 +132,21 @@ final class GeneratorFunctions {
 	 */
 	private static class GuiCreateFlatWorldProxy extends CreateFlatWorldScreen {
 		private final Screen parent;
+		private final Consumer<String> callback;
 
 		public GuiCreateFlatWorldProxy(Screen parent, String config, Consumer<String> callback) {
-			super(null, convertSettingsToConfig(callback), convertConfigToSettings(config));
+			super(CreateWorldScreenProxy.create(),
+					settings -> LOGGER.warn("[WDL] Unexpected GuiCreateFlatWorldProxy callback, ignoring: " + settings),
+					convertConfigToSettings(config));
 			this.parent = parent;
+			this.callback = callback;
 		}
 
-		private static Consumer<FlatGenerationSettings> convertSettingsToConfig(Consumer<String> callback) {
-			return settings -> {
-				FlatGenerationSettings.field_236932_a_
-						.encodeStart(JsonOps.INSTANCE, settings)
-						.map(JsonElement::toString)
-						.getOrThrow(true, LOGGER::error);
-			};
+		private static String convertSettingsToConfig(FlatGenerationSettings settings) {
+			return FlatGenerationSettings.field_236932_a_
+					.encodeStart(JsonOps.INSTANCE, settings)
+					.map(JsonElement::toString)
+					.getOrThrow(true, LOGGER::error);
 		}
 
 		private static FlatGenerationSettings convertConfigToSettings(String config) {
@@ -148,12 +162,43 @@ final class GeneratorFunctions {
 
 		@Override
 		public void init() {
+			// The flat presets screen only can have a CreateFlatWorld screen as a parent.  Thus,
+			// this proxy acts as its parent but directly changes to the real parent.
 			minecraft.displayGuiScreen(parent);
+			// We can't directly get a callback from the flat presets screen,
+			// and the callback in the constructor is only used when the done button here is clicked.
+			// Instead, call our callback when exiting this screen.
+			callback.accept(convertSettingsToConfig(this.func_238603_g_()));
 		}
 
 		@Override
 		public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 			// Do nothing
+		}
+	}
+
+	/**
+	 * Further fake implementations, which make things annoying.  Needed because {@link FlatPresetsScreen} has
+	 * <pre>Registry<Biome> registry = this.parentScreen.createWorldGui.field_238934_c_.func_239055_b_().func_243612_b(Registry.field_239720_u_);</pre>
+	 *
+	 * (field_238934_c_ is a WorldOptionsScreen, but CreateWorldScreen creates it in the constructor)
+	 */
+	private static class CreateWorldScreenProxy extends CreateWorldScreen {
+		public CreateWorldScreenProxy(@Nullable Screen p_i242064_1_, WorldSettings p_i242064_2_,
+				DimensionGeneratorSettings p_i242064_3_, @Nullable Path p_i242064_4_, DatapackCodec p_i242064_5_,
+				DynamicRegistries.Impl p_i242064_6_) {
+			super(p_i242064_1_, p_i242064_2_, p_i242064_3_, p_i242064_4_, p_i242064_5_, p_i242064_6_);
+		}
+
+		public static CreateWorldScreenProxy create() {
+			WorldSettings worldSettings = new WorldSettings("LevelName", GameType.CREATIVE, false,
+					Difficulty.NORMAL, true, new GameRules(), DatapackCodec.field_234880_a_);
+			Registry<DimensionType> dimType = DynamicRegistries.func_239770_b_().func_230520_a_();
+			Registry<Biome> biomes = DynamicRegistries.func_239770_b_().func_243612_b(Registry.field_239720_u_);
+			Registry<DimensionSettings> dimSettings = DynamicRegistries.func_239770_b_().func_243612_b(Registry.field_243549_ar);
+			DimensionGeneratorSettings genSettings = DimensionGeneratorSettings.func_242751_a(dimType, biomes, dimSettings);
+			return new CreateWorldScreenProxy(null, worldSettings, genSettings,
+					null, DatapackCodec.field_234880_a_, DynamicRegistries.func_239770_b_());
 		}
 	}
 
