@@ -289,12 +289,16 @@ final class HandlerFunctions {
 		ClientWorldInfo clientInfo = world.getWorldInfo();
 		WorldSettings worldSettings = new WorldSettings("LevelName", GameType.CREATIVE, false,
 				clientInfo.getDifficulty(), true, new GameRules(), DatapackCodec.field_234880_a_);
-		Registry<DimensionType> dimType = DYNAMIC_REGISTRIES.func_230520_a_();
-		Registry<Biome> biomes = DYNAMIC_REGISTRIES.func_243612_b(Registry.field_239720_u_);
+		DynamicRegistries dynamicRegistries = world.func_241828_r();
+		Registry<DimensionType> dimType = dynamicRegistries.func_230520_a_();
+		Registry<Biome> biomes = dynamicRegistries.func_243612_b(Registry.field_239720_u_);
+		// TODO: figure out why using the world's registries causes a crash with
+		// Missing registry: ResourceKey[minecraft:root / minecraft:worldgen/noise_settings]
+		// in the following call (probably something with it not being sync'd?)
 		Registry<DimensionSettings> dimSettings = DYNAMIC_REGISTRIES.func_243612_b(Registry.field_243549_ar);
 		DimensionGeneratorSettings genSettings = DimensionGeneratorSettings.func_242751_a(dimType, biomes, dimSettings);
 		ServerWorldInfo worldInfo = new ServerWorldInfo(worldSettings, genSettings, Lifecycle.stable());
-		return worldInfo.func_230411_a_(DYNAMIC_REGISTRIES, playerNBT);
+		return worldInfo.func_230411_a_(dynamicRegistries, playerNBT);
 	}
 
 	/* (non-javadoc)
