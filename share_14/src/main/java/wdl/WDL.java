@@ -763,6 +763,7 @@ public class WDL {
 
 		CompoundNBT playerNBT = new CompoundNBT();
 		player.writeWithoutTypeId(playerNBT);
+		VersionedFunctions.writeAdditionalPlayerData(player, playerNBT);
 
 		progressScreen.setMinorTaskProgress(
 				I18n.format("wdl.saveProgress.playerData.editingNBT"), 2);

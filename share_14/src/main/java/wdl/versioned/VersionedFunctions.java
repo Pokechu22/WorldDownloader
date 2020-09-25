@@ -43,6 +43,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.network.play.ClientPlayNetHandler;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
@@ -161,6 +162,19 @@ public final class VersionedFunctions {
 	 */
 	public static ISaveHandlerWrapper getSaveHandler(Minecraft minecraft, String worldName) throws Exception {
 		return HandlerFunctions.getSaveHandler(minecraft, worldName);
+	}
+
+	/**
+	 * Writes additional player NBT not handled by {@link ClientPlayerEntity#writeAdditional}.
+	 *
+	 * Ideally, this should handle everything done by {@link ServerPlayerEntity#writeAdditional}.
+	 * Current implementations don't, though.  (TODO)
+	 *
+	 * @param player The player.
+	 * @param nbt The (partially already populated) nbt.
+	 */
+	public static void writeAdditionalPlayerData(ClientPlayerEntity player, CompoundNBT nbt) {
+		HandlerFunctions.writeAdditionalPlayerData(player, nbt);
 	}
 
 	/**

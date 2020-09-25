@@ -41,6 +41,7 @@ import net.minecraft.block.HopperBlock;
 import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.block.TrappedChestBlock;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.client.world.ClientWorld.ClientWorldInfo;
 import net.minecraft.entity.Entity;
@@ -280,6 +281,14 @@ final class HandlerFunctions {
 		public RegistryKey<World> getWorldKey() {
 			return this.worldKey;
 		}
+	}
+
+	/* (non-javadoc)
+	 * @see VersionedFunctions#writeAdditionalPlayerData
+	 */
+	static void writeAdditionalPlayerData(ClientPlayerEntity player, CompoundNBT nbt) {
+		nbt.putString("Dimension", player.world.func_234923_W_().func_240901_a_().toString());
+		// TODO: handle everything in ServerPlayerEntity (but nothing is completely required)
 	}
 
 	/* (non-javadoc)

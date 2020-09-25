@@ -40,6 +40,7 @@ import net.minecraft.block.HopperBlock;
 import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.block.TrappedChestBlock;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompoundNBT;
@@ -257,6 +258,13 @@ final class HandlerFunctions {
 		public Object getWorldKey() {
 			return null;
 		}
+	}
+
+	/* (non-javadoc)
+	 * @see VersionedFunctions#writeAdditionalPlayerData
+	 */
+	static void writeAdditionalPlayerData(ClientPlayerEntity player, CompoundNBT nbt) {
+		// TODO: handle everything in ServerPlayerEntity (but nothing is completely required)
 	}
 
 	/**
