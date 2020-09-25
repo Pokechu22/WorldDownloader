@@ -87,6 +87,10 @@ import wdl.handler.entity.VillagerHandler;
 final class HandlerFunctions {
 	private HandlerFunctions() { throw new AssertionError(); }
 
+	// NOTE: func_239770_b_ creates a new instance each time!  Even this use might be wrong;
+	// probably vanilla's should be in use.  (XXX)
+	static final DynamicRegistries.Impl DYNAMIC_REGISTRIES = DynamicRegistries.func_239770_b_();
+
 	static final DimensionWrapper NETHER = new DimensionWrapper(DimensionType.field_236000_d_, World.field_234919_h_);
 	static final DimensionWrapper OVERWORLD = new DimensionWrapper(DimensionType.field_235999_c_, World.field_234918_g_);
 	static final DimensionWrapper END = new DimensionWrapper(DimensionType.field_236001_e_, World.field_234920_i_);
@@ -247,7 +251,7 @@ final class HandlerFunctions {
 
 		public DimensionWrapper(RegistryKey<DimensionType> dimensionTypeKey,
 				RegistryKey<World> worldKey) {
-			Registry<DimensionType> dimTypeReg = DynamicRegistries.func_239770_b_().func_230520_a_();
+			Registry<DimensionType> dimTypeReg = DYNAMIC_REGISTRIES.func_230520_a_();
 			this.dimensionType = dimTypeReg.func_230516_a_(dimensionTypeKey);
 			this.worldKey = worldKey;
 		}
@@ -285,12 +289,12 @@ final class HandlerFunctions {
 		ClientWorldInfo clientInfo = world.getWorldInfo();
 		WorldSettings worldSettings = new WorldSettings("LevelName", GameType.CREATIVE, false,
 				clientInfo.getDifficulty(), true, new GameRules(), DatapackCodec.field_234880_a_);
-		Registry<DimensionType> dimType = DynamicRegistries.func_239770_b_().func_230520_a_();
-		Registry<Biome> biomes = DynamicRegistries.func_239770_b_().func_243612_b(Registry.field_239720_u_);
-		Registry<DimensionSettings> dimSettings = DynamicRegistries.func_239770_b_().func_243612_b(Registry.field_243549_ar);
+		Registry<DimensionType> dimType = DYNAMIC_REGISTRIES.func_230520_a_();
+		Registry<Biome> biomes = DYNAMIC_REGISTRIES.func_243612_b(Registry.field_239720_u_);
+		Registry<DimensionSettings> dimSettings = DYNAMIC_REGISTRIES.func_243612_b(Registry.field_243549_ar);
 		DimensionGeneratorSettings genSettings = DimensionGeneratorSettings.func_242751_a(dimType, biomes, dimSettings);
 		ServerWorldInfo worldInfo = new ServerWorldInfo(worldSettings, genSettings, Lifecycle.stable());
-		return worldInfo.func_230411_a_(DynamicRegistries.func_239770_b_(), playerNBT);
+		return worldInfo.func_230411_a_(DYNAMIC_REGISTRIES, playerNBT);
 	}
 
 	/* (non-javadoc)

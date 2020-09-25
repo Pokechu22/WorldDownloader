@@ -85,6 +85,10 @@ import wdl.handler.entity.VillagerHandler;
 final class HandlerFunctions {
 	private HandlerFunctions() { throw new AssertionError(); }
 
+	// NOTE: func_239770_b_ creates a new instance each time!  Even this use might be wrong;
+	// probably vanilla's should be in use.  (XXX)
+	static final IDynamicRegistries.Impl DYNAMIC_REGISTRIES = IDynamicRegistries.func_239770_b_();
+
 	static final DimensionWrapper NETHER = new DimensionWrapper(DimensionType.field_236000_d_, World.field_234919_h_);
 	static final DimensionWrapper OVERWORLD = new DimensionWrapper(DimensionType.field_235999_c_, World.field_234918_g_);
 	static final DimensionWrapper END = new DimensionWrapper(DimensionType.field_236001_e_, World.field_234920_i_);
@@ -247,7 +251,7 @@ final class HandlerFunctions {
 
 		public DimensionWrapper(RegistryKey<DimensionType> dimensionTypeKey,
 				RegistryKey<World> worldKey) {
-			Registry<DimensionType> dimTypeReg = IDynamicRegistries.func_239770_b_().func_230520_a_();
+			Registry<DimensionType> dimTypeReg = DYNAMIC_REGISTRIES.func_230520_a_();
 			this.dimensionType = dimTypeReg.func_230516_a_(dimensionTypeKey);
 			this.dimensionTypeKey = dimensionTypeKey;
 			this.worldKey = worldKey;
@@ -288,7 +292,7 @@ final class HandlerFunctions {
 				clientInfo.getDifficulty(), true, new GameRules(), DatapackCodec.field_234880_a_);
 		DimensionGeneratorSettings genSettings = DimensionGeneratorSettings.func_236210_a_();
 		ServerWorldInfo worldInfo = new ServerWorldInfo(worldSettings, genSettings, Lifecycle.stable());
-		return worldInfo.func_230411_a_(IDynamicRegistries.func_239770_b_(), playerNBT);
+		return worldInfo.func_230411_a_(DYNAMIC_REGISTRIES, playerNBT);
 	}
 
 	/* (non-javadoc)

@@ -37,7 +37,7 @@ final class RegistryFunctions {
 	 * @see VersionedFunctions#getBiomeId
 	 */
 	static final int getBiomeId(Biome biome) {
-		Registry<Biome> biomes = DynamicRegistries.func_239770_b_().func_243612_b(Registry.field_239720_u_);
+		Registry<Biome> biomes = HandlerFunctions.DYNAMIC_REGISTRIES.func_243612_b(Registry.field_239720_u_);
 		return biomes.getId(biome);
 	}
 }

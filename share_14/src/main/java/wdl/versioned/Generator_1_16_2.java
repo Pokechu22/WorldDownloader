@@ -44,6 +44,7 @@ import net.minecraft.util.datafix.codec.DatapackCodec;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.DynamicRegistries;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.WorldGenSettingsExport;
 import net.minecraft.util.registry.WorldSettingsImport;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -96,7 +97,7 @@ final class GeneratorFunctions {
 		case SINGLE_BIOME_SURFACE:
 		case SINGLE_BIOME_CAVES:
 		case SINGLE_BIOME_FLOATING_ISLANDS: {
-			return new CreateBuffetWorldScreen(parent, DynamicRegistries.func_239770_b_(), convertBiomeToConfig(callback), convertConfigToBiome(generatorConfig));
+			return new CreateBuffetWorldScreen(parent, HandlerFunctions.DYNAMIC_REGISTRIES, convertBiomeToConfig(callback), convertConfigToBiome(generatorConfig));
 		}
 		default:
 			LOGGER.warn("Generator lacks extra settings; cannot make a settings GUI: " + generator);
@@ -121,7 +122,7 @@ final class GeneratorFunctions {
 				.parse(JsonOps.INSTANCE, jsonobject)
 				.resultOrPartial(LOGGER::error)
 				.orElseGet(() -> {
-					Registry<Biome> biomesReg = DynamicRegistries.func_239770_b_().func_243612_b(Registry.field_239720_u_);
+					Registry<Biome> biomesReg = HandlerFunctions.DYNAMIC_REGISTRIES.func_243612_b(Registry.field_239720_u_);
 					return biomesReg.func_230516_a_(Biomes.THE_VOID);
 				});
 	}
@@ -145,24 +146,24 @@ final class GeneratorFunctions {
 		}
 
 		private static String convertSettingsToConfig(FlatGenerationSettings settings) {
-			// XXX This doesn't seem to work quite right; the biome's data is still serialized instead of the biome key
-			WorldSettingsImport<JsonElement> ops = WorldSettingsImport.func_244335_a(JsonOps.INSTANCE,
-					WDL.getInstance().minecraft.getResourceManager(), DynamicRegistries.func_239770_b_());
+			WorldGenSettingsExport<JsonElement> ops = WorldGenSettingsExport.func_240896_a_(JsonOps.INSTANCE,
+					HandlerFunctions.DYNAMIC_REGISTRIES);
 			return FlatGenerationSettings.field_236932_a_
 					.encodeStart(ops, settings)
+					.resultOrPartial(LOGGER::error)
 					.map(JsonElement::toString)
-					.getOrThrow(true, LOGGER::error);
+					.get();
 		}
 
 		private static FlatGenerationSettings convertConfigToSettings(String config) {
 			WorldSettingsImport<JsonElement> ops = WorldSettingsImport.func_244335_a(JsonOps.INSTANCE,
-					WDL.getInstance().minecraft.getResourceManager(), DynamicRegistries.func_239770_b_());
+					WDL.getInstance().minecraft.getResourceManager(), HandlerFunctions.DYNAMIC_REGISTRIES);
 			JsonObject jsonobject = config.isEmpty() ? new JsonObject() : JSONUtils.fromJson(config);
 			return FlatGenerationSettings.field_236932_a_
 					.parse(ops, jsonobject)
 					.resultOrPartial(LOGGER::error)
 					.orElseGet(() -> {
-						Registry<Biome> biomesReg = DynamicRegistries.func_239770_b_().func_243612_b(Registry.field_239720_u_);
+						Registry<Biome> biomesReg = HandlerFunctions.DYNAMIC_REGISTRIES.func_243612_b(Registry.field_239720_u_);
 						return FlatGenerationSettings.func_242869_a(biomesReg);
 					});
 		}
@@ -200,12 +201,12 @@ final class GeneratorFunctions {
 		public static CreateWorldScreenProxy create() {
 			WorldSettings worldSettings = new WorldSettings("LevelName", GameType.CREATIVE, false,
 					Difficulty.NORMAL, true, new GameRules(), DatapackCodec.field_234880_a_);
-			Registry<DimensionType> dimType = DynamicRegistries.func_239770_b_().func_230520_a_();
-			Registry<Biome> biomes = DynamicRegistries.func_239770_b_().func_243612_b(Registry.field_239720_u_);
-			Registry<DimensionSettings> dimSettings = DynamicRegistries.func_239770_b_().func_243612_b(Registry.field_243549_ar);
+			Registry<DimensionType> dimType = HandlerFunctions.DYNAMIC_REGISTRIES.func_230520_a_();
+			Registry<Biome> biomes = HandlerFunctions.DYNAMIC_REGISTRIES.func_243612_b(Registry.field_239720_u_);
+			Registry<DimensionSettings> dimSettings = HandlerFunctions.DYNAMIC_REGISTRIES.func_243612_b(Registry.field_243549_ar);
 			DimensionGeneratorSettings genSettings = DimensionGeneratorSettings.func_242751_a(dimType, biomes, dimSettings);
 			return new CreateWorldScreenProxy(null, worldSettings, genSettings,
-					null, DatapackCodec.field_234880_a_, DynamicRegistries.func_239770_b_());
+					null, DatapackCodec.field_234880_a_, HandlerFunctions.DYNAMIC_REGISTRIES);
 		}
 	}
 
