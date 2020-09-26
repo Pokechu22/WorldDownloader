@@ -40,6 +40,8 @@ import net.minecraft.client.gui.toasts.ToastGui;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.util.JSONUtils;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.ResourceLocationException;
 import net.minecraft.util.datafix.codec.DatapackCodec;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.DynamicRegistries;
@@ -55,7 +57,6 @@ import net.minecraft.world.GameRules;
 import net.minecraft.world.GameType;
 import net.minecraft.world.WorldSettings;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.gen.DimensionSettings;
 import net.minecraft.world.gen.FlatGenerationSettings;
 import net.minecraft.world.gen.settings.DimensionGeneratorSettings;
@@ -70,19 +71,7 @@ final class GeneratorFunctions {
 	 * @see VersionedFunctions#isAvailableGenerator
 	 */
 	static boolean isAvaliableGenerator(Generator generator) {
-		switch (generator) {
-		// Generators that no longer exists
-		case CUSTOMIZED:
-		case BUFFET:
-		// Single-biome generators - should possibly exist (or maybe are just buffet),
-		// but not implemented (TODO)
-		case SINGLE_BIOME_SURFACE:
-		case SINGLE_BIOME_CAVES:
-		case SINGLE_BIOME_FLOATING_ISLANDS:
-			return false;
-		default:
-			return true;
-		}
+		return generator != Generator.CUSTOMIZED && generator != Generator.BUFFET;
 	}
 
 	/* (non-javadoc)
@@ -96,9 +85,8 @@ final class GeneratorFunctions {
 			return new FlatPresetsScreen(new GuiCreateFlatWorldProxy(parent, generatorConfig, callback));
 		case SINGLE_BIOME_SURFACE:
 		case SINGLE_BIOME_CAVES:
-		case SINGLE_BIOME_FLOATING_ISLANDS: {
+		case SINGLE_BIOME_FLOATING_ISLANDS:
 			return new CreateBuffetWorldScreen(parent, HandlerFunctions.DYNAMIC_REGISTRIES, convertBiomeToConfig(callback), convertConfigToBiome(generatorConfig));
-		}
 		default:
 			LOGGER.warn("Generator lacks extra settings; cannot make a settings GUI: " + generator);
 			return parent;
@@ -106,25 +94,30 @@ final class GeneratorFunctions {
 	}
 
 	private static Consumer<Biome> convertBiomeToConfig(Consumer<String> callback) {
-		// TODO
 		return biome -> {
-			Biome.field_242418_b
-					.encodeStart(JsonOps.INSTANCE, biome)
-					.map(JsonElement::toString)
-					.getOrThrow(true, LOGGER::error);
+			Registry<Biome> biomesReg = HandlerFunctions.DYNAMIC_REGISTRIES.func_243612_b(Registry.field_239720_u_);
+			ResourceLocation name = biomesReg.getKey(biome);
+			String biomeName;
+			if (name != null) {
+				biomeName = name.toString();
+			} else {
+				LOGGER.warn("[WDL] Failed to get name for biome " + biome);
+				biomeName = "minecraft:plains";
+			}
+			callback.accept(biomeName);
 		};
 	}
 
 	private static Biome convertConfigToBiome(String config) {
-		// TODO
-		JsonObject jsonobject = config.isEmpty() ? new JsonObject() : JSONUtils.fromJson(config);
-		return Biome.field_242418_b
-				.parse(JsonOps.INSTANCE, jsonobject)
-				.resultOrPartial(LOGGER::error)
-				.orElseGet(() -> {
-					Registry<Biome> biomesReg = HandlerFunctions.DYNAMIC_REGISTRIES.func_243612_b(Registry.field_239720_u_);
-					return biomesReg.func_230516_a_(Biomes.THE_VOID);
-				});
+		ResourceLocation name;
+		try {
+			name = new ResourceLocation(config);
+		} catch (ResourceLocationException ex) {
+			LOGGER.warn("[WDL] Failed to get biome for name " + config, ex);
+			name = new ResourceLocation("minecraft", "plains");
+		}
+		Registry<Biome> biomesReg = HandlerFunctions.DYNAMIC_REGISTRIES.func_243612_b(Registry.field_239720_u_);
+		return biomesReg.getOrDefault(name);
 	}
 
 	/**
@@ -244,7 +237,7 @@ final class GeneratorFunctions {
 	static final String VOID_FLAT_CONFIG = "{features:0,lakes:0,layers:[{block:\"minecraft:air\",height:1b}],biome:\"minecraft:the_void\",structures:{structures:{}}}";
 
 	/* (non-javadoc)
-	 * @see GeneratorFunctions#writeGeneratorOptions
+	 * @see VersionedFunctions#writeGeneratorOptions
 	 *
 	 * An example (normal terrain):
 	 * 
@@ -299,9 +292,19 @@ final class GeneratorFunctions {
 	}
 
 	private static CompoundNBT createOverworld(long seed, String name, String options, int version) {
-		// TODO: this isn't a complete implementation (e.g. it doesn't handle buffet)
+		// TODO: This implementation is rather jank (hardcoding strings that are present
+		// in GeneratorSettings)
 		if (name.equals("flat")) {
 			return createFlatGenerator(seed, options);
+		}
+		if (name.equals("single_biome_surface") || name.equals("single_biome_caves") || name.equals("single_biome_floating_islands")) {
+			if (name.equals("single_biome_caves")) {
+				return createBuffetGenerator(seed, "minecraft:caves", options);
+			} else if (name.equals("single_biome_floating_islands")) {
+				return createBuffetGenerator(seed, "minecraft:floating_islands", options);
+			} else {
+				return createBuffetGenerator(seed, "minecraft:overworld", options);
+			}
 		}
 		boolean isAmplified = name.equals("amplified");
 		boolean isLargeBiomes = name.equals("largeBiomes");
@@ -321,6 +324,21 @@ final class GeneratorFunctions {
 			settings = new CompoundNBT();
 		}
 		generator.put("settings", settings);
+		result.put("generator", generator);
+		return result;
+	}
+
+	private static CompoundNBT createBuffetGenerator(long seed, String settings, String biome) {
+		CompoundNBT result = new CompoundNBT();
+		result.putString("type", "minecraft:overworld");
+		CompoundNBT generator = new CompoundNBT();
+		generator.putString("type", "minecraft:noise");
+		generator.putString("settings", settings);
+		generator.putLong("seed", seed);
+		CompoundNBT biomeSource = new CompoundNBT();
+		biomeSource.putString("type", "minecraft:fixed");
+		biomeSource.putString("biome", biome);
+		generator.put("biome_source", biomeSource);
 		result.put("generator", generator);
 		return result;
 	}

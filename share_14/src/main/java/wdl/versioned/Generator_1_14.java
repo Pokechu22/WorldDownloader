@@ -48,10 +48,8 @@ final class GeneratorFunctions {
 	 * @see VersionedFunctions#isAvailableGenerator
 	 */
 	static boolean isAvaliableGenerator(Generator generator) {
-		return generator != Generator.CUSTOMIZED
-				&& generator != Generator.SINGLE_BIOME_SURFACE
-				&& generator != Generator.SINGLE_BIOME_CAVES
-				&& generator != Generator.SINGLE_BIOME_FLOATING_ISLANDS;
+		return generator != Generator.CUSTOMIZED && generator != Generator.SINGLE_BIOME_SURFACE
+				&& generator != Generator.SINGLE_BIOME_CAVES && generator != Generator.SINGLE_BIOME_FLOATING_ISLANDS;
 	}
 
 	/* (non-javadoc)
@@ -193,7 +191,7 @@ final class GeneratorFunctions {
 	}
 
 	/* (non-javadoc)
-	 * @see GeneratorFunctions#writeGeneratorOptions
+	 * @see VersionedFunctions#writeGeneratorOptions
 	 */
 	static void writeGeneratorOptions(CompoundNBT worldInfoNBT, long randomSeed, boolean mapFeatures, String generatorName, String generatorOptions, int generatorVersion) {
 		worldInfoNBT.putLong("RandomSeed", randomSeed);

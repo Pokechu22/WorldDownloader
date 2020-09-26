@@ -56,10 +56,12 @@ public final class GeneratorSettings {
 		LARGE_BIOMES("largeBiomes", "largeBiomes", 0, ""),
 		AMPLIFIED("amplified", "amplified", 0, ""),
 		CUSTOMIZED("custom", "custom", 0, ""),
+		// In 1.15 and earlier the buffet GUI lets you select the generator type
 		BUFFET("buffet", "buffet", 0, ""),
-		SINGLE_BIOME_SURFACE("single_biome_surface", "single_biome_surface", 0, ""),
-		SINGLE_BIOME_CAVES("single_biome_caves", "single_biome_caves", 0, ""),
-		SINGLE_BIOME_FLOATING_ISLANDS("single_biome_floating_islands", "single_biome_floating_islands", 0, ""),
+		// In 1.16+ it needs to be selected outside, and the buffet GUI only chooses the biome
+		SINGLE_BIOME_SURFACE("single_biome_surface", "single_biome_surface", 0, "minecraft:plains"),
+		SINGLE_BIOME_CAVES("single_biome_caves", "single_biome_caves", 0, "minecraft:plains"),
+		SINGLE_BIOME_FLOATING_ISLANDS("single_biome_floating_islands", "single_biome_floating_islands", 0, "minecraft:plains"),
 		LEGACY("legacy", "default_1_1", 0, ""); // XXX do we really need this?
 
 		private final String confName;
