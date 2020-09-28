@@ -1,0 +1,30 @@
+--- a/net/minecraft/client/particle/Particle.java
++++ b/net/minecraft/client/particle/Particle.java
+@@ -153,6 +153,7 @@
+       if (!this.field_228343_B_) {
+          double d0 = p_187110_1_;
+          double d1 = p_187110_3_;
++         double origZ = p_187110_5_;
+          if (this.field_190017_n && (p_187110_1_ != 0.0D || p_187110_3_ != 0.0D || p_187110_5_ != 0.0D)) {
+             Vector3d vector3d = Entity.func_223307_a((Entity)null, new Vector3d(p_187110_1_, p_187110_3_, p_187110_5_), this.func_187116_l(), this.field_187122_b, ISelectionContext.func_216377_a(), new ReuseableStream<>(Stream.empty()));
+             p_187110_1_ = vector3d.field_72450_a;
+@@ -165,16 +166,16 @@
+             this.func_187118_j();
+          }
+ 
+-         if (Math.abs(p_187110_3_) >= (double)1.0E-5F && Math.abs(p_187110_3_) < (double)1.0E-5F) {
++         if (Math.abs(d1) >= (double)1.0E-5F && Math.abs(p_187110_3_) < (double)1.0E-5F) {
+             this.field_228343_B_ = true;
+          }
+ 
+-         this.field_187132_l = p_187110_3_ != p_187110_3_ && d1 < 0.0D;
++         this.field_187132_l = d1 != p_187110_3_ && d1 < 0.0D;
+          if (d0 != p_187110_1_) {
+             this.field_187129_i = 0.0D;
+          }
+ 
+-         if (p_187110_5_ != p_187110_5_) {
++         if (origZ != p_187110_5_) {
+             this.field_187131_k = 0.0D;
+          }
+ 
