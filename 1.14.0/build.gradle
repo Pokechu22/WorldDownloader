@@ -196,6 +196,7 @@ sourceSets {
 tasks.withType(JavaCompile) { javaTask ->
     javaTask.sourceCompatibility = "1.8"
     javaTask.targetCompatibility = "1.8"
+    javaTask.dependsOn("processBasePatches")
 }
 
 sourceCompatibility = "1.8"
