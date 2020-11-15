@@ -115,7 +115,7 @@ dependencies {
     implementation "org.lwjgl:lwjgl-stb:3.2.1"
     implementation "com.mojang:text2speech:1.11.3"
     implementation "com.google.code.findbugs:jsr305:3.0.1"
-    // HACK: Targetting server data so that it's not clobbered for matching the client code
+    // HACK: Targeting server data so that it's not clobbered for matching the client code
     // The data is the same, but it's still jank to use it instead of the client data (or it being added automatically)
     compile 'net.minecraft:server:1.14.2:data'
 }
