@@ -1,0 +1,11 @@
+--- net/minecraft/client/resources/VirtualAssetsPack.java
++++ net/minecraft/client/resources/VirtualAssetsPack.java
+@@ -15,7 +15,7 @@
+    private final ResourceIndex field_195785_b;
+ 
+    public VirtualAssetsPack(ResourceIndex p_i48115_1_) {
+-      super("minecraft", "realms");
++      super("minecraft", "realms"/* >>> WDL */, "wdl" /* <<< WDL */);
+       this.field_195785_b = p_i48115_1_;
+    }
+ 
