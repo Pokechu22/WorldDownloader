@@ -100,7 +100,7 @@ dependencies {
     implementation "com.mojang:brigadier:1.0.17"
     implementation "com.mojang:datafixerupper:4.0.26"
     implementation "com.google.code.gson:gson:2.8.0"
-    implementation "com.mojang:authlib:1.6.25"
+    implementation "com.mojang:authlib:2.0.27"
     implementation "org.apache.commons:commons-compress:1.8.1"
     implementation "org.apache.httpcomponents:httpclient:4.3.3"
     implementation "commons-logging:commons-logging:1.1.3"
