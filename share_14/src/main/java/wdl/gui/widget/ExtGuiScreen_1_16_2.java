@@ -13,7 +13,6 @@
  */
 package wdl.gui.widget;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -205,7 +204,7 @@ abstract class ExtGuiScreen extends net.minecraft.client.gui.screen.Screen imple
 	 * Draws a semitransparent description box.
 	 *
 	 * @param text
-	 *            Text to display. Takes \n into consideration.
+	 *            Text to display. Takes \n into consideration.  If null, nothing is drawn.
 	 * @param guiWidth
 	 *            Width of the GUI.
 	 * @param guiHeight
@@ -213,7 +212,7 @@ abstract class ExtGuiScreen extends net.minecraft.client.gui.screen.Screen imple
 	 * @param bottomPadding
 	 *            The amount of space to put below the bottom of the info box.
 	 */
-	public void drawGuiInfoBox(ITextComponent text, int guiWidth, int guiHeight,
+	public void drawGuiInfoBox(@Nullable ITextComponent text, int guiWidth, int guiHeight,
 			int bottomPadding) {
 		drawGuiInfoBox(text, 300, 100, guiWidth, guiHeight, bottomPadding);
 	}
@@ -222,7 +221,7 @@ abstract class ExtGuiScreen extends net.minecraft.client.gui.screen.Screen imple
 	 * Draws a semitransparent description box.
 	 *
 	 * @param text
-	 *            Text to display. Takes \n into consideration.
+	 *            Text to display. Takes \n into consideration.  If null, nothing is drawn.
 	 * @param infoBoxWidth
 	 *            The width of the info box.
 	 * @param infoBoxHeight
@@ -234,7 +233,7 @@ abstract class ExtGuiScreen extends net.minecraft.client.gui.screen.Screen imple
 	 * @param bottomPadding
 	 *            The amount of space to put below the bottom of the info box.
 	 */
-	public void drawGuiInfoBox(ITextComponent text, int infoBoxWidth,
+	public void drawGuiInfoBox(@Nullable ITextComponent text, int infoBoxWidth,
 			int infoBoxHeight, int guiWidth, int guiHeight, int bottomPadding) {
 		if (text == null) {
 			return;

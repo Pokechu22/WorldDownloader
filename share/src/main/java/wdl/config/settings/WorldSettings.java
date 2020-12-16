@@ -3,7 +3,7 @@
  * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2018 Pokechu22, julialy
+ * Copyright (c) 2018-2020 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -39,6 +39,10 @@ public final class WorldSettings {
 			new EnumSetting<>("Time", Time.KEEP, "wdl.gui.world.time", Time.values(), Time::fromString);
 	public static final EnumSetting<Weather> WEATHER =
 			new EnumSetting<>("Weather", Weather.KEEP, "wdl.gui.world.weather", Weather.values(), Weather::fromString);
+	public static final EnumSetting<Difficulty> DIFFICULTY =
+			new EnumSetting<>("Difficulty", Difficulty.KEEP, "wdl.gui.world.difficulty", Difficulty.values(), Difficulty::fromString);
+	public static final BooleanSetting LOCK_DIFFICULTY =
+			new BooleanSetting("LockDifficuty", false, "wdl.gui.world.lockDifficulty");
 	public static final EnumSetting<SpawnMode> SPAWN =
 			new EnumSetting<>("Spawn", SpawnMode.AUTO, "wdl.gui.world.spawn", SpawnMode.values(), SpawnMode::fromString);
 	public static final IntSetting SPAWN_X = new IntSetting("SpawnX", 8);
@@ -183,6 +187,37 @@ public final class WorldSettings {
 		}
 
 		public static Time fromString(String confName) {
+			return FROM_STRING.get(confName);
+		}
+
+		@Override
+		public String getName() {
+			return confName;
+		}
+	}
+
+	// Refer to net.minecraft.world.Difficulty or net.minecraft.world.EnumDifficulty
+	public enum Difficulty implements IStringSerializable {
+		KEEP("keep", -1, false),
+		PEACEFUL("peaceful", 0, false),
+		EASY("easy", 1, false),
+		NORMAL("normal", 2, false),
+		HARD("hard", 3, false),
+		HARDCORE("hardcore", 3, true);
+
+		private final String confName;
+		private static final Map<String, Difficulty> FROM_STRING = makeFromString(values(), d -> d.confName);
+
+		public final int difficultyId;
+		public final boolean hardcore;
+
+		private Difficulty(String confName, int difficultyId, boolean hardcore) {
+			this.confName = confName;
+			this.difficultyId = difficultyId;
+			this.hardcore = hardcore;
+		}
+
+		public static Difficulty fromString(String confName) {
 			return FROM_STRING.get(confName);
 		}
 

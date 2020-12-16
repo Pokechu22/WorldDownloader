@@ -3,7 +3,7 @@
  * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds
  *
  * Copyright (c) 2014 nairol, cubic72
- * Copyright (c) 2018-2019 Pokechu22, julialy
+ * Copyright (c) 2018-2020 Pokechu22, julialy
  *
  * This project is licensed under the MMPLv2.  The full text of the MMPL can be
  * found in LICENSE.md, or online at https://github.com/iopleke/MMPLv2/blob/master/LICENSE.md
@@ -51,6 +51,18 @@ public class WorldSettingsTest extends MaybeMixinTest {
 	public void testWeather() {
 		checkAllText(WorldSettings.WEATHER);
 		checkParsability(WorldSettings.WEATHER);
+	}
+
+	@Test
+	public void testDifficulty() {
+		checkAllText(WorldSettings.DIFFICULTY);
+		checkParsability(WorldSettings.DIFFICULTY);
+	}
+
+	@Test
+	public void testLockDifficulty() {
+		checkAllText(WorldSettings.LOCK_DIFFICULTY);
+		checkParsability(WorldSettings.LOCK_DIFFICULTY);
 	}
 
 	@Test

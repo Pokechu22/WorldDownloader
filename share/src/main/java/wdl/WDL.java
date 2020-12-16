@@ -1279,6 +1279,15 @@ public class WDL {
 			worldInfoNBT.putBoolean("initialized", true);
 		}
 
+		// Difficulty, DifficultyLocked, hardcore
+		WorldSettings.Difficulty difficulty = worldProps.getValue(WorldSettings.DIFFICULTY);
+		if (difficulty != WorldSettings.Difficulty.KEEP) {
+			boolean locked = worldProps.getValue(WorldSettings.LOCK_DIFFICULTY);
+			worldInfoNBT.putBoolean("hardcore", difficulty.hardcore);
+			worldInfoNBT.putByte("Difficulty", (byte)difficulty.difficultyId);
+			worldInfoNBT.putBoolean("DifficultyLocked", locked);
+		}
+
 		// Compute an entire new set of gamerules
 		// (based on what we loaded from level.dat earlier)
 		NBTTagCompound vanillaRules = worldInfoNBT.getCompound("GameRules");

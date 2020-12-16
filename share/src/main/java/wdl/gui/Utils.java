@@ -15,6 +15,8 @@ package wdl.gui;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import wdl.versioned.VersionedFunctions;
@@ -26,7 +28,7 @@ public class Utils {
 	 * Draws a semitransparent description box.
 	 *
 	 * @param text
-	 *            Text to display. Takes \n into consideration.
+	 *            Text to display. Takes \n into consideration.  If null, nothing is drawn.
 	 * @param guiWidth
 	 *            Width of the GUI.
 	 * @param guiHeight
@@ -34,7 +36,7 @@ public class Utils {
 	 * @param bottomPadding
 	 *            The amount of space to put below the bottom of the info box.
 	 */
-	public static void drawGuiInfoBox(String text, int guiWidth, int guiHeight,
+	public static void drawGuiInfoBox(@Nullable String text, int guiWidth, int guiHeight,
 			int bottomPadding) {
 		drawGuiInfoBox(text, 300, 100, guiWidth, guiHeight, bottomPadding);
 	}
@@ -43,7 +45,7 @@ public class Utils {
 	 * Draws a semitransparent description box.
 	 *
 	 * @param text
-	 *            Text to display. Takes \n into consideration.
+	 *            Text to display. Takes \n into consideration.  If null, nothing is drawn.
 	 * @param infoBoxWidth
 	 *            The width of the info box.
 	 * @param infoBoxHeight
@@ -55,7 +57,7 @@ public class Utils {
 	 * @param bottomPadding
 	 *            The amount of space to put below the bottom of the info box.
 	 */
-	public static void drawGuiInfoBox(String text, int infoBoxWidth,
+	public static void drawGuiInfoBox(@Nullable String text, int infoBoxWidth,
 			int infoBoxHeight, int guiWidth, int guiHeight, int bottomPadding) {
 		if (text == null) {
 			return;

@@ -15,10 +15,12 @@ package wdl.gui;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextComponentTranslation;
 import wdl.WDL;
+import wdl.config.BooleanSetting;
 import wdl.config.IConfiguration;
 import wdl.config.settings.WorldSettings;
 import wdl.gui.widget.WDLButton;
@@ -36,6 +38,8 @@ public class GuiWDLWorld extends WDLScreen {
 	private SettingButton gamemodeBtn;
 	private SettingButton timeBtn;
 	private SettingButton weatherBtn;
+	private SettingButton difficultyBtn;
+	private SettingButton lockDifficultyBtn;
 	private SettingButton spawnBtn;
 	private WDLButton pickSpawnBtn;
 	private boolean showSpawnFields = false;
@@ -43,6 +47,37 @@ public class GuiWDLWorld extends WDLScreen {
 	private GuiNumericTextField spawnY;
 	private GuiNumericTextField spawnZ;
 	private int spawnTextY;
+
+	/**
+	 * @see net.minecraft.client.gui.widget.button.LockIconButton
+	 */
+	private class LockSettingButton extends SettingButton {
+		private final BooleanSetting setting;
+
+		public LockSettingButton(BooleanSetting setting, IConfiguration config, int x, int y) {
+			super(setting, config, x, y, 20, 20);
+			this.setting = setting;
+			setMessage("");
+		}
+
+		@Override
+		public void performAction() {
+			config.cycle(setting);
+		}
+
+		//@Override
+		//public ITextComponent getNarratorMessage() {
+			//return config.getButtonText(setting);
+		//}
+
+		@Override
+		public void afterDraw() {
+			int textureX = config.getValue((BooleanSetting)this.setting) ? 0 : 20; 
+			int textureY = this.isHovered() ? 166 : 146;
+			minecraft.getTextureManager().bindTexture(GuiButton.BUTTON_TEXTURES);
+			blit(this.x, this.y, textureX, textureY, this.width, this.height);
+		}
+	}
 
 	public GuiWDLWorld(@Nullable GuiScreen parent, WDL wdl) {
 		super(new TextComponentTranslation("wdl.gui.world.title", WDL.baseFolderName));
@@ -69,6 +104,11 @@ public class GuiWDLWorld extends WDLScreen {
 		y += 22;
 		this.weatherBtn = this.addButton(new SettingButton(
 				WorldSettings.WEATHER, this.config, this.width / 2 - 100, y));
+		y += 22;
+		this.difficultyBtn = this.addButton(new SettingButton(
+				WorldSettings.DIFFICULTY, this.config, this.width / 2 - 100, y, 180, 20));
+		this.lockDifficultyBtn = this.addButton(new LockSettingButton(
+				WorldSettings.LOCK_DIFFICULTY, this.config, this.width / 2 + 80, y));
 		y += 22;
 		this.spawnBtn = this.addButton(new SettingButton(
 				WorldSettings.SPAWN, this.config, this.width / 2 - 100, y) {
@@ -147,6 +187,10 @@ public class GuiWDLWorld extends WDLScreen {
 			tooltip = timeBtn.getTooltip();
 		} else if (weatherBtn.isHovered()) {
 			tooltip = weatherBtn.getTooltip();
+		} else if (this.difficultyBtn.isHovered()) {
+			tooltip = difficultyBtn.getTooltip();
+		} else if (this.lockDifficultyBtn.isHovered()) {
+			tooltip = lockDifficultyBtn.getTooltip();
 		} else if (spawnBtn.isHovered()) {
 			tooltip = spawnBtn.getTooltip();
 		} else if (pickSpawnBtn.isHovered()) {
