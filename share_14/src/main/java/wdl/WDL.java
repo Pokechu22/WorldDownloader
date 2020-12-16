@@ -22,6 +22,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -882,6 +883,26 @@ public class WDL {
 	}
 
 	/**
+	 * Gets a list of all currently-loaded chunks. There may be null elements in the
+	 * list.
+	 */
+	public List<Chunk> getChunkList() {
+		Class<?> chunkArrayClass = ClientChunkProvider.class.getDeclaredClasses()[0];
+		Object obj = ReflectionUtils.findAndGetPrivateField(worldClient.getChunkProvider(),
+				ClientChunkProvider.class,
+				chunkArrayClass);
+		@SuppressWarnings("unchecked")
+		AtomicReferenceArray<Chunk> chunks = ReflectionUtils.findAndGetPrivateField(obj,
+				AtomicReferenceArray.class);
+
+		List<Chunk> chunkList = new ArrayList<>(chunks.length());
+		for (int currentChunk = 0; currentChunk < chunks.length(); currentChunk++) {
+			chunkList.add(chunks.get(currentChunk));
+		}
+		return chunkList;
+	}
+
+	/**
 	 * Calls saveChunk for all currently loaded chunks
 	 *
 	 * @throws IllegalAccessException
@@ -894,19 +915,12 @@ public class WDL {
 		WDLMessages.chatMessageTranslated(WDL.serverProps,
 				WDLMessageTypes.SAVING, "wdl.messages.saving.savingChunks");
 
-		// Get the list of loaded chunks
-		Class<?> chunkArrayClass = ClientChunkProvider.class.getDeclaredClasses()[0];
-		Object obj = ReflectionUtils.findAndGetPrivateField(worldClient.getChunkProvider(),
-				ClientChunkProvider.class,
-				chunkArrayClass);
-		@SuppressWarnings("unchecked")
-		AtomicReferenceArray<Chunk> chunks = ReflectionUtils.findAndGetPrivateField(obj,
-				AtomicReferenceArray.class);
+		List<Chunk> chunks = getChunkList();
 
 		progressScreen.startMajorTask(I18n.format("wdl.saveProgress.chunk.title"),
-				chunks.length());
+				chunks.size());
 
-		for (int currentChunk = 0; currentChunk < chunks.length(); currentChunk++) {
+		for (int currentChunk = 0; currentChunk < chunks.size(); currentChunk++) {
 			Chunk c = chunks.get(currentChunk);
 			if (c != null) {
 				//Serverside restrictions check

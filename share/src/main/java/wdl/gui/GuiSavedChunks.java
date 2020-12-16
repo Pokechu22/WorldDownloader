@@ -22,6 +22,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.RegionFile;
 import wdl.WDL;
 import wdl.config.settings.MiscSettings;
@@ -129,6 +130,11 @@ public class GuiSavedChunks extends WDLScreen {
 		// Chunks that have been saved already
 		for (ChunkPos pos : wdl.savedChunks) {
 			drawChunk(pos, 0xFF00FF00);
+		}
+
+		// Chunks near the player
+		for (Chunk chunk : wdl.getChunkList()) {
+			drawChunk(chunk.getPos(), 0x3F0000FF);
 		}
 
 		// Player position.
