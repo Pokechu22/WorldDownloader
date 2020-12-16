@@ -61,6 +61,7 @@ project(':1.16.2').evaluationDependsOn(':share')
 project(':1.16.3').evaluationDependsOn(':share')
 project(':1.16.3-forge').evaluationDependsOn(':1.16.3')
 project(':1.16.4').evaluationDependsOn(':share')
+project(':1.16.4-forge').evaluationDependsOn(':1.16.4')
 
 allprojects {
     tasks.withType(JavaCompile) {

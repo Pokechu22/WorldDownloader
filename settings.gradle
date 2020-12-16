@@ -15,7 +15,7 @@ include '1.14.4-forge'
 include '1.15.0', '1.15.1', '1.15.2'
 include '1.15.2-forge'
 include '1.16.1', '1.16.2', '1.16.3', '1.16.4'
-include '1.16.3-forge'
+include '1.16.3-forge', '1.16.4-forge'
 
 // More information about what went wrong
 gradle.buildFinished { buildResult ->
