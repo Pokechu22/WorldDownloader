@@ -85,7 +85,7 @@ public class VersionConstants {
 	 */
 	public static String getModVersion() {
 		// TODO: Automatically generate this somehow
-		return "4.1.1.0-SNAPSHOT";
+		return "4.1.1.0";
 	}
 
 	/**
