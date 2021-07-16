@@ -82,7 +82,7 @@ configurations {
 }
 
 dependencies {
-    minecraft 'net.minecraft:client:1.16.4'
+    minecraft 'net.minecraft:client:1.16.5'
     // HACK: For some reason the libraries MC depends upon aren't added automatically
     implementation "com.mojang:patchy:1.1"
     implementation "oshi-project:oshi-core:1.1"
@@ -121,7 +121,7 @@ dependencies {
     implementation "com.google.code.findbugs:jsr305:3.0.1"
     // HACK: Targeting server data so that it's not clobbered for matching the client code
     // The data is the same, but it's still jank to use it instead of the client data (or it being added automatically)
-    compile 'net.minecraft:server:1.16.4:data'
+    compile 'net.minecraft:server:1.16.5:data'
 }
 
 sourceSets {
@@ -212,7 +212,7 @@ targetCompatibility = "1.8"
 // Ensure that the API code is in the jar
 jar {
     from sourceSets.api.output
-    classifier = 'mc1.16.4'
+    classifier = 'mc1.16.5'
 }
 
 // Unit tests require native libraries to be available, which ForgeGradle
