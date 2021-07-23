@@ -31,6 +31,8 @@ wdl.gui.world.gamemode.keep=Modo de juego: Dejar sin cambios
 wdl.gui.world.gamemode.creative=Modo de juego: Creativo
 wdl.gui.world.gamemode.survival=Modo de juego: Supervivencia
 wdl.gui.world.gamemode.hardcore=Modo de juego: Supervivencia Extrema
+wdl.gui.world.gamemode.adventure=Modo de juego: Aventura
+wdl.gui.world.gamemode.spectator=Modo de juego: Supervivencia
 # Tiempo is both time and weather - should Hora be used or should Tiempo be used?
 wdl.gui.world.time.keep=Hora: Dejar sin cambios
 wdl.gui.world.time.23000=Hora: Amanecer

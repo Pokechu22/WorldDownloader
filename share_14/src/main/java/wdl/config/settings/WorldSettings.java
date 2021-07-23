@@ -54,7 +54,9 @@ public final class WorldSettings {
 		KEEP("keep", -1, false),
 		CREATIVE("creative", 1, false),
 		SURVIVAL("survival", 0, false),
-		HARDCORE("hardcore", 0, true);
+		HARDCORE("hardcore", 0, true),
+		ADVENTURE("adventure", 2, false),
+		SPECTATOR("spectator", 3, false);
 
 		private final String confName;
 		private static final Map<String, GameMode> FROM_STRING = makeFromString(values(), t -> t.confName);
