@@ -309,11 +309,16 @@ wdl.gui.gamerules.rules.spawnRadius=How far from the central spawn (in blocks) s
 wdl.gui.gamerules.rules.spectatorsGenerateChunks=Should players in spectator mode generate new chunks?
 wdl.gui.gamerules.rules.disableRaids=Should raids on villages be disabled?
 wdl.gui.gamerules.rules.doInsomnia=Should phantoms spawn near players who haven't slept?
+wdl.gui.gamerules.rules.doImmediateRespawn=Should players respawn immediately, without seeing the death screen?
 wdl.gui.gamerules.rules.drowningDamage=Should players take damage when drowning?
 wdl.gui.gamerules.rules.fallDamage=Should players take fall damage?
 wdl.gui.gamerules.rules.fireDamage=Should players take damage from fire?
 wdl.gui.gamerules.rules.doPatrolSpawning=Should patrols of pillagers randomly spawn?
 wdl.gui.gamerules.rules.doTraderSpawning=Should the wandering trader randomly spawn?
+wdl.gui.gamerules.rules.forgiveDeadPlayers=Should angered neutral mobs return to normal when the offending player dies nearby?
+wdl.gui.gamerules.rules.universalAnger=Should angered neutral mobs become angry at all players, instead of only the offending player?
+wdl.gui.gamerules.rules.freezeDamage=Should players take damage when inside of powder snow?
+wdl.gui.gamerules.rules.playersSleepingPercentage=What percentage of online players need to be in a bed for night to be skipped?  (0-100)
 # This is a special case, since it doesn't seem to actually be on the list:
 wdl.gui.gamerules.rules.gameLoopFunction=The name of the function to call each tick.  (Deprecated, will be removed in 1.13 and functions are not saved by the mod so this is not useful)
 
