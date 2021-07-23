@@ -279,7 +279,7 @@ public class GuiWDLBackup extends WDLScreen {
 				this.drawString(font, "ಠ_ಠ", x, y, 0xFF0000); // See some of my experiences with dealing with rar files.  Use a non-proprietary format, please, it's for your own good!
 			}
 		}
-		if (commandInvalidReason != null) {
+		if (!isCommandValid && commandInvalidReason != null) {
 			List<String> lines = Utils.wordWrap(commandInvalidReason, this.width - 50);
 			int y = 80;
 			for (String line : lines) {
