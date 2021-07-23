@@ -300,6 +300,8 @@ final class HandlerFunctions {
 				clientInfo.getDifficulty(), true, new GameRules(), DatapackCodec.field_234880_a_);
 		DimensionGeneratorSettings genSettings = DimensionGeneratorSettings.func_236210_a_();
 		ServerWorldInfo worldInfo = new ServerWorldInfo(worldSettings, genSettings, Lifecycle.stable());
+		worldInfo.setGameTime(world.getGameTime());
+		worldInfo.setDayTime(world.getDayTime());
 		return worldInfo.func_230411_a_(DYNAMIC_REGISTRIES, playerNBT);
 	}
 

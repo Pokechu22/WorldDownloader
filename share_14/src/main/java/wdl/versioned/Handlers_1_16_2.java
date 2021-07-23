@@ -307,6 +307,8 @@ final class HandlerFunctions {
 		Registry<DimensionSettings> dimSettings = DYNAMIC_REGISTRIES.func_243612_b(Registry.field_243549_ar);
 		DimensionGeneratorSettings genSettings = DimensionGeneratorSettings.func_242751_a(dimType, biomes, dimSettings);
 		ServerWorldInfo worldInfo = new ServerWorldInfo(worldSettings, genSettings, Lifecycle.stable());
+		worldInfo.setGameTime(world.getGameTime());
+		worldInfo.setDayTime(world.getDayTime());
 		return worldInfo.func_230411_a_(dynamicRegistries, playerNBT);
 	}
 
