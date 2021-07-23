@@ -67,8 +67,6 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkSection;
 import net.minecraft.world.chunk.EmptyChunk;
 import net.minecraft.world.storage.MapData;
-//import net.minecraft.world.storage.SaveHandler;
-//import net.minecraft.world.storage.WorldInfo;
 import wdl.WorldBackup.WorldBackupType;
 import wdl.api.APIImpl;
 import wdl.api.IPlayerInfoEditor;
@@ -688,6 +686,15 @@ public class WDL {
 		chunkLoader.close();
 		chunkLoader = null;
 
+		File worldDirectory = saveHandler.getWorldDirectory();
+
+		try {
+			saveHandler.close();
+		} catch (Exception ex) {
+			LOGGER.warn("Failed to close saveHandler", ex);
+		}
+		saveHandler = null;
+
 		if (backupType != WorldBackupType.NONE) {
 			WDLMessages.chatMessageTranslated(WDL.serverProps,
 					WDLMessageTypes.SAVING, "wdl.messages.saving.backingUp");
@@ -721,15 +728,6 @@ public class WDL {
 					return progressScreen.cancelAttempted();
 				}
 			}
-
-			File worldDirectory = saveHandler.getWorldDirectory();
-
-			try {
-				saveHandler.close();
-			} catch (Exception ex) {
-				LOGGER.warn("Failed to close saveHandler", ex);
-			}
-			saveHandler = null;
 
 			try {
 				WorldBackup.backupWorld(worldDirectory,
