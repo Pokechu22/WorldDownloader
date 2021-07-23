@@ -55,6 +55,11 @@ public class GuiSavedChunks extends WDLScreen {
 	private static final int SCALE = 8;
 
 	/**
+	 * Is a drag currently active?  (We need to track this so that drags from a previous screen
+	 * and drags initiated on the border of this screen don't do anything)
+	 */
+	private boolean dragActive;
+	/**
 	 * The position of the mouse on the last tick, for dragging.
 	 */
 	private int lastTickX, lastTickY;
@@ -88,11 +93,13 @@ public class GuiSavedChunks extends WDLScreen {
 	public void init() {
 		this.addButton(new ButtonDisplayGui(width / 2 - 100, height - 29,
 				200, 20, this.parent));
+		dragActive = false;
 	}
 
 	@Override
 	public void mouseDown(int mouseX, int mouseY) {
 		if (mouseY > TOP_MARGIN && mouseY < height - BOTTOM_MARGIN) {
+			dragActive = true;
 			lastTickX = mouseX;
 			lastTickY = mouseY;
 		}
@@ -100,14 +107,21 @@ public class GuiSavedChunks extends WDLScreen {
 
 	@Override
 	public void mouseDragged(int mouseX, int mouseY) {
-		int deltaX = lastTickX - mouseX;
-		int deltaY = lastTickY - mouseY;
+		if (dragActive) {
+			int deltaX = lastTickX - mouseX;
+			int deltaY = lastTickY - mouseY;
 
-		lastTickX = mouseX;
-		lastTickY = mouseY;
+			lastTickX = mouseX;
+			lastTickY = mouseY;
 
-		scrollX += deltaX / (float)SCALE;
-		scrollZ += deltaY / (float)SCALE;
+			scrollX += deltaX / (float)SCALE;
+			scrollZ += deltaY / (float)SCALE;
+		}
+	}
+
+	@Override
+	public void mouseUp(int mouseX, int mouseY) {
+		dragActive = false;
 	}
 
 	@Override
