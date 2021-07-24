@@ -57,6 +57,7 @@ import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.crash.ReportedException;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
@@ -345,6 +346,7 @@ public class WDL {
 					worldProps = loadWorldProps(selectedWorld);
 					propsFound = true; // Successfully loaded, even if the file doesn't exist.
 					gameRules = loadGameRules(selectedWorld);
+					loadEnderChest(selectedWorld, player);
 					callback.run();
 				}
 
@@ -1018,6 +1020,7 @@ public class WDL {
 			isMultiworld = false;
 			worldProps = serverProps;
 			gameRules = loadGameRules("");
+			loadEnderChest("", player);
 		} else {
 			isMultiworld = true;
 		}
@@ -1087,6 +1090,43 @@ public class WDL {
 
 		rules.read(gameRules);
 		return rules;
+	}
+
+	/**
+	 * Loads existing ender chest items into the given player's ender chest
+	 * inventory. Note that WDL does not do any special management of ender chest
+	 * items; it just reads them into {@link EntityPlayer#enterChestInventory}
+	 * (which will persist until the player entity is re-created). Also note that
+	 * the player data file that WDL reads from is tied to the player's UUID; since
+	 * this is not supposed to change, it generally won't be an issue except during
+	 * development where player names are tied to a random number.
+	 *
+	 * @param worldName The name of the world, for multiworld. Otherwise empty.
+	 * @param player    The player to read the ender chest into (and whose UUID
+	 *                  should be used)
+	 */
+	public void loadEnderChest(String worldName, EntityPlayerSP player) {
+		File savesDir = new File(minecraft.gameDir, "saves");
+
+		String folder = getWorldFolderName(worldName);
+		File worldFolder = new File(savesDir, folder);
+		File playerDataFolder = new File(worldFolder, "playerdata");
+		File playerDatFile = new File(playerDataFolder, player.getUniqueID().toString() + ".dat");
+
+		if (!playerDatFile.exists()) {
+			return;
+		}
+
+		try (FileInputStream stream = new FileInputStream(playerDatFile)) {
+			NBTTagCompound compound = CompressedStreamTools.readCompressed(stream);
+			if (compound.contains("EnderItems", 9)) {
+				player.getInventoryEnderChest().read(compound.getList("EnderItems", 10));
+			} else {
+				LOGGER.warn("[WDL] Existing player data does not have EnderItems tag");
+			}
+		} catch (Exception e) {
+			LOGGER.warn("[WDL] Error while loading existing ender chest; an empty chest will be used instead: ", e);
+		}
 	}
 
 	/**
