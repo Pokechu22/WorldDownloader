@@ -61,7 +61,10 @@ abstract class ExtGuiScreen extends net.minecraft.client.gui.screen.Screen imple
 	public final void init(Minecraft mc, int width, int height) {
 		this.listList.clear();
 		this.textFieldList.clear();
-		this.characterManager = ReflectionUtils.findAndGetPrivateField(mc.fontRenderer, CharacterManager.class);
+		// Note that mods can replace the font render (e.g. Emojiful).
+		// The exact class must be specified.
+		this.characterManager = ReflectionUtils.findAndGetPrivateField(mc.fontRenderer, FontRenderer.class,
+				CharacterManager.class);
 		super.init(mc, width, height);
 	}
 
