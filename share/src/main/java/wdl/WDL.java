@@ -1000,6 +1000,9 @@ public class WDL {
 	 */
 	private void loadServerProps() {
 		baseFolderName = getBaseFolderName();
+		if (baseFolderName == null || baseFolderName == "") {
+			throw new RuntimeException("baseFolderName is empty ! This can cause numerous weird issues, like the mod zipping your whole .minecraft, so the mod crashed on purpose. Please report this on Github.");
+		}
 		serverProps = new Configuration(globalProps);
 
 		File savesFolder = new File(minecraft.gameDir, "saves");
@@ -1475,10 +1478,12 @@ public class WDL {
 		try {
 			if (minecraft.getCurrentServerData() != null) {
 				String name = minecraft.getCurrentServerData().serverName;
-
-				if (name.equals(I18n.format("selectServer.defaultName"))) {
+				
+				// Empty name = using the "reconnect" feature on some clients/mods
+				if (name == null || name == "" || name.equals(I18n.format("selectServer.defaultName"))) {
 					// Direct connection using domain name or IP (and port)
 					name = minecraft.getCurrentServerData().serverIP;
+					name = name.replace(":25565", "");
 				}
 
 				return name;
