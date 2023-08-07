@@ -1,7 +1,0 @@
-{
-    "name": "LiteModWDL",
-    "mcversion": "1.10",
-    "mixinConfigs": [
-        "mixins.LiteModWDL.json"
-    ]
-}

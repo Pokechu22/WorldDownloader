@@ -1,4 +1,0 @@
-searge,name,side,desc
-func_71384_a,startGame,0,"Starts the game: initializes the canvas, the title, the settings, etcetera.\n \nActual name: init"
-func_147346_a,processPlayerBlockPlacement,2,"Called when a client is using an item while not pointing at a block, but simply using an item\n \nActual name: processTryUseItem"
-func_188391_a,doRenderEntity,0,"Actual name: renderEntity"

@@ -1,4 +1,0 @@
-searge,name,side,desc
-func_146112_a,drawButton,0,Draws this button to the screen.  Replaced with a new version that has partialTicks in 1.12.
-func_178011_a,setSelected,0,
-func_180790_a,drawEntry,0,

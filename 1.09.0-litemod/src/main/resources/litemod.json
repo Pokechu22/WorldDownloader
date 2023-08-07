@@ -1,7 +1,0 @@
-{
-    "name": "LitemodStub",
-    "mcversion": "1.9",
-    "mixinConfigs": [
-        "mixins.LiteModWDL.json"
-    ]
-}

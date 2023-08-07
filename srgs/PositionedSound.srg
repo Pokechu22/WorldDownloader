@@ -1,4 +1,0 @@
-# Applies to all versions before 1.13.2
-# https://github.com/ModCoderPack/MCPBot-Issues/issues/733
-CL: net/minecraft/client/audio/PositionedSound net/minecraft/client/audio/AbstractSound
-CL: net/minecraft/client/audio/PositionedSoundRecord net/minecraft/client/audio/SimpleSound

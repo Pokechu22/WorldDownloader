@@ -1,3 +1,0 @@
-# Swap HorseType and HorseArmorType (1.9, 1.9.2 only): https://github.com/ModCoderPack/MCPBot-Issues/issues/154
-CL: net/minecraft/entity/passive/HorseType net/minecraft/entity/passive/HorseArmorType
-CL: net/minecraft/entity/passive/HorseArmorType net/minecraft/entity/passive/HorseType

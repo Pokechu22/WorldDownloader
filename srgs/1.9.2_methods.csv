@@ -1,6 +1,0 @@
-searge,name,side,desc
-func_71500_a,addDetail,2,"Adds a Crashreport section with the given name with the value set to the result of the given Callable;\n \nOriginal name: addCrashSectionCallable"
-func_70109_d,writeWithoutTypeId,2,"Writes this entity, including passengers, to NBT, regardless as to whether or not it is removed or a passenger. Does <b>not</b> include the entity's type ID, so the NBT is insufficient to recreate the entity using {@link AnvilChunkLoader#readWorldEntity}. Use {@link #writeUnlessPassenger} for that purpose.\n \nOriginal name: writeToNBT; SRG name was re-allocated as func_189511_e"
-func_76187_b,write,2,"Original name: writeToNBT; SRG name was re-allocated as func_189551_b"
-func_145841_b,write,2,"Original name: writeToNBT; SRG name was re-allocated as func_189515_b"
-func_184246_b,create,2,"Original name: createTileEntity"

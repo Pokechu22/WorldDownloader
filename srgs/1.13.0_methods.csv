@@ -1,6 +1,0 @@
-searge,name,side,desc
-func_205217_j_,getFluidsToBeTicked,0,
-func_82594_a,get,0,Became getOrDefault in 1.13 due to SRG naming mishap
-func_148741_d,containsKey,0,
-func_73158_c,loadChunk,0,
-func_73025_a,doPreChunk,0,

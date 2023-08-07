@@ -1,84 +1,91 @@
-buildscript {
+plugins {
+    id 'fabric-loom' version '1.3-SNAPSHOT'
+    id 'maven-publish'
+}
+
+version = project.mod_version
+group = project.maven_group
+
+base {
+    archivesName = project.archives_base_name
+}
+
+repositories {
+    // Add repositories to retrieve artifacts from in here.
+    // You should only use this when depending on other mods because
+    // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
+    // See https://docs.gradle.org/current/userguide/declaring_repositories.html
+    // for more information about repositories.
+}
+
+loom {
+    splitEnvironmentSourceSets()
+
+    mods {
+        "modid" {
+            sourceSet sourceSets.main
+            sourceSet sourceSets.client
+        }
+    }
+
+}
+
+dependencies {
+    // To change the versions see the gradle.properties file
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
+    // Fabric API. This is technically optional, but you probably want it anyway.
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+    // Uncomment the following line to enable the deprecated Fabric API modules.
+    // These are included in the Fabric API production distribution and allow you to update your mod to the latest modules at a later more convenient time.
+
+    // modImplementation "net.fabricmc.fabric-api:fabric-api-deprecated:${project.fabric_version}"
+}
+
+processResources {
+    inputs.property "version", project.version
+
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.release = 17
+}
+
+java {
+    // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
+    // if it is present.
+    // If you remove this line, sources will not be generated.
+    withSourcesJar()
+
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+jar {
+    from("LICENSE") {
+        rename { "${it}_${project.base.archivesName.get()}"}
+    }
+}
+
+// configure the maven publication
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+
+    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
     repositories {
-        mavenLocal()
-        mavenCentral()
-        maven {
-            name = "sonatype"
-            url = "https://oss.sonatype.org/content/repositories/snapshots/"
-        }
-        maven {
-            name = "forge"
-            url = "https://files.minecraftforge.net/maven"
-        }
-        maven {
-            name = 'sponge'
-            url = 'https://repo.spongepowered.org/maven'
-        }
-        jcenter()
-    }
-    dependencies {
-        // NOTE: must be compiled manually, not currently in any repos
-        // Download https://github.com/Pokechu22/ForgeGradle-extensions and
-        // then run 'gradlew install'
-        // classpath 'pokechu22.test.begradle:begradle:0.2.6:fg2'
-    }
-}
-
-project(':1.09.0').evaluationDependsOn(':share')
-project(':1.09.0-litemod').evaluationDependsOn(':1.09.0')
-project(':1.09.2').evaluationDependsOn(':share')
-project(':1.09.4').evaluationDependsOn(':share')
-project(':1.09.4-litemod').evaluationDependsOn(':1.09.4')
-project(':1.10.0').evaluationDependsOn(':share')
-project(':1.10.0-litemod').evaluationDependsOn(':1.10.0')
-project(':1.10.2').evaluationDependsOn(':share')
-project(':1.10.2-litemod').evaluationDependsOn(':1.10.2')
-project(':1.11.0').evaluationDependsOn(':share')
-project(':1.11.0-litemod').evaluationDependsOn(':1.11.0')
-project(':1.11.2').evaluationDependsOn(':share')
-project(':1.11.2-litemod').evaluationDependsOn(':1.11.2')
-project(':1.12.0').evaluationDependsOn(':share')
-project(':1.12.0-litemod').evaluationDependsOn(':1.12.0')
-project(':1.12.1').evaluationDependsOn(':share')
-project(':1.12.1-litemod').evaluationDependsOn(':1.12.1')
-project(':1.12.2').evaluationDependsOn(':share')
-project(':1.12.2-litemod').evaluationDependsOn(':1.12.2')
-project(':1.13.0').evaluationDependsOn(':share')
-project(':1.13.1').evaluationDependsOn(':share')
-project(':1.13.2').evaluationDependsOn(':share')
-project(':1.14.0').evaluationDependsOn(':share')
-project(':1.14.1').evaluationDependsOn(':share')
-project(':1.14.2').evaluationDependsOn(':share')
-project(':1.14.3').evaluationDependsOn(':share')
-project(':1.14.4').evaluationDependsOn(':share')
-project(':1.14.4-forge').evaluationDependsOn(':1.14.4')
-project(':1.15.0').evaluationDependsOn(':share')
-project(':1.15.1').evaluationDependsOn(':share')
-project(':1.15.2').evaluationDependsOn(':share')
-project(':1.15.2-forge').evaluationDependsOn(':1.15.2')
-project(':1.16.1').evaluationDependsOn(':share')
-project(':1.16.2').evaluationDependsOn(':share')
-project(':1.16.3').evaluationDependsOn(':share')
-project(':1.16.3-forge').evaluationDependsOn(':1.16.3')
-project(':1.16.4').evaluationDependsOn(':share')
-project(':1.16.4-forge').evaluationDependsOn(':1.16.4')
-project(':1.16.5').evaluationDependsOn(':share')
-project(':1.16.5-forge').evaluationDependsOn(':1.16.5')
-
-allprojects {
-    tasks.withType(JavaCompile) {
-        options.encoding = 'UTF-8'
-    }
-}
-
-subprojects {
-    if (project.name != 'share' && project.name != 'share_14') {
-        task regenEclipse {
-            // Delete the eclipse classpath and project and then recreate it, without doing any of the slower bits.
-            dependsOn 'cleanEclipseProject'
-            dependsOn 'cleanEclipseClasspath'
-            dependsOn 'eclipseProject'
-            dependsOn 'eclipseClasspath'
-        }
+        // Add repositories to publish to here.
+        // Notice: This block does NOT have the same function as the block in the top level.
+        // The repositories here will be used for publishing your artifact, not for
+        // retrieving dependencies.
     }
 }

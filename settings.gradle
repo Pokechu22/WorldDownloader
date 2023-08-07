@@ -1,40 +1,10 @@
-include 'share', 'share_14'
-include '1.09.0', '1.09.0-litemod'
-include '1.09.2' // There never was a 1.9.2 liteloader
-include '1.09.4', '1.09.4-litemod'
-include '1.10.0', '1.10.0-litemod'
-include '1.10.2', '1.10.2-litemod'
-include '1.11.0', '1.11.0-litemod'
-include '1.11.2', '1.11.2-litemod'
-include '1.12.0', '1.12.0-litemod'
-include '1.12.1', '1.12.1-litemod'
-include '1.12.2', '1.12.2-litemod'
-include '1.13.0', '1.13.1', '1.13.2'
-include '1.14.0', '1.14.1', '1.14.2', '1.14.3', '1.14.4'
-include '1.14.4-forge'
-include '1.15.0', '1.15.1', '1.15.2'
-include '1.15.2-forge'
-include '1.16.1', '1.16.2', '1.16.3', '1.16.4', '1.16.5'
-include '1.16.3-forge', '1.16.4-forge', '1.16.5-forge'
-
-// More information about what went wrong
-gradle.buildFinished { buildResult ->
-  if (buildResult.failure != null && buildResult.failure.cause != null) {
-    if (buildResult.failure.cause.cause instanceof org.gradle.api.internal.tasks.compile.CompilationFailedException) {
-        println '----------------------------------------'
-        println 'Compilation failed.'
-        println 'If this was due to a bad class file, try running "gradlew setupDecompWorkspace"'
-        println 'The cause of this behavior is being investigated.'
-    } else if (buildResult.failure.cause.cause instanceof org.gradle.api.artifacts.ResolveException) {
-        println '----------------------------------------'
-        println 'Dependency resolution failed.'
-        println 'If this was due to begradle not being found, you need to manually install it.'
-        println 'Download the latest version of https://github.com/Pokechu22/ForgeGradle-extensions and run "gradlew install" to install the library, and then it should work.'
-    } else if (buildResult.failure.cause.cause instanceof groovy.lang.MissingPropertyException) {
-        println '----------------------------------------'
-        println 'Build evaluation (most likely) failed.'
-        println 'If this was due to the `refMap` property not existing, this should not be happening (see https://github.com/SpongePowered/MixinGradle/issues/3).'
-        println 'Unfortunately I have no advice at this time.  You may need to downgrade gradle to version 2.14.1, but that should not be required.'
+pluginManagement {
+    repositories {
+        maven {
+            name = 'Fabric'
+            url = 'https://maven.fabricmc.net/'
+        }
+        mavenCentral()
+        gradlePluginPortal()
     }
-  }
 }
