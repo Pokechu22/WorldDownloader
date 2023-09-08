@@ -1,3 +1,11 @@
+## Alternatives
+
+This mod is currently stuck on 1.16.x, and as such, will not function on any newer versions, however there are currently 2 alternatives:
+
+1 (recommended option) - [WorldTools](https://github.com/Avanatiker/WorldTools), a Client-sided mod for 1.20.1+ on both forge and fabric, may also work with [ViaFabricPlus](https://github.com/ViaVersion/ViaFabricPlus) to allow downloading worlds from older servers, snapshot and april fools servers, and even bedrock servers
+
+2 - [Minecraft World Downloader](https://github.com/mircokroon/minecraft-world-downloader), an external application that works as a proxy to intercept world data and save it in a minecraft world folder
+
 # World Downloader v4
 
 World Downloader is a mod that allows making backups of Minecraft worlds.  You can view the [Minecraft forum thread](https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds) here.  [Project wiki](https://github.com/pokechu22/WorldDownloader/wiki); [issue tracker](https://github.com/Pokechu22/WorldDownloader/issues).
