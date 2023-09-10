@@ -1,3 +1,10 @@
+## Alternatives
+
+This mod is currently stuck on 1.16.x, and as such, will not function on any newer versions, however as of 2023 there are currently 2 alternatives developed by other people:
+
+* [Avanatiker/WorldTools](https://github.com/Avanatiker/WorldTools), a client-sided mod for 1.20.1+ on both forge and fabric
+* [mircokroon/minecraft-world-downloader](https://github.com/mircokroon/minecraft-world-downloader), an external application that works as a proxy to intercept world data and save it in a Minecraft world folder
+
 # World Downloader v4
 
 World Downloader is a mod that allows making backups of Minecraft worlds.  You can view the [Minecraft forum thread](https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2520465-world-downloader-mod-create-backups-of-your-builds) here.  [Project wiki](https://github.com/pokechu22/WorldDownloader/wiki); [issue tracker](https://github.com/Pokechu22/WorldDownloader/issues).
